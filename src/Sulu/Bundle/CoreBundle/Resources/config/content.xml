@@ -25,6 +25,8 @@
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
         <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
+
+        <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
     </parameters>
 
     <services>
@@ -129,6 +131,12 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
+        </service>
+
+        <!-- cache warmer for structures -->
+        <service id="sulu.cache.warmer.structure" class="%sulu.cache.warmer.structure.class%">
+            <argument type="service" id="sulu.content.structure_manager" />
+            <tag name="kernel.cache_warmer" />
         </service>
     </services>
 </container>

@@ -27,8 +27,10 @@
         "symfony/symfony": "2.5.*",
         "phpunit/phpunit": "4.0.*",
         "phpspec/prophecy-phpunit": "~1.0",
-        "sulu/test-bundle": "0.8.*",
-        "jackalope/jackalope-doctrine-dbal": "1.1.*"
+        "jackalope/jackalope-doctrine-dbal": "1.1.*",
+        "matthiasnoback/symfony-dependency-injection-test": "~0.1",
+        "matthiasnoback/symfony-config-test": "~0.3",
+        "sulu/test-bundle": "dev-develop"
     },
     "suggest": {
         "massive/build-bundle": "For initializing the Sulu environment"
