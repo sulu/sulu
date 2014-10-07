@@ -1979,7 +1979,7 @@ class ContentMapper implements ContentMapperInterface
                 } else {
                     return false;
                 }
-            } catch (RepositoryException $ex) {
+            } catch (RepositoryException $e) {
                 // ignore exception because no route node exists
                 // could have several reasons:
                 //  - external links has text-line as "rlp"
