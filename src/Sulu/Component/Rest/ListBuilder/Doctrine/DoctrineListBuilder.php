@@ -102,7 +102,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         if ($this->sortField != null) {
-            $this->queryBuilder->orderBy($this->sortField->getName(), $this->sortOrder);
+            $this->queryBuilder->orderBy($this->sortField->getSelect(), $this->sortOrder);
         }
 
         return $this->queryBuilder->getQuery()->getArrayResult();
