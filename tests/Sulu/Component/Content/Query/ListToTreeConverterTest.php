@@ -143,4 +143,38 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testConvertWithEmptyItems()
+    {
+        $i = 0;
+        $data = array(
+            $this->createItem('/a/a/a', $i++), // 0
+            $this->createItem('/a', $i++), // 1
+            $this->createItem('/b/b', $i++), // 2
+        );
+
+        $expected = array(
+            array(
+                'path' => '/a',
+                'a' => 1,
+                'children' => array(
+                    array(
+                        'path' => '/a/a/a',
+                        'a' => 0,
+                        'children' => array()
+                    )
+                )
+            ),
+            array(
+                'path' => '/b/b',
+                'a' => 2,
+                'children' => array()
+            )
+        );
+
+        $converter = new ListToTreeConverter();
+        $result = $converter->convert($data);
+
+        $this->assertEquals($expected, $result);
+    }
 }
