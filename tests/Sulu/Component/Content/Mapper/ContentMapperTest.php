@@ -334,7 +334,6 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
-
         $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
 
         $this->assertEquals('Testname', $result->getPropertyValue('name'));
@@ -374,7 +373,7 @@ class ContentMapperTest extends PhpcrTestCase
         return array(
             array(
                 array(
-                    'is_shadow' => false, 
+                    'is_shadow' => false,
                     'language' => 'de',
                     'shadow_base_language' => 'fr'
                 ),
@@ -385,7 +384,7 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     'is_shadow' => true,
                     'language' => 'de',
-                    'shadow_base_language' =>'de'
+                    'shadow_base_language' => 'de'
                 ),
                 null,
                 array(
@@ -418,8 +417,7 @@ class ContentMapperTest extends PhpcrTestCase
                     'language' => 'en_us',
                     'shadow_base_language' => 'de_at'
                 ),
-                array(
-                ),
+                array(),
             ),
             array(
                 array(
@@ -458,8 +456,7 @@ class ContentMapperTest extends PhpcrTestCase
         $node1,
         $node2,
         $expectations
-    )
-    {
+    ) {
         $data = array(
             'name' => 'Testname',
             'tags' => array(
@@ -486,7 +483,7 @@ class ContentMapperTest extends PhpcrTestCase
             }
 
             $structures[$i] = $this->mapper->save(
-                $data, 
+                $data,
                 'overview',
                 'default',
                 $node['language'],
@@ -1887,7 +1884,6 @@ class ContentMapperTest extends PhpcrTestCase
         return $result;
     }
 
-
     public function testLoadShadow()
     {
         $result = $this->prepareLoadShadowData();
@@ -3021,8 +3017,26 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'default'
         );
 
-        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotValidException', "ResourceLocator '/news/test.xml' is not valid");
+        $this->setExpectedException(
+            'Sulu\Component\Content\Exception\ResourceLocatorNotValidException',
+            "ResourceLocator '/news/test.xml' is not valid"
+        );
         $this->mapper->save($data, 'overview', 'default', 'de', 1);
+    }
+
+    public function testSaveSlash()
+    {
+        $result = $this->mapper->save(
+            array('name' => 'My / Your nice test', 'url' => '/my-your-nice-test'),
+            'overview',
+            'default',
+            'de',
+            1
+        );
+
+        $this->assertEquals('/my-your-nice-test', $result->getPath());
+        $this->assertEquals('/my-your-nice-test', $result->getPropertyValue('url'));
+        $this->assertEquals('My / Your nice test', $result->getPropertyValue('name'));
     }
 }
 

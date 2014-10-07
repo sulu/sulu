@@ -261,10 +261,13 @@ class ContentMapper implements ContentMapperInterface
             }
         };
 
+        // title should not have a slash
+        $title = str_replace('/', '-', $data[$nodeNameProperty->getName()]);
+
         /** @var NodeInterface $node */
         if ($uuid === null) {
             // create a new node
-            $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
+            $path = $this->cleaner->cleanUp($title, $languageCode);
             $path = $this->getUniquePath($path, $root);
             $node = $root->addNode($path);
             $newTranslatedNode($node);
@@ -284,7 +287,7 @@ class ContentMapper implements ContentMapperInterface
                     ) !== $data[$nodeNameProperty->getName()];
 
                 if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
-                    $path = $this->cleaner->cleanUp($data[$nodeNameProperty->getName()], $languageCode);
+                    $path = $this->cleaner->cleanUp($title, $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
 
                     if ($path) {
@@ -1816,13 +1819,13 @@ class ContentMapper implements ContentMapperInterface
         $fieldsData = array();
         foreach ($fields as $field) {
             // determine target for data in result array
-            if (isset($fieldsData['target'])) {
+            if (isset($field['target'])) {
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = & $fieldsData[$field['target']];
+                $target = &$fieldsData[$field['target']];
             } else {
-                $target = & $fieldsData;
+                $target = &$fieldsData;
             }
 
             // create target
@@ -1963,16 +1966,21 @@ class ContentMapper implements ContentMapperInterface
                 if ($property->getContentTypeName() !== 'resource_locator') {
                     return 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
+            } else {
+                return '';
             }
 
             try {
                 $routePath = $row->getPath('route');
-                if (strpos($routePath, $routesPath) === 0) {
+
+                $nextChar = substr($routePath, strlen($routesPath), 1);
+                $position = strpos($routePath, $routesPath);
+                if ($position === 0 && ($nextChar === '/' || $nextChar === false)) {
                     $url = str_replace($routesPath, '', $routePath);
                 } else {
                     return false;
                 }
-            } catch (RepositoryException $ex) {
+            } catch (RepositoryException $e) {
                 // ignore exception because no route node exists
                 // could have several reasons:
                 //  - external links has text-line as "rlp"

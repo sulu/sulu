@@ -10,48 +10,46 @@
 
 namespace Sulu\Component\Content\Query;
 
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-
 /**
  * Converts a list of nodes to a tree
  */
 class ListToTreeConverter
 {
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    function __construct(SessionManagerInterface $sessionManager)
-    {
-        $this->sessionManager = $sessionManager;
-    }
-
-    /**
      * generate a tree of the given data with the path property
      * @param array $data
-     * @param string $webspaceKey
+     * @return array
      */
-    public function convert($data, $webspaceKey)
+    public function convert($data)
     {
         $map = array();
+        $minDepth = 99;
         foreach ($data as $item) {
-            $map['/root' . $item['path']] = $item;
+            $path = rtrim('/root' . $item['path'], '/');
+            $map[$path] = $item;
+
+            $parts = explode('/', $path);
+            $parts = array_filter($parts);
+            $depth = sizeof($parts);
+            if ($minDepth > $depth) {
+                $minDepth = $depth;
+            }
         }
 
         $tree = $this->explodeTree($map, '/');
-        if (!array_key_exists('children', $tree)) {
-            return array();
+
+        for ($i = 0; $i < $minDepth - 1; $i++) {
+            $tree['children'] = array_values($tree['children']);
+            if (!array_key_exists('children', $tree) || !array_key_exists(0, $tree['children'])) {
+                return array();
+            }
+
+            $tree = $tree['children'][0];
         }
+
         $tree = $this->toArray($tree);
-        $tree = $tree['children'];
 
-        // root node exists
-        if (array_key_exists('root', $tree)) {
-            return $tree['root'];
-        }
-
-        return $tree;
+        return $tree['children'];
     }
 
     private function toArray($tree)
@@ -59,6 +57,17 @@ class ListToTreeConverter
         if (isset($tree['children'])) {
             $tree['children'] = array_values($tree['children']);
 
+            // search for empty nodes
+            for ($i = 0; $i < sizeof($tree['children']); $i++) {
+                if (array_keys($tree['children'][$i]) === array('children')) {
+                    array_splice($tree['children'], $i + 1, 0, $tree['children'][$i]['children']);
+                    unset($tree['children'][$i]);
+                }
+            }
+
+            $tree['children'] = array_values($tree['children']);
+
+            // recursive to array
             for ($i = 0; $i < sizeof($tree['children']); $i++) {
                 $tree['children'][$i] = $this->toArray($tree['children'][$i]);
             }
@@ -136,6 +145,9 @@ class ListToTreeConverter
                         }
                     }
                     $parentArr = & $parentArr['children'][$part];
+                } else {
+                    $parentArr['children'][$part] = array();
+                    $parentArr = & $parentArr['children'][$part];
                 }
             }
 
@@ -144,6 +156,8 @@ class ListToTreeConverter
                 $parentArr['children'][$leafPart] = $val;
             } elseif ($baseval && is_array($parentArr['children'][$leafPart])) {
                 $parentArr['children'][$leafPart]['__base_val'] = $val;
+            } else {
+                $parentArr['children'][$leafPart] = array_merge($val, $parentArr['children'][$leafPart]);
             }
         }
 

@@ -110,10 +110,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             $additionalFields[$locale] = array();
 
             if ($this->excerpt) {
-                $excerptSelect =  $this->buildSelectorForExcerpt($locale, $additionalFields);
-                if($excerptSelect !== '') {
-                    $select[] = $this->buildSelectorForExcerpt($locale, $additionalFields);
-                }
+                $this->buildSelectorForExcerpt($locale, $additionalFields);
             }
 
             $customSelect = $this->buildSelect($webspaceKey, $locale, $additionalFields);
@@ -135,17 +132,6 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
                 $where = $where . ($where !== '' ? ' AND ' : '') . $customWhere;
             }
             $where .= ')';
-
-            $where .= sprintf(
-                " AND (ISDESCENDANTNODE(route, '/cmf/%s/routes/%s') OR ISSAMENODE(route, '/cmf/%s/routes/%s') OR NOT (page.[%s:%s-nodeType] = '%s'))",
-                $webspaceKey,
-                $locale,
-                $webspaceKey,
-                $locale,
-                $this->languageNamespace,
-                $locale,
-                Structure::NODE_TYPE_CONTENT
-            );
 
             $customOrder = $this->buildOrder($webspaceKey, $locale);
             if (!empty($customOrder)) {
@@ -239,28 +225,16 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     private function buildSelectorForExcerpt($locale, &$additionalFields)
     {
         $excerptStructure = $this->structureManager->getStructure('excerpt');
-        $select = '';
+        $extension = $this->structureManager->getExtension('', 'excerpt');
 
         foreach ($excerptStructure->getProperties(true) as $property) {
-            $column = sprintf('ext_excerpt_%s_%s', $locale, $property->getName());
             $additionalFields[$locale][] = array(
-                'name' => $property->getName(),
-                'column' => $column,
+                'extension' => $extension,
                 'target' => 'excerpt',
-                'property' => $property
+                'property' => $property->getName(),
+                'name' => $property->getName()
             );
-
-            $singleSelect = sprintf(
-                '%s%s AS %s',
-                ($select !== '') ? ', ' : '',
-                $this->buildSelector($this->getTranslatedProperty($property, $locale)->getName()),
-                $column
-            );
-
-            $select .= $singleSelect;
         }
-
-        return $select;
     }
 
     /**
