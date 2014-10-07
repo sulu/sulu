@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
 use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
