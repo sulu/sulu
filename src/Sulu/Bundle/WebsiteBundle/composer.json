@@ -4,7 +4,7 @@
     "description": "This sulu bundle is responsible for the websites administrated by Sulu",
     "license": "MIT",
     "keywords": ["sulu", "website"],
-    "version": "0.8.1",
+    "version": "0.8.2",
     "authors": [
         {
             "name": "Sulu Community",
