@@ -110,12 +110,18 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getChildrenAction(Request $request, $key)
     {
-        $sortBy = $request->get('sortBy');
-        $sortOrder = $request->get('sortOrder');
-        $categoryManager = $this->get('sulu_category.category_manager');
-        $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
-        $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
-        return $this->getMultipleResponse($wrappers, $request);
+        if ($request->get('flat') == 'true') {
+            $list = $this->getCategoryListRepresentation($request);
+        } else {
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder');
+            $categoryManager = $this->get('sulu_category.category_manager');
+            $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
+            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $list = new CollectionRepresentation($wrappers, self::$entityKey);
+        }
+        $view = $this->view($list, 200);
+        return $this->handleView($view);
     }
 
     /**
@@ -127,15 +133,20 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function cgetAction(Request $request)
     {
-        $parent = $request->get('parent');
-        $depth = $request->get('depth');
-        $sortBy = $request->get('sortBy');
-        $sortOrder = $request->get('sortOrder');
-
-        $categoryManager = $this->get('sulu_category.category_manager');
-        $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
-        $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
-        return $this->getMultipleResponse($wrappers, $request);
+        if ($request->get('flat') == 'true') {
+            $list = $this->getCategoryListRepresentation($request);
+        } else {
+            $parent = $request->get('parent');
+            $depth = $request->get('depth');
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder');
+            $categoryManager = $this->get('sulu_category.category_manager');
+            $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
+            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $list = new CollectionRepresentation($wrappers, self::$entityKey);
+        }
+        $view = $this->view($list, 200);
+        return $this->handleView($view);
     }
 
     /**
@@ -221,25 +232,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns a List- or a Collection-representation whereas the flat-parameter is true or not
-     *
-     * @param $wrappers
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function getMultipleResponse($wrappers, Request $request)
-    {
-        $list = null;
-        if ($request->get('flat') == 'true') {
-            $list = $this->getCategoryListRepresentation($request);
-        } else {
-            $list = new CollectionRepresentation($wrappers, self::$entityKey);
-        }
-        $view = $this->view($list, 200);
-        return $this->handleView($view);
-    }
-
-    /**
      * Handles the change of a category. Used in PUT and PATCH
      *
      * @param $id
@@ -306,8 +298,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
         foreach ($results as $result) {
             if (isset($result['hasChildren'])) {
                 $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
-                $manipulatedResults[] = $result;
             }
+            $manipulatedResults[] = $result;
         }
 
         $list = new ListRepresentation(
