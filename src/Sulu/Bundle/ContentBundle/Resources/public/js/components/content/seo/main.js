@@ -14,7 +14,7 @@ define([], function() {
     var defaults = {
         maxDescriptionCharacters: 155,
         maxKeywords: 5,
-        keywordsSeperator: ',',
+        keywordsSeparator: ',',
         excerptUrlPrefix: 'www.yoursite.com'
     };
 
@@ -106,13 +106,6 @@ define([], function() {
             this.keywords.$counter = this.$find('#keywords-left');
             this.updateKeywordsCounter();
             this.sandbox.dom.on(this.keywords.$el, 'keyup', this.updateKeywordsCounter.bind(this));
-            // prevent input if maximum size got reached
-            this.sandbox.dom.on(this.keywords.$el, 'keypress', function(event) {
-                if (this.keywords.count >= this.options.maxKeywords &&
-                    String.fromCharCode(event.keyCode) === this.options.keywordsSeperator) {
-                    return false;
-                }
-            }.bind(this));
         },
 
         updateExcerpt: function() {
@@ -121,7 +114,10 @@ define([], function() {
             // update url
 
             // update description
-            this.sandbox.dom.html(this.$find('#seo-excerpt-description'), this.sandbox.dom.val(this.$find('#seo-description')));
+            this.sandbox.dom.html(
+                this.$find('#seo-excerpt-description'),
+                this.sandbox.dom.val(this.$find('#seo-description'))
+            );
         },
 
         initializeDescriptionCounter: function() {
@@ -132,26 +128,26 @@ define([], function() {
         },
 
         updateDescriptionCounter: function() {
-            this.sandbox.dom.html(
-                this.description.$counter,
-                ' ' + (this.options.maxDescriptionCharacters - this.sandbox.dom.val(this.description.$el).length) + ' '
-            );
+            var charsLeft = this.options.maxDescriptionCharacters - this.sandbox.dom.val(this.description.$el).length;
+            this.sandbox.dom.html(this.description.$counter, ' ' + charsLeft + ' ');
+            this.toggleWarning(this.description.$counter.parent(), (charsLeft < 0));
         },
 
         updateKeywordsCounter: function() {
             var value = this.sandbox.dom.trim(
-                            this.sandbox.dom.trim(this.sandbox.dom.val(this.keywords.$el)),
-                            this.options.keywordsSeperator
-                        ),
-                keywords = value.split(this.options.keywordsSeperator);
-                // remove empty entries
-                keywords = keywords.filter(function(value) {
-                    return !!value;
-                });
+                    this.sandbox.dom.trim(this.sandbox.dom.val(this.keywords.$el)),
+                    this.options.keywordsSeparator
+                ),
+                keywords = value.split(this.options.keywordsSeparator),
+                keywordsLeft = this.options.maxKeywords;
+            // remove empty entries
+            keywords = keywords.filter(function(value) {
+                return !!value;
+            });
             this.keywords.count = keywords.length;
-            this.sandbox.dom.html(
-                this.keywords.$counter, (this.options.maxKeywords - this.keywords.count)
-            );
+            keywordsLeft = keywordsLeft - this.keywords.count;
+            this.sandbox.dom.html(this.keywords.$counter, keywordsLeft);
+            this.toggleWarning(this.keywords.$counter.parent(), (keywordsLeft < 0));
         },
 
         listenForChange: function() {
@@ -163,6 +159,14 @@ define([], function() {
 
         setHeaderBar: function(saved) {
             this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
+        },
+
+        toggleWarning: function($el, warn) {
+            if (warn) {
+                $el.addClass('seo-warning');
+            } else {
+                $el.removeClass('seo-warning');
+            }
         }
     };
 });
