@@ -311,7 +311,7 @@ class BlockContentType extends ComplexContentType
             }
         }
 
-        if (!$property->getIsMultiple() && sizeof($data) === 1) {
+        if (!$property->getIsMultiple() && count($data) > 0) {
             $data = $data[0];
         }
 
