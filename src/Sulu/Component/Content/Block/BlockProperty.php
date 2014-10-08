@@ -45,8 +45,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $params = array(),
         $tags = array(),
         $col = null
-    )
-    {
+    ) {
         parent::__construct(
             $name,
             $metadata,
@@ -89,10 +88,13 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getType($name)
     {
         if (!isset($this->types[$name])) {
-            throw new \InvalidArgumentException(sprintf(
-                'The block type "%s" has not been registered. Known block types are: [%s]',
-                $name, implode(', ', array_keys($this->types))
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'The block type "%s" has not been registered. Known block types are: [%s]',
+                    $name,
+                    implode(', ', array_keys($this->types))
+                )
+            );
         }
 
         return $this->types[$name];
@@ -201,11 +203,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $data[] = $result;
         }
 
-        if (!$this->getIsMultiple()) {
-            return sizeof($data) > 0 ? $data[0] : null;
-        } else {
-            return $data;
-        }
+        return $data;
     }
 
     /**
@@ -236,6 +234,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
         }
 
         $clone->setValue($this->getValue());
+
         return $clone;
     }
 }
