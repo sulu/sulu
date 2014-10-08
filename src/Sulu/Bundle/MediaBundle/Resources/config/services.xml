@@ -88,7 +88,7 @@
             <argument type="service" id="sulu_media.image.converter" />
             <argument type="string">%ghost_script.path%</argument>
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
-            <argument type="string">%sulu_media.format_manager.extensions%</argument>
+            <argument type="string">%sulu_media.format_manager.mime_types%</argument>
         </service>
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">

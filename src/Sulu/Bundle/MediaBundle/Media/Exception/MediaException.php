@@ -124,7 +124,13 @@ class MediaException extends Exception
      * @var int
      * @description no previews are generated for this extension
      */
-    const EXCEPTION_INVALID_EXTENSION_FOR_PREVIEW = 5018;
+    const EXCEPTION_INVALID_MIMETYPE_FOR_PREVIEW = 5018;
+
+    /**
+     * @var int
+     * @description ghostscript was not found at location
+     */
+    const EXCEPTION_CODE_GHOST_SCRIPT_NOT_FOUND = 5019;
 
     public function toArray()
     {
