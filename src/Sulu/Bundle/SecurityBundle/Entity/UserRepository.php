@@ -119,9 +119,9 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * Loads the user for the given username.
      *
      * @param string $username The username
-     * @throws LockedException
-     * @throws DisabledException
-     * @throws UsernameNotFoundException
+     * @throws LockedException if the User is Locked
+     * @throws DisabledException if the User is not active
+     * @throws UsernameNotFoundException if the User is not found
      * @return UserInterface
      */
     public function loadUserByUsername($username)

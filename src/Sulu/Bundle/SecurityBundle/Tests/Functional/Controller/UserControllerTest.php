@@ -971,17 +971,8 @@ class UserControllerTest extends DatabaseTestCase
         $client = static::createClient();
 
         $client->request(
-            'PUT',
-            '/api/users/2',
-            array(
-                'username' => 'disabled',
-                'password'=> '',
-                'locale' => 'de',
-                'contact' => array(
-                    'id' => 1
-                ),
-                'enabled' => true,
-            )
+            'POST',
+            '/api/users/2?action=enable'
         );
 
         $response = json_decode($client->getResponse()->getContent());

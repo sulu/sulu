@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NoResultException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
@@ -151,6 +152,55 @@ class UserController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * @Post("/users/{id}")
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postEnableUserAction($id, Request $request)
+    {
+        $action = $request->get('action');
+        try {
+            switch ($action) {
+                case 'enable':
+                    // call repository method
+                    $user = $this->enableUser($id);
+                    break;
+                default:
+                    throw new RestException('Unrecognized action: ' . $action);
+            }
+
+            // prepare view
+            $view = $this->view($user, 200);
+        } catch (RestException $exc) {
+            $view = $this->view($exc->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param $id
+     * @return User
+     */
+    private function enableUser($id)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()
+            ->getRepository(static::$entityName)
+            ->findUserById($id);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user->setEnabled(true);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $user;
+    }
+
+    /**
      * Checks if the given password is a valid one
      * @param string $password The password to check
      * @return bool True if the password is valid, otherwise false
@@ -199,7 +249,6 @@ class UserController extends RestController implements ClassResourceInterface
                 );
             }
 
-            $user->setEnabled($request->get('enabled'));
             $user->setLocale($request->get('locale'));
 
             if (

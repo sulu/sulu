@@ -243,21 +243,18 @@ define([
         },
 
         enableUser: function() {
-            var dfd = this.sandbox.data.deferred();
+            var dfd = this.sandbox.data.deferred(),
+                url = '/admin/api/users/' + this.user.id + '?action=enable';
 
-            this.user.set('enabled', true);
-
-            this.user.save(null, {
-                success: function(response) {
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(response) {
                     this.sandbox.logger.log('successfully enabled user', response);
                     this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + this.user.attributes.contact.id + '/permissions', true, false, true);
                     dfd.resolve();
-                }.bind(this),
-                error: function() {
+                }.bind(this))
+                .fail(function() {
                     dfd.reject();
-                }
-            });
-
+                }.bind(this));
             return dfd;
         }
     };
