@@ -372,10 +372,18 @@ class AccountCategoryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertEquals('Hauptsitz', $response2->_embedded->accountCategories[0]->category);
-        $this->assertEquals(1, $response2->_embedded->accountCategories[0]->id);
+        if($response2->_embedded->accountCategories[0]->id == 1){
+            $this->assertEquals('Hauptsitz', $response2->_embedded->accountCategories[0]->category);
+            $this->assertEquals(1, $response2->_embedded->accountCategories[0]->id);
 
-        $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[1]->category);
-        $this->assertEquals(2, $response2->_embedded->accountCategories[1]->id);
+            $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[1]->category);
+            $this->assertEquals(2, $response2->_embedded->accountCategories[1]->id);
+        } else {
+            $this->assertEquals('Hauptsitz', $response2->_embedded->accountCategories[0]->category);
+            $this->assertEquals(1, $response2->_embedded->accountCategories[0]->id);
+
+            $this->assertEquals('Nebensitz', $response2->_embedded->accountCategories[1]->category);
+            $this->assertEquals(2, $response2->_embedded->accountCategories[1]->id);
+        }
     }
 }
