@@ -22,6 +22,8 @@
         <field name="postboxPostcode" type="string" column="postboxPostcode" length="100" nullable="true" />
         <field name="postboxCity" type="string" column="postboxCity" length="100" nullable="true" />
 
+        <field name="note" type="string" column="note" length="500" nullable="true" />
+
         <one-to-many field="contactAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactAddress" mapped-by="address"/>
         <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="address"/>
 
