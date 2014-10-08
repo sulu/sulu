@@ -590,6 +590,9 @@ abstract class AbstractContactController extends RestController implements Class
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
 
+            if(isset($addressData['note'])){
+                $address->setNote($addressData['note']);
+            }
             if (isset($addressData['primaryAddress'])) {
                 $isMain = $this->getBooleanValue($addressData['primaryAddress']);
             } else {
@@ -659,6 +662,10 @@ abstract class AbstractContactController extends RestController implements Class
                 $address->setState($entry['state']);
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
+
+                if(isset($entry['note'])){
+                    $address->setNote($entry['note']);
+                }
 
                 if (isset($entry['primaryAddress'])) {
                     $isMain = $this->getBooleanValue($entry['primaryAddress']);
