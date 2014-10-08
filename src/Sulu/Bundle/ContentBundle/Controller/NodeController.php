@@ -356,7 +356,7 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $data = $request->request->all();
 
-        $request = ContentMapperRequest::create()
+        $mapperRequest = ContentMapperRequest::create()
             ->setType($type)
             ->setTemplateKey($template)
             ->setWebspaceKey($webspace)

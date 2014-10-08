@@ -247,7 +247,7 @@ class NodeRepository implements NodeRepositoryInterface
         if (!empty($ids)) {
             foreach ($ids as $id) {
                 try {
-                    if(!empty($id)) {
+                    if (!empty($id)) {
                         $result[] = $this->getNode($id, $webspaceKey, $languageCode);
                     }
                 } catch (ItemNotFoundException $ex) {
@@ -422,10 +422,11 @@ class NodeRepository implements NodeRepositoryInterface
         return $this->prepareNode($node, $webspaceKey, $languageCode);
     }
 
-    public function saveNodeRequest(ContentMapperRequest $request)
+    public function saveNodeRequest(ContentMapperRequest $mapperRequest)
     {
-        $this->getMapper()->saveRequest($request);
-        return $this->prepareNode($node, $request->getWebspaceKey(), $request->getLocale());
+        $node = $this->getMapper()->saveRequest($mapperRequest);
+
+        return $this->prepareNode($node, $mapperRequest->getWebspaceKey(), $mapperRequest->getLocale());
     }
 
     /**
