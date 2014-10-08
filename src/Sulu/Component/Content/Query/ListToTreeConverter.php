@@ -22,6 +22,10 @@ class ListToTreeConverter
      */
     public function convert($data)
     {
+        if (empty($data)) {
+            return array();
+        }
+
         $map = array();
         $minDepth = 99;
         foreach ($data as $item) {
