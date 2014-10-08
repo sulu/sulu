@@ -66,8 +66,6 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('publish', [
-        'compass:dev',
-        'cssmin',
         'clean:public',
         'copy:public',
         'copy:public_dev'
