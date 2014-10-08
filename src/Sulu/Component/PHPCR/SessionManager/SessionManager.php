@@ -19,7 +19,6 @@ use PHPCR\SimpleCredentials;
 
 class SessionManager implements SessionManagerInterface
 {
-
     /**
      * @var string[]
      */

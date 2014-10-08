@@ -11,6 +11,8 @@
 namespace Sulu\Component\Content;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
