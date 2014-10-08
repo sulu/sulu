@@ -180,9 +180,9 @@ class DefaultFormatManager implements FormatManagerInterface
             'Content-Type' => 'image/' . $imageExtension
         );
 
-        $placeholder = dirname(__FILE__) . '/../../Resources/images/file-'.$fileExtension.'.png';
+        $placeholder = dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png';
 
-        if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-'.$fileExtension.'.png')) {
+        if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png')) {
             return $this->returnFallbackImage($format);
         }
 
@@ -251,11 +251,23 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function convertPdfToImage($path)
     {
-        $command = $this->ghostScriptPath . ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' . $path . ' -dJPEGQ=100 -r300x300 -q ' . $path . ' -c quit';
+        $command = $this->ghostScriptPath .
+            ' -dNOPAUSE -sDEVICE=jpeg -dFirstPage=1 -dLastPage=1 -sOutputFile=' .
+            $path .
+            ' -dJPEGQ=100 -r300x300 -q ' .
+            $path .
+            ' -c quit';
+
         exec($command);
 
         if (mime_content_type($path) == 'application/pdf') {
-            throw new GhostScriptNotFoundException('Ghostscript was not found at "' . $this->ghostScriptPath . '" or user has no Permission for "' . $path . '"');
+            throw new GhostScriptNotFoundException(
+                'Ghostscript was not found at "' .
+                $this->ghostScriptPath .
+                '" or user has no Permission for "' .
+                $path .
+                '"'
+            );
         }
     }
 
@@ -277,8 +289,10 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $newExtension
      * @return string
      */
-    protected function replaceExtension($filename, $newExtension) {
+    protected function replaceExtension($filename, $newExtension)
+    {
         $info = pathinfo($filename);
+
         return $info['filename'] . '.' . $newExtension;
     }
 
