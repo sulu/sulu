@@ -273,6 +273,7 @@ interface ContentMapperInterface
      * Map and save the content given in the request object.
      *
      * @param ContentMapperRequest
+     * @return StructureInterface
      */
     public function saveRequest(ContentMapperRequest $request);
 }
