@@ -40,6 +40,23 @@ class ListToTreeConverter
             }
         }
 
+        uksort(
+            $map,
+            function ($a, $b) use ($map) {
+                $depthDifference = substr_count($a, '/') - substr_count($b, '/');
+                if ($depthDifference > 0) {
+                    return 1;
+                } elseif($depthDifference < 0) {
+                    return -1;
+                } else {
+                    $aPosition = array_search($a, array_keys($map));
+                    $bPosition = array_search($b, array_keys($map));
+
+                    return ($aPosition < $bPosition) ? -1 : 1;
+                }
+            }
+        );
+
         $tree = $this->explodeTree($map, '/');
 
         for ($i = 0; $i < $minDepth - 1; $i++) {
