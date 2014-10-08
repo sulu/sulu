@@ -64,8 +64,7 @@ class BlockContentType extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
@@ -155,8 +154,7 @@ class BlockContentType extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
@@ -196,8 +194,7 @@ class BlockContentType extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         if ($property->getIsBlock()) {
             /** @var BlockPropertyInterface $blockProperty */
             $blockProperty = $property;
@@ -273,8 +270,7 @@ class BlockContentType extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         // TODO: Implement remove() method.
     }
 
@@ -305,9 +301,9 @@ class BlockContentType extends ComplexContentType
             unset($properties['type']);
 
             $data[$i] = array('type' => $type);
-            foreach ($properties as $property) {
-                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-                $data[$i][$property->getName()] = $contentType->getContentData($property);
+            foreach ($properties as $prop) {
+                $contentType = $this->contentTypeManager->get($prop->getContentTypeName());
+                $data[$i][$prop->getName()] = $contentType->getContentData($prop);
             }
         }
 
