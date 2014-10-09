@@ -278,7 +278,7 @@ class ContentMapper implements ContentMapperInterface
                 $root = $this->getContentNode($webspaceKey);
             }
         } else {
-            $root = $this->sessionManager->getSnippetNode();
+            $root = $this->sessionManager->getSnippetNode($resolvedTemplateKey);
         }
 
         $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
@@ -327,7 +327,7 @@ class ContentMapper implements ContentMapperInterface
                 $newTranslatedNode($node);
             } else {
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
-                $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
+                $hasSamePath = ($node->getPath() !== $root->getPath());
                 $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
                     $node->getPropertyValue(
                         $translatedNodeNameProperty->getName()
@@ -489,7 +489,7 @@ class ContentMapper implements ContentMapperInterface
 
         $contentNode = Structure::TYPE_PAGE === $structureType ? 
             $this->sessionManager->getContentNode($webspaceKey) :
-            $this->sessionManager->getSnippetNode();
+            $this->sessionManager->getSnippetNode($templateKey);
 
         if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
@@ -961,10 +961,17 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
     {
-        $structures = array();
-
         $query = $this->createSql2Query($sql2, $limit);
+        return $this->loadByQuery($query);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey)
+    {
         $result = $query->execute();
+        $structures = array();
 
         foreach ($result as $row) {
             try {
