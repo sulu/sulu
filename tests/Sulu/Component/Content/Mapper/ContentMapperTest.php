@@ -337,7 +337,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $result = $this->mapper->saveRequest(
             ContentMapperRequest::create()
-                ->setWebspaceKey('this_is_fake_so_there')
+                ->setWebspaceKey('default')
                 ->setTemplateKey('overview')
                 ->setLocale('de')
                 ->setUserId(1)
@@ -3050,16 +3050,6 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/my-your-nice-test', $result->getPath());
         $this->assertEquals('/my-your-nice-test', $result->getPropertyValue('url'));
         $this->assertEquals('My / Your nice test', $result->getPropertyValue('name'));
-    }
-
-    public function testLoadSnippet()
-    {
-        throw new \Exception('Do this');
-    }
-
-    public function testSaveSnippet()
-    {
-        throw new \Exception('Do this');
     }
 }
 

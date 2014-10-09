@@ -16,6 +16,7 @@ use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
+use Sulu\Component\Content\Structure;
 
 /**
  * reads a template xml and returns a array representation
@@ -56,7 +57,7 @@ class TemplateReader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = Structure::TYPE_PAGE)
     {
         // init running vars
         // DEEP COPY

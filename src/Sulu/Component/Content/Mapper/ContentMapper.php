@@ -962,7 +962,7 @@ class ContentMapper implements ContentMapperInterface
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
     {
         $query = $this->createSql2Query($sql2, $limit);
-        return $this->loadByQuery($query);
+        return $this->loadByQuery($query, $languageCode, $webspaceKey);
     }
 
     /**
@@ -1657,7 +1657,7 @@ class ContentMapper implements ContentMapperInterface
     protected function getStructure($key, $type = Structure::TYPE_PAGE)
     {
         if (Structure::TYPE_PAGE === $type) {
-            $structure = $this->structureManager->getPage($key);
+            $structure = $this->structureManager->getStructure($key, $type);
         } else {
             $structure = $this->structureManager->getSnippet($key);
         }
