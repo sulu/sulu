@@ -1,0 +1,3 @@
+sulu_snippet.snippets:
+    type: rest
+    resource: Sulu\Bundle\SnippetBundle\Controller\SnippetController

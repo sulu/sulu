@@ -13,88 +13,92 @@ define([
 
     'use strict';
 
-    var component = {
-        view: true,
+    var template = [
+            '<div id="list-toolbar-container"></div>',
+            '<div id="snippet-list"></div>',
+            '<div id="dialog"></div>'
+        ].join(''),
 
-        layout: {
-            content: {
-                width: 'max',
-                leftSpace: false,
-                rightSpace: false
-            },
-            sidebar: false
-        },
+        component = {
+            view: true,
 
-        header: {
-            title: 'snippets.snippet.title',
-            noBack: true,
-
-            breadcrumb: [
-                {title: 'navigation.snippets'},
-                {title: 'snippets.snippet.title'}
-            ]
-        },
-
-        templates: ['/admin/snippet/template/snippet/list'],
-
-        initialize: function() {
-            this.bindModelEvents();
-            this.bindCustomEvents();
-
-            this.render();
-        },
-
-        bindCustomEvents: function() {
-            // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.snippets.snippet.delete', ids);
-                }.bind(this));
-            }, this);
-
-            // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
-                this.sandbox.emit('sulu.snippets.snippet.new');
-            }, this);
-
-        },
-
-        render: function() {
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/snippet/template/snippet/list'));
-
-            // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'snippetsFields', '/admin/api/snippets/fields',
-                {
-                    el: this.$find('#list-toolbar-container'),
-                    instanceName: 'snippets',
-                    inHeader: true
+            layout: {
+                content: {
+                    width: 'max',
+                    leftSpace: false,
+                    rightSpace: false
                 },
-                {
-                    el: this.sandbox.dom.find('#snippet-list', this.$el),
-                    url: '/admin/api/snippets',
-                    searchInstanceName: 'contacts',
-                    searchFields: ['title'], // TODO ???
-                    resultKey: 'snippets',
-                    viewOptions: {
-                        table: {
-                            icons: [
-                                {
-                                    icon: 'pencil',
-                                    column: 'title',
-                                    align: 'left',
-                                    callback: function(id) {
-                                        this.sandbox.emit('sulu.snippets.snippet.load', id);
-                                    }.bind(this)
-                                }
-                            ],
-                            highlightSelected: true,
-                            fullWidth: true
+                sidebar: false
+            },
+
+            header: {
+                title: 'snippets.snippet.title',
+                noBack: true,
+
+                breadcrumb: [
+                    {title: 'navigation.snippets'},
+                    {title: 'snippets.snippet.title'}
+                ]
+            },
+
+            initialize: function() {
+                this.bindModelEvents();
+                this.bindCustomEvents();
+
+                this.render();
+            },
+
+            bindCustomEvents: function() {
+                // delete clicked
+                this.sandbox.on('sulu.list-toolbar.delete', function() {
+                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                        this.sandbox.emit('sulu.snippets.snippet.delete', ids);
+                    }.bind(this));
+                }, this);
+
+                // add clicked
+                this.sandbox.on('sulu.list-toolbar.add', function() {
+                    this.sandbox.emit('sulu.snippets.snippet.new');
+                }, this);
+
+            },
+
+            render: function() {
+                this.sandbox.dom.html(this.$el, template);
+
+                // init list-toolbar and datagrid
+                this.sandbox.sulu.initListToolbarAndList.call(this, 'snippetsFields', '/admin/api/snippet/fields',
+                    {
+                        el: this.$find('#list-toolbar-container'),
+                        instanceName: 'snippets',
+                        inHeader: true
+                    },
+                    {
+                        el: this.sandbox.dom.find('#snippet-list', this.$el),
+                        url: '/admin/api/snippets',
+                        searchInstanceName: 'contacts',
+                        searchFields: ['title'], // TODO ???
+                        resultKey: 'snippets',
+                        viewOptions: {
+                            table: {
+                                icons: [
+                                    {
+                                        icon: 'pencil',
+                                        column: 'title',
+                                        align: 'left',
+                                        callback: function(id) {
+                                            this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                        }.bind(this)
+                                    }
+                                ],
+                                highlightSelected: true,
+                                fullWidth: true
+                            }
                         }
                     }
-                }
-            );
-        }
-    };
+                );
+            }
+        };
 
     // inheritance
     component.__proto__ = Snippet;

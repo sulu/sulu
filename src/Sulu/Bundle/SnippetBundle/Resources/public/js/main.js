@@ -43,7 +43,7 @@ define({
         sandbox.mvc.routes.push({
             route: 'snippet/snippets/:language',
             callback: function(language) {
-                this.html('<div data-aura-component="snippet@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>');
+                this.html('<div data-aura-component="snippet/list@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>');
             }
         });
     }
