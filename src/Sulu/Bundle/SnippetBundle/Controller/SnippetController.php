@@ -34,8 +34,8 @@ class SnippetController extends RestController implements ClassResourceInterface
                     array(
                         "id" => "123-123-123",
                         "title" => "asdfasdf",
-                        "changed" => "2014-01-01 01:01",
-                        "created" => "2014-01-01 01:01"
+                        "changed" => new \DateTime(),
+                        "created" => new \DateTime()
                     )
                 )
             ),
