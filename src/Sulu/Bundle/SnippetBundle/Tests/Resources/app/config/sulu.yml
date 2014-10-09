@@ -13,7 +13,7 @@ sulu_core:
         structure:
             paths:
                 structure:
-                    path: "%kernel.root_dir%/../../../vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/structures/snippets"
+                    path: "%kernel.root_dir%/Resources/snippets"
                     internal: false
                     type: snippet
                 page:

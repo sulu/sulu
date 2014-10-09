@@ -16,5 +16,6 @@ class SuluSnippetExtension extends Extension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('content.xml');
+        $loader->load('snippet.xml');
     }
 }
