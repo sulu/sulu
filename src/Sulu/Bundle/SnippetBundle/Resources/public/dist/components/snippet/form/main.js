@@ -1,0 +1,1 @@
+define(["sulusnippet/components/snippet/main"],function(a){"use strict";var b={initialize:function(){this.bindModelEvents(),this.render()},render:function(){}};return b.__proto__=a,b});
