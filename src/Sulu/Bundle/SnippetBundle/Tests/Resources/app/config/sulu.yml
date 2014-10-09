@@ -1,6 +1,3 @@
-doctrine:
-    orm: ~
-
 sulu_core:
     phpcr:
         backend: %phpcr_backend%
@@ -22,3 +19,30 @@ sulu_core:
                     type: page
     http_cache:
         ~
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:
+
+doctrine:
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        resolve_target_entities:
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role

@@ -40,3 +40,8 @@ Save a snippet:
 - Refactoring: Using proxies protects against refactoring breakages in one
   respect but makes things worse ultimately -- you end up having lots of
   different interfaces for the same things.
+
+## TODO
+
+- API Security
+- Template loaders (in sulu/sulu!)

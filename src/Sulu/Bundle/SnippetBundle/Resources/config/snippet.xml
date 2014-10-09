@@ -5,12 +5,21 @@
 
     <parameters>
         <parameter key="sulu_snippet.repository.class">Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository</parameter>
+        <parameter key="sulu_snippet.controller.snippet.class">Sulu\Bundle\SnippetBundle\Controller\SnippetController</parameter>
     </parameters>
 
     <services>
         <service id="sulu_snippet.repository" class="%sulu_snippet.repository.class%">
             <argument type="service" id="sulu.phpcr.session" />
             <argument type="service" id="sulu.content.mapper" />
+        </service>
+
+        <service id="sulu_snippet.controller.snippet" class="%sulu_snippet.controller.snippet.class%">
+            <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_snippet.repository" />
+            <argument type="service" id="security.context" />
         </service>
     </services>
 </container>

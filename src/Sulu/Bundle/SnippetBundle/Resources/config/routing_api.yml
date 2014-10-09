@@ -1,0 +1,3 @@
+sulu_snippet.snippet:
+    type: rest
+    resource: sulu_snippet.controller.snippet

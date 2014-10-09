@@ -49,7 +49,7 @@ class SnippetContentTypeTest extends BaseFunctionalTestCase
         $values = $prop->getValue();
         $this->assertCount(2, $values);
         $hotel1 = reset($values);
-        $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-name'));
+        $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-title'));
     }
 
     public function testGetContentData()
@@ -60,9 +60,9 @@ class SnippetContentTypeTest extends BaseFunctionalTestCase
         $data = $this->contentType->getContentData($property, 'sulu_io', 'de', null);
         $this->assertCount(2, $data);
         $hotel1 = reset($data);
-        $this->assertEquals('Le grande budapest', $hotel1['name']);
+        $this->assertEquals('Le grande budapest', $hotel1['title']);
         $hotel2 = next($data);
-        $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['name']);
+        $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
 
     public function testRemove()
