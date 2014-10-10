@@ -5,6 +5,7 @@
 
     <parameters>
         <parameter key="sulu_snippet.admin.class">Sulu\Bundle\SnippetBundle\Admin\SuluSnippetAdmin</parameter>
+        <parameter key="sulu_snippet.admin.snippet_navigation.class">Sulu\Bundle\SnippetBundle\Admin\SuluSnippetContentNavigation</parameter>
     </parameters>
 
     <services>
@@ -13,5 +14,7 @@
 
             <tag name="sulu.admin"/>
         </service>
+
+        <service id="sulu_snippet.admin.snippet_navigation" class="%sulu_snippet.admin.snippet_navigation.class%"/>
     </services>
 </container>

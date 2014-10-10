@@ -1,0 +1,1 @@
+define([],function(){"use strict";return{view:!0,initialize:function(){this.bindCustomEvents(),this.loadData()},bindCustomEvents:function(){},loadData:function(){},render:function(){}}});

@@ -34,6 +34,10 @@ define([
             return{
                 breadcrumb: this.breadcrumb,
 
+                tabs: {
+                    url: '/admin/snippet/navigation/snippet'
+                },
+
                 toolbar: {
                     parentTemplate: 'default',
 
@@ -99,6 +103,8 @@ define([
         initialize: function() {
             this.type = (!!this.options.id ? 'edit' : 'add');
 
+            this.headerDef = this.sandbox.data.deferred();
+
             this.bindModelEvents();
             this.bindCustomEvents();
 
@@ -110,15 +116,20 @@ define([
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.snippets.snippet.list');
             }.bind(this));
+
+            // header initialize to set-title
+            this.sandbox.on('husky.toolbar.header.initialized', function() {
+                this.headerDef.resolve();
+            }.bind(this));
         },
 
         loadData: function() {
-            if (!this.content) {
-                this.content = new Snippet({id: this.options.id});
+            if (!this.snippet) {
+                this.model = new Snippet({id: this.options.id});
             }
 
             if (this.options.id !== undefined) {
-                this.content.fullFetch(
+                this.model.fullFetch(
                     this.options.language,
                     {
                         success: function(data) {
@@ -127,14 +138,16 @@ define([
                     }
                 );
             } else {
-                this.render(this.content.toJSON());
+                this.render(this.model.toJSON());
             }
         },
 
         render: function(data) {
             this.data = data;
 
-            this.setTitle(data.title);
+            this.headerDef.then(function() {
+                this.setTitle(data.title);
+            }.bind(this));
         },
 
         /**
