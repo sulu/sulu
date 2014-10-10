@@ -377,9 +377,19 @@ class ContentMapper implements ContentMapperInterface
             $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
         }
 
-        // do not state transition for root (contents) node
-        $contentRootNode = $this->getContentNode($webspaceKey);
-        if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
+        if (Structure::TYPE_PAGE === $structureType) {
+            // do not state transition for root (contents) node
+            $contentRootNode = $this->getContentNode($webspaceKey);
+            if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
+                $this->changeState(
+                    $node,
+                    $state,
+                    $structure,
+                    $this->properties->getName('state'),
+                    $this->properties->getName('published')
+                );
+            }
+        } else {
             $this->changeState(
                 $node,
                 $state,
