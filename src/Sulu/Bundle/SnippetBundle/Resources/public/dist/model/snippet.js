@@ -1,1 +1,1 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return new a({urlRoot:"/admin/api/snippets"})});
+define(["mvc/relationalmodel"],function(a){"use strict";return new a({urlRoot:"/admin/api/snippets",fullFetch:function(a,b){return b=_.defaults(b||{},{url:this.urlRoot+(void 0!==this.get("id")?"/"+this.get("id"):"")+"?language="+a}),this.fetch.call(this,b)}})});

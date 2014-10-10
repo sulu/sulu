@@ -28,22 +28,35 @@ class SnippetController extends RestController implements ClassResourceInterface
 
     public function cgetAction(Request $request)
     {
-        return new JsonResponse(array(
-            "_embedded" => array(
-                "snippets" => array(
-                    array(
-                        "id" => "123-123-123",
-                        "title" => "asdfasdf",
-                        "changed" => new \DateTime(),
-                        "created" => new \DateTime()
+        return new JsonResponse(
+            array(
+                "_embedded" => array(
+                    "snippets" => array(
+                        array(
+                            "_links" => array(),
+                            "id" => "123-123-123",
+                            "title" => "asdfasdf",
+                            "changed" => new \DateTime(),
+                            "created" => new \DateTime()
+                        )
                     )
-                )
-            ),
-
-            "_links" => array(
-
+                ),
+                "_links" => array()
             )
-        ));
+        );
+    }
+
+    public function getAction($id, Request $request)
+    {
+        return new JsonResponse(
+            array(
+                "_links" => array(),
+                "id" => $id,
+                "title" => "asdfasdf",
+                "changed" => new \DateTime(),
+                "created" => new \DateTime()
+            )
+        );
     }
 
     /**

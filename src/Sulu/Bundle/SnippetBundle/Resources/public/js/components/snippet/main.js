@@ -13,8 +13,9 @@ define([
 
     'use strict';
 
-    return {
+    var CONTENT_LANGUAGE = 'contentLanguage';
 
+    return {
         bindModelEvents: function() {
             // delete current
             this.sandbox.on('sulu.snippets.snippet.delete', function() {
@@ -27,13 +28,13 @@ define([
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.snippets.snippet.load', function(id) {
-                this.load(id);
+            this.sandbox.on('sulu.snippets.snippet.load', function(id, language) {
+                this.load(id, language);
             }, this);
 
             // add new
-            this.sandbox.on('sulu.snippets.snippet.new', function() {
-                this.add();
+            this.sandbox.on('sulu.snippets.snippet.new', function(language) {
+                this.add(language);
             }, this);
 
             // delete selected
@@ -44,6 +45,25 @@ define([
             // load list view
             this.sandbox.on('sulu.snippets.snippet.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
+            }, this);
+
+            // change language
+            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
+                var data = this.content.toJSON();
+
+                // if there is a index id this should be after reload
+                if (this.options.id === 'index') {
+                    data.id = this.options.id;
+                }
+
+                if (this.type === 'edit') {
+                    this.sandbox.emit('sulu.snippets.snippet.load', data.id, item.localization);
+                } else if (this.type === 'add') {
+                    this.sandbox.emit('sulu.snippets.snippet.new', item.localization);
+                } else {
+                    this.sandbox.emit('sulu.snippets.snippet.list');
+                }
             }, this);
         },
 
@@ -71,7 +91,7 @@ define([
                     if (!!data.id) {
                         this.sandbox.emit('sulu.snippets.snippet.saved', model);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'snippets/snippet/edit:' + model.id + '/details');
+                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + model.id);
                     }
                 }.bind(this),
                 error: function() {
@@ -80,14 +100,22 @@ define([
             });
         },
 
-        load: function(id) {
+        load: function(id, language) {
+            if (!language) {
+                language = this.options.language;
+            }
+
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'snippets/snippet/edit:' + id + '/details');
+            this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language + '/edit:' + id);
         },
 
-        add: function() {
+        add: function(language) {
+            if (!language) {
+                language = this.options.language;
+            }
+
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'snippets/snippet/add');
+            this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + language + '/add');
         },
 
         delSnippets: function(ids) {

@@ -9,7 +9,7 @@
 
 define([
     'sulusnippet/components/snippet/main'
-], function(Snippet) {
+], function(BaseSnippet) {
 
     'use strict';
 
@@ -101,7 +101,7 @@ define([
         };
 
     // inheritance
-    component.__proto__ = Snippet;
+    component.__proto__ = BaseSnippet;
 
     return component;
 });

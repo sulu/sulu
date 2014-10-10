@@ -39,11 +39,27 @@ define({
             }
         });
 
-        // list all contents for a language
+        // list all snippets for a language
         sandbox.mvc.routes.push({
             route: 'snippet/snippets/:language',
             callback: function(language) {
                 this.html('<div data-aura-component="snippet/list@sulusnippet" data-aura-language="' + language + '" data-aura-display="list"/>');
+            }
+        });
+
+        // edit form
+        sandbox.mvc.routes.push({
+            route: 'snippet/snippets/:language/edit::id',
+            callback: function(language, id) {
+                this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '" data-aura-id="' + id + '"/>');
+            }
+        });
+
+        // add form
+        sandbox.mvc.routes.push({
+            route: 'snippet/snippets/:language/add',
+            callback: function(language) {
+                this.html('<div data-aura-component="snippet/form@sulusnippet" data-aura-language="' + language + '"/>');
             }
         });
     }
