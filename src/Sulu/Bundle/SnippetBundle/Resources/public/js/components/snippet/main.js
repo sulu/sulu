@@ -8,8 +8,9 @@
  */
 
 define([
-    'sulusnippet/model/snippet'
-], function(Snippet) {
+    'sulusnippet/model/snippet',
+    'app-config'
+], function(Snippet, AppConfig) {
 
     'use strict';
 
@@ -82,14 +83,20 @@ define([
 
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-            data.template = this.template;
+            if (!!this.template) {
+                data.template = this.template;
+            } else {
+                var config = AppConfig.getSection('sulu-snippet');
+
+                data.template = config.defaultType;
+            }
             this.model.set(data);
 
             this.model.fullSave(this.template, this.options.language, this.state, {}, {
                 // on success save contacts id
                 success: function(response) {
                     var data = response.toJSON();
-                    if (!!data.id) {
+                    if (!!this.data.id) {
                         this.sandbox.emit('sulu.snippets.snippet.saved', data);
                     } else {
                         this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);

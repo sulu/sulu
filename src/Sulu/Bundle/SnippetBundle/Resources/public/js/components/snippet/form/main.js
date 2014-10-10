@@ -68,8 +68,8 @@ define([
                                         callback: function() {
                                             if (!!this.state) {
                                                 this.setHeaderBar(false);
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
                                             }
+                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
                                             this.state = STATE_PUBLISHED;
                                         }.bind(this)
                                     },
@@ -80,8 +80,8 @@ define([
                                         callback: function() {
                                             if (!!this.state) {
                                                 this.setHeaderBar(false);
-                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
                                             }
+                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
                                             this.state = STATE_TEST;
                                         }.bind(this)
                                     }
@@ -105,8 +105,8 @@ define([
                                     callback: function(item) {
                                         if (!!this.template) {
                                             this.setHeaderBar(false);
-                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                         }
+                                        this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                         this.template = item.template;
                                     }.bind(this)
                                 }
