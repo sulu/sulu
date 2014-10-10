@@ -66,8 +66,11 @@ define([
                                         title: this.sandbox.translate('toolbar.state-publish'),
                                         icon: 'husky-publish',
                                         callback: function() {
+                                            if (!!this.state) {
+                                                this.setHeaderBar(false);
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
+                                            }
                                             this.state = STATE_PUBLISHED;
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
                                         }.bind(this)
                                     },
                                     {
@@ -75,8 +78,11 @@ define([
                                         title: this.sandbox.translate('toolbar.state-test'),
                                         icon: 'husky-test',
                                         callback: function() {
+                                            if (!!this.state) {
+                                                this.setHeaderBar(false);
+                                                this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
+                                            }
                                             this.state = STATE_TEST;
-                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
                                         }.bind(this)
                                     }
                                 ]
@@ -97,8 +103,11 @@ define([
                                     translate: false,
                                     markable: true,
                                     callback: function(item) {
+                                        if (!!this.template) {
+                                            this.setHeaderBar(false);
+                                            this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                        }
                                         this.template = item.template;
-                                        this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                     }.bind(this)
                                 }
                             }
@@ -108,11 +117,6 @@ define([
             },
 
             initialize: function() {
-                this.config = AppConfig.getSection('sulu-snippet');
-                this.defaultType = this.config.defaultType;
-                this.template = this.defaultType;
-                this.state = STATE_TEST;
-
                 this.type = (!!this.options.id ? 'edit' : 'add');
 
                 this.headerDef = this.sandbox.data.deferred();
@@ -178,12 +182,10 @@ define([
              * @param {Object} data
              */
             setState: function(data) {
-                if (!!data.nodeState) {
-                    this.state = data.nodeState;
+                var state = !!data.nodeState ? data.nodeState : STATE_TEST;
 
-                    if (this.state !== '' && this.state !== undefined && this.state !== null) {
-                        this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
-                    }
+                if (state !== '' && state !== undefined && state !== null) {
+                    this.sandbox.emit('sulu.header.toolbar.item.change', 'state',state);
                 }
             },
 
@@ -226,6 +228,7 @@ define([
 
             render: function(data) {
                 this.data = data;
+                this.template = data.template;
 
                 this.headerDef.then(function() {
                     this.setTitle(data.title);

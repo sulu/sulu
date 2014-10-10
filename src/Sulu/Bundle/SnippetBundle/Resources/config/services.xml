@@ -22,7 +22,7 @@
             <argument type="string">sulu-snippet</argument>
             <argument type="collection">
                 <!-- FIXME move to config -->
-                <argument key="defaultType" type="string">complex</argument>
+                <argument key="defaultType" type="string">%sulu.content.type.default%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

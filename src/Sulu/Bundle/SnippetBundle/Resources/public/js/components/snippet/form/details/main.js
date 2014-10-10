@@ -62,7 +62,7 @@ define(['app-config'], function(AppConfig) {
                 return;
             }
 
-            if (!!this.template) {
+            if (!this.template) {
                 this.template = this.defaultType;
             }
 
@@ -86,6 +86,8 @@ define(['app-config'], function(AppConfig) {
 
                     if (!!this.template) {
                         this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+                    } else {
+                        this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.defaultType);
                     }
                 }.bind(this),
                 function() {
@@ -237,11 +239,10 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template');
             if (!!this.template) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
             }
-            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
-            this.animateTemplateDropdown = false;
         },
 
         submit: function() {

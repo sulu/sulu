@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Component\Content\Mapper\ContentMapper;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -141,7 +142,8 @@ class SnippetController
             ->setUuid($uuid)
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
-            ->setData($data);
+            ->setData($data)
+            ->setState($request->get('state', StructureInterface::STATE_TEST));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray()));
