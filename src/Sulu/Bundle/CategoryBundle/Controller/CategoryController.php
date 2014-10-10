@@ -25,6 +25,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 
 /**
  * Makes categories available through a REST API
@@ -45,76 +46,52 @@ class CategoryController extends RestController implements ClassResourceInterfac
     /**
      * {@inheritdoc}
      */
-    protected $sortable = array('name', 'created', 'changed');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsDefault = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsExcluded = array('lft', 'rgt', 'depth');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsHidden = array('id', 'created', 'changed');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsRelations = array('name');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsSortOrder = array(0 => 'id', 1 => 'name');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsTranslationKeys = array('id' => 'public.id');
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsEditable = array();
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $fieldsValidation = array();
-
-    /**
-     * {@inheritdoc}
-     */
     protected $fieldsWidth = array();
 
     /**
-     *
      * {@inheritdoc}
      */
     protected $bundlePrefix = 'category.category.';
 
+    /**
+     * Returns the CategoryManager
+     *
+     * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManager
+     */
+    private function getManager()
+    {
+        return $this->get('sulu_category.category_manager');
+    }
 
     /**
-     * returns all fields that can be used by list
+     * Returns all fields that can be used by list
+     *
      * @Get("categories/fields")
      * @return mixed
      */
     public function getFieldsAction()
     {
-        $categoryManager = $this->get('sulu_category.category_manager');
-        $categoryManager->createFieldDescriptors();
-
         // default contacts list
-        return $this->handleView($this->view(array_values($categoryManager->getFieldDescriptors()), 200));
+        return $this->handleView(
+            $this->view(
+                array_values(
+                    array_diff_key(
+                        $this->getManager()->getFieldDescriptors(),
+                        array(
+                            'depth' => false,
+                            'parent' => false,
+                            'hasChildren' => false
+                        )
+                    )
+                ),
+                200
+            )
+        );
     }
 
     /**
-     * Shows a single category with a given id
+     * Get a single category for a given id
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -127,6 +104,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $id,
             function ($id) use ($locale, $categoryManager) {
                 $categoryEntity = $categoryManager->findById($id);
+
                 return $categoryManager->getApiObject($categoryEntity, $locale);
             }
         );
@@ -135,55 +113,69 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Shows the children of a category in a list representation
-     * @param $key
+     * Returns the children for a parent for the given key
+     *
      * @param Request $request
+     * @param mixed $key
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getChildrenAction($key, Request $request)
+    public function getChildrenAction(Request $request, $key)
     {
-        $sortBy = $request->get('sortBy');
-        $sortOrder = $request->get('sortOrder');
-        $request->query->add(array('key' => $key));
+        if ($request->get('flat') == 'true') {
+            $list = $this->getCategoryListRepresentation($request);
+        } else {
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder');
+            $categoryManager = $this->get('sulu_category.category_manager');
+            $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
+            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $list = new CollectionRepresentation($wrappers, self::$entityKey);
+        }
+        $view = $this->view($list, 200);
 
-        $categoryManager = $this->get('sulu_category.category_manager');
-        $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
-        $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
-        return $this->getMultipleResponse($wrappers, $request);
+        return $this->handleView($view);
     }
 
     /**
      * Shows all categories
      * Can be filtered with "parent" and "depth" parameters
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
      */
     public function cgetAction(Request $request)
     {
-        $parent = $request->get('parent');
-        $depth = $request->get('depth');
-        $sortBy = $request->get('sortBy');
-        $sortOrder = $request->get('sortOrder');
+        if ($request->get('flat') == 'true') {
+            $list = $this->getCategoryListRepresentation($request);
+        } else {
+            $parent = $request->get('parent');
+            $depth = $request->get('depth');
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder');
+            $categoryManager = $this->get('sulu_category.category_manager');
+            $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
+            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $list = new CollectionRepresentation($wrappers, self::$entityKey);
+        }
+        $view = $this->view($list, 200);
 
-        $categoryManager = $this->get('sulu_category.category_manager');
-        $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
-        $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
-        return $this->getMultipleResponse($wrappers, $request);
+        return $this->handleView($view);
     }
 
     /**
      * Adds a new category
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
     {
-        return $this->saveEntity(null, $request);
+        return $this->saveEntity($request, null);
     }
 
     /**
      * Changes an existing category
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -194,26 +186,30 @@ class CategoryController extends RestController implements ClassResourceInterfac
             if (!$request->get('name')) {
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
-            return $this->saveEntity($id, $request);
+
+            return $this->saveEntity($request, $id);
         } catch (MissingArgumentException $exc) {
             $view = $this->view($exc->toArray(), 400);
+
             return $this->handleView($view);
         }
     }
 
     /**
      * Partly changes an existing category
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function patchAction($id, Request $request)
+    public function patchAction(Request $request, $id)
     {
-        return $this->saveEntity($id, $request);
+        return $this->saveEntity($request, $id);
     }
 
     /**
-     * Deletes a category with a given id
+     * Deletes the category for the given id
+     *
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -230,6 +226,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
+     * @return RestHelperInterface
+     */
+    protected function getRestHelper()
+    {
+        return $this->get('sulu_core.doctrine_rest_helper');
+    }
+
+    /**
      * @param $requestLocale
      * @return mixed
      */
@@ -243,29 +247,13 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * Returns a List- or a Collection-representation whereas the flat-parameter is true or not
-     * @param $wrappers
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function getMultipleResponse($wrappers, Request $request) {
-        $list = null;
-        if ($request->get('flat') == 'true') {
-            $list = $this->getCategoryListRepresentation($wrappers, $request);
-        } else {
-            $list = new CollectionRepresentation($wrappers, self::$entityKey);
-        }
-        $view = $this->view($list, 200);
-        return $this->handleView($view);
-    }
-
-    /**
      * Handles the change of a category. Used in PUT and PATCH
+     *
      * @param $id
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function saveEntity($id, Request $request)
+    protected function saveEntity(Request $request, $id)
     {
         try {
             $categoryManager = $this->get('sulu_category.category_manager');
@@ -279,7 +267,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 'locale' => $this->getLocale($request->get('locale'))
             ];
             $categoryEntity = $categoryManager->save($data, $this->getUser()->getId());
-            $categoryWrapper = $categoryManager->getApiObject($categoryEntity, $this->getLocale($request->get('locale')));
+            $categoryWrapper = $categoryManager->getApiObject(
+                $categoryEntity,
+                $this->getLocale(
+                    $request->get('locale')
+                )
+            );
 
             $view = $this->view($categoryWrapper, 200);
         } catch (EntityNotFoundException $enfe) {
@@ -293,23 +286,44 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
     /**
      * Returns a Category-list-representation
-     * @param $entities
+     *
      * @param Request $request
      * @return CategoryListRepresentation
      */
-    protected function getCategoryListRepresentation($entities, Request $request)
+    protected function getCategoryListRepresentation(Request $request)
     {
-        $listRestHelper = $this->get('sulu_core.list_rest_helper');
-        $all = count($entities); // TODO
+        /** @var RestHelperInterface $restHelper */
+        $restHelper = $this->getRestHelper();
 
-        return new CategoryListRepresentation(
-            $entities,
-            self::$entityKey,
-            $request->get('_route'),
-            $request->query->all(),
-            $listRestHelper->getPage(),
-            $listRestHelper->getLimit(),
-            $all
+        /** @var DoctrineListBuilderFactory $factory */
+        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+        $listBuilder = $factory->create(self::$entityName);
+
+        $restHelper->initializeListBuilder(
+            $listBuilder,
+            $this->getManager()->getFieldDescriptors()
         );
+
+        $results = $listBuilder->execute();
+        $manipulatedResults = [];
+        foreach ($results as $result) {
+            if (array_key_exists('hasChildren', $result)) {
+                $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
+            }
+            $manipulatedResults[] = $result;
+        }
+
+        $list = new CategoryListRepresentation(
+            $manipulatedResults,
+            self::$entityKey,
+            'get_categories',
+            $request->query->all(),
+            $listBuilder->getCurrentPage(),
+            $listBuilder->getLimit(),
+            $listBuilder->count()
+        );
+
+        return $list;
     }
 }
