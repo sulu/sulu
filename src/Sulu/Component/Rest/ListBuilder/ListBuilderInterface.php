@@ -39,6 +39,13 @@ interface ListBuilderInterface
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
+     * Checks if field by name has been already added
+     * @param $name
+     * @return bool
+     */
+    public function hasField($name);
+
+    /**
      * Adds a field descriptor, which will be used for search
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @return ListBuilderInterface
