@@ -305,17 +305,20 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $this->getManager()->getFieldDescriptors()
         );
 
+        $listBuilder->addField($this->getManager()->getFieldDescriptor('depth'));
+        $listBuilder->addField($this->getManager()->getFieldDescriptor('parent'));
+        $listBuilder->addField($this->getManager()->getFieldDescriptor('hasChildren'));
+
         $results = $listBuilder->execute();
-        $manipulatedResults = [];
-        foreach ($results as $result) {
+        foreach ($results as &$result) {
             if (array_key_exists('hasChildren', $result)) {
                 $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
             }
-            $manipulatedResults[] = $result;
         }
+        unset($result); // break the reference
 
         $list = new CategoryListRepresentation(
-            $manipulatedResults,
+            $results,
             self::$entityKey,
             'get_categories',
             $request->query->all(),

@@ -31,6 +31,7 @@ use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 class CategoryManager implements CategoryManagerInterface
 {
     protected static $categoryEntityName = 'SuluCategoryBundle:Category';
+
     protected static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
 
     /**
@@ -53,6 +54,11 @@ class CategoryManager implements CategoryManagerInterface
      */
     private $categoryRepository;
 
+    /**
+     * @var DoctrineFieldDescriptor[]
+     */
+    private $fieldDescriptors;
+
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         UserRepositoryInterface $userRepository,
@@ -70,7 +76,7 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function getFieldDescriptor($key)
     {
-        return $this->getFieldDescriptors[$key];
+        return $this->getFieldDescriptors()[$key];
     }
 
     /**
@@ -78,88 +84,90 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function getFieldDescriptors()
     {
-        $fieldDescriptors = array();
+        if (null === $this->fieldDescriptors) {
 
-        $fieldDescriptors['id'] = new DoctrineFieldDescriptor(
-            'id',
-            'id',
-            self::$categoryEntityName,
-            'public.id',
-            array(),
-            true
-        );
-        $fieldDescriptors['key'] = new DoctrineFieldDescriptor(
-            'key',
-            'key',
-            self::$categoryEntityName,
-            'public.key',
-            array(),
-            true
-        );
-        $fieldDescriptors['name'] = new DoctrineFieldDescriptor(
-            'translation',
-            'name',
-            self::$catTranslationEntityName,
-            'public.name',
-            array(
-                self::$catTranslationEntityName => new DoctrineJoinDescriptor(
-                    self::$catTranslationEntityName,
-                    self::$categoryEntityName .
-                    '.translations'
+            $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
+                'id',
+                'id',
+                self::$categoryEntityName,
+                'public.id',
+                array(),
+                true
+            );
+            $this->fieldDescriptors['key'] = new DoctrineFieldDescriptor(
+                'key',
+                'key',
+                self::$categoryEntityName,
+                'public.key',
+                array(),
+                true
+            );
+            $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
+                'translation',
+                'name',
+                self::$catTranslationEntityName,
+                'public.name',
+                array(
+                    self::$catTranslationEntityName => new DoctrineJoinDescriptor(
+                            self::$catTranslationEntityName,
+                            self::$categoryEntityName .
+                            '.translations'
+                        )
                 )
-            )
-        );
-        $fieldDescriptors['created'] = new DoctrineFieldDescriptor(
-            'created',
-            'created',
-            self::$categoryEntityName,
-            'public.created',
-            array(),
-            true
-        );
-        $fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
-            'changed',
-            'changed',
-            self::$categoryEntityName,
-            'public.changed',
-            array(),
-            true
-        );
-        $fieldDescriptors['depth'] = new DoctrineFieldDescriptor(
-            'depth',
-            'depth',
-            self::$categoryEntityName,
-            'public.depth',
-            array(),
-            false
-        );
-        $fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
-            'id',
-            'parent',
-            self::$categoryEntityName . 'Parent',
-            'category.parent',
-            array(
-                self::$categoryEntityName . 'Parent' => new DoctrineJoinDescriptor(
-                    self::$categoryEntityName,
-                    self::$categoryEntityName . '.parent'
-                )
-            ),
-            false
-        );
-        $fieldDescriptors['hasChildren'] = new DoctrineFieldDescriptor(
-            'id',
-            'hasChildren',
-            self::$categoryEntityName . 'Children',
-            'category.children',
-            array(
-                self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
-                    self::$categoryEntityName,
-                    self::$categoryEntityName . '.children'
-                )
-            ),
-            false
-        );
-        return $fieldDescriptors;
+            );
+            $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
+                'created',
+                'created',
+                self::$categoryEntityName,
+                'public.created',
+                array(),
+                true
+            );
+            $this->fieldDescriptors['changed'] = new DoctrineFieldDescriptor(
+                'changed',
+                'changed',
+                self::$categoryEntityName,
+                'public.changed',
+                array(),
+                true
+            );
+            $this->fieldDescriptors['depth'] = new DoctrineFieldDescriptor(
+                'depth',
+                'depth',
+                self::$categoryEntityName,
+                'public.depth',
+                array(),
+                false
+            );
+            $this->fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
+                'id',
+                'parent',
+                self::$categoryEntityName . 'Parent',
+                'category.parent',
+                array(
+                    self::$categoryEntityName . 'Parent' => new DoctrineJoinDescriptor(
+                            self::$categoryEntityName,
+                            self::$categoryEntityName . '.parent'
+                        )
+                ),
+                false
+            );
+            $this->fieldDescriptors['hasChildren'] = new DoctrineFieldDescriptor(
+                'id',
+                'hasChildren',
+                self::$categoryEntityName . 'Children',
+                'category.children',
+                array(
+                    self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
+                            self::$categoryEntityName,
+                            self::$categoryEntityName . '.children'
+                        )
+                ),
+                false
+            );
+        }
+
+        return $this->fieldDescriptors;
     }
 
     /**
@@ -281,6 +289,7 @@ class CategoryManager implements CategoryManagerInterface
         foreach ($categories as $category) {
             array_push($arrReturn, $this->getApiObject($category, $locale));
         }
+
         return $arrReturn;
     }
 
