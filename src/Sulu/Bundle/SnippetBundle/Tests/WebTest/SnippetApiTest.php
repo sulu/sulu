@@ -9,6 +9,7 @@ class SnippetApiTest extends SuluTestCase
 {
     protected $client;
     protected $hotel1;
+    protected $hotel2;
     protected $contentMapper;
 
     public function setUp()
@@ -27,12 +28,33 @@ class SnippetApiTest extends SuluTestCase
 
     public function testGet()
     {
-        $this->client->request('GET', '/api/snippets/' . $this->hotel1->getUuid() . '?language=de&webspace=sulu_io');
+        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=de&webspace=sulu_io');
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
 
+        $this->assertCount(2, $res);
+        $res = reset($res);
+        $this->assertEquals('/cmf/snippets/hotel/le-grande-budapest', $res['path']);
+        $this->assertEquals($this->hotel1->getUuid(), $res['id']);
+    }
+
+    public function testGetMany()
+    {
+        $this->client->request('GET', sprintf(
+            '/snippets/%s,%s%s',
+            $this->hotel1->getUuid(),
+            $this->hotel2->getUuid(),
+            '?language=de&webspace=sulu_io'
+        ));
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $res = json_decode($response->getContent(), true);
+
+        $this->assertCount(2, $res);
+        $res = reset($res);
         $this->assertEquals('/cmf/snippets/hotel/le-grande-budapest', $res['path']);
         $this->assertEquals($this->hotel1->getUuid(), $res['id']);
     }
@@ -70,13 +92,12 @@ class SnippetApiTest extends SuluTestCase
         ), $params);
 
         $query = http_build_query($params);
-        $this->client->request('GET', '/api/snippets?' . $query);
+        $this->client->request('GET', '/snippets?' . $query);
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
         $this->assertCount($expectedNbResults, $res['_embedded']['snippets']);
-
     }
 
     public function providePost()
@@ -118,7 +139,7 @@ class SnippetApiTest extends SuluTestCase
         );
 
         $query = http_build_query($params);
-        $this->client->request('POST', '/api/snippets?' . $query, $data);
+        $this->client->request('POST', '/snippets?' . $query, $data);
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -152,7 +173,7 @@ class SnippetApiTest extends SuluTestCase
         ), $params);
 
         $query = http_build_query($params);
-        $this->client->request('PUT', sprintf('/api/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
+        $this->client->request('PUT', sprintf('/snippets/%s?%s', $this->hotel1->getUuid(), $query), $data);
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -183,7 +204,7 @@ class SnippetApiTest extends SuluTestCase
             ->setData(array(
                 'title' => 'L\'Hôtel New Hampshire',
             ));
-        $this->contentMapper->saveRequest($req);
+        $this->hotel2 = $this->contentMapper->saveRequest($req);
 
         // CARS
         $req = ContentMapperRequest::create()

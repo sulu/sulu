@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PHPCR\Util\UUIDHelper;
 
 /**
  * handles snippets
@@ -103,12 +104,32 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
+    /**
+     * Retrieve either a single or multiple snippets
+     *
+     * Multiple snippets can be retrieved by providing a comma separated list of IDs
+     * instead of a single ID.
+     */
     public function getSnippetAction(Request $request, $uuid)
     {
         $this->initEnv($request);
+        $single = true;
 
-        $snippet = $this->contentMapper->load($uuid, $this->webspaceKey, $this->languageCode);
-        $view = View::create($this->decorateSnippet($snippet->toArray()));
+        if (UUIDHelper::isUUID($uuid)) {
+            $uuids = array($uuid);
+        } else {
+            $uuids = explode(',', $uuid);
+        }
+
+        $res = array();
+
+        $snippets = array();
+        foreach ($uuids as $uuid) {
+            $snippet = $this->contentMapper->load($uuid, $this->webspaceKey, $this->languageCode);
+            $snippets[] = $this->decorateSnippet($snippet->toArray());
+        }
+
+        $view = View::create($snippets);
 
         return $this->viewHandler->handle($view);
     }
