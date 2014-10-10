@@ -125,6 +125,11 @@ define([
                 this.sandbox.on('husky.toolbar.header.initialized', function() {
                     this.headerDef.resolve();
                 }.bind(this));
+
+                // get content data
+                this.sandbox.on('sulu.snippets.snippet.get-data', function(callback) {
+                    callback(this.data);
+                }.bind(this));
             },
 
             loadData: function() {
