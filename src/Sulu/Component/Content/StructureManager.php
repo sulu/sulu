@@ -95,13 +95,18 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * @deprecated Use getPage instead
+     * Returns structure for given key and type
+     * @param string $key
+     * @param string $type
+     * @return Page|Snippet|StructureInterface
      */
-    public function getStructure($key)
+    public function getStructure($key, $type = 'page')
     {
-        // trigger_error('getStructure is deprecated, use getPage instead', E_USER_DEPRECATED);
-
-        return $this->getPage($key);
+        if ($type === 'page') {
+            return $this->getPage($key);
+        } else {
+            return $this->getSnippet($key);
+        }
     }
 
     /**
@@ -202,9 +207,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private function getStructureByFile($key, $templateConfig, $type)
     {
         if (!in_array($type, array('page', 'snippet'))) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid structure type "%s"', $type
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid structure type "%s"',
+                    $type
+                )
+            );
         }
 
         $fileName = $templateConfig['path'];
@@ -289,9 +297,12 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         }
 
         if (empty($triedDirs)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not find any template directories for structure type "%s"', $type
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not find any template directories for structure type "%s"',
+                    $type
+                )
+            );
         }
 
         throw new \InvalidArgumentException(
@@ -347,6 +358,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private function getStructureByType($key, $type)
     {
         $templateFile = $this->getTemplate($key, $type);
+
         return $this->getStructureByFile($key, $templateFile, $type);
     }
 }
