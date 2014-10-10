@@ -1,6 +1,6 @@
 <?php
 
-namespace Functional\Content;
+namespace Sulu\Bundle\SnippetBundle\Functional\Content;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
