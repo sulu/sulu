@@ -100,9 +100,9 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @param string $type
      * @return Page|Snippet|StructureInterface
      */
-    public function getStructure($key, $type = 'page')
+    public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        if ($type === 'page') {
+        if ($type === Structure::TYPE_PAGE) {
             return $this->getPage($key);
         } else {
             return $this->getSnippet($key);
