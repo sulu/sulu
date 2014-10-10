@@ -146,6 +146,19 @@ class CategoryManager implements CategoryManagerInterface
             ),
             false
         );
+        $fieldDescriptors['hasChildren'] = new DoctrineFieldDescriptor(
+            'id',
+            'hasChildren',
+            self::$categoryEntityName . 'Children',
+            'category.children',
+            array(
+                self::$categoryEntityName . 'Children' => new DoctrineJoinDescriptor(
+                    self::$categoryEntityName,
+                    self::$categoryEntityName . '.children'
+                )
+            ),
+            false
+        );
         return $fieldDescriptors;
     }
 
