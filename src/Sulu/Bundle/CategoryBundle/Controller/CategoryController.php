@@ -289,21 +289,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $listBuilder,
             $this->getManager()->getFieldDescriptors()
         );
-
-        // TODO: Since no adequate FieldDescriptor is available for returning a count or a
-        // boolean state we manipulate the 'hasChildren' value which currently contains an id to a
-        // boolean value. Also see todo in CategoryManager.
-        $results = $listBuilder->execute();
-        $manipulatedResults = [];
-        foreach ($results as $result) {
-            if (isset($result['hasChildren'])) {
-                $result['hasChildren'] = $result['hasChildren'] != null ? true : false;
-            }
-            $manipulatedResults[] = $result;
-        }
-
-        $list = new ListRepresentation(
-            $manipulatedResults,
+        $list = new CategoryListRepresentation(
+            $listBuilder->execute(),
             self::$entityKey,
             'get_categories',
             $request->query->all(),
