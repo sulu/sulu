@@ -203,7 +203,8 @@ define(['app-config'], function(AppConfig) {
         },
 
         setHeaderBar: function(saved) {
-            this.sandbox.emit('sulu.content.contents.set-header-bar', saved);
+            // FIXME add event
+            this.sandbox.emit('sulu.snippets.snippet.set-header-bar', saved);
 
             this.saved = saved;
             if (this.saved) {
@@ -224,7 +225,8 @@ define(['app-config'], function(AppConfig) {
         },
 
         setStateDropdown: function(data) {
-            this.sandbox.emit('sulu.content.contents.set-state', data);
+            // FIXME add event
+            this.sandbox.emit('sulu.snippets.snippet.set-state', data);
         },
 
         initData: function() {
@@ -237,6 +239,20 @@ define(['app-config'], function(AppConfig) {
             }
             this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
             this.animateTemplateDropdown = false;
+        },
+
+        submit: function() {
+            this.sandbox.logger.log('save Model');
+            var data;
+
+            if (this.sandbox.form.validate(this.formId)) {
+                data = this.sandbox.form.getData(this.formId);
+
+                this.sandbox.logger.log('data', data);
+
+                this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
+                this.sandbox.emit('sulu.snippets.snippet.save', data);
+            }
         }
     };
 });

@@ -130,6 +130,44 @@ define([
                 this.sandbox.on('sulu.snippets.snippet.get-data', function(callback) {
                     callback(this.data);
                 }.bind(this));
+
+                // setter for header bar buttons
+                this.sandbox.on('sulu.snippets.snippet.set-header-bar', function(saved) {
+                    this.setHeaderBar(saved);
+                }.bind(this));
+
+                // setter for state bar buttons
+                this.sandbox.on('sulu.snippets.snippet.set-state', function(data) {
+                    this.setState(data);
+                }.bind(this));
+            },
+
+            /**
+             * Sets state to header
+             * @param {Object} data
+             */
+            setState: function(data) {
+                this.state = data.nodeState;
+
+                if (this.state !== '' && this.state !== undefined && this.state !== null) {
+                    this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
+                }
+            },
+
+            /**
+             * Sets header bar
+             * @param {Boolean} saved
+             */
+            setHeaderBar: function(saved) {
+                if (saved !== this.saved) {
+                    var type = (!!this.data && !!this.data.id) ? 'edit' : 'add';
+                    this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
+                    this.sandbox.emit('sulu.preview.state.change', saved);
+                }
+                this.saved = saved;
+                if (this.saved) {
+                    this.contentChanged = false;
+                }
             },
 
             loadData: function() {
