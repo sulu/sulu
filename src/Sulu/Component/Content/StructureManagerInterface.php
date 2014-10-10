@@ -22,10 +22,10 @@ interface StructureManagerInterface extends ContainerAwareInterface
     /**
      * Returns structure for given key and type
      * @param string $key
-     * @internal param string $type
+     * @param string $type
      * @return StructureInterface
      */
-    public function getStructure($key);
+    public function getStructure($key, $type = Structure::TYPE_PAGE);
 
     /**
      * Returns a page structure for given key
