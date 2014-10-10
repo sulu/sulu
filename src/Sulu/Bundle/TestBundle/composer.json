@@ -17,7 +17,7 @@
 
         "friendsofsymfony/http-cache": "@dev",
         "phpspec/prophecy-phpunit": "~1.0",
-        "symfony-cmf/testing": "dev-master"
+        "symfony-cmf/testing": "~1.2@RC"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
