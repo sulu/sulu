@@ -15,8 +15,10 @@ abstract class Snippet extends Structure
      */
     private $nodeState;
 
-    function __construct()
+    public function __construct($key, $metaData)
     {
+        parent::__construct($key, $metaData);
+
         // default state is test
         $this->nodeState = StructureInterface::STATE_TEST;
     }
