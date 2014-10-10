@@ -158,7 +158,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         // Default template
-        $container->setParameter('sulu.content.template.default', $contentConfig['default_template']);
+        $container->setParameter('sulu.content.template.default', $contentConfig['default_template']['page']);
+        $container->setParameter('sulu.content.type.default', $contentConfig['default_template']['snippet']);
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Default Language

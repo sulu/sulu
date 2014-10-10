@@ -45,7 +45,10 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.template_resolver"/>
             <argument>%sulu.content.language.default%</argument>
-            <argument>%sulu.content.template.default%</argument>
+            <argument type="collection">
+                <argument key="page">%sulu.content.template.default%</argument>
+                <argument key="snippet">%sulu.content.type.default%</argument>
+            </argument>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>

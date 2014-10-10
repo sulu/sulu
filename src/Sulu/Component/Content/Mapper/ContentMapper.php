@@ -104,9 +104,9 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * default template
-     * @var string
+     * @var string[]
      */
-    private $defaultTemplate;
+    private $defaultTemplates;
 
     /**
      * @var Stopwatch
@@ -167,7 +167,7 @@ class ContentMapper implements ContentMapperInterface
         WebspaceManagerInterface $webspaceManager,
         TemplateResolverInterface $templateResolver,
         $defaultLanguage,
-        $defaultTemplate,
+        $defaultTemplates,
         $languageNamespace,
         $internalPrefix,
         $stopwatch = null
@@ -178,7 +178,7 @@ class ContentMapper implements ContentMapperInterface
         $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLanguage = $defaultLanguage;
-        $this->defaultTemplate = $defaultTemplate;
+        $this->defaultTemplates = $defaultTemplates;
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
@@ -377,18 +377,16 @@ class ContentMapper implements ContentMapperInterface
             $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
         }
 
-        if (Structure::TYPE_PAGE === $structureType) {
-            // do not state transition for root (contents) node
-            $contentRootNode = $this->getContentNode($webspaceKey);
-            if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
-                $this->changeState(
-                    $node,
-                    $state,
-                    $structure,
-                    $this->properties->getName('state'),
-                    $this->properties->getName('published')
-                );
-            }
+        // do not state transition for root (contents) node
+        $contentRootNode = $this->getContentNode($webspaceKey);
+        if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
+            $this->changeState(
+                $node,
+                $state,
+                $structure,
+                $this->properties->getName('state'),
+                $this->properties->getName('published')
+            );
         }
 
         if (Structure::TYPE_PAGE === $structureType) {
@@ -479,7 +477,7 @@ class ContentMapper implements ContentMapperInterface
         }
         $session->save();
 
-        $contentNode = Structure::TYPE_PAGE === $structureType ? 
+        $contentNode = Structure::TYPE_PAGE === $structureType ?
             $this->sessionManager->getContentNode($webspaceKey) :
             $this->sessionManager->getSnippetNode($templateKey);
 
@@ -1167,7 +1165,7 @@ class ContentMapper implements ContentMapperInterface
 
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
-            $this->defaultTemplate
+            $this->defaultTemplates[$structureType]
         );
         $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
@@ -1230,14 +1228,15 @@ class ContentMapper implements ContentMapperInterface
                 );
             }
         }
-        
+
+        $structure->setNodeState(
+            $contentNode->getPropertyValueWithDefault(
+                $this->properties->getName('state'),
+                StructureInterface::STATE_TEST
+            )
+        );
+
         if ($structureType === Structure::TYPE_PAGE) {
-            $structure->setNodeState(
-                $contentNode->getPropertyValueWithDefault(
-                    $this->properties->getName('state'),
-                    StructureInterface::STATE_TEST
-                )
-            );
             $structure->setNavContexts(
                 $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
@@ -1245,7 +1244,7 @@ class ContentMapper implements ContentMapperInterface
                 $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
             );
             $structure->setOriginTemplate(
-                $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate)
+                $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplates[$structureType])
             );
 
             // load data of extensions
@@ -1365,7 +1364,7 @@ class ContentMapper implements ContentMapperInterface
                 // title
                 $templateKey = $node->getPropertyValueWithDefault(
                     $this->properties->getName('template'),
-                    $this->defaultTemplate
+                    $this->defaultTemplates[Structure::TYPE_PAGE]
                 );
                 $structure = $this->getStructure($templateKey);
                 $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
@@ -1649,7 +1648,7 @@ class ContentMapper implements ContentMapperInterface
     protected function getStructure($key, $type = Structure::TYPE_PAGE)
     {
         if (Structure::TYPE_PAGE === $type) {
-            $structure = $this->structureManager->getStructure($key, $type);
+            $structure = $this->structureManager->getPage($key);
         } else {
             $structure = $this->structureManager->getSnippet($key);
         }
