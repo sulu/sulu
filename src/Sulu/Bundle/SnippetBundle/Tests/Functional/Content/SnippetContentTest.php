@@ -1,13 +1,14 @@
 <?php
 
-namespace Sulu\Bundle\SnippetBundle\Functional\Content;
+namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 
-class SnippetContentTypeTest extends SuluTestCase
+class SnippetContentTypeTest extends BaseFunctionalTestCase
 {
     public function setUp()
     {
@@ -48,7 +49,7 @@ class SnippetContentTypeTest extends SuluTestCase
         $values = $prop->getValue();
         $this->assertCount(2, $values);
         $hotel1 = reset($values);
-        $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-name'));
+        $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-title'));
     }
 
     public function testGetContentData()
@@ -59,9 +60,9 @@ class SnippetContentTypeTest extends SuluTestCase
         $data = $this->contentType->getContentData($property, 'sulu_io', 'de', null);
         $this->assertCount(2, $data);
         $hotel1 = reset($data);
-        $this->assertEquals('Le grande budapest', $hotel1['name']);
+        $this->assertEquals('Le grande budapest', $hotel1['title']);
         $hotel2 = next($data);
-        $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['name']);
+        $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
 
     public function testRemove()
@@ -73,46 +74,5 @@ class SnippetContentTypeTest extends SuluTestCase
         $this->contentType->remove($pageNode, $this->property, 'sulu_io', 'de', null);
         $this->session->save();
         $this->assertFalse($pageNode->hasProperty('i18n:de-hotels'));
-    }
-
-    private function loadFixtures()
-    {
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'name' => 'Le grande budapest'
-            ));
-        $hotel1 = $this->contentMapper->saveRequest($req);
-
-        $req = ContentMapperRequest::create()
-            ->setType('snippet')
-            ->setTemplateKey('hotel')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'name' => 'L\'Hôtel New Hampshire',
-            ));
-        $hotel2 = $this->contentMapper->saveRequest($req);
-
-        $req = ContentMapperRequest::create()
-            ->setType('page')
-            ->setWebspaceKey('sulu_io')
-            ->setState(StructureInterface::STATE_PUBLISHED)
-            ->setTemplateKey('hotel_page')
-            ->setLocale('de')
-            ->setUserId(1)
-            ->setData(array(
-                'title' => 'Hotels page',
-                'url' => '/hotels',
-                'hotels' => array(
-                    $hotel1->getUuid(),
-                    $hotel2->getUuid()
-                )
-            ));
-
-        $this->contentMapper->saveRequest($req);
     }
 }

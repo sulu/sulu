@@ -27,7 +27,7 @@ class LanguageController extends Controller implements ClassResourceInterface
         $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
 
         $localizations = array();
-        
+
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $i = 0;

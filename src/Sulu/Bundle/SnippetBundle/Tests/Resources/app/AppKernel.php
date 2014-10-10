@@ -9,12 +9,16 @@ class AppKernel extends TestKernel
     {
         $this->requireBundleSets(array(
             'default',
-            'phpcr_odm'
+            'phpcr_odm',
+            'doctrine_orm',
         ));
 
         $this->addBundles(array(
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
             new \Sulu\Bundle\SnippetBundle\SuluSnippetBundle(),
+            new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new \FOS\RestBundle\FOSRestBundle(),
+            new \Sulu\Bundle\TestBundle\SuluTestBundle()
         ));
     }
 
