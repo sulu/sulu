@@ -77,7 +77,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 array_values(
                     array_diff_key(
                         $this->getManager()->getFieldDescriptors(),
-                        array('depth' => false, 'parent' => false)
+                        array(
+                            'depth' => false,
+                            'parent' => false,
+                            'hasChildren' => false
+                        )
                     )
                 ),
                 200
