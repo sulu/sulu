@@ -215,6 +215,7 @@ class ContentMapper implements ContentMapperInterface
     public function saveRequest(ContentMapperRequest $request)
     {
         $this->validateRequest($request);
+
         return $this->save(
             $request->getData(),
             $request->getTemplateKey(),
@@ -293,10 +294,12 @@ class ContentMapper implements ContentMapperInterface
 
         $nodeNamePropertyName = $nodeNameProperty->getName();
         if (!isset($data[$nodeNamePropertyName])) {
-            throw new \InvalidArgumentException(sprintf(
-                'You must set the "%s" data key which is tagged as the sulu.node.name',
-                $nodeNamePropertyName
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You must set the "%s" data key which is tagged as the sulu.node.name',
+                    $nodeNamePropertyName
+                )
+            );
         }
 
         // title should not have a slash
@@ -401,7 +404,10 @@ class ContentMapper implements ContentMapperInterface
 
         if (Structure::TYPE_PAGE === $structureType) {
             if (isset($data['navContexts']) && $data['navContexts'] !== false
-                && $this->validateNavContexts($data['navContexts'], $this->webspaceManager->findWebspaceByKey($webspaceKey))
+                && $this->validateNavContexts(
+                    $data['navContexts'],
+                    $this->webspaceManager->findWebspaceByKey($webspaceKey)
+                )
             ) {
                 $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
             }
@@ -745,6 +751,8 @@ class ContentMapper implements ContentMapperInterface
             }
         } else {
             $oldState = $node->getPropertyValue($statePropertyName);
+            $oldState = intval($oldState);
+            $state = intval($state);
 
             if ($oldState === $state) {
                 $structure->setNodeState($state);
@@ -962,6 +970,7 @@ class ContentMapper implements ContentMapperInterface
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
     {
         $query = $this->createSql2Query($sql2, $limit);
+
         return $this->loadByQuery($query, $languageCode, $webspaceKey);
     }
 
@@ -1254,7 +1263,10 @@ class ContentMapper implements ContentMapperInterface
                 $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
             );
             $structure->setOriginTemplate(
-                $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplates[$structureType])
+                $contentNode->getPropertyValueWithDefault(
+                    $this->properties->getName('template'),
+                    $this->defaultTemplates[$structureType]
+                )
             );
 
             // load data of extensions
@@ -1664,10 +1676,13 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if (!$structure) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not find "%s" structure template for key "%s"',
-                $type, $key
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not find "%s" structure template for key "%s"',
+                    $type,
+                    $key
+                )
+            );
         }
 
         return $structure;
@@ -1908,9 +1923,9 @@ class ContentMapper implements ContentMapperInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = &$fieldsData[$field['target']];
+                $target = & $fieldsData[$field['target']];
             } else {
-                $target = &$fieldsData;
+                $target = & $fieldsData;
             }
 
             // create target
@@ -2084,17 +2099,23 @@ class ContentMapper implements ContentMapperInterface
      */
     private function validateRequest(ContentMapperRequest $request)
     {
-        $this->validateRequired($request, array(
-            'templateKey',
-            'userId',
-            'locale',
-            'type',
-        ));
+        $this->validateRequired(
+            $request,
+            array(
+                'templateKey',
+                'userId',
+                'locale',
+                'type',
+            )
+        );
 
         if ($request->getType() === Structure::TYPE_PAGE) {
-            $this->validateRequired($request, array(
-                'webspaceKey',
-            ));
+            $this->validateRequired(
+                $request,
+                array(
+                    'webspaceKey',
+                )
+            );
         }
     }
 
@@ -2105,10 +2126,12 @@ class ContentMapper implements ContentMapperInterface
             $val = $request->$method();
 
             if (null === $val) {
-                throw new \InvalidArgumentException(sprintf(
-                    'ContentMapperRequest "%s" cannot be null',
-                    $required
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'ContentMapperRequest "%s" cannot be null',
+                        $required
+                    )
+                );
             }
         }
     }
