@@ -14,164 +14,168 @@ define([
 
     'use strict';
 
-    var component = {
-        view: true,
+    var STATE_TEST = 1,
 
-        layout: {
-            sidebar: false,
+        STATE_PUBLISHED = 2,
 
-            navigation: {
-                collapsed: true
-            },
+        component = {
+            view: true,
 
-            content: {
-                width: 'fixed',
-                shrinkable: false
-            }
-        },
+            layout: {
+                sidebar: false,
 
-        header: function() {
-            return{
-                breadcrumb: this.breadcrumb,
-
-                tabs: {
-                    url: '/admin/snippet/navigation/snippet'
+                navigation: {
+                    collapsed: true
                 },
 
-                toolbar: {
-                    parentTemplate: 'default',
+                content: {
+                    width: 'fixed',
+                    shrinkable: false
+                }
+            },
 
-                    languageChanger: {
-                        url: '/admin/api/languages',
-                        preSelected: this.options.language
+            header: function() {
+                return{
+                    breadcrumb: this.breadcrumb,
+
+                    tabs: {
+                        url: '/admin/snippet/navigation/snippet'
                     },
 
-                    template: [
-                        {
-                            id: 'state',
-                            group: 'left',
-                            position: 100,
-                            type: 'select',
-                            itemsOption: {
-                                markable: true
-                            },
-                            items: [
-                                {
-                                    id: 2,
-                                    title: this.sandbox.translate('toolbar.state-publish'),
-                                    icon: 'husky-publish',
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
-                                    }.bind(this)
+                    toolbar: {
+                        parentTemplate: 'default',
+
+                        languageChanger: {
+                            url: '/admin/api/languages',
+                            preSelected: this.options.language
+                        },
+
+                        template: [
+                            {
+                                id: 'state',
+                                group: 'left',
+                                position: 100,
+                                type: 'select',
+                                itemsOption: {
+                                    markable: true
                                 },
-                                {
-                                    id: 1,
-                                    title: this.sandbox.translate('toolbar.state-test'),
-                                    icon: 'husky-test',
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
+                                items: [
+                                    {
+                                        id: STATE_PUBLISHED,
+                                        title: this.sandbox.translate('toolbar.state-publish'),
+                                        icon: 'husky-publish',
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
+                                        }.bind(this)
+                                    },
+                                    {
+                                        id: STATE_TEST,
+                                        title: this.sandbox.translate('toolbar.state-test'),
+                                        icon: 'husky-test',
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
+                                        }.bind(this)
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'template',
+                                icon: 'pencil',
+                                iconSize: 'large',
+                                group: 'left',
+                                position: 10,
+                                type: 'select',
+                                title: '',
+                                hidden: false,
+                                itemsOption: {
+                                    url: '/admin/api/snippet/types',
+                                    titleAttribute: 'title',
+                                    idAttribute: 'template',
+                                    translate: false,
+                                    markable: true,
+                                    callback: function(item) {
+                                        this.template = item.template;
+                                        this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                     }.bind(this)
                                 }
-                            ]
-                        },
-                        {
-                            id: 'template',
-                            icon: 'pencil',
-                            iconSize: 'large',
-                            group: 'left',
-                            position: 10,
-                            type: 'select',
-                            title: '',
-                            hidden: false,
-                            itemsOption: {
-                                url: '/admin/api/snippet/types',
-                                titleAttribute: 'title',
-                                idAttribute: 'template',
-                                translate: false,
-                                markable: true,
-                                callback: function(item) {
-                                    this.template = item.template;
-                                    this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                }.bind(this)
                             }
-                        }
-                    ]
-                }
-            };
-        },
-
-        initialize: function() {
-            this.type = (!!this.options.id ? 'edit' : 'add');
-
-            this.headerDef = this.sandbox.data.deferred();
-
-            this.bindModelEvents();
-            this.bindCustomEvents();
-
-            this.loadData();
-        },
-
-        bindCustomEvents: function() {
-            // back button
-            this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.snippets.snippet.list');
-            }.bind(this));
-
-            // header initialize to set-title
-            this.sandbox.on('husky.toolbar.header.initialized', function() {
-                this.headerDef.resolve();
-            }.bind(this));
-        },
-
-        loadData: function() {
-            if (!this.snippet) {
-                this.model = new Snippet({id: this.options.id});
-            }
-
-            if (this.options.id !== undefined) {
-                this.model.fullFetch(
-                    this.options.language,
-                    {
-                        success: function(data) {
-                            this.render(data.toJSON());
-                        }.bind(this)
+                        ]
                     }
-                );
-            } else {
-                this.render(this.model.toJSON());
+                };
+            },
+
+            initialize: function() {
+                this.type = (!!this.options.id ? 'edit' : 'add');
+
+                this.headerDef = this.sandbox.data.deferred();
+
+                this.bindModelEvents();
+                this.bindCustomEvents();
+
+                this.loadData();
+            },
+
+            bindCustomEvents: function() {
+                // back button
+                this.sandbox.on('sulu.header.back', function() {
+                    this.sandbox.emit('sulu.snippets.snippet.list');
+                }.bind(this));
+
+                // header initialize to set-title
+                this.sandbox.on('husky.toolbar.header.initialized', function() {
+                    this.headerDef.resolve();
+                }.bind(this));
+            },
+
+            loadData: function() {
+                if (!this.snippet) {
+                    this.model = new Snippet({id: this.options.id});
+                }
+
+                if (this.options.id !== undefined) {
+                    this.model.fullFetch(
+                        this.options.language,
+                        {
+                            success: function(data) {
+                                this.render(data.toJSON());
+                            }.bind(this)
+                        }
+                    );
+                } else {
+                    this.render(this.model.toJSON());
+                }
+            },
+
+            render: function(data) {
+                this.data = data;
+
+                this.headerDef.then(function() {
+                    this.setTitle(data.title);
+                }.bind(this));
+            },
+
+            /**
+             * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
+             * @param {Object} title
+             */
+            setTitle: function(title) {
+                var breadcrumb = [
+                    {title: 'navigation.snippets'},
+                    {title: 'snippets.snippet.title'}
+                ];
+
+                if (!!this.options.id && title !== '') {
+                    this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(title, 40));
+
+                    // breadcrumb
+                    breadcrumb.push({title: title});
+                    this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
+                } else {
+                    this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('snippets.snippet.title'));
+                    this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
+                }
             }
-        },
-
-        render: function(data) {
-            this.data = data;
-
-            this.headerDef.then(function() {
-                this.setTitle(data.title);
-            }.bind(this));
-        },
-
-        /**
-         * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
-         * @param {Object} title
-         */
-        setTitle: function(title) {
-            var breadcrumb = [
-                {title: 'navigation.snippets'},
-                {title: 'snippets.snippet.title'}
-            ];
-
-            if (!!this.options.id && title !== '') {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(title, 40));
-
-                // breadcrumb
-                breadcrumb.push({title: title});
-                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-            } else {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('snippets.snippet.title'));
-                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
-            }
-        }
-    };
+        };
 
     // inheritance
     component.__proto__ = BaseSnippet;
