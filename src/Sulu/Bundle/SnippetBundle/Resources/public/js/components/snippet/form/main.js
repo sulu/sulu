@@ -9,8 +9,9 @@
 
 define([
     'sulusnippet/components/snippet/main',
-    'sulusnippet/model/snippet'
-], function(BaseSnippet, Snippet) {
+    'sulusnippet/model/snippet',
+    'app-config'
+], function(BaseSnippet, Snippet, AppConfig) {
 
     'use strict';
 
@@ -65,6 +66,7 @@ define([
                                         title: this.sandbox.translate('toolbar.state-publish'),
                                         icon: 'husky-publish',
                                         callback: function() {
+                                            this.state = STATE_PUBLISHED;
                                             this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_PUBLISHED);
                                         }.bind(this)
                                     },
@@ -73,6 +75,7 @@ define([
                                         title: this.sandbox.translate('toolbar.state-test'),
                                         icon: 'husky-test',
                                         callback: function() {
+                                            this.state = STATE_TEST;
                                             this.sandbox.emit('sulu.dropdown.state.item-clicked', STATE_TEST);
                                         }.bind(this)
                                     }
@@ -105,6 +108,11 @@ define([
             },
 
             initialize: function() {
+                this.config = AppConfig.getSection('sulu-snippet');
+                this.defaultType = this.config.defaultType;
+                this.template = this.defaultType;
+                this.state = STATE_TEST;
+
                 this.type = (!!this.options.id ? 'edit' : 'add');
 
                 this.headerDef = this.sandbox.data.deferred();
@@ -147,10 +155,12 @@ define([
              * @param {Object} data
              */
             setState: function(data) {
-                this.state = data.nodeState;
+                if (!!data.nodeState) {
+                    this.state = data.nodeState;
 
-                if (this.state !== '' && this.state !== undefined && this.state !== null) {
-                    this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
+                    if (this.state !== '' && this.state !== undefined && this.state !== null) {
+                        this.sandbox.emit('sulu.header.toolbar.item.change', 'state', data.nodeState);
+                    }
                 }
             },
 
@@ -171,7 +181,7 @@ define([
             },
 
             loadData: function() {
-                if (!this.snippet) {
+                if (!this.model) {
                     this.model = new Snippet({id: this.options.id});
                 }
 

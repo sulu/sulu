@@ -20,6 +20,13 @@ define([
             options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language});
 
             return this.fetch.call(this, options);
+        },
+
+        fullSave: function(template, language, state, attributes, options) {
+            // FIXME remove webspace
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=sulu_io&language=' + language + '&template=' + template + (!!state ? '&state=' + state : '')});
+
+            return this.save.call(this, attributes, options);
         }
     });
 });

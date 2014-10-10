@@ -71,7 +71,7 @@ define([
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.snippet.destroy({
+                    this.model.destroy({
                         success: function() {
                             this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
                         }.bind(this)
@@ -82,9 +82,10 @@ define([
 
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-            this.snippet.set(data);
+            data.template = this.template;
+            this.model.set(data);
 
-            this.snippet.save(null, {
+            this.model.fullSave(this.template, this.options.language, this.state, {
                 // on success save contacts id
                 success: function(response) {
                     var model = response.toJSON();
