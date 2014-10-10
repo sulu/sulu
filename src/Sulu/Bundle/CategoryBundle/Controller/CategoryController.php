@@ -31,7 +31,6 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
  * Makes categories available through a REST API
  * @package Sulu\Bundle\CategoryBundle\Controller
  */
-
 class CategoryController extends RestController implements ClassResourceInterface
 {
     /**
@@ -54,11 +53,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     protected $bundlePrefix = 'category.category.';
 
-
     /**
      * Returns the CategoryManager
      *
-     * @return Sulu\Bundle\CategoryBundle\Category\CategoryManager
+     * @return \Sulu\Bundle\CategoryBundle\Category\CategoryManager
      */
     private function getManager()
     {
@@ -75,7 +73,15 @@ class CategoryController extends RestController implements ClassResourceInterfac
     {
         // default contacts list
         return $this->handleView(
-            $this->view(array_values($this->getManager()->getFieldDescriptors()), 200)
+            $this->view(
+                array_values(
+                    array_diff_key(
+                        $this->getManager()->getFieldDescriptors(),
+                        array('depth' => false, 'parent' => false)
+                    )
+                ),
+                200
+            )
         );
     }
 
@@ -94,6 +100,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $id,
             function ($id) use ($locale, $categoryManager) {
                 $categoryEntity = $categoryManager->findById($id);
+
                 return $categoryManager->getApiObject($categoryEntity, $locale);
             }
         );
@@ -106,7 +113,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      *
      * @param Request $request
      * @param mixed $key
-     * @return Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getChildrenAction(Request $request, $key)
     {
@@ -121,6 +128,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -146,6 +154,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -173,9 +182,11 @@ class CategoryController extends RestController implements ClassResourceInterfac
             if (!$request->get('name')) {
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
+
             return $this->saveEntity($request, $id);
         } catch (MissingArgumentException $exc) {
             $view = $this->view($exc->toArray(), 400);
+
             return $this->handleView($view);
         }
     }
@@ -298,6 +309,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $listBuilder->getLimit(),
             $listBuilder->count()
         );
+
         return $list;
     }
 }
