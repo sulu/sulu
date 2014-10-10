@@ -75,7 +75,8 @@ define([
                     },
                     {
                         el: this.sandbox.dom.find('#snippet-list', this.$el),
-                        url: '/admin/api/snippets',
+                        // FIXME no webspace
+                        url: '/admin/api/snippets?webspace=sulu_io&language=' + this.options.language,
                         searchInstanceName: 'contacts',
                         searchFields: ['title'], // TODO ???
                         resultKey: 'snippets',

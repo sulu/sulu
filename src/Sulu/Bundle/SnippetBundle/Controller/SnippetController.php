@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\StructureManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use FOS\RestBundle\View\ViewHandler;
@@ -26,7 +27,7 @@ use FOS\RestBundle\Controller\Annotations\Prefix,
     FOS\RestBundle\Controller\Annotations\QueryParam;
 
 /**
- * @Prefix("/api")
+ * handles snippets
  */
 class SnippetController
 {
@@ -144,6 +145,63 @@ class SnippetController
         $view = View::create($snippet->toArray());
 
         return $this->viewHandler->handle($view);
+    }
+
+
+    /**
+     * TODO refactor
+     * @return JsonResponse
+     */
+    public function getSnippetFieldsAction()
+    {
+        return new JsonResponse(
+            array(
+                array(
+                    "name" => "title",
+                    "translation" => "public.title",
+                    "disabled" => false,
+                    "default" => true,
+                    "sortable" => true,
+                    "type" => "",
+                    "width" => "",
+                    "minWidth" => "100px",
+                    "editable" => false
+                ),
+                array(
+                    "name" => "id",
+                    "translation" => "public.id",
+                    "disabled" => true,
+                    "default" => false,
+                    "sortable" => true,
+                    "type" => "",
+                    "width" => "50px",
+                    "minWidth" => "",
+                    "editable" => false
+                ),
+                array(
+                    "name" => "created",
+                    "translation" => "public.created",
+                    "disabled" => true,
+                    "default" => false,
+                    "sortable" => true,
+                    "type" => "date",
+                    "width" => "",
+                    "minWidth" => "",
+                    "editable" => false
+                ),
+                array(
+                    "name" => "changed",
+                    "translation" => "public.changed",
+                    "disabled" => true,
+                    "default" => false,
+                    "sortable" => true,
+                    "type" => "date",
+                    "width" => "",
+                    "minWidth" => "",
+                    "editable" => false
+                ),
+            )
+        );
     }
 
     private function getUser()

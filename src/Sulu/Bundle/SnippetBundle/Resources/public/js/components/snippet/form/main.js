@@ -38,8 +38,7 @@ define([
                     parentTemplate: 'default',
 
                     languageChanger: {
-                        // FIXME no webspace
-                        url: '/admin/content/languages/sulu_io',
+                        url: '/admin/api/languages',
                         preSelected: this.options.language
                     },
 
