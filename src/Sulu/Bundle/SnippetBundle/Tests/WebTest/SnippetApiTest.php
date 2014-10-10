@@ -56,14 +56,6 @@ class SnippetApiTest extends SuluTestCase
                 ),
                 2
             ),
-            array(
-                array(
-                    'type' => 'car',
-                    'offset' => 1,
-                    'max' => 1
-                ),
-                1
-            ),
         );
     }
 
@@ -83,7 +75,7 @@ class SnippetApiTest extends SuluTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
-        $this->assertCount($expectedNbResults, $res);
+        $this->assertCount($expectedNbResults, $res['_embedded']['snippets']);
 
     }
 

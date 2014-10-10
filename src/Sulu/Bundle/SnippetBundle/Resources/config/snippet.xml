@@ -20,6 +20,7 @@
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu_snippet.repository" />
             <argument type="service" id="security.context" />
+            <argument type="service" id="router" />
         </service>
     </services>
 </container>
