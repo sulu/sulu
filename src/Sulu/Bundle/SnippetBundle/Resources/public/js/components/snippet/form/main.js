@@ -81,8 +81,7 @@ define([
                             title: '',
                             hidden: false,
                             itemsOption: {
-                                // FIXME snippet types
-                                url: '/admin/content/template',
+                                url: '/admin/api/snippet/types',
                                 titleAttribute: 'title',
                                 idAttribute: 'template',
                                 translate: false,
