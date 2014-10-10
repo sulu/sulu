@@ -18,7 +18,8 @@ class AppKernel extends TestKernel
             new \Sulu\Bundle\SnippetBundle\SuluSnippetBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
-            new \Sulu\Bundle\TestBundle\SuluTestBundle()
+            new \Sulu\Bundle\TestBundle\SuluTestBundle(),
+            new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
         ));
     }
 

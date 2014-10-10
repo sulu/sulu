@@ -95,6 +95,8 @@ class SnippetApiTest extends SuluTestCase
         $this->client->request('GET', '/snippets?' . $query);
         $response = $this->client->getResponse();
 
+        die($response->getContent());
+
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
         $this->assertCount($expectedNbResults, $res['_embedded']['snippets']);

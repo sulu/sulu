@@ -15,8 +15,6 @@
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link rel="stylesheet" href="/bundles/suluadmin/js/vendor/husky/husky.min.css">
-        <link rel="stylesheet" href="../../css/main.css">
-        <link rel="stylesheet" href="../../js/vendor/leaflet/leaflet.css">
         <style type="text/css">
             h1 {
                 padding: 20px 0 0 00px;
@@ -46,11 +44,10 @@
         <script src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
         <script type="text/javascript">
             var data = {
-                }
             }
 
-            function set_data(dataIndex) {
-                // $('#snippet_content').data('sn', data[dataIndex]);
+            function set_data(ids) {
+                $('#snippet_content').data('ids', ids);
             }
 
             var App;
@@ -64,30 +61,27 @@
             require(['husky'], function(Husky) {
                 'use strict';
 
-                set_data('address_1');
-
                 var app = Husky({ debug: { enable: true }});
                 var _ = app.sandbox.util._;
 
                 App = app;
 
-                app.components.addSource('sululocation', '/bundles/sulusnippet/js/components');
+                app.components.addSource('sulusnippet', '/bundles/sulusnippet/js/components');
 
                 app.start([
                     {
-                        name: 'snippet@sulusnippet',
+                        name: 'snippet-content@sulusnippet',
                         options: {
                             el: '#snippet_content',
-                            instanceName: 'i1'
+                            instanceName: 'i1',
+                            url: 'data',
+                            urlAll: 'data/snippets',
+                            preselected: { ids: [ '1234', '4321' ] },
+                            snippetType: 'hotel'
                         }
                     }
                 ]).then(function() {
                     app.logger.log('Aura started...');
-
-                    $('.load_data_button').on('click', function () {
-                        // set_data($(this).attr('rel'));
-                        // app.sandbox.emit('sulu.location.reload_data');
-                    });
                 });
             });
         </script>
