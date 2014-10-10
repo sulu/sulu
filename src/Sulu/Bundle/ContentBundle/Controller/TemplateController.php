@@ -86,12 +86,13 @@ class TemplateController extends Controller
 
         $webspace = $request->get('webspace');
         $language = $request->get('language');
+        $type = $request->get('type', 'page');
 
         /** @var UserInterface $user */
-        $user= $this->getUser();
+        $user = $this->getUser();
         $userLocale = $user->getLocale();
 
-        $template = $this->getTemplateStructure($key);
+        $template = $this->getTemplateStructure($key, $type);
 
         return $this->render(
             'SuluContentBundle:Template:content.html.twig',
@@ -131,11 +132,15 @@ class TemplateController extends Controller
     /**
      * returns structure for given key
      * @param string $key template key
+     * @param string $type
      * @return StructureInterface
      */
-    private function getTemplateStructure($key)
+    private function getTemplateStructure($key, $type)
     {
-        return $this->container->get('sulu.content.structure_manager')->getStructure($key);
+        /** @var StructureManagerInterface $structureManager */
+        $structureManager = $this->container->get('sulu.content.structure_manager');
+
+        return $structureManager->getStructure($key, $type);
     }
 
     /**
