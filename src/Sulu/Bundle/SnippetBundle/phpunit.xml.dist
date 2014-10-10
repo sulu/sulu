@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./tests/bootstrap.php" colors="true">
+<phpunit
+    colors="true"
+    bootstrap="vendor/symfony-cmf/testing/bootstrap/bootstrap.php"
+>
 
     <testsuites>
-        <testsuite name="Sulu Snippet Bundle Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="SuluSnippetBundle Test Suite">
+            <directory>./Tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
-        <whitelist>
-            <directory>./</directory>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory>.</directory>
             <exclude>
-                <directory>./tests</directory>
-                <directory>./vendor</directory>
+                <directory>Resources/</directory>
+                <directory>Tests/</directory>
+                <directory>vendor/</directory>
             </exclude>
         </whitelist>
     </filter>
+
+    <php>
+        <server name="KERNEL_DIR" value="Tests/Resources/app" />
+    </php>
 
 </phpunit>

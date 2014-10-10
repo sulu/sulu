@@ -1,0 +1,48 @@
+sulu_core:
+    phpcr:
+        backend: %phpcr_backend%
+        workspace: %phpcr_workspace%
+        username: %phpcr_user%
+        password: %phpcr_pass%
+    webspace:
+        config_dir: %kernel.root_dir%/../../../vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/webspaces
+    content:
+        structure:
+            paths:
+                structure:
+                    path: "%kernel.root_dir%/Resources/snippets"
+                    internal: false
+                    type: snippet
+                page:
+                    path: "%kernel.root_dir%/Resources/pages"
+                    internal: false
+                    type: page
+    http_cache:
+        ~
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:
+
+doctrine:
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        resolve_target_entities:
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role

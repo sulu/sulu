@@ -10,27 +10,22 @@
     ],
     "require": {
         "php": ">=5.4",
-
         "sulu/sulu": "dev-develop",
-        "sulu/admin-bundle": "dev-develop",
-
-        "friendsofsymfony/http-cache": "@dev",
-        "friendsofsymfony/rest-bundle": "@dev"
+        "friendsofsymfony/rest-bundle": "~1.4",
+        "sulu/admin-bundle": "dev-develop"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
-
+        "sulu/test-bundle": "dev-develop",
         "symfony/symfony": "2.5.*",
+        "symfony-cmf/testing": "~1.1",
         "symfony/monolog-bundle": "2.4.*",
-        "sensio/framework-extra-bundle":  "~3.0",
-        "doctrine/doctrine-bundle": "1.2.*",
-
-        "sulu/test-bundle": "dev-develop"
+        "phpunit/phpunit": "3.7.*",
+        "matthiasnoback/symfony-dependency-injection-test": "~0.7.1"
     },
     "autoload": {
-        "psr-0": {
-            "Sulu\\Bundle\\SnippetBundle": ""
+        "psr-4": {
+            "Sulu\\Bundle\\SnippetBundle\\": "."
         }
     },
-    "target-dir": "Sulu/Bundle/SnippetBundle"
+    "minimum-stability": "dev"
 }
