@@ -23,6 +23,16 @@ interface StructureManagerInterface extends ContainerAwareInterface
      *
      * @param $key string
      * @return StructureInterface
+     *
+     * @deprecated use getPage
+     */
+    public function getStructure($key);
+
+    /**
+     * Returns a page structure for given key
+     *
+     * @param $key string
+     * @return StructureInterface
      */
     public function getPage($key);
 
