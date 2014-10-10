@@ -18,7 +18,6 @@ define(['app-config'], function(AppConfig) {
             this.bindCustomEvents();
             this.config = AppConfig.getSection('sulu-snippet');
             this.defaultType = this.config.defaultType;
-            this.template = this.defaultType;
 
             this.loadData();
         },
@@ -58,9 +57,13 @@ define(['app-config'], function(AppConfig) {
             if (typeof item === 'string') {
                 item = {template: item};
             }
-            if (!!item && this.template === item.template) {
+            if (!!item && !!this.template && this.template === item.template) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
                 return;
+            }
+
+            if (!!this.template) {
+                this.template = this.defaultType;
             }
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');

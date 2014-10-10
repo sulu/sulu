@@ -38,7 +38,7 @@ define([
             }, this);
 
             // delete selected
-            this.sandbox.on('sulu.snippets.snippet.delete', function(ids) {
+            this.sandbox.on('sulu.snippets.snippets.delete', function(ids) {
                 this.delSnippets(ids);
             }, this);
 
@@ -85,17 +85,18 @@ define([
             data.template = this.template;
             this.model.set(data);
 
-            this.model.fullSave(this.template, this.options.language, this.state, {
+            this.model.fullSave(this.template, this.options.language, this.state, {}, {
                 // on success save contacts id
                 success: function(response) {
-                    var model = response.toJSON();
+                    var data = response.toJSON();
                     if (!!data.id) {
-                        this.sandbox.emit('sulu.snippets.snippet.saved', model);
+                        this.sandbox.emit('sulu.snippets.snippet.saved', data);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + model.id);
+                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
                     }
                 }.bind(this),
                 error: function() {
+                    this.sandbox.emit('sulu.snippets.snippet.save-error');
                     this.sandbox.logger.log('error while saving profile');
                 }.bind(this)
             });

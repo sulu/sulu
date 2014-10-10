@@ -52,7 +52,7 @@ define([
                 // delete clicked
                 this.sandbox.on('sulu.list-toolbar.delete', function() {
                     this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                        this.sandbox.emit('sulu.snippets.snippet.delete', ids);
+                        this.sandbox.emit('sulu.snippets.snippets.delete', ids);
                     }.bind(this));
                 }, this);
 

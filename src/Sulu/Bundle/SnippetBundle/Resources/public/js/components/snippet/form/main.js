@@ -26,7 +26,7 @@ define([
                 sidebar: false,
 
                 navigation: {
-                    collapsed: true
+                    collapsed: false
                 },
 
                 content: {
@@ -116,6 +116,7 @@ define([
                 this.type = (!!this.options.id ? 'edit' : 'add');
 
                 this.headerDef = this.sandbox.data.deferred();
+                this.dataDef = this.sandbox.data.deferred();
 
                 this.bindModelEvents();
                 this.bindCustomEvents();
@@ -136,7 +137,9 @@ define([
 
                 // get content data
                 this.sandbox.on('sulu.snippets.snippet.get-data', function(callback) {
-                    callback(this.data);
+                    this.dataDef.then(function() {
+                        callback(this.data);
+                    }.bind(this));
                 }.bind(this));
 
                 // setter for header bar buttons
@@ -148,6 +151,26 @@ define([
                 this.sandbox.on('sulu.snippets.snippet.set-state', function(data) {
                     this.setState(data);
                 }.bind(this));
+
+                // content saved
+                this.sandbox.on('sulu.snippets.snippet.saved', function(data) {
+                    this.data = data;
+                    this.setHeaderBar(true);
+                    this.setTitle(this.data.title);
+
+                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
+                }, this);
+
+                // content save-error
+                this.sandbox.on('sulu.snippets.snippet.save-error', function() {
+                    this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
+                    this.setHeaderBar(false);
+                }, this);
+
+                // content delete
+                this.sandbox.on('sulu.header.toolbar.delete', function() {
+                    this.sandbox.emit('sulu.snippets.snippet.delete', this.data.id);
+                }, this);
             },
 
             /**
@@ -191,11 +214,13 @@ define([
                         {
                             success: function(data) {
                                 this.render(data.toJSON());
+                                this.dataDef.resolve();
                             }.bind(this)
                         }
                     );
                 } else {
                     this.render(this.model.toJSON());
+                    this.dataDef.resolve();
                 }
             },
 

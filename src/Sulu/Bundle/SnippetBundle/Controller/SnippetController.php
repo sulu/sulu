@@ -68,8 +68,7 @@ class SnippetController
         SnippetRepository $snippetRepository,
         SecurityContext $securityContext,
         UrlGeneratorInterface $urlGenerator
-    )
-    {
+    ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
         $this->structureManager = $structureManager;
@@ -150,6 +149,13 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
+    public function deleteSnippetAction(Request $request, $uuid)
+    {
+        $this->webspaceKey = $request->query->get('webspace', null);
+        $this->contentMapper->delete($uuid, $this->webspaceKey);
+
+        return new JsonResponse();
+    }
 
     /**
      * TODO refactor
