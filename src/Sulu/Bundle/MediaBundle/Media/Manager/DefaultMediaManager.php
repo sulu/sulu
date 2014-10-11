@@ -385,7 +385,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * Modified an exists media
      * @param UploadedFile $uploadedFile
      * @param $data
-     * @param $user
+     * @param \Sulu\Component\Security\UserInterface $user
      * @return Media
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
@@ -495,7 +495,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * Create a new media
      * @param UploadedFile $uploadedFile
      * @param $data
-     * @param $user
+     * @param \Sulu\Component\Security\UserInterface $user
      * @return MediaEntity
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException
      */
@@ -576,7 +576,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * Data can be set over by array
      * @param $media
      * @param $data
-     * @param $user
+     * @param \Sulu\Component\Security\UserInterface $user
      * @return Media
      */
     protected function setDataToMedia(Media $media, $data, $user)
@@ -615,7 +615,12 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setContentLanguages($value);
                         break;
                     case 'tags':
-                        $media->setTags($value, $user->getId());
+                        if (count($value)) {
+                            foreach ($value as $tag) {
+                                $tagEntity = $this->tagManager->findOrCreateByName($tag, $user->getId());
+                                $media->addTag($tagEntity);
+                            }
+                        }
                         break;
                     case 'properties':
                         $media->setProperties($value);
