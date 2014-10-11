@@ -38,6 +38,7 @@
         <service id="sulu_media.storage" class="%sulu_media.storage.class%">
             <argument>%sulu_media.media.storage.local.path%</argument>
             <argument>%sulu_media.media.storage.local.segments%</argument>
+            <!-- <argument type="service" id="logger"/> -->
         </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
         <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">

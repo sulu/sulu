@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use \stdClass;
+use Symfony\Component\HttpKernel\Log\NullLogger;
+use Symfony\Component\HttpKernel\Tests\Logger;
 
 class LocalStorage implements StorageInterface
 {
@@ -30,13 +32,20 @@ class LocalStorage implements StorageInterface
     private $segments;
 
     /**
+     * @var NullLogger|Logger
+     */
+    protected $logger;
+
+    /**
      * @param string $uploadPath
      * @param int $segments
+     * @param null $logger
      */
-    public function __construct($uploadPath, $segments)
+    public function __construct($uploadPath, $segments, $logger = null)
     {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;
+        $this->logger = $logger ? : new NullLogger();
     }
 
     /**
@@ -59,7 +68,8 @@ class LocalStorage implements StorageInterface
         if (!file_exists($segmentPath)) {
             mkdir($segmentPath, 0777, true);
         }
-        copy($tempPath, $segmentPath . '/' . $fileName);
+
+        copy($tempPath, $this->getPathByFolderAndFileName($segmentPath, $fileName));
 
         $this->addStorageOption('segment', $segment);
         $this->addStorageOption('fileName', $fileName);
@@ -117,7 +127,7 @@ class LocalStorage implements StorageInterface
             $newFileName = $fileNameParts[0] . '-' . $counter . '.' . $fileNameParts[1];
         }
 
-        $filePath = $folder . $newFileName;
+        $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);
 
         if (!file_exists($filePath)) {
             return $newFileName;
@@ -125,6 +135,16 @@ class LocalStorage implements StorageInterface
 
         $counter++;
         return $this->getUniqueFileName($folder, $fileName, $counter);
+    }
+
+    /**
+     * @param $folder
+     * @param $fileName
+     * @return string
+     */
+    private function getPathByFolderAndFileName($folder, $fileName)
+    {
+        return rtrim($folder, '/') . '/' . ltrim($fileName, '/');
     }
 
     /**
