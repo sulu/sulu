@@ -43,5 +43,6 @@
             "Sulu\\Bundle\\SecurityBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/SecurityBundle"
+    "target-dir": "Sulu/Bundle/SecurityBundle",
+    "minimum-stability": "dev"
 }
