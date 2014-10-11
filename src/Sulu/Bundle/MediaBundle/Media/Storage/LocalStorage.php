@@ -64,12 +64,16 @@ class LocalStorage implements StorageInterface
 
         $segmentPath = $this->uploadPath . '/' . $segment;
         $fileName = $this->getUniqueFileName($segmentPath , $fileName);
+        $filePath = $this->getPathByFolderAndFileName($segmentPath, $fileName);
+        $this->logger->debug('Check FilePath: ' . $filePath);
 
         if (!file_exists($segmentPath)) {
+            $this->logger->debug('Try Create Folder: ' . $segmentPath);
             mkdir($segmentPath, 0777, true);
         }
 
-        copy($tempPath, $this->getPathByFolderAndFileName($segmentPath, $fileName));
+        $this->logger->debug('Copy File "' . $tempPath . '" to "' . $filePath . '"');
+        copy($tempPath, $filePath);
 
         $this->addStorageOption('segment', $segment);
         $this->addStorageOption('fileName', $fileName);
@@ -128,6 +132,8 @@ class LocalStorage implements StorageInterface
         }
 
         $filePath = $this->getPathByFolderAndFileName($folder, $newFileName);
+
+        $this->logger->debug('Check FilePath: ' . $filePath);
 
         if (!file_exists($filePath)) {
             return $newFileName;
