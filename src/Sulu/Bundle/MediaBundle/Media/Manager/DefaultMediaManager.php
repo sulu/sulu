@@ -615,6 +615,7 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setContentLanguages($value);
                         break;
                     case 'tags':
+                        $media->removeTags();
                         if (count($value)) {
                             foreach ($value as $tag) {
                                 $tagEntity = $this->tagManager->findOrCreateByName($tag, $user->getId());
