@@ -132,6 +132,12 @@ class MediaException extends Exception
      */
     const EXCEPTION_CODE_GHOST_SCRIPT_NOT_FOUND = 5019;
 
+    /**
+     * @var int
+     * @description a file with this name exists
+     */
+    const EXCEPTION_LOCAL_STORAGE_CONFLICT = 5020;
+
     public function toArray()
     {
         return array(

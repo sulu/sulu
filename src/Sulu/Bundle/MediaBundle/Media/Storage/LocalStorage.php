@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use \stdClass;
+use Sulu\Bundle\MediaBundle\Media\Exception\LocalStorageConflictException;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 use Symfony\Component\HttpKernel\Tests\Logger;
 
@@ -72,7 +73,10 @@ class LocalStorage implements StorageInterface
             mkdir($segmentPath, 0777, true);
         }
 
-        $this->logger->debug('Copy File "' . $tempPath . '" to "' . $filePath . '"');
+        $this->logger->debug('Try to copy File "' . $tempPath . '" to "' . $filePath . '"');
+        if (file_exists($filePath)) {
+            throw new LocalStorageConflictException($filePath);
+        }
         copy($tempPath, $filePath);
 
         $this->addStorageOption('segment', $segment);
