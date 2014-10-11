@@ -123,7 +123,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('username')) {
             $username = $this->getHelper('dialog')->askAndValidate(
                 $output,
-                'Please choose a username:',
+                'Please choose a username: ',
                 function ($username) {
                     if (empty($username)) {
                         throw new \Exception('Username can not be empty');
@@ -138,7 +138,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('firstName')) {
             $result = $this->getHelper('dialog')->askAndValidate(
                 $output,
-                'Please choose a FirstName:',
+                'Please choose a FirstName: ',
                 function ($username) {
                     if (empty($username)) {
                         throw new \Exception('FirstName can not be empty');
@@ -153,7 +153,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('lastName')) {
             $result = $this->getHelper('dialog')->askAndValidate(
                 $output,
-                'Please choose a LastName:',
+                'Please choose a LastName: ',
                 function ($username) {
                     if (empty($username)) {
                         throw new \Exception('LastName can not be empty');
@@ -168,7 +168,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('email')) {
             $email = $this->getHelper('dialog')->askAndValidate(
                 $output,
-                'Please choose an email:',
+                'Please choose an email: ',
                 function ($email) {
                     if (empty($email)) {
                         throw new \Exception('Email can not be empty');
@@ -183,7 +183,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('locale')) {
             $email = $this->getHelper('dialog')->askAndValidate(
                 $output,
-                'Please choose an locale:',
+                'Please choose an locale: ',
                 function ($email) {
                     if (empty($email)) {
                         throw new \Exception('Locale can not be empty');
@@ -198,7 +198,7 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('password')) {
             $password = $this->getHelper('dialog')->askAndValidate(
                 $output,
-                'Please choose a password:',
+                'Please choose a password: ',
                 function ($password) {
                     if (empty($password)) {
                         throw new \Exception('Password can not be empty');
