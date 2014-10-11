@@ -15732,7 +15732,6 @@ define('aura/ext/mediator', ['eventemitter','underscore'],function () {
             try {
               listener.apply(context, args);
             } catch(e) {
-              console.warn("App logger: ", app.logger);
               app.logger.error("Error caught in listener '" + name + "', called with arguments: ", args, "\nError:", e.message, e, args);
             }
           };
@@ -15916,7 +15915,7 @@ define('aura/ext/components', [],function() {
     }
 
     /**
-     * Method called on Components' initialization.
+     * Method called on Component's initialization.
      *
      * @method initialize
      * @param {Object} options options Object passed on Component initialization
@@ -15924,7 +15923,7 @@ define('aura/ext/components', [],function() {
     Component.prototype.initialize = function() {};
 
     /**
-     * A helper function to render markup and recursilvely start nested components.
+     * A helper function to render markup and recursively start nested components.
      *
      * @method  html
      * @param  {String} markup the markup to render in the component's root el
@@ -19127,86 +19126,147 @@ define("husky-validation", function(){});
 
 /*
  * HTML5 Sortable jQuery Plugin
- * http://farhadi.ir/projects/html5sortable
- * 
- * Copyright 2012, Ali Farhadi
+ * https://github.com/voidberg/html5sortable
+ *
+ * Original code copyright 2012 Ali Farhadi.
+ * This version is mantained by Alexandru Badiu <andu@ctrlz.ro>
+ *
+ * Thanks to the following contributors: andyburke, bistoco, daemianmack, drskullster, flying-sheep, OscarGodson, Parikshit N. Samant, rodolfospalenza, ssafejava
+ *
  * Released under the MIT license.
  */
-(function($) {
-    var dragging, placeholders = $();
-    $.fn.sortable = function(options) {
+
+
+(function ($) {
+    var dragging, draggingHeight, placeholders = $();
+    $.fn.sortable = function (options) {
         var method = String(options);
+
         options = $.extend({
-            connectWith: false
+            connectWith: false,
+            placeholder: null,
+            dragImage: null
         }, options);
-        return this.each(function() {
+
+        return this.each(function () {
+            if (method === 'reload') {
+                $(this).children(options.items).off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
+            }
             if (/^enable|disable|destroy$/.test(method)) {
-                var items = $(this).children($(this).data('items')).attr('draggable', method == 'enable');
-                if (method == 'destroy') {
-                    items.add(this).removeData('connectWith items')
-                        .off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s');
+                var citems = $(this).children($(this).data('items')).attr('draggable', method === 'enable');
+                if (method === 'destroy') {
+                    $(this).off('sortupdate');
+                    $(this).removeData('opts');
+                    citems.add(this).removeData('connectWith items')
+                        .off('dragstart.h5s dragend.h5s selectstart.h5s dragover.h5s dragenter.h5s drop.h5s').off('sortupdate');
                 }
                 return;
             }
+
+            var soptions = $(this).data('opts');
+
+            if (typeof soptions === 'undefined') {
+                $(this).data('opts', options);
+            }
+            else {
+                options = soptions;
+            }
+
             var isHandle, index, items = $(this).children(options.items);
-            var placeholder = $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">');
-            items.find(options.handle).mousedown(function() {
+            var startParent, newParent;
+            var placeholder = ( options.placeholder === null ) ? $('<' + (/^ul|ol$/i.test(this.tagName) ? 'li' : 'div') + ' class="sortable-placeholder">') : $(options.placeholder).addClass('sortable-placeholder');
+
+            items.find(options.handle).mousedown(function () {
                 isHandle = true;
-            }).mouseup(function() {
-                    isHandle = false;
-                });
-            $(this).data('items', options.items)
+            }).mouseup(function () {
+                isHandle = false;
+            });
+            $(this).data('items', options.items);
             placeholders = placeholders.add(placeholder);
             if (options.connectWith) {
                 $(options.connectWith).add(this).data('connectWith', options.connectWith);
             }
-            items.attr('draggable', 'true').on('dragstart.h5s', function(e) {
+
+            items.attr('role', 'option');
+            items.attr('aria-grabbed', 'false');
+
+            items.attr('draggable', 'true').on('dragstart.h5s',function (e) {
+                e.stopImmediatePropagation();
                 if (options.handle && !isHandle) {
                     return false;
                 }
                 isHandle = false;
                 var dt = e.originalEvent.dataTransfer;
                 dt.effectAllowed = 'move';
-                dt.setData('Text', 'dummy');
-                index = (dragging = $(this)).addClass('sortable-dragging').index();
-            }).on('dragend.h5s', function() {
-                    if (!dragging) {
-                        return;
-                    }
-                    dragging.removeClass('sortable-dragging').show();
-                    placeholders.detach();
-                    if (index != dragging.index()) {
-                        dragging.parent().trigger('sortupdate', {item: dragging});
-                    }
-                    dragging = null;
-                }).not('a[href], img').on('selectstart.h5s', function() {
-                    this.dragDrop && this.dragDrop();
+                dt.setData('text', '');
+
+                if (options.dragImage && dt.setDragImage) {
+                    dt.setDragImage(options.dragImage, 0, 0);
+                }
+
+                index = (dragging = $(this)).addClass('sortable-dragging').attr('aria-grabbed', 'true').index();
+                draggingHeight = dragging.outerHeight();
+                startParent = $(this).parent();
+            }).on('dragend.h5s',function () {
+                if (!dragging) {
+                    return;
+                }
+                dragging.removeClass('sortable-dragging').attr('aria-grabbed', 'false').show();
+                placeholders.detach();
+                newParent = $(this).parent();
+                if (index !== dragging.index() || startParent.get(0) !== newParent.get(0)) {
+                    dragging.parent().triggerHandler('sortupdate', {item: dragging, oldindex: index, startparent: startParent, endparent: newParent});
+                }
+                dragging = null;
+                draggingHeight = null;
+            }).not('a[href], img').on('selectstart.h5s',function () {
+                if (options.handle && !isHandle) {
+                    return true;
+                }
+
+                if (this.dragDrop) {
+                    this.dragDrop();
+                }
+                return false;
+            }).end().add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function (e) {
+                if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
+                    return true;
+                }
+                if (e.type === 'drop') {
+                    e.stopPropagation();
+                    placeholders.filter(':visible').after(dragging);
+                    dragging.trigger('dragend.h5s');
                     return false;
-                }).end().add([this, placeholder]).on('dragover.h5s dragenter.h5s drop.h5s', function(e) {
-                    if (!items.is(dragging) && options.connectWith !== $(dragging).parent().data('connectWith')) {
-                        return true;
+                }
+                e.preventDefault();
+                e.originalEvent.dataTransfer.dropEffect = 'move';
+                if (items.is(this)) {
+                    var thisHeight = $(this).outerHeight();
+                    if (options.forcePlaceholderSize) {
+                        placeholder.height(draggingHeight);
                     }
-                    if (e.type == 'drop') {
-                        e.stopPropagation();
-                        placeholders.filter(':visible').after(dragging);
-                        dragging.trigger('dragend.h5s');
-                        return false;
-                    }
-                    e.preventDefault();
-                    e.originalEvent.dataTransfer.dropEffect = 'move';
-                    if (items.is(this)) {
-                        if (options.forcePlaceholderSize) {
-                            placeholder.height(dragging.outerHeight());
+
+                    // Check if $(this) is bigger than the draggable. If it is, we have to define a dead zone to prevent flickering
+                    if (thisHeight > draggingHeight) {
+                        // Dead zone?
+                        var deadZone = thisHeight - draggingHeight, offsetTop = $(this).offset().top;
+                        if (placeholder.index() < $(this).index() && e.originalEvent.pageY < offsetTop + deadZone) {
+                            return false;
                         }
-                        dragging.hide();
-                        $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
-                        placeholders.not(placeholder).detach();
-                    } else if (!placeholders.is(this) && !$(this).children(options.items).length) {
-                        placeholders.detach();
-                        $(this).append(placeholder);
+                        else if (placeholder.index() > $(this).index() && e.originalEvent.pageY > offsetTop + thisHeight - deadZone) {
+                            return false;
+                        }
                     }
-                    return false;
-                });
+
+                    dragging.hide();
+                    $(this)[placeholder.index() < $(this).index() ? 'after' : 'before'](placeholder);
+                    placeholders.not(placeholder).detach();
+                } else if (!placeholders.is(this) && !$(this).children(options.items).length) {
+                    placeholders.detach();
+                    $(this).append(placeholder);
+                }
+                return false;
+            });
         });
     };
 })(jQuery);
@@ -26180,6 +26240,9 @@ define('bower_components/aura/lib/platform',[],function() {
         context = context || document;
         return $(context).find(selector);
       },
+      contains: function(selector, context) {
+        return $.contains(context || document, selector);
+      },
       data: function(selector, attribute) {
         return $(selector).data(attribute);
       }
@@ -26249,12 +26312,14 @@ define('bower_components/aura/lib/logger',[], function() {
     this._error   = (console.error || this._log);
     this._enabled = true;
 
-    if (Function.prototype.bind && typeof console === "object") {
-      var logFns = ["log", "warn", "error"];
-      for (var i = 0; i < logFns.length; i++) {
-        console[logFns[i]] = Function.prototype.call.bind(console[logFns[i]], console);
+    try {
+      if (Function.prototype.bind && typeof console === "object") {
+        var logFns = ["log", "warn", "error"];
+        for (var i = 0; i < logFns.length; i++) {
+          console[logFns[i]] = Function.prototype.call.bind(console[logFns[i]], console);
+        }
       }
-    }
+    } catch(e) {}
 
     return this;
   };
@@ -26552,7 +26617,7 @@ define('bower_components/aura/lib/aura',[
      * App Sandboxes
      */
 
-    var appSandboxes = {};
+    var appSandboxes = app._sandboxes = {};
     var baseSandbox = Object.create(base);
 
     /**
@@ -26738,6 +26803,24 @@ define('bower_components/aura/lib/aura',[
     app.stop = function() {
       // TODO: We ne to actually do some cleanup here.
       app.started = false;
+    };
+
+    /**
+     * Check if any component is not stopped correctly and still referenced by aura.
+     * If that is the case we will stop the component and remove it.
+     * TODO: Consider using 'MutationObserver' for cleanup
+     *
+     * @method cleanUp
+     * @return {void}
+     */
+    app.cleanUp = function () {
+      _.defer(function() {    
+        _.each(appSandboxes, function(sandbox) {
+          if (!!sandbox && ((!!sandbox.el && !app.core.dom.contains($(sandbox.el)[0], document)) || !sandbox.el)) {
+            sandbox.stop();
+          }
+        });
+      });
     };
 
     /**
@@ -34293,7 +34376,8 @@ define('__component__$toolbar@husky',[],function() {
  * @param {String} [options.instanceName] name of the component instance
  * @param {Boolean} [options.noNewValues] if true input value must have been suggested by auto-complete
  * @param {String} [options.suggestionClass] CSS-class for auto-complete suggestions
- * @param {String} [options.suggestionImg] Icon Class - Image gets rendered before every suggestion
+ * @param {String} [options.suggestionIcon] Icon Class - Image gets rendered before every suggestion
+ * @param {String} [options.autoCompleteIcon] Icon Class - Icon in auto complete input
  * @param {Boolean} [options.stickToInput] If true suggestions are always under the input field
  * @param {Boolean} [options.hint] if false typeahead hint-field will be removed
  * @param {Boolean} [options.emptyOnBlur] If true input field value gets deleted on blur
@@ -34309,105 +34393,117 @@ define('__component__$auto-complete@husky',[], function() {
      * Default values for options
      */
     var defaults = {
-            prefetchUrl: '',
-            localData: [],
-            remoteUrl: '',
-            getParameter: 'query',
-            valueKey: 'name',
-            resultKey: 'countries',
-            value: null,
-            instanceName: 'undefined',
-            noNewValues: false,
-            suggestionClass: 'suggestion',
-            suggestionImg: '',
-            stickToInput: false,
-            hint: false,
-            emptyOnBlur: false,
-            excludes: [],
-            selectCallback: null
-        },
+        prefetchUrl: '',
+        localData: [],
+        remoteUrl: '',
+        getParameter: 'query',
+        valueKey: 'name',
+        resultKey: 'countries',
+        value: null,
+        instanceName: 'undefined',
+        noNewValues: false,
+        suggestionClass: 'suggestion',
+        suggestionIcon: '',
+        autoCompleteIcon: 'search',
+        stickToInput: false,
+        hint: false,
+        emptyOnBlur: false,
+        excludes: [],
+        selectCallback: null
+    },
 
-        eventNamespace = 'husky.auto-complete.',
+    templates = {
+        main: [
+            '<div class="husky-auto-complete">',
+                '<div class="front">',
+                    '<a class="fa-<%= autoCompleteIcon %>"></a>',
+                '</div>',
+                '<div class="input"></div>',
+            '</div>'
+        ].join('')
+    },
 
-        /**
-         * raised after initialization
-         * @event husky.auto-complete.initialized
-         */
-        INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
+    eventNamespace = 'husky.auto-complete.',
 
-        /**
-         * raised after prefetched data is retrieved
-         * @event husky.auto-complete.prefetch-data
-         */
-        PREFETCH_LOAD = function() {
-            return createEventName.call(this, 'prefetch-data');
-        },
+    /**
+     * raised after initialization
+     * @event husky.auto-complete.initialized
+     */
+    INITIALIZED = function() {
+        return createEventName.call(this, 'initialized');
+    },
 
-        /**
-         * raised before remoted data is loaded
-         * @event husky.auto-complete.remote-data-load
-         */
-        REMOTE_LOAD = function() {
-            return createEventName.call(this, 'remote-data-load');
-        },
+    /**
+     * raised after prefetched data is retrieved
+     * @event husky.auto-complete.prefetch-data
+     */
+    PREFETCH_LOAD = function() {
+        return createEventName.call(this, 'prefetch-data');
+    },
 
-        /**
-         * raised after remoted data is retrieved
-         * @event husky.auto-complete.remote-data
-         */
-        REMOTE_RETRIEVE = function() {
-            return createEventName.call(this, 'remote-data');
-        },
+    /**
+     * raised before remoted data is loaded
+     * @event husky.auto-complete.remote-data-load
+     */
+    REMOTE_LOAD = function() {
+        return createEventName.call(this, 'remote-data-load');
+    },
 
-        /**
-         * raised before the component tries to request a match after blur
-         * @event husky.auto-complete.request-match
-         */
-        REQUEST_MATCH = function() {
-            return createEventName.call(this, 'request-match');
-        },
+    /**
+     * raised after remoted data is retrieved
+     * @event husky.auto-complete.remote-data
+     */
+    REMOTE_RETRIEVE = function() {
+        return createEventName.call(this, 'remote-data');
+    },
 
-        /**
-         * raised after autocomplete suggestion is selected
-         * @event husky.auto-complete.select
-         * @param {object} selected datum with id and name
-         */
-        SELECT = function() {
-            return createEventName.call(this, 'select');
-        },
+    /**
+     * raised before the component tries to request a match after blur
+     * @event husky.auto-complete.request-match
+     */
+    REQUEST_MATCH = function() {
+        return createEventName.call(this, 'request-match');
+    },
 
-        /**
-         * raised after selection has been removed
-         * @event husky.auto-complete.selection-removed
-         */
-        SELECTION_REMOVED = function() {
-            return createEventName.call(this, 'selection-removed');
-        },
+    /**
+     * raised after autocomplete suggestion is selected
+     * @event husky.auto-complete.select
+     * @param {object} selected datum with id and name
+     */
+    SELECT = function() {
+        return createEventName.call(this, 'select');
+    },
 
-        /**
-         * raised after autocomplete suggestion is selected
-         * @event husky.auto-complete.set-excludes
-         * @param {array} array of objects to exclude from suggestions
-         */
-        SET_EXCLUDES = function() {
-            return createEventName.call(this, 'set-excludes');
-        },
+    /**
+     * raised after selection has been removed
+     * @event husky.auto-complete.selection-removed
+     */
+    SELECTION_REMOVED = function() {
+        return createEventName.call(this, 'selection-removed');
+    },
 
-        /**
-         * listens on and passes boolean to callback if input is matched exactly
-         * @event husky.auto-complete.is-matched
-         * @param {Function} Callback which gets the booloan passed
-         */
-        IS_MATCHED = function() {
-            return createEventName.call(this, 'is-matched');
-        },
+    /**
+     * raised after autocomplete suggestion is selected
+     * @event husky.auto-complete.set-excludes
+     * @param {array} array of objects to exclude from suggestions
+     */
+    SET_EXCLUDES = function() {
+        return createEventName.call(this, 'set-excludes');
+    },
 
-        /** returns normalized event names */
-        createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        };
+    /**
+     * listens on and passes boolean to callback if input is matched exactly
+     * @event husky.auto-complete.is-matched
+     * @param {Function} Callback which gets the booloan passed
+     */
+    IS_MATCHED = function() {
+        return createEventName.call(this, 'is-matched');
+    },
+
+    /** returns normalized event names */
+    createEventName = function(postFix) {
+        return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+    };
 
     return {
 
@@ -34466,8 +34562,8 @@ define('__component__$auto-complete@husky',[], function() {
          */
         setTemplate: function() {
             var iconHTML = '';
-            if (this.options.suggestionImg !== '') {
-                iconHTML = '<span class="fa-' + this.options.suggestionImg + ' icon"></span>';
+            if (this.options.suggestionIcon !== '') {
+                iconHTML = '<span class="fa-' + this.options.suggestionIcon + ' icon"></span>';
             }
             this._template = this.sandbox.util.template('' +
                 '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
@@ -34494,10 +34590,19 @@ define('__component__$auto-complete@husky',[], function() {
         },
 
         /**
+         * the main-template gets rendered and displayed
+         */
+        renderMain: function() {
+            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.main, {
+                autoCompleteIcon: this.options.autoCompleteIcon
+            }));
+        },
+
+        /**
          * Initializes and appends the input, starts the typeahead-auto-complete plugin
          */
         render: function() {
-            this.sandbox.dom.addClass(this.$el, 'husky-auto-complete');
+            this.renderMain();
             this.initValueField();
             this.appendValueField();
 
@@ -34522,7 +34627,7 @@ define('__component__$auto-complete@husky',[], function() {
          */
         appendValueField: function() {
             if (!!this.$valueField.length) {
-                this.sandbox.dom.append(this.$el, this.$valueField);
+                this.sandbox.dom.append(this.sandbox.dom.find('.input', this.$el), this.$valueField);
             }
         },
 
@@ -34700,7 +34805,6 @@ define('__component__$auto-complete@husky',[], function() {
          * Gets called when the input box triggers the blur event
          */
         handleBlur: function() {
-
             if (!!this.selectedElement) { // selected via dropdown
                 this.selectedElement = null;
             } else if (this.options.noNewValues === true) {
@@ -34897,7 +35001,8 @@ define('__component__$auto-complete@husky',[], function() {
  * @param {String} [options.arrowUpClass] CSS-class for arrow up icon
  * @param {Integer} [options.slideDuration] ms - duration for sliding suggestinos up/down
  * @param {String} [options.elementTagDataName] attribute name to store list of tags on element
- * @param {String} [options.autoCompleteIcon] Icon Class-suffix for autocomplete-suggestion-icon
+ * @param {String} [options.autoCompleteIcon] Icon Class-suffix for autocomplete-icon
+ * @param {String} [options.suggestionIcon] Icon Class-suffix for autocomplete-suggestion-icon
  * @param {Array} [options.delimiters] Array of key-codes which trigger a tag input
  * @param {Boolean} [options.noNewTags] If true only auto-completed tags are accepted
  */
@@ -34918,7 +35023,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 suggestionsUrl: '',
                 suggestionsKey: 'suggestions',
                 label: '',
-                inputSelector: '.husky-auto-complete',
+                inputSelector: '.husky-auto-complete-container',
                 autocomplete: true,
                 localData: [],
                 prefetchUrl: '',
@@ -34937,7 +35042,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                 arrowUpClass: 'fa-caret-up',
                 slideDuration: 500,
                 elementTagDataName: 'tags',
-                autoCompleteIcon: 'tag',
+                autoCompleteIcon: '',
+                suggestionIcon: 'tag',
                 delimiters: [9, 188, 13],
                 noNewTags: false
             },
@@ -34947,24 +35053,23 @@ define('__component__$auto-complete-list@husky',[], function() {
                     '<div class="auto-complete-list-container">',
                     '    <label>',
                     '        <%= label %>',
-                    '            <div class="auto-complete-list">',
-                    '                <div class="husky-auto-complete"></div>',
-                    '                <div class="toggler"></div>',
-                    '            </div>',
-                    '        </label>',
-                    '    </div>'
+                    '        <div class="auto-complete-list">',
+                    '           <div class="husky-auto-complete-container"></div>',
+                    '           <div class="toggler"></div>',
+                    '        </div>',
+                    '    </label>',
+                    '</div>'
                 ].join(''),
                 suggestion: [
                     '<div class="auto-complete-list-suggestions">',
                     '    <h5><%= headline %></h5>',
-                    '    <ul>',
-                    '    </ul>',
+                    '    <ul></ul>',
                     '</div>'
                 ].join('')
             },
 
             /** Position values for toggling suggestions */
-                togglerPosUp = 'up',
+            togglerPosUp = 'up',
             togglerPosDown = 'down',
 
             eventNamespace = 'husky.auto-complete-list.',
@@ -34973,7 +35078,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after initialization
              * @event husky.auto-complete-list.initialized
              */
-                INITIALIZED = function() {
+            INITIALIZED = function() {
                 return createEventName.call(this, 'initialized');
             },
 
@@ -34982,7 +35087,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * @event husky.auto-complete-list.set-tags
              * @param {Array} tags Array of strings
              */
-                SET_TAGS = function() {
+            SET_TAGS = function() {
                 return createEventName.call(this, 'set-tags');
             },
 
@@ -34990,7 +35095,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * used for receiving tags
              * @event husky.auto-complete-list.get-tags
              */
-                GET_TAGS = function() {
+            GET_TAGS = function() {
                 return createEventName.call(this, 'get-tags');
             },
 
@@ -34998,7 +35103,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after AJAX request for loading items is sent
              * @event husky.auto-complete-list.items-request
              */
-                ITEM_REQUEST = function() {
+            ITEM_REQUEST = function() {
                 return createEventName.call(this, 'item-request');
             },
 
@@ -35006,7 +35111,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after AJAX request for loading suggestions is sent
              * @event husky.auto-complete-list.sug-request
              */
-                SUGGESTION_REQUEST = function() {
+            SUGGESTION_REQUEST = function() {
                 return createEventName.call(this, 'sug-request');
             },
 
@@ -35015,7 +35120,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * @event husky.auto-complete-list.sug-added
              * @param {object} suggestion - the suggestion element with id, name, DOM-object
              */
-                SUGGESTION_ADDED = function() {
+            SUGGESTION_ADDED = function() {
                 return createEventName.call(this, 'sug-added');
             },
 
@@ -35023,7 +35128,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after an item is deleted
              * @event husky.auto-complete-list.item-deleted
              */
-                ITEM_DELETED = function() {
+            ITEM_DELETED = function() {
                 return createEventName.call(this, 'item-deleted');
             },
 
@@ -35031,7 +35136,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after data was loaded
              * @event husky.auto-complete-list.data-loaded
              */
-                DATA_LOADED = function() {
+            DATA_LOADED = function() {
                 return createEventName.call(this, 'data-loaded');
             },
 
@@ -35040,7 +35145,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * @event husky.auto-complete-list.item-added
              * @param {string} item value
              */
-                ITEM_ADDED = function() {
+            ITEM_ADDED = function() {
                 return createEventName.call(this, 'item-added');
             },
 
@@ -35048,7 +35153,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after all item were added
              * @event husky.auto-complete-list.items-added
              */
-                ITEMS_ADDED = function() {
+            ITEMS_ADDED = function() {
                 return createEventName.call(this, 'items-added');
             },
 
@@ -35056,7 +35161,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised when the suggestion container is closed
              * @event husky.auto-complete-list.sug-closed
              */
-                SUGGESTIONS_CLOSED = function() {
+            SUGGESTIONS_CLOSED = function() {
                 return createEventName.call(this, 'sug-closed');
             },
 
@@ -35064,12 +35169,12 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised when the suggestion container is opened
              * @event husky.auto-complete-list.sug-opened
              */
-                SUGGESTIONS_OPENED = function() {
+            SUGGESTIONS_OPENED = function() {
                 return createEventName.call(this, 'sug-opened');
             },
 
             /** returns normalized event names */
-                createEventName = function(postFix) {
+            createEventName = function(postFix) {
                 return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
             };
 
@@ -35090,7 +35195,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 this.initItems();
 
                 if (this.options.autocomplete === true) {
-                    this.sandbox.on('husky.auto-complete.'+this.options.instanceName+'.initialized', function() {
+                    this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.initialized', function() {
                         this.sandbox.emit(INITIALIZED.call(this));
                     }.bind(this));
                 } else {
@@ -35183,7 +35288,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 prefetchUrl: this.options.prefetchUrl,
                                 remoteUrl: this.options.remoteUrl,
                                 getParameter: this.options.getParameter,
-                                suggestionImg: this.options.autoCompleteIcon,
+                                suggestionIcon: this.options.suggestionIcon,
+                                autoCompleteIcon: this.options.autoCompleteIcon,
                                 resultKey: this.options.resultKey
                             },
                             this.options.autocompleteOptions
@@ -41853,8 +41959,48 @@ define('__component__$input@husky',[], function() {
                             $editor = $(selector).ckeditor(callback, configuration);
                         } else {
                             $editor = $(selector).ckeditor(configuration);
-
                         }
+
+                        // customize ckeditor dialog appearance on 'dialogDefinition' (=> open)
+                        // and filter link/target options
+                        CKEDITOR.on('dialogDefinition', function(ev) {
+                            // take the dialog name and its definition from the event
+                            // data.
+                            var dialogName = ev.data.name,
+                                dialogDefinition = ev.data.definition;
+
+                            // check if the definition is from the dialog we're
+                            // interested in (the "Link" dialog).
+                            if (dialogName == 'link') {
+                                    // get a reference to the "Link Info" and "Target" tab.
+                                var infoTab = dialogDefinition.getContents('info'),
+                                    targetTab = dialogDefinition.getContents('target'),
+                                
+                                    // get a reference to the link type
+                                    linkOptions = infoTab.get('linkType'),
+                                    targetOptions = targetTab.get('linkTargetType'),
+
+                                    // list of excluded link target options
+                                    includedTargetOptions = [
+                                        'notSet',
+                                        '_blank',
+                                        '_self'
+                                    ],
+                                    selectedTargetOptions = [];
+                            
+                                // remove 'link to anchor' option
+                                linkOptions.items.splice(1, 1);
+
+                                // just show included target options
+                                for (var i = 0; i < targetOptions.items.length; i++) {
+                                    if (includedTargetOptions.indexOf(targetOptions.items[i][1]) !== -1) {
+                                        selectedTargetOptions.push(targetOptions.items[i]);
+                                    }
+                                }
+
+                                targetOptions.items = selectedTargetOptions;
+                            }
+                        });
 
                         return $editor.editor;
                     }
@@ -41915,6 +42061,7 @@ if(jQuery) (function($) {
 			change: null,
 			changeDelay: 0,
 			control: 'hue',
+			dataUris: true,
 			defaultValue: '',
 			hide: null,
 			hideSpeed: 100,
@@ -42029,7 +42176,8 @@ if(jQuery) (function($) {
 		// The wrapper
 		minicolors
 			.addClass('minicolors-theme-' + settings.theme)
-			.toggleClass('minicolors-with-opacity', settings.opacity);
+			.toggleClass('minicolors-with-opacity', settings.opacity)
+			.toggleClass('minicolors-no-data-uris', settings.dataUris !== true);
 
 		// Custom positioning
 		if( settings.position !== undefined ) {
@@ -42047,13 +42195,13 @@ if(jQuery) (function($) {
 			.wrap(minicolors)
 			.after(
 				'<div class="minicolors-panel minicolors-slider-' + settings.control + '">' +
-					'<div class="minicolors-slider">' +
+					'<div class="minicolors-slider minicolors-sprite">' +
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
-					'<div class="minicolors-opacity-slider">' +
+					'<div class="minicolors-opacity-slider minicolors-sprite">' +
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
-					'<div class="minicolors-grid">' +
+					'<div class="minicolors-grid minicolors-sprite">' +
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
 					'</div>' +
@@ -42062,7 +42210,7 @@ if(jQuery) (function($) {
 
 		// The swatch
 		if( !settings.inline ) {
-			input.after('<span class="minicolors-swatch"><span class="minicolors-swatch-color"></span></span>');
+			input.after('<span class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></span>');
 			input.next('.minicolors-swatch').on('click', function(event) {
 				event.preventDefault();
 				input.focus();

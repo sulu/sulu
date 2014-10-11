@@ -231,6 +231,7 @@ define(function() {
             App.stop('#sulu-content-container');
             App.stop('#content > *');
             App.stop('#sidebar > *');
+            app.cleanUp();
         },
 
         /**
