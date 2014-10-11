@@ -15,6 +15,7 @@
         </parameter>
 
         <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
+        <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
         <parameter key="sulu_security.mask_converter.class">Sulu\Bundle\SecurityBundle\Permission\MaskConverter</parameter>
         <parameter key="sulu_security.salt_generator.class">Sulu\Bundle\SecurityBundle\Permission\SaltGenerator</parameter>
         <parameter key="sulu_security.admin.content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation</parameter>
@@ -29,6 +30,10 @@
         <service id="sulu_security.admin" class="%sulu_security.admin.class%">
             <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
+        </service>
+
+        <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
+            <argument type="service" id="router"/>
         </service>
 
         <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%">
