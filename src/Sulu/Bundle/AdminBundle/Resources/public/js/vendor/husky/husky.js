@@ -26066,7 +26066,7 @@ define('type/husky-input',[
                     return regex.test(value);
                 },
                 url:  function(value) {
-                    var regex = /^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+                    var regex = /^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-\?\$\#])*\/?/;
                     return regex.test(value);
                 },
                 color:  function(value) {
@@ -34354,7 +34354,8 @@ define('__component__$toolbar@husky',[],function() {
  * @param {String} [options.instanceName] name of the component instance
  * @param {Boolean} [options.noNewValues] if true input value must have been suggested by auto-complete
  * @param {String} [options.suggestionClass] CSS-class for auto-complete suggestions
- * @param {String} [options.suggestionImg] Icon Class - Image gets rendered before every suggestion
+ * @param {String} [options.suggestionIcon] Icon Class - Image gets rendered before every suggestion
+ * @param {String} [options.autoCompleteIcon] Icon Class - Icon in auto complete input
  * @param {Boolean} [options.stickToInput] If true suggestions are always under the input field
  * @param {Boolean} [options.hint] if false typeahead hint-field will be removed
  * @param {Boolean} [options.emptyOnBlur] If true input field value gets deleted on blur
@@ -34370,105 +34371,117 @@ define('__component__$auto-complete@husky',[], function() {
      * Default values for options
      */
     var defaults = {
-            prefetchUrl: '',
-            localData: [],
-            remoteUrl: '',
-            getParameter: 'query',
-            valueKey: 'name',
-            resultKey: 'countries',
-            value: null,
-            instanceName: 'undefined',
-            noNewValues: false,
-            suggestionClass: 'suggestion',
-            suggestionImg: '',
-            stickToInput: false,
-            hint: false,
-            emptyOnBlur: false,
-            excludes: [],
-            selectCallback: null
-        },
+        prefetchUrl: '',
+        localData: [],
+        remoteUrl: '',
+        getParameter: 'query',
+        valueKey: 'name',
+        resultKey: 'countries',
+        value: null,
+        instanceName: 'undefined',
+        noNewValues: false,
+        suggestionClass: 'suggestion',
+        suggestionIcon: '',
+        autoCompleteIcon: 'search',
+        stickToInput: false,
+        hint: false,
+        emptyOnBlur: false,
+        excludes: [],
+        selectCallback: null
+    },
 
-        eventNamespace = 'husky.auto-complete.',
+    templates = {
+        main: [
+            '<div class="husky-auto-complete">',
+                '<div class="front">',
+                    '<a class="fa-<%= autoCompleteIcon %>"></a>',
+                '</div>',
+                '<div class="input"></div>',
+            '</div>'
+        ].join('')
+    },
 
-        /**
-         * raised after initialization
-         * @event husky.auto-complete.initialized
-         */
-        INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
+    eventNamespace = 'husky.auto-complete.',
 
-        /**
-         * raised after prefetched data is retrieved
-         * @event husky.auto-complete.prefetch-data
-         */
-        PREFETCH_LOAD = function() {
-            return createEventName.call(this, 'prefetch-data');
-        },
+    /**
+     * raised after initialization
+     * @event husky.auto-complete.initialized
+     */
+    INITIALIZED = function() {
+        return createEventName.call(this, 'initialized');
+    },
 
-        /**
-         * raised before remoted data is loaded
-         * @event husky.auto-complete.remote-data-load
-         */
-        REMOTE_LOAD = function() {
-            return createEventName.call(this, 'remote-data-load');
-        },
+    /**
+     * raised after prefetched data is retrieved
+     * @event husky.auto-complete.prefetch-data
+     */
+    PREFETCH_LOAD = function() {
+        return createEventName.call(this, 'prefetch-data');
+    },
 
-        /**
-         * raised after remoted data is retrieved
-         * @event husky.auto-complete.remote-data
-         */
-        REMOTE_RETRIEVE = function() {
-            return createEventName.call(this, 'remote-data');
-        },
+    /**
+     * raised before remoted data is loaded
+     * @event husky.auto-complete.remote-data-load
+     */
+    REMOTE_LOAD = function() {
+        return createEventName.call(this, 'remote-data-load');
+    },
 
-        /**
-         * raised before the component tries to request a match after blur
-         * @event husky.auto-complete.request-match
-         */
-        REQUEST_MATCH = function() {
-            return createEventName.call(this, 'request-match');
-        },
+    /**
+     * raised after remoted data is retrieved
+     * @event husky.auto-complete.remote-data
+     */
+    REMOTE_RETRIEVE = function() {
+        return createEventName.call(this, 'remote-data');
+    },
 
-        /**
-         * raised after autocomplete suggestion is selected
-         * @event husky.auto-complete.select
-         * @param {object} selected datum with id and name
-         */
-        SELECT = function() {
-            return createEventName.call(this, 'select');
-        },
+    /**
+     * raised before the component tries to request a match after blur
+     * @event husky.auto-complete.request-match
+     */
+    REQUEST_MATCH = function() {
+        return createEventName.call(this, 'request-match');
+    },
 
-        /**
-         * raised after selection has been removed
-         * @event husky.auto-complete.selection-removed
-         */
-        SELECTION_REMOVED = function() {
-            return createEventName.call(this, 'selection-removed');
-        },
+    /**
+     * raised after autocomplete suggestion is selected
+     * @event husky.auto-complete.select
+     * @param {object} selected datum with id and name
+     */
+    SELECT = function() {
+        return createEventName.call(this, 'select');
+    },
 
-        /**
-         * raised after autocomplete suggestion is selected
-         * @event husky.auto-complete.set-excludes
-         * @param {array} array of objects to exclude from suggestions
-         */
-        SET_EXCLUDES = function() {
-            return createEventName.call(this, 'set-excludes');
-        },
+    /**
+     * raised after selection has been removed
+     * @event husky.auto-complete.selection-removed
+     */
+    SELECTION_REMOVED = function() {
+        return createEventName.call(this, 'selection-removed');
+    },
 
-        /**
-         * listens on and passes boolean to callback if input is matched exactly
-         * @event husky.auto-complete.is-matched
-         * @param {Function} Callback which gets the booloan passed
-         */
-        IS_MATCHED = function() {
-            return createEventName.call(this, 'is-matched');
-        },
+    /**
+     * raised after autocomplete suggestion is selected
+     * @event husky.auto-complete.set-excludes
+     * @param {array} array of objects to exclude from suggestions
+     */
+    SET_EXCLUDES = function() {
+        return createEventName.call(this, 'set-excludes');
+    },
 
-        /** returns normalized event names */
-        createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        };
+    /**
+     * listens on and passes boolean to callback if input is matched exactly
+     * @event husky.auto-complete.is-matched
+     * @param {Function} Callback which gets the booloan passed
+     */
+    IS_MATCHED = function() {
+        return createEventName.call(this, 'is-matched');
+    },
+
+    /** returns normalized event names */
+    createEventName = function(postFix) {
+        return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+    };
 
     return {
 
@@ -34527,8 +34540,8 @@ define('__component__$auto-complete@husky',[], function() {
          */
         setTemplate: function() {
             var iconHTML = '';
-            if (this.options.suggestionImg !== '') {
-                iconHTML = '<span class="fa-' + this.options.suggestionImg + ' icon"></span>';
+            if (this.options.suggestionIcon !== '') {
+                iconHTML = '<span class="fa-' + this.options.suggestionIcon + ' icon"></span>';
             }
             this._template = this.sandbox.util.template('' +
                 '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
@@ -34555,10 +34568,19 @@ define('__component__$auto-complete@husky',[], function() {
         },
 
         /**
+         * the main-template gets rendered and displayed
+         */
+        renderMain: function() {
+            this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.main, {
+                autoCompleteIcon: this.options.autoCompleteIcon
+            }));
+        },
+
+        /**
          * Initializes and appends the input, starts the typeahead-auto-complete plugin
          */
         render: function() {
-            this.sandbox.dom.addClass(this.$el, 'husky-auto-complete');
+            this.renderMain();
             this.initValueField();
             this.appendValueField();
 
@@ -34583,7 +34605,7 @@ define('__component__$auto-complete@husky',[], function() {
          */
         appendValueField: function() {
             if (!!this.$valueField.length) {
-                this.sandbox.dom.append(this.$el, this.$valueField);
+                this.sandbox.dom.append(this.sandbox.dom.find('.input', this.$el), this.$valueField);
             }
         },
 
@@ -34761,7 +34783,6 @@ define('__component__$auto-complete@husky',[], function() {
          * Gets called when the input box triggers the blur event
          */
         handleBlur: function() {
-
             if (!!this.selectedElement) { // selected via dropdown
                 this.selectedElement = null;
             } else if (this.options.noNewValues === true) {
@@ -34958,7 +34979,8 @@ define('__component__$auto-complete@husky',[], function() {
  * @param {String} [options.arrowUpClass] CSS-class for arrow up icon
  * @param {Integer} [options.slideDuration] ms - duration for sliding suggestinos up/down
  * @param {String} [options.elementTagDataName] attribute name to store list of tags on element
- * @param {String} [options.autoCompleteIcon] Icon Class-suffix for autocomplete-suggestion-icon
+ * @param {String} [options.autoCompleteIcon] Icon Class-suffix for autocomplete-icon
+ * @param {String} [options.suggestionIcon] Icon Class-suffix for autocomplete-suggestion-icon
  * @param {Array} [options.delimiters] Array of key-codes which trigger a tag input
  * @param {Boolean} [options.noNewTags] If true only auto-completed tags are accepted
  */
@@ -34979,7 +35001,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 suggestionsUrl: '',
                 suggestionsKey: 'suggestions',
                 label: '',
-                inputSelector: '.husky-auto-complete',
+                inputSelector: '.husky-auto-complete-container',
                 autocomplete: true,
                 localData: [],
                 prefetchUrl: '',
@@ -34998,7 +35020,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                 arrowUpClass: 'fa-caret-up',
                 slideDuration: 500,
                 elementTagDataName: 'tags',
-                autoCompleteIcon: 'tag',
+                autoCompleteIcon: '',
+                suggestionIcon: 'tag',
                 delimiters: [9, 188, 13],
                 noNewTags: false
             },
@@ -35008,24 +35031,23 @@ define('__component__$auto-complete-list@husky',[], function() {
                     '<div class="auto-complete-list-container">',
                     '    <label>',
                     '        <%= label %>',
-                    '            <div class="auto-complete-list">',
-                    '                <div class="husky-auto-complete"></div>',
-                    '                <div class="toggler"></div>',
-                    '            </div>',
-                    '        </label>',
-                    '    </div>'
+                    '        <div class="auto-complete-list">',
+                    '           <div class="husky-auto-complete-container"></div>',
+                    '           <div class="toggler"></div>',
+                    '        </div>',
+                    '    </label>',
+                    '</div>'
                 ].join(''),
                 suggestion: [
                     '<div class="auto-complete-list-suggestions">',
                     '    <h5><%= headline %></h5>',
-                    '    <ul>',
-                    '    </ul>',
+                    '    <ul></ul>',
                     '</div>'
                 ].join('')
             },
 
             /** Position values for toggling suggestions */
-                togglerPosUp = 'up',
+            togglerPosUp = 'up',
             togglerPosDown = 'down',
 
             eventNamespace = 'husky.auto-complete-list.',
@@ -35034,7 +35056,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after initialization
              * @event husky.auto-complete-list.initialized
              */
-                INITIALIZED = function() {
+            INITIALIZED = function() {
                 return createEventName.call(this, 'initialized');
             },
 
@@ -35043,7 +35065,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * @event husky.auto-complete-list.set-tags
              * @param {Array} tags Array of strings
              */
-                SET_TAGS = function() {
+            SET_TAGS = function() {
                 return createEventName.call(this, 'set-tags');
             },
 
@@ -35051,7 +35073,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * used for receiving tags
              * @event husky.auto-complete-list.get-tags
              */
-                GET_TAGS = function() {
+            GET_TAGS = function() {
                 return createEventName.call(this, 'get-tags');
             },
 
@@ -35059,7 +35081,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after AJAX request for loading items is sent
              * @event husky.auto-complete-list.items-request
              */
-                ITEM_REQUEST = function() {
+            ITEM_REQUEST = function() {
                 return createEventName.call(this, 'item-request');
             },
 
@@ -35067,7 +35089,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after AJAX request for loading suggestions is sent
              * @event husky.auto-complete-list.sug-request
              */
-                SUGGESTION_REQUEST = function() {
+            SUGGESTION_REQUEST = function() {
                 return createEventName.call(this, 'sug-request');
             },
 
@@ -35076,7 +35098,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * @event husky.auto-complete-list.sug-added
              * @param {object} suggestion - the suggestion element with id, name, DOM-object
              */
-                SUGGESTION_ADDED = function() {
+            SUGGESTION_ADDED = function() {
                 return createEventName.call(this, 'sug-added');
             },
 
@@ -35084,7 +35106,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after an item is deleted
              * @event husky.auto-complete-list.item-deleted
              */
-                ITEM_DELETED = function() {
+            ITEM_DELETED = function() {
                 return createEventName.call(this, 'item-deleted');
             },
 
@@ -35092,7 +35114,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after data was loaded
              * @event husky.auto-complete-list.data-loaded
              */
-                DATA_LOADED = function() {
+            DATA_LOADED = function() {
                 return createEventName.call(this, 'data-loaded');
             },
 
@@ -35101,7 +35123,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * @event husky.auto-complete-list.item-added
              * @param {string} item value
              */
-                ITEM_ADDED = function() {
+            ITEM_ADDED = function() {
                 return createEventName.call(this, 'item-added');
             },
 
@@ -35109,7 +35131,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised after all item were added
              * @event husky.auto-complete-list.items-added
              */
-                ITEMS_ADDED = function() {
+            ITEMS_ADDED = function() {
                 return createEventName.call(this, 'items-added');
             },
 
@@ -35117,7 +35139,7 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised when the suggestion container is closed
              * @event husky.auto-complete-list.sug-closed
              */
-                SUGGESTIONS_CLOSED = function() {
+            SUGGESTIONS_CLOSED = function() {
                 return createEventName.call(this, 'sug-closed');
             },
 
@@ -35125,12 +35147,12 @@ define('__component__$auto-complete-list@husky',[], function() {
              * raised when the suggestion container is opened
              * @event husky.auto-complete-list.sug-opened
              */
-                SUGGESTIONS_OPENED = function() {
+            SUGGESTIONS_OPENED = function() {
                 return createEventName.call(this, 'sug-opened');
             },
 
             /** returns normalized event names */
-                createEventName = function(postFix) {
+            createEventName = function(postFix) {
                 return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
             };
 
@@ -35151,7 +35173,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 this.initItems();
 
                 if (this.options.autocomplete === true) {
-                    this.sandbox.on('husky.auto-complete.'+this.options.instanceName+'.initialized', function() {
+                    this.sandbox.on('husky.auto-complete.' + this.options.instanceName + '.initialized', function() {
                         this.sandbox.emit(INITIALIZED.call(this));
                     }.bind(this));
                 } else {
@@ -35244,7 +35266,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 prefetchUrl: this.options.prefetchUrl,
                                 remoteUrl: this.options.remoteUrl,
                                 getParameter: this.options.getParameter,
-                                suggestionImg: this.options.autoCompleteIcon,
+                                suggestionIcon: this.options.suggestionIcon,
+                                autoCompleteIcon: this.options.autoCompleteIcon,
                                 resultKey: this.options.resultKey
                             },
                             this.options.autocompleteOptions
@@ -41914,8 +41937,48 @@ define('__component__$input@husky',[], function() {
                             $editor = $(selector).ckeditor(callback, configuration);
                         } else {
                             $editor = $(selector).ckeditor(configuration);
-
                         }
+
+                        // customize ckeditor dialog appearance on 'dialogDefinition' (=> open)
+                        // and filter link/target options
+                        CKEDITOR.on('dialogDefinition', function(ev) {
+                            // take the dialog name and its definition from the event
+                            // data.
+                            var dialogName = ev.data.name,
+                                dialogDefinition = ev.data.definition;
+
+                            // check if the definition is from the dialog we're
+                            // interested in (the "Link" dialog).
+                            if (dialogName == 'link') {
+                                    // get a reference to the "Link Info" and "Target" tab.
+                                var infoTab = dialogDefinition.getContents('info'),
+                                    targetTab = dialogDefinition.getContents('target'),
+                                
+                                    // get a reference to the link type
+                                    linkOptions = infoTab.get('linkType'),
+                                    targetOptions = targetTab.get('linkTargetType'),
+
+                                    // list of excluded link target options
+                                    includedTargetOptions = [
+                                        'notSet',
+                                        '_blank',
+                                        '_self'
+                                    ],
+                                    selectedTargetOptions = [];
+                            
+                                // remove 'link to anchor' option
+                                linkOptions.items.splice(1, 1);
+
+                                // just show included target options
+                                for (var i = 0; i < targetOptions.items.length; i++) {
+                                    if (includedTargetOptions.indexOf(targetOptions.items[i][1]) !== -1) {
+                                        selectedTargetOptions.push(targetOptions.items[i]);
+                                    }
+                                }
+
+                                targetOptions.items = selectedTargetOptions;
+                            }
+                        });
 
                         return $editor.editor;
                     }
@@ -46489,6 +46552,10 @@ define("datepicker-zh-TW", function(){});
             };
 
             app.core.util.ajax = $.ajax;
+
+            app.core.util.ajaxError = function(callback) {
+                $(document).ajaxError(callback);
+            };
 
             app.core.util.when = function(deferreds){
                 return $.when(deferreds);

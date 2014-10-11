@@ -117,6 +117,12 @@ define(function() {
             }
 
             this.sandbox.emit(INITIALIZED.call(this));
+
+            this.sandbox.util.ajaxError(function(event, request) {
+                if (request.status == 401) {
+                    window.location.replace('/admin/login');
+                }
+            });
         },
 
         /**

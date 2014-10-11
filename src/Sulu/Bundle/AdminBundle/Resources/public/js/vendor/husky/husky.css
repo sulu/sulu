@@ -7637,16 +7637,106 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
 }
 
-/* line 1, ../scss/modules/auto-complete.scss */
+/* line 64, ../scss/modules/input.scss */
+.husky-input {
+  background: white;
+  position: relative;
+  top: 0px;
+  left: 0px;
+}
+/* line 32, ../scss/mixins.scss */
+.husky-input:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 6, ../scss/modules/input.scss */
+.husky-input .front {
+  float: left;
+  line-height: 20px;
+  margin: 5px 0 0 0;
+  padding-right: 5px;
+  border-right: 1px solid #cccccc;
+  color: #999999;
+  font-size: 16px;
+}
+/* line 15, ../scss/modules/input.scss */
+.husky-input .front .color-field {
+  width: 15px;
+  height: 15px;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  display: inline-block;
+  margin-top: 2px;
+}
+/* line 24, ../scss/modules/input.scss */
+.husky-input .front a {
+  padding-top: 1px;
+  text-decoration: none;
+  cursor: default;
+}
+/* line 29, ../scss/modules/input.scss */
+.husky-input .front a.clickable {
+  color: black;
+  cursor: pointer;
+}
+/* line 36, ../scss/modules/input.scss */
+.husky-input .back {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  line-height: 20px;
+  padding: 5px 10px 0 5px;
+  background: white;
+  color: #999999;
+  font-size: 16px;
+}
+/* line 47, ../scss/modules/input.scss */
+.husky-input .input {
+  overflow: hidden;
+  padding-left: 5px;
+}
+/* line 51, ../scss/modules/input.scss */
+.husky-input .input input {
+  height: 30px;
+  border: none;
+  outline-width: 0;
+  width: 100%;
+}
+/* line 59, ../scss/modules/input.scss */
+.husky-input .text {
+  font-size: 14px;
+}
+/* line 77, ../scss/modules/input.scss */
+.husky-input.colorpicker .input {
+  overflow: visible;
+}
+/* line 81, ../scss/modules/input.scss */
+.husky-input.colorpicker .front {
+  color: black;
+  cursor: pointer;
+}
+/* line 88, ../scss/modules/input.scss */
+.husky-input.pickdate .front {
+  color: black;
+  cursor: pointer;
+}
+
+/* line 97, ../scss/modules/input.scss */
+.husky-validate-error .husky-input input {
+  height: 26px;
+}
+
+/* line 3, ../scss/modules/auto-complete.scss */
 .auto-complete-container {
   position: relative;
 }
-/* line 4, ../scss/modules/auto-complete.scss */
+/* line 6, ../scss/modules/auto-complete.scss */
 .auto-complete-container label {
   cursor: default;
 }
 
-/* line 9, ../scss/modules/auto-complete.scss */
+/* line 11, ../scss/modules/auto-complete.scss */
 .husky-auto-complete {
   position: relative;
   top: 0px;
@@ -7655,33 +7745,94 @@ a.btn-black, a.btn-highlight {
   display: table;
   width: 100%;
   font-size: 12px;
+  border: 1px solid #cccccc;
   border-radius: 3px 3px 0 0;
+  background: white;
 }
-/* line 19, ../scss/modules/auto-complete.scss */
+/* line 6, ../scss/modules/input.scss */
+.husky-auto-complete .front {
+  float: left;
+  line-height: 18px;
+  margin: 5px 0 0 0;
+  padding-right: 5px;
+  border-right: 1px solid #cccccc;
+  color: #999999;
+  font-size: 16px;
+}
+/* line 15, ../scss/modules/input.scss */
+.husky-auto-complete .front .color-field {
+  width: 15px;
+  height: 15px;
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  display: inline-block;
+  margin-top: 2px;
+}
+/* line 24, ../scss/modules/input.scss */
+.husky-auto-complete .front a {
+  padding-top: 1px;
+  text-decoration: none;
+  cursor: default;
+}
+/* line 29, ../scss/modules/input.scss */
+.husky-auto-complete .front a.clickable {
+  color: black;
+  cursor: pointer;
+}
+/* line 36, ../scss/modules/input.scss */
+.husky-auto-complete .back {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  line-height: 18px;
+  padding: 5px 10px 0 5px;
+  background: white;
+  color: #999999;
+  font-size: 16px;
+}
+/* line 47, ../scss/modules/input.scss */
+.husky-auto-complete .input {
+  overflow: hidden;
+  padding-left: 5px;
+}
+/* line 51, ../scss/modules/input.scss */
+.husky-auto-complete .input input {
+  height: 28px;
+  border: none;
+  outline-width: 0;
+  width: 100%;
+}
+/* line 59, ../scss/modules/input.scss */
+.husky-auto-complete .text {
+  font-size: 14px;
+}
+/* line 25, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"] {
   font-size: 14px;
-  width: 100%;
-  border: 1px solid #cccccc;
-  outline: 0;
-  background: white;
-  padding: 4px 8px;
-  border-radius: 3px 3px 0 0;
-  margin: 0;
-  height: 30px;
 }
-/* line 30, ../scss/modules/auto-complete.scss */
+/* line 28, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"]:focus {
   outline: 0 none;
 }
-
-/* line 36, ../scss/modules/auto-complete.scss */
-.twitter-typeahead {
-  width: 100%;
-  background-color: white;
-  border-radius: 3px 3px 0 0;
+/* line 33, ../scss/modules/auto-complete.scss */
+.husky-auto-complete .front {
+  padding-left: 5px;
+}
+/* line 37, ../scss/modules/auto-complete.scss */
+.form-horizontal .husky-auto-complete {
+  margin-top: 0;
 }
 
 /* line 42, ../scss/modules/auto-complete.scss */
+.twitter-typeahead {
+  width: 100%;
+}
+/* line 45, ../scss/modules/auto-complete.scss */
+.twitter-typeahead input[type="text"] {
+  border-radius: 3px 3px 0 0;
+}
+
+/* line 50, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
   width: 100%;
   top: 37px;
@@ -7689,7 +7840,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
 }
 
-/* line 49, ../scss/modules/auto-complete.scss */
+/* line 57, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
   width: 100%;
   border: 1px solid #cccccc;
@@ -7697,55 +7848,66 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
 }
 
-/* line 57, ../scss/modules/auto-complete.scss */
+/* line 65, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 61, ../scss/modules/auto-complete.scss */
+/* line 69, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
   width: 100%;
 }
 
-/* line 67, ../scss/modules/auto-complete.scss */
+/* line 75, ../scss/modules/auto-complete.scss */
 .suggestion:hover,
 .tt-is-under-cursor .suggestion {
   background: #52b6ca;
   color: white;
 }
-/* line 71, ../scss/modules/auto-complete.scss */
+/* line 79, ../scss/modules/auto-complete.scss */
 .suggestion:hover.disabled,
 .tt-is-under-cursor .suggestion.disabled {
   background: #efefef;
 }
 
-/* line 76, ../scss/modules/auto-complete.scss */
+/* line 84, ../scss/modules/auto-complete.scss */
 .suggestion {
+  white-space: nowrap;
   color: black;
   padding: 0 6px;
+  position: relative;
 }
-/* line 80, ../scss/modules/auto-complete.scss */
+/* line 90, ../scss/modules/auto-complete.scss */
 .suggestion .border {
   height: 25px;
-  clear: both;
+  white-space: nowrap;
 }
-/* line 83, ../scss/modules/auto-complete.scss */
+/* line 94, ../scss/modules/auto-complete.scss */
 .suggestion .border .icon {
-  display: block;
-  float: left;
+  display: inline-block;
   margin: 0 10px 0 10px;
   width: 12px;
   height: 25px;
   text-align: center;
   line-height: 25px;
+  position: absolute;
+  left: 4px;
+  top: 0;
 }
-/* line 92, ../scss/modules/auto-complete.scss */
+/* line 105, ../scss/modules/auto-complete.scss */
+.suggestion .border .icon + .text {
+  padding-left: 30px;
+}
+/* line 110, ../scss/modules/auto-complete.scss */
 .suggestion .border .text {
-  float: left;
+  display: inline-block;
+  width: 100%;
   line-height: 25px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-/* line 98, ../scss/modules/auto-complete.scss */
+/* line 119, ../scss/modules/auto-complete.scss */
 .suggestion.disabled {
   color: #999999;
   cursor: default;
@@ -7813,7 +7975,7 @@ a.btn-black, a.btn-highlight {
   position: absolute;
   padding-left: 8px;
   font-size: 16px;
-  line-height: 30px;
+  line-height: 28px;
   vertical-align: middle;
   text-decoration: none;
 }
@@ -7822,7 +7984,7 @@ a.btn-black, a.btn-highlight {
   display: none;
   position: absolute;
   right: 10px;
-  line-height: 30px;
+  line-height: 28px;
   vertical-align: middle;
   margin: auto;
   background-color: white;
@@ -8694,13 +8856,12 @@ a.btn-black, a.btn-highlight {
 
 /* line 37, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list {
-  padding: 1px 8px;
   border-radius: 3px;
   background-color: #fff;
   margin: 0;
   border: 1px solid #cccccc;
 }
-/* line 44, ../scss/modules/auto-complete-list.scss */
+/* line 43, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete {
   background: none;
   border-radius: 0;
@@ -8708,6 +8869,7 @@ a.btn-black, a.btn-highlight {
   margin: 0;
   display: block;
   margin-bottom: -5px;
+  border: 0;
 }
 /* line 52, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete input[type="text"] {
@@ -9106,8 +9268,8 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
   width: 100%;
-  margin: -30px 0 0 -4px;
-  height: 30px;
+  margin: -28px 0 0 -4px;
+  height: 28px;
   display: none;
 }
 /* line 166, ../scss/modules/datagrid.scss */
@@ -10350,7 +10512,7 @@ a.btn-black, a.btn-highlight {
   height: 130px;
 }
 
-/* line 5, ../scss/modules/input.scss */
+/* line 64, ../scss/modules/input.scss */
 .husky-input {
   background: white;
   position: relative;
@@ -10363,7 +10525,7 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 16, ../scss/modules/input.scss */
+/* line 6, ../scss/modules/input.scss */
 .husky-input .front {
   float: left;
   line-height: 18px;
@@ -10373,7 +10535,7 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 16px;
 }
-/* line 25, ../scss/modules/input.scss */
+/* line 15, ../scss/modules/input.scss */
 .husky-input .front .color-field {
   width: 15px;
   height: 15px;
@@ -10382,18 +10544,18 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   margin-top: 2px;
 }
-/* line 33, ../scss/modules/input.scss */
+/* line 24, ../scss/modules/input.scss */
 .husky-input .front a {
   padding-top: 1px;
   text-decoration: none;
   cursor: default;
 }
-/* line 37, ../scss/modules/input.scss */
+/* line 29, ../scss/modules/input.scss */
 .husky-input .front a.clickable {
   color: black;
   cursor: pointer;
 }
-/* line 43, ../scss/modules/input.scss */
+/* line 36, ../scss/modules/input.scss */
 .husky-input .back {
   position: absolute;
   top: 0px;
@@ -10404,38 +10566,38 @@ a.btn-black, a.btn-highlight {
   color: #999999;
   font-size: 16px;
 }
-/* line 53, ../scss/modules/input.scss */
+/* line 47, ../scss/modules/input.scss */
 .husky-input .input {
   overflow: hidden;
   padding-left: 5px;
 }
-/* line 56, ../scss/modules/input.scss */
+/* line 51, ../scss/modules/input.scss */
 .husky-input .input input {
   height: 28px;
   border: none;
   outline-width: 0;
   width: 100%;
 }
-/* line 63, ../scss/modules/input.scss */
+/* line 59, ../scss/modules/input.scss */
 .husky-input .text {
   font-size: 14px;
 }
-/* line 68, ../scss/modules/input.scss */
+/* line 77, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 71, ../scss/modules/input.scss */
+/* line 81, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: black;
   cursor: pointer;
 }
-/* line 78, ../scss/modules/input.scss */
+/* line 88, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: black;
   cursor: pointer;
 }
 
-/* line 87, ../scss/modules/input.scss */
+/* line 97, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }
