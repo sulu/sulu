@@ -49,8 +49,19 @@ class AuthenticationEntryPointTest extends ProphecyTestCase
     {
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
         $request->getPathInfo()->willReturn($url);
+        $request->isXmlHttpRequest()->willReturn(false);
         $result = $this->authenticationEntryPoint->start($request->reveal());
 
         $this->assertEquals($statusCode, $result->getStatusCode());
+    }
+
+    public function testStartAjax()
+    {
+        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request->isXmlHttpRequest()->willReturn(true);
+        $request->getPathInfo()->willReturn(true);
+        $result = $this->authenticationEntryPoint->start($request->reveal());
+
+        $this->assertEquals(401, $result->getStatusCode());
     }
 }

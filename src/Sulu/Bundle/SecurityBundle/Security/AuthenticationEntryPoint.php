@@ -37,7 +37,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        if (strpos($request->getPathInfo(), '/admin/api') === 0) {
+        if (strpos($request->getPathInfo(), '/admin/api') === 0 || $request->isXmlHttpRequest()) {
             $response = new Response('', 401);
         } else {
             $response = new RedirectResponse($this->urlGenerator->generate('sulu_admin.login'));
