@@ -404,7 +404,7 @@ class DefaultFormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormats($id, $fileName, $storageOptions)
+    public function getFormats($id, $fileName, $storageOptions, $version)
     {
         $formats = array();
 
@@ -413,7 +413,8 @@ class DefaultFormatManager implements FormatManagerInterface
                 $id,
                 $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
                 $storageOptions,
-                $format['name']
+                $format['name'],
+                $version
             );
         }
 

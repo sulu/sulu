@@ -726,7 +726,7 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function addFormatsAndUrl(Media $media)
     {
         $media->setFormats(
-            $this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions())
+            $this->formatManager->getFormats($media->getId(), $media->getName(), $media->getStorageOptions(), $media->getVersion())
         );
 
         $media->setUrl(
@@ -744,17 +744,6 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function getUser($userId)
     {
         return $this->userRepository->findUserById($userId);
-    }
-
-    /**
-     * @param $id
-     * @param $name
-     * @param $storageOptions
-     * @return mixed
-     */
-    protected function getFormats($id, $name, $storageOptions)
-    {
-        return $this->formatManager->getFormats($id, $name, $storageOptions);
     }
 
     /**
