@@ -27,7 +27,6 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use JMS\Serializer\Annotation\Groups;
 
 /**

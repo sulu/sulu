@@ -351,7 +351,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
-        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null, $this->tagManager));
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
     /**
@@ -362,7 +362,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $media = array();
         $mediaEntities = $this->mediaRepository->findMedia($filter, $limit);
         foreach ($mediaEntities as $mediaEntity) {
-            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null, $this->tagManager));
+            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
         return $media;
     }
@@ -476,7 +476,7 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['storageOptions'] = null;
         }
 
-        $media = new Media($mediaEntity, $data['locale'], null, $this->tagManager);
+        $media = new Media($mediaEntity, $data['locale'], null);
 
         $media = $this->setDataToMedia(
             $media,
@@ -540,7 +540,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->addFileVersion($fileVersion);
         $mediaEntity->addFile($file);
 
-        $media = new Media($mediaEntity, $data['locale'], null, $this->tagManager);
+        $media = new Media($mediaEntity, $data['locale'], null);
 
         $media = $this->setDataToMedia(
             $media,
