@@ -42,7 +42,7 @@ define(function () {
          * @event sulu.media-edit.edit
          * @param media {Object} the media model to edit
          */
-            EDIT = function () {
+        EDIT = function () {
             return createEventName.call(this, 'edit');
         },
 
@@ -50,19 +50,21 @@ define(function () {
          * raised if the media-edit overlay got closed
          * @event sulu.media-edit.closed
          */
-            CLOSED = function () {
+        CLOSED = function () {
             return createEventName.call(this, 'closed');
         },
 
         /** returns normalized event names */
-            createEventName = function (postFix) {
+        createEventName = function (postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
 
-        templates: ['/admin/media/template/media/info',
-            '/admin/media/template/media/multiple-edit'],
+        templates: [
+            '/admin/media/template/media/info',
+            '/admin/media/template/media/multiple-edit'
+        ],
 
         /**
          * Initializes the collections list
@@ -211,10 +213,8 @@ define(function () {
                         openOnStart: true,
                         instanceName: 'media-edit',
                         propagateEvents: false,
-                        okCallback: this.changeSingleModel.bind(this),
-                        closeCallback: function() {
-                            this.sandbox.stop(constants.infoFormSelector + ' *');
-                            this.sandbox.off('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added');
+                        okCallback: function() {
+                            this.changeSingleModel();
                         }.bind(this)
                     }
                 }
@@ -237,9 +237,6 @@ define(function () {
             }.bind(this));
             this.sandbox.once('husky.auto-complete-list.media-info-'+ this.media.id +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
-            }.bind(this));
-            this.sandbox.once('husky.overlay.media-edit.closed', function() {
-                this.sandbox.stop('.' + constants.singleEditClass);
             }.bind(this));
             this.sandbox.on('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
