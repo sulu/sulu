@@ -137,6 +137,7 @@
 
     <xs:complexType name="paramType">
         <xs:choice maxOccurs="unbounded">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:choice>
         <xs:attribute name="type" type="paramTypeType" default="string"/>
