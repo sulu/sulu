@@ -27,7 +27,8 @@ class TemplateException extends Exception
     /**
      * @param string $template The template causing the error
      */
-    public function __construct($template, $message = '') {
+    public function __construct($template, $message = '')
+    {
         $this->template = $template;
         parent::__construct($message);
     }
