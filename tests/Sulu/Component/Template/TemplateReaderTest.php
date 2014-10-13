@@ -209,8 +209,8 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
-            'The given XML is invalid! Tag(s) sulu.node.name required but not found'
+            '\Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException',
+            'The property with the name "title" is required, but was not found in the template "template"'
         );
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
@@ -900,8 +900,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     function testReservedName()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
-            'The given XML is invalid! Property name changed is a reserved'
+            '\Sulu\Component\Content\Template\Exception\ReservedPropertyNameException'
         );
 
         $templateReader = new TemplateReader();
@@ -961,7 +960,20 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($template, $result);
     }
 
-    function arrayRecursiveDiff($aArray1, $aArray2)
+    public function testWithoutTitle()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException',
+            'The property with the name "title" is required, but was not found in the template "template"'
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_title.xml'
+        );
+    }
+
+    private function arrayRecursiveDiff($aArray1, $aArray2)
     {
         $aReturn = array();
 

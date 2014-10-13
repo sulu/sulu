@@ -10,14 +10,14 @@
 
 namespace Sulu\Component\Content\Template\Exception;
 
-
-use Exception;
-
-class InvalidXmlException extends Exception
+/**
+ * Thrown when the xml definition of a template contains an error
+ * @package Sulu\Component\Content\Template\Exception
+ */
+class InvalidXmlException extends TemplateException
 {
-    public function __construct($message = '')
+    public function __construct($template, $message = 'The given XML is invalid.')
     {
-        $msg = 'The given XML is invalid!';
-        parent::__construct($msg . ' ' . $message);
+        parent::__construct($template, $message);
     }
 }
