@@ -298,11 +298,14 @@ define([], function() {
 
             var thenFunction = function (data) {
                 var snippets = data._embedded.snippets;
+                var linkList = this.sandbox.dom.createElement('<ul class="items-list"/>');
+                this.sandbox.dom.html(snippetListEl, linkList);
 
                 // I AM HERE ....
                 this.sandbox.util.each(snippets, function (i) {
                     var snippet = snippets[i];
-                    renderSnippetItem.call(this, snippet, snippetListEl);
+                    renderSnippetItem.call(this, snippet, linkList);
+
                 }.bind(this));
             };
 
