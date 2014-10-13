@@ -21,7 +21,6 @@
                 <placeholder lang="de">Platzhalter-Info-DE</placeholder>
                 <placeholder lang="en">Placeholder-Info-EN</placeholder>
             </meta>
-            <tag name="sulu.node.name"/>
             <tag name="sulu.node.title" priority="10"/>
         </property>
 

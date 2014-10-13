@@ -11,7 +11,6 @@
 
     <properties>
         <property name="changed" type="text_line" mandatory="true">
-            <tag name="sulu.node.name" />
         </property>
     </properties>
 </template>
