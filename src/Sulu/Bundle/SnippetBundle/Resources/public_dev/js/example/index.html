@@ -74,10 +74,13 @@
                         options: {
                             el: '#snippet_content',
                             instanceName: 'i1',
-                            url: 'data',
-                            urlAll: 'data/snippets',
-                            preselected: { ids: [ '1234', '4321' ] },
-                            snippetType: 'hotel'
+                            // url: 'http://sulu.lo/bundles/sulusnippet/js/example/data',
+                            url: 'http://sulu.lo/admin/api/snippets',
+                            // urlAll: 'http://sulu.lo/bundles/sulusnippet/js/example/data/snippets',
+                            urlAll: 'http://sulu.lo/admin/api/snippets?webspace=sulu_io&language=de',
+                            preselected: { ids: [ 'b2d24529-548a-4b7c-a5c7-d3ddf7a9b01c' ] },
+                            snippetType: 'hotel',
+                            language: 'de'
                         }
                     }
                 ]).then(function() {
@@ -88,12 +91,6 @@
 
         <div class="container">
             <div class="grid">
-                <div class="grid-row">
-                    <div class="grid-col-3 fixed-width">
-                        <button rel="address_1" class="load_data_button">Load Data 1</button>
-                        <button rel="address_2" class="load_data_button">Load Data 2</button>
-                    </div>
-                </div>
                 <div class="grid-row">
                     <div class="grid-col-6 fixed-width">
                         <div id="snippet_content"></div>

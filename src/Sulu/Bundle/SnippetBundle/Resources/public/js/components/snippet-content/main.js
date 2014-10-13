@@ -27,6 +27,7 @@ define([], function() {
             titleKey: 'title',
             resultKey: '',
             urlAll: '',
+            language: null,
             snippetType: null,
             translations: {
                 noSnippetsSelected: 'snippet-content.nosnippets-selected',
@@ -47,14 +48,6 @@ define([], function() {
          * @type {string}
          */
         eventNamespace = 'sulu.snippet-content.',
-
-        /**
-         * raised when all overlay components returned their value
-         * @event sulu.snippet-content.input-retrieved
-         */
-        INPUT_RETRIEVED = function() {
-            return createEventName.call(this, 'input-retrieved');
-        },
 
         /**
          * raised when the overlay data has been changed
@@ -201,42 +194,12 @@ define([], function() {
         bindCustomEvents = function() {
             this.sandbox.on('husky.overlay.snippet-content.' + this.options.instanceName + '.add.initialized', initSnippetList.bind(this));
 
-            this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.edit', selectSnippet.bind(this));
-
-            // data from overlay retrieved
-            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
-                setURIGet.call(this);
-                loadContent.call(this);
-            }.bind(this));
+            this.sandbox.dom.on(getId.call(this, 'content'), 'click', removeSnippet.bind(this), 'li .remove');
 
             // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.column-navigation.'+ this.options.instanceName +'.initialized', function() {
+            this.sandbox.on('husky.datagrid.initialized', function() {
                 this.sandbox.emit('husky.overlay.snippet-content.' + this.options.instanceName + '.add.set-position');
             }.bind(this));
-        },
-
-        /**
-         * Handles the selection of a link
-         * @param item {Object} the object of the link node
-         */
-        selectSnippet = function(item) {
-            if (this.data.ids.indexOf(item.id) === -1) {
-                this.data.ids.push(item.id);
-                this.items.push(item);
-
-                // render only one link if the list already exists, else render the whole content
-                if (!!this.$find('.items-list').length) {
-                    renderSnippetItem.call(this, item, this.linkList);
-                    detachFooter.call(this);
-                    this.itemsVisible = this.options.visibleItems;
-                    renderFooter.call(this);
-                } else {
-                    renderContent.call(this);
-                }
-
-                setData.call(this, this.data);
-                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-            }
         },
 
         /**
@@ -284,37 +247,36 @@ define([], function() {
          * initialize column navigation
          */
         initSnippetList = function() {
-            var snippetListEl = getId.call(this, 'snippetList');
+
             this.sandbox.start([
                 {
-                    name: 'loader@husky',
+                    name: 'datagrid@husky',
                     options: {
-                        el: snippetListEl,
-                        size: '100px',
-                        color: '#cccccc'
+                        url: this.URIGetAll.str,
+                        preselected: [],
+                        pagination: false,
+                        resultKey: 'snippets',
+                        sortable: true,
+                        searchInstanceName: 'test',
+                        searchFields: ['title'],
+                        columnOptionsInstanceName: '',
+                        el: getId.call(this, 'snippetList'),
+                        matchings: [
+                            {
+                                content: 'Title',
+                                width: "100%",
+                                name: "title",
+                                editable: true,
+                                sortable: true,
+                                type: 'title',
+                                validation: {
+                                    required: false
+                                }
+                            }
+                        ]
                     }
                 }
             ]);
-
-            var thenFunction = function (data) {
-                var snippets = data._embedded.snippets;
-                var linkList = this.sandbox.dom.createElement('<ul class="items-list"/>');
-                this.sandbox.dom.html(snippetListEl, linkList);
-
-                // I AM HERE ....
-                this.sandbox.util.each(snippets, function (i) {
-                    var snippet = snippets[i];
-                    renderSnippetItem.call(this, snippet, linkList);
-
-                }.bind(this));
-            };
-
-            $.ajax({
-                url: this.URIGetAll.str,
-                dataType: 'json',
-                success: thenFunction.bind(this),
-                error: function (e) { this.sandbox.logger.log(e); }
-            });
         },
 
         /**
@@ -396,12 +358,23 @@ define([], function() {
                             {
                                 title: this.sandbox.translate(this.options.translations.addSnippets),
                                 cssClass: 'snippet-content-overlay-add',
-                                data: templates.data(this.options)
+                                data: templates.data(this.options),
+                                okCallback: addSnippets.bind(this)
                             }
                         ]
                     }
                 }
             ]);
+        },
+
+        addSnippets = function () {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
+                this.data.ids = this.data.ids.concat(selected);
+                setData.call(this, this.data);
+                setURIGet.call(this);
+                loadContent.call(this);
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+            }.bind(this));
         },
 
         /**
@@ -484,7 +457,11 @@ define([], function() {
             var newURIGet = [
                 this.options.url,
                 '/',
-                (this.data.ids || []).join(',')
+                (this.data.ids || []).join(','),
+                '?language=',
+                this.options.language,
+                '&webspace=',
+                'sulu_io' // REMOVE THIS
             ].join('');
 
             if (newURIGet !== this.URIGet.str) {
@@ -501,7 +478,7 @@ define([], function() {
         setURIGetAll = function() {
             var newURIGetAll = [
                 this.options.urlAll,
-                '?type=',
+                '&type=',
                 this.options.snippetType
             ].join('');
 
@@ -526,6 +503,10 @@ define([], function() {
         initialize: function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
+
+            if (!this.options.language) {
+                this.sandbox.logger.log('asd');
+            }
             this.data = {};
             this.linkList = null;
 

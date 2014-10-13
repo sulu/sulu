@@ -244,11 +244,11 @@ class SnippetController
         $this->webspaceKey = $request->query->get('webspace', null);
         $this->languageCode = $request->query->get('language', null);
 
-        if (null === $this->webspaceKey) {
+        if (!$this->webspaceKey) {
             throw new \InvalidArgumentException('You must provide the "webspace" query parameter');
         }
 
-        if (null === $this->languageCode) {
+        if (!$this->languageCode) {
             throw new \InvalidArgumentException('You must provide the "language" query parameter');
         }
     }
