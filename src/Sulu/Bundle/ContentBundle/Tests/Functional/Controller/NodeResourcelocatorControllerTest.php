@@ -9,16 +9,11 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class NodeResourcelocatorControllerTest extends DatabaseTestCase
+class NodeResourcelocatorControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
     /**
      * @var SessionInterface
      */
@@ -36,22 +31,10 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
 
     protected function setUp()
     {
-        $this->setUpSchema();
-        $this->prepareSession();
-
-        NodeHelper::purgeWorkspace($this->session);
-        $this->session->save();
-
-        $this->session->save();
-
-        $cmf = $this->session->getRootNode()->addNode('cmf');
-        $webspace = $cmf->addNode('sulu_io');
-        $nodes = $webspace->addNode('routes');
-        $nodes->addNode('en');
-        $webspace->addNode('contents');
-
-        $this->session->save();
-
+        $this->session = $this->db('PHPCR')->getOm()->getPhpcrSession();
+        $this->purgeDatabase();
+        $this->initPhpcr();
+        $this->data = $this->prepareRepositoryContent();
         $this->client = $this->createClient(
             array(),
             array(
@@ -59,40 +42,6 @@ class NodeResourcelocatorControllerTest extends DatabaseTestCase
                 'PHP_AUTH_PW' => 'test',
             )
         );
-
-        $this->data = $this->prepareRepositoryContent();
-    }
-
-    private function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private function prepareSession()
-    {
-        $factoryclass = '\Jackalope\RepositoryFactoryJackrabbit';
-        $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
-        $factory = new $factoryclass();
-        $repository = $factory->getRepository($parameters);
-        $credentials = new \PHPCR\SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'test');
-    }
-
-    protected function tearDown()
-    {
-        if ($this->session != null) {
-            NodeHelper::purgeWorkspace($this->session);
-            $this->session->save();
-        }
-        parent::tearDown();
     }
 
     private function prepareRepositoryContent()
