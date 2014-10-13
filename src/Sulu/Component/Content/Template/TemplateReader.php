@@ -59,8 +59,7 @@ class TemplateReader implements LoaderInterface
     public function load($resource, $type = null)
     {
         // init running vars
-        // DEEP COPY
-        $requiredTags = array_merge(array(), $this->requiredTags);
+        $requiredTags = $this->requiredTags;
         $tags = array();
 
         // read file
