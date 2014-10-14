@@ -55,6 +55,12 @@ abstract class Page extends Structure
     private $internalLinkContent;
 
     /**
+     * absolute path of node
+     * @var string
+     */
+    private $path;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
@@ -187,6 +193,7 @@ abstract class Page extends Structure
         $result = array_merge(
             parent::toArray($complete),
             array(
+                'path' => $this->path,
                 'nodeState' => $this->getNodeState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
@@ -246,5 +253,22 @@ abstract class Page extends Structure
     public function setExt($ext)
     {
         $this->ext = $ext;
+    }
+
+    /**
+     * returns absolute path of node
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 }

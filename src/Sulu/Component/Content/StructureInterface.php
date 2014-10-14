@@ -57,22 +57,6 @@ interface StructureInterface extends \JsonSerializable
     public function setUuid($uuid);
 
     /**
-     * returns absolute path of node
-     * @return string
-     */
-    public function getPath();
-
-    /**
-     * @param string $path
-     */
-    public function setPath($path);
-    /**
-     * returns id of creator
-     * @return int
-     */
-    public function getCreator();
-
-    /**
      * sets user id of creator
      * @param $userId int id of creator
      */

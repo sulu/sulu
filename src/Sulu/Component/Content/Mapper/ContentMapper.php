@@ -516,7 +516,6 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setPath(str_replace($contentNode->getPath(), '', $node->getPath()));
         $structure->setNodeType(
             $node->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT)
         );
@@ -540,6 +539,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         if (Structure::TYPE_PAGE === $structureType) {
+            $structure->setPath(str_replace($root->getPath(), '', $node->getPath()));
             $structure->setNavContexts(
                 $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
@@ -900,7 +900,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
+    public function load($uuid, $webspaceKey = null, $languageCode, $loadGhostContent = false)
     {
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.load');
@@ -942,7 +942,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey = null, $languageCode, $segmentKey = null)
     {
         $session = $this->getSession();
         $uuid = $this->getResourceLocator()->loadContentNodeUuid(
@@ -968,7 +968,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey)
+    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey = null)
     {
         $result = $query->execute();
         $structures = array();
@@ -993,7 +993,7 @@ class ContentMapper implements ContentMapperInterface
     public function loadTreeByUuid(
         $uuid,
         $languageCode,
-        $webspaceKey,
+        $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
@@ -1117,7 +1117,7 @@ class ContentMapper implements ContentMapperInterface
     public function loadByNode(
         NodeInterface $contentNode,
         $localization,
-        $webspaceKey,
+        $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false,
         $excludeShadow = true
@@ -1195,7 +1195,6 @@ class ContentMapper implements ContentMapperInterface
         $structure->setIsShadow($shadowOn);
         $structure->setShadowBaseLanguage($shadowBaseLanguage);
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
         $structure->setNodeType(
             $contentNode->getPropertyValueWithDefault(
                 $this->properties->getName('nodeType'),
@@ -1240,6 +1239,7 @@ class ContentMapper implements ContentMapperInterface
         }
         
         if ($structureType === Structure::TYPE_PAGE) {
+            $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
             $structure->setNodeState(
                 $contentNode->getPropertyValueWithDefault(
                     $this->properties->getName('state'),

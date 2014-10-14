@@ -92,12 +92,6 @@ abstract class Structure implements StructureInterface
     private $uuid;
 
     /**
-     * absolute path of node
-     * @var string
-     */
-    private $path;
-
-    /**
      * user id of creator
      * @var int
      */
@@ -310,22 +304,6 @@ abstract class Structure implements StructureInterface
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
     }
 
     /**
@@ -778,7 +756,6 @@ abstract class Structure implements StructureInterface
         if ($complete) {
             $result = array(
                 'id' => $this->uuid,
-                'path' => $this->path,
                 'nodeType' => $this->nodeType,
                 'internal' => $this->internal,
                 'enabledShadowLanguages' => $this->getEnabledShadowLanguages(),
