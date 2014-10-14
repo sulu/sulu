@@ -39,5 +39,6 @@
         "psr-0": {
             "Sulu\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
