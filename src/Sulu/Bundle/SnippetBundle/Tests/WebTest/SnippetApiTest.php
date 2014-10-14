@@ -59,6 +59,26 @@ class SnippetApiTest extends SuluTestCase
         $this->assertEquals($this->hotel1->getUuid(), $res['id']);
     }
 
+    public function testGetMultipleWithNotExistingIds()
+    {
+        $this->client->request('GET', sprintf(
+            '/snippets/%s,%s,%s%s',
+            $this->hotel1->getUuid(),
+            '1234',
+            $this->hotel2->getUuid(),
+            '?language=de&webspace=sulu_io'
+        ));
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $res = json_decode($response->getContent(), true);
+
+        $this->assertCount(2, $res);
+        $res = reset($res);
+        $this->assertEquals('Le grande budapest', $res['title']);
+        $this->assertEquals($this->hotel1->getUuid(), $res['id']);
+    }
+
     public function provideIndex()
     {
         return array(

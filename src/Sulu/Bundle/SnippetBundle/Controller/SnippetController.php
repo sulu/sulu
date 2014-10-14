@@ -109,6 +109,10 @@ class SnippetController
      * An array of snippets is always returned.
      * Multiple Snippet IDs must be delimited with a comma.
      *
+     * Note the defaults below allow us to generate the base URL for the benefit
+     * of the javascript code (i.e. we can pass the base URL without the UUID to the
+     * javascript code).
+     *
      * @Get(defaults={"uuid" = ""}, requirements={ "uuid" = ".*" })
      */
     public function getSnippetAction(Request $request, $uuid = null)
@@ -125,8 +129,12 @@ class SnippetController
 
         $snippets = array();
         foreach ($uuids as $uuid) {
-            $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
-            $snippets[] = $this->decorateSnippet($snippet->toArray());
+            try {
+                $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
+                $snippets[] = $this->decorateSnippet($snippet->toArray());
+            } catch (\PHPCR\ItemNotFoundException $e) {
+                // ignore not found items
+            }
         }
 
         $view = View::create($snippets);
