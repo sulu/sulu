@@ -68,7 +68,7 @@ define([], function() {
             var template = this.sandbox.util.template(templates.skeleton.call(this));
 
             // skeleton
-            this.html(template);
+            this.$el.html(template);
 
             // bind events (also initializes first component)
             this.bindCustomEvents();

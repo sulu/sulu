@@ -588,7 +588,7 @@ define([], function () {
                     // first start the content-component responsible for the tabs-content-handling
                     this.startContentTabsComponent();
                     // wait for content-component to initialize
-                    this.sandbox.on('sulu.content-tabs.content.initialized', function () {
+                    this.sandbox.once('sulu.content-tabs.content.initialized', function () {
                         this.startTabsComponent(def);
                     }.bind(this));
                 } else {
@@ -622,7 +622,7 @@ define([], function () {
                 this.sandbox.dom.addClass(constants.headerBackgroundSelector, constants.hasTabsClass);
 
                 // wait for initialized
-                this.sandbox.on('husky.tabs.header.initialized', function () {
+                this.sandbox.once('husky.tabs.header.initialized', function () {
                     def.resolve();
                 }.bind(this));
 
@@ -713,7 +713,7 @@ define([], function () {
 
             // wait for initialized
             if (!!def) {
-                this.sandbox.on('husky.toolbar.' + this.toolbarInstanceName  + '.initialized', function () {
+                this.sandbox.once('husky.toolbar.' + this.toolbarInstanceName  + '.initialized', function () {
                     def.resolve();
                 }.bind(this));
             }

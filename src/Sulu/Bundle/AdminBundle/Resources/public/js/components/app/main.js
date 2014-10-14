@@ -38,7 +38,7 @@ define(function() {
          * raised after the initialization has finished
          * @event sulu.app.initialized
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName('initialized');
         },
 
@@ -47,7 +47,7 @@ define(function() {
          * @event sulu.app.content.has-started
          * @param {function} callback The callback to pass true on
          */
-            HAS_STARTED = function() {
+        HAS_STARTED = function() {
             return createEventName('has-started');
         },
 
@@ -56,9 +56,9 @@ define(function() {
          * @event sulu.app.change-user-locale
          * @param {String} the locale to change to
          */
-         CHANGE_USER_LOCALE = function() {
+        CHANGE_USER_LOCALE = function() {
             return createEventName('change-user-locale');
-         },
+        },
 
         /**
          * listens on and changes the width type of the column
@@ -92,7 +92,7 @@ define(function() {
         /**
          * Creates the event-names
          */
-            createEventName = function(postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + postFix;
         };
 
@@ -200,7 +200,7 @@ define(function() {
         /**
          * Handler for the sulu.router.navigate event. Calls the backbone-router
          * @param route {String} the route to navigate to
-         * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the borswer-url will be updated
+         * @param trigger {Boolean} if trigger is true it will be actually navigated to the route. Otherwise only the browser-url will be updated
          * @param noLoader {Boolean} if false no loader will be instantiated
          * @param forceReload {Boolean} force page to reload
          */
@@ -236,7 +236,8 @@ define(function() {
             // and the stop method will be called
             App.stop('#sulu-content-container');
             App.stop('#content > *');
-            App.stop('#preview > *');
+            App.stop('#sidebar > *');
+            app.cleanUp();
         },
 
         /**
@@ -284,7 +285,7 @@ define(function() {
             }.bind(this));
 
             this.sandbox.on('husky.navigation.version-history.clicked', function() {
-                window.open(constants.versionHistoryUrl,'_blank');
+                window.open(constants.versionHistoryUrl, '_blank');
             }.bind(this));
 
             // change user locale
@@ -446,7 +447,7 @@ define(function() {
          */
         routeToUserForm: function() {
             //Todo: don't use hardcoded url
-            this.navigate('contacts/contacts/edit:'+ this.sandbox.sulu.user.id +'/details', true, false);
+            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.id + '/details', true, false);
         },
 
         /**

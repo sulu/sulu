@@ -83,5 +83,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         });
 
         app.start();
+
+        window.app = app;
     });
 });

@@ -15732,7 +15732,6 @@ define('aura/ext/mediator', ['eventemitter','underscore'],function () {
             try {
               listener.apply(context, args);
             } catch(e) {
-              console.warn("App logger: ", app.logger);
               app.logger.error("Error caught in listener '" + name + "', called with arguments: ", args, "\nError:", e.message, e, args);
             }
           };
@@ -15916,7 +15915,7 @@ define('aura/ext/components', [],function() {
     }
 
     /**
-     * Method called on Components' initialization.
+     * Method called on Component's initialization.
      *
      * @method initialize
      * @param {Object} options options Object passed on Component initialization
@@ -15924,7 +15923,7 @@ define('aura/ext/components', [],function() {
     Component.prototype.initialize = function() {};
 
     /**
-     * A helper function to render markup and recursilvely start nested components.
+     * A helper function to render markup and recursively start nested components.
      *
      * @method  html
      * @param  {String} markup the markup to render in the component's root el
@@ -26241,6 +26240,9 @@ define('bower_components/aura/lib/platform',[],function() {
         context = context || document;
         return $(context).find(selector);
       },
+      contains: function(selector, context) {
+        return $.contains(context || document, selector);
+      },
       data: function(selector, attribute) {
         return $(selector).data(attribute);
       }
@@ -26310,12 +26312,14 @@ define('bower_components/aura/lib/logger',[], function() {
     this._error   = (console.error || this._log);
     this._enabled = true;
 
-    if (Function.prototype.bind && typeof console === "object") {
-      var logFns = ["log", "warn", "error"];
-      for (var i = 0; i < logFns.length; i++) {
-        console[logFns[i]] = Function.prototype.call.bind(console[logFns[i]], console);
+    try {
+      if (Function.prototype.bind && typeof console === "object") {
+        var logFns = ["log", "warn", "error"];
+        for (var i = 0; i < logFns.length; i++) {
+          console[logFns[i]] = Function.prototype.call.bind(console[logFns[i]], console);
+        }
       }
-    }
+    } catch(e) {}
 
     return this;
   };
@@ -26799,6 +26803,24 @@ define('bower_components/aura/lib/aura',[
     app.stop = function() {
       // TODO: We ne to actually do some cleanup here.
       app.started = false;
+    };
+
+    /**
+     * Check if any component is not stopped correctly and still referenced by aura.
+     * If that is the case we will stop the component and remove it.
+     * TODO: Consider using 'MutationObserver' for cleanup
+     *
+     * @method cleanUp
+     * @return {void}
+     */
+    app.cleanUp = function () {
+      _.defer(function() {    
+        _.each(appSandboxes, function(sandbox) {
+          if (!!sandbox && !!sandbox.el && !app.core.dom.contains($(sandbox.el)[0], document)) {
+            sandbox.stop();
+          }
+        });
+      });
     };
 
     /**
@@ -35020,7 +35042,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                 arrowUpClass: 'fa-caret-up',
                 slideDuration: 500,
                 elementTagDataName: 'tags',
-                autoCompleteIcon: '',
+                autoCompleteIcon: 'search',
                 suggestionIcon: 'tag',
                 delimiters: [9, 188, 13],
                 noNewTags: false
@@ -38520,7 +38542,7 @@ define('__component__$overlay@husky',[], function() {
             instanceName: 'undefined',
             draggable: true,
             openOnStart: false,
-            removeOnClose: false,
+            removeOnClose: true,
             backdrop: true,
             backdropClose: true,
             backdropColor: '#000000',
@@ -38679,13 +38701,13 @@ define('__component__$overlay@husky',[], function() {
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'husky.overlay.',
+        eventNamespace = 'husky.overlay.',
 
         /**
          * raised after initialization process
          * @event husky.overlay.<instance-name>.initialize
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return createEventName.call(this, 'initialized');
         },
 
@@ -38693,7 +38715,7 @@ define('__component__$overlay@husky',[], function() {
          * raised after overlay is opened
          * @event husky.overlay.<instance-name>.opened
          */
-            OPENED = function() {
+        OPENED = function() {
             return createEventName.call(this, 'opened');
         },
 
@@ -38701,7 +38723,7 @@ define('__component__$overlay@husky',[], function() {
          * raised after overlay is closed
          * @event husky.overlay.<instance-name>.closed
          */
-            CLOSED = function() {
+        CLOSED = function() {
             return createEventName.call(this, 'closed');
         },
 
@@ -38709,7 +38731,7 @@ define('__component__$overlay@husky',[], function() {
          * raised after overlay is closing
          * @event husky.overlay.<instance-name>.closing
          */
-            CLOSING = function() {
+        CLOSING = function() {
             return createEventName.call(this, 'closing');
         },
 
@@ -38717,7 +38739,7 @@ define('__component__$overlay@husky',[], function() {
          * used to activate all ok buttons
          * @event husky.overlay.<instance-name>.okbutton.activate
          */
-            OKBUTTON_ACTIVATE = function() {
+        OKBUTTON_ACTIVATE = function() {
             return createEventName.call(this, 'okbutton.activate');
         },
 
@@ -38725,7 +38747,7 @@ define('__component__$overlay@husky',[], function() {
          * used to deactivate all ok buttons
          * @event husky.overlay.<instance-name>.okbutton.deactivate
          */
-            OKBUTTON_DEACTIVATE = function() {
+        OKBUTTON_DEACTIVATE = function() {
             return createEventName.call(this, 'okbutton.deactivate');
         },
 
@@ -38733,7 +38755,7 @@ define('__component__$overlay@husky',[], function() {
          * removes the component
          * @event husky.overlay.<instance-name>.remove
          */
-            REMOVE = function() {
+        REMOVE = function() {
             return createEventName.call(this, 'remove');
         },
 
@@ -38741,7 +38763,7 @@ define('__component__$overlay@husky',[], function() {
          * opens the overlay
          * @event husky.overlay.<instance-name>.open
          */
-            OPEN = function() {
+        OPEN = function() {
             return createEventName.call(this, 'open');
         },
 
@@ -38749,7 +38771,7 @@ define('__component__$overlay@husky',[], function() {
          * closes the overlay
          * @event husky.overlay.<instance-name>.close
          */
-            CLOSE = function() {
+        CLOSE = function() {
             return createEventName.call(this, 'close');
         },
 
@@ -38757,7 +38779,7 @@ define('__component__$overlay@husky',[], function() {
          * calls the resize handler of the overlay to set the position, height etc.
          * @event husky.overlay.<instance-name>.set-position
          */
-            SET_POSITION = function() {
+        SET_POSITION = function() {
             return createEventName.call(this, 'set-position');
         },
 
@@ -38767,7 +38789,7 @@ define('__component__$overlay@husky',[], function() {
          * @param {String} selected language
          * @param {Object} currently active tab
          */
-            LANGUAGE_CHANGED = function() {
+        LANGUAGE_CHANGED = function() {
             return createEventName.call(this, 'language-changed');
         },
 
@@ -38775,7 +38797,7 @@ define('__component__$overlay@husky',[], function() {
          * slide left
          * @event husky.overlay.<instance-name>.slide-left
          */
-            SLIDE_LEFT = function() {
+        SLIDE_LEFT = function() {
             return createEventName.call(this, 'slide-left');
         },
 
@@ -38783,12 +38805,12 @@ define('__component__$overlay@husky',[], function() {
          * slide right
          * @event husky.overlay.<instance-name>.slide-right
          */
-            SLIDE_RIGHT = function() {
+        SLIDE_RIGHT = function() {
             return createEventName.call(this, 'slide-right');
         },
 
         /** returns normalized event names */
-            createEventName = function(postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -38908,18 +38930,13 @@ define('__component__$overlay@husky',[], function() {
          * Removes the component
          */
         removeComponent: function() {
-            this.sandbox.dom.off(this.overlay.$el);
-            this.sandbox.dom.off(this.$backdrop);
-            this.sandbox.dom.off(this.$trigger, this.options.trigger + '.overlay.' + this.options.instanceName);
-            this.sandbox.dom.remove(this.$backdrop);
-            this.sandbox.dom.remove(this.overlay.$el);
-
             // todo fix bug: sometimes overlay-sandbox has own sandbox or parent-sandboxes as child which
             // couses an endless loop. The bug can be reproduced by starting the component
             // in a clickhandler with openOnStart-option true
-            //this.sandbox.stop();
+            // this.sandbox.stop();
 
             this.sandbox.stop('*');
+            this.sandbox.stop();
             this.sandbox.stopListening();
             this.sandbox.dom.remove(this.$el);
         },
@@ -39061,11 +39078,7 @@ define('__component__$overlay@husky',[], function() {
          */
         closeOverlay: function() {
             this.sandbox.emit(CLOSING.call(this));
-
-            this.sandbox.dom.detach(this.overlay.$el);
-            if (this.options.backdrop === true) {
-                this.sandbox.dom.detach(this.$backdrop);
-            }
+            
             this.overlay.opened = false;
             this.dragged = false;
             this.collapsed = false;
@@ -39774,7 +39787,7 @@ define('__component__$label@husky',[],function() {
          * Handles closing the component
          */
         close: function() {
-            this.sandbox.dom.remove(this.$el);
+            this.sandbox.stop();
         }
     };
 
@@ -42039,6 +42052,7 @@ if(jQuery) (function($) {
 			change: null,
 			changeDelay: 0,
 			control: 'hue',
+			dataUris: true,
 			defaultValue: '',
 			hide: null,
 			hideSpeed: 100,
@@ -42153,7 +42167,8 @@ if(jQuery) (function($) {
 		// The wrapper
 		minicolors
 			.addClass('minicolors-theme-' + settings.theme)
-			.toggleClass('minicolors-with-opacity', settings.opacity);
+			.toggleClass('minicolors-with-opacity', settings.opacity)
+			.toggleClass('minicolors-no-data-uris', settings.dataUris !== true);
 
 		// Custom positioning
 		if( settings.position !== undefined ) {
@@ -42171,13 +42186,13 @@ if(jQuery) (function($) {
 			.wrap(minicolors)
 			.after(
 				'<div class="minicolors-panel minicolors-slider-' + settings.control + '">' +
-					'<div class="minicolors-slider">' +
+					'<div class="minicolors-slider minicolors-sprite">' +
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
-					'<div class="minicolors-opacity-slider">' +
+					'<div class="minicolors-opacity-slider minicolors-sprite">' +
 						'<div class="minicolors-picker"></div>' +
 					'</div>' +
-					'<div class="minicolors-grid">' +
+					'<div class="minicolors-grid minicolors-sprite">' +
 						'<div class="minicolors-grid-inner"></div>' +
 						'<div class="minicolors-picker"><div></div></div>' +
 					'</div>' +
@@ -42186,7 +42201,7 @@ if(jQuery) (function($) {
 
 		// The swatch
 		if( !settings.inline ) {
-			input.after('<span class="minicolors-swatch"><span class="minicolors-swatch-color"></span></span>');
+			input.after('<span class="minicolors-swatch minicolors-sprite"><span class="minicolors-swatch-color"></span></span>');
 			input.next('.minicolors-swatch').on('click', function(event) {
 				event.preventDefault();
 				input.focus();
