@@ -30,7 +30,7 @@
         "jackalope/jackalope-doctrine-dbal": "1.1.*",
         "matthiasnoback/symfony-dependency-injection-test": "~0.1",
         "matthiasnoback/symfony-config-test": "~0.3",
-        "sulu/test-bundle": "dev-develop"
+        "sulu/test-bundle": "dev-feature/node-helper"
     },
     "suggest": {
         "massive/build-bundle": "For initializing the Sulu environment"
@@ -39,5 +39,6 @@
         "psr-0": {
             "Sulu\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

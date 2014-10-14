@@ -81,18 +81,4 @@ class MultipleTranslatedProperties
             throw new NoSuchPropertyException($key);
         }
     }
-
-    public function getLanguagesForNode(NodeInterface $node)
-    {
-        $languages = array();
-        foreach ($node->getProperties() as $property) {
-            preg_match('/^' . $this->languageNamespace . ':(.*?)-template/', $property->getName(), $matches);
-
-            if ($matches) {
-                $languages[$matches[1]] = $matches[1];
-            }
-        }
-
-        return array_values($languages);
-    }
 }
