@@ -476,9 +476,9 @@ input, select {
   transition: opacity 100ms ease-in 200ms;
 }
 /* line 53, ../scss/modules/sidebar.scss */
-.sulu-sidebar .blue-icon > span {
+.sulu-sidebar h2 .blue-icon > span {
   vertical-align: text-top;
-  margin-top: -3px;
+  margin-top: -4px;
 }
 /* line 58, ../scss/modules/sidebar.scss */
 .sulu-sidebar .show-icon:hover .blue-icon {
