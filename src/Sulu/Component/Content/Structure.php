@@ -545,7 +545,7 @@ abstract class Structure implements StructureInterface
      * set if this structure should act like a shadow
      * @return boolean
      */
-    public function getIsShadow() 
+    public function getIsShadow()
     {
         return $this->isShadow;
     }
@@ -563,7 +563,7 @@ abstract class Structure implements StructureInterface
      * return the shadow base language
      * @return string
      */
-    public function getShadowBaseLanguage() 
+    public function getShadowBaseLanguage()
     {
         return $this->shadowBaseLanguage;
     }
@@ -698,7 +698,12 @@ abstract class Structure implements StructureInterface
      */
     public function getLocalizedTitle($languageCode)
     {
-        return $this->metaData->get('title', $languageCode, ucfirst($this->key));
+        $default = ucfirst($this->key);
+        if ($this->metaData) {
+            return $this->metaData->get('title', $languageCode, $default);
+        } else {
+            return $default;
+        }
     }
 
     /**
@@ -836,7 +841,7 @@ abstract class Structure implements StructureInterface
      * (determined at runtime)
      * @return array
      */
-    public function getEnabledShadowLanguages() 
+    public function getEnabledShadowLanguages()
     {
         return $this->enabledShadowLanguages;
     }
@@ -856,7 +861,7 @@ abstract class Structure implements StructureInterface
      *
      * @return array
      */
-    public function getConcreteLanguages() 
+    public function getConcreteLanguages()
     {
         return $this->concreteLanguages;
     }
