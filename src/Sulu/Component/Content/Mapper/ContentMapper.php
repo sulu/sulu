@@ -51,6 +51,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
+use Sulu\Component\Util\SuluNodeHelper;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -156,6 +157,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $extensionDataCache;
 
+    /**
+     * @var SuluNodeHelper
+     */
+    private $nodeHelper;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -169,7 +175,8 @@ class ContentMapper implements ContentMapperInterface
         $defaultTemplate,
         $languageNamespace,
         $internalPrefix,
-        $stopwatch = null
+        $stopwatch = null,
+        SuluNodeHelper $nodeHelper
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -183,6 +190,7 @@ class ContentMapper implements ContentMapperInterface
         $this->cleaner = $cleaner;
         $this->webspaceManager = $webspaceManager;
         $this->templateResolver = $templateResolver;
+        $this->nodeHelper = $nodeHelper;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -551,7 +559,7 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getEnabledShadowLanguages(NodeInterface $node)
     {
-        $nodeLanguages = $this->properties->getLanguagesForNode($node);
+        $nodeLanguages = $this->nodeHelper->getLanguagesForNode($node);
         $shadowBaseLanguages = array();
 
         foreach ($nodeLanguages as $nodeLanguage) {
@@ -585,7 +593,7 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getConcreteLanguages(NodeInterface $node)
     {
-        $enabledLanguages = $this->properties->getLanguagesForNode($node);
+        $enabledLanguages = $this->nodeHelper->getLanguagesForNode($node);
         $enabledShadowLanguages = $this->getEnabledShadowLanguages($node);
         $concreteTranslations = array_diff($enabledLanguages, array_values($enabledShadowLanguages));
 
