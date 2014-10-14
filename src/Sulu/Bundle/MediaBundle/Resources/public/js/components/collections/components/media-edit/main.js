@@ -232,12 +232,15 @@ define(function () {
                     this.startDropzone();
                 }.bind(this));
             }.bind(this));
+
             this.sandbox.once('husky.dropzone.file-version-'+ this.media.id +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
+
             this.sandbox.once('husky.auto-complete-list.media-info-'+ this.media.id +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
+
             this.sandbox.on('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
@@ -343,12 +346,8 @@ define(function () {
          */
         startDropzone: function () {
             // replace the current media with the new one if a fileversion got uploaded
-            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added');
-            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', function (newMedia) {
-                this.media = newMedia[0];
-                this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
-                this.savedCallback();
-            }.bind(this));
+            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler);
+            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler, this);
 
             this.sandbox.start([
                 {
@@ -366,6 +365,12 @@ define(function () {
                     }
                 }
             ]);
+        },
+
+        filesAddedHandler: function(newMedia) {
+            this.media = newMedia[0];
+            this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
+            this.savedCallback();
         },
 
         /**
