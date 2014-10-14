@@ -137,7 +137,7 @@ new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? 
             array(
 {% for param in params %}
 {% if param.type == 'collection'  %}
-                '{{ param.name }}' => {{ _self.renderParams(param.value) }}
+                '{{ param.name }}' => {{ _self.renderParams(param.value) }},
 {% elseif param.type|lower == 'string'  %}
 {% if param.value|lower == 'true' %}
                 '{{ param.name }}' => {{ param.value|lower }},
