@@ -23,6 +23,7 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PHPCR\Util\UUIDHelper;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * handles snippets
@@ -59,7 +60,6 @@ class SnippetController
      */
     protected $urlGenerator;
 
-    protected $webspaceKey;
     protected $languageCode;
 
     public function __construct(
@@ -87,7 +87,6 @@ class SnippetController
 
         $snippets = $this->snippetRepository->getSnippets(
             $this->languageCode,
-            $this->webspaceKey,
             $type
         );
 
@@ -105,15 +104,16 @@ class SnippetController
     }
 
     /**
-     * Retrieve either a single or multiple snippets
+     * Retrieve snippet(s) by ID(s)
      *
-     * Multiple snippets can be retrieved by providing a comma separated list of IDs
-     * instead of a single ID.
+     * An array of snippets is always returned.
+     * Multiple Snippet IDs must be delimited with a comma.
+     *
+     * @Get(defaults={"uuid" = ""}, requirements={ "uuid" = ".*" })
      */
-    public function getSnippetAction(Request $request, $uuid)
+    public function getSnippetAction(Request $request, $uuid = null)
     {
         $this->initEnv($request);
-        $single = true;
 
         if (UUIDHelper::isUUID($uuid)) {
             $uuids = array($uuid);
@@ -125,7 +125,7 @@ class SnippetController
 
         $snippets = array();
         foreach ($uuids as $uuid) {
-            $snippet = $this->contentMapper->load($uuid, $this->webspaceKey, $this->languageCode);
+            $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
             $snippets[] = $this->decorateSnippet($snippet->toArray());
         }
 
@@ -241,12 +241,7 @@ class SnippetController
 
     private function initEnv(Request $request)
     {
-        $this->webspaceKey = $request->query->get('webspace', null);
         $this->languageCode = $request->query->get('language', null);
-
-        if (!$this->webspaceKey) {
-            throw new \InvalidArgumentException('You must provide the "webspace" query parameter');
-        }
 
         if (!$this->languageCode) {
             throw new \InvalidArgumentException('You must provide the "language" query parameter');

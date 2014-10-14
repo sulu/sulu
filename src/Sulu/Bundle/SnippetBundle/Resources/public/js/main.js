@@ -9,7 +9,8 @@
 
 require.config({
     paths: {
-        sulusnippet: '../../sulusnippet/js'
+        sulusnippet: '../../sulusnippet/js',
+        "type/snippet": '../../sulusnippet/js/validation/type/snippet'
     }
 });
 

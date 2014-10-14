@@ -23,10 +23,12 @@ use Sulu\Component\Content\ContentTypeInterface;
 class SnippetContent extends ComplexContentType
 {
     protected $contentMapper;
+    protected $template;
 
-    public function __construct(ContentMapper $contentMapper)
+    public function __construct(ContentMapper $contentMapper, $template)
     {
         $this->contentMapper = $contentMapper;
+        $this->template = $template;
     }
 
     public function getType()
@@ -36,7 +38,7 @@ class SnippetContent extends ComplexContentType
 
     public function getTemplate()
     {
-        return '';
+        return $this->template;
     }
 
     /**

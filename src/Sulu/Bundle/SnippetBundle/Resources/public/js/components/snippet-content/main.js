@@ -20,15 +20,16 @@ define([], function() {
     var defaults = {
             visibleItems: 999,
             instanceName: null,
-            urlGet: '',
+            urlGet: null,
             idsParameter: 'ids',
             preselected: {ids: []},
             idKey: 'id',
             titleKey: 'title',
             resultKey: '',
-            urlAll: '',
+            urlAll: null,
             language: null,
             snippetType: null,
+            webspace: null,
             translations: {
                 noSnippetsSelected: 'snippet-content.nosnippets-selected',
                 addSnippets: 'snippet-content.add',
@@ -114,10 +115,6 @@ define([], function() {
          * render component
          */
         render = function() {
-            if (this.options.snippetType === null) {
-                throw 'You must specify the "snippetType" option';
-            }
-
             // init ids
             this.options.ids = {
                 container: 'snippet-content-' + this.options.instanceName + '-container',
@@ -426,12 +423,11 @@ define([], function() {
                 this.itemsVisible = this.options.visibleItems;
 
                 if (!!this.data.ids && this.data.ids.length > 0) {
-                    $.ajax({
-                        url: this.URIGet.str,
-                        dataType: 'json',
-                        success: thenFunction.bind(this),
-                        error: function (e) { this.sandbox.logger.log(e); }
-                    });
+                    this.sandbox.util.load(this.URIGet.str)
+                        .then(thenFunction.bind(this))
+                        .fail(function (error) {
+                            this.sandbox.logger.log(error);
+                        }.bind(this));
                 } else {
                     thenFunction.call(this, {_embedded: []});
                 }
@@ -455,13 +451,13 @@ define([], function() {
          */
         setURIGet = function() {
             var newURIGet = [
-                this.options.url,
+                this.options.urlGet,
                 '/',
                 (this.data.ids || []).join(','),
                 '?language=',
                 this.options.language,
                 '&webspace=',
-                'sulu_io' // REMOVE THIS
+                this.options.webspace
             ].join('');
 
             if (newURIGet !== this.URIGet.str) {
@@ -478,6 +474,9 @@ define([], function() {
         setURIGetAll = function() {
             var newURIGetAll = [
                 this.options.urlAll,
+                '?language=de',
+                '&webspace=',
+                this.options.webspace,
                 '&type=',
                 this.options.snippetType
             ].join('');
@@ -501,14 +500,20 @@ define([], function() {
         historyClosed: true,
 
         initialize: function() {
+
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            if (!this.options.language) {
-                this.sandbox.logger.log('asd');
-            }
             this.data = {};
             this.linkList = null;
+
+            this.sandbox.util.each([
+                'snippetType', 'language', 'webspace', 'urlGet', 'urlAll'
+            ], function (key) {
+                if (this.options[key] === null) {
+                    throw 'you must specify the "' + key + '" option';
+                }
+            }.bind(this));
 
             render.call(this);
         }

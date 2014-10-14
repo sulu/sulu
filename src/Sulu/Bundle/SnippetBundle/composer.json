@@ -12,6 +12,7 @@
         "php": ">=5.4",
         "sulu/sulu": "dev-develop",
         "friendsofsymfony/rest-bundle": "~1.4",
+        "sensio/framework-extra-bundle":  "~2.2",
         "sulu/admin-bundle": "dev-develop"
     },
     "require-dev": {
