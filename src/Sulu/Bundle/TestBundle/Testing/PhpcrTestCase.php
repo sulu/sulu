@@ -43,6 +43,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sulu\Component\Util\SuluNodeHelper;
 
 /**
  * prepares repository and basic classes for phpcr test cases
@@ -185,6 +186,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
+            $nodeHelper = new SuluNodeHelper('i18n');
 
             $cleaner = new PathCleanup();
             $this->mapper = new ContentMapper(
@@ -199,7 +201,9 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->language,
                 $this->defaultTemplate,
                 $this->languageNamespace,
-                $this->internalPrefix
+                $this->internalPrefix,
+                null,
+                $nodeHelper
             );
 
             $resourceLocator = new ResourceLocator(
