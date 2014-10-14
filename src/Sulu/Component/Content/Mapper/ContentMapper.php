@@ -1368,20 +1368,6 @@ class ContentMapper implements ContentMapperInterface
         return $result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode)
-    {
-        $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
-
-        $data = $structure->toArray(true);
-
-        $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
-
-        return $structure;
-    }
-
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode)
     {
         // prepare utility
