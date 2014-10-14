@@ -35,5 +35,6 @@
             "Sulu\\Bundle\\CategoryBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/CategoryBundle"
+    "target-dir": "Sulu/Bundle/CategoryBundle",
+    "minimum-stability": "dev"
 }
