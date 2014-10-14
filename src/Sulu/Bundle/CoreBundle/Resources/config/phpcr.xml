@@ -18,5 +18,14 @@
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
         </service>
+
+        <service id="sulu.phpcr.initializer" class="Sulu\Bundle\CoreBundle\Initializer\SuluInitializer">
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument key="base">%sulu.content.node_names.base%</argument>
+            <argument key="content">%sulu.content.node_names.content%</argument>
+            <argument key="route">%sulu.content.node_names.route%</argument>
+            <argument key="temp">%sulu.content.node_names.temp%</argument>
+            <tag name="doctrine_phpcr.initializer"/>
+        </service>
     </services>
 </container>
