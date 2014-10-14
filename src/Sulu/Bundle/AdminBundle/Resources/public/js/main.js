@@ -59,7 +59,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
 
         app = new Husky({
             debug: {
-                enable: false // AppConfig.getDebug()
+                enable: AppConfig.getDebug()
             },
             culture: {
                 name: language,
