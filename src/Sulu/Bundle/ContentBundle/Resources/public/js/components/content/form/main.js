@@ -303,10 +303,6 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
             var initialize = this.sandbox.form.setData(this.formId, data),
                 titleAttr = 'title'; // default value
 
-            this.getDomElementsForTagName('sulu.node.name', function(property) {
-                titleAttr = property.name;
-            }.bind(this));
-
             if (!!data.id && (data[titleAttr] === '' || typeof data[titleAttr] === 'undefined' || data[titleAttr] === null)) {
                 this.sandbox.util.load('/admin/api/nodes/' + data.id + '?webspace=' + this.options.webspace + '&language=' + this.options.language + '&complete=false&ghost-content=true')
                     .then(function(data) {
