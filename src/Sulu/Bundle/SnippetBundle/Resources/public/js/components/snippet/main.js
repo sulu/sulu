@@ -16,7 +16,10 @@ define([
 
     var CONTENT_LANGUAGE = 'contentLanguage';
 
-    return {
+    var BaseSnippet = function() {
+    };
+
+    BaseSnippet.prototype = {
         bindModelEvents: function() {
             // delete current
             this.sandbox.on('sulu.snippets.snippet.delete', function() {
@@ -164,4 +167,6 @@ define([
             );
         }
     };
+
+    return BaseSnippet;
 });

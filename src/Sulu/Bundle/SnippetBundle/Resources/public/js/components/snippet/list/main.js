@@ -19,91 +19,93 @@ define([
             '<div id="dialog"></div>'
         ].join(''),
 
-        component = {
-            view: true,
+        SnippetList = function() {
+            BaseSnippet.call(this);
 
-            layout: {
-                content: {
-                    width: 'max',
-                    leftSpace: false,
-                    rightSpace: false
-                },
-                sidebar: false
-            },
-
-            header: {
-                title: 'snippets.snippet.title',
-                noBack: true,
-
-                breadcrumb: [
-                    {title: 'navigation.snippets'},
-                    {title: 'snippets.snippet.title'}
-                ]
-            },
-
-            initialize: function() {
-                this.bindModelEvents();
-                this.bindCustomEvents();
-
-                this.render();
-            },
-
-            bindCustomEvents: function() {
-                // delete clicked
-                this.sandbox.on('sulu.list-toolbar.delete', function() {
-                    this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                        this.sandbox.emit('sulu.snippets.snippets.delete', ids);
-                    }.bind(this));
-                }, this);
-
-                // add clicked
-                this.sandbox.on('sulu.list-toolbar.add', function() {
-                    this.sandbox.emit('sulu.snippets.snippet.new');
-                }, this);
-
-            },
-
-            render: function() {
-                this.sandbox.dom.html(this.$el, template);
-
-                // init list-toolbar and datagrid
-                this.sandbox.sulu.initListToolbarAndList.call(this, 'snippetsFields', '/admin/api/snippet/fields',
-                    {
-                        el: this.$find('#list-toolbar-container'),
-                        instanceName: 'snippets',
-                        inHeader: true
-                    },
-                    {
-                        el: this.sandbox.dom.find('#snippet-list', this.$el),
-                        // FIXME no webspace
-                        url: '/admin/api/snippets?webspace=sulu_io&language=' + this.options.language,
-                        searchInstanceName: 'contacts',
-                        searchFields: ['title'], // TODO ???
-                        resultKey: 'snippets',
-                        viewOptions: {
-                            table: {
-                                icons: [
-                                    {
-                                        icon: 'pencil',
-                                        column: 'title',
-                                        align: 'left',
-                                        callback: function(id) {
-                                            this.sandbox.emit('sulu.snippets.snippet.load', id);
-                                        }.bind(this)
-                                    }
-                                ],
-                                highlightSelected: true,
-                                fullWidth: true
-                            }
-                        }
-                    }
-                );
-            }
+            return this;
         };
 
     // inheritance
-    component.prototype = Object.create(BaseSnippet.prototype);
-    component.prototype.constructor = BaseSnippet;
+    SnippetList.prototype = Object.create(BaseSnippet.prototype);
+    SnippetList.prototype.constructor = BaseSnippet;
 
-    return component;
+    SnippetList.prototype.view = true;
+    SnippetList.prototype.layout = {
+        content: {
+            width: 'max',
+            leftSpace: false,
+            rightSpace: false
+        },
+        sidebar: false
+    };
+    SnippetList.prototype.header = {
+        title: 'snippets.snippet.title',
+        noBack: true,
+
+        breadcrumb: [
+            {title: 'navigation.snippets'},
+            {title: 'snippets.snippet.title'}
+        ]
+    };
+
+    SnippetList.prototype.initialize = function() {
+        this.bindModelEvents();
+        this.bindCustomEvents();
+
+        this.render();
+    };
+
+    SnippetList.prototype.bindCustomEvents = function() {
+        // delete clicked
+        this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.snippets.snippets.delete', ids);
+            }.bind(this));
+        }, this);
+
+        // add clicked
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('sulu.snippets.snippet.new');
+        }, this);
+
+    };
+
+    SnippetList.prototype.render = function() {
+        this.sandbox.dom.html(this.$el, template);
+
+        // init list-toolbar and datagrid
+        this.sandbox.sulu.initListToolbarAndList.call(this, 'snippetsFields', '/admin/api/snippet/fields',
+            {
+                el: this.$find('#list-toolbar-container'),
+                instanceName: 'snippets',
+                inHeader: true
+            },
+            {
+                el: this.sandbox.dom.find('#snippet-list', this.$el),
+                // FIXME no webspace
+                url: '/admin/api/snippets?webspace=sulu_io&language=' + this.options.language,
+                searchInstanceName: 'contacts',
+                searchFields: ['title'], // TODO ???
+                resultKey: 'snippets',
+                viewOptions: {
+                    table: {
+                        icons: [
+                            {
+                                icon: 'pencil',
+                                column: 'title',
+                                align: 'left',
+                                callback: function(id) {
+                                    this.sandbox.emit('sulu.snippets.snippet.load', id);
+                                }.bind(this)
+                            }
+                        ],
+                        highlightSelected: true,
+                        fullWidth: true
+                    }
+                }
+            }
+        );
+    };
+
+    return new SnippetList();
 });
