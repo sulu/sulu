@@ -100,7 +100,7 @@ define([
                     this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeClick.bind(this));
                 },
 
-                removeClick: function() {
+                removeClick: function(event) {
                     var $removeButton = $(event.target),
                         $element = $removeButton.closest('.' + this.propertyName + '-element');
 

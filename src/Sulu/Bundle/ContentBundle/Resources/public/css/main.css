@@ -265,6 +265,11 @@
   line-height: 16px;
 }
 
+/* line 25, ../scss/modules/seo.scss */
+.seo-warning {
+  color: #EA524E;
+}
+
 /* line 2, ../scss/modules/resource-locator.scss */
 .resource-locator input {
   width: 200px;

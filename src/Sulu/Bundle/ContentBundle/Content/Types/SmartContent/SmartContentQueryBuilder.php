@@ -129,7 +129,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
                 $sql2Order[] = $order . ' ' . $sortOrder;
             }
         } else {
-            $sql2Order[] = 'page.[sulu:order]';
+            $sql2Order[] = 'page.[sulu:order] ' . $sortOrder;
         }
 
         return implode(', ', $sql2Order);
