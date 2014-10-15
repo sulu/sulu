@@ -46,6 +46,13 @@ interface StructureExtensionInterface
     public function load(NodeInterface $node, $webspaceKey, $languageCode);
 
     /**
+     * Returns content data for given values
+     * @param mixed $value
+     * @return mixed
+     */
+    public function getContentData($value);
+
+    /**
      * returns name of extension
      * @return string
      */
