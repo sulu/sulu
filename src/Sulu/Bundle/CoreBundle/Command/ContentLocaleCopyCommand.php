@@ -1,7 +1,19 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
+use Jackalope\Property;
+use Jackalope\Query\QueryManager;
+use Jackalope\Query\Row;
+use Jackalope\Session;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,6 +27,33 @@ use PHPCR\NodeInterface;
  */
 class ContentLocaleCopyCommand extends ContainerAwareCommand
 {
+    /**
+     * Additional information will be written if true
+     * @var boolean
+     */
+    private $verbose;
+
+    /**
+     * The namespace for languages
+     * @var string
+     */
+    private $languageNamespace;
+
+    /**
+     * @var Session
+     */
+    private $session;
+
+    /**
+     * @var QueryManager
+     */
+    private $queryManager;
+
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
     /**
      * {@inheritDoc}
      */
@@ -75,7 +114,8 @@ EOT
     {
         $nodes = $this->getRowIterator($path);
 
-        foreach ($nodes as $i => $row) {
+        foreach ($nodes as $row) {
+            /** @var Row $row */
             $this->copyLocale($row->getNode(), $srcLocale, $destLocale, $overwrite);
         }
     }
@@ -97,6 +137,7 @@ EOT
     {
         $srcPrefix = $this->languageNamespace . ':' . $srcLocale . '-';
         $destPrefix = $this->languageNamespace . ':' . $destLocale . '-';
+        /** @var Property[] $properties */
         $properties = array();
 
         foreach ($node->getProperties() as $name => $property) {
