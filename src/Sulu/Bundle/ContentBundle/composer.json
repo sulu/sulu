@@ -4,7 +4,7 @@
     "description": "The bundle responsible for content management in Sulu",
     "license": "MIT",
     "keywords": ["content", "cmf"],
-    "version": "0.8.3",
+    "version": "0.8.4",
     "authors": [
         {
             "name": "Sulu Community",
