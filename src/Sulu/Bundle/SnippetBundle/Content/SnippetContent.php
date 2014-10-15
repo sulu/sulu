@@ -16,6 +16,7 @@ use Sulu\Component\Content\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\ContentTypeInterface;
+use PHPCR\Util\UUIDHelper;
 
 /**
  * ContentType for TextEditor
@@ -49,7 +50,13 @@ class SnippetContent extends ComplexContentType
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
         $snippets = array();
 
-        foreach ($refs as $ref) {
+        foreach ($refs as $i => $ref) {
+            // see https://github.com/jackalope/jackalope/issues/248
+            if (UUIDHelper::isUUID($i)) {
+                $ref = $i;
+            } else {
+            }
+
             $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
         }
 

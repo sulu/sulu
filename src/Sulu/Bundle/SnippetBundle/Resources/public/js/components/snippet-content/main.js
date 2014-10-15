@@ -39,27 +39,6 @@ define([], function() {
             config: {}
         },
 
-        /**
-         * namespace for events
-         * @type {string}
-         */
-        eventNamespace = 'sulu.snippet-content.',
-
-        /**
-         * raised when the overlay data has been changed
-         * @event sulu.snippet-content.data-changed
-         */
-        DATA_CHANGED = function() {
-            return createEventName.call(this, 'data-changed');
-        },
-
-        /**
-         * returns normalized event names
-         */
-        createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        },
-
         templates = {
             skeleton: function(options) {
                 return [
@@ -211,7 +190,8 @@ define([], function() {
             }
             this.sandbox.emit('husky.column-navigation.'+ this.options.instanceName +'.unmark', dataId);
             setData.call(this, this.data);
-            this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+
+            this.sandbox.emit('sulu.content.changed');
         },
 
         /**
@@ -353,7 +333,7 @@ define([], function() {
                 setData.call(this, this.data);
                 setURIGet.call(this);
                 loadContent.call(this);
-                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+                this.sandbox.emit('sulu.content.changed');
             }.bind(this));
         },
 
@@ -473,8 +453,6 @@ define([], function() {
         };
 
     return {
-        historyClosed: true,
-
         initialize: function() {
 
             // extend default options
