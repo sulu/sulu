@@ -8,14 +8,18 @@
  */
 
 define([
-    'sulusnippet/model/snippet'
-], function(Snippet) {
+    'sulusnippet/model/snippet',
+    'app-config'
+], function(Snippet, AppConfig) {
 
     'use strict';
 
     var CONTENT_LANGUAGE = 'contentLanguage';
 
-    return {
+    var BaseSnippet = function() {
+    };
+
+    BaseSnippet.prototype = {
         bindModelEvents: function() {
             // delete current
             this.sandbox.on('sulu.snippets.snippet.delete', function() {
@@ -38,7 +42,7 @@ define([
             }, this);
 
             // delete selected
-            this.sandbox.on('sulu.snippets.snippet.delete', function(ids) {
+            this.sandbox.on('sulu.snippets.snippets.delete', function(ids) {
                 this.delSnippets(ids);
             }, this);
 
@@ -82,20 +86,27 @@ define([
 
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-            data.template = this.template;
+            if (!!this.template) {
+                data.template = this.template;
+            } else {
+                var config = AppConfig.getSection('sulu-snippet');
+
+                data.template = config.defaultType;
+            }
             this.model.set(data);
 
-            this.model.fullSave(this.template, this.options.language, this.state, {
+            this.model.fullSave(this.template, this.options.language, this.state, {}, {
                 // on success save contacts id
                 success: function(response) {
-                    var model = response.toJSON();
-                    if (!!data.id) {
-                        this.sandbox.emit('sulu.snippets.snippet.saved', model);
+                    var data = response.toJSON();
+                    if (!!this.data.id) {
+                        this.sandbox.emit('sulu.snippets.snippet.saved', data);
                     } else {
-                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + model.id);
+                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets/' + this.options.language + '/edit:' + data.id);
                     }
                 }.bind(this),
                 error: function() {
+                    this.sandbox.emit('sulu.snippets.snippet.save-error');
                     this.sandbox.logger.log('error while saving profile');
                 }.bind(this)
             });
@@ -156,4 +167,6 @@ define([
             );
         }
     };
+
+    return BaseSnippet;
 });

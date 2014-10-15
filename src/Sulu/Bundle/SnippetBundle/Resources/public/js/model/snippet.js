@@ -17,7 +17,8 @@ define([
         urlRoot: '/admin/api/snippets',
 
         fullFetch: function(language, options) {
-            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?language=' + language});
+            // FIXME remove webspace
+            options = _.defaults((options || {}), {url: this.urlRoot + (this.get('id') !== undefined ? '/' + this.get('id') : '') + '?webspace=sulu_io&language=' + language});
 
             return this.fetch.call(this, options);
         },
