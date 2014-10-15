@@ -1410,6 +1410,14 @@
                 <source>form.validation-warning</source>
                 <target><![CDATA[Please check your input.<br/>You cannot save as long as not all required fields are filled properly.]]></target>
             </trans-unit>
+            <trans-unit id="a504f522de145650142c0b4720e29a4f" resname="public.status">
+                <source>public.status</source>
+                <target>Status</target>
+            </trans-unit>
+            <trans-unit id="a504f522de145650142c0b4820e29a4f" resname="public.number">
+                <source>public.number</source>
+                <target>Nummer</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
