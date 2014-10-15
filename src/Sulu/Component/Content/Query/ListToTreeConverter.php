@@ -22,6 +22,10 @@ class ListToTreeConverter
      */
     public function convert($data)
     {
+        if (empty($data)) {
+            return array();
+        }
+
         $map = array();
         $minDepth = 99;
         foreach ($data as $item) {
@@ -35,6 +39,23 @@ class ListToTreeConverter
                 $minDepth = $depth;
             }
         }
+
+        uksort(
+            $map,
+            function ($a, $b) use ($map) {
+                $depthDifference = substr_count($a, '/') - substr_count($b, '/');
+                if ($depthDifference > 0) {
+                    return 1;
+                } elseif($depthDifference < 0) {
+                    return -1;
+                } else {
+                    $aPosition = array_search($a, array_keys($map));
+                    $bPosition = array_search($b, array_keys($map));
+
+                    return ($aPosition < $bPosition) ? -1 : 1;
+                }
+            }
+        );
 
         $tree = $this->explodeTree($map, '/');
 
