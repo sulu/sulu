@@ -1188,9 +1188,10 @@ class ContentMapper implements ContentMapperInterface
             $structureType = Structure::TYPE_PAGE;
         }
 
+        $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
-            $this->defaultTemplates[$structureType]
+            $originTemplateKey
         );
         $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
@@ -1268,7 +1269,7 @@ class ContentMapper implements ContentMapperInterface
                 $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
             );
             $structure->setOriginTemplate(
-                $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate)
+                $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $originTemplateKey)
             );
 
             // load data of extensions
