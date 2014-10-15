@@ -141,6 +141,7 @@ define([
 
             this.sandbox.on('husky.overlay.add-bank-account.opened', function() {
 
+                // starts subcomponents
                 this.sandbox.start(constants.bankAccountFormId);
 
                 // start form and set data
