@@ -27,7 +27,7 @@ define([
                 },
 
                 getValue: function() {
-                    return App.dom.data($el, 'snippet');
+                    return App.dom.data($el, 'snippet-ids');
                 },
 
                 needsValidation: function() {

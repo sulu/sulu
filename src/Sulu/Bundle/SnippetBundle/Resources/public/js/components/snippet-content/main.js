@@ -403,7 +403,7 @@ define([], function() {
                     this.data[propertyName] = data[propertyName];
                 }
             }
-            this.sandbox.dom.data(this.$el, 'snippet-content', this.data);
+            this.sandbox.dom.data(this.$el, 'snippet-ids', this.data.ids);
         },
 
         /**
