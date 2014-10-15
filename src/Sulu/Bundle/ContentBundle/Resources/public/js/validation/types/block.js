@@ -100,7 +100,7 @@ define([
                     this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeClick.bind(this));
                 },
 
-                removeClick: function() {
+                removeClick: function(event) {
                     var $removeButton = $(event.target),
                         $element = $removeButton.closest('.' + this.propertyName + '-element');
 
@@ -221,7 +221,7 @@ define([
                         dfd = App.data.deferred(),
                         resolve = function() {
                             count--;
-                            if (count === 0) {
+                            if (count <= 0) {
                                 dfd.resolve();
                             }
                         };
@@ -231,12 +231,17 @@ define([
                     len = value.length < this.getMinOccurs() ? this.getMinOccurs() : value.length;
                     count = len;
 
-                    for (i = 0; i < len; i++) {
-                        item = value[i] || {};
-                        this.addChild(item.type || this.options.default, item).then(function() {
-                            resolve();
-                        });
+                    if (len > 0) {
+                        for (i = 0; i < len; i++) {
+                            item = value[i] || {};
+                            this.addChild(item.type || this.options.default, item).then(function() {
+                                resolve();
+                            });
+                        }
+                    } else {
+                        resolve();
                     }
+
                     return dfd.promise();
                 },
 
