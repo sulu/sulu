@@ -8,7 +8,6 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -22,54 +21,55 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
 use DateTime;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
+use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class NodeControllerTest extends DatabaseTestCase
+class NodeControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
-
-    /**
-     * @var SessionInterface
-     */
-    public $session;
+    protected $em;
 
     protected function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+
+        $this->initOrm();
+        $this->initPhpcr();
+    }
+
+    protected function initOrm()
+    {
+        $this->purgeDatabase();
 
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
-        self::$em->persist($contact);
-        self::$em->flush();
+        $this->em->persist($contact);
+        $this->em->flush();
 
         $emailType = new EmailType();
         $emailType->setName('Private');
-        self::$em->persist($emailType);
-        self::$em->flush();
+        $this->em->persist($emailType);
+        $this->em->flush();
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
-        self::$em->persist($email);
-        self::$em->flush();
+        $this->em->persist($email);
+        $this->em->flush();
 
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
         $role1->setChanged(new DateTime());
         $role1->setCreated(new DateTime());
-        self::$em->persist($role1);
-        self::$em->flush();
+        $this->em->persist($role1);
+        $this->em->flush();
 
         $user = new User();
         $user->setUsername('admin');
@@ -77,154 +77,50 @@ class NodeControllerTest extends DatabaseTestCase
         $user->setSalt('salt');
         $user->setLocale('de');
         $user->setContact($contact);
-        self::$em->persist($user);
-        self::$em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole1);
-        self::$em->flush();
+        $this->em->persist($userRole1);
+        $this->em->flush();
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
         $permission1->setContext("Context 1");
-        self::$em->persist($permission1);
-        self::$em->flush();
+        $this->em->persist($permission1);
+        $this->em->flush();
 
         $tag1 = new Tag();
         $tag1->setChanged(new DateTime());
         $tag1->setCreated(new DateTime());
         $tag1->setName('tag1');
-        self::$em->persist($tag1);
-        self::$em->flush();
+        $this->em->persist($tag1);
+        $this->em->flush();
 
         $tag2 = new Tag();
         $tag2->setChanged(new DateTime());
         $tag2->setCreated(new DateTime());
         $tag2->setName('tag2');
-        self::$em->persist($tag2);
-        self::$em->flush();
+        $this->em->persist($tag2);
+        $this->em->flush();
 
         $tag3 = new Tag();
         $tag3->setChanged(new DateTime());
         $tag3->setCreated(new DateTime());
         $tag3->setName('tag3');
-        self::$em->persist($tag3);
-        self::$em->flush();
+        $this->em->persist($tag3);
+        $this->em->flush();
 
         $tag4 = new Tag();
         $tag4->setChanged(new DateTime());
         $tag4->setCreated(new DateTime());
         $tag4->setName('tag4');
-        self::$em->persist($tag4);
-        self::$em->flush();
-
-        $this->prepareSession();
-
-        NodeHelper::purgeWorkspace($this->session);
-        $this->session->save();
-
-        $this->prepareRepository();
-        $this->session->save();
-
-        $cmf = $this->session->getRootNode()->addNode('cmf');
-        $webspace = $cmf->addNode('sulu_io');
-        $nodes = $webspace->addNode('routes');
-        $nodes->addNode('de');
-        $nodes->addNode('en');
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->addMixin('sulu:content');
-
-        $this->session->save();
-    }
-
-    public function prepareRepository()
-    {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-            'i18n',
-            'http://sulu.io/phpcr/locale'
-        );
-    }
-
-    private function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private function prepareSession()
-    {
-        $factoryclass = '\Jackalope\RepositoryFactoryJackrabbit';
-        $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
-        $factory = new $factoryclass();
-        $repository = $factory->getRepository($parameters);
-        $credentials = new SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'test');
-    }
-
-    protected function tearDown()
-    {
-        if ($this->session != null) {
-            NodeHelper::purgeWorkspace($this->session);
-            $this->session->save();
-        }
-        self::$tool->dropSchema(self::$entities);
-        parent::tearDown();
+        $this->em->persist($tag4);
+        $this->em->flush();
     }
 
     public function providePost()
@@ -282,8 +178,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
-        $this->assertEquals(1, $response->creator);
-        $this->assertEquals(1, $response->changer);
+        $this->assertEquals($this->getTestUserId(), $response->creator);
+        $this->assertEquals($this->getTestUserId(), $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/sulu_io/routes/en/test');
@@ -293,9 +189,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('Testtitle', $content->getProperty('i18n:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('i18n:en-article')->getString());
-        $this->assertEquals(array(1, 2), $content->getPropertyValue('i18n:en-tags'));
-        $this->assertEquals(1, $content->getPropertyValue('i18n:en-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('i18n:en-changer'));
+        $this->assertCount(2, $content->getPropertyValue('i18n:en-tags'));
+        $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-creator'));
+        $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
     }
 
     public function testPostTree()
@@ -343,8 +239,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals('Test', $response->article);
         $this->assertEquals('/news/test', $response->url);
         $this->assertEquals(array('tag1', 'tag2'), $response->tags);
-        $this->assertEquals(1, $response->creator);
-        $this->assertEquals(1, $response->changer);
+        $this->assertEquals($this->getTestUserId(), $response->creator);
+        $this->assertEquals($this->getTestUserId(), $response->changer);
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/sulu_io/routes/en/news/test');
@@ -354,9 +250,9 @@ class NodeControllerTest extends DatabaseTestCase
 
         $this->assertEquals('test-1', $content->getProperty('i18n:en-title')->getString());
         $this->assertEquals('Test', $content->getProperty('i18n:en-article')->getString());
-        $this->assertEquals(array(1, 2), $content->getPropertyValue('i18n:en-tags'));
-        $this->assertEquals(1, $content->getPropertyValue('i18n:en-creator'));
-        $this->assertEquals(1, $content->getPropertyValue('i18n:en-changer'));
+        $this->assertCount(2, $content->getPropertyValue('i18n:en-tags'));
+        $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-creator'));
+        $this->assertEquals($this->getTestUserId(), $content->getPropertyValue('i18n:en-changer'));
 
         // check parent
         $this->assertEquals($uuid, $content->getParent()->getIdentifier());
@@ -475,8 +371,8 @@ class NodeControllerTest extends DatabaseTestCase
         $this->assertEquals($data[0]['tags'], $response->tags);
         $this->assertEquals($data[0]['url'], $response->url);
         $this->assertEquals($data[0]['article'], $response->article);
-        $this->assertEquals(1, $response->creator);
-        $this->assertEquals(1, $response->creator);
+        $this->assertEquals($this->getTestUserId(), $response->creator);
+        $this->assertEquals($this->getTestUserId(), $response->creator);
 
         $this->assertEquals(2, sizeof((array)$response->ext));
 
