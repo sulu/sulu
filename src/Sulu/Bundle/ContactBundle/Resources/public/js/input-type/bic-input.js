@@ -28,11 +28,7 @@ define([
                 },
 
                 getValue: function() {
-                    if (this.$el.data('auraSkin') === 'date') {
-                        return this.$el.data('value');
-                    } else {
-                        return this.$el.find('input').val();
-                    }
+                    return this.$el.find('input').val();
                 },
 
                 needsValidation: function() {
