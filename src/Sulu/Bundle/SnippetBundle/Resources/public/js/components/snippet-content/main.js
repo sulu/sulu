@@ -8,39 +8,34 @@
  */
 
 /**
- * handles snippet selection
+ * Snippet content type
  *
- * @class SnippetSelection
- * @constructor
+ * Allows selection of multiple snippets
  */
 define([], function() {
 
     'use strict';
 
     var defaults = {
-            visibleItems: 999,
             instanceName: null,
             urlGet: null,
             idsParameter: 'ids',
             preselected: {ids: []},
             idKey: 'id',
             titleKey: 'title',
-            resultKey: '',
+            resultKey: 'snippets',
             urlAll: null,
             language: null,
             snippetType: null,
             webspace: null,
             translations: {
                 noSnippetsSelected: 'snippet-content.nosnippets-selected',
-                addSnippets: 'snippet-content.add',
-                visible: 'public.visible',
-                of: 'public.of'
+                addSnippets: 'snippet-content.add'
             }
         },
 
         dataDefaults = {
             ids: [],
-            displayOption: 'top',
             config: {}
         },
 
@@ -120,9 +115,7 @@ define([], function() {
                 container: 'snippet-content-' + this.options.instanceName + '-container',
                 addButton: 'snippet-content-' + this.options.instanceName + '-add',
                 configButton: 'snippet-content-' + this.options.instanceName + '-config',
-                displayOption: 'snippet-content-' + this.options.instanceName + '-display-option',
                 content: 'snippet-content-' + this.options.instanceName + '-content',
-                chooseTab: 'snippet-content-' + this.options.instanceName + '-choose-tab',
                 snippetList: 'snippet-content-' + this.options.instanceName + '-column-navigation'
             };
             this.sandbox.dom.html(this.$el, templates.skeleton(this.options));
@@ -141,14 +134,10 @@ define([], function() {
                 setData.call(this, this.options.preselected);
             }
 
-            // render no images selected
             renderStartContent.call(this);
 
             // sandbox event handling
             bindCustomEvents.call(this);
-
-            // init vars
-            this.itemsVisible = this.options.visibleItems;
 
             this.URIGet = {
                 str: '',
@@ -218,7 +207,6 @@ define([], function() {
             if (this.items.length === 0) {
                 renderStartContent.call(this);
             } else {
-                this.itemsVisible = this.options.visibleItems;
                 renderFooter.call(this);
             }
             this.sandbox.emit('husky.column-navigation.'+ this.options.instanceName +'.unmark', dataId);
@@ -252,7 +240,7 @@ define([], function() {
                         url: this.URIGetAll.str,
                         preselected: [],
                         pagination: false,
-                        resultKey: 'snippets',
+                        resultKey: this.options.resultKey,
                         sortable: true,
                         searchInstanceName: 'test',
                         searchFields: ['title'],
@@ -280,11 +268,6 @@ define([], function() {
          * handle dom events
          */
         bindDomEvents = function() {
-            this.sandbox.dom.on(getId.call(this, 'displayOption'), 'change', function() {
-                setData.call(this, {displayOption: this.sandbox.dom.val(getId.call(this, 'displayOption'))});
-                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-            }.bind(this));
-
             this.sandbox.dom.on(this.$el, 'click', removeSnippet.bind(this), '.-list .remove');
         },
 
@@ -419,9 +402,6 @@ define([], function() {
 
                 startLoader.call(this);
 
-                // reset item visible
-                this.itemsVisible = this.options.visibleItems;
-
                 if (!!this.data.ids && this.data.ids.length > 0) {
                     this.sandbox.util.load(this.URIGet.str)
                         .then(thenFunction.bind(this))
@@ -455,9 +435,7 @@ define([], function() {
                 '/',
                 (this.data.ids || []).join(','),
                 '?language=',
-                this.options.language,
-                '&webspace=',
-                this.options.webspace
+                this.options.language
             ].join('');
 
             if (newURIGet !== this.URIGet.str) {
@@ -475,8 +453,6 @@ define([], function() {
             var newURIGetAll = [
                 this.options.urlAll,
                 '?language=de',
-                '&webspace=',
-                this.options.webspace,
                 '&type=',
                 this.options.snippetType
             ].join('');

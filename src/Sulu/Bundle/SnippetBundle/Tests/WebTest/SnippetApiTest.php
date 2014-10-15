@@ -28,7 +28,7 @@ class SnippetApiTest extends SuluTestCase
 
     public function testGet()
     {
-        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=de&webspace=sulu_io');
+        $this->client->request('GET', '/snippets/' . $this->hotel1->getUuid() . '?language=de');
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -46,7 +46,7 @@ class SnippetApiTest extends SuluTestCase
             '/snippets/%s,%s%s',
             $this->hotel1->getUuid(),
             $this->hotel2->getUuid(),
-            '?language=de&webspace=sulu_io'
+            '?language=de'
         ));
         $response = $this->client->getResponse();
 
@@ -66,7 +66,7 @@ class SnippetApiTest extends SuluTestCase
             $this->hotel1->getUuid(),
             '1234',
             $this->hotel2->getUuid(),
-            '?language=de&webspace=sulu_io'
+            '?language=de'
         ));
         $response = $this->client->getResponse();
 
@@ -107,7 +107,6 @@ class SnippetApiTest extends SuluTestCase
     public function testIndex($params, $expectedNbResults)
     {
         $params = array_merge(array(
-            'webspace' => 'sulu_io',
             'language' => 'de',
         ), $params);
 
@@ -149,7 +148,6 @@ class SnippetApiTest extends SuluTestCase
     public function testPost($params, $data)
     {
         $params = array_merge(array(
-            'webspace' => 'sulu_io',
             'language' => 'de',
         ), $params);
 
@@ -188,7 +186,6 @@ class SnippetApiTest extends SuluTestCase
     public function testPut($params, $data)
     {
         $params = array_merge(array(
-            'webspace' => 'sulu_io',
             'language' => 'de',
         ), $params);
 
