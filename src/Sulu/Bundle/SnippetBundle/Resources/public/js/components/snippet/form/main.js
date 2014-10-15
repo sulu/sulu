@@ -19,6 +19,9 @@ define([
         STATE_PUBLISHED = 2,
 
         SnippetForm = function() {
+            BaseSnippet.call(this);
+
+            return this;
         };
 
     SnippetForm.prototype = Object.create(BaseSnippet.prototype);
