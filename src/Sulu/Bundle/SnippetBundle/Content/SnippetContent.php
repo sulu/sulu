@@ -50,7 +50,7 @@ class SnippetContent extends ComplexContentType
         $snippets = array();
 
         foreach ($refs as $ref) {
-            $snippets[] = $this->contentMapper->loadByNode($ref, $languageCode, $webspaceKey);
+            $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
         }
 
         $property->setValue($snippets);
@@ -121,7 +121,7 @@ class SnippetContent extends ComplexContentType
         $serializedSnippets = array();
 
         foreach ($snippets as $snippet) {
-            $serializedSnippets[] = $snippet->toArray();
+            $serializedSnippets[] = $snippet->toArray(true);
         }
 
         return $serializedSnippets;

@@ -20,7 +20,7 @@ define([], function() {
             instanceName: null,
             urlGet: null,
             idsParameter: 'ids',
-            preselected: {ids: []},
+            preselected: [],
             idKey: 'id',
             titleKey: 'title',
             resultKey: 'snippets',
@@ -131,7 +131,7 @@ define([], function() {
                 var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'snippet-content'));
                 setData.call(this, data);
             } else {
-                setData.call(this, this.options.preselected);
+                setData.call(this, { ids: this.options.preselected }) ;
             }
 
             renderStartContent.call(this);

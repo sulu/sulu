@@ -19,7 +19,11 @@ define([
 
             subType = {
                 setValue: function(value) {
-                    App.dom.data($el, 'snippet', value);
+                    var ids = [];
+                    $.each(value, function (i, value) {
+                        ids.push(value.uuid);
+                    });
+                    App.dom.data($el, 'preselected', ids);
                 },
 
                 getValue: function() {
