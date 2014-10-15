@@ -23,7 +23,7 @@ define([
                     $.each(value, function (i, value) {
                         ids.push(value.uuid);
                     });
-                    App.dom.data($el, 'preselected', ids);
+                    App.dom.data($el, 'snippet-ids', ids);
                 },
 
                 getValue: function() {

@@ -106,11 +106,9 @@ define([], function() {
             this.$configButton = this.sandbox.dom.find(getId.call(this, 'configButton'), this.$el);
 
             // set preselected values
-            if (!!this.sandbox.dom.data(this.$el, 'snippet-content')) {
-                var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'snippet-content'));
+            if (!!this.sandbox.dom.data(this.$el, 'snippet-ids')) {
+                var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'snippet-ids'));
                 setData.call(this, data);
-            } else {
-                setData.call(this, { ids: this.options.preselected }) ;
             }
 
             renderStartContent.call(this);
@@ -389,7 +387,7 @@ define([], function() {
                             this.sandbox.logger.log(error);
                         }.bind(this));
                 } else {
-                    thenFunction.call(this, {_embedded: []});
+                    thenFunction.call(this, []);
                 }
             }
         },
