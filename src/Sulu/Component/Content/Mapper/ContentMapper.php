@@ -1452,6 +1452,10 @@ class ContentMapper implements ContentMapperInterface
         // prepare content node
         $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
         $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
+
+        // node name should not have a slash
+        $nodeName = str_replace('/', '-', $nodeName);
+
         $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
         $nodeName = $this->getUniquePath($nodeName, $parentNode);
 
