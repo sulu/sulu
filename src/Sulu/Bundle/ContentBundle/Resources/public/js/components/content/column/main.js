@@ -242,6 +242,7 @@ define(function() {
             // wait for overlay initialized to initialize overlay
             this.sandbox.once('husky.overlay.node.opened', function() {
                 this.renderOverlayTable('#child-table', columnItems, item.id);
+                this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
 
             this.startOverlay('content.contents.settings.order.title', templates.table());
