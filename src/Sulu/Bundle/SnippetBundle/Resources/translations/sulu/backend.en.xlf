@@ -10,8 +10,8 @@
                 <source>snippets.snippet.title</source>
                 <target>Snippets</target>
             </trans-unit>
-            <trans-unit id="3" resname="snippets.list.title">
-                <source>snippets.list.title</source>
+            <trans-unit id="3" resname="snippets.list.template">
+                <source>snippets.list.template</source>
                 <target>Type</target>
             </trans-unit>
             <trans-unit id="4" resname="content-navigation.snippets.details">
