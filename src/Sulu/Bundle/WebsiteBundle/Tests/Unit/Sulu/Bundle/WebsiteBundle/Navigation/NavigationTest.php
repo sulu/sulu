@@ -10,18 +10,22 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Navigation;
 
+use PHPCR\NodeInterface;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
-
-require_once(__DIR__ . '/ExcerptStructureExtension.php');
 
 class NavigationTest extends PhpcrTestCase
 {
@@ -488,16 +492,16 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(3, sizeof($result));
         $layer1 = $result;
 
-        $this->assertEquals(0, sizeof($layer1[0]['children']));
+        $this->assertEquals(2, sizeof($layer1[0]['children']));
         $this->assertEquals(0, sizeof($layer1[1]['children']));
+        $this->assertEquals(0, sizeof($layer1[2]['children']));
 
-        $this->assertEquals('News-1', $layer1[0]['title']);
-        $this->assertEquals('News-2', $layer1[1]['title']);
+        $this->assertEquals('Products', $layer1[0]['title']);
+        $this->assertEquals('News-1', $layer1[1]['title']);
+        $this->assertEquals('News-2', $layer1[2]['title']);
 
-        $this->assertEquals(2, sizeof($layer1[2]['children']));
-        $layer2 = $layer1[2]['children'];
+        $layer2 = $layer1[0]['children'];
 
-        $this->assertEquals('Products', $layer1[2]['title']);
         $this->assertEquals('Products-1', $layer2[0]['title']);
         $this->assertEquals('Products-2', $layer2[1]['title']);
     }
@@ -646,5 +650,132 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals($this->data['news/news-1']->getUuid(), $main[1]['uuid']);
         $this->assertEquals('News-1', $main[1]['title']);
         $this->assertEquals('/news/news-1', $main[1]['url']);
+    }
+}
+
+class ExcerptStructureExtension extends StructureExtension
+{
+    /**
+     * name of structure extension
+     */
+    const EXCERPT_EXTENSION_NAME = 'excerpt';
+
+    /**
+     * will be filled with data in constructor
+     * {@inheritdoc}
+     */
+    protected $properties = array();
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $name = self::EXCERPT_EXTENSION_NAME;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $additionalPrefix = self::EXCERPT_EXTENSION_NAME;
+
+    /**
+     * @var StructureInterface
+     */
+    protected $excerptStructure;
+
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    protected $contentTypeManager;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    protected $structureManager;
+
+    /**
+     * @var string
+     */
+    private $languageNamespace;
+
+    function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
+    {
+        $this->contentTypeManager = $contentTypeManager;
+        $this->structureManager = $structureManager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    {
+        foreach ($this->excerptStructure->getProperties() as $property) {
+            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+            if (isset($data[$property->getName()])) {
+                $property->setValue($data[$property->getName()]);
+                $contentType->write(
+                    $node,
+                    new TranslatedProperty(
+                        $property,
+                        $languageCode . '-' . $this->additionalPrefix,
+                        $this->languageNamespace
+                    ),
+                    null, // userid
+                    $webspaceKey,
+                    $languageCode,
+                    null // segmentkey
+                );
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(NodeInterface $node, $webspaceKey, $languageCode)
+    {
+        $data = array();
+        foreach ($this->excerptStructure->getProperties() as $property) {
+            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+            $contentType->read(
+                $node,
+                new TranslatedProperty($property, $languageCode . '-' . $this->additionalPrefix, $this->languageNamespace),
+                $webspaceKey,
+                $languageCode,
+                null // segmentkey
+            );
+            $data[$property->getName()] = $contentType->getContentData($property);
+        }
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLanguageCode($languageCode, $languageNamespace, $namespace)
+    {
+        // lazy load excerpt structure to avoid redeclaration of classes
+        // should be done before parent::setLanguageCode because it uses the $thi<->properties
+        // which will be set in initExcerptStructure
+        if ($this->excerptStructure === null) {
+            $this->excerptStructure = $this->initExcerptStructure();
+        }
+
+        parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
+        $this->languageNamespace = $languageNamespace;
+    }
+
+    /**
+     * initiates structure and properties
+     */
+    private function initExcerptStructure()
+    {
+        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+        /** @var PropertyInterface $property */
+        foreach ($excerptStructure->getProperties() as $property) {
+            $this->properties[] = $property->getName();
+        }
+
+        return $excerptStructure;
     }
 }
