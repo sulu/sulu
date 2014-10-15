@@ -107,12 +107,16 @@ class ExcerptStructureExtension extends StructureExtension
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
                 $node,
-                new TranslatedProperty($property, $languageCode . '-' . $this->additionalPrefix, $this->languageNamespace),
+                new TranslatedProperty(
+                    $property,
+                    $languageCode . '-' . $this->additionalPrefix,
+                    $this->languageNamespace
+                ),
                 $webspaceKey,
                 $languageCode,
                 null // segmentkey
             );
-            $data[$property->getName()] = $contentType->getContentData($property);
+            $data[$property->getName()] = $property->getValue();
         }
 
         return new ExcerptValueContainer($data);
@@ -132,6 +136,27 @@ class ExcerptStructureExtension extends StructureExtension
 
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
         $this->languageNamespace = $languageNamespace;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentData($value)
+    {
+        if ($value instanceof ExcerptValueContainer) {
+            $data = array();
+            foreach ($this->excerptStructure->getProperties() as $property) {
+                if ($value->__isset($property->getName())) {
+                    $property->setValue($value->__get($property->getName()));
+                    $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                    $data[$property->getName()] = $contentType->getContentData($property);
+                }
+            }
+
+            return $data;
+        } else {
+            return $value;
+        }
     }
 
     /**
