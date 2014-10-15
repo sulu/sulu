@@ -107,8 +107,8 @@ define([], function() {
 
             // set preselected values
             if (!!this.sandbox.dom.data(this.$el, 'snippet-ids')) {
-                var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'snippet-ids'));
-                setData.call(this, data);
+                var snippetIds = this.sandbox.dom.data(this.$el, 'snippet-ids');
+                this.data.ids = snippetIds;
             }
 
             renderStartContent.call(this);
@@ -187,8 +187,6 @@ define([], function() {
                 renderFooter.call(this);
             }
             this.sandbox.emit('husky.column-navigation.'+ this.options.instanceName +'.unmark', dataId);
-            setData.call(this, this.data);
-
             this.sandbox.emit('sulu.content.changed');
         },
 
@@ -219,11 +217,23 @@ define([], function() {
                         preselected: [],
                         pagination: false,
                         resultKey: this.options.resultKey,
-                        sortable: true,
-                        searchInstanceName: 'test',
-                        searchFields: ['title'],
+                        sortable: false,
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'snippetList'),
+                        viewOptions: {
+                            table: {
+                                selectItem: {
+                                    type: 'checkbox'
+                                },
+                                removeRow: false,
+                                editable: false,
+                                validation: false,
+                                addRowTop: false,
+                                showHead: true,
+                                contentContainer: '#content',
+                                highlightSelected: true
+                            },
+                        },
                         matchings: [
                             {
                                 content: 'Title',
@@ -396,11 +406,6 @@ define([], function() {
          * set data of snippet-content
          */
         setData = function(data) {
-            for (var propertyName in data) {
-                if (data.hasOwnProperty(propertyName)) {
-                    this.data[propertyName] = data[propertyName];
-                }
-            }
             this.sandbox.dom.data(this.$el, 'snippet-ids', this.data.ids);
         },
 

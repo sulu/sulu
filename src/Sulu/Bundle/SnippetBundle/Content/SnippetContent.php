@@ -83,9 +83,7 @@ class SnippetContent extends ComplexContentType
         $segmentKey
     ) {
         $snippetReferences = $property->getValue();
-        foreach ($snippetReferences as $snippetReference) {
-            $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
-        }
+        $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
     }
 
     /**
