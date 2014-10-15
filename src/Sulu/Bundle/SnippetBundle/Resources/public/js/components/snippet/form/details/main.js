@@ -25,7 +25,6 @@ define(['app-config'], function(AppConfig) {
         bindCustomEvents: function() {
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
-                this.animateTemplateDropdown = true;
                 this.checkRenderTemplate(item);
             }, this);
 

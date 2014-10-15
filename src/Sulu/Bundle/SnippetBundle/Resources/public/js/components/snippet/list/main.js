@@ -102,7 +102,8 @@ define([
         };
 
     // inheritance
-    component.__proto__ = BaseSnippet;
+    component.prototype = Object.create(BaseSnippet.prototype);
+    component.prototype.constructor = BaseSnippet;
 
     return component;
 });
