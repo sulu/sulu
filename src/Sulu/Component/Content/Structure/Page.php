@@ -197,6 +197,7 @@ abstract class Page extends Structure
                 'nodeState' => $this->getNodeState(),
                 'publishedState' => $this->getPublishedState(),
                 'navContexts' => $this->getNavContexts(),
+                'originTemplate' => $this->getOriginTemplate(),
             )
         );
 

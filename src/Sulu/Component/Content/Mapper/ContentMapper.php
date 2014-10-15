@@ -556,7 +556,7 @@ class ContentMapper implements ContentMapperInterface
                 $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
             $structure->setOriginTemplate(
-                $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
+                $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplates[$structureType])
             );
             // load dependencies for internal links
             $this->loadInternalLinkDependencies(
@@ -1267,9 +1267,6 @@ class ContentMapper implements ContentMapperInterface
             );
             $structure->setPublished(
                 $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
-            );
-            $structure->setOriginTemplate(
-                $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $originTemplateKey)
             );
 
             // load data of extensions
