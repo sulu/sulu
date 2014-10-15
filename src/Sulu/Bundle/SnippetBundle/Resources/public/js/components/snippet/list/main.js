@@ -43,8 +43,7 @@ define([
         noBack: true,
 
         breadcrumb: [
-            {title: 'navigation.snippets'},
-            {title: 'snippets.snippet.title'}
+            {title: 'navigation.snippets'}
         ]
     };
 
@@ -82,9 +81,8 @@ define([
             },
             {
                 el: this.sandbox.dom.find('#snippet-list', this.$el),
-                // FIXME no webspace
-                url: '/admin/api/snippets?webspace=sulu_io&language=' + this.options.language,
-                searchInstanceName: 'contacts',
+                url: '/admin/api/snippets?language=' + this.options.language,
+                searchInstanceName: 'snippets',
                 searchFields: ['title'], // TODO ???
                 resultKey: 'snippets',
                 viewOptions: {

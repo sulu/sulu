@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="navigation.snippets">
+                <source>navigation.snippets</source>
+                <target>Snippets</target>
+            </trans-unit>
+            <trans-unit id="2" resname="snippets.snippet.title">
+                <source>snippets.snippet.title</source>
+                <target>Snippets</target>
+            </trans-unit>
+            <trans-unit id="3" resname="snippets.list.title">
+                <source>snippets.list.title</source>
+                <target>Type</target>
+            </trans-unit>
+            <trans-unit id="4" resname="content-navigation.snippets.details">
+                <source>content-navigation.snippets.details</source>
+                <target>Details</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

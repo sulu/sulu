@@ -247,8 +247,7 @@ define([
      */
     SnippetForm.prototype.setTitle = function(title) {
         var breadcrumb = [
-            {title: 'navigation.snippets'},
-            {title: 'snippets.snippet.title'}
+            {title: 'navigation.snippets'}
         ];
 
         if (!!this.options.id && title !== '') {

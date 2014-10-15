@@ -87,7 +87,12 @@ class SnippetController
 
         $snippets = $this->snippetRepository->getSnippets(
             $this->languageCode,
-            $type
+            $type,
+            null,
+            null,
+            $request->get('search'),
+            $request->get('sortBy'),
+            $request->get('sortOrder')
         );
 
         $data = array();
@@ -96,7 +101,7 @@ class SnippetController
             $data[] = $snippet->toArray();
         }
 
-        $data = $this->decorateList($data);
+        $data = $this->decorateList($data, $this->languageCode);
 
         $view = View::create($data);
 
@@ -128,7 +133,7 @@ class SnippetController
         foreach ($uuids as $uuid) {
             try {
                 $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
-                $snippets[] = $this->decorateSnippet($snippet->toArray());
+                $snippets[] = $this->decorateSnippet($snippet->toArray(), $this->languageCode);
             } catch (\PHPCR\ItemNotFoundException $e) {
                 // ignore not found items
             }
@@ -156,7 +161,7 @@ class SnippetController
             ->setData($data);
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
-        $view = View::create($this->decorateSnippet($snippet->toArray()));
+        $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
 
         return $this->viewHandler->handle($view);
     }
@@ -176,7 +181,7 @@ class SnippetController
             ->setState($request->get('state', StructureInterface::STATE_TEST));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
-        $view = View::create($this->decorateSnippet($snippet->toArray()));
+        $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
 
         return $this->viewHandler->handle($view);
     }
@@ -206,6 +211,17 @@ class SnippetController
                     "type" => "",
                     "width" => "",
                     "minWidth" => "100px",
+                    "editable" => false
+                ),
+                array(
+                    "name" => "template",
+                    "translation" => "snippets.list.template",
+                    "disabled" => false,
+                    "default" => true,
+                    "sortable" => true,
+                    "type" => "",
+                    "width" => "",
+                    "minWidth" => "",
                     "editable" => false
                 ),
                 array(
@@ -286,7 +302,7 @@ class SnippetController
      *
      * TODO: Use the HateoasBundle / JMSSerializer to do this.
      */
-    private function decorateList(array $data)
+    private function decorateList(array $data, $locale)
     {
         return array(
             'page' => 1,
@@ -295,32 +311,23 @@ class SnippetController
             'total' => count($data),
             '_links' => array(
                 'self' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
-                ),
-                'first' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
-                ),
-                'last' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
-                ),
-                'next' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
-                ),
-                'filter' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
+                    'href' => $this->urlGenerator->generate('get_snippets', array('language' => $locale)),
                 ),
                 'find' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
-                ),
-                'pagination' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
+                    'href' => $this->urlGenerator->generate(
+                            'get_snippets',
+                            array('language' => $locale, 'search' => '{searchString}')
+                        ),
                 ),
                 'sortable' => array(
-                    'href' => $this->urlGenerator->generate('get_snippets'),
-                ),
+                    'href' => $this->urlGenerator->generate(
+                            'get_snippets',
+                            array('language' => $locale, 'sortBy' => '{sortBy}', 'sortOrder' => '{sortOrder}')
+                        ),
+                )
             ),
             '_embedded' => array(
-                'snippets' => $this->decorateSnippets($data)
+                'snippets' => $this->decorateSnippets($data, $locale)
             ),
         );
 
@@ -331,11 +338,11 @@ class SnippetController
      *
      * @param array $snippets
      */
-    private function decorateSnippets(array $snippets)
+    private function decorateSnippets(array $snippets, $locale)
     {
         $res = array();
         foreach ($snippets as $snippet) {
-            $res[] = $this->decorateSnippet($snippet);
+            $res[] = $this->decorateSnippet($snippet, $locale);
         }
 
         return $res;
@@ -346,16 +353,25 @@ class SnippetController
      *
      * @param array $snippets
      */
-    private function decorateSnippet(array $snippet)
+    private function decorateSnippet(array $snippet, $locale)
     {
         return array_merge(
             $snippet,
             array(
                 '_links' => array(
-                    'self' => $this->urlGenerator->generate('get_snippet', array('uuid' => $snippet['id'])),
-                    'delete' => 'TODO',
-                    'new' => $this->urlGenerator->generate('post_snippet'),
-                    'update' => $this->urlGenerator->generate('put_snippet', array('uuid' => $snippet['id'])),
+                    'self' => $this->urlGenerator->generate(
+                            'get_snippet',
+                            array('uuid' => $snippet['id'], 'language' => $locale)
+                        ),
+                    'delete' => $this->urlGenerator->generate(
+                            'delete_snippet',
+                            array('uuid' => $snippet['id'], 'language' => $locale)
+                        ),
+                    'new' => $this->urlGenerator->generate('post_snippet', array('language' => $locale)),
+                    'update' => $this->urlGenerator->generate(
+                            'put_snippet',
+                            array('uuid' => $snippet['id'], 'language' => $locale)
+                        ),
                 ),
             )
         );

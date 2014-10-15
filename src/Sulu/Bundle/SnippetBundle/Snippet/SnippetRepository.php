@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Sulu\Component\Content\Mapper\ContentMapper;
+use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
@@ -43,16 +44,29 @@ class SnippetRepository
      * @param string $type Optional snippet type
      * @param integer $offset Optional offset
      * @param integer $max Optional max
+     * @param string $search
+     * @param string $sortBy
+     * @param string $sortOrder
      *
+     * @throws \InvalidArgumentException
      * @return Snippet[]
      */
-    public function getSnippets($languageCode, $type = null, $offset = null, $max = null)
+    public function getSnippets(
+        $languageCode,
+        $type = null,
+        $offset = null,
+        $max = null,
+        $search = null,
+        $sortBy = null,
+        $sortOrder = null
+    )
     {
         $snippetNode = $this->sessionManager->getSnippetNode($type);
         $workspace = $this->sessionManager->getSession()->getWorkspace();
         $queryManager = $workspace->getQueryManager();
 
-        $qb = new QueryBuilder($queryManager->getQOMFactory());
+        $qf = $queryManager->getQOMFactory();
+        $qb = new QueryBuilder($qf);
 
         $qb->from(
             $qb->qomf()->selector('a', 'nt:unstructured')
@@ -89,10 +103,24 @@ class SnippetRepository
             $qb->setMaxResults($max);
         }
 
+        if (null !== $search) {
+            $searchConstraint = $qf->orConstraint(
+                $qf->fullTextSearch('a', 'i18n:' . $languageCode . '-title', $search . '%'),
+                $qf->fullTextSearch('a', 'i18n:' . $languageCode . '-template', $search . '%')
+            );
+            $qb->andWhere($searchConstraint);
+        }
+
         // Title is a mandatory property for snippets
         // NOTE: Prefixing the language code and namespace here is bad. But the solution is
         //       refactoring (i.e. a node property name translator service).
-        $qb->orderBy($qb->qomf()->propertyValue('a', 'i18n:' . $languageCode . '-title'), 'ASC');
+        $sortOrder = ($sortOrder !== null ? strtoupper($sortOrder) : 'ASC');
+        $sortBy = ($sortBy !== null ? $sortBy : 'title');
+
+        $qb->orderBy(
+            $qb->qomf()->propertyValue('a', 'i18n:' . $languageCode . '-' . $sortBy),
+            $sortOrder !== null ? strtoupper($sortOrder) : 'ASC'
+        );
 
         $query = $qb->getQuery();
 
