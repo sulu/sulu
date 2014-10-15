@@ -10,17 +10,16 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
-use Jackalope\Property;
 use Jackalope\Query\QueryManager;
-use Jackalope\Query\Row;
 use Jackalope\Session;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use PHPCR\Util\QOM\QueryBuilder;
-use PHPCR\NodeInterface;
 
 /**
  * Copy internationalized properties from one locale to another
@@ -28,16 +27,15 @@ use PHPCR\NodeInterface;
 class ContentLocaleCopyCommand extends ContainerAwareCommand
 {
     /**
-     * Additional information will be written if true
-     * @var boolean
-     */
-    private $verbose;
-
-    /**
      * The namespace for languages
      * @var string
      */
     private $languageNamespace;
+
+    /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
 
     /**
      * @var Session
@@ -61,8 +59,9 @@ class ContentLocaleCopyCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:content:locale-copy');
         $this->setDescription('Copy nodes from one locale to another');
-        $this->setHelp(<<<EOT
-The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
+        $this->setHelp(
+            <<<EOT
+            The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
 to <info>destLocale</info> on all nodes which descend from the given path.
 
     %command.full_name% /cms/sulu_io/contents de en --dry-run
@@ -73,8 +72,8 @@ You can overwrite existing values using the <info>overwrite</info> option:
 
 Remove the <info>dry-run</info> option to actually persist the changes.
 EOT
-    );
-        $this->addArgument('path', InputArgument::REQUIRED, 'Copy locales in nodes which descend from this path (e.g. /)');
+        );
+        $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Copy locales in nodes belonging to this webspace');
         $this->addArgument('srcLocale', InputArgument::REQUIRED, 'Locale to copy from (e.g. de)');
         $this->addArgument('destLocale', InputArgument::REQUIRED, 'Locale to copy to (e.g. en)');
         $this->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite existing locales');
@@ -86,20 +85,20 @@ EOT
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument('path');
+        $webspaceKey = $input->getArgument('webspaceKey');
         $srcLocale = $input->getArgument('srcLocale');
         $destLocale = $input->getArgument('destLocale');
         $overwrite = $input->getOption('overwrite');
         $dryRun = $input->getOption('dry-run');
 
-        $this->verbose = $input->getOption('verbose');
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
         $this->queryManager = $this->session->getWorkspace()->getQueryManager();
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
+        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
 
         $this->output = $output;
 
-        $this->copyNodes($path, $srcLocale, $destLocale, $overwrite);
+        $this->copyNodes($webspaceKey, $srcLocale, $destLocale, $overwrite);
 
         if (false === $dryRun) {
             $this->output->writeln('<info>Saving ...</info>');
@@ -110,66 +109,60 @@ EOT
         }
     }
 
-    private function copyNodes($path, $srcLocale, $destLocale, $overwrite)
+    private function copyNodes($webspaceKey, $srcLocale, $destLocale, $overwrite)
     {
-        $nodes = $this->getRowIterator($path);
+        $node = $this->contentMapper->loadStartPage($webspaceKey, $srcLocale);
 
-        foreach ($nodes as $row) {
-            /** @var Row $row */
-            $this->copyLocale($row->getNode(), $srcLocale, $destLocale, $overwrite);
-        }
+        // copy start node
+        $this->copyNode($webspaceKey, $srcLocale, $destLocale, $node, $overwrite);
+
+        $this->copyChildNodes($node, $webspaceKey, $srcLocale, $destLocale, $overwrite);
     }
 
-    private function getRowIterator($path)
+    private function copyChildNodes(StructureInterface $structure, $webspaceKey, $srcLocale, $destLocale, $overwrite)
     {
-        $qb = new QueryBuilder($this->queryManager->getQOMFactory());
-        $qomf = $qb->qomf();
-
-        $qb->from($qomf->selector('a', 'nt:unstructured'))->where(
-            $qomf->descendantNode('a', $path)
-        );
-        $query = $qb->getQuery();
-
-        return $query->execute();
-    }
-
-    private function copyLocale(NodeInterface $node, $srcLocale, $destLocale, $overwrite)
-    {
-        $srcPrefix = $this->languageNamespace . ':' . $srcLocale . '-';
-        $destPrefix = $this->languageNamespace . ':' . $destLocale . '-';
-        /** @var Property[] $properties */
-        $properties = array();
-
-        foreach ($node->getProperties() as $name => $property) {
-            if (0 === strpos($name, $srcPrefix)) {
-                $properties[$name] = $property;
-            }
-        }
-
-        if (!$properties) {
+        if (!$structure->getHasChildren()) {
             return;
         }
 
-        $this->output->writeln('<info>Processing: </info>' . $node->getPath());
+        foreach ($this->contentMapper->loadByParent($structure->getUuid(), $webspaceKey, $srcLocale) as $child) {
+            $this->copyNode($webspaceKey, $srcLocale, $destLocale, $child, $overwrite);
 
-        foreach ($properties as $name => $property) {
-            $suluName = substr($name, strlen($srcPrefix));
-            $destName = $destPrefix . $suluName;
+            $this->copyChildNodes($child, $webspaceKey, $srcLocale, $destLocale, $overwrite);
+        }
+    }
 
-            if ($node->hasProperty($destName) && false === $overwrite) {
-                $this->output->writeln(sprintf('    Property exists: %s <comment>(use overwrite option to force)</comment>', $destName));
-                continue;
+    private function copyNode($webspaceKey, $srcLocale, $destLocale, StructureInterface $structure, $overwrite = false)
+    {
+        if (!$overwrite) {
+            $destStructure = $this->contentMapper->load($structure->getUuid(), $webspaceKey, $destLocale, true);
+
+            if (!($destStructure->getType() && $destStructure->getType()->getName() === 'ghost')) {
+                $this->output->writeln(
+                    '<info>Processing aborted: </info>' .
+                    $structure->getPath() . ' <comment>(use overwrite option to force)</comment>'
+                );
+
+                return;
             }
+        }
 
-            $node->setProperty($destName, $property->getValue(), $property->getType());
+        try {
+            $this->contentMapper->copyLanguage(
+                $structure->getUuid(),
+                $structure->getChanger(),
+                $webspaceKey,
+                $srcLocale,
+                $destLocale
+            );
 
-            if ($this->verbose) {
-                $this->output->writeln(sprintf(
-                    '    <info>%s</info> > <comment>%s</comment>',
-                    $name,
-                    $destName
-                ));
-            }
+            $this->output->writeln('<info>Processing: </info>' . $structure->getPath());
+        } catch (ResourceLocatorAlreadyExistsException $exc) {
+            $this->output->writeln(
+                '<info>Processing aborted: </info>' .
+                $structure->getPath() . ' <comment>(ResouceLocator "'
+                . $structure->getResourceLocator() . '" already existed)</comment>'
+            );
         }
     }
 }
