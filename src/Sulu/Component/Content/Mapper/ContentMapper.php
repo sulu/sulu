@@ -1932,12 +1932,7 @@ class ContentMapper implements ContentMapperInterface
             $locale
         );
 
-        // insure array
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
-        return $data;
+        return $extension->getContentData($data);
     }
 
     /**
