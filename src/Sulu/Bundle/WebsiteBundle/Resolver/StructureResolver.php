@@ -4,6 +4,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.
@@ -16,11 +17,18 @@ class StructureResolver implements StructureResolverInterface
     protected $contentTypeManager;
 
     /**
-     * @param ContentTypeManagerInterface $contentTypeManager
+     * @var StructureManagerInterface
      */
-    public function __construct(ContentTypeManagerInterface $contentTypeManager)
+    protected $structureManager;
+
+    /**
+     * @param ContentTypeManagerInterface $contentTypeManager
+     * @param StructureManagerInterface $structureManager
+     */
+    public function __construct(ContentTypeManagerInterface $contentTypeManager, StructureManagerInterface $structureManager)
     {
         $this->contentTypeManager = $contentTypeManager;
+        $this->structureManager = $structureManager;
     }
 
     /**
@@ -43,6 +51,11 @@ class StructureResolver implements StructureResolverInterface
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $data['view'][$property->getName()] = $contentType->getViewData($property);
             $data['content'][$property->getName()] = $contentType->getContentData($property);
+        }
+
+        foreach ($data['extension'] as $name => $value) {
+            $extension = $this->structureManager->getExtension($structure->getKey(), $name);
+            $data['extension'][$name] = $extension->getContentData($value);
         }
 
         return $data;
