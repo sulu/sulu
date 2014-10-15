@@ -103,9 +103,17 @@ abstract class AbstractListBuilder implements ListBuilderInterface
      */
     public function addField(AbstractFieldDescriptor $fieldDescriptor)
     {
-        $this->fields[] = $fieldDescriptor;
+        $this->fields[$fieldDescriptor->getName()] = $fieldDescriptor;
 
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasField($name)
+    {
+        return array_key_exists($name, $this->fields);
     }
 
     /**
