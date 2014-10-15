@@ -22,6 +22,8 @@ use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 
+require_once(dirname(__DIR__) . '/Navigation/ExcerptStructureExtension.php');
+
 class SitemapGeneratorTest extends PhpcrTestCase
 {
     /**
@@ -68,6 +70,16 @@ class SitemapGeneratorTest extends PhpcrTestCase
             $this->webspaceManager,
             new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace)
         );
+    }
+
+    public function getExtensionCallback()
+    {
+        return new \Sulu\Bundle\WebsiteBundle\Navigation\ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
+    }
+
+    public function getExtensionsCallback()
+    {
+        return array($this->getExtensionCallback());
     }
 
     protected function prepareWebspaceManager()

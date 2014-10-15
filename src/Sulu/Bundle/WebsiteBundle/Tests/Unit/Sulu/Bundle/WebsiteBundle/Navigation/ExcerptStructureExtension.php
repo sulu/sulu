@@ -114,7 +114,7 @@ class ExcerptStructureExtension extends StructureExtension
             $data[$property->getName()] = $contentType->getContentData($property);
         }
 
-        return new ExcerptValueContainer($data);
+        return $data;
     }
 
     /**
@@ -145,5 +145,15 @@ class ExcerptStructureExtension extends StructureExtension
         }
 
         return $excerptStructure;
+    }
+
+    /**
+     * Returns content data for given values
+     * @param mixed $value
+     * @return mixed
+     */
+    public function getContentData($value)
+    {
+        return $value;
     }
 }

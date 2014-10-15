@@ -21,6 +21,8 @@ use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 
+require_once(__DIR__ . '/ExcerptStructureExtension.php');
+
 class NavigationTest extends PhpcrTestCase
 {
     /**
