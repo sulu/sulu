@@ -492,16 +492,16 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals(3, sizeof($result));
         $layer1 = $result;
 
-        $this->assertEquals(0, sizeof($layer1[0]['children']));
+        $this->assertEquals(2, sizeof($layer1[0]['children']));
         $this->assertEquals(0, sizeof($layer1[1]['children']));
+        $this->assertEquals(0, sizeof($layer1[2]['children']));
 
-        $this->assertEquals('News-1', $layer1[0]['title']);
-        $this->assertEquals('News-2', $layer1[1]['title']);
+        $this->assertEquals('Products', $layer1[0]['title']);
+        $this->assertEquals('News-1', $layer1[1]['title']);
+        $this->assertEquals('News-2', $layer1[2]['title']);
 
-        $this->assertEquals(2, sizeof($layer1[2]['children']));
-        $layer2 = $layer1[2]['children'];
+        $layer2 = $layer1[0]['children'];
 
-        $this->assertEquals('Products', $layer1[2]['title']);
         $this->assertEquals('Products-1', $layer2[0]['title']);
         $this->assertEquals('Products-2', $layer2[1]['title']);
     }

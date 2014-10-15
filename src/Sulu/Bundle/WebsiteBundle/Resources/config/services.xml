@@ -96,6 +96,7 @@
 
         <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%">
             <argument type="service" id="sulu.content.type_manager" />
+            <argument type="service" id="sulu.content.structure_manager"/>
         </service>
 
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
