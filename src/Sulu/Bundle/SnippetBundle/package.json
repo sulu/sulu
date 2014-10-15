@@ -1,6 +1,6 @@
 {
-    "name": "sulucontent",
-    "version": "0.3.0",
+    "name": "sulusnippet",
+    "version": "0.1.0",
     "devDependencies": {
         "grunt": "0.4.*",
         "grunt-contrib-copy": "0.4.*",

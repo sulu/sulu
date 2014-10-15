@@ -10,6 +10,7 @@
     <services>
         <service id="sulu_snippet.content.snippet" class="%sulu_snippet.content.snippet.class%">
             <argument type="service" id="sulu.content.mapper" />
+            <argument>%sulu_snippet.content-type.template%</argument>
             <tag name="sulu.content.type" alias="snippet"/>
         </service>
     </services>

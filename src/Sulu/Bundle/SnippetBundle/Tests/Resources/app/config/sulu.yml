@@ -38,6 +38,9 @@ security:
     firewalls:
         test:
             http_basic:
+            
+sulu_admin:
+    name: sulu 2.0
 
 doctrine:
     orm:

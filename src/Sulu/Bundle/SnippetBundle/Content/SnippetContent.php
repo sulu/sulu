@@ -16,6 +16,7 @@ use Sulu\Component\Content\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\ContentTypeInterface;
+use PHPCR\Util\UUIDHelper;
 
 /**
  * ContentType for TextEditor
@@ -23,10 +24,12 @@ use Sulu\Component\Content\ContentTypeInterface;
 class SnippetContent extends ComplexContentType
 {
     protected $contentMapper;
+    protected $template;
 
-    public function __construct(ContentMapper $contentMapper)
+    public function __construct(ContentMapper $contentMapper, $template)
     {
         $this->contentMapper = $contentMapper;
+        $this->template = $template;
     }
 
     public function getType()
@@ -36,7 +39,7 @@ class SnippetContent extends ComplexContentType
 
     public function getTemplate()
     {
-        return '';
+        return $this->template;
     }
 
     /**
@@ -47,8 +50,14 @@ class SnippetContent extends ComplexContentType
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
         $snippets = array();
 
-        foreach ($refs as $ref) {
-            $snippets[] = $this->contentMapper->loadByNode($ref, $languageCode, $webspaceKey);
+        foreach ($refs as $i => $ref) {
+            // see https://github.com/jackalope/jackalope/issues/248
+            if (UUIDHelper::isUUID($i)) {
+                $ref = $i;
+            } else {
+            }
+
+            $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
         }
 
         $property->setValue($snippets);
@@ -119,7 +128,7 @@ class SnippetContent extends ComplexContentType
         $serializedSnippets = array();
 
         foreach ($snippets as $snippet) {
-            $serializedSnippets[] = $snippet->toArray();
+            $serializedSnippets[] = $snippet->toArray(true);
         }
 
         return $serializedSnippets;

@@ -40,14 +40,13 @@ class SnippetRepository
      * If $type is given then only return the snippets of that type.
      *
      * @param string $languageCode
-     * @param string $webspaceKey
      * @param string $type Optional snippet type
      * @param integer $offset Optional offset
      * @param integer $max Optional max
      *
      * @return Snippet[]
      */
-    public function getSnippets($languageCode, $webspaceKey, $type = null, $offset = null, $max = null)
+    public function getSnippets($languageCode, $type = null, $offset = null, $max = null)
     {
         $snippetNode = $this->sessionManager->getSnippetNode($type);
         $workspace = $this->sessionManager->getSession()->getWorkspace();
@@ -97,6 +96,6 @@ class SnippetRepository
 
         $query = $qb->getQuery();
 
-        return $this->contentMapper->loadByQuery($query, $languageCode, $webspaceKey);
+        return $this->contentMapper->loadByQuery($query, $languageCode);
     }
 }

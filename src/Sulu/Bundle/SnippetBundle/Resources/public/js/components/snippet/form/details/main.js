@@ -18,7 +18,6 @@ define(['app-config'], function(AppConfig) {
             this.bindCustomEvents();
             this.config = AppConfig.getSection('sulu-snippet');
             this.defaultType = this.config.defaultType;
-            this.template = this.defaultType;
 
             this.loadData();
         },
@@ -26,7 +25,6 @@ define(['app-config'], function(AppConfig) {
         bindCustomEvents: function() {
             // change template
             this.sandbox.on('sulu.dropdown.template.item-clicked', function(item) {
-                this.animateTemplateDropdown = true;
                 this.checkRenderTemplate(item);
             }, this);
 
@@ -58,9 +56,13 @@ define(['app-config'], function(AppConfig) {
             if (typeof item === 'string') {
                 item = {template: item};
             }
-            if (!!item && this.template === item.template) {
+            if (!!item && !!this.template && this.template === item.template) {
                 this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', false);
                 return;
+            }
+
+            if (!this.template) {
+                this.template = this.defaultType;
             }
 
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'template');
@@ -83,6 +85,8 @@ define(['app-config'], function(AppConfig) {
 
                     if (!!this.template) {
                         this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
+                    } else {
+                        this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.defaultType);
                     }
                 }.bind(this),
                 function() {
@@ -234,11 +238,10 @@ define(['app-config'], function(AppConfig) {
         },
 
         changeTemplateDropdownHandler: function() {
+            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template');
             if (!!this.template) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
             }
-            this.sandbox.emit('sulu.header.toolbar.item.enable', 'template', this.animateTemplateDropdown);
-            this.animateTemplateDropdown = false;
         },
 
         submit: function() {

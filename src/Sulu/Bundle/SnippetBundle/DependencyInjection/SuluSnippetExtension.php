@@ -14,9 +14,17 @@ class SuluSnippetExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter(
+            'sulu_snippet.content-type.template',
+            $config['types']['snippet']['template']
+        );
+
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
         $loader->load('content.xml');
         $loader->load('snippet.xml');
+        $loader->load('services.xml');
     }
 }

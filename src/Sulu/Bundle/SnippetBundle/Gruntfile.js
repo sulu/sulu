@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                         expand: true, 
                         cwd: 'Resources/public', 
                         src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../web/bundles/sulusnippet/'
+                        dest: '../../../web/bundles/sulusnippet/'
                     }
                 ]
             },
@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                         expand: true, 
                         cwd: 'Resources/public_dev', 
                         src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../web/bundles/sulusnippet/'
+                        dest: '../../../web/bundles/sulusnippet/'
                     }
                 ]
             }
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         dot: true,
-                        src: ['../../../../../../web/bundles/sulusnippet/']
+                        src: ['../../../web/bundles/sulusnippet/']
                     }
                 ]
             }
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                 tasks: ['compass:dev']
             },
             scripts: {
-                files: ['Resources/public/**'],
+                files: ['Resources/public/**', 'Resources/public_dev/**'],
                 tasks: ['publish']
             }
         },

@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use Sulu\Component\Content\Mapper\ContentMapper;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,8 @@ use Symfony\Component\Security\Core\SecurityContext;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use FOS\RestBundle\Controller\Annotations\Prefix;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PHPCR\Util\UUIDHelper;
+use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * handles snippets
@@ -58,7 +61,6 @@ class SnippetController
      */
     protected $urlGenerator;
 
-    protected $webspaceKey;
     protected $languageCode;
 
     public function __construct(
@@ -68,8 +70,7 @@ class SnippetController
         SnippetRepository $snippetRepository,
         SecurityContext $securityContext,
         UrlGeneratorInterface $urlGenerator
-    )
-    {
+    ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
         $this->structureManager = $structureManager;
@@ -86,7 +87,6 @@ class SnippetController
 
         $snippets = $this->snippetRepository->getSnippets(
             $this->languageCode,
-            $this->webspaceKey,
             $type
         );
 
@@ -103,12 +103,41 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
-    public function getSnippetAction(Request $request, $uuid)
+    /**
+     * Retrieve snippet(s) by ID(s)
+     *
+     * An array of snippets is always returned.
+     * Multiple Snippet IDs must be delimited with a comma.
+     *
+     * Note the defaults below allow us to generate the base URL for the benefit
+     * of the javascript code (i.e. we can pass the base URL without the UUID to the
+     * javascript code).
+     *
+     * @Get(defaults={"uuid" = ""}, requirements={ "uuid" = ".*" })
+     */
+    public function getSnippetAction(Request $request, $uuid = null)
     {
         $this->initEnv($request);
 
-        $snippet = $this->contentMapper->load($uuid, $this->webspaceKey, $this->languageCode);
-        $view = View::create($this->decorateSnippet($snippet->toArray()));
+        if (UUIDHelper::isUUID($uuid)) {
+            $uuids = array($uuid);
+        } else {
+            $uuids = explode(',', $uuid);
+        }
+
+        $res = array();
+
+        $snippets = array();
+        foreach ($uuids as $uuid) {
+            try {
+                $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
+                $snippets[] = $this->decorateSnippet($snippet->toArray());
+            } catch (\PHPCR\ItemNotFoundException $e) {
+                // ignore not found items
+            }
+        }
+
+        $view = View::create($snippets);
 
         return $this->viewHandler->handle($view);
     }
@@ -142,7 +171,8 @@ class SnippetController
             ->setUuid($uuid)
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
-            ->setData($data);
+            ->setData($data)
+            ->setState($request->get('state', StructureInterface::STATE_TEST));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray()));
@@ -150,6 +180,13 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
+    public function deleteSnippetAction(Request $request, $uuid)
+    {
+        $this->webspaceKey = $request->query->get('webspace', null);
+        $this->contentMapper->delete($uuid, $this->webspaceKey);
+
+        return new JsonResponse();
+    }
 
     /**
      * TODO refactor
@@ -220,14 +257,9 @@ class SnippetController
 
     private function initEnv(Request $request)
     {
-        $this->webspaceKey = $request->query->get('webspace', null);
         $this->languageCode = $request->query->get('language', null);
 
-        if (null === $this->webspaceKey) {
-            throw new \InvalidArgumentException('You must provide the "webspace" query parameter');
-        }
-
-        if (null === $this->languageCode) {
+        if (!$this->languageCode) {
             throw new \InvalidArgumentException('You must provide the "language" query parameter');
         }
     }

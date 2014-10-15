@@ -50,7 +50,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
      */
     public function testGetSnippets($type, $offset, $limit, $expectedCount)
     {
-        $snippets = $this->snippetRepository->getSnippets('de', 'sulu_io', $type, $offset, $limit);
+        $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit);
         $this->assertCount($expectedCount, $snippets);
         foreach ($snippets as $snippet) {
             $this->assertInstanceOf('Sulu\Component\Content\Structure\Snippet', $snippet);
@@ -59,7 +59,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
 
     public function testOrder()
     {
-        $snippets = $this->snippetRepository->getSnippets('de', 'sulu_io', 'car');
+        $snippets = $this->snippetRepository->getSnippets('de', 'car');
         $this->assertNotNull($snippets);
         $this->assertCount(3, $snippets);
         $first = current($snippets);

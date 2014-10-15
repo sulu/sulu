@@ -17,15 +17,14 @@
 
         <service id="sulu_snippet.admin.snippet_navigation" class="%sulu_snippet.admin.snippet_navigation.class%"/>
 
-        <!-- JsConfig -->
-        <service id="sulu_snippet.jsconfig" class="%sulu_content.jsconfig.class%">
-            <argument type="string">sulu-snippet</argument>
-            <argument type="collection">
-                <!-- FIXME move to config -->
-                <argument key="defaultType" type="string">complex</argument>
-            </argument>
-
-            <tag name="sulu.js_config"/>
-        </service>
+        <!-- JsConfig
+         <service id="sulu_snippet.jsconfig" class="%sulu_content.jsconfig.class%">
+             <argument type="string">sulu-snippet</argument>
+             <argument type="collection">
+                 FIXME move to config
+                 <argument key="defaultType" type="string">complex</argument>
+             </argument>
+        <     <tag name="sulu.js_config"/>
+        </service> -->
     </services>
 </container>
