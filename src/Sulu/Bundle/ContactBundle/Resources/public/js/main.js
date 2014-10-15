@@ -10,7 +10,8 @@
 require.config({
     paths: {
         sulucontact: '../../sulucontact/js',
-        'accountsutil/header': '../../sulucontact/js/components/accounts/util/header'
+        'accountsutil/header': '../../sulucontact/js/components/accounts/util/header',
+        'type/bic-input': '../../sulucontact/js/input-type/bic-input'
     }
 });
 
