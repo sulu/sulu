@@ -106,7 +106,6 @@ class SnippetController
     /**
      * Retrieve snippet(s) by ID(s)
      *
-     * An array of snippets is always returned.
      * Multiple Snippet IDs must be delimited with a comma.
      *
      * Note the defaults below allow us to generate the base URL for the benefit
@@ -125,8 +124,6 @@ class SnippetController
             $uuids = explode(',', $uuid);
         }
 
-        $res = array();
-
         $snippets = array();
         foreach ($uuids as $uuid) {
             try {
@@ -135,6 +132,10 @@ class SnippetController
             } catch (\PHPCR\ItemNotFoundException $e) {
                 // ignore not found items
             }
+        }
+
+        if (sizeof($snippets) == 1) {
+            $snippets = $snippets[0];
         }
 
         $view = View::create($snippets);
@@ -182,8 +183,8 @@ class SnippetController
 
     public function deleteSnippetAction(Request $request, $uuid)
     {
-        $this->webspaceKey = $request->query->get('webspace', null);
-        $this->contentMapper->delete($uuid, $this->webspaceKey);
+        $webspaceKey = $request->query->get('webspace', null);
+        $this->contentMapper->delete($uuid, $webspaceKey);
 
         return new JsonResponse();
     }
