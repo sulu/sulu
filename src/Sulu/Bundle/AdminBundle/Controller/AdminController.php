@@ -15,6 +15,7 @@ use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSettings;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminController extends Controller
 {
@@ -78,9 +79,7 @@ class AdminController extends Controller
             }
         }
 
-        $response = json_encode($admins);
-
-        return new Response($response);
+        return new JsonResponse($admins);
     }
 
     public function contextsAction()
@@ -88,8 +87,8 @@ class AdminController extends Controller
         $contexts = $this->get('sulu_admin.admin_pool')->getSecurityContexts();
         $system = $this->getRequest()->get('system');
 
-        $response = json_encode((isset($system) ? $contexts[$system] : $contexts));
+        $response = isset($system) ? $contexts[$system] : $contexts;
 
-        return new Response($response);
+        return new JsonResponse($response);
     }
 }
