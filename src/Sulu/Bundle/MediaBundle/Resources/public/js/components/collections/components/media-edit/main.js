@@ -212,7 +212,7 @@ define(function () {
                         instanceName: 'media-edit',
                         propagateEvents: false,
                         okCallback: this.changeSingleModel.bind(this),
-                        closeCallback: function() {
+                        cancelCallback: function() {
                             this.sandbox.stop(constants.infoFormSelector + ' *');
                             this.sandbox.off('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added');
                         }.bind(this)
