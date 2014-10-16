@@ -131,7 +131,7 @@ define(function() {
             // default options for the overlay
             defaultOptions = {
                 el: $element,
-                closeCallback: function() {
+                cancelCallback: function() {
                     this.sandbox.emit(CANCELED.call(this));
                 }.bind(this),
                 okCallback: function() {

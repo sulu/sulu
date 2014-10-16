@@ -413,7 +413,7 @@ define([], function() {
                 this.onCloseWithOk(data);
             }.bind(this);
 
-            config.closeCallback = function() {
+            config.cancelCallback = function() {
                 this.elementsToRemove = [];
                 this.$elementsToRemove = [];
             }.bind(this);
