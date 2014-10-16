@@ -643,7 +643,7 @@ define([
                         instanceName: 'edit-fields',
                         data: this.$editOverlayContent,
                         okCallback: editOkClicked.bind(this),
-                        closeCallback: unbindEditEvents.bind(this)
+                        cancelCallback: unbindEditEvents.bind(this)
                     }
                 }
             ]);
@@ -704,7 +704,7 @@ define([
                         data: addressTemplate,
                         skin: 'wide',
                         okCallback: addAddressOkClicked.bind(this, mapperId),
-                        closeCallback: removeAddressFormEvents.bind(this)
+                        cancelCallback: removeAddressFormEvents.bind(this)
                     }
                 }
             ]);
@@ -756,7 +756,7 @@ define([
                         data: bankAccountTemplate,
                         skin: 'wide',
                         okCallback: addBankAccountOkClicked.bind(this, mapperId),
-                        closeCallback: removeBankAccountFormEvents.bind(this)
+                        cancelCallback: removeBankAccountFormEvents.bind(this)
                     }
                 }
             ]);
