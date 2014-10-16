@@ -21,7 +21,14 @@
                 <div class="grid-col-6">
                     <div class="form-group-vertical">
                         <label for="bic"><%=translate('public.bic')%></label>
-                        <input id="bic" type="text" class="form-element" data-mapper-property="bic" data-validation-required="true" value=""/>
+                        <div id="bic"
+                             data-aura-component="input@husky"
+                             data-aura-front-icon="bank"
+                             data-aura-instance-name="bic-input"
+                             data-form="true"
+                             data-type="bic-input"
+                             data-validation-required="true"
+                             data-mapper-property="bic"></div>
                     </div>
                 </div>
             </div>

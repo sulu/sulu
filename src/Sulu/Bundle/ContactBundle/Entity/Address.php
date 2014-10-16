@@ -137,6 +137,13 @@ class Address
     private $accountAddresses;
 
     /**
+     * @var string
+     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
+     * @Expose
+     */
+    private $note;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -567,5 +574,28 @@ class Address
     public function removeContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
     {
         $this->contactAddresses->removeElement($contactAddresses);
+    }
+
+    /**
+     * Set note
+     *
+     * @param string $note
+     * @return Address
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * Get note
+     *
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
     }
 }
