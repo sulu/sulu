@@ -377,6 +377,7 @@ define([], function() {
                         cssClass: 'internal-links-overlay',
                         el: $element,
                         container: this.$el,
+                        removeOnClose: false,
                         instanceName: 'internal-links.' + this.options.instanceName + '.add',
                         skin: 'wide',
                         slides: [
