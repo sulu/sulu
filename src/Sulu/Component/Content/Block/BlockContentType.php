@@ -285,7 +285,37 @@ class BlockContentType extends ComplexContentType
     /**
      * {@inheritDoc}
      */
+    public function getViewData(PropertyInterface $property)
+    {
+        return $this->prepareData(
+            $property,
+            function (ContentTypeInterface $contentType, $property) {
+                return $contentType->getViewData($property);
+            },
+            false
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getContentData(PropertyInterface $property)
+    {
+        return $this->prepareData(
+            $property,
+            function (ContentTypeInterface $contentType, $property) {
+                return $contentType->getContentData($property);
+            }
+        );
+    }
+
+    /**
+     * @param PropertyInterface $property
+     * @param callable $dataCallback
+     * @param bool $returnType
+     * @return array
+     */
+    private function prepareData(PropertyInterface $property, callable $dataCallback, $returnType = true)
     {
         /** @var BlockPropertyInterface $blockProperty */
         $blockProperty = $property;
@@ -297,13 +327,16 @@ class BlockContentType extends ComplexContentType
         for ($i = 0; $i < $blockProperty->getLength(); $i++) {
             $properties = $blockProperty->getProperties($i);
 
-            $type = $properties['type'];
+            if ($returnType) {
+                $type = $properties['type'];
+                $data[$i] = array('type' => $type);
+            }
+
             unset($properties['type']);
 
-            $data[$i] = array('type' => $type);
             foreach ($properties as $prop) {
                 $contentType = $this->contentTypeManager->get($prop->getContentTypeName());
-                $data[$i][$prop->getName()] = $contentType->getContentData($prop);
+                $data[$i][$prop->getName()] = $dataCallback($contentType, $prop);
             }
         }
 
