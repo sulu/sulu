@@ -707,6 +707,7 @@ define([], function() {
                     options: {
                         triggerEl: this.$button,
                         el: $element,
+                        removeOnClose: false,
                         container: this.$el,
                         instanceName: 'smart-content.' + this.options.instanceName,
                         skin: 'wide',
@@ -733,7 +734,7 @@ define([], function() {
                                         align: 'center'
                                     }
                                 ],
-                                closeCallback: function() {
+                                cancelCallback: function() {
                                     this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
                                     return false;
                                 }.bind(this)
