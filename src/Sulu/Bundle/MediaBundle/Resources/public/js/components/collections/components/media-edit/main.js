@@ -42,7 +42,7 @@ define(function () {
          * @event sulu.media-edit.edit
          * @param media {Object} the media model to edit
          */
-            EDIT = function () {
+        EDIT = function () {
             return createEventName.call(this, 'edit');
         },
 
@@ -50,19 +50,21 @@ define(function () {
          * raised if the media-edit overlay got closed
          * @event sulu.media-edit.closed
          */
-            CLOSED = function () {
+        CLOSED = function () {
             return createEventName.call(this, 'closed');
         },
 
         /** returns normalized event names */
-            createEventName = function (postFix) {
+        createEventName = function (postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
 
-        templates: ['/admin/media/template/media/info',
-            '/admin/media/template/media/multiple-edit'],
+        templates: [
+            '/admin/media/template/media/info',
+            '/admin/media/template/media/multiple-edit'
+        ],
 
         /**
          * Initializes the collections list
@@ -211,10 +213,8 @@ define(function () {
                         openOnStart: true,
                         instanceName: 'media-edit',
                         propagateEvents: false,
-                        okCallback: this.changeSingleModel.bind(this),
-                        cancelCallback: function() {
-                            this.sandbox.stop(constants.infoFormSelector + ' *');
-                            this.sandbox.off('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added');
+                        okCallback: function() {
+                            this.changeSingleModel();
                         }.bind(this)
                     }
                 }
@@ -232,15 +232,15 @@ define(function () {
                     this.startDropzone();
                 }.bind(this));
             }.bind(this));
+
             this.sandbox.once('husky.dropzone.file-version-'+ this.media.id +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
+
             this.sandbox.once('husky.auto-complete-list.media-info-'+ this.media.id +'.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
-            this.sandbox.once('husky.overlay.media-edit.closed', function() {
-                this.sandbox.stop('.' + constants.singleEditClass);
-            }.bind(this));
+
             this.sandbox.on('husky.auto-complete-list.media-info-'+ this.media.id +'.item-added', function() {
                 this.sandbox.emit('husky.overlay.media-edit.set-position');
             }.bind(this));
@@ -346,12 +346,8 @@ define(function () {
          */
         startDropzone: function () {
             // replace the current media with the new one if a fileversion got uploaded
-            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added');
-            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', function (newMedia) {
-                this.media = newMedia[0];
-                this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
-                this.savedCallback();
-            }.bind(this));
+            this.sandbox.off('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler);
+            this.sandbox.on('husky.dropzone.file-version-' + this.media.id + '.files-added', this.filesAddedHandler, this);
 
             this.sandbox.start([
                 {
@@ -369,6 +365,12 @@ define(function () {
                     }
                 }
             ]);
+        },
+
+        filesAddedHandler: function(newMedia) {
+            this.media = newMedia[0];
+            this.sandbox.emit('sulu.media.collections.save-media', this.media, null, true);
+            this.savedCallback();
         },
 
         /**
