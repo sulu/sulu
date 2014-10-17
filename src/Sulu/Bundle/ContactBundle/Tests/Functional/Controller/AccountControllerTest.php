@@ -238,7 +238,7 @@ class AccountControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/accounts/1asd0'
+            '/api/accounts/11230'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -730,7 +730,7 @@ class AccountControllerTest extends SuluTestCase
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '123123123123213',
+                            'id' => '12312',
                             'name' => 'Work'
                         )
                     )
@@ -794,7 +794,7 @@ class AccountControllerTest extends SuluTestCase
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => '12381243123',
+                            'id' => '1233',
                             'name' => 'Work'
                         )
                     )
@@ -853,7 +853,7 @@ class AccountControllerTest extends SuluTestCase
                     array(
                         'fax' => '12345',
                         'faxType' => array(
-                            'id' => '12312312312313123',
+                            'id' => '123123',
                             'name' => 'Work'
                         )
                     )
@@ -882,7 +882,7 @@ class AccountControllerTest extends SuluTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 123912123123,
+                            'id' => 12393,
                             'name' => 'Österreich',
                             'code' => 'AT'
                         ),

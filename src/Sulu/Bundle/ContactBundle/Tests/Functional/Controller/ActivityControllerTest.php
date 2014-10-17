@@ -386,7 +386,7 @@ class ActivityControllerTest extends SuluTestCase
                     'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 1231231231231231
+                    'id' => 123123
                 ),
             )
         );

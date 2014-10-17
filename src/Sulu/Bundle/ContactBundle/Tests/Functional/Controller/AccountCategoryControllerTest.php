@@ -299,7 +299,7 @@ class AccountCategoryControllerTest extends SuluTestCase
                     'category' => 'Changed Hauptsitz',
                 ),
                 array(
-                    'id' => 10012381230,
+                    'id' => 100120,
                     'category' => 'Neuer Nebensitz',
                 )
             )

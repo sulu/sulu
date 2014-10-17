@@ -226,7 +226,7 @@ class TermsOfPaymentControllerTest extends SuluTestCase
     public function testDeleteInvalidId()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', '/api/termsofpayments/1123123123000');
+        $client->request('DELETE', '/api/termsofpayments/11231');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
         $client2 = $this->createAuthenticatedClient();

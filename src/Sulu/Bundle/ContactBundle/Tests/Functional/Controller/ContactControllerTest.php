@@ -1389,7 +1389,7 @@ class ContactControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/10123123213',
+            '/api/contacts/10113',
             array(
                 'firstName' => 'John'
             )
