@@ -40,19 +40,19 @@ use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Entity\File;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class ContactMediaControllerTest extends DatabaseTestCase
+class ContactMediaControllerTest extends SuluTestCase
 {
-    private $contactPosition = null;
-    private $contactTitle = null;
-    /**
-     * @var array
-     */
-    protected static $entities;
-
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
+    }
+
+    public function initOrm()
+    {
+        $this->purgeDatabase();
 
         $contact = new Contact();
         $contact->setFirstName('Max');
@@ -63,6 +63,8 @@ class ContactMediaControllerTest extends DatabaseTestCase
         $contact->setFormOfAddress(1);
         $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
         $contact->setDisabled(0);
+
+        $this->contact = $contact;
 
         $title = new ContactTitle();
         $title->setTitle('MSc');
@@ -94,6 +96,7 @@ class ContactMediaControllerTest extends DatabaseTestCase
         $phone = new Phone();
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
+
         $contact->addPhone($phone);
 
         $emailType = new EmailType();
@@ -102,10 +105,13 @@ class ContactMediaControllerTest extends DatabaseTestCase
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
+
         $contact->addEmail($email);
 
         $faxType = new FaxType();
         $faxType->setName('Private');
+
+        $this->faxType = $faxType;
 
         $fax = new Fax();
         $fax->setFax('123654789');
@@ -142,6 +148,7 @@ class ContactMediaControllerTest extends DatabaseTestCase
         $contactAddress->setAddress($address);
         $contactAddress->setContact($contact);
         $contactAddress->setMain(true);
+
         $contact->addContactAddresse($contactAddress);
         $address->addContactAddresse($contactAddress);
 
@@ -151,102 +158,25 @@ class ContactMediaControllerTest extends DatabaseTestCase
 
         $this->setUpMediaEntities($contact);
 
-        self::$em->persist($contact);
-        self::$em->persist($title);
-        self::$em->persist($position);
-        self::$em->persist($account);
-        self::$em->persist($account1);
-        self::$em->persist($phoneType);
-        self::$em->persist($phone);
-        self::$em->persist($faxType);
-        self::$em->persist($fax);
-        self::$em->persist($emailType);
-        self::$em->persist($email);
-        self::$em->persist($country1);
-        self::$em->persist($country2);
-        self::$em->persist($addressType);
-        self::$em->persist($contactAddress);
-        self::$em->persist($address);
-        self::$em->persist($note);
+        $this->em->persist($contact);
+        $this->em->persist($title);
+        $this->em->persist($position);
+        $this->em->persist($account);
+        $this->em->persist($account1);
+        $this->em->persist($phoneType);
+        $this->em->persist($phone);
+        $this->em->persist($faxType);
+        $this->em->persist($fax);
+        $this->em->persist($emailType);
+        $this->em->persist($email);
+        $this->em->persist($country1);
+        $this->em->persist($country2);
+        $this->em->persist($addressType);
+        $this->em->persist($contactAddress);
+        $this->em->persist($address);
+        $this->em->persist($note);
 
-        self::$em->flush();
-
-        $this->contactTitle = $title;
-        $this->contactPosition = $position;
-    }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function setUpMediaEntities($contact)
@@ -272,10 +202,14 @@ class ContactMediaControllerTest extends DatabaseTestCase
         $media->setChanged(new DateTime());
         $media->setType($imageType);
 
+        $this->media = $media;
+
         $media2 = new Media();
         $media2->setCreated(new DateTime());
         $media2->setChanged(new DateTime());
         $media2->setType($imageType);
+
+        $this->media2 = $media2;
 
         $contact->addMedia($media2);
 
@@ -323,15 +257,15 @@ class ContactMediaControllerTest extends DatabaseTestCase
 
         $media->setCollection($collection);
         $media2->setCollection($collection);
-        self::$em->persist($media);
-        self::$em->persist($media2);
-        self::$em->persist($collection);
-        self::$em->persist($file);
-        self::$em->persist($file2);
-        self::$em->persist($videoType);
-        self::$em->persist($imageType);
-        self::$em->persist($audioType);
-        self::$em->persist($mediaType);
+        $this->em->persist($media);
+        $this->em->persist($media2);
+        $this->em->persist($collection);
+        $this->em->persist($file);
+        $this->em->persist($file2);
+        $this->em->persist($videoType);
+        $this->em->persist($imageType);
+        $this->em->persist($audioType);
+        $this->em->persist($mediaType);
     }
 
     public function setUpCollection(&$collection)
@@ -371,18 +305,18 @@ class ContactMediaControllerTest extends DatabaseTestCase
 
         $collection->addMeta($collectionMeta2);
 
-        self::$em->persist($collection);
-        self::$em->persist($collectionType);
-        self::$em->persist($collectionMeta);
-        self::$em->persist($collectionMeta2);
+        $this->em->persist($collection);
+        $this->em->persist($collectionType);
+        $this->em->persist($collectionMeta);
+        $this->em->persist($collectionMeta2);
     }
 
     public function testContactMediaPost(){
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/contacts/1'
+            '/api/contacts/' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -390,38 +324,33 @@ class ContactMediaControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/contacts/1/medias',
+            '/api/contacts/' . $this->contact->getId() . '/medias',
             array(
-                'mediaId' => 1
+                'mediaId' => $this->media->getId()
             )
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
 
         $client->request(
             'GET',
-            '/api/contacts/1'
+            '/api/contacts/' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
 
-        if($response->medias[0]->id == 1) {
-            $this->assertEquals(1, $response->medias[0]->id);
-            $this->assertEquals(2, $response->medias[1]->id);
-        } else {
-            $this->assertEquals(1, $response->medias[1]->id);
-            $this->assertEquals(2, $response->medias[0]->id);
-        }
+        $this->assertNotNull($response->medias[0]->id);
+        $this->assertNotNull($response->medias[1]->id);
     }
 
     public function testContactMediaPostNotExistingMedia(){
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/contacts/1'
+            '/api/contacts/' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -429,7 +358,7 @@ class ContactMediaControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/contacts/1/medias',
+            '/api/contacts/' . $this->contact->getId() . '/medias',
             array(
                 'mediaId' => 99
             )
@@ -439,7 +368,7 @@ class ContactMediaControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/contacts/1'
+            '/api/contacts/' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -447,18 +376,18 @@ class ContactMediaControllerTest extends DatabaseTestCase
     }
 
     public function testContactMediaDelete(){
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            '/api/contacts/1/medias/2'
+            '/api/contacts/' . $this->contact->getId() . '/medias/' . $this->media2->getId()
         );
 
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
-            '/api/contacts/1'
+            '/api/contacts/' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -466,17 +395,17 @@ class ContactMediaControllerTest extends DatabaseTestCase
     }
 
     public function testContactMediaDeleteNotExistingRelation(){
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'DELETE',
-            '/api/contacts/1/medias/99'
+            '/api/contacts/' . $this->contact->getId() . '/medias/99'
         );
 
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
-            '/api/contacts/1'
+            '/api/contacts/' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
