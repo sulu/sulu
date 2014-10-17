@@ -14,6 +14,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\ContactBundle\Entity\Account;
 
 class AccountCategoryControllerTest extends SuluTestCase
 {
@@ -43,7 +44,7 @@ class AccountCategoryControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            'api/account/categories/1'
+            'api/account/categories/' . $this->category->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -147,7 +148,7 @@ class AccountCategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            'api/accounts/1/category',
+            'api/accounts/' . $this->category->getId() . '/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -181,7 +182,7 @@ class AccountCategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            'api/accounts/100/category',
+            'api/accounts/' . $this->category->getId() . '00/category',
             array(
                 'category' => 'Nebensitz 3'
             )
@@ -194,7 +195,7 @@ class AccountCategoryControllerTest extends SuluTestCase
     public function testDelete()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', 'api/account/categories/1');
+        $client->request('DELETE', 'api/account/categories/' . $this->category->getId());
 
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
         $client2 = $this->createAuthenticatedClient();
@@ -212,7 +213,7 @@ class AccountCategoryControllerTest extends SuluTestCase
     public function testDeleteInvalidId()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', 'api/account/categories/1000');
+        $client->request('DELETE', 'api/account/categories/1000123123');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
         $client2 = $this->createAuthenticatedClient();

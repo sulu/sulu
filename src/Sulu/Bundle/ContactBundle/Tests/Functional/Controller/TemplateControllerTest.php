@@ -2,9 +2,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class TemplateControllerTest extends WebTestCase
+class TemplateControllerTest extends SuluTestCase
 {
     public function testDetailsform()
     {
