@@ -86,6 +86,9 @@ class DoctrineListBuilder extends AbstractListBuilder
             ->select('count(' . $entityId . ')');
 
         $result = $this->queryBuilder->getQuery()->getScalarResult();
+        if (!$result) {
+            return 0;
+        }
 
         // in case result has multiple results,
         // group by separated result into multiple results,
