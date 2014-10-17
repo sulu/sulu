@@ -309,6 +309,8 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addField($this->getManager()->getFieldDescriptor('parent'));
         $listBuilder->addField($this->getManager()->getFieldDescriptor('hasChildren'));
 
+        $listBuilder->addGroupBy($this->getManager()->getFieldDescriptor('id'));
+
         $results = $listBuilder->execute();
         foreach ($results as &$result) {
             if (array_key_exists('hasChildren', $result)) {
