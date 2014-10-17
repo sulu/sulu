@@ -4,6 +4,7 @@
     "description": "TODO",
     "license": "MIT",
     "keywords": ["TODO"],
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Sulu Community",
@@ -32,9 +33,9 @@
         "sulu/contact-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
 
-        "sulu/category-bundle": "@dev",
-        "sulu/media-bundle": "@dev",
-        "liip/theme-bundle": "@dev",
+        "sulu/category-bundle": "dev-develop",
+        "sulu/media-bundle": "dev-develop",
+        "liip/theme-bundle": "dev-master",
 
         "symfony/symfony": "2.5.*",
         "sensio/framework-extra-bundle": "~3.0",
