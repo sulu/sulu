@@ -235,7 +235,7 @@ class ActivityControllerTest extends SuluTestCase
 
         $this->assertEquals(1, $response->total);
 
-        $this->assertEquals(2, $data[0]->id);
+        $this->assertNotNull($data[0]->id);
         $this->assertEquals('test 2', $data[0]->subject);
         $this->assertEquals('note 2', $data[0]->note);
         $this->assertNotEmpty($data[0]->dueDate);
@@ -281,7 +281,7 @@ class ActivityControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('test 3', $response->subject);
         $this->assertEquals('note 3', $response->note);
         $this->assertNotEmpty($response->dueDate);
@@ -459,22 +459,21 @@ class ActivityControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('test 3', $response->subject);
         $this->assertEquals('note 3', $response->note);
         $this->assertNotEmpty($response->dueDate);
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
-        $this->assertEquals(1, $response->activityStatus->id);
-        $this->assertEquals(1, $response->activityType->id);
-        $this->assertEquals(1, $response->activityPriority->id);
+        $this->assertNotNull($response->activityStatus->id);
+        $this->assertNotNull($response->activityType->id);
+        $this->assertNotNull($response->activityPriority->id);
         $this->assertEquals(false, array_key_exists('account', $response));
-        $this->assertEquals(1, $response->contact->id);
-        $this->assertEquals(1, $response->assignedContact->id);
+        $this->assertNotNull($response->contact->id);
+        $this->assertNotNull($response->assignedContact->id);
     }
 
-    public
-    function testPutInvalidId()
+    public function testPutInvalidId()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -506,14 +505,13 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public
-    function testDelete()
+    public function testDelete()
     {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            'api/activities/1'
+            'api/activities/' . $this->activity->getId()
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
@@ -529,8 +527,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->_embedded->activities));
     }
 
-    public
-    function testDeleteInvalidId()
+    public function testDeleteInvalidId()
     {
         $client = $this->createAuthenticatedClient();
 

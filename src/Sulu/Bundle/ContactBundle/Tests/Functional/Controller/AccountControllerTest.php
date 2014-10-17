@@ -77,6 +77,8 @@ class AccountControllerTest extends SuluTestCase
 
         $url = new Url();
         $url->setUrl('http://www.company.example');
+
+        $this->url = $url;
         $url->setUrlType($urlType);
         $account->addUrl($url);
 
@@ -135,6 +137,8 @@ class AccountControllerTest extends SuluTestCase
         $address->setPostboxPostcode("6850");
         $address->setPostboxNumber("4711");
         $address->setNote("note");
+
+        $this->address = $address;
 
         $accountAddress = new AccountAddress();
         $accountAddress->setAddress($address);
@@ -591,7 +595,7 @@ class AccountControllerTest extends SuluTestCase
                 'name' => 'ExampleCompany',
                 'urls' => array(
                     array(
-                        'id' => 15,
+                        'id' => 1512312312313,
                         'url' => 'http://example.company.com',
                         'urlType' => array(
                             'id' => $this->urlType->getId(),
@@ -934,7 +938,7 @@ class AccountControllerTest extends SuluTestCase
                 'name' => 'ExampleCompany',
                 'urls' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->url->getId(),
                         'url' => 'http://example.company.com',
                         'urlType' => array(
                             'id' => $this->urlType->getId(),
@@ -1300,7 +1304,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/1/addresses');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/addresses');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1308,7 +1312,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterstraße', $address->street);
         $this->assertEquals('1', $address->number);
 
-        $client->request('GET', '/api/accounts/1/addresses?flat=true');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/addresses?flat=true');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1443,7 +1447,7 @@ class AccountControllerTest extends SuluTestCase
             'GET',
             '/api/accounts/multipledeleteinfo',
             array(
-                "ids" => array(1, 2)
+                "ids" => array($this->account->getId(), $acc->getId())
             )
         );
 
@@ -1493,7 +1497,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1529,7 +1533,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() .'/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1548,7 +1552,7 @@ class AccountControllerTest extends SuluTestCase
         $client->request('GET', '/api/accounts/4711/deleteinfo');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() .'/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
     }
 
@@ -1561,7 +1565,7 @@ class AccountControllerTest extends SuluTestCase
             '/api/accounts',
             array(
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => $this->$account->getId()),
+                'parent' => array('id' => $this->account->getId()),
                 'type' => Account::TYPE_BASIC,
                 'urls' => array(
                     array(
@@ -1677,11 +1681,13 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
 
+        $account2Id = $response->id;
+
         $client->request(
             'PUT',
-            '/api/accounts/2',
+            '/api/accounts/' . $account2Id,
             array(
-                'id' => 2,
+                'id' => $account2Id,
                 'name' => 'ExampleCompany 222',
                 'parent' => array('id' => null),
                 'urls' => array(
@@ -1695,7 +1701,7 @@ class AccountControllerTest extends SuluTestCase
                 ),
                 'emails' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->emails[0]->id,
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
                             'id' => $this->emailType->getId(),
@@ -1703,7 +1709,7 @@ class AccountControllerTest extends SuluTestCase
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->emails[1]->id,
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
                             'id' => $this->emailType->getId(),
@@ -1713,25 +1719,25 @@ class AccountControllerTest extends SuluTestCase
                 ),
                 'phones' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->phones[0]->id,
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->phones[1]->id,
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'faxes' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->faxes[0]->id,
                         'fax' => '123456789-1',
                         'faxType' => array(
                             'id' => $this->faxType->getId(),
@@ -1739,7 +1745,7 @@ class AccountControllerTest extends SuluTestCase
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->faxes[1]->id,
                         'fax' => '987654321-1',
                         'faxType' => array(
                             'id' => $this->faxType->getId(),
@@ -1749,7 +1755,7 @@ class AccountControllerTest extends SuluTestCase
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->addresses[0]->id,
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
@@ -1773,15 +1779,18 @@ class AccountControllerTest extends SuluTestCase
                     )
                 ),
                 'notes' => array(
-                    array('id' => 2, 'value' => 'Note 1'),
-                    array('id' => 3, 'value' => 'Note 2')
+                    array('id' => $response->notes[0]->id, 'value' => 'Note 1'),
+                    array('id' => $response->notes[1]->id, 'value' => 'Note 2')
                 )
             )
         );
 
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
         $client->request(
             'GET',
-            '/api/accounts/2'
+            '/api/accounts/' . $account2Id
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1824,7 +1833,7 @@ class AccountControllerTest extends SuluTestCase
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1895,6 +1904,7 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(false,$response->addresses[0]->primaryAddress);
         $this->assertEquals(true,$response->addresses[1]->primaryAddress);
@@ -1923,17 +1933,17 @@ class AccountControllerTest extends SuluTestCase
                 'name' => 'ExampleCompany',
                 'urls' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->url->getId(),
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'url' => 'http://test.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1956,7 +1966,7 @@ class AccountControllerTest extends SuluTestCase
                 ),
                 'addresses' => array(
                     array(
-                        'id' => '1',
+                        'id' => $this->address->getId(),
                         'street' => 'Bahnhofstraße',
                         'number' => '2',
                         'zip' => '0022',
@@ -2065,7 +2075,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/accounts/1?action=convertAccountType&type=lead'
+            '/api/accounts/' . $this->account->getId() .'?action=convertAccountType&type=lead'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -2082,7 +2092,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/accounts/1?action=xyz&type=lead'
+            '/api/accounts/' . $this->account->getId() .'?action=xyz&type=lead'
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
