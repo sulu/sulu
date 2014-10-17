@@ -10,10 +10,8 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use JMS\Serializer\Annotation\ExclusionPolicy;
-
 /**
- * This field descriptor can be used to concatenate multiple field descriptors
+ * This field descriptor can be used to group-concatenate a joined (1:n) field descriptor
  * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
  * @ExclusionPolicy("all")
  */
