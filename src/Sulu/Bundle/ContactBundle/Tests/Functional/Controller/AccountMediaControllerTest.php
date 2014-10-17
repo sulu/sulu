@@ -40,10 +40,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Sulu\Bundle\ContactBundle\Entity\Activity;
-use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
-use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
-use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountMediaControllerTest extends SuluTestCase
