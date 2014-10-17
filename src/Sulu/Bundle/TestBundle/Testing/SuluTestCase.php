@@ -69,7 +69,7 @@ abstract class SuluTestCase extends BaseTestCase
         $em = $this->db('ORM')->getOm();
         $connection = $em->getConnection();
 
-        if ($connection instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
             $connection->executeUpdate("SET foreign_key_checks = 0;");
         }
 
