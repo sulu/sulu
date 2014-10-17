@@ -13,8 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class TermsOfDeliveryControllerTest extends DatabaseTestCase
+class TermsOfDeliveryControllerTest extends SuluTestCase
 {
     /**
      * @var array
@@ -24,64 +25,44 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
+    }
+
+    private function initOrm()
+    {
+        $this->purgeDatabase();
 
         $term1 = new TermsOfDelivery();
         $term1->setTerms('Term 1');
 
+        $this->term1 = $term1;
+
         $term2 = new TermsOfDelivery();
         $term2->setTerms('Term 2');
 
-        self::$em->persist($term1);
-        self::$em->persist($term2);
+        $this->term2 = $term2;
 
-        self::$em->flush();
-    }
+        $this->em->persist($term1);
+        $this->em->persist($term2);
 
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $this->em->flush();
     }
 
     public function testGet()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/termsofdeliveries/1'
+            '/api/termsofdeliveries/' . $this->term1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 1', $response->terms);
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
     }
 
     public function testGetAll()
@@ -92,7 +73,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
     public function testPost()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -106,9 +87,9 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 3', $response->terms);
-        $this->assertEquals(3, $response->id);
+        $this->assertNotNull($response->id);
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofdeliveries'
@@ -118,19 +99,19 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 1', $response2->_embedded->termsOfDeliveries[0]->terms);
-        $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
+        $this->assertNotNull($response2->_embedded->termsOfDeliveries[0]->id);
 
         $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[1]->terms);
-        $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[1]->id);
+        $this->assertNotNull($response2->_embedded->termsOfDeliveries[1]->id);
 
         $this->assertEquals('Term 3', $response2->_embedded->termsOfDeliveries[2]->terms);
-        $this->assertEquals(3, $response2->_embedded->termsOfDeliveries[2]->id);
+        $this->assertNotNull($response2->_embedded->termsOfDeliveries[2]->id);
 
     }
 
     public function testPostNonUniqueName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/termsofdeliveries',
@@ -146,7 +127,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testPostInvalidCTermsName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/termsofdeliveries',
@@ -161,7 +142,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testPostEmptyTermsName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/termsofdeliveries',
@@ -176,10 +157,10 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/termsofdeliveries/1',
+            '/api/termsofdeliveries/' . $this->term1->getId(),
             array(
                 'terms' => 'Term 1.1'
             )
@@ -189,9 +170,9 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 1.1', $response->terms);
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofdeliveries'
@@ -200,18 +181,18 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $response2 = json_decode($client2->getResponse()->getContent(), true);
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        $this->assertContains(array('terms' => 'Term 1.1', 'id' => 1), $response2['_embedded']['termsOfDeliveries']);
-        $this->assertContains(array('terms' => 'Term 2', 'id' => 2), $response2['_embedded']['termsOfDeliveries']);
+        $this->assertContains(array('terms' => 'Term 1.1', 'id' => $this->term1->getId()), $response2['_embedded']['termsOfDeliveries']);
+        $this->assertContains(array('terms' => 'Term 2', 'id' => $this->term2->getId()), $response2['_embedded']['termsOfDeliveries']);
 
         $this->assertEquals(2, sizeof($response2['_embedded']['termsOfDeliveries']));
     }
 
     public function testPutInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/termsofdeliveries/100',
+            '/api/termsofdeliveries/101231230',
             array(
                 'terms' => 'Term 3'
             )
@@ -223,11 +204,11 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testDelete()
     {
-        $client = $this->createTestClient();
-        $client->request('DELETE', '/api/termsofdeliveries/1');
+        $client = $this->createAuthenticatedClient();
+        $client->request('DELETE', '/api/termsofdeliveries/' . $this->term1->getId());
 
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofdeliveries'
@@ -241,11 +222,11 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testDeleteInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('DELETE', '/api/termsofdeliveries/1000');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
 
         $client2->request(
             'GET',
@@ -261,13 +242,13 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
     public function testPatch()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/termsofdeliveries',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->term1->getId(),
                     'terms' => 'Changed Term',
                 ),
                 array(
@@ -279,12 +260,12 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Changed Term', $response[0]->terms);
-        $this->assertEquals(1, $response[0]->id);
+        $this->assertNotNull($response[0]->id);
 
         $this->assertEquals('Neuer Term', $response[1]->terms);
-        $this->assertEquals(3, $response[1]->id);
+        $this->assertNotNull($response[1]->id);
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofdeliveries'
@@ -297,34 +278,34 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
         if($response2->_embedded->termsOfDeliveries[0]->terms == 'Changed Term') {
             $this->assertEquals('Changed Term', $response2->_embedded->termsOfDeliveries[0]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
+            $this->assertNotNull($response2->_embedded->termsOfDeliveries[0]->id);
 
             $this->assertEquals('Neuer Term', $response2->_embedded->termsOfDeliveries[1]->terms);
-            $this->assertEquals(3, $response2->_embedded->termsOfDeliveries[1]->id);
+            $this->assertNotNull($response2->_embedded->termsOfDeliveries[1]->id);
 
             $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[2]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[2]->id);
+            $this->assertNotNull($response2->_embedded->termsOfDeliveries[2]->id);
         } else {
             $this->assertEquals('Changed Term', $response2->_embedded->termsOfDeliveries[2]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[2]->id);
+            $this->assertNotNull($response2->_embedded->termsOfDeliveries[2]->id);
 
             $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[0]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[0]->id);
+            $this->assertNotNull($response2->_embedded->termsOfDeliveries[0]->id);
 
             $this->assertEquals('Neuer Term', $response2->_embedded->termsOfDeliveries[1]->terms);
-            $this->assertEquals(3, $response2->_embedded->termsOfDeliveries[1]->id);
+            $this->assertNotNull($response2->_embedded->termsOfDeliveries[1]->id);
         }
     }
 
     public function testPatchInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/termsofdeliveries',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->term1->getId(),
                     'terms' => 'Changed Term',
                 ),
                 array(
@@ -340,13 +321,13 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function testPatchInvalidTermsName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/termsofdeliveries',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->term1->getId(),
                     'terms' => 'Changed Term',
                 ),
                 array(
@@ -361,7 +342,7 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
 
     public function checkAssertionsForOriginalState()
     {
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
 
         $client2->request(
             'GET',
@@ -374,10 +355,10 @@ class TermsOfDeliveryControllerTest extends DatabaseTestCase
         $this->assertEquals(2, count($response2->_embedded->termsOfDeliveries));
 
         $this->assertEquals('Term 1', $response2->_embedded->termsOfDeliveries[0]->terms);
-        $this->assertEquals(1, $response2->_embedded->termsOfDeliveries[0]->id);
+        $this->assertNotNull($response2->_embedded->termsOfDeliveries[0]->id);
 
         $this->assertEquals('Term 2', $response2->_embedded->termsOfDeliveries[1]->terms);
-        $this->assertEquals(2, $response2->_embedded->termsOfDeliveries[1]->id);
+        $this->assertNotNull($response2->_embedded->termsOfDeliveries[1]->id);
     }
 
 }
