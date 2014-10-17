@@ -110,6 +110,13 @@ interface ListBuilderInterface
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
 
     /**
+     * Defines GROUP BY
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @return mixed
+     */
+    public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
+
+    /**
      * Defines a constraint
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
