@@ -79,6 +79,8 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function count()
     {
+        // TODO: remove uneccessary joins from count!
+        
         $entityId = $this->entityName . '.id';
         $this->queryBuilder = $this->createQueryBuilder()
             ->select('count(' . $entityId . ')');
@@ -213,7 +215,7 @@ class DoctrineListBuilder extends AbstractListBuilder
             }
 
             $this->queryBuilder->andWhere('(' . implode(' OR ', $searchParts) . ')');
-            $this->queryBuilder->setParameter('search', '%' . $this->seadrch . '%');
+            $this->queryBuilder->setParameter('search', '%' . $this->search . '%');
         }
 
         return $this->queryBuilder;
