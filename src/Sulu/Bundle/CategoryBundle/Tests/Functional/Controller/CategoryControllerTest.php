@@ -27,10 +27,8 @@ class CategoryControllerTest extends SuluTestCase
     public function setUp()
     {
         $this->em = $this->db('ORM')->getOm();
-        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
 
         $this->initOrm();
-        $this->initPhpcr();
     }
 
     public function initOrm()
