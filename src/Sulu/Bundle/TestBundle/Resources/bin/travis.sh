@@ -27,7 +27,7 @@ function init_phpcr_jackalope {
     php vendor/symfony-cmf/testing/bin/console sulu:phpcr:init
 }
 
-if [[ $TARGET == '' ]]; then
+if test -z $TARGET; then
     TARGET="phpcr_dbal"
 fi
 
