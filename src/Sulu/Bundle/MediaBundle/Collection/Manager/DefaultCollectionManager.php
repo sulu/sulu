@@ -456,7 +456,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
             }
         }
 
-        $mediaFormats = $this->formatManager->getFormats($mediaId, $fileVersion->getName(), $fileVersion->getStorageOptions());
+        $mediaFormats = $this->formatManager->getFormats($mediaId, $fileVersion->getName(), $fileVersion->getStorageOptions(), $fileVersion->getVersion());
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
             if ($formatName == $this->collectionPreviewFormat) {

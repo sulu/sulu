@@ -36,6 +36,7 @@
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "4.0.*",
         "sulu/test-bundle": "dev-develop",
+        "symfony-cmf/testing": "~1.2@RC",
         "sulu/search-bundle": "dev-develop"
     },
     "autoload": {
@@ -43,5 +44,6 @@
             "Sulu\\Bundle\\MediaBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/MediaBundle"
+    "target-dir": "Sulu/Bundle/MediaBundle",
+    "minimum-stability": "dev"
 }
