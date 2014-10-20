@@ -19,7 +19,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
 
 /**
- * ContentType for TextEditor
+ * ContentType for Snippets
  */
 class SnippetContent extends ComplexContentType
 {
@@ -83,9 +83,7 @@ class SnippetContent extends ComplexContentType
         $segmentKey
     ) {
         $snippetReferences = $property->getValue();
-        foreach ($snippetReferences as $snippetReference) {
-            $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
-        }
+        $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
     }
 
     /**

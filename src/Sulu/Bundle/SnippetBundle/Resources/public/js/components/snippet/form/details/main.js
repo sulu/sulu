@@ -43,7 +43,6 @@ define(['app-config'], function(AppConfig) {
 
         render: function(data) {
             this.data = data;
-            this.listenForChange();
 
             if (!!this.data.template) {
                 this.checkRenderTemplate(this.data.template);
