@@ -58,6 +58,7 @@ class SuluMediaExtension extends Extension
             'image/vnd.adobe.photoshop',
             'application/pdf',
         ));
+        $container->setParameter('sulu_media.format_manager.cache_time', '+1 month');
         $container->setParameter('sulu_media.image.formats', array(
             array(
                 'name' => self::DEFAULT_FORMAT_NAME,

@@ -69,6 +69,11 @@ class DefaultFormatManager implements FormatManagerInterface
     private $previewMimeTypes = array();
 
     /**
+     * @var string
+     */
+    private $cacheTime = '';
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
@@ -76,6 +81,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $ghostScriptPath
      * @param string $saveImage
      * @param array $previewMimeTypes
+     * @param string $cacheTime
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -84,7 +90,8 @@ class DefaultFormatManager implements FormatManagerInterface
         ImageConverterInterface $converter,
         $ghostScriptPath,
         $saveImage,
-        $previewMimeTypes
+        $previewMimeTypes,
+        $cacheTime
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -93,6 +100,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
         $this->previewMimeTypes = $previewMimeTypes;
+        $this->cacheTime = $cacheTime;
     }
 
     /**
@@ -139,13 +147,11 @@ class DefaultFormatManager implements FormatManagerInterface
                 // get image
                 $image = $image->get($imageExtension, $this->getOptionsFromImage($image, $imageExtension));
 
-                // set header
-                $headers = array(
-                    'Content-Type' => 'image/' . $imageExtension
-                );
+                // HTTP Status
+                $status = 200;
 
                 // save image
-                if ($this->saveImage) {
+                if ($this->saveImage && false) {
                     $this->formatCache->save(
                         $this->createTmpFile($image),
                         $media->getId(),
@@ -156,15 +162,18 @@ class DefaultFormatManager implements FormatManagerInterface
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                return $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
+                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
             }
         } catch (MediaException $e) {
             // return default image
-            return $this->returnFallbackImage($format);
+            list($image, $status, $imageExtension) = $this->returnFallbackImage($format);
         }
 
+        // set header
+        $headers = $this->getResponseHeaders($imageExtension);
+
         // return image
-        return new Response($image, 200, $headers);
+        return new Response($image, $status, $headers);
     }
 
     /**
@@ -176,10 +185,6 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $imageExtension = 'png';
 
-        $headers = array(
-            'Content-Type' => 'image/' . $imageExtension
-        );
-
         $placeholder = dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png';
 
         if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png')) {
@@ -190,7 +195,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
         $image = $image->get($imageExtension);
 
-        return new Response($image, 200, $headers);
+        return array($image, 200, $imageExtension);
     }
 
     /**
@@ -201,17 +206,36 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $imageExtension = 'png';
 
-        $headers = array(
-            'Content-Type' => 'image/' . $imageExtension
-        );
-
         $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
 
         $image = $this->converter->convert($placeholder, $format);
 
         $image = $image->get($imageExtension);
 
-        return new Response($image, 404, $headers);
+        return array($image, 404, $imageExtension);
+    }
+
+    /**
+     * @param $imageExtension
+     * @return array
+     */
+    protected function getResponseHeaders($imageExtension = '')
+    {
+        $headers = array();
+
+        if (!empty($this->cacheTime)) {
+            $date = new \DateTime();
+            $date->modify($this->cacheTime);
+            $headers[''] = 'public';
+            $headers[''] = 'public';
+            $headers['Expires'] = $date;
+        }
+
+        if (!empty($imageExtension)) {
+            $headers['Content-Type'] = 'image/' . $imageExtension;
+        }
+
+        return $headers;
     }
 
     /**
@@ -246,7 +270,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param sstring $path
+     * @param string $path
      * @throws GhostScriptNotFoundException
      */
     protected function convertPdfToImage($path)
@@ -273,6 +297,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * @param $path
+     * @throws MediaException
      */
     protected function convertPsdToImage($path)
     {
@@ -281,6 +306,8 @@ class DefaultFormatManager implements FormatManagerInterface
             $image = $imagine->open($path);
             $image = $image->layers()[0];
             file_put_contents($path, $image->get('png'));
+        } else {
+            throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
     }
 
