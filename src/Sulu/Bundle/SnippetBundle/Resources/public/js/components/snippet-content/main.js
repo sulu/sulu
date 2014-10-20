@@ -34,11 +34,6 @@ define([], function() {
             }
         },
 
-        dataDefaults = {
-            ids: [],
-            config: {}
-        },
-
         templates = {
             skeleton: function(options) {
                 return [
