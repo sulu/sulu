@@ -60,7 +60,7 @@ class LocalStorage implements StorageInterface
             $oldStorageOption = json_decode($storageOption);
             $segment = $oldStorageOption->segment;
         } else {
-            $segment = rand(1, $this->segments);
+            $segment = sprintf('%0'.strlen($this->segments).'d', rand(1, $this->segments));
         }
 
         $segmentPath = $this->uploadPath . '/' . $segment;
