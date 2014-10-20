@@ -28,7 +28,7 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
- * @group webtest
+ * @group nodecontroller
  */
 class NodeControllerTest extends SuluTestCase
 {

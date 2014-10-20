@@ -18,6 +18,7 @@ before_script:
   - ./vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/bin/travis.sh
 
 script: 
+    - phpunit --group nodecontroller -c $DB.phpunit.xml --coverage-text
     - phpunit --group webtest -c $DB.phpunit.xml --coverage-text
     - phpunit --group preview -c $DB.phpunit.xml --coverage-text
     - phpunit --group repository -c $DB.phpunit.xml --coverage-text
