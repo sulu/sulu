@@ -43,9 +43,10 @@ interface FormatCacheInterface
      * @param string $fileName
      * @param array $options
      * @param string $format
+     * @param int $version
      * @return string
      */
-    public function getMediaUrl($id, $fileName, $options, $format);
+    public function getMediaUrl($id, $fileName, $options, $format, $version);
 
     /**
      * Return the id and the format of a media

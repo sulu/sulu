@@ -56,7 +56,7 @@
         <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Entity\Tag">
             <join-table name="me_file_version_tags">
                 <join-columns>
-                    <join-column name="idFileVersions" referenced-column-name="id"/>
+                    <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
                     <join-column name="idTags" referenced-column-name="id"/>
