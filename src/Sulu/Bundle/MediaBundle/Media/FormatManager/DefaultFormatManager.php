@@ -152,7 +152,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $status = 200;
 
                 // save image
-                if ($this->saveImage && false) {
+                if ($this->saveImage) {
                     $this->formatCache->save(
                         $this->createTmpFile($image),
                         $media->getId(),
