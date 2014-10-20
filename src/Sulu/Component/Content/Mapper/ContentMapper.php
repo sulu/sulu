@@ -1452,6 +1452,10 @@ class ContentMapper implements ContentMapperInterface
         // prepare content node
         $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
         $nodeName = $content->getPropertyValue('title');
+
+        // node name should not have a slash
+        $nodeName = str_replace('/', '-', $nodeName);
+
         $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
         $nodeName = $this->getUniquePath($nodeName, $parentNode);
 
@@ -1928,12 +1932,7 @@ class ContentMapper implements ContentMapperInterface
             $locale
         );
 
-        // insure array
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
-        return $data;
+        return $extension->getContentData($data);
     }
 
     /**

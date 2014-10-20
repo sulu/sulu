@@ -73,8 +73,7 @@ abstract class StructureExtension implements StructureExtensionInterface
     }
 
     /**
-     * returns name of extension
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -107,4 +106,11 @@ abstract class StructureExtension implements StructureExtensionInterface
         return $node->getPropertyValueWithDefault($this->getPropertyName($name), $default);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentData($value)
+    {
+        return $value;
+    }
 } 

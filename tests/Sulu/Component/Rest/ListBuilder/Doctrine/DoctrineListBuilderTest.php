@@ -422,4 +422,21 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->execute();
     }
+
+    public function testGroupBy()
+    {
+        $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
+
+        $this->doctrineListBuilder->setFields(
+            array(
+                $nameFieldDescriptor,
+            )
+        );
+
+        $this->doctrineListBuilder->addGroupBy($nameFieldDescriptor);
+
+        $this->queryBuilder->expects($this->at(1))->method('groupBy')->with(self::$entityName . '.name');
+
+        $this->doctrineListBuilder->execute();
+    }
 }
