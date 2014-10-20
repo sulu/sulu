@@ -41,6 +41,12 @@ class Configuration implements ConfigurationInterface
                 ->children()
                      ->scalarNode('path')->defaultValue(SuluMediaExtension::DEFAULT_GHOST_SCRIPT_PATH)->end()
                 ->end()
+            ->end()
+            ->arrayNode('format_manager')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                    ->arrayNode('response_headers')->prototype('scalar')->end()
+                ->end()
             ->end();
 
         // Here you should define the parameters that are allowed to

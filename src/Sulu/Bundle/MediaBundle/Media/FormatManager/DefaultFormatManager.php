@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use Faker\Provider\cs_CZ\DateTime;
 use Imagick;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine;
@@ -81,7 +82,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $ghostScriptPath
      * @param string $saveImage
      * @param array $previewMimeTypes
-     * @param string $cacheTime
+     * @param array $responseHeaders
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -91,7 +92,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $ghostScriptPath,
         $saveImage,
         $previewMimeTypes,
-        $cacheTime
+        $responseHeaders
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -100,7 +101,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
         $this->previewMimeTypes = $previewMimeTypes;
-        $this->cacheTime = $cacheTime;
+        $this->responseHeaders = $responseHeaders;
     }
 
     /**
@@ -151,7 +152,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $status = 200;
 
                 // save image
-                if ($this->saveImage) {
+                if ($this->saveImage && false) {
                     $this->formatCache->save(
                         $this->createTmpFile($image),
                         $media->getId(),
@@ -223,12 +224,13 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $headers = array();
 
-        if (!empty($this->cacheTime)) {
-            $date = new \DateTime();
-            $date->modify($this->cacheTime);
-            $headers[''] = 'public';
-            $headers[''] = 'public';
-            $headers['Expires'] = $date;
+        if (!empty($this->responseHeaders)) {
+            $headers = $this->responseHeaders;
+            if (isset($this->responseHeaders['Expires'])) {
+                $date = new \DateTime();
+                $date->modify($this->responseHeaders['Expires']);
+                $headers['Expires'] = $date->format('D, d M Y H:i:s \G\M\T');
+            }
         }
 
         if (!empty($imageExtension)) {
