@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
+use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -422,6 +423,7 @@ class Media extends ApiWrapper
     {
         $tags = array();
         foreach($this->getFileVersion()->getTags() as $tag) {
+            /** @var Tag $tag */
             array_push($tags, $tag->getName());
         }
         return $tags;

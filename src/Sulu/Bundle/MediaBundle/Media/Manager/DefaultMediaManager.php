@@ -385,15 +385,14 @@ class DefaultMediaManager implements MediaManagerInterface
      * Modified an exists media
      * @param UploadedFile $uploadedFile
      * @param $data
-     * @param \Sulu\Component\Security\UserInterface $user
+     * @param UserInterface $user
      * @return Media
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
-     * @throws \Symfony\Component\Filesystem\Exception\FileNotFoundException
+     * @throws MediaNotFoundException
+     * @throws FileVersionNotFoundException
+     * @throws FileNotFoundException
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
-
         $mediaEntity = $this->mediaRepository->findMediaById($data['id']);
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
@@ -495,9 +494,9 @@ class DefaultMediaManager implements MediaManagerInterface
      * Create a new media
      * @param UploadedFile $uploadedFile
      * @param $data
-     * @param \Sulu\Component\Security\UserInterface $user
+     * @param UserInterface $user
      * @return MediaEntity
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException
+     * @throws InvalidFileException
      */
     private function createMedia($uploadedFile, $data, $user)
     {
@@ -576,7 +575,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * Data can be set over by array
      * @param $media
      * @param $data
-     * @param \Sulu\Component\Security\UserInterface $user
+     * @param UserInterface $user
      * @return Media
      */
     protected function setDataToMedia(Media $media, $data, $user)
@@ -662,7 +661,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * @param $collectionId
      * @return object
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
+     * @throws CollectionNotFoundException
      */
     protected function getCollectionById($collectionId)
     {
@@ -745,7 +744,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * Returns a user for a given user-id
      * @param $userId
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     protected function getUser($userId)
     {
