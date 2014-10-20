@@ -136,7 +136,7 @@ class MediaException extends Exception
      * @var int
      * @description a file with this name exists
      */
-    const EXCEPTION_LOCAL_STORAGE_CONFLICT = 5020;
+    const EXCEPTION_FILENAME_ALREADY_EXISTS = 5020;
 
     public function toArray()
     {

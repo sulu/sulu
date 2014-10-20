@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use \stdClass;
-use Sulu\Bundle\MediaBundle\Media\Exception\LocalStorageConflictException;
+use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 use Symfony\Component\HttpKernel\Tests\Logger;
 
@@ -75,7 +75,7 @@ class LocalStorage implements StorageInterface
 
         $this->logger->debug('Try to copy File "' . $tempPath . '" to "' . $filePath . '"');
         if (file_exists($filePath)) {
-            throw new LocalStorageConflictException($filePath);
+            throw new FilenameAlreadyExistsException($filePath);
         }
         copy($tempPath, $filePath);
 

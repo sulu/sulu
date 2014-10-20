@@ -13,13 +13,13 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
-class LocalStorageConflictException extends MediaException
+class FilenameAlreadyExistsException extends MediaException
 {
     /**
      * @param string $path
      */
     public function __construct($path)
     {
-        parent::__construct('A File with the name "' . basename($path) . ' exists in "' . dirname($path) . '"', self::EXCEPTION_LOCAL_STORAGE_CONFLICT);
+        parent::__construct('A File with the name "' . basename($path) . ' exists in "' . dirname($path) . '"', self::EXCEPTION_FILENAME_ALREADY_EXISTS);
     }
 }
