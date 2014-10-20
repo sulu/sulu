@@ -10,6 +10,10 @@
                 <source>security.user.error.missingPassword</source>
                 <target>Zum Erstellen eines Benutzers wird ein Passwort benötigt!</target>
             </trans-unit>
+            <trans-unit id="a50af522ac183350142c0b4720e29a5f" resname="security.user.activate">
+                <source>security.user.activate</source>
+                <target>User aktivieren</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

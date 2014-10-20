@@ -17,6 +17,8 @@ use Sulu\Component\Security\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\DisabledException;
+use Symfony\Component\Security\Core\Exception\LockedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -116,13 +118,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     /**
      * Loads the user for the given username.
      *
-     * This method throws UsernameNotFoundException if the user is not found.
-     *
      * @param string $username The username
+     * @throws LockedException if the User is Locked
+     * @throws DisabledException if the User is not active
+     * @throws UsernameNotFoundException if the User is not found
      * @return UserInterface
-     * @see UsernameNotFoundException
-     * @throws UsernameNotFoundException if the user is not found
-     *
      */
     public function loadUserByUsername($username)
     {
@@ -149,6 +149,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         try {
             /** @var User $user */
             $user = $query->getSingleResult();
+
+            if (!$user->getEnabled()) {
+                throw new DisabledException();
+            }
+
+            if ($user->getLocked()) {
+                throw new LockedException();
+            }
+
             foreach ($user->getUserRoles() as $ur) {
                 /** @var UserRole $ur */
                 if ($ur->getRole()->getSystem() == $this->getSystem()) {

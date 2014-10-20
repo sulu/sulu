@@ -137,7 +137,6 @@ define([], function() {
                 url: '/admin/contexts?system=' + system
             })
                 .done(function(data) {
-                    data = JSON.parse(data);
                     for (var module in data) {
                         if (data.hasOwnProperty(module)) {
                             // create a matrix for every module

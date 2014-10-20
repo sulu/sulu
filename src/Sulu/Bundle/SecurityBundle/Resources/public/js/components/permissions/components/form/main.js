@@ -11,6 +11,59 @@ define(['app-config'], function(AppConfig) {
 
     'use strict';
 
+    var setHeaderToolbar = function() {
+        var toolbarItems = [
+            {
+                id: 'save-button',
+                icon: 'floppy-o',
+                iconSize: 'large',
+                class: 'highlight',
+                position: 1,
+                group: 'left',
+                disabled: true,
+                callback: function () {
+                    this.sandbox.emit('sulu.header.toolbar.save');
+                }.bind(this)
+            }
+        ],
+        configDropdown = {
+            icon: 'gear',
+            iconSize: 'large',
+            group: 'left',
+            id: 'options-button',
+            position: 30,
+            items: [
+                {
+                    title: this.sandbox.translate('toolbar.delete'),
+                    callback: function () {
+                        this.sandbox.emit('sulu.header.toolbar.delete');
+                    }.bind(this)
+                }
+            ]
+        },
+        configItems = {
+            confirm: {
+                title: this.sandbox.translate('security.user.activate'),
+                callback: function () {
+                    this.sandbox.emit('sulu.user.activate');
+                }.bind(this)
+            }
+        };
+
+        if (!this.user.enabled) {
+            configDropdown.items.push(configItems.confirm);
+        }
+
+        // add workflow items
+        if (configDropdown.items.length > 0) {
+            toolbarItems.push(configDropdown);
+        }
+
+        this.sandbox.emit('sulu.header.set-toolbar', {
+            template: toolbarItems
+        });
+    };
+
     return {
 
         name: 'Sulu Security Permissions Form',
@@ -143,7 +196,8 @@ define(['app-config'], function(AppConfig) {
             headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {user: !!this.user ? this.user : null, email: email, headline: headline}));
             this.startLanguageDropdown();
-            this.sandbox.emit('sulu.header.set-toolbar', {template: 'default'});
+
+            setHeaderToolbar.call(this);
         },
 
         /**

@@ -91,6 +91,27 @@ class User extends ApiEntity implements UserInterface, Serializable
     private $apiKey;
 
     /**
+     * @var boolean
+     */
+    private $locked = false;
+
+    /**
+     * @var boolean
+     * @Expose
+     */
+    private $enabled = true;
+
+    /**
+     * @var \DateTime
+     */
+    private $lastLogin;
+
+    /**
+     * @var string
+     */
+    private $confirmationKey;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -423,5 +444,97 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function getApiKey()
     {
         return $this->apiKey;
+    }
+
+    /**
+     * Set locked
+     *
+     * @param boolean $locked
+     * @return User
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+    
+        return $this;
+    }
+
+    /**
+     * Get locked
+     *
+     * @return boolean 
+     */
+    public function getLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
+     * Set enabled
+     *
+     * @param boolean $enabled
+     * @return User
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    
+        return $this;
+    }
+
+    /**
+     * Get enabled
+     *
+     * @return boolean
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Set lastLogin
+     *
+     * @param \DateTime $lastLogin
+     * @return User
+     */
+    public function setLastLogin($lastLogin)
+    {
+        $this->lastLogin = $lastLogin;
+    
+        return $this;
+    }
+
+    /**
+     * Get lastLogin
+     *
+     * @return \DateTime 
+     */
+    public function getLastLogin()
+    {
+        return $this->lastLogin;
+    }
+
+    /**
+     * Set confirmationKey
+     *
+     * @param string $confirmationKey
+     * @return User
+     */
+    public function setConfirmationKey($confirmationKey)
+    {
+        $this->confirmationKey = $confirmationKey;
+    
+        return $this;
+    }
+
+    /**
+     * Get confirmationKey
+     *
+     * @return string 
+     */
+    public function getConfirmationKey()
+    {
+        return $this->confirmationKey;
     }
 }
