@@ -114,7 +114,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $depth
         );
 
-        if ($limit !== null) {
+        if ($limit !== null && is_numeric($limit)) {
             $result = array_splice($result, 0, $limit);
         }
 
