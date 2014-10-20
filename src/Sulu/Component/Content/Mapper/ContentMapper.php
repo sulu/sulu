@@ -546,10 +546,11 @@ class ContentMapper implements ContentMapperInterface
      * Return the enabled shadow languages on the given node
      *
      * @param NodeInterface $node
+     * @param bool $useBaseAsKey if true baseLanguage => language else language => baseLanguage
      *
      * @return array
      */
-    protected function getEnabledShadowLanguages(NodeInterface $node)
+    protected function getEnabledShadowLanguages(NodeInterface $node, $useBaseAsKey = true)
     {
         $nodeLanguages = $this->properties->getLanguagesForNode($node);
         $shadowBaseLanguages = array();
@@ -567,7 +568,11 @@ class ContentMapper implements ContentMapperInterface
                 );
 
                 if (null !== $nodeShadowBaseLanguage) {
-                    $shadowBaseLanguages[$nodeShadowBaseLanguage] = $nodeLanguage;
+                    if ($useBaseAsKey) {
+                        $shadowBaseLanguages[$nodeShadowBaseLanguage] = $nodeLanguage;
+                    } else {
+                        $shadowBaseLanguages[] = $nodeLanguage;
+                    }
                 }
             }
         }
@@ -586,8 +591,8 @@ class ContentMapper implements ContentMapperInterface
     protected function getConcreteLanguages(NodeInterface $node)
     {
         $enabledLanguages = $this->properties->getLanguagesForNode($node);
-        $enabledShadowLanguages = $this->getEnabledShadowLanguages($node);
-        $concreteTranslations = array_diff($enabledLanguages, array_values($enabledShadowLanguages));
+        $enabledShadowLanguages = $this->getEnabledShadowLanguages($node, false);
+        $concreteTranslations = array_values(array_diff($enabledLanguages, array_values($enabledShadowLanguages)));
 
         return $concreteTranslations;
     }
@@ -1786,7 +1791,14 @@ class ContentMapper implements ContentMapperInterface
             // get url returns false if route is not this language
             if ($url !== false) {
                 // generate field data
-                $fieldsData = $this->getFieldsData($row, $node, $fields[$originLocale], $templateKey, $webspaceKey, $locale);
+                $fieldsData = $this->getFieldsData(
+                    $row,
+                    $node,
+                    $fields[$originLocale],
+                    $templateKey,
+                    $webspaceKey,
+                    $locale
+                );
 
                 return array_merge(
                     array(
@@ -1827,9 +1839,9 @@ class ContentMapper implements ContentMapperInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = &$fieldsData[$field['target']];
+                $target = & $fieldsData[$field['target']];
             } else {
-                $target = &$fieldsData;
+                $target = & $fieldsData;
             }
 
             // create target
