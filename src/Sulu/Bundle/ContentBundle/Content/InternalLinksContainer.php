@@ -116,21 +116,28 @@ class InternalLinksContainer implements ArrayableInterface
     {
         $result = array();
         if ($this->ids !== null) {
+            $this->contentQueryBuilder->init(
+                array(
+                    'ids' => $this->ids,
+                    'properties' => (isset($this->params['properties']) ? $this->params['properties'] : array())
+                )
+            );
+            $pages = $this->contentQueryExecutor->execute(
+                $this->webspaceKey,
+                array($this->languageCode),
+                $this->contentQueryBuilder
+            );
+
+            // init vars
+            $map = array();
+
+            // map pages
+            foreach ($pages as $page) {
+                $map[$page['uuid']] = $page;
+            }
+
             foreach ($this->ids as $id) {
-                try {
-                    if (!empty($id)) {
-                        $this->contentQueryBuilder->init(array('ids' => $this->ids, 'properties' => $this->params['properties']));
-                        $result = $this->contentQueryExecutor->execute(
-                            $this->webspaceKey,
-                            array($this->languageCode),
-                            $this->contentQueryBuilder
-                        );
-                    }
-                } catch (ItemNotFoundException $ex) {
-                    $this->logger->warning(
-                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
-                    );
-                }
+                $result[] = $map[$id];
             }
         }
 

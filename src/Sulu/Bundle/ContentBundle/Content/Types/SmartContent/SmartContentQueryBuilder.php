@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -214,9 +215,18 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildTagsWhere($languageCode)
     {
+        $structure = $this->structureManager->getStructure('excerpt');
         $sql2Where = array();
-        foreach ($this->getConfig('tags', array()) as $tag) {
-            $sql2Where[] = 'page.[i18n:' . $languageCode . '-excerpt-tags] = ' . $tag;
+        if ($structure->hasProperty('tags')) {
+            $property = new TranslatedProperty(
+                $structure->getProperty('tags'),
+                $languageCode,
+                $this->languageNamespace,
+                'excerpt'
+            );
+            foreach ($this->getConfig('tags', array()) as $tag) {
+                $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
+            }
         }
 
         return $sql2Where;
