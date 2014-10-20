@@ -205,7 +205,6 @@ class MediaController extends RestController implements ClassResourceInterface
      */
     protected function saveEntity($id, Request $request)
     {
-        try {
             $mediaManager = $this->getMediaManager();
             $data = $this->getData($request, $id === null);
             $data['id'] = $id;
@@ -213,11 +212,6 @@ class MediaController extends RestController implements ClassResourceInterface
             $media = $mediaManager->save($uploadedFile, $data, $this->getUser()->getId());
 
             $view = $this->view($media, 200);
-        } catch (MediaNotFoundException $me) {
-            $view = $this->view($me->toArray(), 404);
-        } catch (MediaException $me) {
-            $view = $this->view($me->toArray(), 400);
-        }
 
         return $this->handleView($view);
     }
