@@ -14,114 +14,86 @@ use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 
-class RolesControllerTest extends DatabaseTestCase
+class RolesControllerTest extends SuluTestCase
 {
     /**
-     * @var array
+     * @var SecurityType
      */
-    protected static $entities;
+    protected $securityType1;
 
     /**
      * @var SecurityType
      */
-    protected static $securityType1;
-
-    /**
-     * @var SecurityType
-     */
-    protected static $securityType2;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
+    protected $securityType2;
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
-        self::$securityType1 = new SecurityType();
-        self::$securityType1->setName('Security Type 1');
-        self::$em->persist(self::$securityType1);
+        $this->securityType1 = new SecurityType();
+        $this->securityType1->setName('Security Type 1');
+        $this->em->persist($this->securityType1);
 
-        self::$securityType2 = new SecurityType();
-        self::$securityType2->setName('Security Type 2');
-        self::$em->persist(self::$securityType2);
+        $this->securityType2 = new SecurityType();
+        $this->securityType2->setName('Security Type 2');
+        $this->em->persist($this->securityType2);
 
         $role = new Role();
         $role->setName('Sulu Administrator');
         $role->setSystem('Sulu');
         $role->setCreated(new DateTime());
         $role->setChanged(new DateTime());
-        $role->setSecurityType(self::$securityType1);
-        self::$em->persist($role);
+        $role->setSecurityType($this->securityType1);
+        $this->em->persist($role);
+        $this->role1 = $role;
 
         $role2 = new Role();
         $role2->setName('Sulu Editor');
         $role2->setSystem('Sulu');
         $role2->setCreated(new DateTime());
         $role2->setChanged(new DateTime());
-        self::$em->persist($role2);
+        $this->em->persist($role2);
+        $this->role2 = $role2;
 
-        self::$em->flush();
+        $this->em->flush();
 
         $permission1 = new Permission();
         $permission1->setRole($role);
         $permission1->setContext('context1');
         $permission1->setPermissions(15);
-        self::$em->persist($permission1);
+        $this->em->persist($permission1);
+        $this->permission1 = $permission1;
 
         $permission2 = new Permission();
         $permission2->setRole($role);
         $permission2->setContext('context2');
         $permission2->setPermissions(17);
-        self::$em->persist($permission2);
+        $this->em->persist($permission2);
+        $this->permission2 = $permission2;
 
-        $permission1 = new Permission();
-        $permission1->setRole($role2);
-        $permission1->setContext('context1');
-        $permission1->setPermissions(64);
-        self::$em->persist($permission1);
+        $permission3 = new Permission();
+        $permission3->setRole($role2);
+        $permission3->setContext('context1');
+        $permission3->setPermissions(64);
+        $this->em->persist($permission3);
 
-        $permission2 = new Permission();
-        $permission2->setRole($role2);
-        $permission2->setContext('context2');
-        $permission2->setPermissions(35);
-        self::$em->persist($permission2);
+        $permission4 = new Permission();
+        $permission4->setRole($role2);
+        $permission4->setContext('context2');
+        $permission4->setPermissions(35);
+        $this->em->persist($permission4);
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testList()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/roles?flat=true');
 
@@ -134,9 +106,9 @@ class RolesControllerTest extends DatabaseTestCase
 
     public function testGetById()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/roles/1');
+        $client->request('GET', '/api/roles/' . $this->role1->getId());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu Administrator', $response->name);
@@ -163,7 +135,7 @@ class RolesControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -198,7 +170,7 @@ class RolesControllerTest extends DatabaseTestCase
                     )
                 ),
                 'securityType' => array(
-                    'id' => 2
+                    'id' => $this->securityType2->getId()
                 )
             )
         );
@@ -228,7 +200,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/roles/3'
+            '/api/roles/' . $response->id
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -257,17 +229,17 @@ class RolesControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/roles/1',
+            '/api/roles/' . $this->role1->getId(),
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
                 'permissions' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->permission1->getId(),
                         'context' => 'portal1',
                         'permissions' => array(
                             'view' => true,
@@ -280,7 +252,7 @@ class RolesControllerTest extends DatabaseTestCase
                         ),
                     ),
                     array(
-                        'id' => 2,
+                        'id' => $this->permission2->getId(),
                         'context' => 'portal2',
                         'permissions' => array(
                             'view' => false,
@@ -306,7 +278,7 @@ class RolesControllerTest extends DatabaseTestCase
                     )
                 ),
                 'securityType' => array(
-                    'id' => 2
+                    'id' => $this->securityType2
                 )
             )
         );
@@ -343,7 +315,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/roles/1'
+            '/api/roles/' . $this->role1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -378,17 +350,17 @@ class RolesControllerTest extends DatabaseTestCase
 
     public function testPutRemoveSecurityType()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/roles/1',
+            '/api/roles/' . $this->role1->getId(),
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
                 'permissions' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->permission1->getId(),
                         'context' => 'portal1',
                         'permissions' => array(
                             'view' => true,
@@ -401,7 +373,7 @@ class RolesControllerTest extends DatabaseTestCase
                         ),
                     ),
                     array(
-                        'id' => 2,
+                        'id' => $this->permission2->getId(),
                         'context' => 'portal2',
                         'permissions' => array(
                             'view' => false,
@@ -461,7 +433,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/roles/1'
+            '/api/roles/' . $this->role1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -496,11 +468,11 @@ class RolesControllerTest extends DatabaseTestCase
 
     public function testPutNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/roles/10',
+            '/api/roles/11230',
             array(
                 'name' => 'Portal Manager',
                 'system' => 'Sulu',
@@ -510,12 +482,12 @@ class RolesControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
-        $this->assertContains('10', $response->message);
+        $this->assertContains('11230', $response->message);
     }
 
     public function testDelete()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -529,7 +501,7 @@ class RolesControllerTest extends DatabaseTestCase
 
         $client->request(
             'DELETE',
-            '/api/roles/1'
+            '/api/roles/' . $this->role1->getId()
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
@@ -547,21 +519,21 @@ class RolesControllerTest extends DatabaseTestCase
 
     public function testDeleteNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            '/api/roles/10'
+            '/api/roles/11230'
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
-        $this->assertContains('10', $response->message);
+        $this->assertContains('11230', $response->message);
     }
 
     public function testGetAllRoles(){
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/roles');
 

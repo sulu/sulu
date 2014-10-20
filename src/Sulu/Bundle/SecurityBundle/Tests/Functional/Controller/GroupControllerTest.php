@@ -14,23 +14,34 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class GroupControllerTest extends DatabaseTestCase
+class GroupControllerTest extends SuluTestCase
 {
     /**
-     * @var array
+     * @var Role
      */
-    protected static $entities;
+    protected $role1;
 
     /**
-     * @var SchemaTool
+     * @var Role
      */
-    protected static $tool;
+    protected $role2;
+
+    /**
+     * @var Group
+     */
+    protected $group1;
+
+    /**
+     * @var Group
+     */
+    protected $group2;
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
         $datetime = new \DateTime();
 
@@ -39,14 +50,16 @@ class GroupControllerTest extends DatabaseTestCase
         $role1->setSystem('Sulu');
         $role1->setCreated($datetime);
         $role1->setChanged($datetime);
-        self::$em->persist($role1);
+        $this->em->persist($role1);
+        $this->role1 = $role1;
 
         $role2 = new Role();
         $role2->setName('Sulu Manager');
         $role2->setSystem('Sulu');
         $role2->setCreated($datetime);
         $role2->setChanged($datetime);
-        self::$em->persist($role2);
+        $this->em->persist($role2);
+        $this->role2 = $role2;
 
         $group1 = new Group();
         $group1->setName('Group1');
@@ -54,44 +67,23 @@ class GroupControllerTest extends DatabaseTestCase
         $group1->setChanged($datetime);
         $group1->addRole($role1);
         $group1->addRole($role2);
-        self::$em->persist($group1);
+        $this->em->persist($group1);
+        $this->group1 = $group1;
 
         $group2 = new Group();
         $group2->setName('Group2');
         $group2->setCreated($datetime);
         $group2->setChanged($datetime);
         $group2->addRole($role1);
-        self::$em->persist($group2);
+        $this->em->persist($group2);
+        $this->group2 = $group2;
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testList()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/groups?flat=true');
 
@@ -104,9 +96,9 @@ class GroupControllerTest extends DatabaseTestCase
 
     public function testGetById()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/groups/1');
+        $client->request('GET', '/api/groups/' . $this->group1->getId());
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Group1', $response->name);
@@ -117,20 +109,20 @@ class GroupControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
             '/api/groups',
             array(
                 'name' => 'Group3',
-                'parent' => array('id' => 1),
+                'parent' => array('id' => $this->group1->getId()),
                 'roles' => array(
                     array(
-                        'id' => 1
+                        'id' => $this->role1->getId()
                     ),
                     array(
-                        'id' => 2
+                        'id' => $this->role2->getId()
                     )
                 )
             )
@@ -139,14 +131,14 @@ class GroupControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Group3', $response->name);
-        $this->assertEquals(1, $response->parent->id);
+        $this->assertEquals($this->group1->getId(), $response->parent->id);
         $this->assertCount(2, $response->roles);
         $this->assertEquals('Sulu Administrator', $response->roles[0]->name);
         $this->assertEquals('Sulu Manager', $response->roles[1]->name);
 
         $client->request(
             'GET',
-            '/api/groups/3'
+            '/api/groups/' . $response->id
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -160,17 +152,17 @@ class GroupControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/groups/1',
+            '/api/groups/' . $this->group1->getId(),
             array(
                 'name' => 'Updated Group1',
-                'parent' => array('id' => 2),
+                'parent' => array('id' => $this->group2->getId()),
                 'roles' => array(
                     array(
-                        'id' => 1
+                        'id' => $this->role1->getId()
                     )
                 )
             )
@@ -179,21 +171,21 @@ class GroupControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Updated Group1', $response->name);
-        $this->assertEquals(2, $response->parent->id);
+        $this->assertEquals($this->group2->getId(), $response->parent->id);
         $this->assertCount(1, $response->roles);
         $this->assertEquals('Sulu Administrator', $response->roles[0]->name);
 
-        $client->request('GET', '/api/groups/1');
+        $client->request('GET', '/api/groups/' . $this->group1->getId());
 
         $this->assertEquals('Updated Group1', $response->name);
-        $this->assertEquals(2, $response->parent->id);
+        $this->assertEquals($this->group2->getId(), $response->parent->id);
         $this->assertCount(1, $response->roles);
         $this->assertEquals('Sulu Administrator', $response->roles[0]->name);
     }
 
     public function testDelete()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -207,7 +199,7 @@ class GroupControllerTest extends DatabaseTestCase
 
         $client->request(
             'DELETE',
-            '/api/groups/1'
+            '/api/groups/' . $this->group1->getId()
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
