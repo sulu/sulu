@@ -28,8 +28,9 @@ use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class PreviewControllerTest extends DatabaseTestCase
+class PreviewControllerTest extends SuluTestCase
 {
     /**
      * @var array
@@ -48,32 +49,39 @@ class PreviewControllerTest extends DatabaseTestCase
 
     protected function setUp()
     {
-        $this->setUpSchema();
+        $this->purgeDatabase();
+        $this->initOrm();
+        $this->initPhpcr();
+    }
+
+    protected function initOrm()
+    {
+        $this->em = $this->getContainer()->get('doctrine')->getManager();
 
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
         $contact->setCreated(new DateTime());
         $contact->setChanged(new DateTime());
-        self::$em->persist($contact);
+        $this->em->persist($contact);
 
         $emailType = new EmailType();
         $emailType->setName('Private');
-        self::$em->persist($emailType);
-        self::$em->flush();
+        $this->em->persist($emailType);
+        $this->em->flush();
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
-        self::$em->persist($email);
-        self::$em->flush();
+        $this->em->persist($email);
+        $this->em->flush();
 
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
         $role1->setChanged(new DateTime());
         $role1->setCreated(new DateTime());
-        self::$em->persist($role1);
+        $this->em->persist($role1);
 
         $user = new User();
         $user->setUsername('admin');
@@ -81,130 +89,22 @@ class PreviewControllerTest extends DatabaseTestCase
         $user->setSalt('salt');
         $user->setLocale('de');
         $user->setContact($contact);
-        self::$em->persist($user);
-        self::$em->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole1);
-        self::$em->flush();
+        $this->em->persist($userRole1);
+        $this->em->flush();
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
         $permission1->setContext("Context 1");
-        self::$em->persist($permission1);
-        self::$em->flush();
-
-        $this->prepareSession();
-
-        NodeHelper::purgeWorkspace($this->session);
-        $this->session->save();
-
-        $this->prepareRepository();
-        $this->session->save();
-
-        $cmf = $this->session->getRootNode()->addNode('cmf');
-        $webspace = $cmf->addNode('sulu_io');
-        $nodes = $webspace->addNode('routes');
-        $nodes->addNode('de');
-        $nodes->addNode('en');
-        $content = $webspace->addNode('contents');
-        $content->setProperty('i18n:en-template', 'default');
-        $content->setProperty('i18n:en-creator', 1);
-        $content->setProperty('i18n:en-created', new \DateTime());
-        $content->setProperty('i18n:en-changer', 1);
-        $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->addMixin('sulu:content');
-
-        $webspace->addNode('temp');
-
-        $this->session->save();
-    }
-
-    public function prepareRepository()
-    {
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
-        $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace('sulu', 'http://sulu.io/phpcr');
-        $this->session->getWorkspace()->getNamespaceRegistry()->registerNamespace(
-            'i18n',
-            'http://sulu.io/phpcr/locale'
-        );
-    }
-
-    private function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private function prepareSession()
-    {
-        $factoryclass = '\Jackalope\RepositoryFactoryJackrabbit';
-        $parameters = array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server');
-        $factory = new $factoryclass();
-        $repository = $factory->getRepository($parameters);
-        $credentials = new SimpleCredentials('admin', 'admin');
-        $this->session = $repository->login($credentials, 'test');
-    }
-
-    protected function tearDown()
-    {
-        if ($this->session != null) {
-            NodeHelper::purgeWorkspace($this->session);
-            $this->session->save();
-        }
-        self::$tool->dropSchema(self::$entities);
-        parent::tearDown();
+        $this->em->persist($permission1);
+        $this->em->flush();
     }
 
     public function testRender()
@@ -229,6 +129,7 @@ class PreviewControllerTest extends DatabaseTestCase
 
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
+
 
         $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');

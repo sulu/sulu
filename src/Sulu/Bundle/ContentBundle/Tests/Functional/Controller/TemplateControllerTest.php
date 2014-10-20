@@ -10,22 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class TemplateControllerTest extends DatabaseTestCase
+class TemplateControllerTest extends SuluTestCase
 {
     public $structureFactoryMock;
-    public $container;
-
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-    }
 
     public function testContentForm()
     {
