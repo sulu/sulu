@@ -311,6 +311,9 @@ class CategoryController extends RestController implements ClassResourceInterfac
 
         $listBuilder->addGroupBy($this->getManager()->getFieldDescriptor('id'));
 
+        // FIXME: don't do this.
+        $listBuilder->limit(100000);
+
         $results = $listBuilder->execute();
         foreach ($results as &$result) {
             if (array_key_exists('hasChildren', $result)) {
