@@ -58,8 +58,8 @@ class UserRepositoryTest extends DatabaseTestCase
         // Contact
 
         $contact1 = new Contact();
-        $contact1->setFirstName("Max");
-        $contact1->setLastName("Muster");
+        $contact1->setFirstName('Max');
+        $contact1->setLastName('Muster');
         $contact1->setCreated(new DateTime());
         $contact1->setChanged(new DateTime());
         $contact1->addEmail($email);
@@ -124,13 +124,13 @@ class UserRepositoryTest extends DatabaseTestCase
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
-        $permission1->setContext("Context 1");
+        $permission1->setContext('Context 1');
         self::$em->persist($permission1);
 
         $permission2 = new Permission();
         $permission2->setPermissions(122);
         $permission2->setRole($role2);
-        $permission2->setContext("Context 2");
+        $permission2->setContext('Context 2');
         self::$em->persist($permission2);
 
         // user groups
@@ -204,14 +204,14 @@ class UserRepositoryTest extends DatabaseTestCase
     public function testFindBySystem()
     {
 //        $client = static::createClient();
-
-        // FIXME works when $this->getSystem() is set in user repository
+//
+//        // FIXME works when $this->getSystem() is set in user repository
 //        $em = $client->getContainer()->get('sulu_security.user_repository_factory')->getManager();
 //        /* @var UserRepository $repo */
 //        $repo = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
 //        $employees = $repo->getUserInSystem();
-
-        // FIXME alternative would be to get the container via the factory but there following in the repo is null $this->requestAnalyzer->getCurrentWebspace()
+//
+//        // FIXME alternative would be to get the container via the factory but there following in the repo is null $this->requestAnalyzer->getCurrentWebspace()
 //        $repo = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
 //
 //        $this->assertEquals(1, count($employees));
@@ -222,5 +222,63 @@ class UserRepositoryTest extends DatabaseTestCase
 //
 //        $employees = $repo->findAll();
 //        $this->assertEquals(2, count($employees));
+    }
+
+    public function testLoginFailDisabledUser()
+    {
+        $this->prepareUser('sulu', 'sulu', false);
+
+        $client = static::createClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $this->setExpectedException('Symfony\Component\Security\Core\Exception\DisabledException');
+        $userRepository->loadUserByUsername('sulu');
+    }
+
+    public function testLoginFailLockedUser()
+    {
+        $this->prepareUser('sulu', 'sulu', true, true);
+
+        $client = static::createClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $this->setExpectedException('Symfony\Component\Security\Core\Exception\LockedException');
+        $userRepository->loadUserByUsername('sulu');
+    }
+
+    private function prepareUser($username, $password, $enabled = true, $locked = false)
+    {
+        $emailType = new EmailType();
+        $emailType->setName('Private');
+        self::$em->persist($emailType);
+
+        $email = new Email();
+        $email->setEmail('max.mustermann@muster.at');
+        $email->setEmailType($emailType);
+        self::$em->persist($email);
+
+        $contact1 = new Contact();
+        $contact1->setFirstName('Max');
+        $contact1->setLastName('Muster');
+        $contact1->setCreated(new DateTime());
+        $contact1->setChanged(new DateTime());
+        $contact1->addEmail($email);
+        self::$em->persist($contact1);
+
+        $user = new User();
+        $user->setUsername($username);
+        $user->setPassword($password);
+        $user->setSalt('salt');
+        $user->setLocale('de');
+        $user->setContact($contact1);
+        $user->setEnabled($enabled);
+        $user->setLocked($locked);
+        self::$em->persist($user);
+
+        self::$em->flush();
     }
 }

@@ -58,6 +58,10 @@ define([
                     }
                 }.bind(this));
             }, this);
+
+            this.sandbox.on('sulu.user.activate', function() {
+                this.enableUser();
+            }.bind(this));
         },
 
         save: function(data) {
@@ -71,12 +75,6 @@ define([
                 this.user.set('password', data.user.password);
             } else {
                 this.user.set('password', '');
-            }
-
-            if (!!data.user.id) { // PUT
-                this.user.url = '/admin/api/users/' + data.user.id;
-            } else { // POST
-                this.user.url = '/admin/api/users';
             }
 
             // prepare deselected roles
@@ -166,9 +164,9 @@ define([
 
         loadUser: function() {
             this.user = new User();
-            this.user.url = '/admin/api/users?contactId=' + this.options.id;
+            //TODO: fetch model (fetchUserByContactId)
 
-            this.sandbox.util.load(this.user.url).then(function(data) {
+            this.sandbox.util.load('/admin/api/users?contactId=' + this.options.id).then(function(data) {
                 if (!!data && !!data._embedded && !!data._embedded.users && data._embedded.users.length > 0) {
                     this.user.set(data._embedded.users[0]);
                     this.contact = this.user.get('contact').toJSON();
@@ -242,6 +240,22 @@ define([
                     callbackFunction(true);
                 }.bind(this)
             );
+        },
+
+        enableUser: function() {
+            var dfd = this.sandbox.data.deferred(),
+                url = '/admin/api/users/' + this.user.id + '?action=enable';
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(response) {
+                    this.sandbox.logger.log('successfully enabled user', response);
+                    this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + this.user.attributes.contact.id + '/permissions', true, false, true);
+                    dfd.resolve();
+                }.bind(this))
+                .fail(function() {
+                    dfd.reject();
+                }.bind(this));
+            return dfd;
         }
     };
 });
