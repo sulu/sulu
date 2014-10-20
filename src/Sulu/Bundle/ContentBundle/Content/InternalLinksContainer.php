@@ -116,7 +116,12 @@ class InternalLinksContainer implements ArrayableInterface
     {
         $result = array();
         if ($this->ids !== null) {
-            $this->contentQueryBuilder->init(array('ids' => $this->ids, 'properties' => $this->params['properties']));
+            $this->contentQueryBuilder->init(
+                array(
+                    'ids' => $this->ids,
+                    'properties' => (isset($this->params['properties']) ? $this->params['properties'] : array())
+                )
+            );
             $pages = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,
                 array($this->languageCode),
