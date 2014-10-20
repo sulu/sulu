@@ -92,10 +92,7 @@ class MultipleTranslatedProperties
             preg_match('/^' . $this->languageNamespace . ':(.*?)-template/', $property->getName(), $matches);
 
             if ($matches) {
-                $shadowOnPropertyName = $this->languageNamespace . ':' . $matches[1] . '-shadow-on';
-                if (!$node->hasProperty($shadowOnPropertyName) || !$node->getPropertyValue($shadowOnPropertyName)) {
-                    $languages[$matches[1]] = $matches[1];
-                }
+                $languages[$matches[1]] = $matches[1];
             }
         }
 
