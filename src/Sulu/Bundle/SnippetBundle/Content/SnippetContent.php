@@ -19,7 +19,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
 
 /**
- * ContentType for TextEditor
+ * ContentType for Snippets
  */
 class SnippetContent extends ComplexContentType
 {
