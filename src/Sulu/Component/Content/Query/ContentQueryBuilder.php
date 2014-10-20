@@ -30,7 +30,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * @var string
      */
-    private $languageNamespace;
+    protected $languageNamespace;
 
     /**
      * @var MultipleTranslatedProperties

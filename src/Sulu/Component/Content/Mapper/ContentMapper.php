@@ -478,7 +478,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($node)
         );
-        $structure->setConcreteLanguages($this->properties->getLanguagesForNode($node));
+        $structure->setConcreteLanguages($this->getConcreteLanguages($node));
 
         $structure->setNavContexts(
             $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
@@ -1452,6 +1452,10 @@ class ContentMapper implements ContentMapperInterface
         // prepare content node
         $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
         $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
+
+        // node name should not have a slash
+        $nodeName = str_replace('/', '-', $nodeName);
+
         $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
         $nodeName = $this->getUniquePath($nodeName, $parentNode);
 
@@ -1928,12 +1932,7 @@ class ContentMapper implements ContentMapperInterface
             $locale
         );
 
-        // insure array
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
-        return $data;
+        return $extension->getContentData($data);
     }
 
     /**
