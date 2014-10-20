@@ -108,7 +108,7 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected function getPath($prePath, $id, $fileName, $format)
     {
-        $segment = ($id % $this->segments) . '/';
+        $segment = $this->getSegment($id) . '/';
         $prePath = rtrim($prePath, '/');
 
         return $prePath . '/' . $format . '/' . $segment . $id . '-' . $fileName;
@@ -123,7 +123,7 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected function getPathUrl($prePath, $id, $fileName, $format)
     {
-        $segment = ($id % $this->segments) . '/';
+        $segment = $this->getSegment($id) . '/';
         $prePath = rtrim($prePath, '/');
 
         return str_replace('{slug}', $format . '/' . $segment . $id . '-' . urlencode($fileName), $prePath);
@@ -166,6 +166,15 @@ class LocalFormatCache implements FormatCacheInterface
         }
 
         return $id;
+    }
+
+    /**
+     * @param $id
+     * @return string
+     */
+    protected function getSegment($id)
+    {
+        return sprintf('%0'.strlen($this->segments).'d', ($id % $this->segments));
     }
 
     /**
