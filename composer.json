@@ -4,7 +4,7 @@
     "description": "Symfony bundle that provides basic core functionality",
     "license": "MIT",
     "keywords": ["core", "sulu"],
-    "version": "0.8.5",
+    "version": "0.8.6",
     "authors": [
         {
             "name": "Sulu Community",
