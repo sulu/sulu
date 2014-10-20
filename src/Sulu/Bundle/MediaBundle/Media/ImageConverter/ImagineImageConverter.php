@@ -121,19 +121,11 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     protected function getFormatOptions($format)
     {
-        $formatOptions = null;
-
-        foreach ($this->formats as $options) {
-            if ($options['name'] == $format) {
-                $formatOptions = $options;
-            }
-        }
-
-        if (!$formatOptions) {
+        if (!isset($this->formats[$format])) {
             throw new ImageProxyInvalidImageFormat('Format was not found');
         }
 
-        return $formatOptions;
+        return $this->formats[$format];
     }
 
     /**
