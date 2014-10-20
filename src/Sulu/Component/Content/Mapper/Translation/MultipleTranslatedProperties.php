@@ -80,6 +80,11 @@ class MultipleTranslatedProperties
         }
     }
 
+    /**
+     * returns all concrete languages for a specific content node
+     * @param NodeInterface $node
+     * @return string[]
+     */
     public function getLanguagesForNode(NodeInterface $node)
     {
         $languages = array();
