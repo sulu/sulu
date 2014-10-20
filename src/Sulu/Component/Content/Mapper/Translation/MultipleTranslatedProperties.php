@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
@@ -41,8 +40,7 @@ class MultipleTranslatedProperties
         $names,
         $languageNamespace,
         $namespace = ''
-    )
-    {
+    ) {
         $this->languageNamespace = $languageNamespace;
         $this->properties = array();
         foreach ($names as $name) {
@@ -89,7 +87,10 @@ class MultipleTranslatedProperties
             preg_match('/^' . $this->languageNamespace . ':(.*?)-template/', $property->getName(), $matches);
 
             if ($matches) {
-                $languages[$matches[1]] = $matches[1];
+                $shadowOnPropertyName = $this->languageNamespace . ':' . $matches[1] . '-shadow-on';
+                if (!$node->hasProperty($shadowOnPropertyName) || !$node->getPropertyValue($shadowOnPropertyName)) {
+                    $languages[$matches[1]] = $matches[1];
+                }
             }
         }
 
