@@ -184,7 +184,7 @@ class FilterNodesQueryBuilder
     {
         $sql2Where = array();
         foreach ($this->getConfig('tags', array()) as $tag) {
-            $sql2Where[] = 'c.[i18n:' . $languageCode . '-excerpt-tags] = ' . $tag;
+            $sql2Where[] = '(c.[i18n:' . $languageCode . '-excerpt-tags] = ' . $tag . ' OR c.[excerpt-tags] = ' . $tag . ')';
         }
 
         return $sql2Where;
