@@ -59,7 +59,7 @@ class LocalFormatCacheTest extends \PHPUnit_Framework_TestCase
         $encodedFileName = 'Test%20With%20Spaces%20%26%20Co.jpg';
 
         $this->assertSame(
-            '/uploads/media/'.$format.'/'.$segment.'/'.$fileId.'-'.$encodedFileName.'?v=' . $version,
+            '/uploads/media/50x50/01/1-Test%20With%20Spaces%20%26%20Co.jpg?v=2',
             $filePath
         );
     }
