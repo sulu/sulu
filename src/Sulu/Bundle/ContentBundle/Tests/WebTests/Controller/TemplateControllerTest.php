@@ -12,6 +12,9 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
+/**
+ * @group webtest
+ */
 class TemplateControllerTest extends SuluTestCase
 {
     public $structureFactoryMock;

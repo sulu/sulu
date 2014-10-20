@@ -22,6 +22,10 @@ use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 
+/**
+ * @group functional
+ * @group content
+ */
 class SmartContentQueryBuilderTest extends PhpcrTestCase
 {
     /**

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Preview;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
@@ -34,6 +34,10 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
+/**
+ * @group functional
+ * @group preview
+ */
 class PreviewMessageComponentTest extends PhpcrTestCase
 {
     /**

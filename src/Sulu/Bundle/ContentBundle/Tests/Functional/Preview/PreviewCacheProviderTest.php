@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Preview;
+namespace Sulu\Bundle\ContentBundle\Tests\Preview\Preview;
 
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
@@ -22,6 +22,10 @@ use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 
+/**
+ * @group functional
+ * @group preview
+ */
 class PhpcrCacheProviderTest extends PhpcrTestCase
 {
     /**

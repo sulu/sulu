@@ -21,6 +21,9 @@ interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 {
 }
 
+/**
+ * @group unit
+ */
 class InternalLinksTest extends \PHPUnit_Framework_TestCase
 {
     /**

@@ -23,6 +23,9 @@ interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 {
 }
 
+/**
+ * @group unit
+ */
 class SmartContentTest extends \PHPUnit_Framework_TestCase
 {
     /**
