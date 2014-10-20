@@ -73,7 +73,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $this->stopwatch->start('ContentQuery::execute.execute-query');
         }
 
-        $query = $this->createSql2Query($sql2, $limit);
+        $query = $this->createSql2Query($sql2);
         $queryResult = $query->execute();
 
         if ($this->stopwatch) {
@@ -113,6 +113,10 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $fields,
             $depth
         );
+
+        if ($limit !== null) {
+            $result = array_splice($result, 0, $limit);
+        }
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('ContentQuery::execute.rowsToList');
