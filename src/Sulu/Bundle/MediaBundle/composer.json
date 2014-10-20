@@ -44,5 +44,6 @@
             "Sulu\\Bundle\\MediaBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/MediaBundle"
+    "target-dir": "Sulu/Bundle/MediaBundle",
+    "minimum-stability": "dev"
 }
