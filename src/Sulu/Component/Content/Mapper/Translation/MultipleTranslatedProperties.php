@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
@@ -41,8 +40,7 @@ class MultipleTranslatedProperties
         $names,
         $languageNamespace,
         $namespace = ''
-    )
-    {
+    ) {
         $this->languageNamespace = $languageNamespace;
         $this->properties = array();
         foreach ($names as $name) {
@@ -82,6 +80,11 @@ class MultipleTranslatedProperties
         }
     }
 
+    /**
+     * returns all concrete languages for a specific content node
+     * @param NodeInterface $node
+     * @return string[]
+     */
     public function getLanguagesForNode(NodeInterface $node)
     {
         $languages = array();

@@ -478,7 +478,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($node)
         );
-        $structure->setConcreteLanguages($this->properties->getLanguagesForNode($node));
+        $structure->setConcreteLanguages($this->getConcreteLanguages($node));
 
         $structure->setNavContexts(
             $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
