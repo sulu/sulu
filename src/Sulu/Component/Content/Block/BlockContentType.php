@@ -310,6 +310,8 @@ class BlockContentType extends ComplexContentType
     }
 
     /**
+     * Returns prepared data from property
+     * use callback to prepare data foreach property function($contentType, $property) 
      * @param PropertyInterface $property
      * @param callable $dataCallback
      * @param bool $returnType
