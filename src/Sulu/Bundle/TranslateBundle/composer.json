@@ -10,6 +10,7 @@
             "homepage": "https://github.com/massiveart/SuluTranslateBundle/contributors"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.4-dev",

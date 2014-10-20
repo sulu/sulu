@@ -14,23 +14,13 @@ use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Doctrine\ORM\Tools\SchemaTool;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class PackageControllerTest extends DatabaseTestCase
+class PackageControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
-
     public function setUp()
     {
-
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
 
         $package = new Package();
         $package->setName('Sulu');
@@ -38,46 +28,24 @@ class PackageControllerTest extends DatabaseTestCase
         $catalogue->setPackage($package);
         $catalogue->setIsDefault(false);
         $catalogue->setLocale('EN');
-        self::$em->persist($catalogue);
-        self::$em->persist($package);
+        $this->em->persist($catalogue);
+        $this->em->persist($package);
 
         $package = new Package();
         $package->setName('Global');
-        self::$em->persist($package);
+        $this->em->persist($package);
 
         $package = new Package();
         $package->setName('Portal');
 
-        self::$em->persist($package);
+        $this->em->persist($package);
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testGetAll()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/packages');
 
         $response = json_decode($client->getResponse()->getContent());
@@ -90,7 +58,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testGetAllSorted()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/packages?flat=true&sortBy=name&sortOrder=asc');
         $response = json_decode($client->getResponse()->getContent());
@@ -125,7 +93,7 @@ class PackageControllerTest extends DatabaseTestCase
     {
         $limit = 2;
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/packages?flat=true&limit=' . $limit);
         $response = json_decode($client->getResponse()->getContent());
 
@@ -144,7 +112,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testGetAllFields()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/packages?flat=true&fields=id,name');
         $response = json_decode($client->getResponse()->getContent());
@@ -166,7 +134,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testGetId()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/packages/1');
 
         $response = json_decode($client->getResponse()->getContent());
@@ -178,7 +146,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -207,7 +175,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPostWithoutLanguages()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -233,7 +201,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPostWithoutName()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -246,7 +214,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -292,7 +260,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPutWithoutLanguages()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -327,7 +295,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPutNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -340,7 +308,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testPutNotExistingCatalogue()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -368,7 +336,7 @@ class PackageControllerTest extends DatabaseTestCase
 
     public function testDeleteById()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/packages/1');
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
@@ -378,7 +346,7 @@ class PackageControllerTest extends DatabaseTestCase
     public function testDeleteByIdNotExisting()
     {
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/packages/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());

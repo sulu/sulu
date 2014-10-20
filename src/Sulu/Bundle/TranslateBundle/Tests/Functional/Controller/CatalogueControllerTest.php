@@ -14,58 +14,38 @@ use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Doctrine\ORM\Tools\SchemaTool;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class CatalogueControllerTest extends DatabaseTestCase
+class CatalogueControllerTest extends SuluTestCase
 {
+    /**
+     * @var Package
+     */
+    private $package;
 
     /**
-     * @var array
+     * @Var Catalogue
      */
-    protected static $entities;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
+    private $catalogue;
 
     public function setUp()
     {
-
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
         $package = new Package();
         $package->setName("Sulu");
-        self::$em->persist($package);
+        $this->em->persist($package);
+        $this->package = $package;
 
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
         $catalogue->setLocale('EN');
         $catalogue->setIsDefault(false);
-        self::$em->persist($catalogue);
+        $this->em->persist($catalogue);
+        $this->catalogue = $catalogue;
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testGet()
@@ -81,7 +61,7 @@ class CatalogueControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/catalogues?package=1');
+        $client->request('GET', '/api/catalogues?package=' . $this->package->getId());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->_embedded->catalogues[0]->locale);
     }
@@ -90,7 +70,7 @@ class CatalogueControllerTest extends DatabaseTestCase
     {
         $client = static::createClient();
 
-        $client->request('GET', '/api/catalogues/1');
+        $client->request('GET', '/api/catalogues/' . $this->catalogue->getId());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('EN', $response->locale);
     }
@@ -100,11 +80,11 @@ class CatalogueControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
 
-        $client->request('DELETE', '/api/catalogues/1');
+        $client->request('DELETE', '/api/catalogues/' . $this->package->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
 
-        $client->request('GET', '/api/catalogues/1');
+        $client->request('GET', '/api/catalogues/' . $this->catalogue->getId());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
@@ -127,11 +107,11 @@ class CatalogueControllerTest extends DatabaseTestCase
 
         $client = static::createClient();
 
-        $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=1');
+        $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=' . $this->package->getId());
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('1', $response->_embedded->catalogues[0]->id);
+        $this->assertEquals($this->catalogue->getId(), $response->_embedded->catalogues[0]->id);
         $this->assertEquals('EN', $response->_embedded->catalogues[0]->locale);
 
     }
