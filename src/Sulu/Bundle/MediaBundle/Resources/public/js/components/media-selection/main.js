@@ -698,6 +698,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         triggerEl: this.$addButton,
                         cssClass: 'media-selection-overlay',
                         el: $element,
+                        removeOnClose: false,
                         container: this.$el,
                         draggable: false,
                         instanceName: 'media-selection.' + this.options.instanceName + '.add',

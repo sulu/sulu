@@ -33,7 +33,7 @@ define([
              * @event sulu.media.collections.list
              * @param noReload {Boolean} if false page reloads
              */
-                ROUTE_TO_LIST = function () {
+            ROUTE_TO_LIST = function () {
                 return createEventName.call(this, 'list');
             },
 
@@ -44,7 +44,7 @@ define([
              * @param callback {Function} callback to execute after a media got deleted
              * @param noDialog {Boolean} if true no dialog will be shown
              */
-                DELETE_MEDIA = function () {
+            DELETE_MEDIA = function () {
                 return createEventName.call(this, 'delete-media');
             },
 
@@ -55,7 +55,7 @@ define([
              * @param parameters {Object} parameters to add to the request
              * @param callback {Function} callback to pass the result to
              */
-                RELOAD_SINGLE_MEDIA = function () {
+            RELOAD_SINGLE_MEDIA = function () {
                 return createEventName.call(this, 'reload-single-media');
             },
 
@@ -66,7 +66,7 @@ define([
              * @param parameters {Object} parameters to add to the request
              * @param callback {Function} callback to pass the result to
              */
-                RELOAD_MEDIA = function () {
+            RELOAD_MEDIA = function () {
                 return createEventName.call(this, 'reload-media');
             },
 
@@ -76,7 +76,7 @@ define([
              * @param id {Number|String} the id of the collection to delete
              * @param callback {Function} callback to execute after a media got deleted
              */
-                DELETE_COLLECTION = function () {
+            DELETE_COLLECTION = function () {
                 return createEventName.call(this, 'delete-collection');
             },
 
@@ -85,7 +85,7 @@ define([
              * @event sulu.media.collections.media-deleted
              * @param id {Number|String} the id of the deleted media
              */
-                SINGLE_MEDIA_DELETED = function () {
+            SINGLE_MEDIA_DELETED = function () {
                 return createEventName.call(this, 'media-deleted');
             },
 
@@ -94,7 +94,7 @@ define([
              * @event sulu.media.collections.collection-deleted
              * @param id {Number|String} the id of the deleted media
              */
-                COLLECTION_DELETED = function () {
+            COLLECTION_DELETED = function () {
                 return createEventName.call(this, 'collection-deleted');
             },
 
@@ -103,7 +103,7 @@ define([
              * @event sulu.media.collections.media-saved
              * @param {Object} the changed media object
              */
-                MEDIA_SAVED = function () {
+            MEDIA_SAVED = function () {
                 return createEventName.call(this, 'media-saved');
             },
 
@@ -112,7 +112,7 @@ define([
              * @event sulu.media.collections.edit-media
              * @param id {Number|String} the id of the media to edit
              */
-                EDIT_MEDIA = function () {
+            EDIT_MEDIA = function () {
                 return createEventName.call(this, 'edit-media');
             },
 
@@ -122,7 +122,7 @@ define([
              * @param media {Object|Array} a media object with at least an id property. Can be an array of media objects
              * @param callback {Function} a callback-method to execute after all media got saved
              */
-                SAVE_MEDIA = function () {
+            SAVE_MEDIA = function () {
                 return createEventName.call(this, 'save-media');
             },
 
@@ -132,7 +132,7 @@ define([
              * @param collection {Object} a collection object with at least an id property
              * @param callback {Function} callback to call after collection has been saved
              */
-                SAVE_COLLECTION = function () {
+            SAVE_COLLECTION = function () {
                 return createEventName.call(this, 'save-collection');
             },
 
@@ -143,7 +143,7 @@ define([
              * @param parameters {Object} parameters to add to the request
              * @param callback {Function} callback to pass the result to
              */
-                RELOAD_COLLECTION = function () {
+            RELOAD_COLLECTION = function () {
                 return createEventName.call(this, 'reload-collection');
             },
 
@@ -152,7 +152,7 @@ define([
              * @event sulu.media.collections.collection-changed
              * @param {Object} the changed collection object
              */
-                COLLECTION_CHANGED = function () {
+            COLLECTION_CHANGED = function () {
                 return createEventName.call(this, 'collection-changed');
             },
 
@@ -162,7 +162,7 @@ define([
              * @param {Number|String} the id of the collection
              * @param {String} the tab to navigate to
              */
-                NAVIGATE_COLLECTION_EDIT = function () {
+            NAVIGATE_COLLECTION_EDIT = function () {
                 return createEventName.call(this, 'collection-edit');
             },
 
@@ -170,7 +170,7 @@ define([
              * listens on and navigates to collection list
              * @event sulu.media.collections.collection-list
              */
-                NAVIGATE_COLLECTION_LIST = function () {
+            NAVIGATE_COLLECTION_LIST = function () {
                 return createEventName.call(this, 'collection-list');
             },
 
@@ -178,12 +178,12 @@ define([
              * listens on and downloads a single media
              * @event sulu.media.collections.download-media
              */
-                DOWNLOAD_MEDIA = function () {
+            DOWNLOAD_MEDIA = function () {
                 return createEventName.call(this, 'download-media');
             },
 
             /** returns normalized event names */
-                createEventName = function (postFix) {
+            createEventName = function (postFix) {
                 return namespace + postFix;
             };
 
