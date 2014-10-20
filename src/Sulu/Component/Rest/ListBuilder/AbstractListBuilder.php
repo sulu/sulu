@@ -221,6 +221,4 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->groupByFields[$fieldDescriptor->getName()] = $fieldDescriptor;
     }
-
-
 }

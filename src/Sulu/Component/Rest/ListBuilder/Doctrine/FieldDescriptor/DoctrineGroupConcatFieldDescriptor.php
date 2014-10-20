@@ -32,9 +32,9 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
 
     public function __construct(
         AbstractDoctrineFieldDescriptor $fieldDescriptor,
-        $glue = ',',
         $name,
         $translation = null,
+        $glue = ',',
         $disabled = false,
         $default = false,
         $type = '',
