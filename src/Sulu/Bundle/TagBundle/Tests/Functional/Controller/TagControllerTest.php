@@ -13,60 +13,48 @@ namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class TagControllerTest extends DatabaseTestCase
+class TagControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
+    protected $em;
 
-    public function setUp()
+    protected function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+
+        $this->initOrm();
+    }
+
+    protected function initOrm()
+    {
+        $this->purgeDatabase();
 
         $tag1 = new Tag();
         $tag1->setName('tag1');
         $tag1->setCreated(new \DateTime());
         $tag1->setChanged(new \DateTime());
-        self::$em->persist($tag1);
+        $this->em->persist($tag1);
+        $this->tag1 = $tag1;
 
         $tag2 = new Tag();
         $tag2->setName('tag2');
         $tag2->setCreated(new \DateTime());
         $tag2->setChanged(new \DateTime());
-        self::$em->persist($tag2);
+        $this->em->persist($tag2);
+        $this->tag2 = $tag2;
 
-        self::$em->flush();
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testGetById()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/tags/1',
+            '/api/tags/' . $this->tag1->getId(),
             array(),
             array(),
             array(
@@ -84,7 +72,7 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testList()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -107,7 +95,7 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testListSearch()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -129,10 +117,10 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testGetByIdNotExisting()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/tags/10',
+            '/api/tags/11230',
             array(),
             array(),
             array(
@@ -150,16 +138,11 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/tags',
-            array('name' => 'tag3'),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('name' => 'tag3')
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -168,7 +151,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags/3'
+            '/api/tags/' . $response->id
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -180,7 +163,7 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPostExistingName()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/tags',
@@ -201,10 +184,10 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/tags/1',
+            '/api/tags/' . $this->tag1->getId(),
             array('name' => 'tag1_new'),
             array(),
             array(
@@ -219,7 +202,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags/1',
+            '/api/tags/' . $this->tag1->getId(),
             array(),
             array(),
             array(
@@ -237,10 +220,10 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPutExistingName()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/tags/2',
+            '/api/tags/' . $this->tag2->getId(),
             array('name' => 'tag1'),
             array(),
             array(
@@ -258,7 +241,7 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPutNotExisting()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
             '/api/tags/4711',
@@ -278,7 +261,7 @@ class TagControllerTest extends DatabaseTestCase
         $mockedEventListener = $this->getMock('stdClass', array('onDelete'));
         $mockedEventListener->expects($this->once())->method('onDelete');
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->getContainer()->get('event_dispatcher')->addListener(
             'sulu.tag.delete',
             array($mockedEventListener, 'onDelete')
@@ -286,7 +269,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'DELETE',
-            '/api/tags/1',
+            '/api/tags/' . $this->tag1->getId(),
             array(),
             array(),
             array(
@@ -298,7 +281,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags/1',
+            '/api/tags/' . $this->tag1->getId(),
             array(),
             array(),
             array(
@@ -311,7 +294,7 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testDeleteByNotExistingId()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
@@ -328,24 +311,24 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testMerge()
     {
-        $tag = new Tag();
-        $tag->setName('tag3');
-        $tag->setCreated(new \DateTime());
-        $tag->setChanged(new \DateTime());
-        self::$em->persist($tag);
+        $tag3 = new Tag();
+        $tag3->setName('tag3');
+        $tag3->setCreated(new \DateTime());
+        $tag3->setChanged(new \DateTime());
+        $this->em->persist($tag3);
 
-        $tag = new Tag();
-        $tag->setName('tag4');
-        $tag->setCreated(new \DateTime());
-        $tag->setChanged(new \DateTime());
-        self::$em->persist($tag);
+        $tag4 = new Tag();
+        $tag4->setName('tag4');
+        $tag4->setCreated(new \DateTime());
+        $tag4->setChanged(new \DateTime());
+        $this->em->persist($tag4);
 
-        self::$em->flush();
+        $this->em->flush();
 
         $mockedEventListener = $this->getMock('stdClass', array('onMerge'));
         $mockedEventListener->expects($this->once())->method('onMerge');
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->getContainer()->get('event_dispatcher')->addListener(
             'sulu.tag.merge',
             array($mockedEventListener, 'onMerge')
@@ -354,89 +337,57 @@ class TagControllerTest extends DatabaseTestCase
         $client->request(
             'POST',
             '/api/tags/merge',
-            array('src' => implode(',', array(2, 3, 4)), 'dest' => 1),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('src' => implode(',', array(
+                $this->tag2->getId(), $tag3->getId(), $tag4->getId()
+            )), 'dest' => $this->tag1->getId())
         );
         $this->assertEquals(303, $client->getResponse()->getStatusCode());
-        $this->assertEquals('/admin/api/tags/1', $client->getResponse()->headers->get('location'));
+        $this->assertEquals('/admin/api/tags/' . $this->tag1->getId(), $client->getResponse()->headers->get('location'));
 
         $client->request(
             'GET',
-            '/api/tags/1',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $this->tag1->getId()
         );
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
-            '/api/tags/2',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $this->tag2->getId()
         );
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
-            '/api/tags/3',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $tag3->getId()
         );
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
-            '/api/tags/4',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $tag4->getId()
         );
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     public function testMergeNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/tags/merge',
-            array('src' => 3, 'dest' => 1),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('src' => 1233, 'dest' => $this->tag1->getId())
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "3" not found.', $response->message);
+        $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "1233" not found.', $response->message);
     }
 
     public function testPatch()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/tags',
@@ -493,7 +444,7 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPatchExistingAsNew()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/tags',
@@ -504,11 +455,6 @@ class TagControllerTest extends DatabaseTestCase
                 array(
                     'name' => 'tag2'
                 )
-            ),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
             )
         );
 
@@ -522,24 +468,19 @@ class TagControllerTest extends DatabaseTestCase
 
     public function testPatchExistingChange()
     {
-        $client = self::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/tags',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->tag1->getId(),
                     'name' => 'tag11'
                 ),
                 array(
-                    'id' => 2,
+                    'id' => $this->tag1->getId(),
                     'name' => 'tag22'
                 )
-            ),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
             )
         );
 
@@ -551,13 +492,7 @@ class TagControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/tags?flat=true',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags?flat=true'
         );
 
 
