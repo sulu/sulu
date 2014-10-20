@@ -85,8 +85,9 @@ class ExcerptStructureExtension extends StructureExtension
                     $node,
                     new TranslatedProperty(
                         $property,
-                        $languageCode . '-' . $this->additionalPrefix,
-                        $this->languageNamespace
+                        $languageCode,
+                        $this->languageNamespace,
+                        $this->additionalPrefix
                     ),
                     null, // userid
                     $webspaceKey,
