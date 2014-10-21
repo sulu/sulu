@@ -865,7 +865,6 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertEquals(2, sizeof($items));
 
-        $this->assertEquals(12, sizeof($items[0]));
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);
@@ -876,7 +875,6 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(0, sizeof($items[0]['_embedded']['nodes']));
         $this->assertArrayHasKey('_links', $items[0]);
 
-        $this->assertEquals(12, sizeof($items[1]));
         $this->assertArrayHasKey('id', $items[1]);
         $this->assertEquals('test2', $items[1]['title']);
         $this->assertEquals('/test2', $items[1]['path']);
@@ -1250,7 +1248,6 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertEquals(1, sizeof($items));
 
-        $this->assertEquals(12, sizeof($items[0]));
         $this->assertArrayHasKey('id', $items[0]);
         $this->assertEquals('test1', $items[0]['title']);
         $this->assertEquals('/test1', $items[0]['path']);

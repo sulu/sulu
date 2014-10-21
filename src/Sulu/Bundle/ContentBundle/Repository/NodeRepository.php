@@ -128,9 +128,6 @@ class NodeRepository implements NodeRepositoryInterface
     ) {
         $result = $structure->toArray($complete);
 
-        // add node name
-        $result['sulu.node.name'] = $structure->getPropertyValueByTagName('sulu.node.name');
-
         // add default embedded property with empty nodes array
         $result['_embedded'] = array();
         $result['_embedded']['nodes'] = array();
@@ -510,7 +507,6 @@ class NodeRepository implements NodeRepositoryInterface
         // add uuid and path
         $data['id'] = $structure->getUuid();
         $data['path'] = $structure->getPath();
-        $data['sulu.node.name'] = $structure->getPropertyByTagName('sulu.node.name')->getValue();
 
         // prepare data
         $data['_links'] = array(
@@ -542,7 +538,6 @@ class NodeRepository implements NodeRepositoryInterface
         // add uuid and path
         $data['id'] = $structure->getUuid();
         $data['path'] = $structure->getPath();
-        $data['sulu.node.name'] = $structure->getPropertyByTagName('sulu.node.name')->getValue();
 
         // prepare data
         $data['_links'] = array(

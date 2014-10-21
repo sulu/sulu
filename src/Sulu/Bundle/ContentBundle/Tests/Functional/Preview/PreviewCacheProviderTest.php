@@ -107,12 +107,7 @@ class PhpcrCacheProviderTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'title', 'title', 'text_line', false, true, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.node.name', 100)
-                    )
-                )
+                new Property('title', 'title', 'text_line', false, true, 1, 1, array())
             )
         );
 
