@@ -109,7 +109,7 @@ class ContentTwigExtensionTest extends ProphecyTestCase
     {
         $this
             ->contentMapper
-            ->load('123-123-123', 'sulu_test', 'en_us', true)
+            ->load('123-123-123', 'sulu_test', 'en_us')
             ->willReturn(new TestStructure('123-123-123', 'test', 1));
 
         $extension = new ContentTwigExtension(

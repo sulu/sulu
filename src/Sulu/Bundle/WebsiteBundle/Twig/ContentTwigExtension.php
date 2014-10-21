@@ -55,16 +55,14 @@ class ContentTwigExtension extends \Twig_Extension
     /**
      * Returns resolved content for uuid
      * @param string $uuid
-     * @param bool $loadGhostContent
      * @return array
      */
-    public function load($uuid, $loadGhostContent = true)
+    public function load($uuid)
     {
         $contentStructure = $this->contentMapper->load(
             $uuid,
             $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-            $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
-            $loadGhostContent
+            $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
         );
 
         return $this->structureResolver->resolve($contentStructure);
