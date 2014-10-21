@@ -21,13 +21,16 @@ class PackageControllerTest extends SuluTestCase
     public function setUp()
     {
         $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
         $package = new Package();
         $package->setName('Sulu');
+        $this->package1 = $package;
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
         $catalogue->setIsDefault(false);
         $catalogue->setLocale('EN');
+        $this->catalogue1 = $catalogue;
         $this->em->persist($catalogue);
         $this->em->persist($package);
 
@@ -125,21 +128,21 @@ class PackageControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Sulu', $response->_embedded->packages[0]->name);
-        $this->assertEquals(1, $response->_embedded->packages[0]->id);
+        $this->assertNotNull($response->_embedded->packages[0]->id);
         $this->assertEquals('Global', $response->_embedded->packages[1]->name);
-        $this->assertEquals(2, $response->_embedded->packages[1]->id);
+        $this->assertNotNull($response->_embedded->packages[1]->id);
         $this->assertEquals('Portal', $response->_embedded->packages[2]->name);
-        $this->assertEquals(3, $response->_embedded->packages[2]->id);
+        $this->assertNotNull($response->_embedded->packages[2]->id);
     }
 
     public function testGetId()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/packages/1');
+        $client->request('GET', '/api/packages/' . $this->package1->getId());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('Sulu', $response->name);
         $this->assertEquals('EN', $response->catalogues[0]->locale);
     }
@@ -218,11 +221,11 @@ class PackageControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/api/packages/1',
+            '/api/packages/' . $this->package1->getId(),
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('id' => 1, 'locale' => 'DE'),
+                    array('id' => $this->catalogue1->getId(), 'locale' => 'DE'),
                     array('locale' => 'EN'),
                     array('locale' => 'ES')
                 )
@@ -232,19 +235,19 @@ class PackageControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal', $response->name);
-        $this->assertEquals(1, $response->id);
+        $this->assertEquals($this->package1->getId(), $response->id);
         $this->assertContains('DE', $response->catalogues[0]->locale);
         $this->assertContains('EN', $response->catalogues[1]->locale);
         $this->assertContains('ES', $response->catalogues[2]->locale);
 
         $client->request(
             'PUT',
-            '/api/packages/1',
+            '/api/packages/' . $this->package1->getId(),
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('id' => 2, 'locale' => 'ES'),
-                    array('id' => 3, 'locale' => 'DE')
+                    array('id' => $response->catalogues[1]->id, 'locale' => 'ES'),
+                    array('id' => $response->catalogues[2]->id, 'locale' => 'DE')
                 )
             )
         );
@@ -252,7 +255,7 @@ class PackageControllerTest extends SuluTestCase
         $response1 = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('Portal', $response1->name);
-        $this->assertEquals(1, $response1->id);
+        $this->assertNotNull($response1->id);
         $this->assertEquals(2, count($response1->catalogues));
         $this->assertContains('ES', $response1->catalogues[0]->locale);
         $this->assertContains('DE', $response1->catalogues[1]->locale);
@@ -264,7 +267,7 @@ class PackageControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/api/packages/1',
+            '/api/packages/' . $this->package1->getId(),
             array(
                 'name' => 'ASDF'
             )
@@ -273,7 +276,7 @@ class PackageControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('ASDF', $response->name);
-        $this->assertEquals(1, $response->id);
+        $this->assertEquals($this->package1->getId(), $response->id);
 
         $client->request(
             'GET',
@@ -282,15 +285,12 @@ class PackageControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        if ($response->_embedded->packages[0]->name === 'ASDF') {
-            $i = 0;
-        } elseif ($response->_embedded->packages[1]->name === 'ASDF') {
-            $i = 1;
-        } elseif ($response->_embedded->packages[2]->name === 'ASDF') {
-            $i = 2;
+        $names = array();
+        foreach ($response->_embedded->packages as $package) {
+            $names[] = $package->name;
         }
-        $this->assertEquals('ASDF', $response->_embedded->packages[$i]->name);
-        $this->assertEquals(1, $response->_embedded->packages[$i]->id);
+
+        $this->assertContains('ASDF', $names);
     }
 
     public function testPutNotExisting()
@@ -299,7 +299,7 @@ class PackageControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/api/packages/10',
+            '/api/packages/10123',
             array('name' => 'Portal')
         );
 
@@ -312,11 +312,11 @@ class PackageControllerTest extends SuluTestCase
 
         $client->request(
             'PUT',
-            '/api/packages/1',
+            '/api/packages/' . $this->package1->getId(),
             array(
                 'name' => 'Portal',
                 'catalogues' => array(
-                    array('id' => 2, 'locale' => 'DE')
+                    array('id' => 123123, 'locale' => 'DE')
                 )
             )
         );
@@ -325,7 +325,7 @@ class PackageControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/packages/1'
+            '/api/packages/' . $this->package1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -338,7 +338,7 @@ class PackageControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/packages/1');
+        $client->request('DELETE', '/api/packages/' . $this->package1->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
     }

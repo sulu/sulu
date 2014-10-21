@@ -50,7 +50,7 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
@@ -59,7 +59,7 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testGetByPackage()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/catalogues?package=' . $this->package->getId());
         $response = json_decode($client->getResponse()->getContent());
@@ -68,7 +68,7 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testGetById()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/catalogues/' . $this->catalogue->getId());
         $response = json_decode($client->getResponse()->getContent());
@@ -77,22 +77,19 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testDeleteById()
     {
+        $client = $this->createAuthenticatedClient();
 
-        $client = static::createClient();
-
-        $client->request('DELETE', '/api/catalogues/' . $this->package->getId());
+        $client->request('DELETE', '/api/catalogues/' . $this->catalogue->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
-
         $client->request('GET', '/api/catalogues/' . $this->catalogue->getId());
-        $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
 
     public function testDeleteByIdNotExisting()
     {
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/catalogues/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
@@ -105,7 +102,7 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testListCatalogues(){
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=' . $this->package->getId());
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
@@ -118,7 +115,7 @@ class CatalogueControllerTest extends SuluTestCase
 
     public function testListCataloguesNotExisting(){
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=4711');
 
         $response = json_decode($client->getResponse()->getContent());

@@ -650,20 +650,20 @@ class CodeControllerTest extends SuluTestCase
                 'id' => $this->location2->getId()
             ),
             'translations' => array(
-                array('value' => 'Test Code 1.1', 'catalogue' => array('id' => 1)),
-                array('value' => 'Test Code 1.2', 'catalogue' => array('id' => 2)),
-                array('value' => 'Test Code 1.3', 'catalogue' => array('id' => 3)),
+                array('value' => 'Test Code 1.1', 'catalogue' => array('id' => $this->catalogue1->getId())),
+                array('value' => 'Test Code 1.2', 'catalogue' => array('id' => $this->catalogue2->getId())),
+                array('value' => 'Test Code 1.3', 'catalogue' => array('id' => $this->catalogue3->getId())),
             )
         );
         $this->client->request(
             'PUT',
-            '/api/codes/1',
+            '/api/codes/' . $this->code1->getId(),
             $request
         );
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/codes/1');
+        $this->client->request('GET', '/api/codes/' . $this->code1->getId());
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -718,7 +718,7 @@ class CodeControllerTest extends SuluTestCase
             'backend' => '0',
             'length' => '20',
             'package' => array(
-                'id' => 5
+                'id' => 512312
             ),
             'location' => array(
                 'id' => $this->location2->getId()
@@ -731,7 +731,7 @@ class CodeControllerTest extends SuluTestCase
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/codes/' . $this->getId);
+        $this->client->request('GET', '/api/codes/' . $this->code1->getId());
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($this->code1->getCode(), $response->code);
@@ -757,7 +757,7 @@ class CodeControllerTest extends SuluTestCase
         );
         $this->client->request(
             'PUT',
-            '/api/codes/1',
+            '/api/codes/' . $this->code1->getId(),
             $request
         );
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
@@ -778,7 +778,7 @@ class CodeControllerTest extends SuluTestCase
 
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/codes/' . $this->code1->geId());
+        $client->request('DELETE', '/api/codes/' . $this->code1->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
     }

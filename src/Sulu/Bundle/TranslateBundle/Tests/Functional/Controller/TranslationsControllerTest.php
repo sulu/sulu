@@ -20,6 +20,13 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TranslationsControllerTest extends SuluTestCase
 {
+    protected $package1;
+    protected $catalogue1;
+    protected $catalogue2;
+    protected $code1;
+    protected $catalogue1Translation1;
+    protected $catalogue1Translation2;
+
     public function setUp()
     {
         $this->em = $this->db('ORM')->getOm();
@@ -86,12 +93,14 @@ class TranslationsControllerTest extends SuluTestCase
         $t1_1->setCatalogue($catalogue1);
         $t1_1->setCode($code1);
         $this->em->persist($t1_1);
+        $this->catalogue1Translation1 = $t1_1;
 
         $t1_2 = new Translation();
         $t1_2->setValue('Code 1.2');
         $t1_2->setCatalogue($catalogue2);
         $t1_2->setCode($code1);
         $this->em->persist($t1_2);
+        $this->catalogue1Translation2 = $t1_2;
 
         $t2_2 = new Translation();
         $t2_2->setValue('Code 2.2');
@@ -113,7 +122,7 @@ class TranslationsControllerTest extends SuluTestCase
         $this->assertEquals(2, sizeof($response->_embedded->translations));
 
         $item = $response->_embedded->translations[0];
-        $this->assertEquals($this->catalogue1->getId(), $item->id);
+        $this->assertNotNull($item->id);
         $this->assertEquals('Code 1.2', $item->value);
         $this->assertEquals($this->code1->getId(), $item->code->id);
         $this->assertEquals('code.1', $item->code->code);
@@ -132,7 +141,7 @@ class TranslationsControllerTest extends SuluTestCase
     {
         $request = array(
             array(
-                'id' => $this->catalogue1->getId(),
+                'id' => $this->code1->getId(),
                 'value' => 'new code value 1.1',
                 'code' => array(
                     'id' => $this->code1->getId(),
