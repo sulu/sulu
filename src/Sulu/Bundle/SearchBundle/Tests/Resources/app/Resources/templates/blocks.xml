@@ -24,7 +24,6 @@
 
             <tag name="sulu.search.field" type="string" role="title" />
 
-            <tag name="sulu.node.name"/>
             <tag name="sulu.rlp.part"/>
         </property>
 

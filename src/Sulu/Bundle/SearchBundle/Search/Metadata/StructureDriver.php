@@ -81,10 +81,13 @@ class StructureDriver implements DriverInterface
                         $this->mapProperty($typeProperty, $propertyMapping);
                     }
                 }
-                $indexMeta->addFieldMapping($property->getName(), array(
-                    'type' => 'complex',
-                    'mapping' => $propertyMapping,
-                ));
+                $indexMeta->addFieldMapping(
+                    $property->getName(),
+                    array(
+                        'type' => 'complex',
+                        'mapping' => $propertyMapping,
+                    )
+                );
             } else {
                 $this->mapProperty($property, $indexMeta);
             }
@@ -96,21 +99,23 @@ class StructureDriver implements DriverInterface
         }
 
         if (!$indexMeta->getTitleField()) {
-            if ($structure->hasTag('sulu.node.name')) {
-                $prop = $structure->getPropertyByTagName('sulu.node.name');
-                $indexMeta->setTitleField($prop->getName());
+            $prop = $structure->getProperty('title');
+            $indexMeta->setTitleField($prop->getName());
 
-                $indexMeta->addFieldMapping($prop->getName(), array(
+            $indexMeta->addFieldMapping(
+                $prop->getName(),
+                array(
                     'type' => 'string',
-                ));
-            }
+                )
+            );
         }
 
         // index the webspace
         $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string'));
 
         $this->eventDispatcher->dispatch(
-            SuluSearchEvents::STRUCTURE_LOAD_METADATA, new StructureMetadataLoadEvent($structure, $indexMeta)
+            SuluSearchEvents::STRUCTURE_LOAD_METADATA,
+            new StructureMetadataLoadEvent($structure, $indexMeta)
         );
 
         return $indexMeta;
@@ -136,15 +141,21 @@ class StructureDriver implements DriverInterface
                         $metadata->setImageUrlField($property->getName());
                         break;
                     default:
-                        throw new \InvalidArgumentException(sprintf(
-                            'Unknown search field role "%s", role must be one of "%s"',
-                            $tagAttributes['role'], implode(', ', array('title', 'description', 'image'))
-                        ));
+                        throw new \InvalidArgumentException(
+                            sprintf(
+                                'Unknown search field role "%s", role must be one of "%s"',
+                                $tagAttributes['role'],
+                                implode(', ', array('title', 'description', 'image'))
+                            )
+                        );
                 }
             } elseif (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
-                $metadata->addFieldMapping($property->getName(), array(
-                    'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                ));
+                $metadata->addFieldMapping(
+                    $property->getName(),
+                    array(
+                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                    )
+                );
             }
         }
     }
