@@ -54,7 +54,7 @@ define([
             // change language
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
-                var data = this.content.toJSON();
+                var data = this.model.toJSON();
 
                 // if there is a index id this should be after reload
                 if (this.options.id === 'index') {
