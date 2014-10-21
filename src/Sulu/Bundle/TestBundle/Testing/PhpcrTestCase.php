@@ -141,7 +141,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * The default template for the content mapper
      * @var string
      */
-    protected $defaultTemplate = 'default';
+    protected $defaultTemplates = array('page' => 'default', 'snippet' => 'default');
 
     /**
      * The language namespace
@@ -199,7 +199,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->webspaceManager,
                 $this->templateResolver,
                 $this->language,
-                $this->defaultTemplate,
+                $this->defaultTemplates,
                 $this->languageNamespace,
                 $this->internalPrefix,
                 null,
