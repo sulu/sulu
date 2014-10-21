@@ -38169,7 +38169,7 @@ define('__component__$column-navigation@husky',[], function () {
                 // icons right (subpage, edit)
                 item.push('<span class="icons-right">');
                 if (!!this.options.showEditIcon) {
-                    item.push('<span class="' + this.options.editIcon + ' edit hidden pull-left"></span>');
+                    item.push('<span class="' + this.options.editIcon + ' edit pull-left"></span>');
                 }
                 !!data[this.options.hasSubName] ? item.push('<span class="fa-chevron-right arrow inactive pull-left"></span>') : '';
                 item.push('</span></li>');
@@ -41239,7 +41239,7 @@ define('__component__$dropzone@husky',[], function () {
 
                             // call the after-drop callback on the last file
                             if (typeof that.options.afterDropCallback === 'function') {
-                                if (this.files.length === that.filesDropped) {
+                                if (!!this.files && this.files.length > 0) {
                                     that.options.afterDropCallback(file).then(function() {
                                         that.sandbox.util.foreach(this.files, function(file) {
                                             that.sandbox.util.delay(this.processFile.bind(this, file), 0);
