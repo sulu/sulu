@@ -43,7 +43,6 @@ class SecondStructureCache extends \Sulu\Component\Content\Structure
             array(
             ),
             array(
-                'sulu.node.name' => new PropertyTag('sulu.node.name', 1),
                 'sulu.rlp.part' => new PropertyTag('sulu.rlp.part', 1),
                 'sulu.search.field' => new PropertyTag('sulu.search.field', 1, array('type' => 'string', 'role' => 'title')),
             ),
