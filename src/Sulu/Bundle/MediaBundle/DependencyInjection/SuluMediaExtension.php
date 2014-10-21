@@ -59,7 +59,7 @@ class SuluMediaExtension extends Extension
             'application/pdf',
         ));
         $container->setParameter('sulu_media.image.formats', array(
-            array(
+            self::DEFAULT_FORMAT_NAME => array(
                 'name' => self::DEFAULT_FORMAT_NAME,
                 'commands' => array(
                     array(
@@ -71,7 +71,7 @@ class SuluMediaExtension extends Extension
                     )
                 )
             ),
-            array(
+            '50x50' => array(
                 'name' => '50x50',
                 'commands' => array(
                     array(
@@ -83,7 +83,7 @@ class SuluMediaExtension extends Extension
                     )
                 )
             ),
-            array(
+            '150x100' => array(
                 'name' => '150x100',
                 'commands' => array(
                     array(

@@ -356,7 +356,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
-        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null, $this->tagManager));
+        return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
     /**
@@ -367,7 +367,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $media = array();
         $mediaEntities = $this->mediaRepository->findMedia($filter, $limit);
         foreach ($mediaEntities as $mediaEntity) {
-            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null, $this->tagManager));
+            $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
         return $media;
     }
@@ -390,15 +390,14 @@ class DefaultMediaManager implements MediaManagerInterface
      * Modified an exists media
      * @param UploadedFile $uploadedFile
      * @param $data
-     * @param $user
+     * @param UserInterface $user
      * @return Media
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
-     * @throws \Symfony\Component\Filesystem\Exception\FileNotFoundException
+     * @throws MediaNotFoundException
+     * @throws FileVersionNotFoundException
+     * @throws FileNotFoundException
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {
-
         $mediaEntity = $this->mediaRepository->findMediaById($data['id']);
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
@@ -481,7 +480,7 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['storageOptions'] = null;
         }
 
-        $media = new Media($mediaEntity, $data['locale'], null, $this->tagManager);
+        $media = new Media($mediaEntity, $data['locale'], null);
 
         $media = $this->setDataToMedia(
             $media,
@@ -500,9 +499,9 @@ class DefaultMediaManager implements MediaManagerInterface
      * Create a new media
      * @param UploadedFile $uploadedFile
      * @param $data
-     * @param $user
+     * @param UserInterface $user
      * @return MediaEntity
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException
+     * @throws InvalidFileException
      */
     private function createMedia($uploadedFile, $data, $user)
     {
@@ -545,7 +544,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $file->addFileVersion($fileVersion);
         $mediaEntity->addFile($file);
 
-        $media = new Media($mediaEntity, $data['locale'], null, $this->tagManager);
+        $media = new Media($mediaEntity, $data['locale'], null);
 
         $media = $this->setDataToMedia(
             $media,
@@ -587,7 +586,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * Data can be set over by array
      * @param $media
      * @param $data
-     * @param $user
+     * @param UserInterface $user
      * @return Media
      */
     protected function setDataToMedia(Media $media, $data, $user)
@@ -626,7 +625,13 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setContentLanguages($value);
                         break;
                     case 'tags':
-                        $media->setTags($value, $user->getId());
+                        $media->removeTags();
+                        if (count($value)) {
+                            foreach ($value as $tag) {
+                                $tagEntity = $this->tagManager->findOrCreateByName($tag, $user->getId());
+                                $media->addTag($tagEntity);
+                            }
+                        }
                         break;
                     case 'properties':
                         $media->setProperties($value);
@@ -667,7 +672,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * @param $collectionId
      * @return object
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
+     * @throws CollectionNotFoundException
      */
     protected function getCollectionById($collectionId)
     {
@@ -737,7 +742,7 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function addFormatsAndUrl(Media $media)
     {
         $media->setFormats(
-            $this->getFormats($media->getId(), $media->getName(), $media->getStorageOptions())
+            $this->formatManager->getFormats($media->getId(), $media->getName(), $media->getStorageOptions(), $media->getVersion())
         );
 
         $media->setUrl(
@@ -750,22 +755,11 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * Returns a user for a given user-id
      * @param $userId
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     protected function getUser($userId)
     {
         return $this->userRepository->findUserById($userId);
-    }
-
-    /**
-     * @param $id
-     * @param $name
-     * @param $storageOptions
-     * @return mixed
-     */
-    protected function getFormats($id, $name, $storageOptions)
-    {
-        return $this->formatManager->getFormats($id, $name, $storageOptions);
     }
 
     /**
