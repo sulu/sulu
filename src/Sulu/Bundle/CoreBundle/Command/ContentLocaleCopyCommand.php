@@ -62,13 +62,13 @@ class ContentLocaleCopyCommand extends ContainerAwareCommand
         $this->setHelp(
             <<<EOT
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
-to <info>destLocale</info> on all nodes which descend from the given path.
+to <info>destLocale</info> on all nodes from a specific webspace.
 
-    %command.full_name% /cms/sulu_io/contents de en --dry-run
+    %command.full_name% sulu_io de en --dry-run
 
 You can overwrite existing values using the <info>overwrite</info> option:
 
-    %command.full_name% /cms/sulu_io/contents de en --overwrite --dry-run
+    %command.full_name% sulu_io de en --overwrite --dry-run
 
 Remove the <info>dry-run</info> option to actually persist the changes.
 EOT
@@ -116,10 +116,10 @@ EOT
         // copy start node
         $this->copyNode($webspaceKey, $srcLocale, $destLocale, $node, $overwrite);
 
-        $this->copyChildNodes($node, $webspaceKey, $srcLocale, $destLocale, $overwrite);
+        $this->copyChildrenNodes($node, $webspaceKey, $srcLocale, $destLocale, $overwrite);
     }
 
-    private function copyChildNodes(StructureInterface $structure, $webspaceKey, $srcLocale, $destLocale, $overwrite)
+    private function copyChildrenNodes(StructureInterface $structure, $webspaceKey, $srcLocale, $destLocale, $overwrite)
     {
         if (!$structure->getHasChildren()) {
             return;
@@ -128,7 +128,7 @@ EOT
         foreach ($this->contentMapper->loadByParent($structure->getUuid(), $webspaceKey, $srcLocale) as $child) {
             $this->copyNode($webspaceKey, $srcLocale, $destLocale, $child, $overwrite);
 
-            $this->copyChildNodes($child, $webspaceKey, $srcLocale, $destLocale, $overwrite);
+            $this->copyChildrenNodes($child, $webspaceKey, $srcLocale, $destLocale, $overwrite);
         }
     }
 
