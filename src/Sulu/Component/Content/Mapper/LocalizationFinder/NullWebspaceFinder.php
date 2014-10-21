@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
@@ -32,17 +40,17 @@ class NullWebspaceFinder implements LocalizationFinderInterface
      */
     public function getAvailableLocalization(NodeInterface $node, $localizationCode, $webspaceKey = null)
     {
-        $availableLocalizations = $this->nodeHelper->getLanguagesForNode($node);
+        $localizations = $this->nodeHelper->getLanguagesForNode($node);
 
-        if (empty($availableLocalizations)) {
+        if (empty($localizations)) {
             return $localizationCode;
         }
 
-        if (in_array($localizationCode, $availableLocalizations)) {
+        if (in_array($localizationCode, $localizations)) {
             return $localizationCode;
         }
 
-        return reset($availableLocalizations);
+        return reset($localizations);
     }
 
     /**
