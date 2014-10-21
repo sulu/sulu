@@ -18,7 +18,7 @@ define(function () {
      * @event sulu.media.collections.collection-list
      * @param {String} the new locale
      */
-        SET_LOCALE = function () {
+    SET_LOCALE = function () {
         return createEventName.call(this, 'set-locale');
     },
 
@@ -27,12 +27,12 @@ define(function () {
      * @event sulu.media.collections.collection-list
      * @param {Function} the callback to pass the locale to
      */
-        GET_LOCALE = function () {
+    GET_LOCALE = function () {
         return createEventName.call(this, 'get-locale');
     },
 
     /** returns normalized event names */
-        createEventName = function (postFix) {
+    createEventName = function (postFix) {
         return namespace + postFix;
     };
 

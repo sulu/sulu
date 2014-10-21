@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
+use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -27,7 +28,6 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -64,21 +64,15 @@ class Media extends ApiWrapper
     protected $version;
 
     /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
-
-    /**
      * @var FileVersion
      */
     protected $fileVersion = null;
 
-    public function __construct(Entity $media, $locale, $version = null, TagManagerInterface $tagManager)
+    public function __construct(Entity $media, $locale, $version = null)
     {
         $this->entity = $media;
         $this->locale = $locale;
         $this->version = $version;
-        $this->tagManager = $tagManager;
     }
 
     /**
@@ -396,20 +390,25 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param \Doctrine\ $tags
-     * @param number $userId
      * @return $this
      */
-    public function setTags($tags, $userId)
+    public function removeTags()
     {
         $fileVersion = $this->getFileVersion();
         $fileVersion->removeTags();
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $tagEntity = $this->tagManager->findOrCreateByName($tag, $userId);
-            if (!$fileVersion->getTags()->contains($tagEntity)) {
-                $fileVersion->addTag($tagEntity);
-            }
+
+        return $this;
+    }
+
+    /**
+     * @param Tag $tagEntity
+     * @return $this
+     */
+    public function addTag(Tag $tagEntity)
+    {
+        $fileVersion = $this->getFileVersion();
+        if (!$fileVersion->getTags()->contains($tagEntity)) {
+            $fileVersion->addTag($tagEntity);
         }
 
         return $this;
@@ -424,12 +423,14 @@ class Media extends ApiWrapper
     {
         $tags = array();
         foreach($this->getFileVersion()->getTags() as $tag) {
+            /** @var Tag $tag */
             array_push($tags, $tag->getName());
         }
         return $tags;
     }
 
     /**
+     * @SerializedName("thumbnails")
      * @return array
      */
     public function getFormats()
