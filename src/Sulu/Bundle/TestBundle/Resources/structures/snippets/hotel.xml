@@ -14,7 +14,6 @@
                 <title lang="en">Name</title>
             </meta>
 
-            <tag name="sulu.node.name"/>
             <tag name="sulu.rlp.part"/>
         </property>
 
