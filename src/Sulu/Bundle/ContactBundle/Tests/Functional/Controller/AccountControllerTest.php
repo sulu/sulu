@@ -38,74 +38,88 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
-class AccountControllerTest extends DatabaseTestCase
+class AccountControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
     /**
      * @var Account
      */
-    protected static $account;
+    private $account;
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->purgeDatabase();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
+    }
 
-        self::$account = new Account();
-        self::$account->setName('Company');
-        self::$account->setType(Account::TYPE_BASIC);
-        self::$account->setDisabled(0);
-        self::$account->setCreated(new DateTime());
-        self::$account->setChanged(new DateTime());
-        self::$account->setPlaceOfJurisdiction('Feldkirch');
+    private function initOrm()
+    {
+        $account = new Account();
+        $account->setName('Company');
+        $account->setType(Account::TYPE_BASIC);
+        $account->setDisabled(0);
+        $account->setCreated(new DateTime());
+        $account->setChanged(new DateTime());
+        $account->setPlaceOfJurisdiction('Feldkirch');
+
+        $this->account = $account;
 
         $urlType = new UrlType();
         $urlType->setName('Private');
 
+        $this->urlType = $urlType;
+
         $url = new Url();
         $url->setUrl('http://www.company.example');
+
+        $this->url = $url;
         $url->setUrlType($urlType);
-        self::$account->addUrl($url);
+        $account->addUrl($url);
 
-        $emailType = new EmailType();
-        $emailType->setName('Private');
+        $this->emailType = new EmailType();
+        $this->emailType->setName('Private');
 
-        $email = new Email();
-        $email->setEmail('office@company.example');
-        $email->setEmailType($emailType);
-        self::$account->addEmail($email);
+        $this->email = new Email();
+        $this->email->setEmail('office@company.example');
+        $this->email->setEmailType($this->emailType);
+        $account->addEmail($this->email);
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
 
+        $this->phoneType = $phoneType;
+
         $phone = new Phone();
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
-        self::$account->addPhone($phone);
+        $account->addPhone($phone);
 
         $faxType = new FaxType();
         $faxType->setName('Private');
 
+        $this->faxType = $faxType;
+
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
-        self::$account->addFax($fax);
+        $account->addFax($fax);
 
         $country = new Country();
         $country->setName('Musterland');
         $country->setCode('ML');
 
+        $this->country = $country;
+
         $addressType = new AddressType();
         $addressType->setName('Private');
+
+        $this->addressType = $addressType;
 
         $address = new Address();
         $address->setStreet('Musterstraße');
@@ -124,11 +138,13 @@ class AccountControllerTest extends DatabaseTestCase
         $address->setPostboxNumber("4711");
         $address->setNote("note");
 
+        $this->address = $address;
+
         $accountAddress = new AccountAddress();
         $accountAddress->setAddress($address);
-        $accountAddress->setAccount(self::$account);
+        $accountAddress->setAccount($account);
         $accountAddress->setMain(true);
-        self::$account->addAccountAddresse($accountAddress);
+        $account->addAccountAddresse($accountAddress);
         $address->addAccountAddresse($accountAddress);
 
         $contact = new Contact();
@@ -142,118 +158,46 @@ class AccountControllerTest extends DatabaseTestCase
 
         $accountContact = new AccountContact();
         $accountContact->setContact($contact);
-        $accountContact->setAccount(self::$account);
+        $accountContact->setAccount($account);
         $accountContact->setMain(true);
-        self::$account->addAccountContact($accountContact);
+        $account->addAccountContact($accountContact);
 
         $note = new Note();
         $note->setValue('Note');
-        self::$account->addNote($note);
+        $account->addNote($note);
 
-        self::$em->persist(self::$account);
-        self::$em->persist($urlType);
-        self::$em->persist($url);
-        self::$em->persist($emailType);
-        self::$em->persist($accountContact);
-        self::$em->persist($email);
-        self::$em->persist($phoneType);
-        self::$em->persist($phone);
-        self::$em->persist($country);
-        self::$em->persist($addressType);
-        self::$em->persist($address);
-        self::$em->persist($accountAddress);
-        self::$em->persist($note);
-        self::$em->persist($faxType);
-        self::$em->persist($fax);
-        self::$em->persist($contact);
+        $this->em->persist($account);
+        $this->em->persist($urlType);
+        $this->em->persist($url);
+        $this->em->persist($this->emailType);
+        $this->em->persist($accountContact);
+        $this->em->persist($this->email);
+        $this->em->persist($phoneType);
+        $this->em->persist($phone);
+        $this->em->persist($country);
+        $this->em->persist($addressType);
+        $this->em->persist($address);
+        $this->em->persist($accountAddress);
+        $this->em->persist($note);
+        $this->em->persist($faxType);
+        $this->em->persist($fax);
+        $this->em->persist($contact);
 
         $accountCategory = new AccountCategory();
         $accountCategory->setCategory("Test");
-        self::$em->persist($accountCategory);
+        $this->accountCategory = $accountCategory;
+        $this->em->persist($accountCategory);
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $this->em->flush();
     }
 
     public function testGetById()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/accounts/1'
+            '/api/accounts/' . $this->account->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -291,10 +235,10 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetByIdNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/accounts/10'
+            '/api/accounts/11230'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -312,10 +256,10 @@ class AccountControllerTest extends DatabaseTestCase
         $account->setChanged(new DateTime());
         $account->setCreated(new DateTime());
 
-        self::$em->persist($account);
-        self::$em->flush();
+        $this->em->persist($account);
+        $this->em->flush();
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts/' . $account->getId() . '/contacts?flat=true');
 
         $response = json_decode($client->getResponse()->getContent());
@@ -327,20 +271,20 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPost()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
             '/api/accounts',
             array(
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => self::$account->getId()),
+                'parent' => array('id' => $this->account->getId()),
                 'type' => Account::TYPE_BASIC,
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -349,14 +293,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -365,14 +309,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -381,14 +325,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '123456789-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -401,12 +345,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -429,7 +373,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals(1, $response->depth);
-        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -457,7 +401,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals(1, $response->depth);
-        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -482,20 +426,20 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithCategory()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
             '/api/accounts',
             array(
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => self::$account->getId()),
+                'parent' => array('id' => $this->account->getId()),
                 'type' => Account::TYPE_BASIC,
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -504,14 +448,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -520,14 +464,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -536,14 +480,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '123456789-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -556,12 +500,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -578,7 +522,7 @@ class AccountControllerTest extends DatabaseTestCase
                     array('value' => 'Note 2')
                 ),
                 'accountCategory' => array(
-                    'id' => '1',
+                    'id' => $this->accountCategory->getId(),
                     'category' => 'test'
                 )
             )
@@ -588,7 +532,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals(1, $response->depth);
-        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -603,7 +547,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
-        $this->assertEquals(1, $response->accountCategory->id);
+        $this->assertNotNull($response->accountCategory->id);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
         $this->assertEquals(true,$response->addresses[0]->primaryAddress);
@@ -617,7 +561,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $this->assertEquals('ExampleCompany', $response->name);
         $this->assertEquals(1, $response->depth);
-        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -631,7 +575,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
-        $this->assertEquals(1, $response->accountCategory->id);
+        $this->assertNotNull($response->accountCategory->id);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
         $this->assertEquals(true,$response->addresses[0]->primaryAddress);
@@ -643,7 +587,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithIds()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -651,10 +595,10 @@ class AccountControllerTest extends DatabaseTestCase
                 'name' => 'ExampleCompany',
                 'urls' => array(
                     array(
-                        'id' => 15,
+                        'id' => 1512312312313,
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -705,14 +649,14 @@ class AccountControllerTest extends DatabaseTestCase
                         'id' => 17,
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -738,7 +682,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
@@ -776,7 +720,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingUrlType()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -786,7 +730,7 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '2',
+                            'id' => '12312',
                             'name' => 'Work'
                         )
                     )
@@ -801,7 +745,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingEmailType()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -833,7 +777,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingPhoneType()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -843,14 +787,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 2,
+                            'id' => '1233',
                             'name' => 'Work'
                         )
                     )
@@ -865,7 +809,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingAddressType()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -899,7 +843,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingFaxType()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -909,7 +853,7 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '12345',
                         'faxType' => array(
-                            'id' => 2,
+                            'id' => '123123',
                             'name' => 'Work'
                         )
                     )
@@ -924,7 +868,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPostWithNotExistingCountry()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/accounts',
@@ -938,7 +882,7 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 2,
+                            'id' => 12393,
                             'name' => 'Österreich',
                             'code' => 'AT'
                         ),
@@ -958,7 +902,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetList()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -969,7 +913,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testGetListSearch()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts?flat=true&search=Nothing&searchFields=name');
         $response = json_decode($client->getResponse()->getContent());
 
@@ -986,25 +930,25 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/accounts/1',
+            '/api/accounts/' . $this->account->getId(),
             array(
                 'name' => 'ExampleCompany',
                 'urls' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->url->getId(),
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'url' => 'http://test.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1013,14 +957,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'office@company.com',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@company.com',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1029,14 +973,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '4567890',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1045,14 +989,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '4567890-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '789456123-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1065,12 +1009,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1088,12 +1032,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'note' => 'note1'
@@ -1201,7 +1145,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/accounts/1'
+            '/api/accounts/' . $this->account->getId()
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -1297,10 +1241,10 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPutNoDetails()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/accounts/1',
+            '/api/accounts/' . $this->account->getId(),
             array(
                 'name' => 'ExampleCompany',
                 'urls' => array(),
@@ -1316,7 +1260,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/accounts/1'
+            '/api/accounts/' . $this->account->getId()
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -1333,7 +1277,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPutNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -1349,18 +1293,18 @@ class AccountControllerTest extends DatabaseTestCase
     public function testDeleteById()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/accounts/1');
+        $client->request('DELETE', '/api/accounts/' . $this->account->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
     }
 
     public function testAccountAddresses()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/1/addresses');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/addresses');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1368,7 +1312,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('Musterstraße', $address->street);
         $this->assertEquals('1', $address->number);
 
-        $client->request('GET', '/api/accounts/1/addresses?flat=true');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/addresses?flat=true');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1376,17 +1320,17 @@ class AccountControllerTest extends DatabaseTestCase
 
         $address = $response->_embedded->addresses[0];
         $this->assertEquals('Musterstraße 1 , 0000, Musterstadt, Musterland, Musterland, 4711', $address->address);
-        $this->assertEquals('1', $address->id);
+        $this->assertNotNull($address->id);
     }
 
     public function testDeleteByIdAndNotDeleteContacts()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            '/api/accounts/1',
+            '/api/accounts/' . $this->account->getId(),
             array(
                 'removeContacts' => 'false'
             )
@@ -1409,21 +1353,21 @@ class AccountControllerTest extends DatabaseTestCase
         $contact->setChanged(new \DateTime());
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
-        self::$em->persist($contact);
+        $this->em->persist($contact);
         $accountContact = new AccountContact();
         $accountContact->setContact($contact);
-        $accountContact->setAccount(self::$account);
+        $accountContact->setAccount($this->account);
         $accountContact->setMain(true);
-        self::$account->addAccountContact($accountContact);
-        self::$em->persist($accountContact);
+        $this->account->addAccountContact($accountContact);
+        $this->em->persist($accountContact);
 
-        self::$em->flush();
+        $this->em->flush();
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            '/api/accounts/1',
+            '/api/accounts/' . $this->account->getId(),
             array(
                 'removeContacts' => 'true'
             )
@@ -1440,7 +1384,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testDeleteByIdNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/accounts/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
@@ -1462,7 +1406,7 @@ class AccountControllerTest extends DatabaseTestCase
         $acc->setName("Test Account");
         $acc->setChanged(new \DateTime());
         $acc->setCreated(new \DateTime());
-        self::$em->persist($acc);
+        $this->em->persist($acc);
 
         // add 5 contacts to account
         for ($i = 0; $i < 5; $i++) {
@@ -1474,36 +1418,36 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setChanged(new \DateTime());
             $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
-            self::$em->persist($contact);
+            $this->em->persist($contact);
 
             $accountContact = new AccountContact();
             $accountContact->setContact($contact);
-            $accountContact->setAccount(self::$account);
+            $accountContact->setAccount($this->account);
             $accountContact->setMain(true);
-            self::$em->persist($accountContact);
-            self::$account->addAccountContact($accountContact);
+            $this->em->persist($accountContact);
+            $this->account->addAccountContact($accountContact);
         }
 
-        // add subaccount to self::$account
+        // add subaccount to $this->account
         $subacc = new Account();
         $subacc->setName("Subaccount");
         $subacc->setChanged(new \DateTime());
         $subacc->setCreated(new \DateTime());
-        $subacc->setParent(self::$account);
+        $subacc->setParent($this->account);
 
-        self::$em->persist($subacc);
+        $this->em->persist($subacc);
 
-        self::$em->flush();
+        $this->em->flush();
 
         // get number of contacts from both accounts
-        $numContacts = self::$account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
+        $numContacts = $this->account->getAccountContacts()->count() + $acc->getAccountContacts()->count();
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             '/api/accounts/multipledeleteinfo',
             array(
-                "ids" => array(1, 2)
+                "ids" => array($this->account->getId(), $acc->getId())
             )
         );
 
@@ -1537,23 +1481,23 @@ class AccountControllerTest extends DatabaseTestCase
             $contact->setChanged(new \DateTime());
             $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
-            self::$em->persist($contact);
+            $this->em->persist($contact);
 
             $accountContact = new AccountContact();
             $accountContact->setContact($contact);
-            $accountContact->setAccount(self::$account);
+            $accountContact->setAccount($this->account);
             $accountContact->setMain(true);
-            self::$em->persist($accountContact);
-            self::$account->addAccountContact($accountContact);
+            $this->em->persist($accountContact);
+            $this->account->addAccountContact($accountContact);
         }
 
-        self::$em->flush();
+        $this->em->flush();
 
-        $numContacts = self::$account->getAccountContacts()->count();
+        $numContacts = $this->account->getAccountContacts()->count();
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() . '/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1581,15 +1525,15 @@ class AccountControllerTest extends DatabaseTestCase
             $childAccount->setName("child num#" . $i);
             $childAccount->setChanged(new \DateTime());
             $childAccount->setCreated(new \DateTime());
-            $childAccount->setParent(self::$account);
+            $childAccount->setParent($this->account);
 
-            self::$em->persist($childAccount);
+            $this->em->persist($childAccount);
         }
-        self::$em->flush();
+        $this->em->flush();
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() .'/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
@@ -1604,30 +1548,30 @@ class AccountControllerTest extends DatabaseTestCase
     public function testGetDeleteInfoByIdNotExisting()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/accounts/4711/deleteinfo');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/accounts/1/deleteinfo');
+        $client->request('GET', '/api/accounts/' . $this->account->getId() .'/deleteinfo');
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
     }
 
     public function testPutRemovedParentAccount()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
             '/api/accounts',
             array(
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => self::$account->getId()),
+                'parent' => array('id' => $this->account->getId()),
                 'type' => Account::TYPE_BASIC,
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1636,14 +1580,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1652,14 +1596,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1668,14 +1612,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '123456789-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1688,12 +1632,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1715,7 +1659,7 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('ExampleCompany', $response->name);
-        $this->assertEquals(self::$account->getId(), $response->parent->id);
+        $this->assertEquals($this->account->getId(), $response->parent->id);
         $this->assertEquals('erika.mustermann@muster.at', $response->emails[0]->email);
         $this->assertEquals('erika.mustermann@muster.de', $response->emails[1]->email);
         $this->assertEquals('123456789', $response->phones[0]->phone);
@@ -1737,91 +1681,93 @@ class AccountControllerTest extends DatabaseTestCase
         $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
 
+        $account2Id = $response->id;
+
         $client->request(
             'PUT',
-            '/api/accounts/2',
+            '/api/accounts/' . $account2Id,
             array(
-                'id' => 2,
+                'id' => $account2Id,
                 'name' => 'ExampleCompany 222',
                 'parent' => array('id' => null),
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'emails' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->emails[0]->id,
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->emails[1]->id,
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'phones' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->phones[0]->id,
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->phones[1]->id,
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'faxes' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->faxes[0]->id,
                         'fax' => '123456789-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->faxes[1]->id,
                         'fax' => '987654321-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 2,
+                        'id' => $response->addresses[0]->id,
                         'street' => 'Musterstraße',
                         'number' => '1',
                         'zip' => '0000',
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1833,15 +1779,18 @@ class AccountControllerTest extends DatabaseTestCase
                     )
                 ),
                 'notes' => array(
-                    array('id' => 2, 'value' => 'Note 1'),
-                    array('id' => 3, 'value' => 'Note 2')
+                    array('id' => $response->notes[0]->id, 'value' => 'Note 1'),
+                    array('id' => $response->notes[1]->id, 'value' => 'Note 2')
                 )
             )
         );
 
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
         $client->request(
             'GET',
-            '/api/accounts/2'
+            '/api/accounts/' . $account2Id
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -1871,20 +1820,20 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPrimaryAddressHandlingPost()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
             '/api/accounts',
             array(
                 'name' => 'ExampleCompany',
-                'parent' => array('id' => self::$account->getId()),
+                'parent' => array('id' => $this->account->getId()),
                 'type' => Account::TYPE_BASIC,
                 'urls' => array(
                     array(
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1893,14 +1842,14 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1913,12 +1862,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1935,12 +1884,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1955,6 +1904,7 @@ class AccountControllerTest extends DatabaseTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals(false,$response->addresses[0]->primaryAddress);
         $this->assertEquals(true,$response->addresses[1]->primaryAddress);
@@ -1975,25 +1925,25 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testPrimaryAddressHandlingPut()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/accounts/1',
+            '/api/accounts/' . $this->account->getId(),
             array(
                 'name' => 'ExampleCompany',
                 'urls' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->url->getId(),
                         'url' => 'http://example.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'url' => 'http://test.company.com',
                         'urlType' => array(
-                            'id' => '1',
+                            'id' => $this->urlType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -2002,33 +1952,33 @@ class AccountControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'office@company.com',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@company.com',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => '1',
+                        'id' => $this->address->getId(),
                         'street' => 'Bahnhofstraße',
                         'number' => '2',
                         'zip' => '0022',
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -2045,12 +1995,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -2067,12 +2017,12 @@ class AccountControllerTest extends DatabaseTestCase
                         'city' => 'Dornbirn',
                         'state' => 'state1',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -2096,7 +2046,7 @@ class AccountControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/accounts/1'
+            '/api/accounts/' . $this->account->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -2121,28 +2071,28 @@ class AccountControllerTest extends DatabaseTestCase
     public function testTriggerAction()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
-            '/api/accounts/1?action=convertAccountType&type=lead'
+            '/api/accounts/' . $this->account->getId() .'?action=convertAccountType&type=lead'
         );
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(self::$account->getId(), $response->id);
+        $this->assertEquals($this->account->getId(), $response->id);
         $this->assertEquals(1, $response->type);
 
     }
 
     public function testTriggerActionUnknownTrigger()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
-            '/api/accounts/1?action=xyz&type=lead'
+            '/api/accounts/' . $this->account->getId() .'?action=xyz&type=lead'
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -2150,7 +2100,7 @@ class AccountControllerTest extends DatabaseTestCase
 
     public function testTriggerActionUnknownEntity()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',

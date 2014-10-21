@@ -34,18 +34,19 @@ use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class ActivityControllerTest extends DatabaseTestCase
+class ActivityControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->purgeDatabase();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
+    }
 
+    private function initOrm()
+    {
         $account = new Account();
         $account->setName('Company');
         $account->setType(Account::TYPE_BASIC);
@@ -54,8 +55,12 @@ class ActivityControllerTest extends DatabaseTestCase
         $account->setChanged(new \DateTime());
         $account->setPlaceOfJurisdiction('Feldkirch');
 
+        $this->account = $account;
+
         $emailType = new EmailType();
         $emailType->setName('Private');
+
+        $this->emailType = $emailType;
 
         $email = new Email();
         $email->setEmail('office@company.example');
@@ -71,19 +76,29 @@ class ActivityControllerTest extends DatabaseTestCase
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
+        $this->contact = $contact;
+
         $email2 = new Email();
         $email2->setEmail('vorname.nachname@company.example');
         $email2->setEmailType($emailType);
         $contact->addEmail($email2);
 
+        $this->email2 = $email2;
+
         $activityType = new ActivityType();
         $activityType->setName('activityType');
+
+        $this->activityType = $activityType;
 
         $activityState = new ActivityStatus();
         $activityState->setName('activityState');
 
+        $this->activityStatus = $activityState;
+
         $activityPriortiy = new ActivityPriority();
         $activityPriortiy->setName('activityPriortiy');
+
+        $this->activityPriority = $activityPriortiy;
 
         $activity = new Activity();
         $activity->setSubject('test');
@@ -98,6 +113,8 @@ class ActivityControllerTest extends DatabaseTestCase
         $activity->setCreated(new \DateTime());
         $activity->setChanged(new \DateTime());
 
+        $this->activity = $activity;
+
         $activity2 = new Activity();
         $activity2->setSubject('test 2');
         $activity2->setNote('note 2');
@@ -111,159 +128,25 @@ class ActivityControllerTest extends DatabaseTestCase
         $activity2->setCreated(new \DateTime());
         $activity2->setChanged(new \DateTime());
 
-        self::$em->persist($activityType);
-        self::$em->persist($activityState);
-        self::$em->persist($activityPriortiy);
-        self::$em->persist($activity);
-        self::$em->persist($activity2);
-        self::$em->persist($emailType);
-        self::$em->persist($contact);
-        self::$em->persist($account);
-        self::$em->persist($email);
-        self::$em->persist($email2);
+        $this->activity2 = $activity2;
 
-        self::$em->flush();
+        $this->em->persist($activityType);
+        $this->em->persist($activityState);
+        $this->em->persist($activityPriortiy);
+        $this->em->persist($activity);
+        $this->em->persist($activity2);
+        $this->em->persist($emailType);
+        $this->em->persist($contact);
+        $this->em->persist($account);
+        $this->em->persist($email);
+        $this->em->persist($email2);
+
+        $this->em->flush();
     }
 
-    public
-    function tearDown()
+    public function testGet()
     {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public
-    function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\TestBundle\Entity\TestUser'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\AccountCategory'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\TestBundle\Entity\TestUser'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Account'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\ActivityStatus'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\ActivityPriority'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\ActivityType'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Activity'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Address'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\AccountAddress'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\ContactAddress'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\AddressType'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\BankAccount'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Contact'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\ContactLocale'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Country'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Email'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\EmailType'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Note'
-            ),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\FaxType'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Phone'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\PhoneType'
-            ),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\UrlType'
-            ),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\AccountCategory'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\AccountContact'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\Position'
-            ),
-            self::$em->getClassMetadata(
-                'Sulu\Bundle\ContactBundle\Entity\ContactTitle'
-            ),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
-
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private
-    function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
-    }
-
-    public
-    function testGet()
-    {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -277,71 +160,43 @@ class ActivityControllerTest extends DatabaseTestCase
 
         $this->assertEquals(2, count($data));
 
-        if ($data[0]->id === 1) {
-            $this->assertEquals(1, $data[0]->id);
-            $this->assertEquals('test', $data[0]->subject);
-            $this->assertEquals('note', $data[0]->note);
-            $this->assertNotEmpty($data[0]->dueDate);
-            $this->assertNotEmpty($data[0]->startDate);
-            $this->assertNotEmpty($data[0]->created);
-            $this->assertNotEmpty($data[0]->changed);
-            $this->assertEquals(1, $data[0]->activityStatus->id);
-            $this->assertEquals(1, $data[0]->activityType->id);
-            $this->assertEquals(1, $data[0]->activityPriority->id);
-            $this->assertEquals(false, array_key_exists('contact', $data[0]));
-            $this->assertEquals(1, $data[0]->account->id);
-            $this->assertEquals(1, $data[0]->assignedContact->id);
+        $this->assertNotNull($data[0]->id);
+        $this->assertEquals('test', $data[0]->subject);
+        $this->assertEquals('note', $data[0]->note);
+        $this->assertNotEmpty($data[0]->dueDate);
+        $this->assertNotEmpty($data[0]->startDate);
+        $this->assertNotEmpty($data[0]->created);
+        $this->assertNotEmpty($data[0]->changed);
+        $this->assertEquals($this->activityStatus->getId(), $data[0]->activityStatus->id);
+        $this->assertEquals($this->activityType->getId(), $data[0]->activityType->id);
+        $this->assertEquals($this->activityPriority->getId(), $data[0]->activityPriority->id);
+        $this->assertEquals(false, array_key_exists('contact', $data[0]));
+        $this->assertEquals($this->account->getId(), $data[0]->account->id);
+        $this->assertEquals($this->contact->getId(), $data[0]->assignedContact->id);
 
-            $this->assertEquals(2, $data[1]->id);
-            $this->assertEquals('test 2', $data[1]->subject);
-            $this->assertEquals('note 2', $data[1]->note);
-            $this->assertNotEmpty($data[1]->dueDate);
-            $this->assertNotEmpty($data[1]->startDate);
-            $this->assertNotEmpty($data[1]->created);
-            $this->assertNotEmpty($data[1]->changed);
-            $this->assertEquals(1, $data[1]->activityStatus->id);
-            $this->assertEquals(1, $data[1]->activityType->id);
-            $this->assertEquals(1, $data[1]->activityPriority->id);
-            $this->assertEquals(1, $data[1]->contact->id);
-            $this->assertEquals(false, array_key_exists('account', $data[1]));
-            $this->assertEquals(1, $data[1]->assignedContact->id);
-        } else {
-            $this->assertEquals(1, $data[1]->id);
-            $this->assertEquals('test', $data[1]->subject);
-            $this->assertEquals('note', $data[1]->note);
-            $this->assertNotEmpty($data[1]->dueDate);
-            $this->assertNotEmpty($data[1]->startDate);
-            $this->assertNotEmpty($data[1]->created);
-            $this->assertNotEmpty($data[1]->changed);
-            $this->assertEquals(1, $data[1]->activityStatus->id);
-            $this->assertEquals(1, $data[1]->activityType->id);
-            $this->assertEquals(1, $data[1]->activityPriority->id);
-            $this->assertEquals(false, array_key_exists('contact', $data[1]));
-            $this->assertEquals(1, $data[1]->account->id);
-            $this->assertEquals(1, $data[1]->assignedContact->id);
-
-            $this->assertEquals(2, $data[0]->id);
-            $this->assertEquals('test 2', $data[0]->subject);
-            $this->assertEquals('note 2', $data[0]->note);
-            $this->assertNotEmpty($data[0]->dueDate);
-            $this->assertNotEmpty($data[0]->startDate);
-            $this->assertNotEmpty($data[0]->created);
-            $this->assertNotEmpty($data[0]->changed);
-            $this->assertEquals(1, $data[0]->activityStatus->id);
-            $this->assertEquals(1, $data[0]->activityType->id);
-            $this->assertEquals(1, $data[0]->activityPriority->id);
-            $this->assertEquals(1, $data[0]->assignedContact->id);
-        }
+        $this->assertNotNull($data[1]->id);
+        $this->assertEquals('test 2', $data[1]->subject);
+        $this->assertEquals('note 2', $data[1]->note);
+        $this->assertNotEmpty($data[1]->dueDate);
+        $this->assertNotEmpty($data[1]->startDate);
+        $this->assertNotEmpty($data[1]->created);
+        $this->assertNotEmpty($data[1]->changed);
+        $this->assertEquals($this->activityStatus->getId(), $data[1]->activityStatus->id);
+        $this->assertEquals($this->activityType->getId(), $data[1]->activityType->id);
+        $this->assertEquals($this->activityPriority->getId(), $data[1]->activityPriority->id);
+        $this->assertEquals($this->contact->getId(), $data[1]->contact->id);
+        $this->assertEquals(false, array_key_exists('account', $data[1]));
+        $this->assertEquals($this->contact->getId(), $data[1]->assignedContact->id);
     }
 
     public
     function testGetFlatByAccount()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            'api/activities?flat=true&account=1'
+            'api/activities?flat=true&account=' . $this->account->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -350,7 +205,7 @@ class ActivityControllerTest extends DatabaseTestCase
         $data = $response->_embedded->activities;
         $this->assertEquals(1, $response->total);
 
-        $this->assertEquals(1, $data[0]->id);
+        $this->assertEquals($this->activity->getId(), $data[0]->id);
         $this->assertEquals('test', $data[0]->subject);
         $this->assertEquals('note', $data[0]->note);
         $this->assertNotEmpty($data[0]->dueDate);
@@ -366,11 +221,11 @@ class ActivityControllerTest extends DatabaseTestCase
     public
     function testGetFlatByContact()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            'api/activities?flat=true&contact=1'
+            'api/activities?flat=true&contact=' . $this->contact->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -380,7 +235,7 @@ class ActivityControllerTest extends DatabaseTestCase
 
         $this->assertEquals(1, $response->total);
 
-        $this->assertEquals(2, $data[0]->id);
+        $this->assertNotNull($data[0]->id);
         $this->assertEquals('test 2', $data[0]->subject);
         $this->assertEquals('note 2', $data[0]->note);
         $this->assertNotEmpty($data[0]->dueDate);
@@ -396,7 +251,7 @@ class ActivityControllerTest extends DatabaseTestCase
     public
     function testPost()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -406,19 +261,19 @@ class ActivityControllerTest extends DatabaseTestCase
                 'note' => 'note 3',
                 'dueDate' => '1-1-2013',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId()
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
             )
         );
@@ -426,24 +281,24 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(3, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('test 3', $response->subject);
         $this->assertEquals('note 3', $response->note);
         $this->assertNotEmpty($response->dueDate);
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
-        $this->assertEquals(1, $response->activityStatus->id);
-        $this->assertEquals(1, $response->activityType->id);
-        $this->assertEquals(1, $response->activityPriority->id);
+        $this->assertEquals($this->activityStatus->getId(), $response->activityStatus->id);
+        $this->assertEquals($this->activityType->getId(), $response->activityType->id);
+        $this->assertEquals($this->activityPriority->getId(), $response->activityPriority->id);
         $this->assertEquals(false, array_key_exists('account', $response));
-        $this->assertEquals(1, $response->contact->id);
-        $this->assertEquals(1, $response->assignedContact->id);
+        $this->assertEquals($this->contact->getId(), $response->contact->id);
+        $this->assertEquals($this->contact->getId(), $response->assignedContact->id);
     }
 
     public
     function testPostInValidContact()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -453,19 +308,19 @@ class ActivityControllerTest extends DatabaseTestCase
                 'note' => 'note 3',
                 'dueDate' => '1-1-2013',
                 'contact' => array(
-                    'id' => 99
+                    'id' => 99123123
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
             )
         );
@@ -476,7 +331,7 @@ class ActivityControllerTest extends DatabaseTestCase
     public
     function testPostInValidAccount()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -489,16 +344,16 @@ class ActivityControllerTest extends DatabaseTestCase
                     'id' => 99
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
             )
         );
@@ -509,7 +364,7 @@ class ActivityControllerTest extends DatabaseTestCase
     public
     function testPostInValidAssignedContact()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -519,19 +374,19 @@ class ActivityControllerTest extends DatabaseTestCase
                 'note' => 'note 3',
                 'dueDate' => '1-1-2013',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 99
+                    'id' => 123123
                 ),
             )
         );
@@ -542,7 +397,7 @@ class ActivityControllerTest extends DatabaseTestCase
     public
     function testPostMissingSubject()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -551,19 +406,19 @@ class ActivityControllerTest extends DatabaseTestCase
                 'note' => 'note 3',
                 'dueDate' => '1-1-2013',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
             )
         );
@@ -574,29 +429,29 @@ class ActivityControllerTest extends DatabaseTestCase
     public
     function testPut()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            'api/activities/1',
+            'api/activities/' . $this->activity->getId(),
             array(
                 'subject' => 'test 3',
                 'note' => 'note 3',
                 'dueDate' => '1-1-2013',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
-                    'id' => 1
+                    'id' => $this->contact->getId(),
                 ),
             )
         );
@@ -604,24 +459,23 @@ class ActivityControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('test 3', $response->subject);
         $this->assertEquals('note 3', $response->note);
         $this->assertNotEmpty($response->dueDate);
         $this->assertNotEmpty($response->created);
         $this->assertNotEmpty($response->changed);
-        $this->assertEquals(1, $response->activityStatus->id);
-        $this->assertEquals(1, $response->activityType->id);
-        $this->assertEquals(1, $response->activityPriority->id);
+        $this->assertNotNull($response->activityStatus->id);
+        $this->assertNotNull($response->activityType->id);
+        $this->assertNotNull($response->activityPriority->id);
         $this->assertEquals(false, array_key_exists('account', $response));
-        $this->assertEquals(1, $response->contact->id);
-        $this->assertEquals(1, $response->assignedContact->id);
+        $this->assertNotNull($response->contact->id);
+        $this->assertNotNull($response->assignedContact->id);
     }
 
-    public
-    function testPutInvalidId()
+    public function testPutInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -634,13 +488,13 @@ class ActivityControllerTest extends DatabaseTestCase
                     'id' => 1
                 ),
                 'activityStatus' => array(
-                    'id' => 1
+                    'id' => $this->activityStatus->getId(),
                 ),
                 'activityType' => array(
-                    'id' => 1
+                    'id' => $this->activityType->getId(),
                 ),
                 'activityPriority' => array(
-                    'id' => 1
+                    'id' => $this->activityPriority->getId(),
                 ),
                 'assignedContact' => array(
                     'id' => 1
@@ -651,19 +505,18 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public
-    function testDelete()
+    public function testDelete()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
-            'api/activities/1'
+            'api/activities/' . $this->activity->getId()
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             'api/activities'
@@ -674,10 +527,9 @@ class ActivityControllerTest extends DatabaseTestCase
         $this->assertEquals(1, count($response->_embedded->activities));
     }
 
-    public
-    function testDeleteInvalidId()
+    public function testDeleteInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'DELETE',
@@ -686,7 +538,7 @@ class ActivityControllerTest extends DatabaseTestCase
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
             'api/activities'

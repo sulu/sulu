@@ -13,75 +13,50 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class TermsOfPaymentControllerTest extends DatabaseTestCase
+class TermsOfPaymentControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
-
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
+    }
+
+    private function initOrm()
+    {
+        $this->purgeDatabase();
 
         $term1 = new TermsOfPayment();
         $term1->setTerms('Term 1');
 
+        $this->term1 = $term1;
+
         $term2 = new TermsOfPayment();
         $term2->setTerms('Term 2');
 
-        self::$em->persist($term1);
-        self::$em->persist($term2);
+        $this->term2 = $term2;
 
-        self::$em->flush();
-    }
+        $this->em->persist($term1);
+        $this->em->persist($term2);
 
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $this->em->flush();
     }
 
     public function testGet()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/termsofpayments/1'
+            '/api/termsofpayments/' . $this->term1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 1', $response->terms);
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
     }
 
     public function testGetAll()
@@ -92,7 +67,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
     public function testPost()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -106,9 +81,9 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 3', $response->terms);
-        $this->assertEquals(3, $response->id);
+        $this->assertNotNull($response->id);
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofpayments'
@@ -118,19 +93,19 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 1', $response2->_embedded->termsOfPayments[0]->terms);
-        $this->assertEquals(1, $response2->_embedded->termsOfPayments[0]->id);
+        $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
 
         $this->assertEquals('Term 2', $response2->_embedded->termsOfPayments[1]->terms);
-        $this->assertEquals(2, $response2->_embedded->termsOfPayments[1]->id);
+        $this->assertNotNull($response2->_embedded->termsOfPayments[1]->id);
 
         $this->assertEquals('Term 3', $response2->_embedded->termsOfPayments[2]->terms);
-        $this->assertEquals(3, $response2->_embedded->termsOfPayments[2]->id);
+        $this->assertNotNull($response2->_embedded->termsOfPayments[2]->id);
 
     }
 
     public function testPostNonUniqueName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/termsofpayments',
@@ -146,7 +121,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function testPostInvalidCTermsName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/termsofpayments',
@@ -161,7 +136,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function testPostEmptyTermsName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
             '/api/termsofpayments',
@@ -176,10 +151,10 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function testPut()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/termsofpayments/1',
+            '/api/termsofpayments/' . $this->term1->getId(),
             array(
                 'terms' => 'Term 1.1'
             )
@@ -189,9 +164,9 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('Term 1.1', $response->terms);
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofpayments'
@@ -202,25 +177,25 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
         if ($response2->_embedded->termsOfPayments[1]->terms === 'Term 2') {
             $this->assertEquals('Term 2', $response2->_embedded->termsOfPayments[1]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfPayments[1]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[1]->id);
 
             $this->assertEquals('Term 1.1', $response2->_embedded->termsOfPayments[0]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfPayments[0]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
         } else {
             $this->assertEquals('Term 1.1', $response2->_embedded->termsOfPayments[1]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfPayments[1]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[1]->id);
 
             $this->assertEquals('Term 2', $response2->_embedded->termsOfPayments[0]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfPayments[0]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
         }
     }
 
     public function testPutInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PUT',
-            '/api/termsofpayments/100',
+            '/api/termsofpayments/112312300',
             array(
                 'terms' => 'Term 3'
             )
@@ -232,11 +207,11 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function testDelete()
     {
-        $client = $this->createTestClient();
-        $client->request('DELETE', '/api/termsofpayments/1');
+        $client = $this->createAuthenticatedClient();
+        $client->request('DELETE', '/api/termsofpayments/' . $this->term1->getId());
 
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofpayments'
@@ -250,11 +225,11 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function testDeleteInvalidId()
     {
-        $client = $this->createTestClient();
-        $client->request('DELETE', '/api/termsofpayments/1000');
+        $client = $this->createAuthenticatedClient();
+        $client->request('DELETE', '/api/termsofpayments/11231');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
 
         $client2->request(
             'GET',
@@ -270,13 +245,13 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
     public function testPatch()
     {
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/termsofpayments',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->term1->getId(),
                     'terms' => 'Changed Term',
                 ),
                 array(
@@ -288,12 +263,12 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals('Changed Term', $response[0]->terms);
-        $this->assertEquals(1, $response[0]->id);
+        $this->assertNotNull($response[0]->id);
 
         $this->assertEquals('Neuer Term', $response[1]->terms);
-        $this->assertEquals(3, $response[1]->id);
+        $this->assertNotNull($response[1]->id);
 
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
         $client2->request(
             'GET',
             '/api/termsofpayments'
@@ -306,34 +281,34 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
         if($response2->_embedded->termsOfPayments[0]->terms == 'Changed Term') {
             $this->assertEquals('Changed Term', $response2->_embedded->termsOfPayments[0]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfPayments[0]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
 
             $this->assertEquals('Neuer Term', $response2->_embedded->termsOfPayments[1]->terms);
-            $this->assertEquals(3, $response2->_embedded->termsOfPayments[1]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[1]->id);
 
             $this->assertEquals('Term 2', $response2->_embedded->termsOfPayments[2]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfPayments[2]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[2]->id);
         } else {
             $this->assertEquals('Changed Term', $response2->_embedded->termsOfPayments[2]->terms);
-            $this->assertEquals(1, $response2->_embedded->termsOfPayments[2]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[2]->id);
 
             $this->assertEquals('Term 2', $response2->_embedded->termsOfPayments[0]->terms);
-            $this->assertEquals(2, $response2->_embedded->termsOfPayments[0]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
 
             $this->assertEquals('Neuer Term', $response2->_embedded->termsOfPayments[1]->terms);
-            $this->assertEquals(3, $response2->_embedded->termsOfPayments[1]->id);
+            $this->assertNotNull($response2->_embedded->termsOfPayments[1]->id);
         }
     }
 
     public function testPatchInvalidId()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/termsofpayments',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->term1->getId(),
                     'terms' => 'Changed Term',
                 ),
                 array(
@@ -349,13 +324,13 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function testPatchInvalidTermsName()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
         $client->request(
             'PATCH',
             '/api/termsofpayments',
             array(
                 array(
-                    'id' => 1,
+                    'id' => $this->term1->getId(),
                     'terms' => 'Changed Term',
                 ),
                 array(
@@ -370,7 +345,7 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
 
     public function checkAssertionsForOriginalState()
     {
-        $client2 = $this->createTestClient();
+        $client2 = $this->createAuthenticatedClient();
 
         $client2->request(
             'GET',
@@ -383,10 +358,10 @@ class TermsOfPaymentControllerTest extends DatabaseTestCase
         $this->assertEquals(2, count($response2->_embedded->termsOfPayments));
 
         $this->assertEquals('Term 1', $response2->_embedded->termsOfPayments[0]->terms);
-        $this->assertEquals(1, $response2->_embedded->termsOfPayments[0]->id);
+        $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
 
         $this->assertEquals('Term 2', $response2->_embedded->termsOfPayments[1]->terms);
-        $this->assertEquals(2, $response2->_embedded->termsOfPayments[1]->id);
+        $this->assertNotNull($response2->_embedded->termsOfPayments[1]->id);
     }
 
 }

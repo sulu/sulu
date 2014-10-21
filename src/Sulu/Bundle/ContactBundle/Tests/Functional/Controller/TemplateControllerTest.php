@@ -2,26 +2,12 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class TemplateControllerTest extends WebTestCase
+class TemplateControllerTest extends SuluTestCase
 {
     public function testDetailsform()
     {
-        $client = $this->createTestClient();
-
+        $client = $this->createAuthenticatedClient();
     }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
-    }
-
-
 }
