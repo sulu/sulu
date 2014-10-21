@@ -59,7 +59,6 @@ class ImportTest extends SuluTestCase
             ->method('getBundles')
             ->will($this->returnValue(array($sampleBundle, $hikaruBundle)));
 
-
         $this->import = new Import($this->em, $kernel);
     }
 
@@ -69,7 +68,7 @@ class ImportTest extends SuluTestCase
         $this->import->setName('Import');
         $this->import->setFormat(Import::XLIFF);
         $this->import->setLocale('de');
-        $res = $this->import->executeFromFile(true, true);
+        $this->import->executeFromFile(true, true);
 
         $package = $this->em->getRepository('SuluTranslateBundle:Package')->findOneByName('Import');
         $this->assertNotNull($package);
@@ -107,7 +106,8 @@ class ImportTest extends SuluTestCase
         $this->assertEquals('Import Update', $package->getName());
 
         $catalogues = $package->getCatalogues();
-        $catalogue = reset($catalogues->toArray());
+        $catalogues = $catalogues->toArray();
+        $catalogue = reset($catalogues);
         $this->assertNotNull($catalogue);
         $this->assertEquals('de', $catalogue->getLocale());
 
