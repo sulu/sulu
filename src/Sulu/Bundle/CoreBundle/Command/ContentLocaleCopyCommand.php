@@ -114,21 +114,19 @@ EOT
         $node = $this->contentMapper->loadStartPage($webspaceKey, $srcLocale);
 
         // copy start node
-        $this->copyNode($webspaceKey, $srcLocale, $destLocale, $node, $overwrite);
-
-        $this->copyChildrenNodes($node, $webspaceKey, $srcLocale, $destLocale, $overwrite);
+        $this->copyNodeRecursive($node, $webspaceKey, $srcLocale, $destLocale, $overwrite);
     }
 
-    private function copyChildrenNodes(StructureInterface $structure, $webspaceKey, $srcLocale, $destLocale, $overwrite)
+    private function copyNodeRecursive(StructureInterface $structure, $webspaceKey, $srcLocale, $destLocale, $overwrite)
     {
+        $this->copyNode($webspaceKey, $srcLocale, $destLocale, $structure, $overwrite);
+
         if (!$structure->getHasChildren()) {
             return;
         }
 
         foreach ($this->contentMapper->loadByParent($structure->getUuid(), $webspaceKey, $srcLocale) as $child) {
-            $this->copyNode($webspaceKey, $srcLocale, $destLocale, $child, $overwrite);
-
-            $this->copyChildrenNodes($child, $webspaceKey, $srcLocale, $destLocale, $overwrite);
+            $this->copyNodeRecursive($child, $webspaceKey, $srcLocale, $destLocale, $overwrite);
         }
     }
 
