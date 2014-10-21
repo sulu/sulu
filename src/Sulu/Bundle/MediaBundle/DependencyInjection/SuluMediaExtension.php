@@ -98,7 +98,7 @@ class SuluMediaExtension extends Extension
         ));
         $container->setParameter('sulu_media.media.types', array(
             array(
-                'type' => 'default',
+                'type' => 'document',
                 'mimeTypes' => array('*')
             ),
             array(
