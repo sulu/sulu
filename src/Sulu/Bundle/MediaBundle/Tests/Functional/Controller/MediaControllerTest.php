@@ -24,83 +24,61 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class MediaControllerTest extends DatabaseTestCase
+class MediaControllerTest extends SuluTestCase
 {
     /**
-     * @var array
+     * @var Collection
      */
-    protected static $entities;
+    protected $collection;
 
     /**
      * @var Media
      */
-    protected static $media;
+    protected $media;
 
-
-    public function setUp()
+    protected function setUp()
     {
-        $this->setUpSchema();
+        parent::setUp();
+        $this->purgeDatabase();
+        $this->em = $this->db('ORM')->getOm();
         $this->cleanImage();
-        $this->setUpMedia(self::$media);
+        $this->setUpMedia();
     }
 
-    public function tearDown()
-    {
-        $this->cleanImage();
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
 
     protected function cleanImage()
     {
         if (self::$kernel->getContainer()) { //
             $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
-            $segments = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.segments');
-
-            for ($i = 1; $i <= intval($segments); $i++) {
-                $movedFolder = $configPath . '/' . $i;
-                $movedFile = $movedFolder . '/photo.jpeg';
-                if (file_exists($movedFile)) {
-                    copy ($movedFile, $this->getImagePath());
-                    unlink($movedFile);
-                    rmdir($movedFolder);
-                }
-            }
+            $this->recursiveRemoveDirectory($configPath);
         }
     }
 
-    public function setUpSchema()
+    function recursiveRemoveDirectory($directory, $counter = 0)
     {
-        self::$tool = new SchemaTool(self::$em);
+        foreach(glob($directory . '/*') as $file) {
+            if (is_dir($file)) {
+                $this->recursiveRemoveDirectory($file, $counter + 1);
+            } elseif(file_exists($file)) {
+                unlink($file);
+            }
+        }
 
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        if ($counter != 0) {
+            rmdir($directory);
+        }
     }
 
-    protected function setUpMedia(&$media)
+    protected function setUpMedia()
     {
         // Media
         $media = new Media();
 
         $media->setCreated(new DateTime());
         $media->setChanged(new DateTime());
+        $this->media = $media;
 
         // Create Media Type
         $mediaType = new MediaType();
@@ -173,17 +151,17 @@ class MediaControllerTest extends DatabaseTestCase
 
         $media->setCollection($collection);
 
-        self::$em->persist($tag1);
-        self::$em->persist($tag2);
-        self::$em->persist($media);
-        self::$em->persist($file);
-        self::$em->persist($fileVersionMeta);
-        self::$em->persist($fileVersion);
-        self::$em->persist($mediaType);
-        self::$em->persist($imageType);
-        self::$em->persist($videoType);
+        $this->em->persist($tag1);
+        $this->em->persist($tag2);
+        $this->em->persist($media);
+        $this->em->persist($file);
+        $this->em->persist($fileVersionMeta);
+        $this->em->persist($fileVersion);
+        $this->em->persist($mediaType);
+        $this->em->persist($imageType);
+        $this->em->persist($videoType);
 
-        self::$em->flush();
+        $this->em->flush();
     }
 
     protected function setUpCollection(&$collection)
@@ -197,11 +175,13 @@ class MediaControllerTest extends DatabaseTestCase
 
         $collection->setCreated(new DateTime());
         $collection->setChanged(new DateTime());
+        $this->collection = $collection;
 
         // Create Collection Type
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
         $collectionType->setDescription('Default Collection Type');
+        $this->collectionType = $collectionType;
 
         $collection->setType($collectionType);
 
@@ -223,31 +203,10 @@ class MediaControllerTest extends DatabaseTestCase
 
         $collection->addMeta($collectionMeta2);
 
-        self::$em->persist($collection);
-        self::$em->persist($collectionType);
-        self::$em->persist($collectionMeta);
-        self::$em->persist($collectionMeta2);
-    }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
-    }
-
-    /*
-     * Tests
-     */
-
-    public function testTest()
-    {
-        $client = $this->createTestClient();
-        $this->assertTrue((bool)$client);
+        $this->em->persist($collection);
+        $this->em->persist($collectionType);
+        $this->em->persist($collectionMeta);
+        $this->em->persist($collectionMeta2);
     }
 
     /**
@@ -255,19 +214,19 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testGetById()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media/1'
+            '/api/media/' . $this->media->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(2, $response->type->id);
+        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('photo', $response->title);
@@ -280,7 +239,7 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGet()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -301,11 +260,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGetCollection()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?collection=1'
+            '/api/media?collection=' . $this->collection->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -315,7 +274,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -324,11 +283,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGetCollectionTypes()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?collection=1&types=image'
+            '/api/media?collection=' . $this->collection->getId() . '&types=image'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -338,7 +297,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -347,11 +306,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGetCollectionTypesNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?collection=1&types=audio'
+            '/api/media?collection=' . $this->collection->getId() .'&types=audio'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -368,11 +327,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGetCollectionTypesMultiple()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?collection=1&types=image,audio'
+            '/api/media?collection=' . $this->collection->getId(). '&types=image,audio'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -382,7 +341,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -391,11 +350,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGetIds()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?ids=1'
+            '/api/media?ids=' . $this->media->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -405,7 +364,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded->media[0]->id);
+        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -414,11 +373,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testcGetNotExistingIds()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?ids=2,3,4'
+            '/api/media?ids=1232,3123,1234'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -435,11 +394,11 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testGetByIdNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media/10'
+            '/api/media/11230'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -454,7 +413,7 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testPost()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
@@ -464,7 +423,7 @@ class MediaControllerTest extends DatabaseTestCase
             'POST',
             '/api/media',
             array(
-                'collection' => 1,
+                'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
@@ -490,7 +449,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('photo.jpeg', $response->name);
-        $this->assertEquals(2, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('New Image Title', $response->title);
@@ -514,7 +473,7 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testPostWithoutDetails()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
@@ -524,7 +483,7 @@ class MediaControllerTest extends DatabaseTestCase
             'POST',
             '/api/media',
             array(
-                'collection' => 1
+                'collection' => $this->collection->getId(),
             ),
             array(
                 'fileVersion' => $photo
@@ -539,7 +498,7 @@ class MediaControllerTest extends DatabaseTestCase
         $this->assertEquals('photo', $response->title);
 
         $this->assertEquals('photo.jpeg', $response->name);
-        $this->assertEquals(2, $response->id);
+        $this->assertNotNull($response->id);
     }
 
     /**
@@ -547,7 +506,7 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testFileVersionUpdate()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
@@ -555,9 +514,9 @@ class MediaControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/media/1',
+            '/api/media/' . $this->media->getId(),
             array(
-                'collection' => 1,
+                'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
                 'title' => 'New Image Title',
                 'description' => 'New Image Description',
@@ -581,8 +540,8 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->collection);
+        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
@@ -603,13 +562,13 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testPutWithoutFile()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/media/1',
+            '/api/media/' . $this->media->getId(),
             array(
-                'collection' => 1,
+                'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
                 'title' => 'Update Title',
                 'description' => 'Update Description',
@@ -628,8 +587,8 @@ class MediaControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->collection);
+        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(1, $response->version);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
@@ -650,7 +609,7 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testFileVersionUpdateWithoutDetails()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
         $this->assertTrue(file_exists($imagePath));
@@ -658,9 +617,9 @@ class MediaControllerTest extends DatabaseTestCase
 
         $client->request(
             'POST',
-            '/api/media/1',
+            '/api/media/' . $this->media->getId(),
             array(
-                'collection' => 1
+                'collection' => $this->collection->getId()
             ),
             array(
                 'fileVersion' => $photo
@@ -673,8 +632,8 @@ class MediaControllerTest extends DatabaseTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->collection);
+        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
     }
 
@@ -683,16 +642,16 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testDeleteById()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/media/1');
-        $this->assertEquals('204', $client->getResponse()->getStatusCode());
+        $client->request('DELETE', '/api/media/' . $this->media->getId());
+        $this->assertNotNull($client->getResponse()->getStatusCode());
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media/1'
+            '/api/media/' .  $this->media->getId()
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -707,16 +666,16 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testDeleteCollection()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/collections/1');
+        $client->request('DELETE', '/api/collections/' . $this->collection->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media/1'
+            '/api/media/' . $this->media->getId()
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -731,7 +690,7 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testDeleteByIdNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/media/404');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
@@ -746,28 +705,28 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testDownloadCounter()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
+        ob_start();
         $client->request(
             'GET',
-            '/media/1/download/photo.jpeg'
+            '/media/' . $this->media->getId() . '/download/photo.jpeg'
         );
+        ob_end_clean();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $client = $this->createTestClient();
-
         $client->request(
             'GET',
-            '/api/media/1'
+            '/api/media/' . $this->media->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(2, $response->type->id);
+        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('photo', $response->title);
