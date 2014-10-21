@@ -6,7 +6,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\StructureInterface;
 
-abstract class Page extends Structure
+abstract class Page extends Structure implements PageInterface
 {
     /**
      * template to render content
@@ -61,12 +61,13 @@ abstract class Page extends Structure
     private $path;
 
     /**
-     * @param $key string
-     * @param $view string
-     * @param $controller string
-     * @param int $cacheLifeTime
-     * @param array $metaData
-     * @return \Sulu\Component\Content\Structure
+     * uuid of parent page
+     * @var string
+     */
+    private $parentUuid;
+
+    /**
+     * Constructor
      */
     public function __construct($key, $view, $controller, $cacheLifeTime = 604800, $metaData = array())
     {
@@ -81,6 +82,22 @@ abstract class Page extends Structure
 
         // default hide in navigation
         $this->navContexts = array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParentUuid()
+    {
+        return $this->parentUuid;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setParentUuid($parentUuid)
+    {
+        $this->parentUuid = $parentUuid;
     }
 
     /**

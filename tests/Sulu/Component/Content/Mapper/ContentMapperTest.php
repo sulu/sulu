@@ -312,6 +312,8 @@ class ContentMapperTest extends PhpcrTestCase
 
     public function testSave()
     {
+        $parentUuid = $this->sessionManager->getSession()->getNode('/cmf/default/contents')->getIdentifier();
+
         $data = array(
             'name' => 'Testname',
             'tags' => array(
@@ -355,6 +357,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/news/test', $result->getPropertyValue('url'));
         $this->assertEquals('default', $result->getPropertyValue('article'));
         $this->assertEmpty($result->getNavContexts());
+        $this->assertEquals($parentUuid, $result->getParentUuid());
 
         $root = $this->session->getRootNode();
         $route = $root->getNode('cmf/default/routes/de/news/test');
@@ -516,6 +519,8 @@ class ContentMapperTest extends PhpcrTestCase
 
     public function testLoad()
     {
+        $parentUuid = $this->sessionManager->getSession()->getNode('/cmf/default/contents')->getIdentifier();
+
         $data = ContentMapperRequest::create('page')
             ->setLocale('de')
             ->setTemplateKey('overview')
@@ -548,6 +553,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEmpty($content->getNavContexts());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
+        $this->assertEquals($parentUuid, $content->getParentUuid());
     }
 
     public function testNewProperty()
@@ -1346,11 +1352,15 @@ class ContentMapperTest extends PhpcrTestCase
             'article' => 'article'
         );
 
-        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+        $result = $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+        $this->assertEquals('startpage', $result->name);
+        $this->assertEquals('/', $result->url);
+        $this->assertEquals(null, $result->getParentUuid());
 
         $startPage = $this->mapper->loadStartPage('default', 'en');
         $this->assertEquals('startpage', $startPage->name);
         $this->assertEquals('/', $startPage->url);
+        $this->assertEquals(null, $startPage->getParentUuid());
 
         $data['name'] = 'new-startpage';
 

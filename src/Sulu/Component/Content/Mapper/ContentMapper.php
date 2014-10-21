@@ -499,10 +499,6 @@ class ContentMapper implements ContentMapperInterface
         }
         $session->save();
 
-        $contentNode = Structure::TYPE_PAGE === $structureType ?
-            $this->sessionManager->getContentNode($webspaceKey) :
-            $this->sessionManager->getSnippetNode($templateKey);
-
         if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
             $ext = array();
@@ -564,6 +560,8 @@ class ContentMapper implements ContentMapperInterface
                 $languageCode,
                 $webspaceKey
             );
+
+            $structure->setParentUuid($node->getParent()->getIdentifier());
         }
 
         // throw an content.node.save event
@@ -803,7 +801,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
 
-        return $this->save(
+        $page = $this->save(
             $data,
             $templateKey,
             $webspaceKey,
@@ -814,6 +812,11 @@ class ContentMapper implements ContentMapperInterface
             null,
             StructureInterface::STATE_PUBLISHED
         );
+
+        // set parent to null
+        $page->setParentUuid(null);
+
+        return $page;
     }
 
     /**
@@ -945,6 +948,7 @@ class ContentMapper implements ContentMapperInterface
         $startPage = $this->load($uuid, $webspaceKey, $languageCode);
         $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
         $startPage->setNavContexts(array());
+        $startPage->setParentUuid(null);
 
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.loadStartPage');
@@ -1320,6 +1324,8 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $loadGhostContent
             );
+
+            $structure->setParentUuid($contentNode->getParent()->getIdentifier());
         }
 
         // throw an content.node.load event (disabled for now)
@@ -1706,6 +1712,8 @@ class ContentMapper implements ContentMapperInterface
     /**
      * returns a structure with given key
      * @param string $key key of content type
+     * @param string $type
+     * @throws \InvalidArgumentException
      * @return StructureInterface
      */
     protected function getStructure($key, $type = Structure::TYPE_PAGE)
