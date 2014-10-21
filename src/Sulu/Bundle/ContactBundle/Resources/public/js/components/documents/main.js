@@ -136,6 +136,7 @@ define([], function() {
             this.sandbox.on('sulu.contacts.contacts.medias.saved', this.resetAndAddToCurrent.bind(this));
 
             this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
+            this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
             this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
         },
 
@@ -169,6 +170,18 @@ define([], function() {
             if(this.newSelections.indexOf(id) > -1){
                 this.newSelections.splice(this.newSelections.indexOf(id), 1);
             }
+        },
+
+        /**
+         * Processes an arry of items
+         * @param items - array of items
+         */
+        addedItems: function(items){
+            this.sandbox.util.foreach(items, function(item){
+                if(!!item && !!item.id) {
+                    this.selectItem(item.id);
+                }
+            }.bind(this));
         },
 
         selectItem: function(id) {

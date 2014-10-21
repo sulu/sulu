@@ -40,5 +40,6 @@
             "Sulu\\Bundle\\ContactBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/ContactBundle"
+    "target-dir": "Sulu/Bundle/ContactBundle",
+    "minimum-stability": "dev"
 }

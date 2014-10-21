@@ -23,8 +23,6 @@ use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Security\UserInterface;
@@ -43,22 +41,14 @@ use JMS\Serializer\Annotation\Groups;
  */
 class Contact extends ApiWrapper
 {
-
-    /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
-
     /**
      * @param ContactEntity $contact
      * @param string $locale The locale of this product
-     * @param $tagManager
      */
-    public function __construct(ContactEntity $contact, $locale, TagManagerInterface $tagManager)
+    public function __construct(ContactEntity $contact, $locale)
     {
         $this->entity = $contact;
         $this->locale = $locale;
-        $this->tagManager = $tagManager;
     }
 
     /**
@@ -809,7 +799,7 @@ class Contact extends ApiWrapper
     {
         $mainAccount = $this->entity->getMainAccount();
         if (!is_null($mainAccount)) {
-            return new Account($mainAccount, $this->locale, $this->tagManager);
+            return new Account($mainAccount, $this->locale);
         }
 
         return null;
@@ -977,7 +967,7 @@ class Contact extends ApiWrapper
         $entities = array();
         if ($this->entity->getAssignedActivities()) {
             foreach ($this->entity->getAssignedActivities() as $entity) {
-                $entities[] = new Activity($entity, $this->locale, $this->tagManager);
+                $entities[] = new Activity($entity, $this->locale);
             }
         }
 
@@ -1054,7 +1044,7 @@ class Contact extends ApiWrapper
         $entities = array();
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
-                $entities[] = new Media($media, $this->locale, null, $this->tagManager);
+                $entities[] = new Media($media, $this->locale, null);
             }
         }
 
