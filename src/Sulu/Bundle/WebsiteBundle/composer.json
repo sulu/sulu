@@ -5,6 +5,7 @@
     "license": "MIT",
     "keywords": ["sulu", "website"],
     "version": "dev-develop",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Sulu Community",
