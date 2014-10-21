@@ -167,8 +167,7 @@ class PreviewTest extends PhpcrTestCase
                     true,
                     1,
                     1,
-                    array(),
-                    array(new PropertyTag('sulu.node.name', 1))
+                    array()
                 )
             )
         );

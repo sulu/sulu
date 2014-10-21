@@ -697,8 +697,8 @@ define([
          * @param {Object} data
          */
         setTitle: function(data) {
-            if (!!this.options.id && data['sulu.node.name'] !== '') {
-                this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(data['sulu.node.name'], 40));
+            if (!!this.options.id && data.title !== '') {
+                this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(data.title, 40));
             } else {
                 this.sandbox.emit('sulu.header.set-title', this.sandbox.translate('content.contents.title'));
             }
