@@ -338,7 +338,7 @@ class UserControllerTest extends SuluTestCase
     {
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/users/15');
+        $client->request('DELETE', '/api/users/11235');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
