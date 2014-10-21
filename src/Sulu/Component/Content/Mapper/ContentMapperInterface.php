@@ -224,6 +224,17 @@ interface ContentMapperInterface
     public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
 
     /**
+     * Copies the content from one node from one localization to the other
+     * @param string $uuid
+     * @param $userId
+     * @param $webspaceKey
+     * @param $srcLanguageCode
+     * @param $destLanguageCode
+     * @return StructureInterface
+     */
+    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode);
+
+    /**
      * order node with uuid before the node with beforeUuid
      * !IMPORTANT! both nodes should have the same parent
      * @param string $uuid

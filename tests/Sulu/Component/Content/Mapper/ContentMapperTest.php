@@ -2194,6 +2194,18 @@ class ContentMapperTest extends PhpcrTestCase
         $this->checkTreeResult($result);
     }
 
+    public function testLanguageCopy()
+    {
+        $data = $this->prepareSinglePageTestData();
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', 'en');
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->name);
+        $this->assertEquals('/page-1', $result->url);
+    }
+
     private function checkTreeResult($result)
     {
         // layer 0
@@ -2690,6 +2702,21 @@ class ContentMapperTest extends PhpcrTestCase
 
         $this->assertEquals('http://www.google.at', $structure3->getResourceLocator());
         $this->assertEquals('Test', $structure3->getNodeName());
+    }
+
+    private function prepareSinglePageTestData()
+    {
+        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'de', 1);
+        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'en', 1);
+
+        $data = array(
+            'name' => 'Page-1',
+            'url' => '/page-1'
+        );
+
+        $data = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+
+        return $data;
     }
 
     /**
