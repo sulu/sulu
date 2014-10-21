@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Functional\Xml;
+namespace Sulu\Component\Template;
 
 use InvalidArgumentException;
 use Sulu\Component\Content\Template\TemplateReader;
@@ -180,7 +180,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -194,7 +194,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new TemplateReader();
         $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Template/template_not_exists.xml'
+            __DIR__ . '/../../../Resources/DataFixtures/Page/template_not_exists.xml'
         );
     }
 
@@ -214,7 +214,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_properties.xml'
+            __DIR__ . '/../../../Resources/DataFixtures/Page/template_missing_properties.xml'
         );
         $this->assertEquals($template, $result);
     }
@@ -225,7 +225,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadTypesMissingMandatory()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_missing_mandatory.xml');
+        $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_missing_mandatory.xml');
     }
 
     public function testReadBlockTemplate()
@@ -509,7 +509,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_block.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -687,7 +687,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_block_types.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_block_types.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -891,7 +891,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_sections.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_sections.xml');
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
@@ -905,7 +905,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Template/template_reserved.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_reserved.xml');
     }
 
     function testNestingParams()
@@ -953,7 +953,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Template/template_nesting_params.xml'
+            __DIR__ . '/../../../Resources/DataFixtures/Page/template_nesting_params.xml'
         );
 
         $x = $this->arrayRecursiveDiff($result, $template);

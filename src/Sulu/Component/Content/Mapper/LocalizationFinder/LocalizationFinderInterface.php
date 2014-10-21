@@ -23,7 +23,16 @@ interface LocalizationFinderInterface
      * @param NodeInterface $contentNode The content node to check for localizations
      * @param string $localizationCode The desired localization
      * @param string $webspaceKey The key for the webspace, in which the language hierarchy is defined
-     * @return string
+     * @return string|null
      */
-    public function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey);
+    public function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey = null);
+
+    /**
+     * Return true if the localization finder supports the given arguments
+     * @param NodeInterface $contentNode The content node to check for localizations
+     * @param string $localizationCode The desired localization
+     * @param string $webspaceKey The key for the webspace, in which the language hierarchy is defined
+     * @return boolean
+     */
+    public function supports(NodeInterface $contentNode, $localizationCode, $webspaceKey = null);
 } 
