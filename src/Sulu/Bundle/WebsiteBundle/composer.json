@@ -37,6 +37,5 @@
             "Sulu\\Bundle\\WebsiteBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/WebsiteBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Sulu/Bundle/WebsiteBundle"
 }
