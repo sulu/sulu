@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
@@ -19,6 +21,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
@@ -67,6 +70,26 @@ class ContentTwigExtensionTest extends ProphecyTestCase
      */
     private $contentTypeManager;
 
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @var NodeInterface
+     */
+    private $node;
+
+    /**
+     * @var NodeInterface
+     */
+    private $parentNode;
+
     protected function setUp()
     {
         parent::setUp();
@@ -75,6 +98,10 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManagerInterface');
         $this->structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
+        $this->sessionManager = $this->prophesize('Sulu\Component\PHPCR\SessionManager\SessionManagerInterface');
+        $this->session = $this->prophesize('PHPCR\SessionInterface');
+        $this->node = $this->prophesize('PHPCR\NodeInterface');
+        $this->parentNode = $this->prophesize('PHPCR\NodeInterface');
 
         $webspace= new Webspace();
         $webspace->setKey('sulu_test');
@@ -98,6 +125,30 @@ class ContentTwigExtensionTest extends ProphecyTestCase
             ->get('text_line')
             ->willReturn(new TextLine(''));
 
+        $this
+            ->sessionManager
+            ->getSession()
+            ->willReturn($this->session);
+
+        $this
+            ->session
+            ->getNodeByIdentifier('123-123-123')
+            ->willReturn($this->node);
+
+        $this
+            ->node
+            ->getIdentifier()
+            ->willReturn('123-123-123');
+
+        $this
+            ->node
+            ->getParent()
+            ->willReturn($this->parentNode);
+
+        $this
+            ->parentNode
+            ->getIdentifier()
+            ->willReturn('321-321-321');
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
@@ -115,6 +166,7 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $extension = new ContentTwigExtension(
             $this->contentMapper->reveal(),
             $this->structureResolver,
+            $this->sessionManager->reveal(),
             $this->requestAnalyzer->reveal()
         );
 
@@ -122,6 +174,36 @@ class ContentTwigExtensionTest extends ProphecyTestCase
 
         // uuid
         $this->assertEquals('123-123-123', $result['uuid']);
+
+        // metadata
+        $this->assertEquals(1, $result['creator']);
+        $this->assertEquals(1, $result['changer']);
+        $this->assertInstanceOf('\DateTime', $result['created']);
+        $this->assertInstanceOf('\DateTime', $result['changed']);
+
+        // content
+        $this->assertEquals(array('title' => 'test'), $result['content']);
+        $this->assertEquals(array('title' => array()), $result['view']);
+    }
+
+    public function testLoadParent()
+    {
+        $this
+            ->contentMapper
+            ->load('321-321-321', 'sulu_test', 'en_us')
+            ->willReturn(new TestStructure('321-321-321', 'test', 1));
+
+        $extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver,
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
+
+        $result = $extension->loadParent('123-123-123');
+
+        // uuid
+        $this->assertEquals('321-321-321', $result['uuid']);
 
         // metadata
         $this->assertEquals(1, $result['creator']);

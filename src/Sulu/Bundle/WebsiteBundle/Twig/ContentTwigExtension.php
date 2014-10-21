@@ -12,6 +12,7 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -34,13 +35,20 @@ class ContentTwigExtension extends \Twig_Extension
      */
     private $requestAnalyzer;
 
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
     function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
+        SessionManagerInterface $sessionManager,
         RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
+        $this->sessionManager = $sessionManager;
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
@@ -66,6 +74,19 @@ class ContentTwigExtension extends \Twig_Extension
         );
 
         return $this->structureResolver->resolve($contentStructure);
+    }
+
+    /**
+     * Returns resolved content for parent of given uuid
+     * @param string $uuid
+     * @return array
+     */
+    public function loadParent($uuid)
+    {
+        $session = $this->sessionManager->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+
+        return $this->load($node->getParent()->getIdentifier());
     }
 
     /**
