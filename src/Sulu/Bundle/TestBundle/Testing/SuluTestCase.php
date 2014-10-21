@@ -63,6 +63,7 @@ abstract class SuluTestCase extends BaseTestCase
 
     /**
      * Purge the Doctrine ORM database
+        $this->import->resetPackages();
      */
     protected function purgeDatabase()
     {
@@ -79,7 +80,7 @@ abstract class SuluTestCase extends BaseTestCase
         $executor->setReferenceRepository($referenceRepository);
         $executor->purge();
 
-        if ($connection instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
             $em->getConnection()->executeUpdate("SET foreign_key_checks = 1;");
         }
     }
