@@ -728,74 +728,68 @@ class NodeControllerTest extends SuluTestCase
     {
         $data = $this->buildTree();
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en');
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
-        $this->assertEquals('', $response->title);
+        $this->assertEquals('', $response['title']);
         $this->assertEquals(5, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id']);
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
         $this->assertEquals(2, sizeof($items));
-        $this->assertEquals($data[1]['title'], $response->title);
+        $this->assertEquals($data[1]['title'], $response['title']);
 
         $client->request(
             'GET',
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true'
         );
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
         $this->assertEquals(3, sizeof($items));
-        $this->assertEquals($data[1]['title'], $response->title);
+        $this->assertEquals($data[1]['title'], $response['title']);
 
         $client->request(
             'GET',
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2'
         );
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
         $this->assertEquals(2, sizeof($items));
-        $this->assertEquals($data[1]['title'], $response->title);
+        $this->assertEquals($data[1]['title'], $response['title']);
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1');
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
-        $this->assertEquals('', $response->title);
+        $this->assertEquals('', $response['title']);
         $this->assertEquals(4, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag2');
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
-        $this->assertEquals('', $response->title);
+        $this->assertEquals('', $response['title']);
         $this->assertEquals(3, sizeof($items));
 
         $client->request('GET', '/api/nodes/filter?webspace=sulu_io&language=en&tags=tag1,tag2');
-        $response = json_decode($client->getResponse()->getContent());
-        $items = $response->_embedded->nodes;
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $items = $response['_embedded']['nodes'];
 
-        $this->assertEquals('', $response->title);
+        $this->assertEquals('', $response['title']);
         $this->assertEquals(2, sizeof($items));
 
         $client->request(
             'GET',
             '/api/nodes/filter?webspace=sulu_io&language=en&dataSource=' . $data[1]['id'] . '&includeSubFolders=true&limitResult=2&sortBy=title'
         );
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
     }
 
     public function testBreadcrumb()
