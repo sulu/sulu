@@ -1034,14 +1034,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->setAccessible(true);
         $method->invokeArgs(
             $structureMock,
-            array(
-                new Property(
-                    'title', 'title', 'text_line', false, false, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.node.name', 1)
-                    )
-                )
-            )
+            array(new Property('title', 'title', 'text_line', false, false, 1, 1, array()))
         );
 
         $method->invokeArgs(
@@ -1079,12 +1072,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'title', 'title', 'text_line', false, false, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.node.name', 1)
-                    )
-                )
+                new Property('title', 'title', 'text_line', false, false, 1, 1, array())
             )
         );
 
@@ -1133,12 +1121,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'title', 'title', 'text_line', false, true, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.node.name', 100)
-                    )
-                )
+                new Property('title', 'title', 'text_line', false, true, 1, 1, array())
             )
         );
 

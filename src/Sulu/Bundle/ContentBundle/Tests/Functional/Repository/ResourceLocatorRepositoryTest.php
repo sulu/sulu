@@ -77,7 +77,6 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
                 new Property(
                     'title', 'title', 'text_line', false, false, 1, 1, array(),
                     array(
-                        new PropertyTag('sulu.node.name', 100),
                         new PropertyTag('sulu.rlp.part', 100)
                     )
                 )

@@ -99,12 +99,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'title', array(), 'text_line', false, true, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.node.name', 1)
-                    )
-                )
+                new Property('title', array(), 'text_line', false, true, 1, 1, array())
             )
         );
 
