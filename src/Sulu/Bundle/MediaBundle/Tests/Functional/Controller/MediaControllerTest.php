@@ -56,17 +56,22 @@ class MediaControllerTest extends DatabaseTestCase
     {
         if (self::$kernel->getContainer()) { //
             $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
-            $segments = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.segments');
+            $this->recursiveRemoveDirectory($configPath);
+        }
+    }
 
-            for ($i = 1; $i <= intval($segments); $i++) {
-                $movedFolder = $configPath . '/' . $i;
-                $movedFile = $movedFolder . '/photo.jpeg';
-                if (file_exists($movedFile)) {
-                    copy ($movedFile, $this->getImagePath());
-                    unlink($movedFile);
-                    rmdir($movedFolder);
-                }
+    function recursiveRemoveDirectory($directory, $counter = 0)
+    {
+        foreach(glob($directory . '/*') as $file) {
+            if (is_dir($file)) {
+                $this->recursiveRemoveDirectory($file, $counter + 1);
+            } elseif(file_exists($file)) {
+                unlink($file);
             }
+        }
+
+        if ($counter != 0) {
+            rmdir($directory);
         }
     }
 
