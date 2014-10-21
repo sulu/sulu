@@ -73,6 +73,12 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $whereNotValues = array();
 
     /**
+     * group by fields
+     * @var array
+     */
+    protected $groupByFields = array();
+
+    /**
      * The fields which will be used for in-clauses
      * @var array
      */
@@ -206,5 +212,13 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->inFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->inValues[$fieldDescriptor->getName()] = $values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor)
+    {
+        $this->groupByFields[$fieldDescriptor->getName()] = $fieldDescriptor;
     }
 }

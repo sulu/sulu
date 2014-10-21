@@ -79,11 +79,29 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     public function count()
     {
+        // TODO: remove uneccessary joins from count!
+        
         $entityId = $this->entityName . '.id';
         $this->queryBuilder = $this->createQueryBuilder()
             ->select('count(' . $entityId . ')');
 
-        return $this->queryBuilder->getQuery()->getSingleScalarResult();
+        $result = $this->queryBuilder->getQuery()->getScalarResult();
+        if (!$result) {
+            return 0;
+        }
+
+        // in case result has multiple results,
+        // group by separated result into multiple results,
+        // so return count of results
+        if (($temp = count($result)) > 1) {
+            $result = $temp;
+        } else {
+            // reset array indices
+            $result = array_values($result[0]);
+            $result = $result[0];
+        }
+
+        return $result;
     }
 
     /**
@@ -180,6 +198,12 @@ class DoctrineListBuilder extends AbstractListBuilder
         // set where not
         if (!empty($this->whereNotFields)) {
             $this->addWheres($this->whereNotFields, $this->whereNotValues, self::WHERE_COMPARATOR_UNEQUAL);
+        }
+
+        if (!empty($this->groupByFields)) {
+            foreach ($this->groupByFields as $fields) {
+                $this->queryBuilder->groupBy($fields->getSelect());
+            }
         }
 
         // set in
