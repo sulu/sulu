@@ -158,7 +158,8 @@ class SnippetController
             ->setTemplateKey($this->getRequired($request, 'template'))
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
-            ->setData($data);
+            ->setData($data)
+            ->setState(intval($request->get('state', StructureInterface::STATE_TEST)));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
@@ -178,7 +179,7 @@ class SnippetController
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
             ->setData($data)
-            ->setState($request->get('state', StructureInterface::STATE_TEST));
+            ->setState(intval($request->get('state', StructureInterface::STATE_TEST)));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
