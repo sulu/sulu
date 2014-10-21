@@ -251,6 +251,32 @@ class MediaControllerTest extends DatabaseTestCase
     }
 
     /**
+     * @description Test Media DownloadCounter
+     */
+    public function testResponseHeader()
+    {
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/media/1/download/photo.jpeg'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client = $this->createTestClient();
+
+        $client->request(
+            'GET',
+            '/api/media/1'
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotNull($client->getResponse()->getExpires());
+    }
+
+    /**
      * @description Test Media GET by ID
      */
     public function testGetById()
