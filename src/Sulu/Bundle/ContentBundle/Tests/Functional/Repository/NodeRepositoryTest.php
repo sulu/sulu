@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use Monolog\Logger;
 use PHPCR\NodeInterface;
+use Psr\Log\NullLogger;
 use ReflectionMethod;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
@@ -24,7 +25,6 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Webspace;
@@ -970,7 +970,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->sessionManager,
             $this->userManager,
             $this->webspaceManager,
-            new Logger('xyz')
+            new NullLogger()
         );
     }
 
