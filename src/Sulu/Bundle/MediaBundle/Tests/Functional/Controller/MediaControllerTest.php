@@ -53,6 +53,9 @@ class MediaControllerTest extends SuluTestCase
         if (self::$kernel->getContainer()) { //
             $configPath = self::$kernel->getContainer()->getParameter('sulu_media.media.storage.local.path');
             $this->recursiveRemoveDirectory($configPath);
+
+            $cachePath = self::$kernel->getContainer()->getParameter('sulu_media.format_cache.path');
+            $this->recursiveRemoveDirectory($cachePath);
         }
     }
 
@@ -217,14 +220,13 @@ class MediaControllerTest extends SuluTestCase
         $date = new DateTime();
         $date->modify('+1 month');
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
             '/uploads/media/50x50/01/1-photo.jpeg'
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
     }
 
