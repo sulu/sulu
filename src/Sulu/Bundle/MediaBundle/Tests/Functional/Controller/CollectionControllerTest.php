@@ -17,56 +17,19 @@ use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class CollectionControllerTest extends DatabaseTestCase
+class CollectionControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
-    /**
-     * @var Collection
-     */
-    protected static $collection;
-
-    public function setUp()
+    protected function setUp()
     {
-        $this->setUpSchema();
-        $this->setUpCollection(self::$collection);
+        parent::setUp();
+        $this->purgeDatabase();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    protected function setUpCollection(&$collection)
+    protected function initOrm()
     {
         // Collection
         $collection = new Collection();
@@ -80,11 +43,13 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $collection->setCreated(new DateTime());
         $collection->setChanged(new DateTime());
+        $this->collection1 = $collection;
 
         // Create Collection Type
         $collectionType = new CollectionType();
         $collectionType->setName('Default Collection Type');
         $collectionType->setDescription('Default Collection Type');
+        $this->collectionType1 = $collectionType;
 
         $collection->setType($collectionType);
 
@@ -106,23 +71,12 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $collection->addMeta($collectionMeta2);
 
-        self::$em->persist($collection);
-        self::$em->persist($collectionType);
-        self::$em->persist($collectionMeta);
-        self::$em->persist($collectionMeta2);
+        $this->em->persist($collection);
+        $this->em->persist($collectionType);
+        $this->em->persist($collectionMeta);
+        $this->em->persist($collectionMeta2);
 
-        self::$em->flush();
-    }
-
-    private function createTestClient()
-    {
-        return $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW'   => 'test',
-            )
-        );
+        $this->em->flush();
     }
 
     /**
@@ -130,11 +84,11 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testGetById()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/collections/1',
+            '/api/collections/' . $this->collection1->getId(),
             array(
                 'locale' => 'en-gb'
             )
@@ -151,13 +105,13 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals($style, $response->style);
         $this->assertEquals('This Description is only for testing', $response->description);
-        $this->assertEquals(1, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals(0, $response->mediaNumber);
         $this->assertCount(0, $response->thumbnails);
         $this->assertCount(0, $response->children);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Test Collection', $response->title);
-        $this->assertEquals(1, $response->type->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals('Default Collection Type', $response->type->name);
         $this->assertEquals('Default Collection Type', $response->type->description);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
@@ -169,7 +123,7 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testcGet()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -182,7 +136,6 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-
         $this->assertNotEmpty($response->_embedded->collections);
 
         $this->assertCount(1, $response->_embedded->collections);
@@ -193,7 +146,7 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testGetByIdNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -212,7 +165,7 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPost()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $generateColor = '#ffcc00';
 
@@ -231,7 +184,7 @@ class CollectionControllerTest extends DatabaseTestCase
                     )
             ,
                 'type'  => array(
-                    'id' => 1
+                    'id' => $this->collectionType1->getId(),
                 ),
                 'title'       => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
@@ -249,8 +202,8 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals($style, $response->style);
-        $this->assertEquals(2, $response->id);
-        $this->assertEquals(1, $response->type->id);
+        $this->assertNotNull($response->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
@@ -260,7 +213,7 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertNotEmpty($response->changer);
         */
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -286,10 +239,10 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->type = 'circle';
         $style->color = '#ffcc00';
 
-        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals($this->collectionType1->getId(), $responseFirstEntity->type->id);
         $this->assertNotEmpty($responseFirstEntity->created);
         $this->assertNotEmpty($responseFirstEntity->changed);
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
@@ -304,10 +257,10 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->type = 'circle';
         $style->color = $generateColor;
 
-        $this->assertEquals(2, $responseSecondEntity->id);
+        $this->assertNotNull($responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
         $this->assertEquals($style, $responseSecondEntity->style);
-        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertNotNull($responseSecondEntity->type->id);
         $this->assertNotEmpty($responseSecondEntity->created);
         $this->assertNotEmpty($responseSecondEntity->changed);
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
@@ -319,13 +272,16 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPostWithoutDetails()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
             '/api/collections',
             array(
                 'title'       => 'Test Collection 2',
+                'type'  => array(
+                    'id' => $this->collectionType1->getId(),
+                ),
             )
         );
 
@@ -334,15 +290,15 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals('en', $response->locale);
-        $this->assertEquals(2, $response->id);
-        $this->assertEquals(1, $response->type->id);
+        $this->assertNotNull($response->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
 
 
         // get collection in locale 'en-gb'
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -368,10 +324,10 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->type = 'circle';
         $style->color = '#ffcc00';
 
-        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
         $this->assertEquals('en-gb', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertNotNull($responseFirstEntity->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
@@ -381,16 +337,16 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->_embedded->collections[1]));
         $responseSecondEntity = $response->_embedded->collections[1];
 
-        $this->assertEquals(2, $responseSecondEntity->id);
+        $this->assertNotNull($responseSecondEntity->id);
         $this->assertEquals('en-gb', $responseSecondEntity->locale);
-        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertNotNull($responseSecondEntity->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
 
 
         // get collection in locale 'en'
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -416,10 +372,10 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->type = 'circle';
         $style->color = '#ffcc00';
 
-        $this->assertEquals(1, $responseFirstEntity->id);
+        $this->assertNotNull($responseFirstEntity->id);
         $this->assertEquals('en', $responseFirstEntity->locale);
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertNotNull($responseFirstEntity->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection', $responseFirstEntity->title);
@@ -429,9 +385,9 @@ class CollectionControllerTest extends DatabaseTestCase
         $this->assertTrue(isset($response->_embedded->collections[1]));
         $responseSecondEntity = $response->_embedded->collections[1];
 
-        $this->assertEquals(2, $responseSecondEntity->id);
+        $this->assertNotNull($responseSecondEntity->id);
         $this->assertEquals('en', $responseSecondEntity->locale);
-        $this->assertEquals(1, $responseSecondEntity->type->id);
+        $this->assertNotNull($responseSecondEntity->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
@@ -442,7 +398,7 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPostWithNotExistingType()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $generateColor = '#ffcc00';
 
@@ -460,7 +416,7 @@ class CollectionControllerTest extends DatabaseTestCase
                     )
                 ,
                 'type'  => array(
-                    'id' => 2
+                    'id' => 91283
                 ),
                 'title'       => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
@@ -479,11 +435,11 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPut()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/collections/1',
+            '/api/collections/' . $this->collection1->getId(),
             array(
                 'style' =>
                     array(
@@ -491,7 +447,7 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => '#00ccff'
                     )
                 ,
-                'type'  => 1,
+                'type'  => $this->collectionType1->getId(),
                 'title'       => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
                 'locale'      => 'en-gb'
@@ -502,7 +458,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections/1',
+            '/api/collections/' . $this->collection1->getId(),
             array(
                 'locale'      => 'en-gb'
             )
@@ -515,15 +471,15 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->color = '#00ccff';
 
         $this->assertEquals($style, $response->style);
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals($this->collection1->getId(), $response->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection changed', $response->title);
         $this->assertEquals('This Description is only for testing changed', $response->description);
         $this->assertEquals('en-gb', $response->locale);
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -546,8 +502,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->color = '#00ccff';
 
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->id);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
+        $this->assertNotNull($responseFirstEntity->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
@@ -560,11 +516,11 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPutWithoutLocale()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/collections/1',
+            '/api/collections/' . $this->collection1->getId(),
             array(
                 'style' =>
                     array(
@@ -582,7 +538,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections/1'
+            '/api/collections/' . $this->collection1->getId()
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -592,15 +548,15 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->color = '#00ccff';
 
         $this->assertEquals($style, $response->style);
-        $this->assertEquals(1, $response->id);
-        $this->assertEquals(1, $response->type->id);
+        $this->assertEquals($this->collection1->getId(), $response->id);
+        $this->assertNotNull($response->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection changed', $response->title);
         $this->assertEquals('This Description is only for testing changed', $response->description);
         $this->assertEquals('en', $response->locale);
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -623,8 +579,8 @@ class CollectionControllerTest extends DatabaseTestCase
         $style->color = '#00ccff';
 
         $this->assertEquals($style, $responseFirstEntity->style);
-        $this->assertEquals(1, $responseFirstEntity->id);
-        $this->assertEquals(1, $responseFirstEntity->type->id);
+        $this->assertEquals($this->collection1->getId(), $responseFirstEntity->id);
+        $this->assertNotNull($responseFirstEntity->type->id);
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseFirstEntity->changed)));
         $this->assertEquals('Test Collection changed', $responseFirstEntity->title);
@@ -637,20 +593,20 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPutNoDetails()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         // Add New Collection Type
         $collectionType = new CollectionType();
         $collectionType->setName('Second Collection Type');
         $collectionType->setDescription('Second Collection Type');
 
-        self::$em->persist($collectionType);
-        self::$em->flush();
+        $this->em->persist($collectionType);
+        $this->em->flush();
 
         // Test put with only details
         $client->request(
             'PUT',
-            '/api/collections/1',
+            '/api/collections/' . $this->collection1->getId(),
             array(
                 'style' =>
                     array(
@@ -659,7 +615,7 @@ class CollectionControllerTest extends DatabaseTestCase
                     )
                 ,
                 'type'  => array (
-                    'id' => 2
+                    'id' => $collectionType->getId()
                 )
             )
         );
@@ -668,7 +624,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/collections/1?locale=en-gb'
+            '/api/collections/' . $this->collection1->getId() . '?locale=en-gb'
         );
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -679,7 +635,7 @@ class CollectionControllerTest extends DatabaseTestCase
 
         $this->assertEquals($style, $response->style);
 
-        $this->assertEquals(2, $response->type->id);
+        $this->assertNotNull($response->type->id);
     }
 
     /**
@@ -687,7 +643,7 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testPutNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
@@ -699,7 +655,7 @@ class CollectionControllerTest extends DatabaseTestCase
                         'color' => '#00ccff'
                     )
                 ,
-                'type'  => 1
+                'type'  => $this->collectionType1->getId(),
             )
         );
 
@@ -711,16 +667,16 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testDeleteById()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/collections/1');
+        $client->request('DELETE', '/api/collections/' . $this->collection1->getId());
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/collections/1'
+            '/api/collections/' . $this->collection1->getId()
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -735,7 +691,7 @@ class CollectionControllerTest extends DatabaseTestCase
      */
     public function testDeleteByIdNotExisting()
     {
-        $client = $this->createTestClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/collections/404');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());

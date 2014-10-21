@@ -120,6 +120,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $downloadPath;
 
     /**
+     * @var MediaType[]
+     */
+    private $mediaTypeEntities;
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepository $collectionRepository
      * @param UserRepositoryInterface $userRepository
@@ -562,13 +567,19 @@ class DefaultMediaManager implements MediaManagerInterface
     {
         $mimeType = $uploadedFile->getMimeType();
         $id = null;
+
         foreach ($this->mediaTypes as $mediaType) {
             if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
-                $id = $mediaType['id'];
+                $name = $mediaType['type'];
             }
         }
 
-        return $id;
+        if (!isset($this->mediaTypeEntities[$name])) {
+            $mediaType = $this->em->getRepository('Sulu\Bundle\MediaBundle\Entity\MediaType')->findOneByName($name);
+            $this->mediaTypeEntities[$name] = $mediaType;
+        }
+
+        return $this->mediaTypeEntities[$name]->getId();
     }
 
     /**

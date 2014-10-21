@@ -100,22 +100,18 @@ class SuluMediaExtension extends Extension
         ));
         $container->setParameter('sulu_media.media.types', array(
             array(
-                'id' => 1,
                 'type' => 'default',
                 'mimeTypes' => array('*')
             ),
             array(
-                'id' => 2,
                 'type' => 'image',
                 'mimeTypes' => array('image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/vnd.adobe.photoshop')
             ),
             array(
-                'id' => 3,
                 'type' => 'video',
                 'mimeTypes' => array('video/mp4')
             ),
             array(
-                'id' => 4,
                 'type' => 'audio',
                 'mimeTypes' => array('audio/mpeg')
             )
