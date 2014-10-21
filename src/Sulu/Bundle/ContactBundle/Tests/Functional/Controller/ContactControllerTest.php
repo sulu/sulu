@@ -42,20 +42,22 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class ContactControllerTest extends DatabaseTestCase
+class ContactControllerTest extends SuluTestCase
 {
     private $contactPosition = null;
     private $contactTitle = null;
-    /**
-     * @var array
-     */
-    protected static $entities;
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->initOrm();
+    }
 
+    private function initOrm()
+    {
+        $this->purgeDatabase();
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
@@ -65,6 +67,8 @@ class ContactControllerTest extends DatabaseTestCase
         $contact->setFormOfAddress(1);
         $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
         $contact->setDisabled(0);
+
+        $this->contact = $contact;
 
         $title = new ContactTitle();
         $title->setTitle('MSc');
@@ -82,6 +86,8 @@ class ContactControllerTest extends DatabaseTestCase
         $account->setCreated(new DateTime());
         $account->setChanged(new DateTime());
 
+        $this->account = $account;
+
         $account1 = new Account();
         $account1->setLft(0);
         $account1->setRgt(1);
@@ -90,40 +96,60 @@ class ContactControllerTest extends DatabaseTestCase
         $account1->setCreated(new DateTime());
         $account1->setChanged(new DateTime());
 
+        $this->account1 = $account1;
+
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
+
+        $this->phoneType = $phoneType;
 
         $phone = new Phone();
         $phone->setPhone('123456789');
         $phone->setPhoneType($phoneType);
         $contact->addPhone($phone);
 
+        $this->phone = $phone;
+
         $emailType = new EmailType();
         $emailType->setName('Private');
+
+        $this->emailType = $emailType;
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
         $contact->addEmail($email);
 
+        $this->email = $email;
+
         $faxType = new FaxType();
         $faxType->setName('Private');
+
+        $this->faxType = $faxType;
 
         $fax = new Fax();
         $fax->setFax('123654789');
         $fax->setFaxType($faxType);
         $contact->addFax($fax);
 
+        $this->fax = $fax;
+
         $country1 = new Country();
         $country1->setName('Musterland');
         $country1->setCode('ML');
+
+        $this->country = $country1;
 
         $country2 = new Country();
         $country2->setName('United States');
         $country2->setCode('US');
 
+        $this->country2 = $country2;
+
         $addressType = new AddressType();
         $addressType->setName('Private');
+
+        $this->addressType = $addressType;
 
         $address = new Address();
         $address->setStreet('Musterstraße');
@@ -141,34 +167,40 @@ class ContactControllerTest extends DatabaseTestCase
         $address->setPostboxNumber("4711");
         $address->setNote("Note");
 
+        $this->address = $address;
+
         $contactAddress = new ContactAddress();
         $contactAddress->setAddress($address);
         $contactAddress->setContact($contact);
         $contactAddress->setMain(true);
+
+        $this->contactAddress = $contactAddress;
+
         $contact->addContactAddresse($contactAddress);
         $address->addContactAddresse($contactAddress);
 
         $note = new Note();
         $note->setValue('Note');
+        $this->note = $note;
         $contact->addNote($note);
 
-        self::$em->persist($contact);
-        self::$em->persist($title);
-        self::$em->persist($position);
-        self::$em->persist($account);
-        self::$em->persist($account1);
-        self::$em->persist($phoneType);
-        self::$em->persist($phone);
-        self::$em->persist($faxType);
-        self::$em->persist($fax);
-        self::$em->persist($emailType);
-        self::$em->persist($email);
-        self::$em->persist($country1);
-        self::$em->persist($country2);
-        self::$em->persist($addressType);
-        self::$em->persist($contactAddress);
-        self::$em->persist($address);
-        self::$em->persist($note);
+        $this->em->persist($contact);
+        $this->em->persist($title);
+        $this->em->persist($position);
+        $this->em->persist($account);
+        $this->em->persist($account1);
+        $this->em->persist($phoneType);
+        $this->em->persist($phone);
+        $this->em->persist($faxType);
+        $this->em->persist($fax);
+        $this->em->persist($emailType);
+        $this->em->persist($email);
+        $this->em->persist($country1);
+        $this->em->persist($country2);
+        $this->em->persist($addressType);
+        $this->em->persist($contactAddress);
+        $this->em->persist($address);
+        $this->em->persist($note);
 
         /* First Category
         -------------------------------------*/
@@ -176,6 +208,8 @@ class ContactControllerTest extends DatabaseTestCase
         $category->setCreated(new \DateTime());
         $category->setChanged(new \DateTime());
         $category->setKey('first-category-key');
+
+        $this->category = $category;
 
         // name for first category
         $categoryTrans = new CategoryTranslation();
@@ -192,7 +226,7 @@ class ContactControllerTest extends DatabaseTestCase
         $categoryMeta->setCategory($category);
         $category->addMeta($categoryMeta);
 
-        self::$em->persist($category);
+        $this->em->persist($category);
 
         /* Second Category
         -------------------------------------*/
@@ -200,6 +234,8 @@ class ContactControllerTest extends DatabaseTestCase
         $category2->setCreated(new \DateTime());
         $category2->setChanged(new \DateTime());
         $category2->setKey('second-category-key');
+
+        $this->category2 = $category2;
 
         // name for second category
         $categoryTrans2 = new CategoryTranslation();
@@ -216,79 +252,18 @@ class ContactControllerTest extends DatabaseTestCase
         $categoryMeta2->setCategory($category2);
         $category2->addMeta($categoryMeta2);
 
-        self::$em->persist($category2);
+        $this->em->persist($category2);
 
-        self::$em->flush();
+        $this->em->flush();
 
         $this->contactTitle = $title;
         $this->contactPosition = $position;
     }
 
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
     public function testGetById()
     {
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts/1');
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -351,14 +326,14 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -367,14 +342,14 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -387,12 +362,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -449,7 +424,7 @@ class ContactControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
@@ -492,20 +467,20 @@ class ContactControllerTest extends DatabaseTestCase
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
                 'account' => array(
-                    'id' => 2
+                    'id' => $this->account1->getId(),
                 ),
                 'emails' => array(
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -514,14 +489,14 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '123456789',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '987654321',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -530,14 +505,14 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '123456789-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '987654321-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -550,12 +525,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -578,18 +553,17 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'categories' => array(
                     array(
-                        'id' => 1
+                        'id' => $this->category->getId(),
                     ),
                     array(
-                        'id' => 2
+                        'id' => $this->category2->getId(),
                     )
                 )
             )
         );
 
         $response = json_decode($client->getResponse()->getContent());
-
-        $this->assertEquals(2, $response->account->id);
+        $this->assertEquals($this->account1->getId(), $response->account->id);
 
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
@@ -626,7 +600,7 @@ class ContactControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
@@ -689,7 +663,7 @@ class ContactControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
@@ -780,7 +754,7 @@ class ContactControllerTest extends DatabaseTestCase
         $client->request('GET', '/api/contacts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->id);
+        $this->assertNotNull($response->id);
         $this->assertEquals('Erika', $response->firstName);
         $this->assertEquals('Mustermann', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
@@ -817,7 +791,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
@@ -825,84 +799,84 @@ class ContactControllerTest extends DatabaseTestCase
                 'position' => $this->contactPosition->getId(),
                 'emails' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->email->getId(),
                         'email' => 'john.doe@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'john.doe@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'phones' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->phone->getId(),
                         'phone' => '321654987',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '147258369',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'faxes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->fax->getId(),
                         'fax' => '321654987-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '789456123-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'fax' => '147258369-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -916,7 +890,7 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'notes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->note->getId(),
                         'value' => 'Note 1_1'
                     )
                 ),
@@ -927,10 +901,10 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'categories' => array(
                     array(
-                        'id' => 1
+                        'id' => $this->category->getId(),
                     ),
                     array(
-                        'id' => 2
+                        'id' => $this->category2->getId(),
                     )
                 )
             )
@@ -1012,7 +986,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
@@ -1022,7 +996,7 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'email' => 'john.doe@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1031,7 +1005,7 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1040,7 +1014,7 @@ class ContactControllerTest extends DatabaseTestCase
                     array(
                         'fax' => '147258369-1',
                         'faxType' => array(
-                            'id' => 1,
+                            'id' => $this->faxType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1053,12 +1027,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1147,7 +1121,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
@@ -1156,43 +1130,43 @@ class ContactControllerTest extends DatabaseTestCase
                 'emails' => array(),
                 'phones' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->phone->getId(),
                         'phone' => '321654987',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '147258369',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1206,7 +1180,7 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'notes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->note->getId(),
                         'value' => 'Note 1_1'
                     )
                 ),
@@ -1244,7 +1218,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
@@ -1253,49 +1227,49 @@ class ContactControllerTest extends DatabaseTestCase
                 'emails' => array(),
                 'phones' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->phone->getId(),
                         'phone' => '321654987',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '147258369',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 2,
+                            'id' => $this->country2->getId(),
                             'name' => '',
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'notes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->note->getId(),
                         'value' => 'Note 1_1'
                     )
                 ),
@@ -1314,7 +1288,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals(0, count($response->emails));
 
-        $this->assertEquals(2, $response->addresses[0]->country->id);
+        $this->assertNotNull($response->addresses[0]->country->id);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
@@ -1327,61 +1301,61 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
                 'account' => array(
-                    'id' => 2
+                    'id' => $this->account1->getId(),
                 ),
                 'emails' => array(),
                 'phones' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->phone->getId(),
                         'phone' => '321654987',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '147258369',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 2,
+                            'id' => $this->country2->getId(),
                             'name' => '',
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'notes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->note->getId(),
                         'value' => 'Note 1_1'
                     )
                 ),
@@ -1400,9 +1374,9 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('MSc', $response->title->title);
         $this->assertEquals(0, count($response->emails));
 
-        $this->assertEquals(2, $response->account->id);
+        $this->assertEquals($this->account1->getId(), $response->account->id);
 
-        $this->assertEquals(2, $response->addresses[0]->country->id);
+        $this->assertEquals($this->country2->getId(), $response->addresses[0]->country->id);
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
@@ -1415,7 +1389,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/10',
+            '/api/contacts/10113',
             array(
                 'firstName' => 'John'
             )
@@ -1447,7 +1421,7 @@ class ContactControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded->contacts[0]->id);
+        $this->assertEquals($this->contact->getId(), $response->_embedded->contacts[0]->id);
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
 
         $client = $this->createTestClient();
@@ -1455,19 +1429,19 @@ class ContactControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, $response->_embedded->contacts[0]->id);
+        $this->assertEquals($this->contact->getId(), $response->_embedded->contacts[0]->id);
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
     public function testDelete()
     {
         $client = $this->createTestClient();
-        $client->request('DELETE', '/api/contacts/1');
+        $client->request('DELETE', '/api/contacts/' . $this->contact->getId());
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
         $client = $this->createTestClient();
-        $client->request('GET', '/api/contacts/1');
+        $client->request('GET', '/api/contacts/' . $this->contact->getId());
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
@@ -1491,71 +1465,71 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
                 'title' => $this->contactTitle->getId(),
                 'position' => $this->contactPosition->getId(),
                 'account' => array(
-                    'id' => 2
+                    'id' => $this->account1->getId(),
                 ),
                 'emails' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->email->getId(),
                         'email' => 'john.doe@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'john.doe@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'phones' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->phone->getId(),
                         'phone' => '321654987',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'phone' => '147258369',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'note' => 'note'
@@ -1563,7 +1537,7 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'notes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->note->getId(),
                         'value' => 'Note 1_1'
                     )
                 ),
@@ -1580,7 +1554,7 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('John', $response->firstName);
         $this->assertEquals('Doe', $response->lastName);
         $this->assertEquals('MSc', $response->title->title);
-        $this->assertEquals('2', $response->account->id);
+        $this->assertEquals($this->account1->getId(), $response->account->id);
         $this->assertEquals('john.doe@muster.at', $response->emails[0]->email);
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
@@ -1601,7 +1575,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
@@ -1612,63 +1586,63 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'emails' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->email->getId(),
                         'email' => 'john.doe@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 2,
+                        'id' => $response->emails[1]->id,
                         'email' => 'john.doe@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'phones' => array(
                     array(
-                        'id' => 1,
+                        'id' => $response->phones[0]->id,
                         'phone' => '321654987',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 2,
+                        'id' => $response->phones[1]->id,
                         'phone' => '789456123',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
-                        'id' => 3,
+                        'id' => $response->phones[2]->id,
                         'phone' => '147258369',
                         'phoneType' => array(
-                            'id' => 1,
+                            'id' => $this->phoneType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'note' => 'note1'
@@ -1676,7 +1650,7 @@ class ContactControllerTest extends DatabaseTestCase
                 ),
                 'notes' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->note->getId(),
                         'value' => 'Note 1_1'
                     )
                 )
@@ -1693,7 +1667,6 @@ class ContactControllerTest extends DatabaseTestCase
         $this->assertEquals('john.doe@muster.de', $response->emails[1]->email);
         $this->assertEquals('321654987', $response->phones[0]->phone);
         $this->assertEquals('789456123', $response->phones[1]->phone);
-        $this->assertEquals('147258369', $response->phones[2]->phone);
         $this->assertEquals('Street', $response->addresses[0]->street);
         $this->assertEquals('note1', $response->addresses[0]->note);
         $this->assertEquals('2', $response->addresses[0]->number);
@@ -1745,20 +1718,20 @@ class ContactControllerTest extends DatabaseTestCase
                 'title' => 'MSc',
                 'position' => $this->contactPosition->getId(),
                 'account' => array(
-                    'id' => 2
+                    'id' => $this->account1->getId(),
                 ),
                 'emails' => array(
                     array(
                         'email' => 'erika.mustermann@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     ),
                     array(
                         'email' => 'erika.mustermann@muster.de',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
@@ -1771,12 +1744,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1793,12 +1766,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Musterstadt',
                         'state' => 'Musterstate',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1823,7 +1796,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, $response->account->id);
+        $this->assertEquals($this->account1->getId(), $response->account->id);
 
         $this->assertEquals(false, $response->addresses[0]->primaryAddress);
         $this->assertEquals(true, $response->addresses[1]->primaryAddress);
@@ -1841,7 +1814,7 @@ class ContactControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/contacts/1',
+            '/api/contacts/' . $this->contact->getId(),
             array(
                 'firstName' => 'John',
                 'lastName' => 'Doe',
@@ -1849,29 +1822,29 @@ class ContactControllerTest extends DatabaseTestCase
                 'position' => $this->contactPosition->getId(),
                 'emails' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->email->getId(),
                         'email' => 'john.doe@muster.at',
                         'emailType' => array(
-                            'id' => 1,
+                            'id' => $this->emailType->getId(),
                             'name' => 'Private'
                         )
                     )
                 ),
                 'addresses' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->address->getId(),
                         'street' => 'Street',
                         'number' => '2',
                         'zip' => '9999',
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1888,12 +1861,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,
@@ -1910,12 +1883,12 @@ class ContactControllerTest extends DatabaseTestCase
                         'city' => 'Springfield',
                         'state' => 'Colorado',
                         'country' => array(
-                            'id' => 1,
+                            'id' => $this->country->getId(),
                             'name' => 'Musterland',
                             'code' => 'ML'
                         ),
                         'addressType' => array(
-                            'id' => 1,
+                            'id' => $this->addressType->getId(),
                             'name' => 'Private'
                         ),
                         'billingAddress' => true,

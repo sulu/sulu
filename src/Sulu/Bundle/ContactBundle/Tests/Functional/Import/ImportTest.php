@@ -34,8 +34,9 @@ use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
 use Sulu\Bundle\ContactBundle\Entity\ActivityType;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class ImportTest extends DatabaseTestCase
+class ImportTest extends SuluTestCase
 {
     private static $fixturePath;
 
@@ -63,72 +64,65 @@ class ImportTest extends DatabaseTestCase
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->purgeDatabase();
+        $this->em = $this->db('ORM')->getOm();
 
-        $type = new EmailType();
-        $type->setId(1);
-        $type->setName('Business');
-        self::$em->persist($type);
+        $emailType = new EmailType();
+        $emailType->setName('Business');
+        $this->em->persist($emailType);
 
-        $type = new AddressType();
-        $type->setId(1);
-        $type->setName('Business');
-        self::$em->persist($type);
+        $addressType = new AddressType();
+        $addressType->setName('Business');
+        $this->em->persist($addressType);
 
-        $type = new PhoneType();
-        $type->setId(1);
-        $type->setName('Business');
-        self::$em->persist($type);
-        $type = new PhoneType();
-        $type->setId(2);
-        $type->setName('ISDN');
-        self::$em->persist($type);
-        $type = new PhoneType();
-        $type->setId(3);
-        $type->setName('Mobile');
-        self::$em->persist($type);
+        $phoneType = new PhoneType();
+        $phoneType->setName('Business');
+        $this->em->persist($phoneType);
+        $isdnPhoneType = new PhoneType();
+        $isdnPhoneType->setId(2);
+        $isdnPhoneType->setName('ISDN');
+        $this->em->persist($isdnPhoneType);
+        $mobilePhoneType = new PhoneType();
+        $mobilePhoneType->setId(3);
+        $mobilePhoneType->setName('Mobile');
+        $this->em->persist($mobilePhoneType);
 
-        $type = new FaxType();
-        $type->setId(1);
-        $type->setName('Business');
-        self::$em->persist($type);
+        $faxType = new FaxType();
+        $faxType->setName('Business');
+        $this->em->persist($faxType);
 
-        $type = new UrlType();
-        $type->setId(1);
-        $type->setName('Business');
-        self::$em->persist($type);
+        $urlType = new UrlType();
+        $urlType->setName('Business');
+        $this->em->persist($urlType);
 
-        $type = new Country();
-        $type->setId(1);
-        $type->setName('Austria');
-        $type->setCode('AT');
-        self::$em->persist($type);
-        $type = new Country();
-        $type->setId(1);
-        $type->setName('Germany');
-        $type->setCode('DE');
-        self::$em->persist($type);
-        $type = new Country();
-        $type->setId(1);
-        $type->setName('United Kingdom');
-        $type->setCode('UK');
-        self::$em->persist($type);
+        $country = new Country();
+        $country->setName('Austria');
+        $country->setCode('AT');
+        $this->em->persist($country);
+        $country = new Country();
+        $country->setName('Germany');
+        $country->setCode('DE');
+        $this->em->persist($country);
+        $country = new Country();
+        $country->setName('United Kingdom');
+        $country->setCode('UK');
+        $this->em->persist($country);
 
-        self::$em->flush();
+        $this->em->flush();
 
         // TODO: use fixtures
-        $this->import = new Import(self::$em,
-            new AccountManager(self::$em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
-            new ContactManager(self::$em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
+        $this->import = new Import($this->em,
+            new AccountManager($this->em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
+            new ContactManager($this->em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
             array(
-                'emailType' => 1,
-                'phoneType' => 1,
-                'phoneTypeIsdn' => 2,
-                'phoneTypeMobile' => 3,
-                'addressType' => 1,
-                'urlType' => 1,
-                'faxType' => 1,
-                'country' => 1,
+                'emailType' => $emailType->getId(),
+                'phoneType' => $phoneType->getId(),
+                'phoneTypeIsdn' => $isdnPhoneType->getId(),
+                'phoneTypeMobile' => $mobilePhoneType->getId(),
+                'addressType' => $addressType->getId(),
+                'urlType' => $urlType->getId(),
+                'faxType' => $faxType->getId(),
+                'country' => $country->GetId(),
             ),
             array(), // FIXME: this is not beeing used by import currently (fill in when needed)
             array(
@@ -144,71 +138,6 @@ class ImportTest extends DatabaseTestCase
                 ),
             )
         );
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityPriority'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\BankAccount'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountCategory'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\TermsOfPayment'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage')
-        );
-
-        self::$tool->createSchema(self::$entities);
     }
 
     public function testImport()
@@ -227,7 +156,7 @@ class ImportTest extends DatabaseTestCase
         $this->checkContactData();
 
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
-        self::$em->clear();
+        $this->em->clear();
 
     }
 
@@ -245,7 +174,7 @@ class ImportTest extends DatabaseTestCase
 
         // FIXME needed because of strange doctrine behaviour
         // http://stackoverflow.com/questions/18268464/doctrine-lazy-loading-in-symfony-test-environment
-        self::$em->clear();
+        $this->em->clear();
     }
 
     /**
@@ -285,14 +214,14 @@ class ImportTest extends DatabaseTestCase
     private function checkAccountData()
     {
         /** @var Account $account */
-        $accounts = self::$em->getRepository('SuluContactBundle:Account')->findAll();
+        $accounts = $this->em->getRepository('SuluContactBundle:Account')->findAll();
         $this->assertEquals(2, sizeof($accounts));
 
         // accounts
         $account = $accounts[0];
 
         // first account
-        $this->assertEquals(1, $account->getId());
+        $this->assertNotNull($account->getId());
         $this->assertEquals('Test Company 1', $account->getName());
         $this->assertEquals('Office', $account->getCorporation());
         $this->assertEquals(Account::TYPE_SUPPLIER, $account->getType());
@@ -338,12 +267,12 @@ class ImportTest extends DatabaseTestCase
         $account = $accounts[1];
 
         // second account
-        $this->assertEquals(2, $account->getId());
+        $this->assertNotNull($account->getId());
         $this->assertEquals('Child Customer', $account->getName());
         $this->assertEquals(null, $account->getCorporation());
         $this->assertEquals(Account::TYPE_CUSTOMER, $account->getType());
         $this->assertEquals('DEU 5678 1234', $account->getUid());
-        $this->assertEquals(1, $account->getParent()->getId());
+        $this->assertNotNull($account->getParent()->getId());
         $this->assertEquals('0', $account->getDisabled());
 
         // addresss
@@ -379,16 +308,16 @@ class ImportTest extends DatabaseTestCase
     private function checkContactData()
     {
         /** @var Contact $contact */
-        $contacts = self::$em->getRepository('SuluContactBundle:Contact')->findAll();
+        $contacts = $this->em->getRepository('SuluContactBundle:Contact')->findAll();
         $this->assertEquals(2, sizeof($contacts));
 
         $contact = $contacts[0];
 
-        $this->assertEquals(1, $contact->getId());
+        $this->assertNotNull($contact->getId());
         $this->assertEquals('John', $contact->getFirstName());
         $this->assertEquals('Doe', $contact->getLastName());
         $this->assertEquals('Secretary', $contact->getPosition()->getPosition());
-        $this->assertEquals(1, $contact->getAccountContacts()[0]->getAccount()->getId());
+        $this->assertNotNull($contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
         /** @var Address $address */
@@ -418,12 +347,12 @@ class ImportTest extends DatabaseTestCase
 
         $contact = $contacts[1];
 
-        $this->assertEquals(2, $contact->getId());
+        $this->assertNotNull($contact->getId());
         $this->assertEquals('Nicole', $contact->getFirstName());
         $this->assertEquals('Exemplary', $contact->getLastName());
         $this->assertEquals('CEO', $contact->getPosition()->getPosition());
         $this->assertEquals('Master', $contact->getTitle()->getTitle());
-        $this->assertEquals(2, $contact->getAccountContacts()[0]->getAccount()->getId());
+        $this->assertNotNull($contact->getAccountContacts()[0]->getAccount()->getId());
 
         // addresss
         /** @var Address $address */

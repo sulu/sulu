@@ -12,11 +12,10 @@ env:
 before_script:
   - composer self-update
   - composer update
-  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE DATABASE sulu_test;"; fi
-  - if [[ "$DB" == "pgsql" ]]; then psql -c "CREATE DATABASE sulu_test;" -U postgres; fi
   - php vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Testing/GeneratePhpunitConfig.php $DB
+  - ./vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/bin/travis.sh dbal
 
-script: phpunit -c $DB.phpunit.xml --coverage-text
+script: phpunit -c $DB.phpunit.xml
 
 matrix:
   allow_failures:

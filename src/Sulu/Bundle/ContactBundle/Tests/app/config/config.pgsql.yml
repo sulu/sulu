@@ -22,3 +22,4 @@ doctrine:
                 is_bundle: false
         resolve_target_entities:
             Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
