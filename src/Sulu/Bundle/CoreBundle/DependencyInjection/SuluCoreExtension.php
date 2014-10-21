@@ -158,7 +158,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         // Default template
-        $container->setParameter('sulu.content.template.default', $contentConfig['default_template']);
+        $container->setParameter('sulu.content.template.default', $contentConfig['default_template']['page']);
+        $container->setParameter('sulu.content.type.default', $contentConfig['default_template']['snippet']);
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Default Language
@@ -170,6 +171,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
         $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
         $container->setParameter('sulu.content.node_names.temp', $contentConfig['node_names']['temp']);
+        $container->setParameter('sulu.content.node_names.snippet', $contentConfig['node_names']['snippet']);
 
         // Content Types
         $container->setParameter(
@@ -195,8 +197,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         // Template
         $container->setParameter(
-            'sulu.content.template.paths',
-            $contentConfig['templates']['paths']
+            'sulu.content.structure.paths',
+            $contentConfig['structure']['paths']
         );
 
         $loader->load('content.xml');

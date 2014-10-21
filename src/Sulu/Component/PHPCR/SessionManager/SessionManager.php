@@ -16,10 +16,11 @@ use PHPCR\RepositoryFactoryInterface;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
+use PHPCR\ItemNotFoundException;
+use PHPCR\PathNotFoundException;
 
 class SessionManager implements SessionManagerInterface
 {
-
     /**
      * @var string[]
      */
@@ -87,5 +88,27 @@ class SessionManager implements SessionManagerInterface
         }
 
         return $tempNode->getNode($alias);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSnippetNode($templateKey = null)
+    {
+        $snippetPath = '/' . $this->nodeNames['base'] . '/' . $this->nodeNames['snippet'];
+        $nodePath = $snippetPath . '/' . $templateKey;
+
+        if (null === $templateKey) {
+            $nodePath = $snippetPath;
+        }
+
+        try {
+            $node = $this->getSession()->getNode($nodePath);
+        } catch (PathNotFoundException $e) {
+            $snippetNode = $this->getSession()->getNode($snippetPath);
+            $node = $snippetNode->addNode($templateKey);
+        }
+
+        return $node;
     }
 }

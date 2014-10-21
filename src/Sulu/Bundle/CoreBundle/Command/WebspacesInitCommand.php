@@ -51,6 +51,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $contents = $this->getContainer()->getParameter('sulu.content.node_names.content');
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
         $temp = $this->getContainer()->getParameter('sulu.content.node_names.temp');
+        $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
 
         // properties
         $this->properties = new MultipleTranslatedProperties(
@@ -86,14 +87,15 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
             $tempPath = $base . '/' . $webspace->getKey() . '/' . $temp;
+            $snippetsPath = $base . '/' . $snippets;
 
             $output->writeln("  {$webspace->getName()}");
 
             // create content node
             $output->writeln("    content: '/{$contentsPath}'");
-            $content = $this->createRecursive($contentsPath, $root);
+            $content = $this->createRecursive($contentsPath, $root, 'sulu:page');
+            $content->addMixin('sulu:page');
             $this->setBasicProperties($webspace, $content, $template, $userId);
-            $content->addMixin('sulu:content');
             $session->save();
 
             // create routes node
@@ -105,6 +107,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
             // create temp node
             $output->writeln("    temp: '/{$tempPath}'");
             $this->createRecursive($tempPath, $root);
+            $session->save();
+
+            // create snippets node
+            $output->writeln("    snippets: '/{$snippetsPath}'");
+            $this->createRecursive($snippetsPath, $root);
             $session->save();
         }
         $output->writeln('');
@@ -127,7 +134,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('changed'), new DateTime());
             $node->setProperty($this->properties->getName('creator'), $userId);
             $node->setProperty($this->properties->getName('created'), new DateTime());
-
             $node->setProperty($this->properties->getName('navigation'), true);
             $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
             $node->setProperty($this->properties->getName('published'), new DateTime());
@@ -146,7 +152,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
      * @param NodeInterface $rootNode base node to begin
      * @return \PHPCR\NodeInterface
      */
-    private function createRecursive($path, $rootNode)
+    private function createRecursive($path, $rootNode, $type = null)
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;
@@ -183,7 +189,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty('sulu:content', $content);
             $node->setProperty('sulu:history', false);
 
-            $output->writeln("      * '{$node->getPath()}'");
+            $output->writeln('      - ' . $node->getPath());
         }
     }
 }

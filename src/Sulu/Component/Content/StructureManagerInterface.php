@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content;
 
+use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
@@ -19,16 +20,38 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 interface StructureManagerInterface extends ContainerAwareInterface
 {
     /**
-     * returns a structure for given key
+     * Returns structure for given key and type
+     * @param string $key
+     * @param string $type
+     * @return StructureInterface
+     */
+    public function getStructure($key, $type = Structure::TYPE_PAGE);
+
+    /**
+     * Returns a page structure for given key
+     *
      * @param $key string
      * @return StructureInterface
      */
-    public function getStructure($key);
+    public function getPage($key);
 
     /**
      * @return StructureInterface[]
      */
-    public function getStructures();
+    public function getPages();
+
+    /**
+     * Returns a snippet structure for given key
+     *
+     * @param $key string
+     * @return StructureInterface
+     */
+    public function getSnippet($key);
+
+    /**
+     * @return StructureInterface[]
+     */
+    public function getSnippets();
 
     /**
      * add dynamically an extension to structures

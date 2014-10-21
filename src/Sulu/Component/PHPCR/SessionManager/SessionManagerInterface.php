@@ -44,4 +44,10 @@ interface SessionManagerInterface
      * @return \PHPCR\NodeInterface
      */
     public function getTempNode($webspaceKey, $alias);
+
+    /**
+     * returns the snippet node
+     * @return \PHPCR\NodeInterface
+     */
+    public function getSnippetNode();
 }

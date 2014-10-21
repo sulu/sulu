@@ -11,6 +11,8 @@
 namespace Sulu\Component\Content;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
@@ -19,6 +21,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * generates subclasses of structure to match template definitions.
@@ -72,52 +75,81 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * returns a structure for given key
-     * @param $key string
-     * @throws Template\Exception\TemplateNotFoundException
-     * @return StructureInterface
-     */
-    public function getStructure($key)
-    {
-        return $this->getStructureByFile($key, $this->getTemplate($key));
-    }
-
-    /**
      * Sets the options for the manager
      * @param $options
      */
     public function setOptions($options)
     {
-        $this->options = array(
-            'template_dir' => array(),
+        $defaultOptions = array(
+            'structure_paths' => array(),
             'cache_dir' => null,
             'debug' => false,
-            'cache_class_suffix' => 'StructureCache',
-            'base_class' => 'Sulu\Component\Content\Structure'
+            'page_cache_class_suffix' => 'PageCache',
+            'page_base_class' => 'Sulu\Component\Content\Structure\Page',
+            'snippet_cache_class_suffix' => 'SnippetCache',
+            'snippet_base_class' => 'Sulu\Component\Content\Structure\Snippet'
         );
 
         // overwrite the default values with the given options
-        $this->options = array_merge($this->options, $options);
+        $this->options = array_merge($defaultOptions, $options);
+    }
+
+    /**
+     * Returns structure for given key and type
+     * @param string $key
+     * @param string $type
+     * @return Page|Snippet|StructureInterface
+     */
+    public function getStructure($key, $type = Structure::TYPE_PAGE)
+    {
+        if ($type === Structure::TYPE_PAGE) {
+            return $this->getPage($key);
+        } else {
+            return $this->getSnippet($key);
+        }
+    }
+
+    /**
+     * Returns a page structure for given key
+     *
+     * @param $key string
+     * @throws Template\Exception\TemplateNotFoundException
+     * @return Page
+     */
+    public function getPage($key)
+    {
+        return $this->getStructureByType($key, 'page');
+    }
+
+    /**
+     * Returns a snippet structure for given key
+     *
+     * @param $key string
+     * @throws Template\Exception\TemplateNotFoundException
+     * @return Snippet
+     */
+    public function getSnippet($key)
+    {
+        return $this->getStructureByType($key, 'snippet');
     }
 
     /**
      * @return StructureInterface[]
+     * @deprecated
      */
     public function getStructures()
     {
-        $result = array();
-        foreach ($this->getTemplates() as $file) {
-            $fileInfo = pathinfo($file['path']);
-            $key = $fileInfo['filename'];
+        return $this->getPages();
+    }
 
-            try {
-                $result[] = $this->getStructure($key);
-            } catch (TemplateNotFoundException $ex) {
-                $this->logger->warning($ex->getMessage());
-            }
-        }
+    public function getPages()
+    {
+        return $this->getStructuresByType('page');
+    }
 
-        return $result;
+    public function getSnippets()
+    {
+        return $this->getStructuresByType('snippet');
     }
 
     /**
@@ -172,11 +204,21 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @return StructureInterface
      * @throws Template\Exception\TemplateNotFoundException
      */
-    private function getStructureByFile($key, $templateConfig)
+    private function getStructureByFile($key, $templateConfig, $type)
     {
+        if (!in_array($type, array('page', 'snippet'))) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Invalid structure type "%s"',
+                    $type
+                )
+            );
+        }
+
         $fileName = $templateConfig['path'];
 
-        $class = str_replace('-', '_', ucfirst($key)) . $this->options['cache_class_suffix'];
+        $class = str_replace('-', '_', ucfirst($key)) . $this->options[$type . '_cache_class_suffix'];
+
         $cache = new ConfigCache(
             $this->options['cache_dir'] . '/' . $class . '.php',
             $this->options['debug']
@@ -184,7 +226,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         if (!$cache->isFresh()) {
             try {
-                $result = $this->loader->load($fileName);
+                $result = $this->loader->load($fileName, $type);
 
                 if ($result['key'] !== $key) {
                     throw new TemplateNotFoundException($fileName, $key);
@@ -196,7 +238,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                         $result,
                         array(
                             'cache_class' => $class,
-                            'base_class' => $this->options['base_class']
+                            'base_class' => $this->options[$type . '_base_class']
                         )
                     ),
                     $resources
@@ -233,11 +275,15 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @param $key
      * @return bool|string
      */
-    private function getTemplate($key)
+    private function getTemplate($key, $type)
     {
         $triedDirs = array();
 
-        foreach ($this->options['template_dir'] as $templateDir) {
+        foreach ($this->options['structure_paths'] as $templateDir) {
+            if ($templateDir['type'] != $type) {
+                continue;
+            }
+
             $path = $templateDir['path'] . '/' . $key . '.xml';
 
             if (file_exists($path)) {
@@ -247,13 +293,23 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                 );
             }
 
-            $triedDirs[] = $templateDir['path'];
+            $triedDirs[] = '"' . $templateDir['path'] . '"';
+        }
+
+        if (empty($triedDirs)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not find any template directories for structure type "%s"',
+                    $type
+                )
+            );
         }
 
         throw new \InvalidArgumentException(
             sprintf(
-                'Could not find a template named "%s.xml" in the following directories: %s',
+                'Could not find a structure template named "%s.xml" of type "%s" in the following directories: %s',
                 $key,
+                $type,
                 implode(', ', $triedDirs)
             )
         );
@@ -263,10 +319,14 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * returns a list of existing templates
      * @return string[]
      */
-    private function getTemplates()
+    private function getTemplates($type)
     {
         $result = array();
-        foreach ($this->options['template_dir'] as $templateDir) {
+        foreach ($this->options['structure_paths'] as $templateDir) {
+            if ($templateDir['type'] != $type) {
+                continue;
+            }
+
             foreach (glob($templateDir['path'] . '/*.xml', GLOB_BRACE) as $path) {
                 $result[] = array(
                     'path' => $path,
@@ -276,5 +336,29 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         }
 
         return $result;
+    }
+
+    private function getStructuresByType($type)
+    {
+        $result = array();
+        foreach ($this->getTemplates($type) as $file) {
+            $fileInfo = pathinfo($file['path']);
+            $key = $fileInfo['filename'];
+
+            try {
+                $result[] = $this->getStructureByType($key, $type);
+            } catch (TemplateNotFoundException $e) {
+                $this->logger->warning($e->getMessage());
+            }
+        }
+
+        return $result;
+    }
+
+    private function getStructureByType($key, $type)
+    {
+        $templateFile = $this->getTemplate($key, $type);
+
+        return $this->getStructureByFile($key, $templateFile, $type);
     }
 }

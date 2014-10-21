@@ -43,7 +43,19 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
     /**
      * {@inheritDoc}
      */
-    public function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey)
+    public function supports(NodeInterface $contentNode, $localizationCode, $webspaceKey = null)
+    {
+        if ($webspaceKey !== null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAvailableLocalization(NodeInterface $contentNode, $localizationCode, $webspaceKey = null)
     {
         // use title field to check localization availability
         $propertyName = (!empty($this->internalPrefix) ? $this->internalPrefix . '-' : '') . 'created';
