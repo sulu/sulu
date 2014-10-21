@@ -11,8 +11,10 @@
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -82,12 +84,18 @@ class ContentTwigExtension extends \Twig_Extension
     /**
      * Returns resolved content for parent of given uuid
      * @param string $uuid
+     * @throws Exception\ParentNotFoundException
      * @return array
      */
     public function loadParent($uuid)
     {
         $session = $this->sessionManager->getSession();
+        $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getCurrentWebspace()->getKey());
         $node = $session->getNodeByIdentifier($uuid);
+
+        if ($node->getDepth() <= $contentsNode->getDepth()) {
+            throw new ParentNotFoundException($uuid);
+        }
 
         return $this->load($node->getParent()->getIdentifier());
     }

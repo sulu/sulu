@@ -90,6 +90,11 @@ class ContentTwigExtensionTest extends ProphecyTestCase
      */
     private $parentNode;
 
+    /**
+     * @var NodeInterface
+     */
+    private $startPageNode;
+
     protected function setUp()
     {
         parent::setUp();
@@ -102,6 +107,7 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $this->session = $this->prophesize('PHPCR\SessionInterface');
         $this->node = $this->prophesize('PHPCR\NodeInterface');
         $this->parentNode = $this->prophesize('PHPCR\NodeInterface');
+        $this->startPageNode = $this->prophesize('PHPCR\NodeInterface');
 
         $webspace= new Webspace();
         $webspace->setKey('sulu_test');
@@ -128,12 +134,22 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $this
             ->sessionManager
             ->getSession()
-            ->willReturn($this->session);
+            ->willReturn($this->session->reveal());
+
+        $this
+            ->sessionManager
+            ->getContentNode('sulu_test')
+            ->willReturn($this->startPageNode->reveal());
 
         $this
             ->session
             ->getNodeByIdentifier('123-123-123')
-            ->willReturn($this->node);
+            ->willReturn($this->node->reveal());
+
+        $this
+            ->session
+            ->getNodeByIdentifier('321-321-321')
+            ->willReturn($this->parentNode->reveal());
 
         $this
             ->node
@@ -143,12 +159,27 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $this
             ->node
             ->getParent()
-            ->willReturn($this->parentNode);
+            ->willReturn($this->parentNode->reveal());
+
+        $this
+            ->node
+            ->getDepth()
+            ->willReturn(4);
 
         $this
             ->parentNode
             ->getIdentifier()
             ->willReturn('321-321-321');
+
+        $this
+            ->parentNode
+            ->getDepth()
+            ->willReturn(3);
+
+        $this
+            ->startPageNode
+            ->getDepth()
+            ->willReturn(3);
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
@@ -214,5 +245,22 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         // content
         $this->assertEquals(array('title' => 'test'), $result['content']);
         $this->assertEquals(array('title' => array()), $result['view']);
+    }
+
+    public function testLoadParentStartPage()
+    {
+        $this->setExpectedException(
+            'Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException',
+            'Parent for "321-321-321" not found (perhaps it is the startpage?)'
+        );
+
+        $extension = new ContentTwigExtension(
+            $this->contentMapper->reveal(),
+            $this->structureResolver,
+            $this->sessionManager->reveal(),
+            $this->requestAnalyzer->reveal()
+        );
+
+        $extension->loadParent('321-321-321');
     }
 }
