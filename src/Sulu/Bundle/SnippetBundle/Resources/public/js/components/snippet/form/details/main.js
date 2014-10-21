@@ -49,6 +49,7 @@ define(['app-config'], function(AppConfig) {
             } else {
                 this.checkRenderTemplate();
             }
+            this.listenForChange();
         },
 
         checkRenderTemplate: function(item) {
