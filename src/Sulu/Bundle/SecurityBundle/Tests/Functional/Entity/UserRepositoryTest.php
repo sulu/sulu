@@ -23,37 +23,29 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class UserRepositoryTest extends DatabaseTestCase
+class UserRepositoryTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
-
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
         // email
         $emailType = new EmailType();
         $emailType->setName('Private');
-        self::$em->persist($emailType);
+        $this->em->persist($emailType);
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
-        self::$em->persist($email);
+        $this->em->persist($email);
 
         $email2 = new Email();
         $email2->setEmail('maria.musterfrau@muster.at');
         $email2->setEmailType($emailType);
-        self::$em->persist($email2);
+        $this->em->persist($email2);
 
         // Contact
 
@@ -63,7 +55,7 @@ class UserRepositoryTest extends DatabaseTestCase
         $contact1->setCreated(new DateTime());
         $contact1->setChanged(new DateTime());
         $contact1->addEmail($email);
-        self::$em->persist($contact1);
+        $this->em->persist($contact1);
 
         $contact2 = new Contact();
         $contact2->setFirstName('Maria');
@@ -71,23 +63,23 @@ class UserRepositoryTest extends DatabaseTestCase
         $contact2->setCreated(new DateTime());
         $contact2->setChanged(new DateTime());
         $contact2->addEmail($email2);
-        self::$em->persist($contact2);
+        $this->em->persist($contact2);
 
-        self::$em->flush();
+        $this->em->flush();
 
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
         $role1->setChanged(new DateTime());
         $role1->setCreated(new DateTime());
-        self::$em->persist($role1);
+        $this->em->persist($role1);
 
         $role2 = new Role();
         $role2->setName('Role2');
         $role2->setSystem('Test');
         $role2->setChanged(new DateTime());
         $role2->setCreated(new DateTime());
-        self::$em->persist($role2);
+        $this->em->persist($role2);
 
         // User 1
         $user = new User();
@@ -96,7 +88,7 @@ class UserRepositoryTest extends DatabaseTestCase
         $user->setSalt('salt');
         $user->setLocale('de');
         $user->setContact($contact1);
-        self::$em->persist($user);
+        $this->em->persist($user);
 
         // User 2
         $user2 = new User();
@@ -105,33 +97,33 @@ class UserRepositoryTest extends DatabaseTestCase
         $user2->setSalt('salt');
         $user2->setLocale('de');
         $user2->setContact($contact2);
-        self::$em->persist($user2);
+        $this->em->persist($user2);
 
-        self::$em->flush();
+        $this->em->flush();
 
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole1);
+        $this->em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
         $userRole2->setUser($user2);
         $userRole2->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole2);
+        $this->em->persist($userRole2);
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
         $permission1->setContext('Context 1');
-        self::$em->persist($permission1);
+        $this->em->persist($permission1);
 
         $permission2 = new Permission();
         $permission2->setPermissions(122);
         $permission2->setRole($role2);
         $permission2->setContext('Context 2');
-        self::$em->persist($permission2);
+        $this->em->persist($permission2);
 
         // user groups
         $group1 = new Group();
@@ -141,7 +133,7 @@ class UserRepositoryTest extends DatabaseTestCase
         $group1->setDepth(0);
         $group1->setCreated(new DateTime());
         $group1->setChanged(new DateTime());
-        self::$em->persist($group1);
+        $this->em->persist($group1);
 
         $group2 = new Group();
         $group2->setName('Group2');
@@ -150,60 +142,14 @@ class UserRepositoryTest extends DatabaseTestCase
         $group2->setDepth(0);
         $group2->setCreated(new DateTime());
         $group2->setChanged(new DateTime());
-        self::$em->persist($group2);
+        $this->em->persist($group2);
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserSetting'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag')
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testFindBySystem()
     {
-//        $client = static::createClient();
+//        $client = $this->createAuthenticatedClient();
 //
 //        // FIXME works when $this->getSystem() is set in user repository
 //        $em = $client->getContainer()->get('sulu_security.user_repository_factory')->getManager();
@@ -228,7 +174,7 @@ class UserRepositoryTest extends DatabaseTestCase
     {
         $this->prepareUser('sulu', 'sulu', false);
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         /** @var UserRepository $userRepository */
         $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
@@ -241,7 +187,7 @@ class UserRepositoryTest extends DatabaseTestCase
     {
         $this->prepareUser('sulu', 'sulu', true, true);
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         /** @var UserRepository $userRepository */
         $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
@@ -254,12 +200,12 @@ class UserRepositoryTest extends DatabaseTestCase
     {
         $emailType = new EmailType();
         $emailType->setName('Private');
-        self::$em->persist($emailType);
+        $this->em->persist($emailType);
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
-        self::$em->persist($email);
+        $this->em->persist($email);
 
         $contact1 = new Contact();
         $contact1->setFirstName('Max');
@@ -267,7 +213,7 @@ class UserRepositoryTest extends DatabaseTestCase
         $contact1->setCreated(new DateTime());
         $contact1->setChanged(new DateTime());
         $contact1->addEmail($email);
-        self::$em->persist($contact1);
+        $this->em->persist($contact1);
 
         $user = new User();
         $user->setUsername($username);
@@ -277,8 +223,8 @@ class UserRepositoryTest extends DatabaseTestCase
         $user->setContact($contact1);
         $user->setEnabled($enabled);
         $user->setLocked($locked);
-        self::$em->persist($user);
+        $this->em->persist($user);
 
-        self::$em->flush();
+        $this->em->flush();
     }
 }

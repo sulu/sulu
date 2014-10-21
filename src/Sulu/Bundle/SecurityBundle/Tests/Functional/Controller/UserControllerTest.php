@@ -15,7 +15,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -23,70 +23,66 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
-class UserControllerTest extends DatabaseTestCase
+class UserControllerTest extends SuluTestCase
 {
-    /**
-     * @var array
-     */
-    protected static $entities;
-
-    /**
-     * @var SchemaTool
-     */
-    protected static $tool;
-
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
         // Contact
-        $contact = new Contact();
-        $contact->setFirstName('Max');
-        $contact->setLastName('Mustermann');
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
-        self::$em->persist($contact);
+        $contact1 = new Contact();
+        $contact1->setFirstName('Max');
+        $contact1->setLastName('Mustermann');
+        $contact1->setCreated(new DateTime());
+        $contact1->setChanged(new DateTime());
+        $this->em->persist($contact1);
+        $this->contact1 = $contact1;
 
         $emailType = new EmailType();
         $emailType->setName('Private');
-        self::$em->persist($emailType);
+        $this->em->persist($emailType);
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
         $email->setEmailType($emailType);
-        self::$em->persist($email);
-
-        $contact1 = new Contact();
-        $contact1->setFirstName("Max");
-        $contact1->setLastName("Muster");
-        $contact1->setCreated(new DateTime());
-        $contact1->setChanged(new DateTime());
-        $contact1->addEmail($email);
-        self::$em->persist($contact1);
+        $this->em->persist($email);
 
         $contact2 = new Contact();
-        $contact2->setFirstName("Disabled");
-        $contact2->setLastName("User");
+        $contact2->setFirstName("Max");
+        $contact2->setLastName("Muster");
         $contact2->setCreated(new DateTime());
         $contact2->setChanged(new DateTime());
         $contact2->addEmail($email);
-        self::$em->persist($contact2);
+        $this->em->persist($contact2);
+        $this->contact2 = $contact2;
 
-        self::$em->flush();
+        $contact3 = new Contact();
+        $contact3->setFirstName("Disabled");
+        $contact3->setLastName("User");
+        $contact3->setCreated(new DateTime());
+        $contact3->setChanged(new DateTime());
+        $contact3->addEmail($email);
+        $this->em->persist($contact3);
+        $this->contact3 = $contact3;
+
+        $this->em->flush();
 
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
         $role1->setChanged(new DateTime());
         $role1->setCreated(new DateTime());
-        self::$em->persist($role1);
+        $this->em->persist($role1);
+        $this->role1 = $role1;
 
         $role2 = new Role();
         $role2->setName('Role2');
         $role2->setSystem('Sulu');
         $role2->setChanged(new DateTime());
         $role2->setCreated(new DateTime());
-        self::$em->persist($role2);
+        $this->em->persist($role2);
+        $this->role2 = $role2;
 
         // User 1
         $user = new User();
@@ -94,8 +90,9 @@ class UserControllerTest extends DatabaseTestCase
         $user->setPassword('securepassword');
         $user->setSalt('salt');
         $user->setLocale('de');
-        $user->setContact($contact1);
-        self::$em->persist($user);
+        $user->setContact($contact2);
+        $this->em->persist($user);
+        $this->user1 = $user;
 
         // User 2
         $user1 = new User();
@@ -103,42 +100,43 @@ class UserControllerTest extends DatabaseTestCase
         $user1->setPassword('securepassword');
         $user1->setSalt('salt');
         $user1->setLocale('de');
-        $user1->setContact($contact2);
+        $user1->setContact($contact3);
         $user1->setEnabled(false);
-        self::$em->persist($user1);
+        $this->em->persist($user1);
+        $this->user2 = $user1;
 
 
-        self::$em->flush();
+        $this->em->flush();
 
         $userRole1 = new UserRole();
         $userRole1->setRole($role1);
         $userRole1->setUser($user);
         $userRole1->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole1);
+        $this->em->persist($userRole1);
 
         $userRole2 = new UserRole();
         $userRole2->setRole($role2);
         $userRole2->setUser($user);
         $userRole2->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole2);
+        $this->em->persist($userRole2);
 
         $userRole3 = new UserRole();
         $userRole3->setRole($role2);
         $userRole3->setUser($user);
         $userRole3->setLocale(json_encode(array('de', 'en')));
-        self::$em->persist($userRole3);
+        $this->em->persist($userRole3);
 
         $permission1 = new Permission();
         $permission1->setPermissions(122);
         $permission1->setRole($role1);
         $permission1->setContext("Context 1");
-        self::$em->persist($permission1);
+        $this->em->persist($permission1);
 
         $permission2 = new Permission();
         $permission2->setPermissions(122);
         $permission2->setRole($role2);
         $permission2->setContext("Context 2");
-        self::$em->persist($permission2);
+        $this->em->persist($permission2);
 
         // user groups
         $group1 = new Group();
@@ -148,7 +146,8 @@ class UserControllerTest extends DatabaseTestCase
         $group1->setDepth(0);
         $group1->setCreated(new DateTime());
         $group1->setChanged(new DateTime());
-        self::$em->persist($group1);
+        $this->em->persist($group1);
+        $this->group1 = $group1;
 
         $group2 = new Group();
         $group2->setName('Group2');
@@ -157,77 +156,15 @@ class UserControllerTest extends DatabaseTestCase
         $group2->setDepth(0);
         $group2->setCreated(new DateTime());
         $group2->setChanged(new DateTime());
-        self::$em->persist($group2);
+        $this->em->persist($group2);
+        $this->group2 = $group2;
 
-        self::$em->flush();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Activity'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ActivityStatus'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Address'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AddressType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactLocale'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Country'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Note'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Phone'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\PhoneType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\FaxType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Url'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\UrlType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Email'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\EmailType'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Contact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Fax'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Account'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\AccountContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactAddress'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\ContactTitle'),
-            self::$em->getClassMetadata('Sulu\Bundle\ContactBundle\Entity\Position'),
-
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\User'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserSetting'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserGroup'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Group'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\UserRole'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Role'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\Permission'),
-            self::$em->getClassMetadata('Sulu\Bundle\SecurityBundle\Entity\SecurityType'),
-
-            self::$em->getClassMetadata('Sulu\Bundle\TagBundle\Entity\Tag'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Collection'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\CollectionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\Media'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\MediaType'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\File'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersion'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage'),
-            self::$em->getClassMetadata('Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
+        $this->em->flush();
     }
 
     public function testList()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/users?flat=true');
 
@@ -241,9 +178,9 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testGetById()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/users/1');
+        $client->request('GET', '/api/users/' . $this->user1->getId());
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -257,19 +194,19 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testGetByNotExistingId()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('GET', '/api/users/10');
+        $client->request('GET', '/api/users/1120');
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
-        $this->assertContains('10', $response->message);
+        $this->assertContains('1120', $response->message);
     }
 
     public function testPost()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -279,18 +216,18 @@ class UserControllerTest extends DatabaseTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -298,13 +235,13 @@ class UserControllerTest extends DatabaseTestCase
                 'userGroups' => array(
                     array(
                         'group' => array(
-                            'id' => 1
+                            'id' => $this->group1->getId()
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'group' => array(
-                            'id' => 2
+                            'id' => $this->group2->getId()
                         ),
                         'locales' => array('en')
                     )
@@ -316,7 +253,7 @@ class UserControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -331,13 +268,13 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/users/3'
+            '/api/users/' . $response->id
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -353,7 +290,7 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPostWithMissingArgument()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -364,13 +301,13 @@ class UserControllerTest extends DatabaseTestCase
                 'userRoles' => array(
                     array(
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => '["de"]'
                     ),
                     array(
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => '["de"]'
                     ),
@@ -386,52 +323,52 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testDelete()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/users/1');
+        $client->request('DELETE', '/api/users/' . $this->user1->getId());
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
 
-        $client->request('GET', '/api/users/1');
+        $client->request('GET', '/api/users/' . $this->user1->getId());
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     public function testDeleteNotExisting()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/users/15');
+        $client->request('DELETE', '/api/users/11235');
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     public function testPut()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->user1->getId(),
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -439,13 +376,13 @@ class UserControllerTest extends DatabaseTestCase
                 'userGroups' => array(
                     array(
                         'group' => array(
-                            'id' => 1
+                            'id' => $this->group1->getId()
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'group' => array(
-                            'id' => 2
+                            'id' => $this->group2->getId()
                         ),
                         'locales' => array('en')
                     )
@@ -456,7 +393,7 @@ class UserControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
 
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
@@ -473,13 +410,13 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'GET',
-            '/api/users/1'
+            '/api/users/' . $this->user1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
 
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
@@ -497,7 +434,7 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPostNonUniqueName()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -507,7 +444,7 @@ class UserControllerTest extends DatabaseTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 )
             )
         );
@@ -522,7 +459,7 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPutNonUniqueName()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -532,20 +469,20 @@ class UserControllerTest extends DatabaseTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 )
             )
         );
 
         $client->request(
             'PUT',
-            '/api/users/2',
+            '/api/users/' . $this->user2->getId(),
             array(
                 'username' => 'admin',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 )
             )
         );
@@ -559,12 +496,12 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPatch()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
 
         $client->request(
             'PATCH',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'locale' => 'en'
             )
@@ -574,7 +511,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PATCH',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'newusername'
             )
@@ -584,30 +521,30 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PATCH',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 )
             )
         );
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
 
         $client->request(
             'GET',
-            '/api/users/1'
+            '/api/users/' . $this->user1->getId()
         );
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('newusername', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
     }
 
     public function testPatchNonUniqueName()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -617,14 +554,14 @@ class UserControllerTest extends DatabaseTestCase
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 )
             )
         );
 
         $client->request(
             'PATCH',
-            '/api/users/2',
+            '/api/users/' . $this->user2->getId(),
             array(
                 'username' => 'admin'
             )
@@ -639,24 +576,24 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPutWithMissingArgument()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
                 'locale' => 'en',
                 'userRoles' => array(
                     array(
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -673,18 +610,18 @@ class UserControllerTest extends DatabaseTestCase
     public function testGetUserAndRolesByContact()
     {
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/users?contactId=2'
+            '/api/users?contactId=' . $this->contact2->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals(1, $response->_embedded->users[0]->id);
+        $this->assertEquals($this->user1->getId(), $response->_embedded->users[0]->id);
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
 
@@ -698,7 +635,7 @@ class UserControllerTest extends DatabaseTestCase
     public function testGetUserAndRolesByContactNotExisting()
     {
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -713,7 +650,7 @@ class UserControllerTest extends DatabaseTestCase
     public function testGetUserAndRolesWithoutParam()
     {
 
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
@@ -730,30 +667,30 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPutWithRemovedRoles()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->user1->getId(),
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -764,7 +701,7 @@ class UserControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -774,19 +711,19 @@ class UserControllerTest extends DatabaseTestCase
 
         $client->request(
             'PUT',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->user1->getId(),
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     )
@@ -797,7 +734,7 @@ class UserControllerTest extends DatabaseTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -809,7 +746,7 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPostWithoutPassword()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -818,18 +755,18 @@ class UserControllerTest extends DatabaseTestCase
                 'username' => 'manager',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -846,7 +783,7 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPostWithEmptyPassword()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
@@ -856,18 +793,18 @@ class UserControllerTest extends DatabaseTestCase
                 'password' => '',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -884,29 +821,29 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPutWithoutPassword()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->user1->getId(),
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -923,30 +860,30 @@ class UserControllerTest extends DatabaseTestCase
 
     public function testPutWithEmptyPassword()
     {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/users/1',
+            '/api/users/' . $this->user1->getId(),
             array(
                 'username' => 'manager',
                 'password'=> '',
                 'locale' => 'en',
                 'contact' => array(
-                    'id' => 1
+                    'id' => $this->contact1->getId()
                 ),
                 'userRoles' => array(
                     array(
-                        'id' => 1,
+                        'id' => $this->user1->getId(),
                         'role' => array(
-                            'id' => 1
+                            'id' => $this->role1->getId(),
                         ),
                         'locales' => array('de', 'en')
                     ),
                     array(
                         'id' => 2,
                         'role' => array(
-                            'id' => 2
+                            'id' => $this->role2->getId(),
                         ),
                         'locales' => array('en')
                     ),
@@ -958,7 +895,7 @@ class UserControllerTest extends DatabaseTestCase
 
         $this->assertEquals('manager', $response->username);
         $this->assertEquals('securepassword', $response->password);
-        $this->assertEquals(1, $response->contact->id);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('de', $response->userRoles[0]->locales[0]);
@@ -968,11 +905,11 @@ class UserControllerTest extends DatabaseTestCase
     }
 
     public function testEnableUser() {
-        $client = static::createClient();
+        $client = $this->createAuthenticatedClient();
 
         $client->request(
             'POST',
-            '/api/users/2?action=enable'
+            '/api/users/' . $this->user2->getId() . '?action=enable'
         );
 
         $response = json_decode($client->getResponse()->getContent());
