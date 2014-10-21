@@ -7,11 +7,10 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['app-config'], function(AppConfig) {
 
     'use strict';
 
-    // TODO field for selection of locale of user - currently default value of backbone model
     var setHeaderToolbar = function() {
         var toolbarItems = [
             {
@@ -205,7 +204,7 @@ define([], function() {
          * Starts the dropdown for the system language
          */
         startLanguageDropdown: function() {
-            this.systemLanguage = this.options.data.user.locale;
+            this.systemLanguage = AppConfig.getUser().locale;
 
             this.sandbox.start([
                 {
