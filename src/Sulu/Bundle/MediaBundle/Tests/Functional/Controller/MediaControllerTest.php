@@ -255,25 +255,18 @@ class MediaControllerTest extends DatabaseTestCase
      */
     public function testResponseHeader()
     {
-        $client = $this->createTestClient();
-
-        $client->request(
-            'GET',
-            '/media/1/download/photo.jpeg'
-        );
-
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $date = new DateTime();
+        $date->modify('+1 month');
 
         $client = $this->createTestClient();
 
         $client->request(
             'GET',
-            '/api/media/1'
+            '/uploads/media/50x50/01/1-photo.jpeg'
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $this->assertNotNull($client->getResponse()->getExpires());
+        $this->assertEquals($date->format('Y-m-d'), $client->getResponse()->getExpires()->format('Y-m-d'));
     }
 
     /**
