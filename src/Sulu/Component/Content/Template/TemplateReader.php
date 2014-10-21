@@ -112,6 +112,7 @@ class TemplateReader implements LoaderInterface
         } else {
             $result = array(
                 'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
             );
 
             $result = array_filter($result);

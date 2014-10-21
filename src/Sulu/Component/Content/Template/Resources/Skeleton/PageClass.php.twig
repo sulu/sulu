@@ -1,0 +1,13 @@
+{% extends 'StructureClass.php.twig' %}
+
+{% import 'StructureClass.php.twig' as structure %}
+
+{% block parent_constructor %}
+    parent::__construct(
+        '{{ content.key }}',
+        '{{ content.view }}',
+        '{{ content.controller }}',
+        '{{ content.cacheLifetime }}',
+        {{ structure.renderArray(content.meta) }}
+    );
+{% endblock %}
