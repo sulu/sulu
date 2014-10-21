@@ -140,44 +140,44 @@ class NavigationTest extends PhpcrTestCase
     {
         $data = array(
             'news' => array(
-                'name' => 'News',
+                'title' => 'News',
                 'rl' => '/news',
-                'ext' => array('excerpt' => array('name' => 'Excerpt News')),
+                'ext' => array('excerpt' => array('title' => 'Excerpt News')),
                 'navContexts' => array('footer')
             ),
             'products' => array(
-                'name' => 'Products',
+                'title' => 'Products',
                 'rl' => '/products',
-                'ext' => array('excerpt' => array('name' => 'Excerpt Products')),
+                'ext' => array('excerpt' => array('title' => 'Excerpt Products')),
                 'navContexts' => array('main')
             ),
             'news/news-1' => array(
-                'name' => 'News-1',
+                'title' => 'News-1',
                 'rl' => '/news/news-1',
-                'ext' => array('excerpt' => array('name' => 'Excerpt News 1')),
+                'ext' => array('excerpt' => array('title' => 'Excerpt News 1')),
                 'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
-                'name' => 'News-2',
+                'title' => 'News-2',
                 'rl' => '/news/news-2',
-                'ext' => array('excerpt' => array('name' => 'Excerpt News 2')),
+                'ext' => array('excerpt' => array('title' => 'Excerpt News 2')),
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
-                'name' => 'Products-1',
+                'title' => 'Products-1',
                 'rl' => '/products/products-1',
-                'ext' => array('excerpt' => array('name' => 'Excerpt Products 1')),
+                'ext' => array('excerpt' => array('title' => 'Excerpt Products 1')),
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
-                'name' => 'Products-2',
+                'title' => 'Products-2',
                 'rl' => '/products/products-2',
-                'ext' => array('excerpt' => array('name' => 'Excerpt Products 2')),
+                'ext' => array('excerpt' => array('title' => 'Excerpt Products 2')),
                 'navContexts' => array('main')
             )
         );
 
-        $this->mapper->saveStartPage(array('name' => 'Startpage', 'url' => '/'), 'simple', 'default', 'en', 1);
+        $this->mapper->saveStartPage(array('title' => 'Startpage', 'url' => '/'), 'simple', 'default', 'en', 1);
 
         $data['news'] = $this->mapper->save(
             $data['news'],
@@ -266,15 +266,14 @@ class NavigationTest extends PhpcrTestCase
             $structureMock,
             array(
                 new Property(
-                    'name',
+                    'title',
                     '',
                     'text_line',
                     true,
                     true,
                     1,
                     1,
-                    array(),
-                    array(new PropertyTag('sulu.node.name', 1))
+                    array()
                 )
             )
         );
@@ -367,7 +366,7 @@ class NavigationTest extends PhpcrTestCase
     {
         $data['news'] = $this->mapper->save(
             array(
-                'name' => 'SubNews',
+                'title' => 'SubNews',
                 'rl' => '/asdf',
                 'navContexts' => array('footer')
             ),
@@ -392,7 +391,7 @@ class NavigationTest extends PhpcrTestCase
     {
         $data['news'] = $this->mapper->save(
             array(
-                'name' => 'SubNews',
+                'title' => 'SubNews',
                 'rl' => '/asdf',
                 'navContexts' => array('footer')
             ),
@@ -417,13 +416,13 @@ class NavigationTest extends PhpcrTestCase
         );
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('News-1', $result[0]['title']);
-        $this->assertEquals('Excerpt News 1', $result[0]['excerpt']['name']);
+        $this->assertEquals('Excerpt News 1', $result[0]['excerpt']['title']);
 
         $this->assertEquals('SubNews', $result[1]['title']);
-        $this->assertEquals('', $result[1]['excerpt']['name']);
+        $this->assertEquals('', $result[1]['excerpt']['title']);
 
         $this->assertEquals('News-2', $result[2]['title']);
-        $this->assertEquals('Excerpt News 2', $result[2]['excerpt']['name']);
+        $this->assertEquals('Excerpt News 2', $result[2]['excerpt']['title']);
     }
 
     public function testBreadcrumb()
@@ -444,7 +443,7 @@ class NavigationTest extends PhpcrTestCase
     {
         // this node should not be visible in navigation
         $this->mapper->save(
-            array('name' => 'Hikaru Sulu'),
+            array('title' => 'Hikaru Sulu'),
             'norlp',
             'default',
             'en',
@@ -546,7 +545,7 @@ class NavigationTest extends PhpcrTestCase
     public function testNavigationTestPage()
     {
         $data = array(
-            'name' => 'Products-3',
+            'title' => 'Products-3',
             'rl' => '/products/products-3'
         );
 
@@ -591,7 +590,7 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('/products/products-2', $main[1]['url']);
 
         $data = array(
-            'name' => 'Products-3',
+            'title' => 'Products-3',
             'rl' => '/products/products-3',
             'navContexts' => array('main')
         );

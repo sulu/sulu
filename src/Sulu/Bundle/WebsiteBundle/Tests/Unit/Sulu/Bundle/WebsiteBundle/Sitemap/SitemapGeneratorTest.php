@@ -120,15 +120,15 @@ class SitemapGeneratorTest extends PhpcrTestCase
             case 'default_template':
                 return $this->getStructureMock($structureKey);
             case 'excerpt':
-                return $this->getStructureMock($structureKey, 'name', false);
+                return $this->getStructureMock($structureKey, false);
             case 'simple':
-                return $this->getStructureMock($structureKey, 'title');
+                return $this->getStructureMock($structureKey);
             case 'overview':
                 return $this->getStructureMock($structureKey);
             case 'external-link':
-                return $this->getStructureMock($structureKey, 'test', false);
+                return $this->getStructureMock($structureKey, false);
             case 'internal-link':
-                return $this->getStructureMock($structureKey, 'test', false);
+                return $this->getStructureMock($structureKey, false);
             default:
                 return null;
         }
@@ -164,13 +164,13 @@ class SitemapGeneratorTest extends PhpcrTestCase
     {
         $data = array(
             'news' => array(
-                'name' => 'News ' . $locale,
+                'title' => 'News ' . $locale,
                 'rl' => '/news',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
                 'navContexts' => array('footer')
             ),
             'products' => array(
-                'name' => 'Products ' . $locale,
+                'title' => 'Products ' . $locale,
                 'rl' => '/products',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
                 'navContexts' => array('main')
@@ -188,19 +188,19 @@ class SitemapGeneratorTest extends PhpcrTestCase
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
-                'test' => 'Products-1 ' . $locale,
+                'title' => 'Products-1 ' . $locale,
                 'external_url' => '123-123-123',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
-                'test' => 'Products-2 ' . $locale,
+                'title' => 'Products-2 ' . $locale,
                 'external_url' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
                 'navContexts' => array('main')
             ),
             'products/products-3' => array(
-                'test' => 'Products-3 ' . $locale,
+                'title' => 'Products-3 ' . $locale,
                 'external_url' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'navContexts' => array('main')
@@ -292,7 +292,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         return $data;
     }
 
-    private function getStructureMock($structureKey, $nodeName = 'name', $addResourceLocatorProperty = true)
+    private function getStructureMock($structureKey, $addResourceLocatorProperty = true)
     {
         $structureMock = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure',
@@ -308,15 +308,14 @@ class SitemapGeneratorTest extends PhpcrTestCase
             $structureMock,
             array(
                 new Property(
-                    $nodeName,
+                    'title',
                     '',
                     'text_line',
                     false,
                     false,
                     1,
                     1,
-                    array(),
-                    array(new PropertyTag('sulu.node.name', 1))
+                    array()
                 )
             )
         );
