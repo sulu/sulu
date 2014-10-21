@@ -243,7 +243,7 @@ class ContentMapper implements ContentMapperInterface
             $root = $this->getContentNode($webspaceKey);
         }
 
-        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+        $nodeNameProperty = $structure->getProperty('title');
         $translatedNodeNameProperty = new TranslatedProperty(
             $nodeNameProperty,
             $languageCode,
@@ -1304,7 +1304,7 @@ class ContentMapper implements ContentMapperInterface
                     $this->defaultTemplate
                 );
                 $structure = $this->getStructure($templateKey);
-                $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+                $nodeNameProperty = $structure->getProperty('title');
                 $property = $structure->getProperty($nodeNameProperty->getName());
                 $type = $this->getContentType($property->getContentTypeName());
                 $type->read(
@@ -1451,7 +1451,7 @@ class ContentMapper implements ContentMapperInterface
 
         // prepare content node
         $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
-        $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
+        $nodeName = $content->getPropertyValue('title');
 
         // node name should not have a slash
         $nodeName = str_replace('/', '-', $nodeName);
@@ -1546,7 +1546,7 @@ class ContentMapper implements ContentMapperInterface
         if ($srcResourceLocator !== null) {
             $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
         } else {
-            $resourceLocatorPart = $content->getPropertyValueByTagName('sulu.node.name');
+            $resourceLocatorPart = $content->getPropertyValue('title');
         }
 
         // generate new resourcelocator
@@ -1940,7 +1940,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getTitle(NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale)
     {
-        return $this->getPropertyData($node, $structure->getPropertyByTagName('sulu.node.name'), $webspaceKey, $locale);
+        return $this->getPropertyData($node, $structure->getProperty('title'), $webspaceKey, $locale);
     }
 
     /**

@@ -32,7 +32,6 @@
 
             <indexField />
 
-            <tag name="sulu.node.name"/>
             <tag name="sulu.node.title" priority="10"/>
 
             <tag name="some.random.tag" one="1" two="2" three="three" />
