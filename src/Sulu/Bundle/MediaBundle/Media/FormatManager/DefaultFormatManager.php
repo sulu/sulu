@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
-use Faker\Provider\cs_CZ\DateTime;
+use DateTime;
 use Imagick;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine;
@@ -70,9 +70,9 @@ class DefaultFormatManager implements FormatManagerInterface
     private $previewMimeTypes = array();
 
     /**
-     * @var string
+     * @var array
      */
-    private $cacheTime = '';
+    private $responseHeaders = array();
 
     /**
      * @param MediaRepository $mediaRepository
