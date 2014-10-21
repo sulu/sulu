@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use Monolog\Logger;
 use PHPCR\NodeInterface;
@@ -29,6 +29,10 @@ use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Webspace;
 
+/**
+ * @group functional
+ * @group repository
+ */
 class NodeRepositoryTest extends PhpcrTestCase
 {
     /**

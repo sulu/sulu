@@ -12,6 +12,9 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
+/**
+ * @group webtest
+ */
 class NodeResourcelocatorControllerTest extends SuluTestCase
 {
     /**
