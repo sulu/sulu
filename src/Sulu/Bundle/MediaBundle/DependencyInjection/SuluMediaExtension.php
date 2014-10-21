@@ -60,8 +60,6 @@ class SuluMediaExtension extends Extension
             'application/pdf',
         ));
 
-        $date = new \DateTime();
-        $date->modify('+1 month');
         $container->setParameter('sulu_media.image.formats', array(
             self::DEFAULT_FORMAT_NAME => array(
                 'name' => self::DEFAULT_FORMAT_NAME,
