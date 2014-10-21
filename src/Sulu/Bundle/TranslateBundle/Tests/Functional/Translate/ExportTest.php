@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Translate;
 
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Location;
@@ -18,7 +18,7 @@ use Sulu\Bundle\TranslateBundle\Entity\Package;
 use Sulu\Bundle\TranslateBundle\Entity\Translation;
 use Sulu\Bundle\TranslateBundle\Translate\Export;
 
-class ExportTest extends DatabaseTestCase
+class ExportTest extends SuluTestCase
 {
     private static $fixturePath;
 
@@ -40,9 +40,10 @@ class ExportTest extends DatabaseTestCase
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
+        $this->purgeDatabase();
 
-        $this->export = new Export(self::$em);
+        $this->export = new Export($this->em);
 
         //
         // Package - id 1
@@ -51,23 +52,24 @@ class ExportTest extends DatabaseTestCase
         //Insert some data in the database
         $package = new Package();
         $package->setName('Export');
-        self::$em->persist($package);
+        $this->package1 = $package;
+        $this->em->persist($package);
 
         $catalogue = new Catalogue();
         $catalogue->setPackage($package);
         $catalogue->setIsDefault(false);
         $catalogue->setLocale('en');
-        self::$em->persist($catalogue);
+        $this->em->persist($catalogue);
 
         $location1 = new Location();
         $location1->setName('Newsletter');
         $location1->setPackage($package);
-        self::$em->persist($location1);
+        $this->em->persist($location1);
 
         $location2 = new Location();
         $location2->setName('Portals');
         $location2->setPackage($package);
-        self::$em->persist($location2);
+        $this->em->persist($location2);
 
         $code1 = new Code();
         $code1->setPackage($package);
@@ -75,7 +77,7 @@ class ExportTest extends DatabaseTestCase
         $code1->setBackend(true);
         $code1->setFrontend(true);
         $code1->setLocation($location1);
-        self::$em->persist($code1);
+        $this->em->persist($code1);
 
         $code2 = new Code();
         $code2->setPackage($package);
@@ -83,7 +85,7 @@ class ExportTest extends DatabaseTestCase
         $code2->setBackend(true);
         $code2->setFrontend(false);
         $code2->setLocation($location1);
-        self::$em->persist($code2);
+        $this->em->persist($code2);
 
         $code3 = new Code();
         $code3->setPackage($package);
@@ -91,27 +93,27 @@ class ExportTest extends DatabaseTestCase
         $code3->setBackend(false);
         $code3->setFrontend(true);
         $code3->setLocation($location2);
-        self::$em->persist($code3);
+        $this->em->persist($code3);
 
-        self::$em->flush();
+        $this->em->flush();
 
         $translation1 = new Translation();
         $translation1->setCatalogue($catalogue);
         $translation1->setCode($code1);
         $translation1->setValue('Exports made easy');
-        self::$em->persist($translation1);
+        $this->em->persist($translation1);
 
         $translation2 = new Translation();
         $translation2->setCatalogue($catalogue);
         $translation2->setCode($code2);
         $translation2->setValue('Exports are great');
-        self::$em->persist($translation2);
+        $this->em->persist($translation2);
 
         $translation3 = new Translation();
         $translation3->setCatalogue($catalogue);
         $translation3->setCode($code3);
         $translation3->setValue('Exports are configurable');
-        self::$em->persist($translation3);
+        $this->em->persist($translation3);
 
         //
         // Package - id 2
@@ -120,23 +122,23 @@ class ExportTest extends DatabaseTestCase
         //Insert some data in the database
         $package2 = new Package();
         $package2->setName('Export2');
-        self::$em->persist($package2);
+        $this->em->persist($package2);
 
         $catalogue2 = new Catalogue();
         $catalogue2->setPackage($package2);
         $catalogue2->setIsDefault(false);
         $catalogue2->setLocale('en');
-        self::$em->persist($catalogue2);
+        $this->em->persist($catalogue2);
 
         $location21 = new Location();
         $location21->setName('Newsletter');
         $location21->setPackage($package2);
-        self::$em->persist($location21);
+        $this->em->persist($location21);
 
         $location22 = new Location();
         $location22->setName('Portals');
         $location22->setPackage($package2);
-        self::$em->persist($location22);
+        $this->em->persist($location22);
 
         $code21 = new Code();
         $code21->setPackage($package2);
@@ -144,7 +146,7 @@ class ExportTest extends DatabaseTestCase
         $code21->setBackend(true);
         $code21->setFrontend(true);
         $code21->setLocation($location21);
-        self::$em->persist($code21);
+        $this->em->persist($code21);
 
         $code22 = new Code();
         $code22->setPackage($package2);
@@ -152,7 +154,7 @@ class ExportTest extends DatabaseTestCase
         $code22->setBackend(true);
         $code22->setFrontend(false);
         $code22->setLocation($location21);
-        self::$em->persist($code22);
+        $this->em->persist($code22);
 
         $code23 = new Code();
         $code23->setPackage($package2);
@@ -160,35 +162,34 @@ class ExportTest extends DatabaseTestCase
         $code23->setBackend(false);
         $code23->setFrontend(true);
         $code23->setLocation($location22);
-        self::$em->persist($code23);
+        $this->em->persist($code23);
 
-        self::$em->flush();
+        $this->em->flush();
 
         $translation21 = new Translation();
         $translation21->setCatalogue($catalogue2);
         $translation21->setCode($code21);
         $translation21->setValue('Exports made super easy');
-        self::$em->persist($translation21);
+        $this->em->persist($translation21);
 
         $translation22 = new Translation();
         $translation22->setCatalogue($catalogue2);
         $translation22->setCode($code22);
         $translation22->setValue('Exports are super great');
-        self::$em->persist($translation22);
+        $this->em->persist($translation22);
 
         $translation23 = new Translation();
         $translation23->setCatalogue($catalogue2);
         $translation23->setCode($code23);
         $translation23->setValue('Exports are super configurable');
-        self::$em->persist($translation23);
+        $this->em->persist($translation23);
 
-        self::$em->flush();
+        $this->em->flush();
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
         if (file_exists(self::$fixturePath . '/Export.en.xlf')) {
             unlink(self::$fixturePath . '/Export.en.xlf');
         }
@@ -197,22 +198,9 @@ class ExportTest extends DatabaseTestCase
         }
     }
 
-    public function setUpSchema()
-    {
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Catalogue'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Code'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Location'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Package'),
-            self::$em->getClassMetadata('Sulu\Bundle\TranslateBundle\Entity\Translation'),
-        );
-
-        self::$tool->createSchema(self::$entities);
-    }
-
     public function testXliffExport()
     {
-        $this->export->setPackageId(1);
+        $this->export->setPackageId($this->package1->getId());
         $this->export->setLocale('en');
         $this->export->setFilename('sulu');
         $this->export->setFormat(Export::XLIFF);
@@ -227,7 +215,7 @@ class ExportTest extends DatabaseTestCase
 
     public function testXliffExportLocation()
     {
-        $this->export->setPackageId(1);
+        $this->export->setPackageId($this->package1->getId());
         $this->export->setLocale('en');
         $this->export->setFilename('sulu');
         $this->export->setFormat(Export::XLIFF);
@@ -240,7 +228,7 @@ class ExportTest extends DatabaseTestCase
 
         $this->assertEquals($expectedHash, $actualHash);
 
-        $this->export->setPackageId(1);
+        $this->export->setPackageId($this->package1->getId());
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setLocation('Portals');
@@ -256,7 +244,7 @@ class ExportTest extends DatabaseTestCase
 
     public function testXliffExportBackendFrontend()
     {
-        $this->export->setPackageId(1);
+        $this->export->setPackageId($this->package1->getId());
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(null);
@@ -270,7 +258,7 @@ class ExportTest extends DatabaseTestCase
 
         $this->assertEquals($expectedHash, $actualHash);
 
-        $this->export->setPackageId(1);
+        $this->export->setPackageId($this->package1->getId());
         $this->export->setLocale('en');
         $this->export->setFormat(Export::XLIFF);
         $this->export->setFrontend(true);
@@ -287,7 +275,7 @@ class ExportTest extends DatabaseTestCase
 
     public function testJsonExport()
     {
-        $this->export->setPackageId(1);
+        $this->export->setPackageId($this->package1->getId());
         $this->export->setLocale('en');
         $this->export->setFormat(Export::JSON);
         $this->export->setPath(self::$fixturePath . '/');

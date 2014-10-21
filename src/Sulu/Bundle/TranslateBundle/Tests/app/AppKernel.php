@@ -39,4 +39,17 @@ class AppKernel extends Kernel
             $loader->load(__DIR__ . '/config/config.mysql.yml');
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            array(
+                'sulu.context' => \Sulu\Component\HttpKernel\SuluKernel::CONTEXT_ADMIN
+            )
+        );
+    }
 }
