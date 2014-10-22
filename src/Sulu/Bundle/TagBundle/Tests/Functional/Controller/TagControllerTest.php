@@ -178,7 +178,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('tag.error.notUnique', $response->message);
         $this->assertEquals('name', $response->field);
     }
 
@@ -235,7 +235,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('tag.error.notUnique', $response->message);
         $this->assertEquals('name', $response->field);
     }
 
@@ -461,7 +461,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('A tag with the name "tag1"already exists!', $response->message);
+        $this->assertEquals('tag.error.notUnique!', $response->message);
         $this->assertEquals('name', $response->field);
 
     }

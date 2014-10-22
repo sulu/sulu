@@ -214,7 +214,7 @@ class TagController extends RestController implements ClassResourceInterface
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
-            $cvExistsException = new ConstraintViolationException('A tag with the name "' . $exc->getName() . '"already exists!', 'name');
+            $cvExistsException = new ConstraintViolationException('tag.error.notUnique', 'name');
             $view = $this->view($cvExistsException->toArray(), 400);
         } catch (TagNotFoundException $exc) {
             $entityNotFoundException = new EntityNotFoundException(self::$entityName, $id);
@@ -297,7 +297,7 @@ class TagController extends RestController implements ClassResourceInterface
             $view = $this->view($tags, 200);
 
         } catch (TagAlreadyExistsException $exc) {
-            $cvExistsException = new ConstraintViolationException('A tag with the name "' . $exc->getName() . '"already exists!', 'name');
+            $cvExistsException = new ConstraintViolationException('tag.error.notUnique', 'name');
             $view = $this->view($cvExistsException->toArray(), 400);
         }
 
