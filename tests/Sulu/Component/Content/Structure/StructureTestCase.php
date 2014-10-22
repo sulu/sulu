@@ -226,7 +226,7 @@ abstract class StructureTestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(10 => $this->titleProperty), $tag4Properties);
         $this->assertEquals(array(1 => $this->testProperty), $tag5Properties);
 
-        $this->setExpectedException('\Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException');
+        $this->setExpectedException('Sulu\Component\Content\Exception\NoSuchPropertyException');
         $this->structure->getPropertyByTagName('test-tag', true);
     }
 

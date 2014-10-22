@@ -30,7 +30,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * @var string
      */
-    private $languageNamespace;
+    protected $languageNamespace;
 
     /**
      * @var MultipleTranslatedProperties
@@ -197,7 +197,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     private function buildSelectForStructure($locale, StructureInterface $structure, &$names)
     {
-        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+        $nodeNameProperty = $structure->getProperty('title');
         $result = '';
 
         $name = $this->getTranslatedProperty($nodeNameProperty, $locale)->getName();

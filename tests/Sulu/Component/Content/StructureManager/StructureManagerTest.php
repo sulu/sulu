@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\StructureMapper;
+namespace Sulu\Component\Content\StructureManager;
 
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
@@ -25,7 +25,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class StructureMangerTest extends \PHPUnit_Framework_TestCase
+class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var LoaderInterface
@@ -129,11 +129,7 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             array(),
             $property->getParams()
         );
-        $this->assertEquals(3, sizeof($property->getTags()));
-        $this->assertEquals(
-            new PropertyTag('sulu.node.name', 1),
-            $property->getTags()['sulu.node.name']
-        );
+        $this->assertEquals(2, sizeof($property->getTags()));
         $this->assertEquals(
             new PropertyTag('sulu.node.title', 10),
             $property->getTags()['sulu.node.title']
@@ -143,7 +139,6 @@ class StructureMangerTest extends \PHPUnit_Framework_TestCase
             $property->getTags()['some.random.tag']
         );
         $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.title', true));
-        $this->assertEquals($property, $structure->getPropertyByTagName('sulu.node.name', true));
 
         // check url
         $this->assertArrayHasKey('url', $properties);

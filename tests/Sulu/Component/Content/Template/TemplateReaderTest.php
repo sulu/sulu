@@ -8,10 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Template;
+namespace Sulu\Component\Content\Template;
 
 use InvalidArgumentException;
-use Sulu\Component\Content\Template\TemplateReader;
 
 class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,11 +45,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
-                        array(
-                            'name' => 'sulu.node.name',
-                            'priority' => null,
-                            'attributes' => array(),
-                        ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
@@ -180,7 +174,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Template/template.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -194,7 +188,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     {
         $templateReader = new TemplateReader();
         $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Page/template_not_exists.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Template/template_not_exists.xml'
         );
     }
 
@@ -209,12 +203,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
-            'The given XML is invalid! Tag(s) sulu.node.name required but not found'
+            '\Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException',
+            'The property with the name "title" is required, but was not found in the template "template"'
         );
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Page/template_missing_properties.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Template/template_missing_properties.xml'
         );
         $this->assertEquals($template, $result);
     }
@@ -225,7 +219,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReadTypesMissingMandatory()
     {
         $templateReader = new TemplateReader();
-        $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_missing_mandatory.xml');
+        $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Template/template_missing_mandatory.xml');
     }
 
     public function testReadBlockTemplate()
@@ -246,11 +240,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
-                        array(
-                            'name' => 'sulu.node.name',
-                            'priority' => null,
-                            'attributes' => array(),
-                        ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
@@ -509,7 +498,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_block.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Template/template_block.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -534,11 +523,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
-                        array(
-                            'name' => 'sulu.node.name',
-                            'priority' => null,
-                            'attributes' => array(),
-                        ),
                         array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
@@ -687,7 +671,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_block_types.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Template/template_block_types.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -713,11 +697,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(
                         '0' => array(
-                            'name' => 'sulu.node.name',
-                            'priority' => null,
-                            'attributes' => array(),
-                        ),
-                        '1' => array(
                             'name' => 'sulu.node.title',
                             'priority' => 10,
                             'attributes' => array(),
@@ -891,7 +870,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_sections.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Template/template_sections.xml');
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
@@ -900,12 +879,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     function testReservedName()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\InvalidXmlException',
-            'The given XML is invalid! Property name changed is a reserved'
+            '\Sulu\Component\Content\Template\Exception\ReservedPropertyNameException'
         );
 
         $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../Resources/DataFixtures/Page/template_reserved.xml');
+        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Template/template_reserved.xml');
     }
 
     function testNestingParams()
@@ -926,11 +904,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'mandatory' => true,
                     'multilingual' => true,
                     'tags' => array(
-                        '0' => array(
-                            'name' => 'sulu.node.name',
-                            'priority' => null,
-                            'attributes' => array()
-                        )
                     ),
                     'params' => array(
                         array('name' => 'minLinks', 'value' => '1', 'type' => 'string'),
@@ -953,7 +926,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(
-            __DIR__ . '/../../../Resources/DataFixtures/Page/template_nesting_params.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Template/template_nesting_params.xml'
         );
 
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -961,7 +934,20 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($template, $result);
     }
 
-    function arrayRecursiveDiff($aArray1, $aArray2)
+    public function testWithoutTitle()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException',
+            'The property with the name "title" is required, but was not found in the template "template"'
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Template/template_missing_title.xml'
+        );
+    }
+
+    private function arrayRecursiveDiff($aArray1, $aArray2)
     {
         $aReturn = array();
 

@@ -11,9 +11,9 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\StructureTag;
 
 /**
@@ -394,7 +394,7 @@ abstract class Structure implements StructureInterface
         } elseif (isset($this->properties[$name])) {
             return $this->properties[$name];
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($name);
         }
     }
 
@@ -410,7 +410,7 @@ abstract class Structure implements StructureInterface
         if (array_key_exists($tagName, $this->tags)) {
             return $this->tags[$tagName][$highest === true ? 'highest' : 'lowest'];
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($tagName);
         }
     }
 
@@ -425,7 +425,7 @@ abstract class Structure implements StructureInterface
         if (array_key_exists($tagName, $this->tags)) {
             return $this->tags[$tagName]['properties'];
         } else {
-            throw new NoSuchPropertyException();
+            throw new NoSuchPropertyException($tagName);
         }
     }
 
@@ -675,11 +675,11 @@ abstract class Structure implements StructureInterface
         if (
             $this->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
             $this->getInternalLinkContent() !== null &&
-            $this->getInternalLinkContent()->hasTag('sulu.node.name')
+            $this->getInternalLinkContent()->hasProperty('title')
         ) {
-            return $this->internalLinkContent->getPropertyValueByTagName('sulu.node.name');
-        } elseif ($this->hasTag('sulu.node.name')) {
-            return $this->getPropertyValueByTagName('sulu.node.name');
+            return $this->internalLinkContent->getPropertyValue('title');
+        } elseif ($this->hasProperty('title')) {
+            return $this->getPropertyValue('title');
         }
 
         return null;
