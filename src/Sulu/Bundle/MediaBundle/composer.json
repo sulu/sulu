@@ -13,16 +13,12 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "@dev",
-        "friendsofsymfony/http-cache": "@dev",
-        "jms/serializer-bundle": "@dev",
-        "stof/doctrine-extensions-bundle": "1.1.*@dev",
+        "doctrine/orm": "2.4.*",
+        "stof/doctrine-extensions-bundle": "1.1.*",
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
         "imagine/imagine": "~0.6.1",
-        "liip/theme-bundle": "@dev",
 
         "sulu/category-bundle": "@dev",
         "sulu/security-bundle": "@dev",
@@ -36,7 +32,6 @@
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "4.0.*",
         "sulu/test-bundle": "dev-develop",
-        "symfony-cmf/testing": "~1.2@RC",
         "sulu/search-bundle": "dev-develop"
     },
     "autoload": {
@@ -44,6 +39,5 @@
             "Sulu\\Bundle\\MediaBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/MediaBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Sulu/Bundle/MediaBundle"
 }
