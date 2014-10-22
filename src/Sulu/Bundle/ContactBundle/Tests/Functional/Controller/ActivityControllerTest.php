@@ -10,26 +10,14 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Address;
-use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
-use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
-use Sulu\Bundle\ContactBundle\Entity\Note;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
-use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Url;
-use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Entity\Activity;
 use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
 use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
@@ -38,6 +26,56 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ActivityControllerTest extends SuluTestCase
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
+     * @var Account
+     */
+    private $account;
+
+    /**
+     * @var EmailType
+     */
+    private $emailType;
+
+    /**
+     * @var Contact
+     */
+    private $contact;
+
+    /**
+     * @var Email
+     */
+    private $email2;
+
+    /**
+     * @var ActivityType
+     */
+    private $activityType;
+
+    /**
+     * @var ActivityStatus
+     */
+    private $activityStatus;
+
+    /**
+     * @var ActivityPriority
+     */
+    private $activityPriority;
+
+    /**
+     * @var Activity
+     */
+    private $activity;
+
+    /**
+     * @var Activity
+     */
+    private $activity2;
+
     public function setUp()
     {
         $this->purgeDatabase();
@@ -153,44 +191,105 @@ class ActivityControllerTest extends SuluTestCase
             'api/activities'
         );
 
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $data = $response->_embedded->activities;
+        $data = $response['_embedded']['activities'];
 
         $this->assertEquals(2, count($data));
 
-        $this->assertNotNull($data[1]->id);
-        $this->assertEquals('test', $data[1]->subject);
-        $this->assertEquals('note', $data[1]->note);
-        $this->assertNotEmpty($data[1]->dueDate);
-        $this->assertNotEmpty($data[1]->startDate);
-        $this->assertNotEmpty($data[1]->created);
-        $this->assertNotEmpty($data[1]->changed);
-        $this->assertEquals($this->activityStatus->getId(), $data[1]->activityStatus->id);
-        $this->assertEquals($this->activityType->getId(), $data[1]->activityType->id);
-        $this->assertEquals($this->activityPriority->getId(), $data[1]->activityPriority->id);
-        $this->assertEquals(false, array_key_exists('contact', $data[1]));
-        $this->assertEquals($this->account->getId(), $data[1]->account->id);
-        $this->assertEquals($this->contact->getId(), $data[1]->assignedContact->id);
+        // check if fields are present
+        $this->assertNotNull($data[0]['id']);
+        $this->assertNotEmpty($data[0]['dueDate']);
+        $this->assertNotEmpty($data[0]['startDate']);
+        $this->assertNotEmpty($data[0]['created']);
+        $this->assertNotEmpty($data[0]['changed']);
+        $this->assertArrayNotHasKey('contact', $data[0]);
 
-        $this->assertNotNull($data[0]->id);
-        $this->assertEquals('test 2', $data[0]->subject);
-        $this->assertEquals('note 2', $data[0]->note);
-        $this->assertNotEmpty($data[0]->dueDate);
-        $this->assertNotEmpty($data[0]->startDate);
-        $this->assertNotEmpty($data[0]->created);
-        $this->assertNotEmpty($data[0]->changed);
-        $this->assertEquals($this->activityStatus->getId(), $data[0]->activityStatus->id);
-        $this->assertEquals($this->activityType->getId(), $data[0]->activityType->id);
-        $this->assertEquals($this->activityPriority->getId(), $data[0]->activityPriority->id);
-        $this->assertEquals($this->contact->getId(), $data[0]->contact->id);
-        $this->assertEquals(false, array_key_exists('account', $data[0]));
-        $this->assertEquals($this->contact->getId(), $data[0]->assignedContact->id);
+        $this->assertNotNull($data[1]['id']);
+        $this->assertNotEmpty($data[1]['dueDate']);
+        $this->assertNotEmpty($data[1]['startDate']);
+        $this->assertNotEmpty($data[1]['created']);
+        $this->assertNotEmpty($data[1]['changed']);
+        $this->assertArrayHasKey('contact', $data[1]);
+
+        // filter data and check only checkable fields
+        $filterKeys = array(
+            'subject',
+            'note',
+            'activityStatus',
+            'activityType',
+            'activityPriority',
+            'account',
+            'assignedContact'
+        );
+
+        $filterKeyArrays = array(
+            'activityStatus',
+            'activityType',
+            'activityPriority',
+            'account',
+            'assignedContact'
+        );
+
+        $filteredData = array_map(
+            function ($value) use ($filterKeys, $filterKeyArrays) {
+                foreach ($filterKeyArrays as $filterKey) {
+                    if (array_key_exists($filterKey, $value)) {
+                        $value[$filterKey] = array_intersect_key($value[$filterKey], array_flip(array('id')));
+                    }
+                }
+
+                return array_intersect_key($value, array_flip($filterKeys));
+            },
+            $data
+        );
+
+        $this->assertContains(
+            array(
+                'subject' => 'test',
+                'note' => 'note',
+                'activityStatus' => array(
+                    'id' => $this->activityStatus->getId(),
+                ),
+                'activityType' => array(
+                    'id' => $this->activityType->getId(),
+                ),
+                'activityPriority' => array(
+                    'id' => $this->activityPriority->getId(),
+                ),
+                'account' => array(
+                    'id' => $this->account->getId()
+                ),
+                'assignedContact' => array(
+                    'id' => $this->contact->getId()
+                )
+            ),
+            $filteredData
+        );
+
+        $this->assertContains(
+            array(
+                'subject' => 'test 2',
+                'note' => 'note 2',
+                'activityStatus' => array(
+                    'id' => $this->activityStatus->getId(),
+                ),
+                'activityType' => array(
+                    'id' => $this->activityType->getId(),
+                ),
+                'activityPriority' => array(
+                    'id' => $this->activityPriority->getId(),
+                ),
+                'assignedContact' => array(
+                    'id' => $this->contact->getId()
+                )
+            ),
+            $filteredData
+        );
     }
 
-    public
-    function testGetFlatByAccount()
+    public function testGetFlatByAccount()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -218,8 +317,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals('Vorname Nachname', $data[0]->assignedContact);
     }
 
-    public
-    function testGetFlatByContact()
+    public function testGetFlatByContact()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -248,8 +346,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals('Vorname Nachname', $data[0]->assignedContact);
     }
 
-    public
-    function testPost()
+    public function testPost()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -295,8 +392,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals($this->contact->getId(), $response->assignedContact->id);
     }
 
-    public
-    function testPostInValidContact()
+    public function testPostInValidContact()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -328,8 +424,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public
-    function testPostInValidAccount()
+    public function testPostInValidAccount()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -361,8 +456,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public
-    function testPostInValidAssignedContact()
+    public function testPostInValidAssignedContact()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -394,8 +488,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public
-    function testPostMissingSubject()
+    public function testPostMissingSubject()
     {
         $client = $this->createAuthenticatedClient();
 
@@ -426,8 +519,7 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 
-    public
-    function testPut()
+    public function testPut()
     {
         $client = $this->createAuthenticatedClient();
 

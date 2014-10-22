@@ -173,7 +173,7 @@ define([], function() {
         },
 
         /**
-         * Processes an arry of items
+         * Processes an array of items
          * @param items - array of items
          */
         addedItems: function(items){

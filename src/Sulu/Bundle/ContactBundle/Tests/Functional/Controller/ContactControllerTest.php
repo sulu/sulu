@@ -1802,10 +1802,37 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->addresses[1]->primaryAddress);
 
         $client->request('GET', '/api/contacts/' . $response->id);
-        $response = json_decode($client->getResponse()->getContent());
+        $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertEquals(false, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(true, $response->addresses[1]->primaryAddress);
+        $addresses = $response['addresses'];
+
+        $filterKeys = array(
+            'primaryAddress',
+            'street'
+        );
+
+        $filteredAddresses = array_map(
+            function ($address) use ($filterKeys) {
+                return array_intersect_key($address, array_flip($filterKeys));
+            },
+            $addresses
+        );
+
+        $this->assertContains(
+            array(
+                'primaryAddress' => false,
+                'street' => 'Musterstraße'
+            ),
+            $filteredAddresses
+        );
+
+        $this->assertContains(
+            array(
+                'primaryAddress' => true,
+                'street' => 'Musterstraße 2'
+            ),
+            $filteredAddresses
+        );
     }
 
     public function testPrimaryAddressHandlingPut()
@@ -1929,6 +1956,7 @@ class ContactControllerTest extends SuluTestCase
             if ($a->primaryAddress === true && $b->primaryAddress === false) {
                 return true;
             }
+
             return false;
         };
     }
