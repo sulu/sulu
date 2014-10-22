@@ -14,9 +14,9 @@
         "sulu/sulu": "dev-develop"
     },
     "require-dev": {
-        "symfony-cmf/testing": "dev-master",
-        "zendframework/zend-stdlib": "2.3.1 as 2.0.0rc5",
-        "zendframework/zendsearch": "2.*",
+        "sulu/test-bundle": "dev-develop",
+        "zendframework/zend-stdlib": "~2.3",
+        "zendframework/zendsearch": "@dev",
 
         "massive/build-bundle": "0.2.*"
     },
@@ -28,6 +28,5 @@
         "psr-4": {
             "Sulu\\Bundle\\SearchBundle\\": ""
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
