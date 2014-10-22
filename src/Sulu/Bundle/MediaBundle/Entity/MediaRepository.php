@@ -159,4 +159,35 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
+    /**
+     * Returns the most recent version of a media for the specified
+     * filename within a collection
+     *
+     * @param String $filename
+     * @param int $collectionId
+     *
+     * @return Sulu\Bundle\MediaBundle\Entity\Media
+     */
+    public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
+    {
+        try {
+            $qb = $this->createQueryBuilder('media')
+                ->join('media.files', 'file')
+                ->join('file.fileVersions', 'fileVersion')
+                ->join('media.collection', 'collection')
+                ->orderBy('fileVersion.changed', 'DESC')
+                ->setMaxResults(1)
+                ->where('media.collection = :collectionId')
+                ->andWhere('fileVersion.name = :filename');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('collectionId', $collectionId);
+            $query->setParameter('filename', $filename);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }

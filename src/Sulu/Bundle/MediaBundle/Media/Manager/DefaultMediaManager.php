@@ -56,7 +56,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * The repository for communication with the database
      * @var MediaRepositoryInterface
      */
-    private $mediaRepository;
+    protected $mediaRepository;
 
     /**
      * The repository for communication with the database
@@ -663,7 +663,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @return object
      * @throws CollectionNotFoundException
      */
-    protected function getCollectionById($collectionId)
+    public function getCollectionById($collectionId)
     {
         $collection = $this->collectionRepository->find($collectionId);
         if (!$collection) {
