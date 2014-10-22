@@ -461,7 +461,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals('tag.error.notUnique!', $response->message);
+        $this->assertEquals('tag.error.notUnique', $response->message);
         $this->assertEquals('name', $response->field);
 
     }
