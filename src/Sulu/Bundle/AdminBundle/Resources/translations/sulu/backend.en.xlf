@@ -368,7 +368,7 @@
             </trans-unit>
             <trans-unit id="883c0562a1ae3578239d1803dfe61292" resname="navigation.webspaces">
                 <source>navigation.webspaces</source>
-                <target>Web-spaces</target>
+                <target>Global Content &amp; Webspaces</target>
             </trans-unit>
             <trans-unit id="eefab6371eb9c8bb5457d1f5e35014a2" resname="navigation.webspaces.pages">
                 <source>navigation.webspaces.pages</source>
