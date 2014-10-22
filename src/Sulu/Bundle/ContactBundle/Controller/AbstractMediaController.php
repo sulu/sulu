@@ -14,7 +14,8 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -63,11 +64,10 @@ abstract class AbstractMediaController extends RestController
             $em->flush();
 
             $view = $this->view(
-                new \Sulu\Bundle\MediaBundle\Api\Media(
+                new Media(
                     $media,
                     $this->getUser()->getLocale(),
-                    null,
-                    $this->get('sulu_tag.tag_manager')
+                    null
                 ),
                 200
             );

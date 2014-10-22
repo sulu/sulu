@@ -24,8 +24,6 @@ use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Security\UserInterface;
@@ -44,20 +42,13 @@ use JMS\Serializer\Annotation\Groups;
 class AccountContact extends ApiWrapper
 {
     /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
-
-    /**
      * @param AccountContactEntity $accountContact
      * @param string $locale The locale of this product
-     * @param $tagManager
      */
-    public function __construct(AccountContactEntity $accountContact, $locale, TagManagerInterface $tagManager)
+    public function __construct(AccountContactEntity $accountContact, $locale)
     {
         $this->entity = $accountContact;
         $this->locale = $locale;
-        $this->tagManager = $tagManager;
     }
 
     /**

@@ -29,8 +29,6 @@ use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
 use Hateoas\Configuration\Annotation\Relation;
@@ -48,21 +46,15 @@ use JMS\Serializer\Annotation\Groups;
  */
 class Account extends ApiWrapper
 {
-    /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
 
     /**
      * @param AccountEntity $account
      * @param string $locale The locale of this product
-     * @param $tagManager
      */
-    public function __construct(AccountEntity $account, $locale, TagManagerInterface $tagManager)
+    public function __construct(AccountEntity $account, $locale)
     {
         $this->entity = $account;
         $this->locale = $locale;
-        $this->tagManager = $tagManager;
     }
 
     /**
@@ -233,7 +225,7 @@ class Account extends ApiWrapper
     {
         $account = $this->entity->getParent();
         if ($account) {
-            return new Account($account, $this->locale, $this->tagManager);
+            return new Account($account, $this->locale);
         }
 
         return null;
@@ -750,7 +742,7 @@ class Account extends ApiWrapper
         $accountContacts = array();
         if ($this->entity->getAccountContacts()) {
             foreach ($this->entity->getAccountContacts() as $AccountContact) {
-                $accountContacts[] = new AccountContact($AccountContact, $this->locale, $this->tagManager);
+                $accountContacts[] = new AccountContact($AccountContact, $this->locale);
             }
         }
 
@@ -924,7 +916,7 @@ class Account extends ApiWrapper
     public function getResponsiblePerson()
     {
         if ($this->entity->getResponsiblePerson()) {
-            return new Contact($this->entity->getResponsiblePerson(), $this->locale, $this->tagManager);
+            return new Contact($this->entity->getResponsiblePerson(), $this->locale);
         }
     }
 
@@ -939,7 +931,7 @@ class Account extends ApiWrapper
     public function getMainContact()
     {
         if ($this->entity->getMainContact()) {
-            return new Contact($this->entity->getMainContact(), $this->locale, $this->tagManager);
+            return new Contact($this->entity->getMainContact(), $this->locale);
         }
     }
 
@@ -1153,7 +1145,8 @@ class Account extends ApiWrapper
         if (!is_null($accountContacts)) {
             /** @var AccountContactEntity $accountContact */
             foreach ($accountContacts as $accountContact) {
-                $contacts[] = new Contact($accountContact->getContact(), $this->locale, $this->tagManager);
+                $contacts[] = new Contact($accountContact->getContact(), $this->locale);
+                $contacts[] = new Contact($accountContact->getContact(), $this->locale);
             }
         }
 
@@ -1196,7 +1189,7 @@ class Account extends ApiWrapper
         $medias = array();
         if ($this->entity->getMedias()) {
             foreach ($this->entity->getMedias() as $media) {
-                $medias[] = new Media($media, $this->locale, null, $this->tagManager);
+                $medias[] = new Media($media, $this->locale, null);
             }
         }
 

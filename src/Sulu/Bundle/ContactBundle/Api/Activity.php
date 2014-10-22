@@ -31,8 +31,6 @@ use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
 use Hateoas\Configuration\Annotation\Relation;
@@ -50,20 +48,13 @@ use JMS\Serializer\Annotation\Groups;
 class Activity extends ApiWrapper
 {
     /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
-
-    /**
      * @param ActivityEntity $activity
      * @param string $locale The locale of this product
-     * @param $tagManager
      */
-    public function __construct(ActivityEntity $activity, $locale, TagManagerInterface $tagManager)
+    public function __construct(ActivityEntity $activity, $locale)
     {
         $this->entity = $activity;
         $this->locale = $locale;
-        $this->tagManager = $tagManager;
     }
 
     /**
@@ -339,7 +330,7 @@ class Activity extends ApiWrapper
 
         $contact = $this->entity->getContact();
         if ($contact) {
-            return new Contact($contact, $this->locale, $this->tagManager);
+            return new Contact($contact, $this->locale);
         }
 
         return null;
@@ -370,7 +361,7 @@ class Activity extends ApiWrapper
     {
         $account = $this->entity->getAccount();
         if ($account) {
-            return new Account($account, $this->locale, $this->tagManager);
+            return new Account($account, $this->locale);
         }
 
         return null;
@@ -401,7 +392,7 @@ class Activity extends ApiWrapper
     {
         $contact = $this->entity->getAssignedContact();
         if ($contact) {
-            return new Contact($contact, $this->locale, $this->tagManager);
+            return new Contact($contact, $this->locale);
         }
 
         return null;
