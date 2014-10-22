@@ -160,23 +160,9 @@ class ActivityControllerTest extends SuluTestCase
 
         $this->assertEquals(2, count($data));
 
-        $this->assertNotNull($data[0]->id);
-        $this->assertEquals('test', $data[0]->subject);
-        $this->assertEquals('note', $data[0]->note);
-        $this->assertNotEmpty($data[0]->dueDate);
-        $this->assertNotEmpty($data[0]->startDate);
-        $this->assertNotEmpty($data[0]->created);
-        $this->assertNotEmpty($data[0]->changed);
-        $this->assertEquals($this->activityStatus->getId(), $data[0]->activityStatus->id);
-        $this->assertEquals($this->activityType->getId(), $data[0]->activityType->id);
-        $this->assertEquals($this->activityPriority->getId(), $data[0]->activityPriority->id);
-        $this->assertEquals(false, array_key_exists('contact', $data[0]));
-        $this->assertEquals($this->account->getId(), $data[0]->account->id);
-        $this->assertEquals($this->contact->getId(), $data[0]->assignedContact->id);
-
         $this->assertNotNull($data[1]->id);
-        $this->assertEquals('test 2', $data[1]->subject);
-        $this->assertEquals('note 2', $data[1]->note);
+        $this->assertEquals('test', $data[1]->subject);
+        $this->assertEquals('note', $data[1]->note);
         $this->assertNotEmpty($data[1]->dueDate);
         $this->assertNotEmpty($data[1]->startDate);
         $this->assertNotEmpty($data[1]->created);
@@ -184,9 +170,23 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals($this->activityStatus->getId(), $data[1]->activityStatus->id);
         $this->assertEquals($this->activityType->getId(), $data[1]->activityType->id);
         $this->assertEquals($this->activityPriority->getId(), $data[1]->activityPriority->id);
-        $this->assertEquals($this->contact->getId(), $data[1]->contact->id);
-        $this->assertEquals(false, array_key_exists('account', $data[1]));
+        $this->assertEquals(false, array_key_exists('contact', $data[1]));
+        $this->assertEquals($this->account->getId(), $data[1]->account->id);
         $this->assertEquals($this->contact->getId(), $data[1]->assignedContact->id);
+
+        $this->assertNotNull($data[0]->id);
+        $this->assertEquals('test 2', $data[0]->subject);
+        $this->assertEquals('note 2', $data[0]->note);
+        $this->assertNotEmpty($data[0]->dueDate);
+        $this->assertNotEmpty($data[0]->startDate);
+        $this->assertNotEmpty($data[0]->created);
+        $this->assertNotEmpty($data[0]->changed);
+        $this->assertEquals($this->activityStatus->getId(), $data[0]->activityStatus->id);
+        $this->assertEquals($this->activityType->getId(), $data[0]->activityType->id);
+        $this->assertEquals($this->activityPriority->getId(), $data[0]->activityPriority->id);
+        $this->assertEquals($this->contact->getId(), $data[0]->contact->id);
+        $this->assertEquals(false, array_key_exists('account', $data[0]));
+        $this->assertEquals($this->contact->getId(), $data[0]->assignedContact->id);
     }
 
     public
