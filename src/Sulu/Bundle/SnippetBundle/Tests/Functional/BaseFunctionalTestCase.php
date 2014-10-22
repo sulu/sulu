@@ -9,6 +9,24 @@ use Sulu\Component\Content\StructureInterface;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
 {
+    /**
+     * @var Snippet
+     */
+    protected $hotel1;
+
+    /**
+     * @var Snippet
+     */
+    protected $hotel2;
+
+    /**
+     * @var Snippet
+     */
+    protected $car1;
+
+    /**
+     * Load fixtures for snippet functional tests
+     */
     protected function loadFixtures()
     {
         // HOTELS (including page)
@@ -20,7 +38,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setData(array(
                 'title' => 'Le grande budapest'
             ));
-        $hotel1 = $this->contentMapper->saveRequest($req);
+        $this->hotel1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
             ->setType('snippet')
@@ -30,7 +48,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setData(array(
                 'title' => 'L\'Hôtel New Hampshire',
             ));
-        $hotel2 = $this->contentMapper->saveRequest($req);
+        $this->hotel2 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
             ->setType('page')
@@ -43,8 +61,8 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
                 'title' => 'Hotels page',
                 'url' => '/hotels',
                 'hotels' => array(
-                    $hotel1->getUuid(),
-                    $hotel2->getUuid()
+                    $this->hotel1->getUuid(),
+                    $this->hotel2->getUuid()
                 )
             ));
 
@@ -59,7 +77,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ->setData(array(
                 'title' => 'C car',
             ));
-        $this->contentMapper->saveRequest($req);
+        $this->car1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
             ->setType('snippet')

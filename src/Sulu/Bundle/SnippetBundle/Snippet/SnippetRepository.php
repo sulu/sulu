@@ -36,6 +36,31 @@ class SnippetRepository
     }
 
     /**
+     * Return snippets identified by the given UUIDs.
+     *
+     * UUIDs which fail to resolve to a snippet will be ignored.
+     *
+     * @param array $uuids
+     * @param string $languageCode
+     *
+     * @return Snippet[]
+     */
+    public function getSnippetsByUuids(array $uuids = array(), $languageCode)
+    {
+        $snippets = array();
+
+        foreach ($uuids as $uuid) {
+            try {
+                $snippet = $this->contentMapper->load($uuid, null, $languageCode);
+                $snippets[] = $snippet;
+            } catch (\PHPCR\ItemNotFoundException $e) {
+                // ignore not found items
+            }
+        }
+        return $snippets;
+    }
+
+    /**
      * Return snippets
      *
      * If $type is given then only return the snippets of that type.

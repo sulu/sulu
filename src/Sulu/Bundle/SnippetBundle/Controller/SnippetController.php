@@ -84,16 +84,23 @@ class SnippetController
         $this->initEnv($request);
 
         $type = $request->query->get('type', null);
+        $uuidsString = $request->get('ids');
 
-        $snippets = $this->snippetRepository->getSnippets(
-            $this->languageCode,
-            $type,
-            null,
-            null,
-            $request->get('search'),
-            $request->get('sortBy'),
-            $request->get('sortOrder')
-        );
+
+        if ($uuidsString) {
+            $uuids = explode(',', $uuidsString);
+            $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $this->languageCode);
+        } else {
+            $snippets = $this->snippetRepository->getSnippets(
+                $this->languageCode,
+                $type,
+                null,
+                null,
+                $request->get('search'),
+                $request->get('sortBy'),
+                $request->get('sortOrder')
+            );
+        }
 
         $data = array();
 
@@ -109,41 +116,21 @@ class SnippetController
     }
 
     /**
-     * Retrieve snippet(s) by ID(s)
+     * Retrieve snippet by ID(s)
      *
-     * Multiple Snippet IDs must be delimited with a comma.
+     * Note: the defaults below allow us to generate the base URL for the benefit
+     *       of the javascript code (i.e. we can pass the base URL without the UUID to the
+     *       javascript code).
      *
-     * Note the defaults below allow us to generate the base URL for the benefit
-     * of the javascript code (i.e. we can pass the base URL without the UUID to the
-     * javascript code).
-     *
-     * @Get(defaults={"uuid" = ""}, requirements={ "uuid" = ".*" })
+     * @Get(defaults={"uuid" = ""})
      */
     public function getSnippetAction(Request $request, $uuid = null)
     {
         $this->initEnv($request);
 
-        if (UUIDHelper::isUUID($uuid)) {
-            $uuids = array($uuid);
-        } else {
-            $uuids = explode(',', $uuid);
-        }
+        $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
 
-        $snippets = array();
-        foreach ($uuids as $uuid) {
-            try {
-                $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
-                $snippets[] = $this->decorateSnippet($snippet->toArray(), $this->languageCode);
-            } catch (\PHPCR\ItemNotFoundException $e) {
-                // ignore not found items
-            }
-        }
-
-        if (sizeof($snippets) == 1) {
-            $snippets = $snippets[0];
-        }
-
-        $view = View::create($snippets);
+        $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
 
         return $this->viewHandler->handle($view);
     }

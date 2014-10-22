@@ -34,8 +34,6 @@ class SnippetApiTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
 
-        $this->assertCount(1, $res);
-        $res = reset($res);
         $this->assertEquals('Le grande budapest', $res['title']); // snippet nodes do not have a path
         $this->assertEquals($this->hotel1->getUuid(), $res['id']);
     }
@@ -43,18 +41,18 @@ class SnippetApiTest extends SuluTestCase
     public function testGetMany()
     {
         $this->client->request('GET', sprintf(
-            '/snippets/%s,%s%s',
+            '/snippets?ids=%s,%s%s',
             $this->hotel1->getUuid(),
             $this->hotel2->getUuid(),
-            '?language=de'
+            '&language=de'
         ));
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
 
-        $this->assertCount(2, $res);
-        $res = reset($res);
+        $this->assertCount(2, $res['_embedded']['snippets']);
+        $res = reset($res['_embedded']['snippets']);
         $this->assertEquals('Le grande budapest', $res['title']);
         $this->assertEquals($this->hotel1->getUuid(), $res['id']);
     }
@@ -62,16 +60,17 @@ class SnippetApiTest extends SuluTestCase
     public function testGetMultipleWithNotExistingIds()
     {
         $this->client->request('GET', sprintf(
-            '/snippets/%s,%s,%s%s',
+            '/snippets?ids=%s,%s,%s%s',
             $this->hotel1->getUuid(),
             '1234',
             $this->hotel2->getUuid(),
-            '?language=de'
+            '&language=de'
         ));
         $response = $this->client->getResponse();
 
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
+        $res = $res['_embedded']['snippets'];
 
         $this->assertCount(2, $res);
         $res = reset($res);

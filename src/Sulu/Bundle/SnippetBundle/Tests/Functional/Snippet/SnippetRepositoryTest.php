@@ -57,6 +57,45 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         }
     }
 
+    public function provideGetSnippetsByUuids()
+    {
+        return array(
+            array(
+                array('hotel1', 'hotel2', 'car1'), 'de', 3
+            ),
+            // Currently fails because a default template does not exist...
+            //array(
+            //    array('hotel1', 'hotel2', 'car1'), 'en', 3
+            //),
+            array(
+                array('hotel1', 'invalid', 'car1'), 'de', 2
+            ),
+            array(
+                array(), 'de', 0
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideGetSnippetsByUuids
+     */
+    public function testGetSnippetsByUuids($snippets, $languageCode, $expectedCount)
+    {
+        $uuids = array();
+        foreach ($snippets as $snippetVarName) {
+            if (isset($this->{$snippetVarName})) {
+                $snippet = $this->{$snippetVarName};
+                $uuids[] = $snippet->getUuid();
+            } else {
+                $uuids[] = $snippetVarName; // test invalid things too
+            }
+        }
+
+        $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $languageCode);
+        $this->assertNotNull($snippets);
+        $this->assertCount($expectedCount, $snippets);
+    }
+
     public function testOrder()
     {
         $snippets = $this->snippetRepository->getSnippets('de', 'car');
