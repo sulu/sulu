@@ -25,18 +25,18 @@ class SnippetContent extends ComplexContentType
 {
     protected $contentMapper;
     protected $template;
-    protected $defaultType;
+    protected $defaultSnippetType;
 
     /**
      * @param ContentMapper $contentMapper
      * @param string $template Twig template resource
-     * @param string $defaultType Default structure type
+     * @param string $defaultSnippetType Default structure type
      */
-    public function __construct(ContentMapper $contentMapper, $template, $defaultType)
+    public function __construct(ContentMapper $contentMapper, $template, $defaultSnippetType)
     {
         $this->contentMapper = $contentMapper;
         $this->template = $template;
-        $this->defaultType = $defaultType;
+        $this->defaultSnippetType = $defaultSnippetType;
     }
 
     public function getType()
@@ -113,7 +113,9 @@ class SnippetContent extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array();
+        return array(
+            'defaultSnippetType' => $this->defaultSnippetType
+        );
     }
 
     /**

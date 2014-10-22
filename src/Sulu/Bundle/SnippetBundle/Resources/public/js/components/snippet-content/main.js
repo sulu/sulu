@@ -34,6 +34,10 @@ define([], function() {
             }
         },
 
+        data = {
+            ids: []
+        },
+
         templates = {
             skeleton: function(options) {
                 return [
@@ -378,7 +382,10 @@ define([], function() {
             if (this.URIGet.hasChanged === true) {
 
                 var thenFunction = function(data) {
-                    this.items = data;
+                    if (data._embedded.snippets == undefined) {
+                        throw "Invalid response from server, expected to find _embedded.snippets"
+                    }
+                    this.items = data._embedded.snippets;
 
                     renderContent.call(this);
                 }.bind(this);
@@ -410,9 +417,9 @@ define([], function() {
         setURIGet = function() {
             var newURIGet = [
                 this.options.urlGet,
-                '/',
+                '?ids=',
                 (this.data.ids || []).join(','),
-                '?language=',
+                '&language=',
                 this.options.language
             ].join('');
 
@@ -456,7 +463,7 @@ define([], function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            this.data = this.sandbox.util.extend({}, this.dataDefaults);
+            this.data = { ids: [] };
             this.linkList = null;
 
             this.sandbox.util.each([
