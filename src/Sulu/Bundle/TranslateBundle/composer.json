@@ -10,13 +10,9 @@
             "homepage": "https://github.com/massiveart/SuluTranslateBundle/contributors"
         }
     ],
-    "minimum-stability": "dev",
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "@dev",
-        "friendsofsymfony/http-cache": "@dev",
-        "jms/serializer-bundle": "@dev",
+        "doctrine/orm": "2.4.*",
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "willdurand/hateoas-bundle": "0.3.*"
