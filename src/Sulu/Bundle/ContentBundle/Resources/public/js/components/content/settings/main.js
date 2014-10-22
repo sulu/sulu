@@ -84,12 +84,6 @@ define(['app-config'], function(AppConfig) {
 
             selectedLanguage = this.data.shadowBaseLanguage;
 
-            if (shadowsForSelect[selectedLanguage] === undefined) {
-                if (shadowsForSelect.length > 0) {
-                    selectedLanguage = shadowsForSelect[0].id;
-                }
-            }
-
             // show at least a message
             if (shadowsForSelect.length === 0) {
                 shadowsForSelect = [

@@ -30,6 +30,12 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
+/**
+ * This is in preview group because it causes Jackrabbit to lock-up
+ * (this is not a bug here, but some bug in Jackrabbit)
+ *
+ * @group preview
+ */
 class PreviewControllerTest extends SuluTestCase
 {
     /**

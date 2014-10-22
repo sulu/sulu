@@ -242,6 +242,7 @@ define(function() {
             // wait for overlay initialized to initialize overlay
             this.sandbox.once('husky.overlay.node.opened', function() {
                 this.renderOverlayTable('#child-table', columnItems, item.id);
+                this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
 
             this.startOverlay('content.contents.settings.order.title', templates.table());
@@ -262,7 +263,7 @@ define(function() {
                     item = items[id];
                     html.push(
                             '<li data-id="' + item.id + '" data-path="' + item.path + '">' +
-                            '   <span class="node-name">' + this.sandbox.util.cropMiddle(item['sulu.node.name'], 35) + '</span>' +
+                            '   <span class="node-name">' + this.sandbox.util.cropMiddle(item.title, 35) + '</span>' +
                             '   <span class="options-select"><i class="fa fa-arrow-up pointer"></i></span>' +
                             '</li>'
                     );

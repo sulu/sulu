@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Repository;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository;
@@ -20,6 +20,10 @@ use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
 
+/**
+ * @group functional
+ * @group repository
+ */
 class ResourceLocatorRepositoryTest extends PhpcrTestCase
 {
     /**
@@ -73,7 +77,6 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
                 new Property(
                     'title', 'title', 'text_line', false, false, 1, 1, array(),
                     array(
-                        new PropertyTag('sulu.node.name', 100),
                         new PropertyTag('sulu.rlp.part', 100)
                     )
                 )

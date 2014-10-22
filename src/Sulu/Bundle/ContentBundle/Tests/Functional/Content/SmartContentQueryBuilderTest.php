@@ -22,6 +22,10 @@ use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 
+/**
+ * @group functional
+ * @group content
+ */
 class SmartContentQueryBuilderTest extends PhpcrTestCase
 {
     /**
@@ -95,12 +99,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
-                    'title', array(), 'text_line', false, true, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.node.name', 1)
-                    )
-                )
+                new Property('title', array(), 'text_line', false, true, 1, 1, array())
             )
         );
 
@@ -215,7 +214,6 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
-        echo("\r\nProperties estimated time (" . sizeof($nodes) . " nodes): " . $tDiff);
 
         foreach ($result as $item) {
             /** @var StructureInterface $expected */
@@ -306,7 +304,6 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
-        echo("\r\nDatasource estimated time (" . sizeof($nodes) . " nodes): " . $tDiff);
 
         $this->assertEquals(sizeof($nodes), sizeof($result));
         foreach ($result as $item) {
@@ -325,7 +322,6 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
-        echo("\r\nDatasource estimated time (0 nodes): " . $tDiff);
 
         $this->assertEquals(0, sizeof($result));
     }
@@ -345,7 +341,6 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
-        echo("\r\nIncludeSubFolders estimated time (" . sizeof($nodes) . " nodes): " . $tDiff);
 
         // nodes + news + products
         $this->assertEquals(sizeof($nodes) + 2, sizeof($result));
@@ -619,7 +614,6 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
-        echo("\r\nExtensions estimated time (" . sizeof($nodes) . " nodes): " . $tDiff);
 
         foreach ($result as $item) {
             /** @var StructureInterface $expected */
@@ -646,7 +640,6 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('default', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
-        echo("\r\nIds estimated time (1 nodes): " . $tDiff);
 
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals(array_keys($nodes)[0], $result[0]['uuid']);

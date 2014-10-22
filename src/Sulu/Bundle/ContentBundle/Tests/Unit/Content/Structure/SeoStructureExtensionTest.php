@@ -9,6 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Structure;
+
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension;
 
@@ -16,7 +18,10 @@ abstract class TestProperty implements \Iterator, NodeInterface
 {
 }
 
-class SeoStructureExtensionTest extends PHPUnit_Framework_TestCase
+/**
+ * @group unit
+ */
+class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var NodeInterface
@@ -30,7 +35,7 @@ class SeoStructureExtensionTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->nodeMock = $this->getMock('TestProperty');
+        $this->nodeMock = $this->getMock('Sulu\Bundle\ContentBundle\Tests\Unit\Structure\TestProperty');
         $this->extension = new SeoStructureExtension();
     }
 

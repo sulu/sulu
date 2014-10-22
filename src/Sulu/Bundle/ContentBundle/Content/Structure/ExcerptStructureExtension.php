@@ -90,8 +90,9 @@ class ExcerptStructureExtension extends StructureExtension
                     $node,
                     new TranslatedProperty(
                         $property,
-                        $languageCode . '-' . $this->additionalPrefix,
-                        $this->languageNamespace
+                        $languageCode,
+                        $this->languageNamespace,
+                        $this->additionalPrefix
                     ),
                     null, // userid
                     $webspaceKey,
@@ -114,14 +115,15 @@ class ExcerptStructureExtension extends StructureExtension
                 $node,
                 new TranslatedProperty(
                     $property,
-                    $languageCode . '-' . $this->additionalPrefix,
-                    $this->languageNamespace
+                    $languageCode,
+                    $this->languageNamespace,
+                    $this->additionalPrefix
                 ),
                 $webspaceKey,
                 $languageCode,
                 null // segmentkey
             );
-            $data[$property->getName()] = $contentType->getContentData($property);
+            $data[$property->getName()] = $property->getValue();
         }
 
         return new ExcerptValueContainer($data);
@@ -141,6 +143,27 @@ class ExcerptStructureExtension extends StructureExtension
 
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
         $this->languageNamespace = $languageNamespace;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentData($value)
+    {
+        if ($value instanceof ExcerptValueContainer) {
+            $data = array();
+            foreach ($this->excerptStructure->getProperties() as $property) {
+                if ($value->__isset($property->getName())) {
+                    $property->setValue($value->__get($property->getName()));
+                    $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                    $data[$property->getName()] = $contentType->getContentData($property);
+                }
+            }
+
+            return $data;
+        } else {
+            return $value;
+        }
     }
 
     /**

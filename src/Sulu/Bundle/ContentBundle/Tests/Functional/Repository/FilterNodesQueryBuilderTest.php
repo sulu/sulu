@@ -9,11 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Unit\Repository;
+namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\ContentBundle\Repository\FilterNodesQueryBuilder;
 
+/**
+ * @group functional
+ * @group repository
+ */
 class FilterNodesQueryBuilderTest extends ProphecyTestCase
 {
     public function setUp()
