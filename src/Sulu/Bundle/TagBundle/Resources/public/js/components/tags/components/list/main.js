@@ -26,6 +26,15 @@ define(function() {
             }.bind(this));
         }, this);
 
+        // error - non unique tag name
+        this.sandbox.on('husky.datagrid.data.save.failed', function(resp){
+            this.sandbox.emit('sulu.labels.error.show',
+                resp.responseJSON.message,
+                'labels.error',
+                ''
+            );
+        }, this);
+
     };
 
     return {
