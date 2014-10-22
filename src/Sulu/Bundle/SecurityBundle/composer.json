@@ -13,18 +13,14 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "@dev",
-        "friendsofsymfony/http-cache": "@dev",
-        "jms/serializer-bundle": "@dev",
-        "stof/doctrine-extensions-bundle": "1.1.*@dev",
+        "doctrine/orm": "2.4.*",
+        "stof/doctrine-extensions-bundle": "1.1.*",
         "willdurand/hateoas-bundle": "0.3.*",
 
         "sulu/sulu": "dev-develop",
         "sulu/admin-bundle": "dev-develop",
         "sulu/contact-bundle": "dev-develop",
 
-        "liip/theme-bundle": "@dev",
         "sulu/media-bundle": "@dev",
         "sulu/category-bundle": "@dev",
         "sulu/tag-bundle": "@dev"
@@ -33,7 +29,7 @@
         "sensio/framework-extra-bundle":  "~3.0",
         "symfony/symfony": "2.5.*",
         "doctrine/doctrine-bundle": "1.2.*",
-        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
         "sulu/test-bundle": "dev-develop"
@@ -43,6 +39,5 @@
             "Sulu\\Bundle\\SecurityBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/SecurityBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Sulu/Bundle/SecurityBundle"
 }
