@@ -23,7 +23,7 @@ class ConstraintViolationException extends RestException {
      * Error code for non unique tag name
      * @var int
      */
-    public static $nameNotUnique = 1101;
+    const EXCEPTION_CODE_NON_UNIQUE_NAME = 1101;
 
     /**
      * The field of the tag which is not unique
