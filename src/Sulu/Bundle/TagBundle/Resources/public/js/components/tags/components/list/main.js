@@ -28,7 +28,9 @@ define(function() {
 
             // error - non unique tag name
             this.sandbox.on('husky.datagrid.data.save.failed', function(resp) {
-                showErrorLabel.call(this,resp.responseJSON.code);
+                if(!!resp.responseJSON && !!resp.responseJSON.code) {
+                    showErrorLabel.call(this,resp.responseJSON.code);
+                }
             }, this);
 
         },
