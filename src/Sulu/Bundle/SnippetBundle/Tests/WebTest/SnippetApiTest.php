@@ -34,8 +34,6 @@ class SnippetApiTest extends SuluTestCase
         $this->assertEquals(200, $response->getStatusCode());
         $res = json_decode($response->getContent(), true);
 
-        $this->assertCount(1, $res);
-        $res = reset($res);
         $this->assertEquals('Le grande budapest', $res['title']); // snippet nodes do not have a path
         $this->assertEquals($this->hotel1->getUuid(), $res['id']);
     }
@@ -43,7 +41,7 @@ class SnippetApiTest extends SuluTestCase
     public function testGetMany()
     {
         $this->client->request('GET', sprintf(
-            '/snippets/%s,%s%s',
+            '/snippets/?ids=%s,%s%s',
             $this->hotel1->getUuid(),
             $this->hotel2->getUuid(),
             '?language=de'

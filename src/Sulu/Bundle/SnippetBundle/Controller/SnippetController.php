@@ -122,11 +122,15 @@ class SnippetController
     public function getSnippetAction(Request $request, $uuid = null)
     {
         $this->initEnv($request);
+        $uuidsString = $request->get('ids');
 
-        if (UUIDHelper::isUUID($uuid)) {
+        $single = $uuid === null ? false : true;
+
+        $uuids = array();
+        if ($single) {
             $uuids = array($uuid);
-        } else {
-            $uuids = explode(',', $uuid);
+        } elseif ($uuidsString) {
+            $uuids = explode(',', $uuidsString);
         }
 
         $snippets = array();
@@ -139,8 +143,8 @@ class SnippetController
             }
         }
 
-        if (sizeof($snippets) == 1) {
-            $snippets = $snippets[0];
+        if ($single) {
+            $snippets = reset($snippets);
         }
 
         $view = View::create($snippets);
