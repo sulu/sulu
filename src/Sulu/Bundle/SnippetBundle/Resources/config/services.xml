@@ -22,7 +22,7 @@
          <service id="sulu_snippet.jsconfig" class="%sulu_snippet.jsconfig.class%">
              <argument type="string">sulu-snippet</argument>
              <argument type="collection">
-                 <argument key="defaultType" type="string">%sulu.content.type.default%</argument>
+                 <argument key="defaultType" type="string">%sulu.content.structure.default_type.snippet%</argument>
              </argument>
              <tag name="sulu.js_config"/>
         </service>
