@@ -143,7 +143,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
 
         // TODO add groups for system recognition
         $query = $qb->getQuery();
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
 
         try {

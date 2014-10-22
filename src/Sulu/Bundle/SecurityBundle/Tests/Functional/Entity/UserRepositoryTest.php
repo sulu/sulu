@@ -196,6 +196,20 @@ class UserRepositoryTest extends SuluTestCase
         $userRepository->loadUserByUsername('sulu');
     }
 
+    public function testLoadUserByUsername()
+    {
+        $this->prepareUser('sulu', 'sulu');
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $user = $userRepository->loadUserByUsername('sulu');
+
+        $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
+    }
+
     private function prepareUser($username, $password, $enabled = true, $locked = false)
     {
         $emailType = new EmailType();
@@ -224,6 +238,19 @@ class UserRepositoryTest extends SuluTestCase
         $user->setEnabled($enabled);
         $user->setLocked($locked);
         $this->em->persist($user);
+
+        $role = new Role();
+        $role->setName('Sulu');
+        $role->setSystem('Sulu');
+        $role->setCreated(new DateTime());
+        $role->setChanged(new DateTime());
+        $this->em->persist($role);
+
+        $userRole = new UserRole();
+        $userRole->setRole($role);
+        $userRole->setUser($user);
+        $userRole->setLocale('');
+        $this->em->persist($userRole);
 
         $this->em->flush();
     }
