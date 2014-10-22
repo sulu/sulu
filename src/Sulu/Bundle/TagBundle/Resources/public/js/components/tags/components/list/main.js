@@ -13,29 +13,43 @@ define(function() {
 
     var bindCustomEvents = function(instanceNameToolbar) {
 
-        // add clicked
-        this.sandbox.on('sulu.list-toolbar.add', function() {
-            this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
-        }.bind(this));
-
-        // delete clicked
-        this.sandbox.on('sulu.list-toolbar.delete', function() {
-            this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
-            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.tags.delete', ids);
+            // add clicked
+            this.sandbox.on('sulu.list-toolbar.add', function() {
+                this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
             }.bind(this));
-        }, this);
 
-        // error - non unique tag name
-        this.sandbox.on('husky.datagrid.data.save.failed', function(resp){
+            // delete clicked
+            this.sandbox.on('sulu.list-toolbar.delete', function() {
+                this.sandbox.emit('husky.toolbar.' + instanceNameToolbar + '.item.disable', 'delete');
+                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                    this.sandbox.emit('sulu.tags.delete', ids);
+                }.bind(this));
+            }, this);
+
+            // error - non unique tag name
+            this.sandbox.on('husky.datagrid.data.save.failed', function(resp) {
+                showErrorLabel.call(this,resp.responseJSON.code);
+            }, this);
+
+        },
+
+        showErrorLabel = function(code) {
+
+            var translationKeyForError = '';
+            switch (code) {
+                case 1101:
+                    translationKeyForError = 'tag.error.notUnique';
+                    break;
+                default:
+                    break;
+            }
+
             this.sandbox.emit('sulu.labels.error.show',
-                resp.responseJSON.message,
+                translationKeyForError,
                 'labels.error',
                 ''
             );
-        }, this);
-
-    };
+        };
 
     return {
 

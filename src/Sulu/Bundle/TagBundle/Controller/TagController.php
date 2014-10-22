@@ -180,11 +180,12 @@ class TagController extends RestController implements ClassResourceInterface
             if ($name == null) {
                 throw new MissingArgumentException(self::$entityName, 'name');
             }
+
             $tag = $this->getManager()->save(array('name' => $name), $this->getUser()->getId());
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
-            $cvExistsException = new ConstraintViolationException('tag.error.notUnique', 'name');
+            $cvExistsException = new ConstraintViolationException('A tag with the name "' . $exc->getName() . '"already exists!', 'name', ConstraintViolationException::$nameNotUnique);
             $view = $this->view($cvExistsException->toArray(), 400);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
@@ -214,7 +215,7 @@ class TagController extends RestController implements ClassResourceInterface
 
             $view = $this->view($tag, 200);
         } catch (TagAlreadyExistsException $exc) {
-            $cvExistsException = new ConstraintViolationException('tag.error.notUnique', 'name');
+            $cvExistsException = new ConstraintViolationException('A tag with the name "' . $exc->getName() . '"already exists!', 'name', ConstraintViolationException::$nameNotUnique);
             $view = $this->view($cvExistsException->toArray(), 400);
         } catch (TagNotFoundException $exc) {
             $entityNotFoundException = new EntityNotFoundException(self::$entityName, $id);
@@ -297,7 +298,7 @@ class TagController extends RestController implements ClassResourceInterface
             $view = $this->view($tags, 200);
 
         } catch (TagAlreadyExistsException $exc) {
-            $cvExistsException = new ConstraintViolationException('tag.error.notUnique', 'name');
+            $cvExistsException = new ConstraintViolationException('A tag with the name "' . $exc->getName() . '"already exists!', 'name', ConstraintViolationException::$nameNotUnique);
             $view = $this->view($cvExistsException->toArray(), 400);
         }
 

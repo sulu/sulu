@@ -19,9 +19,15 @@ use Sulu\Component\Rest\Exception\RestException;
  */
 class ConstraintViolationException extends RestException {
 
+    /**
+     * Error code for non unique tag name
+     * @var int
+     */
+    public static $nameNotUnique = 1101;
 
     /**
      * The field of the tag which is not unique
+     *
      * @var string
      */
     protected $field;
@@ -29,13 +35,13 @@ class ConstraintViolationException extends RestException {
     /**
      * @param string $message The error message
      * @param string $field The field which is not
+     * @param int $code
      */
-    public function __construct($message, $field)
+    public function __construct($message, $field, $code = 0)
     {
         $this->field = $field;
-        parent::__construct($message, 0);
+        parent::__construct($message, $code);
     }
-
 
     public function toArray()
     {
