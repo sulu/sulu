@@ -5,7 +5,6 @@
     "license": "MIT",
     "keywords": ["sulu", "website"],
     "version": "dev-develop",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Sulu Community",
@@ -16,13 +15,10 @@
         "php": ">=5.4",
 
         "sulu/sulu": "dev-develop",
-        "friendsofsymfony/rest-bundle": "@dev",
-        "friendsofsymfony/http-cache": "@dev",
 
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "liip/theme-bundle": "@dev",
-        "symfony-cmf/routing-bundle": "1.2.*@dev",
-        "symfony-cmf/routing": "1.2.*@dev"
+        "doctrine/orm": "2.4.*",
+        "symfony-cmf/routing-bundle": "1.2.*",
+        "liip/theme-bundle": "1.1.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
