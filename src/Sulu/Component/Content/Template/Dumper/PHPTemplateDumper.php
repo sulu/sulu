@@ -10,6 +10,9 @@
 
 namespace Sulu\Component\Content\Template\Dumper;
 
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureInterface;
+
 /**
  * Class PHPTemplateDumper
  * @package Sulu\Component\Content\Template\Dumper
@@ -49,12 +52,13 @@ class PHPTemplateDumper
      * Creates a new class with the data from the given collection
      * @param array $results
      * @param array $options
+     * @param string $type
      * @return string
      */
-    public function dump($results, $options = array())
+    public function dump($results, $options = array(), $type = Structure::TYPE_PAGE)
     {
         return $this->twig->render(
-            'StructureClass.php.twig',
+            $type === Structure::TYPE_PAGE ? 'PageClass.php.twig' : 'SnippetClass.php.twig',
             array(
                 'cache_class' => $options['cache_class'],
                 'base_class' => $options['base_class'],

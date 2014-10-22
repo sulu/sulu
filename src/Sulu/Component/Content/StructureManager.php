@@ -239,7 +239,8 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                         array(
                             'cache_class' => $class,
                             'base_class' => $this->options[$type . '_base_class']
-                        )
+                        ),
+                        $type
                     ),
                     $resources
                 );
