@@ -330,7 +330,7 @@ class Activity extends ApiWrapper
 
         $contact = $this->entity->getContact();
         if ($contact) {
-            return new Contact($contact, $this->locale, $this->tagManager);
+            return new Contact($contact, $this->locale);
         }
 
         return null;
@@ -361,7 +361,7 @@ class Activity extends ApiWrapper
     {
         $account = $this->entity->getAccount();
         if ($account) {
-            return new Account($account, $this->locale, $this->tagManager);
+            return new Account($account, $this->locale);
         }
 
         return null;
@@ -392,7 +392,7 @@ class Activity extends ApiWrapper
     {
         $contact = $this->entity->getAssignedContact();
         if ($contact) {
-            return new Contact($contact, $this->locale, $this->tagManager);
+            return new Contact($contact, $this->locale);
         }
 
         return null;
