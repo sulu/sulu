@@ -456,7 +456,7 @@ define([], function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            this.data = {};
+            this.data = this.sandbox.util.extend({}, this.dataDefaults);
             this.linkList = null;
 
             this.sandbox.util.each([
