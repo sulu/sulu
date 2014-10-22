@@ -5,6 +5,7 @@
     "license": "MIT",
     "keywords": ["sulu", "website"],
     "version": "dev-develop",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Sulu Community",
@@ -36,6 +37,5 @@
             "Sulu\\Bundle\\WebsiteBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/WebsiteBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Sulu/Bundle/WebsiteBundle"
 }
