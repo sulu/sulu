@@ -2227,7 +2227,7 @@ class ContentMapperTest extends PhpcrTestCase
 
         $result = $this->mapper->load($data->getUuid(), 'default', 'en');
 
-        $this->assertEquals('Page-1', $result->name);
+        $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);
     }
 
@@ -2731,11 +2731,11 @@ class ContentMapperTest extends PhpcrTestCase
 
     private function prepareSinglePageTestData()
     {
-        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'de', 1);
-        $this->mapper->saveStartPage(array('name' => 'Start Page'), 'overview', 'default', 'en', 1);
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'en', 1);
 
         $data = array(
-            'name' => 'Page-1',
+            'title' => 'Page-1',
             'url' => '/page-1'
         );
 

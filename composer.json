@@ -13,11 +13,11 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "doctrine/orm": "2.3.*",
         "symfony/framework-bundle": "2.5.*",
         "sensio/distribution-bundle": "2.3.*",
-        "friendsofsymfony/rest-bundle": "dev-master",
-        "friendsofsymfony/http-cache": "dev-master",
+        "friendsofsymfony/rest-bundle": "1.4.*",
+        "friendsofsymfony/http-cache": "1.0.*",
         "jackalope/jackalope-jackrabbit": "1.1.*",
         "doctrine/phpcr-bundle": "1.1.*",
         "doctrine/phpcr-odm": "1.1.*",
@@ -40,6 +40,5 @@
         "psr-0": {
             "Sulu\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
