@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": "2.3.*",
+        "doctrine/orm": "2.4.*",
         "symfony/framework-bundle": "2.5.*",
         "sensio/distribution-bundle": "2.3.*",
         "friendsofsymfony/rest-bundle": "1.4.*",
