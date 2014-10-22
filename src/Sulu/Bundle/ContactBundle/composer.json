@@ -5,7 +5,6 @@
     "license": "MIT",
     "keywords": ["contact", "crm"],
     "version": "dev-develop",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Sulu Community",
@@ -14,10 +13,9 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "dev-master",
-        "friendsofsymfony/http-cache": "dev-master",
-        "jms/serializer-bundle": "@dev",
+        "doctrine/orm": "2.3.*",
+        "friendsofsymfony/rest-bundle": "1.4.*",
+        "friendsofsymfony/http-cache": "1.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
         "willdurand/hateoas-bundle": "0.3.*",
 
