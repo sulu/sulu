@@ -23,14 +23,12 @@ class AppKernel extends Kernel
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
-            new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
             new \Sulu\Bundle\AdminBundle\SuluAdminBundle(),
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
-            new \Sulu\Bundle\TestBundle\SuluTestBundle(),
+            new \Sulu\Bundle\ContentBundle\SuluContentBundle(),
             new \Sulu\Bundle\SecurityBundle\SuluSecurityBundle(),
             new \Sulu\Bundle\TagBundle\SuluTagBundle(),
-            new \Sulu\Bundle\MediaBundle\SuluMediaBundle(),
-            new \Sulu\Bundle\CategoryBundle\SuluCategoryBundle(),
+            new \Sulu\Bundle\TestBundle\SuluTestBundle(),
         );
 
         return $bundles;
