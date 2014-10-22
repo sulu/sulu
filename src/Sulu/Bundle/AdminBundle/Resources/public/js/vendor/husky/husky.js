@@ -32211,7 +32211,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         }
                     }.bind(this))
                     .fail(function(jqXHR, textStatus, error) {
-                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), textStatus, error);
+                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), jqXHR, textStatus, error);
 
                         if (typeof fail === 'function') {
                             fail(jqXHR, textStatus, error);
