@@ -12,7 +12,6 @@ define(function() {
     'use strict';
 
     var bindCustomEvents = function(instanceNameToolbar) {
-
             // add clicked
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('husky.datagrid.record.add', { id: '', name: '', changed: '', created: '', author: ''});
@@ -32,11 +31,9 @@ define(function() {
                     showErrorLabel.call(this,resp.responseJSON.code);
                 }
             }, this);
-
         },
 
         showErrorLabel = function(code) {
-
             var translationKeyForError = '';
             switch (code) {
                 case 1101:
@@ -54,7 +51,6 @@ define(function() {
         };
 
     return {
-
         view: true,
         instanceNameToolbar: 'saveToolbar',
 
@@ -110,7 +106,6 @@ define(function() {
                     }
                 }
             );
-
         }
     };
 });

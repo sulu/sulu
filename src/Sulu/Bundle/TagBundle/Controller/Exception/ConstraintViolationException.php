@@ -18,7 +18,6 @@ use Sulu\Component\Rest\Exception\RestException;
  * @package Sulu\Bundle\TagBundle\Controller\Exception
  */
 class ConstraintViolationException extends RestException {
-
     /**
      * Error code for non unique tag name
      * @var int
@@ -27,7 +26,6 @@ class ConstraintViolationException extends RestException {
 
     /**
      * The field of the tag which is not unique
-     *
      * @var string
      */
     protected $field;
@@ -51,5 +49,4 @@ class ConstraintViolationException extends RestException {
             'field' => $this->field
         );
     }
-
 }
