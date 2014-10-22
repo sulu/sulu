@@ -408,8 +408,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $view = $this->view(
                 new Activity(
                     $activity,
-                    $this->getUser()->getLocale(),
-                    $this->get('sulu_tag.tag_manager')
+                    $this->getUser()->getLocale()
                 ),
                 200
             );
@@ -469,8 +468,7 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $view = $this->view(
                 new Activity(
                     $activity,
-                    $this->getUser()->getLocale(),
-                    $this->get('sulu_tag.tag_manager')
+                    $this->getUser()->getLocale()
                 ),
                 200
             );

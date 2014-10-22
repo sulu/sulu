@@ -219,5 +219,5 @@ define([], function() {
             }
             this.saved = saved;
         }
-    };;
+    };
 });
