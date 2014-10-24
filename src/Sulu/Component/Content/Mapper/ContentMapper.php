@@ -303,7 +303,7 @@ class ContentMapper implements ContentMapperInterface
         $nodeNamePropertyName = $nodeNameProperty->getName();
         if (!isset($data[$nodeNamePropertyName])) {
             throw new \InvalidArgumentException(sprintf(
-                'You must set the "%s" data key which is tagged as the sulu.node.name',
+                'You must set the "%s" data key',
                 $nodeNamePropertyName
             ));
         }

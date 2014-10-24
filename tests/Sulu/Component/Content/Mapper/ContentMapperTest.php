@@ -518,7 +518,7 @@ class ContentMapperTest extends PhpcrTestCase
             ->setLocale('de')
             ->setTemplateKey('overview')
             ->setData(array(
-                'name' => 'Testname',
+                'title' => 'Testname',
                 'tags' => array(
                     'tag1',
                     'tag2'
