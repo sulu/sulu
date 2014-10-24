@@ -318,7 +318,9 @@ define([], function() {
                         triggerEl: this.$addButton,
                         cssClass: 'snippet-content-overlay',
                         el: $element,
+                        removeOnClose: false,
                         container: this.$el,
+
                         instanceName: 'snippet-content.' + this.options.instanceName + '.add',
                         skin: 'wide',
                         slides: [
@@ -399,7 +401,7 @@ define([], function() {
                             this.sandbox.logger.log(error);
                         }.bind(this));
                 } else {
-                    thenFunction.call(this, []);
+                    thenFunction.call(this, { '_embedded': { 'snippets': [] }});
                 }
             }
         },
