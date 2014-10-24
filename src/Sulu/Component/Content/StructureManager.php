@@ -354,7 +354,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             $key = $fileInfo['filename'];
 
             try {
-                $result[] = $this->getStructureByType($key, $type);
+                $result[] = $this->getStructure($key, $type);
             } catch (TemplateNotFoundException $e) {
                 $this->logger->warning($e->getMessage());
             }
