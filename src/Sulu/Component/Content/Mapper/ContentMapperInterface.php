@@ -160,10 +160,11 @@ interface ContentMapperInterface
      * @param QueryInterface $query The query, which returns the content
      * @param string $languageCode The language code
      * @param string $webspaceKey The webspace key
-     * @param int $limit Limits the number of returned rows
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
      * @return StructureInterface[]
      */
-    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey);
+    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey, $excludeGhost = true, $loadGhostContent = false);
 
     /**
      * load tree from root to given path

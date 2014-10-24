@@ -983,14 +983,20 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey = null)
+    public function loadByQuery(
+        QueryInterface $query,
+        $languageCode,
+        $webspaceKey = null,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    )
     {
         $result = $query->execute();
         $structures = array();
 
         foreach ($result as $row) {
             try {
-                $structure = $this->loadByNode($row->getNode(), $languageCode, $webspaceKey);
+                $structure = $this->loadByNode($row->getNode(), $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
                 if (null !== $structure) {
                     $structures[] = $structure;
                 }
