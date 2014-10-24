@@ -348,7 +348,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
 
         $state = $this->getRequestParameter($request, 'state');
-        $ntype = $this->getRequestParameter($request, 'type') ? : 'page';
+        $type = $this->getRequestParameter($request, 'type') ? : 'page';
 
         if ($state !== null) {
             $state = intval($state);
