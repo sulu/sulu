@@ -439,7 +439,8 @@ define([], function() {
         setURIGetAll = function() {
             var newURIGetAll = [
                 this.options.urlAll,
-                '?language=de',
+                '?language=',
+                this.options.language,
                 '&type=',
                 this.options.snippetType
             ].join('');
