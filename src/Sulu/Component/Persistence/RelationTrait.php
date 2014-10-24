@@ -24,7 +24,7 @@ trait RelationTrait
      *
      * @param Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
-     * @param callable $getId Return id of entity
+     * @param callable $get Return id of entity
      * @param callable $add
      * @param callable $update
      * @param callable $delete
@@ -33,15 +33,19 @@ trait RelationTrait
     public function processSubEntities(
         $entities,
         array $requestEntities,
-        callable $getId,
+        callable $get,
         callable $add = null,
         callable $update = null,
         callable $delete = null
     )
     {
+        // compare id with with $get callback
+        $compareFunction = function($entity, $data) use ($get) {
+            return isset($data['id']) && $data['id'] == $get($entity);
+        };
         // define a matching function
-        $matchFunction = function($requestEntities, $entity, &$matchedEntry, &$matchedKey) use ($getId) {
-            $this->findMatch($requestEntities, $getId($entity), $matchedEntry, $matchedKey);
+        $matchFunction = function($requestEntities, $entity, &$matchedEntry, &$matchedKey) use ($compareFunction) {
+            $this->findMatchByCallback($requestEntities, $entity, $compareFunction, $matchedEntry, $matchedKey);
         };
 
         return $this->compareData($entities, $requestEntities, $matchFunction, $add, $update, $delete);
@@ -76,37 +80,16 @@ trait RelationTrait
     }
 
     /**
-     * Tries to find an given id in a given set of entities. Returns the entity itself and its key with the
-     * $matchedEntry and $matchKey parameters.
-     *
-     * @param array $requestEntities The set of entities to search in
-     * @param integer $id The id to search
-     * @param array $matchedEntry
-     * @param string $matchedKey
-     */
-    protected function findMatch($requestEntities, $id, &$matchedEntry, &$matchedKey)
-    {
-        $matchedEntry = null;
-        $matchedKey = null;
-        if (!empty($requestEntities)) {
-            foreach ($requestEntities as $key => $entity) {
-                if (isset($entity['id']) && $entity['id'] == $id) {
-                    $matchedEntry = $entity;
-                    $matchedKey = $key;
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * @param $requestEntities
-     * @param $entity
-     * @param $compare
-     * @param $matchedEntry
-     * @param $matchedKey
-     */
-    protected function findMatchByCallback($requestEntities, $entity, $compare, &$matchedEntry, &$matchedKey)
+    * Applies a given compare function to a given set of data entries. Returns the entity itself and its key with the
+    * $matchedEntry and $matchKey parameters.
+    *
+    * @param array $requestEntities The set of entities to search in
+    * @param $entity The entity to compare
+    * @param callable $compare Compare function, which defines if data matches the entity
+    * @param array $matchedEntry
+    * @param string $matchedKey
+    */
+    protected function findMatchByCallback($requestEntities, $entity, callable $compare, &$matchedEntry, &$matchedKey)
     {
         $matchedEntry = null;
         $matchedKey = null;

@@ -172,7 +172,7 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
-        $mock->expects($this->once())->method('get');
+        $mock->expects($this->never())->method('get');
 
         $get = function () use ($mock){
             $mock->get();
