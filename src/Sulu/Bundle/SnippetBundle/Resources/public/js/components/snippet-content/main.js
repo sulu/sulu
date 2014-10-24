@@ -28,6 +28,7 @@ define([], function() {
             language: null,
             snippetType: null,
             webspace: null,
+            uniqueSnippets: true,
             translations: {
                 noSnippetsSelected: 'snippet-content.nosnippets-selected',
                 addSnippets: 'snippet-content.add'
@@ -213,7 +214,7 @@ define([], function() {
                     name: 'datagrid@husky',
                     options: {
                         url: this.URIGetAll.str,
-                        preselected: [],
+                        preselected: this.data.ids,
                         pagination: false,
                         resultKey: this.options.resultKey,
                         sortable: false,
@@ -328,7 +329,7 @@ define([], function() {
                                 title: this.sandbox.translate(this.options.translations.addSnippets),
                                 cssClass: 'snippet-content-overlay-add',
                                 data: templates.data(this.options),
-                                okCallback: addSnippets.bind(this)
+                                okCallback: setSnippets.bind(this)
                             }
                         ]
                     }
@@ -336,9 +337,9 @@ define([], function() {
             ]);
         },
 
-        addSnippets = function () {
+        setSnippets = function () {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
-                this.data.ids = this.data.ids.concat(selected);
+                this.data.ids = selected;
                 setData.call(this, this.data);
                 setURIGet.call(this);
                 loadContent.call(this);
