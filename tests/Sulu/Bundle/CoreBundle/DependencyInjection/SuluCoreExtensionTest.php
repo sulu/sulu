@@ -44,7 +44,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
             )
         ));
 
-        $this->assertContainerHasParameter(
+        $this->assertEquals(
             'foobar',
             $this->container->getParameter('sulu.content.structure.default_type.page')
         );

@@ -514,7 +514,6 @@ class ContentMapperTest extends PhpcrTestCase
 
     public function testLoad()
     {
-<<<<<<< HEAD
         $data = ContentMapperRequest::create('page')
             ->setLocale('de')
             ->setTemplateKey('overview')
@@ -529,17 +528,6 @@ class ContentMapperTest extends PhpcrTestCase
             ))
             ->setWebspaceKey('default')
             ->setUserId(1);
-=======
-        $data = array(
-            'title' => 'Testname',
-            'tags' => array(
-                'tag1',
-                'tag2'
-            ),
-            'url' => '/news/test',
-            'article' => 'default'
-        );
->>>>>>> origin/develop
 
         $structure = $this->mapper->saveRequest($data);
 
