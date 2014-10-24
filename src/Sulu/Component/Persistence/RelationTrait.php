@@ -44,8 +44,8 @@ trait RelationTrait
             return isset($data['id']) && $data['id'] == $get($entity);
         };
         // define a matching function
-        $matchFunction = function($requestEntities, $entity, &$matchedEntry, &$matchedKey) use ($compareFunction) {
-            $this->findMatchByCallback($requestEntities, $entity, $compareFunction, $matchedEntry, $matchedKey);
+        $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compareFunction) {
+            $this->findMatchByCallback($entity, $requestEntities, $compareFunction, $matchedEntry, $matchedKey);
         };
 
         return $this->compareData($entities, $requestEntities, $matchFunction, $add, $update, $delete);
@@ -72,8 +72,8 @@ trait RelationTrait
     )
     {
         // define a matching function
-        $matchFunction = function($requestEntities, $entity, &$matchedEntry, &$matchedKey) use ($compare) {
-            $this->findMatchByCallback($requestEntities, $entity, $compare, $matchedEntry, $matchedKey);
+        $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
+            $this->findMatchByCallback($entity, $requestEntities, $compare, $matchedEntry, $matchedKey);
         };
 
         return $this->compareData($entities, $requestEntities, $matchFunction, $add, $update, $delete);
@@ -83,13 +83,13 @@ trait RelationTrait
     * Applies a given compare function to a given set of data entries. Returns the entity itself and its key with the
     * $matchedEntry and $matchKey parameters.
     *
-    * @param array $requestEntities The set of entities to search in
     * @param $entity The entity to compare
+    * @param array $requestEntities The set of entities to search in
     * @param callable $compare Compare function, which defines if data matches the entity
     * @param array $matchedEntry
     * @param string $matchedKey
     */
-    protected function findMatchByCallback($requestEntities, $entity, callable $compare, &$matchedEntry, &$matchedKey)
+    protected function findMatchByCallback($entity, $requestEntities, callable $compare, &$matchedEntry, &$matchedKey)
     {
         $matchedEntry = null;
         $matchedKey = null;
@@ -132,7 +132,7 @@ trait RelationTrait
                 $matchedKey = null;
 
                 // find match callback
-                $compare($requestEntities, $entity, $matchedEntry, $matchedKey);
+                $compare($entity, $requestEntities, $matchedEntry, $matchedKey);
 
                 if ($matchedEntry == null && $delete != null) {
                     // delete entity if it is not listed anymore
