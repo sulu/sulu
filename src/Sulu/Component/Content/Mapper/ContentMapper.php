@@ -1730,11 +1730,7 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        if (Structure::TYPE_PAGE === $type) {
-            $structure = $this->structureManager->getStructure($key, $type);
-        } else {
-            $structure = $this->structureManager->getSnippet($key);
-        }
+        $structure = $this->structureManager->getStructure($key, $type);
 
         if (!$structure) {
             throw new \InvalidArgumentException(sprintf(

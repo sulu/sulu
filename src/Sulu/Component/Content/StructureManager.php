@@ -102,16 +102,22 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        if ($type === Structure::TYPE_PAGE) {
-            return $this->getPage($key);
-        } else {
-            return $this->getSnippet($key);
+        if (!in_array($type, array(Structure::TYPE_PAGE, Structure::TYPE_SNIPPET))) {
+            throw new \InvalidArgumentException(sprintf(
+                'Unknown structure type "%s"',
+                print_r($type, true)
+            ));
         }
+
+        $templateFile = $this->getTemplate($key, $type);
+
+        return $this->getStructureByFile($key, $templateFile, $type);
     }
 
     /**
      * Returns a page structure for given key
      *
+     * @deprecated Remove if not used
      * @param $key string
      * @throws Template\Exception\TemplateNotFoundException
      * @return Page
@@ -124,6 +130,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     /**
      * Returns a snippet structure for given key
      *
+     * @deprecated Remove if not used
      * @param $key string
      * @throws Template\Exception\TemplateNotFoundException
      * @return Snippet
@@ -354,12 +361,5 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         }
 
         return $result;
-    }
-
-    private function getStructureByType($key, $type)
-    {
-        $templateFile = $this->getTemplate($key, $type);
-
-        return $this->getStructureByFile($key, $templateFile, $type);
     }
 }
