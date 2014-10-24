@@ -40,16 +40,32 @@ class SnippetContentTypeTest extends BaseFunctionalTestCase
         $this->contentType->read($pageNode, $this->property, 'sulu_io', 'de', null);
     }
 
-    public function testPropertyWrite()
+    public function testPropertyWriteContentMapper()
     {
-        // property should have been written by the content mapper
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
         $this->assertTrue($pageNode->hasProperty('i18n:de-hotels'));
+
         $prop = $pageNode->getProperty('i18n:de-hotels');
         $values = $prop->getValue();
+
         $this->assertCount(2, $values);
+
         $hotel1 = reset($values);
         $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-title'));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Property value must either be a UUID or a Snippet
+     */
+    public function testPropertyWriteUnknownType()
+    {
+        $this->property->expects($this->once())
+            ->method('getValue')
+            ->will($this->returnValue('this-aint-nuffin'));
+
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $this->contentType->write($pageNode, $this->property, 0, 'sulu_io', 'de', null);
     }
 
     public function testGetContentData()

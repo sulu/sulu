@@ -86,7 +86,6 @@ class SnippetController
         $type = $request->query->get('type', null);
         $uuidsString = $request->get('ids');
 
-
         if ($uuidsString) {
             $uuids = explode(',', $uuidsString);
             $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $this->languageCode);

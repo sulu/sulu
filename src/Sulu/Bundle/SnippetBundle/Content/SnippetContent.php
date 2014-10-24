@@ -17,6 +17,7 @@ use PHPCR\PropertyType;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Component\Content\Structure\Snippet;
 
 /**
  * ContentType for Snippets
@@ -49,12 +50,14 @@ class SnippetContent extends ComplexContentType
         return $this->template;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    protected function setData(
+        $refs,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) 
     {
-        $refs = $node->getPropertyValueWithDefault($property->getName(), array());
         $snippets = array();
 
         foreach ($refs as $i => $ref) {
@@ -73,9 +76,18 @@ class SnippetContent extends ComplexContentType
     /**
      * {@inheritdoc}
      */
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $refs = $node->getPropertyValueWithDefault($property->getName(), array());
+        $this->setData($refs, $property, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        // ??
+        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -89,7 +101,20 @@ class SnippetContent extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $snippetReferences = $property->getValue();
+        $snippetReferences = array();
+        foreach ((array) $property->getValue() as $value) {
+            if ($value instanceof Snippet) {
+                $snippetReferences[] = $value->getUuid();
+            } elseif(UUIDHelper::isUUID($value)) {
+                $snippetReferences[] = $value;
+            } else {
+                throw new \InvalidArgumentException(sprintf(
+                    'Property value must either be a UUID or a Snippet, "%s" given.',
+                    gettype($value)
+                ));
+            }
+        }
+
         $node->setProperty($property->getName(), $snippetReferences, PropertyType::REFERENCE);
     }
 
