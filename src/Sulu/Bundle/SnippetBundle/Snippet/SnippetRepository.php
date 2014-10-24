@@ -149,6 +149,6 @@ class SnippetRepository
 
         $query = $qb->getQuery();
 
-        return $this->contentMapper->loadByQuery($query, $languageCode);
+        return $this->contentMapper->loadByQuery($query, $languageCode, null, false, true);
     }
 }
