@@ -58,7 +58,7 @@ trait RelationTrait
      * @param callable $delete
      * @return bool
      */
-    protected function compareEntitiesWithData(
+    public function compareEntitiesWithData(
         $entities,
         array $requestEntities,
         callable $compare,
@@ -93,6 +93,7 @@ trait RelationTrait
                 if (isset($entity['id']) && $entity['id'] == $id) {
                     $matchedEntry = $entity;
                     $matchedKey = $key;
+                    break;
                 }
             }
         }
@@ -114,6 +115,7 @@ trait RelationTrait
                 if ($compare($entity, $data)) {
                     $matchedEntry = $entity;
                     $matchedKey = $key;
+                    break;
                 }
             }
         }
@@ -143,7 +145,10 @@ trait RelationTrait
 
         if (!empty($entities)) {
             foreach ($entities as $entity) {
-                // callback
+                $matchedEntry = null;
+                $matchedKey = null;
+
+                // find match callback
                 $compare($requestEntities, $entity, $matchedEntry, $matchedKey);
 
                 if ($matchedEntry == null && $delete != null) {
