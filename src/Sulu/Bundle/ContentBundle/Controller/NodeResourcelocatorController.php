@@ -35,7 +35,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
 
         if ($templateKey === null) {
-            $templateKey = $this->container->getParameter('sulu.content.template.default');
+            $templateKey = $this->container->getParameter('sulu.content.structure.default_type.page');
         }
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
 
