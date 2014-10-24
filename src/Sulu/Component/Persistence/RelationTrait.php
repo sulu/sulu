@@ -96,7 +96,7 @@ trait RelationTrait
         if (!empty($requestEntities)) {
             foreach ($requestEntities as $key => $data) {
                 if ($compare($entity, $data)) {
-                    $matchedEntry = $entity;
+                    $matchedEntry = $data;
                     $matchedKey = $key;
                     break;
                 }
