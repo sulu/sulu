@@ -17,4 +17,8 @@
         </whitelist>
     </filter>
 
+    <php>
+        <server name="KERNEL_DIR" value="Tests/app"/>
+        <var name="APP_DB" value="mysql"/>
+    </php>
 </phpunit>
