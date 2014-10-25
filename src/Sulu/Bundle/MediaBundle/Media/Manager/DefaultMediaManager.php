@@ -125,6 +125,11 @@ class DefaultMediaManager implements MediaManagerInterface
     private $mediaTypeEntities;
 
     /**
+     * @var int
+     */
+    private $count;
+
+    /**
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepository $collectionRepository
      * @param UserRepositoryInterface $userRepository
@@ -362,14 +367,23 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $filter = array(), $limit = null)
+    public function get($locale, $filter = array(), $limit = null, $offset = null)
     {
         $media = array();
-        $mediaEntities = $this->mediaRepository->findMedia($filter, $limit);
+        $mediaEntities = $this->mediaRepository->findMedia($filter, $limit, $offset);
+        $this->count = $mediaEntities->count();
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
         return $media;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCount()
+    {
+        return $this->count;
     }
 
     /**

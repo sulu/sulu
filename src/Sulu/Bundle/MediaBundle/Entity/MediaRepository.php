@@ -82,7 +82,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    public function findMedia($filter = array(), $limit = null)
+    public function findMedia($filter = array(), $limit = null, $offset = null)
     {
         try {
             list($collection, $ids, $types) = array(
@@ -141,6 +141,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $qb->setMaxResults($limit);
             }
 
+            if ($offset !== null) {
+                $qb->setFirstResult($offset);
+            }
+
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             if ($collection !== null) {
@@ -166,7 +170,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * @param String $filename
      * @param int $collectionId
      *
-     * @return Sulu\Bundle\MediaBundle\Entity\Media
+     * @return Media
      */
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
     {

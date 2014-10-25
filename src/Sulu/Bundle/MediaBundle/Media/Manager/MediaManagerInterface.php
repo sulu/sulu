@@ -27,6 +27,12 @@ interface MediaManagerInterface
     public function get($locale, $filter = array(), $limit = null);
 
     /**
+     * Return the count of the last get
+     * @return int
+     */
+    public function getCount();
+
+    /**
      * Returns a media with a given id
      * @param int $id the id of the category
      * @param string $locale the locale which the object will be returned
