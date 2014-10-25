@@ -98,16 +98,21 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function cgetAction(Request $request)
     {
         try {
-            $parent = $request->get('parent');
-            $depth = $request->get('depth');
-            $collectionManager = $this->getCollectionManager();
-
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $collections = $collectionManager->get($this->getLocale($request->get('locale')), $parent, $depth);
+            $parent = $request->get('parent');
+            $depth = $request->get('depth');
+            $limit = $request->get('limit', $listRestHelper->getLimit());
+            $offset = ($request->get('page', 1) - 1) * $limit;
+            $collectionManager = $this->getCollectionManager();
 
-            $all = count($collections); // TODO
+            $collections = $collectionManager->get($this->getLocale($request->get('locale')), array(
+                'parent' => $parent,
+                'depth' => $depth
+            ), $limit, $offset);
+
+            $all = $collectionManager->getCount();
 
             $list = new ListRepresentation(
                 $collections,

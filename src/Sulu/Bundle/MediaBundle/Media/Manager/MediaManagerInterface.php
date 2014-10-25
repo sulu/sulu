@@ -22,9 +22,10 @@ interface MediaManagerInterface
      * @param string $locale the locale which the object will be returned
      * @param array $filter collection, ids, types
      * @param int $limit to limit the output
+     * @param int $offset to offset the output
      * @return Media[]
      */
-    public function get($locale, $filter = array(), $limit = null);
+    public function get($locale, $filter = array(), $limit = null, $offset = null);
 
     /**
      * Return the count of the last get

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * CollectionRepository
@@ -81,8 +82,13 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
     /**
      * {@inheritdoc}
      */
-    public function findCollections($parent = null, $depth = null)
+    public function findCollections($filter = array(), $limit = null, $offset = null)
     {
+        list ($parent, $depth) = array(
+            isset($filter['parent']) ? $filter['parent'] : null,
+            isset($filter['depth']) ? $filter['depth'] : null,
+        );
+
         try {
             $qb = $this->createQueryBuilder('collection')
                 ->leftJoin('collection.meta', 'collectionMeta')
@@ -116,6 +122,12 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
             if ($depth !== null) {
                 $qb->where('collection.depth = :depth');
             }
+            if ($offset !== null) {
+                $qb->setFirstResult($offset);
+            }
+            if ($limit !== null) {
+                $qb->setMaxResults($limit);
+            }
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -126,7 +138,7 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
                 $query->setParameter('depth', $depth);
             }
 
-            return $query->getResult();
+            return new Paginator($query);
         } catch (NoResultException $ex) {
             return null;
         }

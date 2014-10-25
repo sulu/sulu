@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -72,6 +73,11 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * @var int
      */
+    private $count;
+
+    /**
+     * @var int
+     */
     private $collectionPreviewFormat;
 
     public function __construct(
@@ -110,14 +116,23 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $parent = null, $depth = null)
+    public function get($locale, $filter = array(), $limit = null, $offset = null)
     {
-        $collectionEntities = $this->collectionRepository->findCollections($parent, $depth);
+        $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset);
+        $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count($collectionEntities);
         $collections = [];
         foreach($collectionEntities as $entity) {
             $collections[] =  $this->addPreviews(new Collection($entity, $locale));
         }
         return $collections;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->count;
     }
 
     /**
