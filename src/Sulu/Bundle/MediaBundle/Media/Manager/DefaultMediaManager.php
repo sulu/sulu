@@ -12,6 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
@@ -371,7 +372,7 @@ class DefaultMediaManager implements MediaManagerInterface
     {
         $media = array();
         $mediaEntities = $this->mediaRepository->findMedia($filter, $limit, $offset);
-        $this->count = $mediaEntities->count();
+        $this->count = $mediaEntities instanceof Paginator ? $mediaEntities->count() : count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }

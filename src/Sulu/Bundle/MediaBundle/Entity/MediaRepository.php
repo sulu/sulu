@@ -85,10 +85,11 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     public function findMedia($filter = array(), $limit = null, $offset = null)
     {
         try {
-            list($collection, $ids, $types) = array(
+            list($collection, $ids, $types, $paginator) = array(
                 isset($filter['collection']) ? $filter['collection'] : null,
                 isset($filter['ids']) ? $filter['ids'] : null,
                 isset($filter['types']) ? $filter['types'] : null,
+                isset($filter['paginator']) ? $filter['paginator'] : true,
             );
 
             // if empty array of ids is requested return empty array of medias
@@ -157,7 +158,11 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $query->setParameter('types', $types);
             }
 
-            return new Paginator($query, false);
+            if (!$paginator) {
+                return $query->getResult();
+            }
+
+            return new Paginator($query);
         } catch (NoResultException $ex) {
             return null;
         }
