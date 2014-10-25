@@ -105,11 +105,13 @@ class CollectionController extends RestController implements ClassResourceInterf
             $depth = $request->get('depth');
             $limit = $request->get('limit', $listRestHelper->getLimit());
             $offset = ($request->get('page', 1) - 1) * $limit;
+            $search = $request->get('search');
             $collectionManager = $this->getCollectionManager();
 
             $collections = $collectionManager->get($this->getLocale($request->get('locale')), array(
                 'parent' => $parent,
-                'depth' => $depth
+                'depth' => $depth,
+                'search' => $search,
             ), $limit, $offset);
 
             $all = $collectionManager->getCount();

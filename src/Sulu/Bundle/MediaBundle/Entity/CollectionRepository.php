@@ -84,9 +84,10 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
      */
     public function findCollections($filter = array(), $limit = null, $offset = null)
     {
-        list ($parent, $depth) = array(
-            isset($filter['parent']) ? $filter['parent'] : null,
-            isset($filter['depth']) ? $filter['depth'] : null,
+        list ($parent, $depth, $search) = array(
+            !empty($filter['parent']) ? $filter['parent'] : null,
+            !empty($filter['depth']) ? $filter['depth'] : null,
+            !empty($filter['search']) ? $filter['search'] : null,
         );
 
         try {
@@ -122,6 +123,9 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
             if ($depth !== null) {
                 $qb->where('collection.depth = :depth');
             }
+            if ($search !== null) {
+                $qb->where('collectionMeta.title LIKE :search');
+            }
             if ($offset !== null) {
                 $qb->setFirstResult($offset);
             }
@@ -136,6 +140,9 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
             }
             if ($depth !== null) {
                 $query->setParameter('depth', $depth);
+            }
+            if ($search !== null) {
+                $query->setParameter('search', '%'.$search.'%');
             }
 
             return new Paginator($query);

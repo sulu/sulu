@@ -85,11 +85,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     public function findMedia($filter = array(), $limit = null, $offset = null)
     {
         try {
-            list($collection, $ids, $types, $paginator) = array(
-                isset($filter['collection']) ? $filter['collection'] : null,
-                isset($filter['ids']) ? $filter['ids'] : null,
-                isset($filter['types']) ? $filter['types'] : null,
-                isset($filter['paginator']) ? $filter['paginator'] : true,
+            list($collection, $ids, $types, $paginator, $search) = array(
+                !empty($filter['collection']) ? $filter['collection'] : null,
+                !empty($filter['ids']) ? $filter['ids'] : null,
+                !empty($filter['types']) ? $filter['types'] : null,
+                !empty($filter['paginator']) ? $filter['paginator'] : true,
+                !empty($filter['search']) ? $filter['search'] : null,
             );
 
             // if empty array of ids is requested return empty array of medias
@@ -100,8 +101,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $qb = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
-                ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion')
+                ->innerJoin('media.files', 'file')
+                ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
                 ->leftJoin('fileVersion.tags', 'tag')
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
@@ -138,6 +139,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $qb->andWhere('type.name IN (:types)');
             }
 
+            if ($search !== null) {
+                $qb->andWhere('fileVersionMeta.title LIKE :search');
+            }
+
             if ($limit !== null) {
                 $qb->setMaxResults($limit);
             }
@@ -156,6 +161,9 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             }
             if ($types !== null) {
                 $query->setParameter('types', $types);
+            }
+            if ($search !== null) {
+                $query->setParameter('search', '%'.$search.'%');
             }
 
             if (!$paginator) {

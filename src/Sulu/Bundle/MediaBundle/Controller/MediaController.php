@@ -104,6 +104,7 @@ class MediaController extends RestController implements ClassResourceInterface
             $limit = $request->get('limit', $listRestHelper->getLimit());
             $offset = ($request->get('page', 1) - 1 ) * $limit;
             $ids = $request->get('ids');
+            $search = $request->get('search');
             if ($ids !== null) {
                 $ids = explode(',', $ids);
             }
@@ -116,7 +117,8 @@ class MediaController extends RestController implements ClassResourceInterface
             $media = $mediaManager->get($this->getLocale($request->get('locale')), array(
                 'collection' => $collection,
                 'ids' => $ids,
-                'types' => $types
+                'types' => $types,
+                'search' => $search
             ), $limit, $offset);
 
             $all = $mediaManager->getCount();
