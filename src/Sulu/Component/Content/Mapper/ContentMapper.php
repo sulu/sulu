@@ -20,6 +20,7 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
+use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -46,6 +47,7 @@ use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -302,10 +304,12 @@ class ContentMapper implements ContentMapperInterface
 
         $nodeNamePropertyName = $nodeNameProperty->getName();
         if (!isset($data[$nodeNamePropertyName])) {
-            throw new \InvalidArgumentException(sprintf(
-                'You must set the "%s" data key',
-                $nodeNamePropertyName
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You must set the "%s" data key',
+                    $nodeNamePropertyName
+                )
+            );
         }
 
         // title should not have a slash
@@ -556,7 +560,10 @@ class ContentMapper implements ContentMapperInterface
                 $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
             $structure->setOriginTemplate(
-                $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplates[$structureType])
+                $node->getPropertyValueWithDefault(
+                    $this->properties->getName('template'),
+                    $this->defaultTemplates[$structureType]
+                )
             );
             // load dependencies for internal links
             $this->loadInternalLinkDependencies(
@@ -608,7 +615,6 @@ class ContentMapper implements ContentMapperInterface
                 )
             );
         }
-
     }
 
     /**
@@ -965,6 +971,7 @@ class ContentMapper implements ContentMapperInterface
             $languageCode,
             $segmentKey
         );
+
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode, $webspaceKey, true, false, false);
@@ -989,14 +996,19 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         $result = $query->execute();
         $structures = array();
 
         foreach ($result as $row) {
             try {
-                $structure = $this->loadByNode($row->getNode(), $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+                $structure = $this->loadByNode(
+                    $row->getNode(),
+                    $languageCode,
+                    $webspaceKey,
+                    $excludeGhost,
+                    $loadGhostContent
+                );
                 if (null !== $structure) {
                     $structures[] = $structure;
                 }
@@ -1188,7 +1200,7 @@ class ContentMapper implements ContentMapperInterface
             Structure::NODE_TYPE_CONTENT
         );
 
-        if ($contentNode->isNodeType('sulu:snippet')) {
+        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
             $structureType = Structure::TYPE_SNIPPET;
         } else {
             $structureType = Structure::TYPE_PAGE;
@@ -1259,9 +1271,11 @@ class ContentMapper implements ContentMapperInterface
                 );
             }
         }
-        
+
         if ($structureType === Structure::TYPE_PAGE) {
-            $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
+            $structure->setPath(
+                str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath())
+            );
             $structure->setNodeState(
                 $contentNode->getPropertyValueWithDefault(
                     $this->properties->getName('state'),
@@ -1733,10 +1747,13 @@ class ContentMapper implements ContentMapperInterface
         $structure = $this->structureManager->getStructure($key, $type);
 
         if (!$structure) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not find "%s" structure template for key "%s"',
-                $type, $key
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not find "%s" structure template for key "%s"',
+                    $type,
+                    $key
+                )
+            );
         }
 
         return $structure;
@@ -1937,7 +1954,14 @@ class ContentMapper implements ContentMapperInterface
             // get url returns false if route is not this language
             if ($url !== false) {
                 // generate field data
-                $fieldsData = $this->getFieldsData($row, $node, $fields[$originLocale], $templateKey, $webspaceKey, $locale);
+                $fieldsData = $this->getFieldsData(
+                    $row,
+                    $node,
+                    $fields[$originLocale],
+                    $templateKey,
+                    $webspaceKey,
+                    $locale
+                );
 
                 return array_merge(
                     array(
@@ -2154,17 +2178,23 @@ class ContentMapper implements ContentMapperInterface
      */
     private function validateRequest(ContentMapperRequest $request)
     {
-        $this->validateRequired($request, array(
-            'templateKey',
-            'userId',
-            'locale',
-            'type',
-        ));
+        $this->validateRequired(
+            $request,
+            array(
+                'templateKey',
+                'userId',
+                'locale',
+                'type',
+            )
+        );
 
         if ($request->getType() === Structure::TYPE_PAGE) {
-            $this->validateRequired($request, array(
-                'webspaceKey',
-            ));
+            $this->validateRequired(
+                $request,
+                array(
+                    'webspaceKey',
+                )
+            );
         }
     }
 
@@ -2175,10 +2205,12 @@ class ContentMapper implements ContentMapperInterface
             $val = $request->$method();
 
             if (null === $val) {
-                throw new \InvalidArgumentException(sprintf(
-                    'ContentMapperRequest "%s" cannot be null',
-                    $required
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'ContentMapperRequest "%s" cannot be null',
+                        $required
+                    )
+                );
             }
         }
     }
