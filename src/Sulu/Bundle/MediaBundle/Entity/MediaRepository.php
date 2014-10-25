@@ -157,7 +157,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $query->setParameter('types', $types);
             }
 
-            return new Paginator($query, $fetchJoin = true);
+            return new Paginator($query, false);
         } catch (NoResultException $ex) {
             return null;
         }
