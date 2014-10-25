@@ -295,7 +295,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
     private function getStructureMock($structureKey, $addResourceLocatorProperty = true)
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array($structureKey, 'asdf', 'asdf', 2400)
         );
 
