@@ -5,7 +5,6 @@
     "license": "MIT",
     "keywords": ["content", "cmf"],
     "version": "dev-develop",
-    "minimum-stability": "RC",
     "authors": [
         {
             "name": "Sulu Community",
@@ -21,31 +20,18 @@
         "sulu/security-bundle": "dev-develop",
         "sulu/website-bundle": "dev-develop",
         "sulu/tag-bundle": "dev-develop",
-
 	    "sulu/category-bundle": "dev-develop",
         "sulu/media-bundle": "dev-develop",
-        "liip/theme-bundle": "@dev",
 
         "jackalope/jackalope-jackrabbit": "1.1.*",
 
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "@dev",
-        "friendsofsymfony/http-cache": "@dev",
-
-        "jms/serializer-bundle": "@dev",
-
-        "cboden/ratchet": "dev-master",
+        "cboden/ratchet": "0.3.*",
         "doctrine/phpcr-bundle": "1.1.*",
-        "doctrine/phpcr-odm": "1.1.*",
-
-        "symfony-cmf/core-bundle": "1.1.*@dev",
-        "symfony-cmf/routing-bundle": "1.2.*@dev",
-        "symfony-cmf/routing": "1.2.*@dev"
+        "doctrine/phpcr-odm": "1.1.*"
     },
     "require-dev": {
         "symfony/symfony": "2.5.*",
         "sensio/framework-extra-bundle":  "~3.0",
-        "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
         "phpspec/prophecy-phpunit": "~1.0",
