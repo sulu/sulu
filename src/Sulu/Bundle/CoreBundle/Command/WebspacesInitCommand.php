@@ -13,7 +13,9 @@ namespace Sulu\Bundle\CoreBundle\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -120,11 +122,17 @@ class WebspacesInitCommand extends ContainerAwareCommand
     private function setBasicProperties(Webspace $webspace, NodeInterface $node, $template, $userId)
     {
         foreach ($webspace->getAllLocalizations() as $local) {
-            $this->setBasicLocalizationProperties($local, $node, $template, $userId);
+            $this->setBasicLocalizationProperties($local, $node, $template, $userId, $webspace->getKey());
         }
     }
 
-    private function setBasicLocalizationProperties(Localization $localization, NodeInterface $node, $template, $userId)
+    private function setBasicLocalizationProperties(
+        Localization $localization,
+        NodeInterface $node,
+        $template,
+        $userId,
+        $webspaceKey
+    )
     {
         $this->properties->setLanguage(str_replace('-', '_', $localization->getLocalization()));
 
@@ -141,9 +149,24 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {
-                $this->setBasicLocalizationProperties($local, $node, $template, $userId);
+                $this->setBasicLocalizationProperties($local, $node, $template, $userId, $webspaceKey);
             }
         }
+
+        // set resource locator to node
+
+        /** @var StructureManagerInterface $structureManager */
+        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $structure = $structureManager->getStructure($template);
+
+        $property = $structure->getPropertyByTagName('sulu.rlp');
+        $translatedProperty = new TranslatedProperty(
+            $property,
+            $localization->getLocalization(),
+            $this->getContainer()->getParameter('sulu.content.language.namespace')
+        );
+        $translatedProperty->setValue('/');
+        $node->setProperty($translatedProperty->getName(), $translatedProperty->getValue());
     }
 
     /**

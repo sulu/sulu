@@ -149,6 +149,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
                 } else {
                     $this->getStrategy()->save($node, $value, $webspaceKey, $languageCode, $segmentKey);
                 }
+                $node->setProperty($property->getName(), $value);
             }
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
@@ -160,7 +161,8 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey=null)
     {
-        // TODO: Implement remove() method.
+        $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
+        $node->remove($property->getName());
     }
 
     /**
