@@ -302,10 +302,12 @@ class ContentMapper implements ContentMapperInterface
 
         $nodeNamePropertyName = $nodeNameProperty->getName();
         if (!isset($data[$nodeNamePropertyName])) {
-            throw new \InvalidArgumentException(sprintf(
-                'You must set the "%s" data key',
-                $nodeNamePropertyName
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You must set the "%s" data key',
+                    $nodeNamePropertyName
+                )
+            );
         }
 
         // title should not have a slash
@@ -551,12 +553,17 @@ class ContentMapper implements ContentMapperInterface
         );
 
         if (Structure::TYPE_PAGE === $structureType) {
-            $structure->setPath(str_replace($root->getPath(), '', $node->getPath()));
+            $structure->setPath(
+                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
+            );
             $structure->setNavContexts(
                 $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
             $structure->setOriginTemplate(
-                $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplates[$structureType])
+                $node->getPropertyValueWithDefault(
+                    $this->properties->getName('template'),
+                    $this->defaultTemplates[$structureType]
+                )
             );
             // load dependencies for internal links
             $this->loadInternalLinkDependencies(
@@ -989,14 +996,19 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false
-    )
-    {
+    ) {
         $result = $query->execute();
         $structures = array();
 
         foreach ($result as $row) {
             try {
-                $structure = $this->loadByNode($row->getNode(), $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
+                $structure = $this->loadByNode(
+                    $row->getNode(),
+                    $languageCode,
+                    $webspaceKey,
+                    $excludeGhost,
+                    $loadGhostContent
+                );
                 if (null !== $structure) {
                     $structures[] = $structure;
                 }
@@ -1259,9 +1271,11 @@ class ContentMapper implements ContentMapperInterface
                 );
             }
         }
-        
+
         if ($structureType === Structure::TYPE_PAGE) {
-            $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
+            $structure->setPath(
+                str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath())
+            );
             $structure->setNodeState(
                 $contentNode->getPropertyValueWithDefault(
                     $this->properties->getName('state'),
@@ -1733,10 +1747,13 @@ class ContentMapper implements ContentMapperInterface
         $structure = $this->structureManager->getStructure($key, $type);
 
         if (!$structure) {
-            throw new \InvalidArgumentException(sprintf(
-                'Could not find "%s" structure template for key "%s"',
-                $type, $key
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not find "%s" structure template for key "%s"',
+                    $type,
+                    $key
+                )
+            );
         }
 
         return $structure;
@@ -1833,14 +1850,12 @@ class ContentMapper implements ContentMapperInterface
 
         $result = array();
         foreach ($locales as $locale) {
-            $routesPath = $this->sessionManager->getRouteNode($webspaceKey, $locale)->getPath();
-
             /** @var \Jackalope\Query\Row $row */
             foreach ($queryResult->getRows() as $row) {
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $routesPath, $fields);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
 
                     if (false !== $item && !in_array($item, $result)) {
                         $result[] = $item;
@@ -1855,7 +1870,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * converts a query row to an array
      */
-    private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
+    private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
     {
         // reset cache
         $this->initializeExtensionCache();
@@ -1931,13 +1946,20 @@ class ContentMapper implements ContentMapperInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
-                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale);
             }
 
             // get url returns false if route is not this language
             if ($url !== false) {
                 // generate field data
-                $fieldsData = $this->getFieldsData($row, $node, $fields[$originLocale], $templateKey, $webspaceKey, $locale);
+                $fieldsData = $this->getFieldsData(
+                    $row,
+                    $node,
+                    $fields[$originLocale],
+                    $templateKey,
+                    $webspaceKey,
+                    $locale
+                );
 
                 return array_merge(
                     array(
@@ -2102,10 +2124,8 @@ class ContentMapper implements ContentMapperInterface
         Row $row,
         StructureInterface $structure,
         $webspaceKey,
-        $locale,
-        $routesPath
+        $locale
     ) {
-        $url = '';
         // if homepage
         if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
             $url = '/';
@@ -2114,28 +2134,12 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    return 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                    $url = 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                } else {
+                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             } else {
-                return '';
-            }
-
-            try {
-                $routePath = $row->getPath('route');
-
-                $nextChar = substr($routePath, strlen($routesPath), 1);
-                $position = strpos($routePath, $routesPath);
-                if ($position === 0 && ($nextChar === '/' || $nextChar === false)) {
-                    $url = str_replace($routesPath, '', $routePath);
-                } else {
-                    return false;
-                }
-            } catch (RepositoryException $e) {
-                // ignore exception because no route node exists
-                // could have several reasons:
-                //  - external links has text-line as "rlp"
-                //  - internal links has a "reference" on another node
-                //  - no url exists
+                $url = '';
             }
         }
 
@@ -2154,17 +2158,23 @@ class ContentMapper implements ContentMapperInterface
      */
     private function validateRequest(ContentMapperRequest $request)
     {
-        $this->validateRequired($request, array(
-            'templateKey',
-            'userId',
-            'locale',
-            'type',
-        ));
+        $this->validateRequired(
+            $request,
+            array(
+                'templateKey',
+                'userId',
+                'locale',
+                'type',
+            )
+        );
 
         if ($request->getType() === Structure::TYPE_PAGE) {
-            $this->validateRequired($request, array(
-                'webspaceKey',
-            ));
+            $this->validateRequired(
+                $request,
+                array(
+                    'webspaceKey',
+                )
+            );
         }
     }
 
@@ -2175,10 +2185,12 @@ class ContentMapper implements ContentMapperInterface
             $val = $request->$method();
 
             if (null === $val) {
-                throw new \InvalidArgumentException(sprintf(
-                    'ContentMapperRequest "%s" cannot be null',
-                    $required
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'ContentMapperRequest "%s" cannot be null',
+                        $required
+                    )
+                );
             }
         }
     }
