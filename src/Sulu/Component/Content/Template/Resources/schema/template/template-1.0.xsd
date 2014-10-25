@@ -5,7 +5,7 @@
            xmlns="http://schemas.sulu.io/template/template"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-   <xs:element name="template" type="templateType"/>
+    <xs:element name="template" type="templateType"/>
 
     <xs:complexType name="templateType">
         <xs:choice maxOccurs="unbounded">
@@ -74,6 +74,7 @@
             <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
             <xs:element type="tagType" name="tag" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="paramsType" name="params" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="valuesType" name="values" minOccurs="0" maxOccurs="1"/>
             <xs:element type="xs:string" name="indexField" minOccurs="0" maxOccurs="1"/>
         </xs:choice>
 
@@ -146,6 +147,35 @@
     </xs:complexType>
 
     <xs:simpleType name="paramTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="collection"/>
+            <xs:enumeration value="string"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="valuesType">
+        <xs:sequence>
+            <xs:element type="valueType" name="value" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="type" type="valuesTypeType" default="static"/>
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="valueType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="metaType" name="meta" minOccurs="0" maxOccurs="1"/>
+        </xs:choice>
+        <xs:anyAttribute processContents="skip" />
+    </xs:complexType>
+
+    <xs:simpleType name="valuesTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="service"/>
+            <xs:enumeration value="static"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="valueTypeType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="collection"/>
             <xs:enumeration value="string"/>
