@@ -555,7 +555,9 @@ class ContentMapper implements ContentMapperInterface
         );
 
         if (Structure::TYPE_PAGE === $structureType) {
-            $structure->setPath(str_replace($root->getPath(), '', $node->getPath()));
+            $structure->setPath(
+                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
+            );
             $structure->setNavContexts(
                 $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
@@ -1850,14 +1852,12 @@ class ContentMapper implements ContentMapperInterface
 
         $result = array();
         foreach ($locales as $locale) {
-            $routesPath = $this->sessionManager->getRouteNode($webspaceKey, $locale)->getPath();
-
             /** @var \Jackalope\Query\Row $row */
             foreach ($queryResult->getRows() as $row) {
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $routesPath, $fields);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
 
                     if (false !== $item && !in_array($item, $result)) {
                         $result[] = $item;
@@ -1872,7 +1872,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * converts a query row to an array
      */
-    private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
+    private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
     {
         // reset cache
         $this->initializeExtensionCache();
@@ -1948,7 +1948,7 @@ class ContentMapper implements ContentMapperInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
-                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale);
             }
 
             // get url returns false if route is not this language
@@ -2126,10 +2126,8 @@ class ContentMapper implements ContentMapperInterface
         Row $row,
         StructureInterface $structure,
         $webspaceKey,
-        $locale,
-        $routesPath
+        $locale
     ) {
-        $url = '';
         // if homepage
         if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
             $url = '/';
@@ -2138,28 +2136,12 @@ class ContentMapper implements ContentMapperInterface
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    return 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                    $url = 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                } else {
+                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             } else {
-                return '';
-            }
-
-            try {
-                $routePath = $row->getPath('route');
-
-                $nextChar = substr($routePath, strlen($routesPath), 1);
-                $position = strpos($routePath, $routesPath);
-                if ($position === 0 && ($nextChar === '/' || $nextChar === false)) {
-                    $url = str_replace($routesPath, '', $routePath);
-                } else {
-                    return false;
-                }
-            } catch (RepositoryException $e) {
-                // ignore exception because no route node exists
-                // could have several reasons:
-                //  - external links has text-line as "rlp"
-                //  - internal links has a "reference" on another node
-                //  - no url exists
+                $url = '';
             }
         }
 
