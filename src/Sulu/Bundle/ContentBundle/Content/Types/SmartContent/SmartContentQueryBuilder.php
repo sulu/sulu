@@ -113,8 +113,8 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildOrder($webspaceKey, $locale)
     {
-        $sortOrder = (isset($this->config['sortMethod']) && strtolower($this->config['sortMethod']) === 'asc')
-            ? 'ASC' : 'DESC';
+        $sortOrder = (isset($this->config['sortMethod']) && strtolower($this->config['sortMethod']) === 'desc')
+            ? 'DESC' : 'ASC';
 
         $sql2Order = array();
         $sortBy = $this->getConfig('sortBy', array());

@@ -10,140 +10,112 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * @group functional
  * @group content
  */
-class SmartContentQueryBuilderTest extends PhpcrTestCase
+class SmartContentQueryBuilderTest extends SuluTestCase
 {
     /**
      * @var ContentQueryExecutor
      */
     private $contentQuery;
 
+    /**
+     * @var ContentMapperInterface
+     */
+    private $mapper;
+
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
+    /**
+     * @var string
+     */
+    private $languageNamespace;
+
+    /**
+     * @var Tag
+     */
+    private $tag1;
+
+    /**
+     * @var Tag
+     */
+    private $tag2;
+
+    /**
+     * @var Tag
+     */
+    private $tag3;
+
     public function setUp()
     {
-        $this->prepareMapper();
+        parent::setUp();
 
-        $this->structureManager->expects($this->any())
-            ->method('getStructures')
-            ->will($this->returnCallback(array($this, 'structuresCallback')));
+        $this->purgeDatabase();
+        $this->initPhpcr();
 
-        $this->contentQuery = new ContentQueryExecutor(
-            $this->sessionManager,
-            $this->mapper
-        );
-    }
+        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->contentQuery = $this->getContainer()->get('sulu.content.query_executor');
 
-    public function structureCallback()
-    {
-        $args = func_get_args();
-        $structureKey = $args[0];
+        $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
-        if ($structureKey == 'simple') {
-            return $this->getStructureMock(1, 'simple');
-        } elseif ($structureKey == 'article') {
-            return $this->getStructureMock(2, 'article');
-        } elseif ($structureKey == 'block') {
-            return $this->getStructureMock(3, 'block');
-        } elseif ($structureKey == 'excerpt') {
-            return $this->getStructureMock(4, 'excerpt');
-        }
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $user = $em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')->findOneByUsername('test');
 
-        return null;
-    }
+        $this->tag1 = new Tag();
+        $this->tag1->setName('test1');
+        $this->tag1->setChanged(new \DateTime());
+        $this->tag1->setCreator($user);
+        $this->tag1->setCreated(new \DateTime());
+        $this->tag1->setChanger($user);
+        $em->persist($this->tag1);
 
-    public function structuresCallback()
-    {
-        return array(
-            $this->getStructureMock(1, 'simple'),
-            $this->getStructureMock(2, 'article'),
-            $this->getStructureMock(3, 'block')
-        );
-    }
+        $this->tag2 = new Tag();
+        $this->tag2->setName('test2');
+        $this->tag2->setChanged(new \DateTime());
+        $this->tag2->setCreator($user);
+        $this->tag2->setCreated(new \DateTime());
+        $this->tag2->setChanger($user);
+        $em->persist($this->tag2);
 
-    public function getExtensionsCallback()
-    {
-        return array(new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager));
-    }
+        $this->tag3 = new Tag();
+        $this->tag3->setName('test3');
+        $this->tag3->setChanged(new \DateTime());
+        $this->tag3->setCreator($user);
+        $this->tag3->setCreated(new \DateTime());
+        $this->tag3->setChanger($user);
+        $em->persist($this->tag3);
 
-    public function getExtensionCallback()
-    {
-        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
-    }
-
-    public function getStructureMock($type, $name)
-    {
-        $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
-            array($name, 'asdf', 'asdf', 2400)
-        );
-
-        $method = new ReflectionMethod(
-            get_class($structureMock), 'addChild'
-        );
-
-        $method->setAccessible(true);
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('title', array(), 'text_line', false, true, 1, 1, array())
-            )
-        );
-
-        if ($type === 2) {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property(
-                        'article', array(), 'text_area', false, true
-                    )
-                )
-            );
-        } elseif ($type === 3) {
-            $block = new BlockProperty('article', array(), 'test', false, true, 2, 1);
-            $type = new BlockPropertyType('test', array());
-            $type->addChild(new Property('title', array(), 'text_line'));
-            $type->addChild(new Property('article', array(), 'text_area'));
-            $block->addType($type);
-
-            $method->invokeArgs($structureMock, array($block));
-        } elseif ($type === 4) {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property(
-                        'tags', array(), 'text_line', false, true, 1, 10
-                    )
-                )
-            );
-        }
-
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property(
-                    'url', 'url', 'resource_locator', false, true, 1, 1, array(),
-                    array(
-                        new PropertyTag('sulu.rlp', 1)
-                    )
-                )
-            )
-        );
-
-        return $structureMock;
+        $em->flush();
     }
 
     public function propertiesProvider()
@@ -185,7 +157,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $node = $this->mapper->save(
                 $data,
                 $template,
-                'default',
+                'sulu_io',
                 'en',
                 1,
                 true,
@@ -212,7 +184,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $builder->init(array('properties' => array('my_article' => 'article')));
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
 
         foreach ($result as $item) {
@@ -243,7 +215,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $news = $this->mapper->save(
             array('title' => 'News', 'url' => '/news'),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -254,7 +226,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $products = $this->mapper->save(
             array('title' => 'Products', 'url' => '/products'),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -274,7 +246,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $node = $this->mapper->save(
                 $data,
                 $template,
-                'default',
+                'sulu_io',
                 'en',
                 1,
                 true,
@@ -302,7 +274,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $builder->init(array('config' => array('dataSource' => $news->getUuid())));
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(sizeof($nodes), sizeof($result));
@@ -320,7 +292,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $builder->init(array('config' => array('dataSource' => $products->getUuid())));
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(0, sizeof($result));
@@ -328,7 +300,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
     public function testIncludeSubFolder()
     {
-        $root = $this->sessionManager->getContentNode('default');
+        $root = $this->sessionManager->getContentNode('sulu_io');
         list($news, $products, $nodes) = $this->datasourceProvider();
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
@@ -339,27 +311,20 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $builder->init(array('config' => array('dataSource' => $root->getIdentifier(), 'includeSubFolders' => true)));
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
 
         // nodes + news + products
         $this->assertEquals(sizeof($nodes) + 2, sizeof($result));
 
-        for ($i = 0; $i < sizeof($nodes) + 2; $i++) {
-            if ($i === 0) {
-                $item = $result[0];
+        $nodes[$news->getUuid()] = $news;
+        $nodes[$products->getUuid()] = $products;
 
-                $expected = $news;
-            } elseif ($i === sizeof($nodes) + 1) {
-                $item = $result[sizeof($nodes) + 1];
+        for ($i = 0; $i < sizeof($nodes); $i++) {
+            $item = $result[$i];
 
-                $expected = $products;
-            } else {
-                $item = $result[$i];
-
-                /** @var StructureInterface $expected */
-                $expected = $nodes[$item['uuid']];
-            }
+            /** @var StructureInterface $expected */
+            $expected = $nodes[$item['uuid']];
 
             $this->assertEquals($expected->getUuid(), $item['uuid']);
             $this->assertEquals($expected->getNodeType(), $item['nodeType']);
@@ -377,10 +342,10 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $t2 = 0;
         for ($i = 0; $i < $max; $i++) {
             if ($i % 2 === 1) {
-                $tags = array(1, 2);
+                $tags = array($this->tag1->getName(), $this->tag2->getName());
                 $t1t2++;
             } else {
-                $tags = array(2);
+                $tags = array($this->tag2->getName());
                 $t2++;
             }
 
@@ -397,7 +362,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $node = $this->mapper->save(
                 $data,
                 $template,
-                'default',
+                'sulu_io',
                 'en',
                 1,
                 true,
@@ -413,7 +378,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
     public function testTags()
     {
-        $root = $this->sessionManager->getContentNode('default');
+        $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
@@ -424,30 +389,35 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
         // tag 1, 2
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(1, 2)))
+            array(
+                'config' => array(
+                    'dataSource' => $root->getIdentifier(),
+                    'tags' => array($this->tag1->getId(), $this->tag2->getId())
+                )
+            )
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals($t1t2, sizeof($result));
 
         // tag 1
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(1)))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag1->getId())))
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals($t1t2 + $t1, sizeof($result));
 
         // tag 2
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(2)))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag2->getId())))
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals($t1t2 + $t2, sizeof($result));
 
         // tag 3
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array(3)))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag3->getId())))
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals(0, sizeof($result));
     }
 
@@ -459,7 +429,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
                 'url' => '/asdf-1'
             ),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -474,7 +444,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
                 'url' => '/qwertz-1'
             ),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -489,7 +459,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
                 'url' => '/qwertz'
             ),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -504,7 +474,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
                 'url' => '/asdf'
             ),
             'simple',
-            'default',
+            'sulu_io',
             'en',
             1,
             true,
@@ -519,7 +489,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
     public function testOrderBy()
     {
-        $root = $this->sessionManager->getContentNode('default');
+        $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes) = $this->orderByProvider();
 
         $builder = new SmartContentQueryBuilder(
@@ -531,9 +501,9 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
         // order by title
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'orderBy' => array('title')))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'sortBy' => array('title')))
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
 
         $this->assertEquals('ASDF', $result[0]['title']);
         $this->assertEquals('asdf', $result[1]['title']);
@@ -542,9 +512,15 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
         // order by title and desc
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'sortBy' => array('title'), 'sortMethod' => 'desc'))
+            array(
+                'config' => array(
+                    'dataSource' => $root->getIdentifier(),
+                    'sortBy' => array('title'),
+                    'sortMethod' => 'desc'
+                )
+            )
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
 
         $this->assertEquals('QWERTZ', $result[0]['title']);
         $this->assertEquals('qwertz', $result[1]['title']);
@@ -554,7 +530,7 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
     public function testOrderByOrder()
     {
-        $root = $this->sessionManager->getContentNode('default');
+        $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes) = $this->orderByProvider();
         $session = $this->sessionManager->getSession();
 
@@ -578,9 +554,15 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
         // order by default
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'orderBy' => array(), 'sortMethod' => 'asc'))
+            array(
+                'config' => array(
+                    'dataSource' => $root->getIdentifier(),
+                    'orderBy' => array(),
+                    'sortMethod' => 'asc'
+                )
+            )
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
 
         $this->assertEquals('qwertz', $result[0]['title']);
         $this->assertEquals('asdf', $result[1]['title']);
@@ -589,9 +571,15 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
 
         // order by default
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'orderBy' => array(), 'sortMethod' => 'desc'))
+            array(
+                'config' => array(
+                    'dataSource' => $root->getIdentifier(),
+                    'orderBy' => array(),
+                    'sortMethod' => 'desc'
+                )
+            )
         );
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
 
         $this->assertEquals('QWERTZ', $result[0]['title']);
         $this->assertEquals('ASDF', $result[1]['title']);
@@ -609,10 +597,18 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(array('properties' => array('my_title' => 'title', 'ext_title' => 'excerpt.title', 'ext_tags' => 'excerpt.tags')));
+        $builder->init(
+            array(
+                'properties' => array(
+                    'my_title' => 'title',
+                    'ext_title' => 'excerpt.title',
+                    'ext_tags' => 'excerpt.tags'
+                )
+            )
+        );
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
 
         foreach ($result as $item) {
@@ -638,11 +634,11 @@ class SmartContentQueryBuilderTest extends PhpcrTestCase
         $builder->init(array('ids' => array(array_keys($nodes)[0], array_keys($nodes)[1])));
 
         $tStart = microtime(true);
-        $result = $this->contentQuery->execute('default', array('en'), $builder);
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $tDiff = microtime(true) - $tStart;
 
         $this->assertEquals(2, sizeof($result));
-        $this->assertEquals(array_keys($nodes)[0], $result[0]['uuid']);
-        $this->assertEquals(array_keys($nodes)[1], $result[1]['uuid']);
+        $this->assertArrayHasKey($result[0]['uuid'], $nodes);
+        $this->assertArrayHasKey($result[1]['uuid'], $nodes);
     }
 }
