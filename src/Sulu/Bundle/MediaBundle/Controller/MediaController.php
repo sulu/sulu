@@ -102,7 +102,7 @@ class MediaController extends RestController implements ClassResourceInterface
 
             $collection = $request->get('collection');
             $limit = $request->get('limit', $listRestHelper->getLimit());
-            $offset = $request->get('offset');
+            $offset = ($request->get('page', 1) - 1 ) * $limit;
             $ids = $request->get('ids');
             if ($ids !== null) {
                 $ids = explode(',', $ids);
