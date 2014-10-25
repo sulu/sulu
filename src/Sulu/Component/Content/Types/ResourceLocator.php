@@ -49,10 +49,10 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
             $value = $node->getPropertyValue($property->getName());
         } else {
             $value = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
+            $node->setProperty($property->getName(), $value);
         }
 
         $property->setValue($value);
-        $node->setProperty($property->getName(), $value);
     }
 
     /**

@@ -86,6 +86,7 @@ class ResourceLocatorTest extends SuluTestCase
         $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
 
         $this->assertEquals('/test', $node->getPropertyValue('url'));
+        $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test'));
     }
 
     public function testLoadFromProperty()
@@ -118,4 +119,26 @@ class ResourceLocatorTest extends SuluTestCase
         $this->assertEquals('/test', $property->getValue());
         $this->assertEquals('/test', $node->getPropertyValue('url'));
     }
+
+    public function testOverride()
+    {
+        $property = new Property('url', array(), 'resource_locator');
+        $property->setValue('/test');
+
+        $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');
+        $node->addMixin('sulu:content');
+        $this->session->save();
+
+        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
+
+        $this->assertEquals('/test', $node->getPropertyValue('url'));
+        $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test'));
+
+        $property->setValue('/test-2');
+        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
+        
+        $this->assertEquals('/test-2', $node->getPropertyValue('url'));
+        $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test-2'));
+    }
+
 }
