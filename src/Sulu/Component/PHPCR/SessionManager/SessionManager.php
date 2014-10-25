@@ -16,10 +16,11 @@ use PHPCR\RepositoryFactoryInterface;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
+use PHPCR\ItemNotFoundException;
+use PHPCR\PathNotFoundException;
 
 class SessionManager implements SessionManagerInterface
 {
-
     /**
      * @var string[]
      */
@@ -49,17 +50,24 @@ class SessionManager implements SessionManagerInterface
      */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
+        return $this->getSession()->getNode($this->getRoutePath($webspaceKey, $languageCode, $segment));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutePath($webspaceKey, $languageCode, $segment = null)
+    {
         $path = sprintf(
-            '%s/%s/%s/%s%s',
+            '/%s/%s/%s/%s%s',
             $this->nodeNames['base'],
             $webspaceKey,
             $this->nodeNames['route'],
             $languageCode,
             ($segment !== null ? '/' . $segment : '')
         );
-        $root = $this->getSession()->getRootNode();
 
-        return $root->getNode($path);
+        return $path;
     }
 
     /**
@@ -67,10 +75,22 @@ class SessionManager implements SessionManagerInterface
      */
     public function getContentNode($webspaceKey)
     {
-        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
-        $root = $this->getSession()->getRootNode();
+        return $this->getSession()->getNode($this->getContentPath($webspaceKey));
+    }
 
-        return $root->getNode($path);
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentPath($webspaceKey)
+    {
+        $path = sprintf(
+            '/%s/%s/%s',
+            $this->nodeNames['base'],
+            $webspaceKey,
+            $this->nodeNames['content']
+        );
+
+        return $path;
     }
 
     /**
@@ -87,5 +107,27 @@ class SessionManager implements SessionManagerInterface
         }
 
         return $tempNode->getNode($alias);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSnippetNode($templateKey = null)
+    {
+        $snippetPath = '/' . $this->nodeNames['base'] . '/' . $this->nodeNames['snippet'];
+        $nodePath = $snippetPath . '/' . $templateKey;
+
+        if (null === $templateKey) {
+            $nodePath = $snippetPath;
+        }
+
+        try {
+            $node = $this->getSession()->getNode($nodePath);
+        } catch (PathNotFoundException $e) {
+            $snippetNode = $this->getSession()->getNode($snippetPath);
+            $node = $snippetNode->addNode($templateKey);
+        }
+
+        return $node;
     }
 }

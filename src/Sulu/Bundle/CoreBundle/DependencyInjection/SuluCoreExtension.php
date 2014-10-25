@@ -157,10 +157,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     private function initContent($contentConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
-        // Default template
-        $container->setParameter('sulu.content.template.default', $contentConfig['default_template']);
-        $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
-
         // Default Language
         $container->setParameter('sulu.content.language.namespace', $contentConfig['language']['namespace']);
         $container->setParameter('sulu.content.language.default', $contentConfig['language']['default']);
@@ -170,6 +166,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
         $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
         $container->setParameter('sulu.content.node_names.temp', $contentConfig['node_names']['temp']);
+        $container->setParameter('sulu.content.node_names.snippet', $contentConfig['node_names']['snippet']);
 
         // Content Types
         $container->setParameter(
@@ -193,11 +190,17 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $contentConfig['types']['block']['template']
         );
 
+        // Default template
+        $container->setParameter('sulu.content.structure.default_type.page', $contentConfig['structure']['default_type']['page']);
+        $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
+        $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
+
         // Template
         $container->setParameter(
-            'sulu.content.template.paths',
-            $contentConfig['templates']['paths']
+            'sulu.content.structure.paths',
+            $contentConfig['structure']['paths']
         );
+
 
         $loader->load('content.xml');
     }

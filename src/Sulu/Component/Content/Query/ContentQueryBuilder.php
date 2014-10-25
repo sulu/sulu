@@ -102,7 +102,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $additionalFields = array();
 
         $where = '';
-        $select = array('route.*', 'page.*');
+        $select = array('page.*');
         $order = array();
 
         foreach ($locales as $locale) {
@@ -143,14 +143,10 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $sql2 = sprintf(
             "SELECT %s
              FROM [nt:unstructured] AS page
-             LEFT OUTER JOIN [nt:unstructured] AS route ON page.[jcr:uuid] = route.[sulu:content]
-             WHERE page.[jcr:mixinTypes] = 'sulu:content'
-                AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))
+             WHERE page.[jcr:mixinTypes] = 'sulu:page'
                 AND (%s)
                 %s %s",
             implode(', ', $select),
-            $webspaceKey,
-            $webspaceKey,
             $where,
             sizeof($order) > 0 ? 'ORDER BY' : '',
             implode(', ', $order)

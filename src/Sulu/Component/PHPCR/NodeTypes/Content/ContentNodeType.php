@@ -16,7 +16,6 @@ use PHPCR\NodeType\PropertyDefinitionInterface;
 
 class ContentNodeType implements NodeTypeDefinitionInterface
 {
-
     /**
      * Returns the name of the node type.
      *

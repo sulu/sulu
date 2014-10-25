@@ -8,13 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Structure;
 
 use DateTime;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Sulu\Component\Content\StructureTag;
+use Sulu\Component\Content\PropertyTag;
 
-class StructureTest extends \PHPUnit_Framework_TestCase
+abstract class StructureTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Structure
@@ -41,19 +42,10 @@ class StructureTest extends \PHPUnit_Framework_TestCase
             ->setMockClassName('TestProperty')
             ->getMock();
 
-        $this->structure = $this->getMockBuilder('Sulu\Component\Content\Structure')
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock();
-
-        $this->structure->setType(StructureType::getGhost('en_us'));
-        $this->structure->setChanged(new DateTime('2014-03-18'));
-        $this->structure->setCreated(new DateTime('2014-03-17'));
-        $this->structure->setNodeState(2);
-        $this->structure->setPublished(new DateTime('2014-03-16'));
-        $this->structure->setNavContexts(true);
-        $this->structure->setHasTranslation(true);
+        $this->structure = $this->getStructure();
     }
+
+    abstract protected function getStructure();
 
     public function testToArray()
     {

@@ -6,7 +6,6 @@
         <parameter key="sulu_core.webspace.webspace_manager.class">Sulu\Component\Webspace\Manager\WebspaceManager</parameter>
         <parameter key="sulu_core.webspace.loader.xml_class">Sulu\Component\Webspace\Loader\XmlFileLoader</parameter>
 
-        <parameter key="sulu_core.webspace.config_dir">%kernel.root_dir%/Resources/webspaces</parameter>
         <parameter key="sulu_core.webspace.cache_class">WebspaceCollectionCache</parameter>
         <parameter key="sulu_core.webspace.base_class">WebspaceCollection</parameter>
     </parameters>

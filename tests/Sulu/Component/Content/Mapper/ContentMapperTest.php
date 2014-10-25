@@ -34,6 +34,7 @@ use Sulu\Component\Webspace\Webspace;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
+ * TODO: REFACTOR THIS NOW - make it an integration test.
  */
 class ContentMapperTest extends PhpcrTestCase
 {
@@ -55,27 +56,27 @@ class ContentMapperTest extends PhpcrTestCase
         $structureKey = $args[0];
 
         if ($structureKey == 'overview') {
-            return $this->getStructureMock(1);
+            return $this->getPageMock(1);
         } elseif ($structureKey == 'default') {
-            return $this->getStructureMock(2);
+            return $this->getPageMock(2);
         } elseif ($structureKey == 'complex') {
-            return $this->getStructureMock(3);
+            return $this->getPageMock(3);
         } elseif ($structureKey == 'mandatory') {
-            return $this->getStructureMock(4);
+            return $this->getPageMock(4);
         } elseif ($structureKey == 'section') {
-            return $this->getStructureMock(5);
+            return $this->getPageMock(5);
         } elseif ($structureKey == 'extension') {
-            return $this->getStructureMock(6);
+            return $this->getPageMock(6);
         } elseif ($structureKey == 'internal-link') {
-            return $this->getStructureMock(7, false);
+            return $this->getPageMock(7, false);
         } elseif ($structureKey == 'external-link') {
-            return $this->getStructureMock(8, false);
+            return $this->getPageMock(8, false);
         }
 
         return null;
     }
 
-    public function getStructureMock($type = 1, $url = true)
+    public function getPageMock($type = 1, $url = true)
     {
         $name = array(
             null, // index 0 not used
@@ -92,7 +93,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
 
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array($name[$type], 'asdf', 'asdf', 2400)
         );
 
@@ -332,7 +333,14 @@ class ContentMapperTest extends PhpcrTestCase
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
-        $result = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $result = $this->mapper->saveRequest(
+            ContentMapperRequest::create()
+                ->setWebspaceKey('default')
+                ->setTemplateKey('overview')
+                ->setLocale('de')
+                ->setUserId(1)
+                ->setData($data)
+            );
 
         $this->assertEquals('Testname', $result->getPropertyValue('title'));
         $this->assertEquals(
@@ -506,17 +514,22 @@ class ContentMapperTest extends PhpcrTestCase
 
     public function testLoad()
     {
-        $data = array(
-            'title' => 'Testname',
-            'tags' => array(
-                'tag1',
-                'tag2'
-            ),
-            'url' => '/news/test',
-            'article' => 'default'
-        );
+        $data = ContentMapperRequest::create('page')
+            ->setLocale('de')
+            ->setTemplateKey('overview')
+            ->setData(array(
+                'title' => 'Testname',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/news/test',
+                'article' => 'default'
+            ))
+            ->setWebspaceKey('default')
+            ->setUserId(1);
 
-        $structure = $this->mapper->save($data, 'overview', 'default', 'de', 1);
+        $structure = $this->mapper->saveRequest($data);
 
         $content = $this->mapper->load($structure->getUuid(), 'default', 'de');
 
@@ -564,8 +577,8 @@ class ContentMapperTest extends PhpcrTestCase
         $this->session = null;
         $this->sessionManager = null;
         $this->structureValueMap = array(
-            'overview' => $this->getStructureMock(1),
-            'default' => $this->getStructureMock(2)
+            'overview' => $this->getPageMock(1),
+            'default' => $this->getPageMock(2)
         );
         $this->prepareMapper();
 
