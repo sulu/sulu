@@ -140,9 +140,29 @@ class WebspaceManager implements WebspaceManagerInterface
         return $urls;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPortalInformations($environment)
     {
         return $this->getWebspaceCollection()->getPortalInformations($environment);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAllLocalizations()
+    {
+        $localizations = array();
+
+        foreach ($this->getWebspaceCollection() as $webspace) {
+            /** @var Webspace $webspace */
+            foreach ($webspace->getAllLocalizations() as $localization) {
+                $localizations[$localization->getLocalization()] = $localization;
+            }
+        }
+
+        return $localizations;
     }
 
     /**

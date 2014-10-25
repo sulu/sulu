@@ -43,7 +43,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid',
                 'cache_class' => 'WebspaceCollectionCache' . uniqid()
             )
@@ -427,7 +427,7 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
             $this->loader,
             $this->logger,
             array(
-                'cache_dir'  => __DIR__ . '/../../../../Resources/cache',
+                'cache_dir' => __DIR__ . '/../../../../Resources/cache',
                 'config_dir' => __DIR__ . '/../../../../Resources/DataFixtures/Webspace/both'
             )
         );
@@ -528,7 +528,10 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('massiveart_ca', $portals['massiveart_ca']->getKey());
         $this->assertEquals('sulucmf_at', $portals['sulucmf_at']->getKey());
         $this->assertEquals('sulucmf_singlelanguage_at', $portals['sulucmf_singlelanguage_at']->getKey());
-        $this->assertEquals('sulucmf_withoutportallocalizations_at', $portals['sulucmf_withoutportallocalizations_at']->getKey());
+        $this->assertEquals(
+            'sulucmf_withoutportallocalizations_at',
+            $portals['sulucmf_withoutportallocalizations_at']->getKey()
+        );
     }
 
     public function testGetUrls()
@@ -567,5 +570,74 @@ class WebspaceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('massiveart.lo/fr-ca/s', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo/de/w', $portalInformations);
         $this->assertArrayHasKey('massiveart.lo/de/s', $portalInformations);
+    }
+
+    public function testGetAllLocalizations()
+    {
+        $localizations = $this->webspaceManager->getAllLocalizations();
+
+        array_walk(
+            $localizations,
+            function (&$localization) {
+                $localization = $localization->toArray();
+                unset($localization['children']);
+                unset($localization['localization']);
+                unset($localization['shadow']);
+                unset($localization['default']);
+            }
+        );
+
+        // check for duplicates
+        $this->assertCount(7, $localizations);
+
+        $this->assertContains(
+            array(
+                'country' => 'us',
+                'language' => 'en'
+            ),
+            $localizations
+        );
+        $this->assertContains(
+            array(
+                'country' => 'at',
+                'language' => 'de'
+            ),
+            $localizations
+        );
+        $this->assertContains(
+            array(
+                'country' => 'ca',
+                'language' => 'en'
+            ),
+            $localizations
+        );
+        $this->assertContains(
+            array(
+                'country' => 'ca',
+                'language' => 'fr'
+            ),
+            $localizations
+        );
+        $this->assertContains(
+            array(
+                'country' => null,
+                'language' => 'de'
+            ),
+            $localizations
+        );
+        $this->assertContains(
+            array(
+                'country' => null,
+                'language' => 'en'
+            ),
+            $localizations
+        );
+        $this->assertContains(
+            array(
+                'country' => 'uk',
+                'language' => 'en'
+            ),
+            $localizations
+        );
     }
 }
