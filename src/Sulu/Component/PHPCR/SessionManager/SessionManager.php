@@ -50,17 +50,24 @@ class SessionManager implements SessionManagerInterface
      */
     public function getRouteNode($webspaceKey, $languageCode, $segment = null)
     {
+        return $this->getSession()->getNode($this->getRoutePath($webspaceKey, $languageCode, $segment));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoutePath($webspaceKey, $languageCode, $segment = null)
+    {
         $path = sprintf(
-            '%s/%s/%s/%s%s',
+            '/%s/%s/%s/%s%s',
             $this->nodeNames['base'],
             $webspaceKey,
             $this->nodeNames['route'],
             $languageCode,
             ($segment !== null ? '/' . $segment : '')
         );
-        $root = $this->getSession()->getRootNode();
 
-        return $root->getNode($path);
+        return $path;
     }
 
     /**
@@ -68,10 +75,22 @@ class SessionManager implements SessionManagerInterface
      */
     public function getContentNode($webspaceKey)
     {
-        $path = $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['content'];
-        $root = $this->getSession()->getRootNode();
+        return $this->getSession()->getNode($this->getContentPath($webspaceKey));
+    }
 
-        return $root->getNode($path);
+    /**
+     * {@inheritdoc}
+     */
+    public function getContentPath($webspaceKey)
+    {
+        $path = sprintf(
+            '/%s/%s/%s',
+            $this->nodeNames['base'],
+            $webspaceKey,
+            $this->nodeNames['content']
+        );
+
+        return $path;
     }
 
     /**
