@@ -10,8 +10,8 @@
 
 namespace Sulu\Component\Content\Types\Rlp\Mapper;
 
-
 use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
@@ -124,8 +124,7 @@ class PhpcrMapper extends RlpMapper
         $webspaceKey,
         $languageCode,
         $segmentKey = null
-    )
-    {
+    ) {
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
@@ -199,12 +198,13 @@ class PhpcrMapper extends RlpMapper
                 if (false !== $resourceLocator) {
                     // add resourceLocator
                     $result[] = new ResourceLocatorInformation(
-                        //backward compability
+                    //backward compability
                         $resourceLocator,
                         $node->getPropertyValueWithDefault('sulu:created', new DateTime()),
                         $node->getIdentifier()
                     );
                 }
+
                 return false;
             },
             $webspaceKey,
@@ -238,16 +238,22 @@ class PhpcrMapper extends RlpMapper
     {
         $resourceLocator = ltrim($resourceLocator, '/');
 
-
-        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
-        if (!$routes->hasNode($resourceLocator) && $resourceLocator !== '') {
+        try {
+            if ($resourceLocator !== '') {
+                // get requested resource locator route node
+                $route = $this->sessionManager->getSession()->getNode(
+                    sprintf(
+                        '%s/%s',
+                        $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
+                        $resourceLocator
+                    )
+                );
+            } else {
+                // get home page route node
+                $route = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+            }
+        } catch (PathNotFoundException $exc) {
             throw new ResourceLocatorNotFoundException();
-        }
-
-        if ($resourceLocator !== '') {
-            $route = $routes->getNode($resourceLocator);
-        } else {
-            $route = $routes;
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
@@ -395,10 +401,7 @@ class PhpcrMapper extends RlpMapper
     public function deleteByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->sessionManager->getSession();
-
-        $routeRootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
-        $routeNode = $routeRootNode->getNode(ltrim($path, '/'));
-
+        $routeNode = $session->getNode($this->getPath($path, $webspaceKey, $languageCode, $segmentKey));
         $this->deleteByNode($routeNode, $session, $webspaceKey, $languageCode, $segmentKey);
         $session->save();
     }
@@ -412,8 +415,7 @@ class PhpcrMapper extends RlpMapper
         $webspaceKey,
         $languageCode,
         $segmentKey = null
-    )
-    {
+    ) {
         if ($node->getPropertyValue('sulu:history') !== true) {
             // search for history nodes
             $this->iterateRouteNodes(
@@ -475,6 +477,7 @@ class PhpcrMapper extends RlpMapper
                 if ($node->getPropertyValue('sulu:history') === true) {
                     $node->setProperty('sulu:content', $newRouteNode);
                 }
+
                 return false;
             },
             $webspaceKey,
@@ -593,6 +596,18 @@ class PhpcrMapper extends RlpMapper
     }
 
     /**
+     * returns base path of routes from phpcr
+     * @param string $webspaceKey current session
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return string
+     */
+    private function getRoutesBasePath($webspaceKey, $languageCode, $segmentKey)
+    {
+        return $this->sessionManager->getRoutePath($webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
      * returns the abspath
      * @param string $relPath
      * @param string $webspaceKey
@@ -602,7 +617,8 @@ class PhpcrMapper extends RlpMapper
      */
     private function getPath($relPath, $webspaceKey, $languageCode, $segmentKey)
     {
-        $basePath = $this->getRoutes($webspaceKey, $languageCode, $segmentKey)->getPath();
+        $basePath = $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey);
+
         return '/' . ltrim($basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
     }
 
@@ -615,7 +631,7 @@ class PhpcrMapper extends RlpMapper
      */
     private function getResourceLocator($path, $webspaceKey, $languageCode, $segmentKey)
     {
-        $basePath = $this->getRoutes($webspaceKey, $languageCode, $segmentKey)->getPath();
+        $basePath = $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey);
         if ($path === $basePath) {
             return '/';
         }
@@ -625,6 +641,7 @@ class PhpcrMapper extends RlpMapper
                 return $result;
             }
         }
+
         return false;
     }
 }
