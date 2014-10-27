@@ -20,6 +20,7 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
+use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -46,6 +47,7 @@ use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -615,7 +617,6 @@ class ContentMapper implements ContentMapperInterface
                 )
             );
         }
-
     }
 
     /**
@@ -972,6 +973,7 @@ class ContentMapper implements ContentMapperInterface
             $languageCode,
             $segmentKey
         );
+
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode, $webspaceKey, true, false, false);
@@ -1200,7 +1202,7 @@ class ContentMapper implements ContentMapperInterface
             Structure::NODE_TYPE_CONTENT
         );
 
-        if ($contentNode->isNodeType('sulu:snippet')) {
+        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
             $structureType = Structure::TYPE_SNIPPET;
         } else {
             $structureType = Structure::TYPE_PAGE;

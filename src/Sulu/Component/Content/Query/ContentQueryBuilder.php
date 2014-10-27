@@ -144,12 +144,9 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             "SELECT %s
              FROM [nt:unstructured] AS page
              WHERE page.[jcr:mixinTypes] = 'sulu:page'
-                AND (ISDESCENDANTNODE(page, '/cmf/%s/contents') OR ISSAMENODE(page, '/cmf/%s/contents'))
                 AND (%s)
                 %s %s",
             implode(', ', $select),
-            $webspaceKey,
-            $webspaceKey,
             $where,
             sizeof($order) > 0 ? 'ORDER BY' : '',
             implode(', ', $order)
