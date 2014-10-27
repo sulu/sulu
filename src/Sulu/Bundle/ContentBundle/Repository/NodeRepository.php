@@ -340,17 +340,22 @@ class NodeRepository implements NodeRepositoryInterface
     public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false)
     {
         $this->queryBuilder->init(array('config' => $filterConfig));
-        $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder);
+        $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder, true, -1, $filterConfig['limitResult']);
 
         if ($api) {
-            if ($this->webspaceManager->findWebspaceByKey($filterConfig['dataSource']) !== null) {
-                $node = $this->sessionManager->getContentNode($filterConfig['dataSource']);
+            if (isset($filterConfig['dataSource'])) {
+                if ($this->webspaceManager->findWebspaceByKey($filterConfig['dataSource']) !== null) {
+                    $node = $this->sessionManager->getContentNode($filterConfig['dataSource']);
+                } else {
+                    $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);
+                }
             } else {
-                $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);
+                $node = $this->sessionManager->getContentNode($webspaceKey);
             }
 
             $parentNode = $this->getParentNode($node->getIdentifier(), $webspaceKey, $languageCode);
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
+
             $result['_embedded']['nodes'] = $data;
             $result['total'] = sizeof($result['_embedded']['nodes']);
         } else {
