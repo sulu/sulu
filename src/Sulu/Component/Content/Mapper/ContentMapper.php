@@ -1970,9 +1970,9 @@ class ContentMapper implements ContentMapperInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = & $fieldsData[$field['target']];
+                $target = &$fieldsData[$field['target']];
             } else {
-                $target = & $fieldsData;
+                $target = &$fieldsData;
             }
 
             // create target

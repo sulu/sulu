@@ -15,7 +15,7 @@ use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 
 /**
- * Node type for representing snippets in the PHPCR
+ * Node type for representing sulu pages in the PHPCR
  */
 class PageNodeType extends ContentNodeType
 {

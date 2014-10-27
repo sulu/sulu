@@ -102,5 +102,4 @@ interface PageInterface extends StructureInterface
      * @return int
      */
     public function setNodeState($state);
-
 }

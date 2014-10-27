@@ -50,7 +50,7 @@ interface ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $type
+        $structureType = Structure::TYPE_PAGE
     );
 
     /**
