@@ -33,6 +33,8 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_security.user_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
+            <argument type="service" id="sulu.content.query_executor"/>
             <argument type="service" id="logger"/>
         </service>
 

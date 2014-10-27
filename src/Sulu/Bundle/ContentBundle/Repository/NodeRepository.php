@@ -16,6 +16,8 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
@@ -59,17 +61,31 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $logger;
 
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $queryBuilder;
+
+    /**
+     * @var ContentQueryExecutorInterface
+     */
+    private $queryExecutor;
+
     function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,
         WebspaceManagerInterface $webspaceManager,
+        ContentQueryBuilderInterface $queryBuilder,
+        ContentQueryExecutorInterface $queryExecutor,
         LoggerInterface $logger
     ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
         $this->userManager = $userManager;
         $this->webspaceManager = $webspaceManager;
+        $this->queryBuilder = $queryBuilder;
+        $this->queryExecutor = $queryExecutor;
         $this->logger = $logger;
     }
 
@@ -356,20 +372,29 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false)
     {
-        // build sql2 query
-        $queryBuilder = new FilterNodesQueryBuilder($filterConfig, $this->sessionManager, $this->webspaceManager);
-        $sql2 = $queryBuilder->build($languageCode);
+        $limit = isset($filterConfig['limitResult']) ? $filterConfig['limitResult'] : null;
 
-        // execute query and return results
-        $nodes = $this->getMapper()->loadBySql2($sql2, $languageCode, $webspaceKey, $queryBuilder->getLimit());
+        $this->queryBuilder->init(array('config' => $filterConfig));
+        $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder, true, -1, $limit);
 
         if ($api) {
-            $parentNode = $this->getParentNode($queryBuilder->getParent(), $webspaceKey, $languageCode);
+            if (isset($filterConfig['dataSource'])) {
+                if ($this->webspaceManager->findWebspaceByKey($filterConfig['dataSource']) !== null) {
+                    $node = $this->sessionManager->getContentNode($filterConfig['dataSource']);
+                } else {
+                    $node = $this->sessionManager->getSession()->getNodeByIdentifier($filterConfig['dataSource']);
+                }
+            } else {
+                $node = $this->sessionManager->getContentNode($webspaceKey);
+            }
+
+            $parentNode = $this->getParentNode($node->getIdentifier(), $webspaceKey, $languageCode);
             $result = $this->prepareNode($parentNode, $webspaceKey, $languageCode, 1, false);
-            $result['_embedded']['nodes'] = $this->prepareNodesTree($nodes, $webspaceKey, $languageCode, false);
+
+            $result['_embedded']['nodes'] = $data;
             $result['total'] = sizeof($result['_embedded']['nodes']);
         } else {
-            $result = $nodes;
+            $result = $data;
         }
 
         return $result;
