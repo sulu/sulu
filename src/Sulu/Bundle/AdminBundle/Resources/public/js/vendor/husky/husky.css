@@ -587,7 +587,7 @@ table {
 
 /* line 15, ../scss/utilities.scss */
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 /* line 19, ../scss/utilities.scss */
@@ -2985,7 +2985,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 4, ../scss/fontsawesome/_core.scss */
-.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .cell-content::after, .husky-datagrid thead tr th.sorted-desc .cell-content::after, .husky-matcher.overflow .wrapper:after, .sortable .text-block .head label::before {
+.fa, [class^="fa-"], .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before, .navigation-item-container .navigation-items li.is-selected a::before, .addButton, .pagination-wrapper.dropdowns .pagination .pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pagination-next::after, .toolbar-dropdown-menu li.marked::before, .auto-complete-list-selection .tm-tag-remove, .husky-datagrid .husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .cell-content::after, .husky-datagrid thead tr th.sorted-desc .cell-content::after, .husky-matcher.overflow .wrapper:after, .sortable .text-block .move::before {
   display: inline-block;
   font-family: FontAwesome;
   font-style: normal;
@@ -3071,11 +3071,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 /* line 14, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-left.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-left.cell-content::after, .husky-matcher.overflow .pull-left.wrapper:after, .sortable .text-block .head label.pull-left::before {
+.fa.pull-left, .pull-left[class^="fa-"], .custom-checkbox input:checked + .pull-left.icon::after, .custom-checkbox input.is-checked + .pull-left.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-left::before, .navigation-item-container .navigation-items li.is-selected a.pull-left::before, .pull-left.addButton, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-left.pagination-next::after, .toolbar-dropdown-menu li.pull-left.marked::before, .auto-complete-list-selection .pull-left.tm-tag-remove, .husky-datagrid .pull-left.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-left.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-left.cell-content::after, .husky-matcher.overflow .pull-left.wrapper:after, .sortable .text-block .pull-left.move::before {
   margin-right: .3em;
 }
 /* line 15, ../scss/fontsawesome/_bordered-pulled.scss */
-.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-right.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-right.cell-content::after, .husky-matcher.overflow .pull-right.wrapper:after, .sortable .text-block .head label.pull-right::before {
+.fa.pull-right, .pull-right[class^="fa-"], .custom-checkbox input:checked + .pull-right.icon::after, .custom-checkbox input.is-checked + .pull-right.icon::after, .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a.pull-right::before, .navigation-item-container .navigation-items li.is-selected a.pull-right::before, .pull-right.addButton, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-prev::after, .pagination-wrapper.dropdowns .pagination .pull-right.pagination-next::after, .toolbar-dropdown-menu li.pull-right.marked::before, .auto-complete-list-selection .pull-right.tm-tag-remove, .husky-datagrid .pull-right.husky-table.overflow:after, .husky-datagrid thead tr th.sorted-asc .pull-right.cell-content::after, .husky-datagrid thead tr th.sorted-desc .pull-right.cell-content::after, .husky-matcher.overflow .pull-right.wrapper:after, .sortable .text-block .pull-right.move::before {
   margin-left: .3em;
 }
 
@@ -5971,229 +5971,233 @@ hr.divider.small {
   margin-bottom: 20px;
 }
 /* line 18, ../scss/modules/grid.scss */
+.grid-row:last-of-type {
+  margin-bottom: 0;
+}
+/* line 21, ../scss/modules/grid.scss */
 .grid-row.small {
   margin-bottom: 10px;
 }
-/* line 21, ../scss/modules/grid.scss */
+/* line 24, ../scss/modules/grid.scss */
 .grid-row.no-spacing {
   margin-bottom: 0;
 }
-/* line 24, ../scss/modules/grid.scss */
+/* line 27, ../scss/modules/grid.scss */
 .grid-row.divider {
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid #cccccc;
 }
-/* line 29, ../scss/modules/grid.scss */
+/* line 32, ../scss/modules/grid.scss */
 .grid-row::after {
   content: "";
   display: table;
   clear: both;
 }
-/* line 35, ../scss/modules/grid.scss */
+/* line 38, ../scss/modules/grid.scss */
 .grid-row img {
   max-width: 100%;
 }
 
-/* line 44, ../scss/modules/grid.scss */
+/* line 47, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-1.floating:nth-child(n+13) {
   margin-top: 10px;
 }
-/* line 49, ../scss/modules/grid.scss */
+/* line 52, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-2.floating:nth-child(n+7) {
   margin-top: 10px;
 }
-/* line 54, ../scss/modules/grid.scss */
+/* line 57, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-3.floating:nth-child(n+5) {
   margin-top: 10px;
 }
-/* line 59, ../scss/modules/grid.scss */
+/* line 62, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-4.floating:nth-child(n+4) {
   margin-top: 10px;
 }
-/* line 64, ../scss/modules/grid.scss */
+/* line 67, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-6.floating:nth-child(n+3) {
   margin-top: 10px;
 }
-/* line 69, ../scss/modules/grid.scss */
+/* line 72, ../scss/modules/grid.scss */
 .grid-row.small .grid-col-12.floating:nth-child(n+2) {
   margin-top: 10px;
 }
 
-/* line 75, ../scss/modules/grid.scss */
+/* line 78, ../scss/modules/grid.scss */
 [class*="grid-col-"] {
   float: left;
   padding-left: 8px;
   padding-right: 8px;
   min-height: 1px;
 }
-/* line 80, ../scss/modules/grid.scss */
+/* line 83, ../scss/modules/grid.scss */
 [class*="grid-col-"]:last-of-type {
   padding-right: 0;
 }
-/* line 83, ../scss/modules/grid.scss */
+/* line 86, ../scss/modules/grid.scss */
 [class*="grid-col-"]:first-of-type {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 87, ../scss/modules/grid.scss */
+/* line 90, ../scss/modules/grid.scss */
 [class*="grid-col-"]:only-of-type {
   padding-left: 0;
   padding-right: 0;
 }
-/* line 91, ../scss/modules/grid.scss */
+/* line 94, ../scss/modules/grid.scss */
 [class*="grid-col-"].no-padding {
   padding: 0;
 }
 
-/* line 96, ../scss/modules/grid.scss */
+/* line 99, ../scss/modules/grid.scss */
 .grid-col-1 {
   width: 8.33%;
 }
-/* line 100, ../scss/modules/grid.scss */
+/* line 103, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(n+13) {
   margin-top: 20px;
 }
-/* line 104, ../scss/modules/grid.scss */
+/* line 107, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 109, ../scss/modules/grid.scss */
+/* line 112, ../scss/modules/grid.scss */
 .grid-col-1.floating:nth-child(12n) {
   padding-right: 0;
 }
 
-/* line 115, ../scss/modules/grid.scss */
+/* line 118, ../scss/modules/grid.scss */
 .grid-col-2 {
   width: 16.66%;
 }
-/* line 119, ../scss/modules/grid.scss */
+/* line 122, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(n+7) {
   margin-top: 20px;
 }
-/* line 123, ../scss/modules/grid.scss */
+/* line 126, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 128, ../scss/modules/grid.scss */
+/* line 131, ../scss/modules/grid.scss */
 .grid-col-2.floating:nth-child(6n) {
   padding-right: 0;
 }
 
-/* line 134, ../scss/modules/grid.scss */
+/* line 137, ../scss/modules/grid.scss */
 .grid-col-3 {
   width: 25%;
 }
-/* line 138, ../scss/modules/grid.scss */
+/* line 141, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(n+5) {
   margin-top: 20px;
 }
-/* line 142, ../scss/modules/grid.scss */
+/* line 145, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 147, ../scss/modules/grid.scss */
+/* line 150, ../scss/modules/grid.scss */
 .grid-col-3.floating:nth-child(4n) {
   padding-right: 0;
 }
 
-/* line 153, ../scss/modules/grid.scss */
+/* line 156, ../scss/modules/grid.scss */
 .grid-col-4 {
   width: 33.33%;
 }
-/* line 157, ../scss/modules/grid.scss */
+/* line 160, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(n+4) {
   margin-top: 20px;
 }
-/* line 161, ../scss/modules/grid.scss */
+/* line 164, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n+1) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 166, ../scss/modules/grid.scss */
+/* line 169, ../scss/modules/grid.scss */
 .grid-col-4.floating:nth-child(3n) {
   padding-right: 0;
 }
 
-/* line 172, ../scss/modules/grid.scss */
+/* line 175, ../scss/modules/grid.scss */
 .grid-col-5 {
   width: 41.66%;
 }
 
-/* line 176, ../scss/modules/grid.scss */
+/* line 179, ../scss/modules/grid.scss */
 .grid-col-6 {
   width: 50%;
 }
-/* line 181, ../scss/modules/grid.scss */
+/* line 184, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(n+3) {
   margin-top: 20px;
 }
-/* line 185, ../scss/modules/grid.scss */
+/* line 188, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(odd) {
   padding-left: 0;
   padding-right: 8px;
 }
-/* line 190, ../scss/modules/grid.scss */
+/* line 193, ../scss/modules/grid.scss */
 .grid-col-6.floating:nth-child(even) {
   padding-right: 0;
 }
 
-/* line 196, ../scss/modules/grid.scss */
+/* line 199, ../scss/modules/grid.scss */
 .grid-col-7 {
   width: 58.33%;
 }
 
-/* line 200, ../scss/modules/grid.scss */
+/* line 203, ../scss/modules/grid.scss */
 .grid-col-8 {
   width: 66.66%;
 }
 
-/* line 204, ../scss/modules/grid.scss */
+/* line 207, ../scss/modules/grid.scss */
 .grid-col-9 {
   width: 75%;
 }
 
-/* line 208, ../scss/modules/grid.scss */
+/* line 211, ../scss/modules/grid.scss */
 .grid-col-10 {
   width: 83.33%;
 }
 
-/* line 212, ../scss/modules/grid.scss */
+/* line 215, ../scss/modules/grid.scss */
 .grid-col-11 {
   width: 91.66%;
 }
 
-/* line 216, ../scss/modules/grid.scss */
+/* line 219, ../scss/modules/grid.scss */
 .grid-col-12 {
   width: 100%;
 }
-/* line 220, ../scss/modules/grid.scss */
+/* line 223, ../scss/modules/grid.scss */
 .grid-col-12.floating:nth-child(n+2) {
   margin-top: 20px;
 }
-/* line 223, ../scss/modules/grid.scss */
+/* line 226, ../scss/modules/grid.scss */
 .grid-col-12.floating:nth-child(n) {
   padding-left: 0;
   padding-right: 0;
 }
 
 @media (max-width: 580px) {
-  /* line 232, ../scss/modules/grid.scss */
+  /* line 235, ../scss/modules/grid.scss */
   [class*="grid-col-"] {
     width: 100%;
     margin-top: 15px;
     padding-left: 0;
     padding-right: 0;
   }
-  /* line 239, ../scss/modules/grid.scss */
+  /* line 242, ../scss/modules/grid.scss */
   [class*="grid-col-"]:first-of-type {
     margin-top: 0;
     padding-right: 0;
   }
-  /* line 245, ../scss/modules/grid.scss */
+  /* line 248, ../scss/modules/grid.scss */
   [class*="grid-col-"].floating:nth-child(n) {
     padding-right: 0;
   }
@@ -7374,80 +7378,85 @@ table {
   cursor: pointer;
   line-height: 30px;
   height: 30px;
+  outline: 0;
 }
-/* line 15, ../scss/modules/btns.scss */
+/* line 16, ../scss/modules/btns.scss */
 .btn.fit {
   display: inline-block;
   padding-right: 30px;
 }
-/* line 19, ../scss/modules/btns.scss */
+/* line 21, ../scss/modules/btns.scss */
 .btn.only-icon {
   padding-left: 0;
   padding-right: 0;
   text-align: center;
   min-width: 40px;
 }
-/* line 25, ../scss/modules/btns.scss */
+/* line 28, ../scss/modules/btns.scss */
 .btn.action {
   background-color: #52b6ca;
   color: white;
 }
-/* line 29, ../scss/modules/btns.scss */
+/* line 33, ../scss/modules/btns.scss */
 .btn.action2 {
   background-color: #f2d212;
   color: white;
 }
-/* line 33, ../scss/modules/btns.scss */
+/* line 38, ../scss/modules/btns.scss */
 .btn.large {
   line-height: 40px;
   height: 40px;
 }
-/* line 37, ../scss/modules/btns.scss */
+/* line 43, ../scss/modules/btns.scss */
 .btn.small {
   font-size: 12px;
   height: 20px;
   line-height: 20px;
   border-radius: 2px;
 }
-/* line 43, ../scss/modules/btns.scss */
+/* line 49, ../scss/modules/btns.scss */
 .btn.small [class^="fa-"] {
   font-size: 10px;
 }
-/* line 46, ../scss/modules/btns.scss */
+/* line 52, ../scss/modules/btns.scss */
 .btn.small [class^="fa-"] + .text {
   font-size: 12px;
 }
-/* line 51, ../scss/modules/btns.scss */
+/* line 58, ../scss/modules/btns.scss */
 .btn.grey, .btn.gray {
   background-color: #cccccc;
   color: white;
 }
-/* line 55, ../scss/modules/btns.scss */
+/* line 63, ../scss/modules/btns.scss */
 .btn.black-text {
   color: black;
 }
-/* line 58, ../scss/modules/btns.scss */
+/* line 67, ../scss/modules/btns.scss */
 .btn.gray-dark {
   background-color: #999999;
   color: white;
 }
-/* line 62, ../scss/modules/btns.scss */
+/* line 72, ../scss/modules/btns.scss */
 .btn.black {
   background-color: black;
   color: white;
 }
-/* line 66, ../scss/modules/btns.scss */
+/* line 77, ../scss/modules/btns.scss */
 .btn.inactive {
   cursor: default;
 }
-/* line 69, ../scss/modules/btns.scss */
+/* line 81, ../scss/modules/btns.scss */
+.btn.link {
+  background: transparent;
+}
+/* line 85, ../scss/modules/btns.scss */
 .btn [class^="fa-"] {
   font-size: 18px;
   margin-left: -15px;
   display: inline;
   line-height: 32px;
 }
-/* line 75, ../scss/modules/btns.scss */
+/* line 91, ../scss/modules/btns.scss */
 .btn [class^="fa-"] + .text {
   font-size: 14px;
   display: inline-block;
@@ -7455,11 +7464,11 @@ table {
   margin-left: 5px;
   padding: 0;
 }
-/* line 83, ../scss/modules/btns.scss */
+/* line 99, ../scss/modules/btns.scss */
 .btn [class^="fa-"]:only-child {
   margin-left: 0;
 }
-/* line 87, ../scss/modules/btns.scss */
+/* line 104, ../scss/modules/btns.scss */
 .btn .text {
   padding: 0 8px;
 }
@@ -7467,43 +7476,43 @@ table {
 /**
 ** Buttons-classes on the bottom and should be replaced in the code with the classes above
 **/
-/* line 95, ../scss/modules/btns.scss */
+/* line 112, ../scss/modules/btns.scss */
 a.btn {
   color: #000;
   text-decoration: none;
 }
 
-/* line 100, ../scss/modules/btns.scss */
+/* line 117, ../scss/modules/btns.scss */
 .btn-large {
   padding: 0 25px;
   font-size: 18px;
   line-height: 30px;
 }
 
-/* line 106, ../scss/modules/btns.scss */
+/* line 123, ../scss/modules/btns.scss */
 .btn-black {
   background-color: #000;
   color: white;
 }
 
-/* line 111, ../scss/modules/btns.scss */
+/* line 128, ../scss/modules/btns.scss */
 .btn-highlight {
   background-color: #52b6ca;
   color: white;
 }
 
-/* line 116, ../scss/modules/btns.scss */
+/* line 133, ../scss/modules/btns.scss */
 a.btn-black, a.btn-highlight {
   color: white;
 }
 
-/* line 121, ../scss/modules/btns.scss */
+/* line 138, ../scss/modules/btns.scss */
 .btn-gray {
   background-color: #cccccc;
   color: black;
 }
 
-/* line 127, ../scss/modules/btns.scss */
+/* line 144, ../scss/modules/btns.scss */
 .addButton {
   border-radius: 3px;
   display: inline-block;
@@ -7516,7 +7525,7 @@ a.btn-black, a.btn-highlight {
   vertical-align: middle;
   cursor: pointer;
 }
-/* line 140, ../scss/modules/btns.scss */
+/* line 157, ../scss/modules/btns.scss */
 .addButton:before {
   content: "\f055";
   font-size: 10px;
@@ -7698,7 +7707,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 51, ../scss/modules/input.scss */
 .husky-input .input input {
-  height: 28px;
+  height: 30px;
   border: none;
   outline-width: 0;
   width: 100%;
@@ -7707,22 +7716,22 @@ a.btn-black, a.btn-highlight {
 .husky-input .text {
   font-size: 14px;
 }
-/* line 75, ../scss/modules/input.scss */
+/* line 77, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 79, ../scss/modules/input.scss */
+/* line 81, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: black;
   cursor: pointer;
 }
-/* line 86, ../scss/modules/input.scss */
+/* line 88, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: black;
   cursor: pointer;
 }
 
-/* line 95, ../scss/modules/input.scss */
+/* line 97, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }
@@ -7752,7 +7761,7 @@ a.btn-black, a.btn-highlight {
 /* line 6, ../scss/modules/input.scss */
 .husky-auto-complete .front {
   float: left;
-  line-height: 20px;
+  line-height: 18px;
   margin: 5px 0 0 0;
   padding-right: 5px;
   border-right: 1px solid #cccccc;
@@ -7784,7 +7793,7 @@ a.btn-black, a.btn-highlight {
   position: absolute;
   top: 0px;
   right: 0px;
-  line-height: 20px;
+  line-height: 18px;
   padding: 5px 10px 0 5px;
   background: white;
   color: #999999;
@@ -7975,7 +7984,7 @@ a.btn-black, a.btn-highlight {
   position: absolute;
   padding-left: 8px;
   font-size: 16px;
-  line-height: 30px;
+  line-height: 28px;
   vertical-align: middle;
   text-decoration: none;
 }
@@ -7984,7 +7993,7 @@ a.btn-black, a.btn-highlight {
   display: none;
   position: absolute;
   right: 10px;
-  line-height: 30px;
+  line-height: 28px;
   vertical-align: middle;
   margin: auto;
   background-color: white;
@@ -9004,13 +9013,6 @@ a.btn-black, a.btn-highlight {
   cursor: default;
 }
 /* line 51, ../scss/modules/select.scss */
-.husky-select-container .husky-select-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
-}
-/* line 58, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list {
   width: 100%;
   /*display: inline-block;*/
@@ -9023,102 +9025,92 @@ a.btn-black, a.btn-highlight {
   z-index: 2000;
   border-radius: 3px;
 }
-/* line 70, ../scss/modules/select.scss */
+/* line 63, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .divider {
   max-width: 100%;
   height: 1px;
   background-color: #ccc;
   margin: 5px 0 10px;
 }
-/* line 77, ../scss/modules/select.scss */
+/* line 70, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list.top {
   top: inherit;
   bottom: 5px;
 }
-/* line 83, ../scss/modules/select.scss */
+/* line 76, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
   cursor: default;
 }
-/* line 86, ../scss/modules/select.scss */
+/* line 79, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
   color: #999999;
 }
-/* line 90, ../scss/modules/select.scss */
+/* line 83, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
-  display: inline;
+  float: left;
   width: 20px;
   margin-right: 10px;
   padding-top: 7px;
 }
-/* line 96, ../scss/modules/select.scss */
+/* line 89, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .item-value {
-  display: inline;
+  float: left;
   line-height: 30px;
 }
-/* line 101, ../scss/modules/select.scss */
+/* line 94, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul {
   list-style: none;
   margin: 0;
   padding: 10px 0;
 }
-/* line 106, ../scss/modules/select.scss */
+/* line 99, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul input {
   margin: 0;
 }
-/* line 110, ../scss/modules/select.scss */
+/* line 103, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li {
   padding: 0px 10px 0px 20px;
   clear: both;
   height: 30px;
 }
-/* line 115, ../scss/modules/select.scss */
-.husky-select-container .dropdown-list > ul > li > div {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-}
-/* line 122, ../scss/modules/select.scss */
+/* line 109, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52b6ca;
   cursor: pointer;
 }
-/* line 126, ../scss/modules/select.scss */
+/* line 113, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value {
   color: white;
 }
-/* line 130, ../scss/modules/select.scss */
-.husky-select-container .dropdown-list > ul > li:hover > div {
-  color: white;
-}
-/* line 138, ../scss/modules/select.scss */
+/* line 121, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
   font-size: 10px;
   line-height: 20px;
 }
-/* line 142, ../scss/modules/select.scss */
+/* line 125, ../scss/modules/select.scss */
 .husky-select-container.small .toggle-icon {
   line-height: 20px;
 }
-/* line 145, ../scss/modules/select.scss */
+/* line 128, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list {
   top: 12px;
   min-width: 200px;
   max-width: 100%;
   border-radius: 2px;
 }
-/* line 151, ../scss/modules/select.scss */
+/* line 134, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-list.top {
   top: auto;
   bottom: -3px;
 }
-/* line 159, ../scss/modules/select.scss */
+/* line 142, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
   background: white;
 }
-/* line 165, ../scss/modules/select.scss */
+/* line 148, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
   background: #52b6ca;
   color: white;
@@ -9285,8 +9277,8 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
   width: 100%;
-  margin: -30px 0 0 -4px;
-  height: 30px;
+  margin: -28px 0 0 -4px;
+  height: 28px;
   display: none;
 }
 /* line 166, ../scss/modules/datagrid.scss */
@@ -9642,12 +9634,6 @@ a.btn-black, a.btn-highlight {
 /* line 349, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list span {
   display: block;
-}
-
-/* line 358, ../scss/modules/datagrid.scss */
-.editable .husky-validate-error .husky-input input {
-  height: 30px;
-  margin-top: -30px;
 }
 
 /* line 3, ../scss/modules/label.scss */
@@ -10061,42 +10047,49 @@ a.btn-black, a.btn-highlight {
   left: 17px;
 }
 
-/* line 8, ../scss/modules/content-types.scss */
-.sortable .text-block .head label {
-  cursor: move;
+/* line 6, ../scss/modules/content-types.scss */
+.sortable .show-in-sortmode {
+  display: none;
 }
 /* line 11, ../scss/modules/content-types.scss */
-.sortable .text-block .head label::before {
+.sortable.is-sortmode .show-in-sortmode {
+  display: block;
+}
+/* line 16, ../scss/modules/content-types.scss */
+.sortable.is-sortmode .cke,
+.sortable.is-sortmode .hide-in-sortmode {
+  display: none;
+}
+/* line 22, ../scss/modules/content-types.scss */
+.sortable .text-block .move {
+  position: relative;
+}
+/* line 25, ../scss/modules/content-types.scss */
+.sortable .text-block .move::before {
   content: "\f142";
   cursor: move;
   padding-right: 5px;
-  margin-left: -10px;
+  position: absolute;
+  top: 10px;
+  left: 2px;
+  z-index: 5;
+  color: #999;
+  font-size: 16px;
+  width: 20px;
 }
 
-/* line 23, ../scss/modules/content-types.scss */
+/* line 42, ../scss/modules/content-types.scss */
 .text-block {
   margin-bottom: 20px;
 }
-/* line 28, ../scss/modules/content-types.scss */
+/* line 47, ../scss/modules/content-types.scss */
 .text-block .head label {
   float: left;
   font-size: 16px;
   margin-bottom: 10px;
   cursor: default;
 }
-/* line 35, ../scss/modules/content-types.scss */
-.text-block .head .options-change {
-  float: left;
-  cursor: pointer;
-  margin-left: 10px;
-  display: none;
-  font-size: 16px;
-}
-/* line 41, ../scss/modules/content-types.scss */
-.text-block .head .options-change .dropdown-toggle::after {
-  margin-left: 0;
-}
-/* line 45, ../scss/modules/content-types.scss */
+/* line 54, ../scss/modules/content-types.scss */
 .text-block .head .options-remove {
   float: right;
   cursor: pointer;
@@ -10105,13 +10098,25 @@ a.btn-black, a.btn-highlight {
   display: none;
   font-size: 16px;
 }
-/* line 54, ../scss/modules/content-types.scss */
+/* line 63, ../scss/modules/content-types.scss */
 .text-block .head::after {
   content: "";
   display: block;
   clear: both;
 }
-/* line 60, ../scss/modules/content-types.scss */
+/* line 70, ../scss/modules/content-types.scss */
+.text-block .options-change {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+/* line 77, ../scss/modules/content-types.scss */
+.text-block .options-change .dropdown-toggle::after {
+  margin-left: 0;
+}
+/* line 82, ../scss/modules/content-types.scss */
 .text-block .container {
   padding: 10px 20px 20px 20px;
   background: #dddddd;
@@ -10120,47 +10125,63 @@ a.btn-black, a.btn-highlight {
   -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
 }
-/* line 66, ../scss/modules/content-types.scss */
+/* line 88, ../scss/modules/content-types.scss */
 .text-block .container label {
   margin-bottom: 10px;
 }
-/* line 70, ../scss/modules/content-types.scss */
+/* line 92, ../scss/modules/content-types.scss */
 .text-block .container textarea {
   max-width: 100%;
   min-width: 100%;
   width: 100%;
 }
-/* line 78, ../scss/modules/content-types.scss */
+/* line 100, ../scss/modules/content-types.scss */
 .text-block:hover .head .options-remove, .text-block:hover .head .options-change {
   display: block;
 }
 
-/* line 86, ../scss/modules/content-types.scss */
+/* line 106, ../scss/modules/content-types.scss */
+.text-blocks-toggle-btn {
+  padding: 5px 0;
+  height: auto;
+}
+
+/* line 113, ../scss/modules/content-types.scss */
 .empty .text-block .head .options-remove {
   display: none;
 }
-/* line 89, ../scss/modules/content-types.scss */
+/* line 116, ../scss/modules/content-types.scss */
 .empty .text-block:hover .head .options-remove {
   display: none;
 }
 
-/* line 95, ../scss/modules/content-types.scss */
+/* line 122, ../scss/modules/content-types.scss */
 .text-block-footer {
   margin-bottom: 20px;
 }
-/* line 98, ../scss/modules/content-types.scss */
+/* line 125, ../scss/modules/content-types.scss */
 .text-block-footer .desc {
   font-size: 12px;
   color: #999999;
   padding-left: 10px;
 }
-/* line 103, ../scss/modules/content-types.scss */
+/* line 130, ../scss/modules/content-types.scss */
 .text-block-footer .btn.full {
   background-color: #cccccc;
   cursor: default;
 }
 
-/* line 113, ../scss/modules/content-types.scss */
+/* line 136, ../scss/modules/content-types.scss */
+.block-content {
+  display: none;
+  color: #999;
+}
+/* line 140, ../scss/modules/content-types.scss */
+.block-content p {
+  margin: 5px 0;
+}
+
+/* line 149, ../scss/modules/content-types.scss */
 .white-box {
   width: 100%;
   height: 100%;
@@ -10168,12 +10189,12 @@ a.btn-black, a.btn-highlight {
   border-radius: 0 0 3px 3px;
   border: 1px solid #cccccc;
 }
-/* line 120, ../scss/modules/content-types.scss */
+/* line 156, ../scss/modules/content-types.scss */
 .white-box .text {
   font-size: 12px;
   color: #999999;
 }
-/* line 125, ../scss/modules/content-types.scss */
+/* line 161, ../scss/modules/content-types.scss */
 .white-box .header {
   position: relative;
   top: 0px;
@@ -10191,7 +10212,7 @@ a.btn-black, a.btn-highlight {
   content: ' ';
   display: block;
 }
-/* line 137, ../scss/modules/content-types.scss */
+/* line 173, ../scss/modules/content-types.scss */
 .white-box .header .icon {
   display: block;
   font-size: 16px;
@@ -10204,29 +10225,29 @@ a.btn-black, a.btn-highlight {
   margin-top: 9px;
   padding-top: 1px;
 }
-/* line 149, ../scss/modules/content-types.scss */
+/* line 185, ../scss/modules/content-types.scss */
 .white-box .header .icon.action {
   background: #52b6ca;
   color: white;
 }
-/* line 153, ../scss/modules/content-types.scss */
+/* line 189, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
   border: 1px solid #cccccc;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
 }
-/* line 159, ../scss/modules/content-types.scss */
+/* line 195, ../scss/modules/content-types.scss */
 .white-box .header .icon.left {
   float: left;
   margin-right: 20px;
 }
-/* line 163, ../scss/modules/content-types.scss */
+/* line 199, ../scss/modules/content-types.scss */
 .white-box .header .icon.right {
   float: right;
   margin-left: 20px;
 }
-/* line 169, ../scss/modules/content-types.scss */
+/* line 205, ../scss/modules/content-types.scss */
 .white-box .header .position {
   width: 32px;
   height: 32px;
@@ -10235,22 +10256,22 @@ a.btn-black, a.btn-highlight {
   left: 50%;
   margin: -16px 0 0 -16px;
 }
-/* line 179, ../scss/modules/content-types.scss */
+/* line 215, ../scss/modules/content-types.scss */
 .white-box .content {
   position: relative;
   top: 0px;
   left: 0px;
 }
-/* line 184, ../scss/modules/content-types.scss */
+/* line 220, ../scss/modules/content-types.scss */
 .white-box .content .loader {
   padding: 50px 0;
 }
-/* line 187, ../scss/modules/content-types.scss */
+/* line 223, ../scss/modules/content-types.scss */
 .white-box .content .no-content {
   text-align: center;
   height: 210px;
 }
-/* line 191, ../scss/modules/content-types.scss */
+/* line 227, ../scss/modules/content-types.scss */
 .white-box .content .no-content .icon {
   display: block;
   position: absolute;
@@ -10262,50 +10283,50 @@ a.btn-black, a.btn-highlight {
   font-size: 125px;
   color: #efefef;
 }
-/* line 202, ../scss/modules/content-types.scss */
+/* line 238, ../scss/modules/content-types.scss */
 .white-box .content .no-content .text {
   padding-top: 160px;
   font-weight: bold;
   color: #e4e4e4;
   font-size: 24px;
 }
-/* line 209, ../scss/modules/content-types.scss */
+/* line 245, ../scss/modules/content-types.scss */
 .white-box .content .items-list {
   list-style-type: none;
   margin: 0;
   padding: 0 20px;
 }
-/* line 213, ../scss/modules/content-types.scss */
+/* line 249, ../scss/modules/content-types.scss */
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
   border-bottom: 1px solid #cccccc;
   position: relative;
 }
-/* line 218, ../scss/modules/content-types.scss */
+/* line 254, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .icon {
   cursor: move;
   color: #999999;
   font-size: 15px;
   padding-right: 15px;
 }
-/* line 224, ../scss/modules/content-types.scss */
+/* line 260, ../scss/modules/content-types.scss */
 .white-box .content .items-list li img {
   vertical-align: middle;
   padding-top: 8px;
   padding-bottom: 8px;
   padding-right: 20px;
 }
-/* line 230, ../scss/modules/content-types.scss */
+/* line 266, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .num {
   color: #999999;
   padding-right: 10px;
 }
-/* line 234, ../scss/modules/content-types.scss */
+/* line 270, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
   color: #999999;
 }
-/* line 237, ../scss/modules/content-types.scss */
+/* line 273, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
   position: absolute;
   top: 50%;
@@ -10313,18 +10334,18 @@ a.btn-black, a.btn-highlight {
   margin-top: -8px;
   cursor: pointer;
 }
-/* line 244, ../scss/modules/content-types.scss */
+/* line 280, ../scss/modules/content-types.scss */
 .white-box .content .items-list li:last-child {
   border-width: 2px;
 }
-/* line 251, ../scss/modules/content-types.scss */
+/* line 287, ../scss/modules/content-types.scss */
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
   color: #999999;
   font-size: 12px;
 }
-/* line 256, ../scss/modules/content-types.scss */
+/* line 292, ../scss/modules/content-types.scss */
 .white-box .footer span {
   padding-right: 5px;
 }
@@ -10551,7 +10572,7 @@ a.btn-black, a.btn-highlight {
 /* line 6, ../scss/modules/input.scss */
 .husky-input .front {
   float: left;
-  line-height: 20px;
+  line-height: 18px;
   margin: 5px 0 0 0;
   padding-right: 5px;
   border-right: 1px solid #cccccc;
@@ -10583,7 +10604,7 @@ a.btn-black, a.btn-highlight {
   position: absolute;
   top: 0px;
   right: 0px;
-  line-height: 20px;
+  line-height: 18px;
   padding: 5px 10px 0 5px;
   background: white;
   color: #999999;
@@ -10605,22 +10626,22 @@ a.btn-black, a.btn-highlight {
 .husky-input .text {
   font-size: 14px;
 }
-/* line 75, ../scss/modules/input.scss */
+/* line 77, ../scss/modules/input.scss */
 .husky-input.colorpicker .input {
   overflow: visible;
 }
-/* line 79, ../scss/modules/input.scss */
+/* line 81, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
   color: black;
   cursor: pointer;
 }
-/* line 86, ../scss/modules/input.scss */
+/* line 88, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
   color: black;
   cursor: pointer;
 }
 
-/* line 95, ../scss/modules/input.scss */
+/* line 97, ../scss/modules/input.scss */
 .husky-validate-error .husky-input input {
   height: 26px;
 }

@@ -27943,7 +27943,7 @@ define('__component__$column-options@husky',[],function() {
          * triggered when component is completely initialized
          * @event husky.column-options[.INSTANCE_NAME].initialized
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return getEventName.call(this, 'initialized');
 
         },
@@ -27953,7 +27953,7 @@ define('__component__$column-options@husky',[],function() {
          * @event husky.column-options[.INSTANCE_NAME].item.enabled
          * @param {Object} item that was enabled
          */
-            ENABLED = function() {
+        ENABLED = function() {
             return getEventName.call(this, 'item.enabled');
 
         },
@@ -27963,7 +27963,7 @@ define('__component__$column-options@husky',[],function() {
          * @event husky.column-options[.INSTANCE_NAME].item.disabled
          * @param {Object} item that was disabled
          */
-            DISABLED = function() {
+        DISABLED = function() {
             return getEventName.call(this, 'item.disabled');
 
         },
@@ -27973,7 +27973,7 @@ define('__component__$column-options@husky',[],function() {
          * @event husky.column-options[.INSTANCE_NAME].saved
          * @param {Array} Contains all visible items
          */
-            SAVED = function() {
+        SAVED = function() {
             return getEventName.call(this, 'saved');
 
         },
@@ -27982,7 +27982,7 @@ define('__component__$column-options@husky',[],function() {
          * used for receiving all visible columns
          * @event husky.column-options[.INSTANCE_NAME].get-selected
          */
-            GET_SELECTED = function() {
+        GET_SELECTED = function() {
             return getEventName.call(this, 'get-selected');
 
         },
@@ -27991,7 +27991,7 @@ define('__component__$column-options@husky',[],function() {
          * used for receiving all columns
          * @event husky.column-options[.INSTANCE_NAME].get-all
          */
-            GET_ALL = function() {
+        GET_ALL = function() {
             return getEventName.call(this, 'get-all');
 
         },
@@ -28000,8 +28000,7 @@ define('__component__$column-options@husky',[],function() {
         /**
          * DOM events
          */
-            bindDOMEvents = function() {
-
+        bindDOMEvents = function() {
             this.sandbox.dom.on(this.$el, 'click', customStopPropagation.bind(this), this.$container); // prevent from unwanted events
             this.sandbox.dom.on(this.$el, 'mouseover', onMouseOver.bind(this), 'li');
             this.sandbox.dom.on(this.$el, 'mouseout', onMouseOut.bind(this), 'li');
@@ -28012,7 +28011,7 @@ define('__component__$column-options@husky',[],function() {
         /**
          * custom events
          */
-            bindCustomEvents = function() {
+        bindCustomEvents = function() {
             this.sandbox.on(GET_SELECTED.call(this), getSelectedItems.bind(this));
             this.sandbox.on(GET_ALL.call(this), getAllItems.bind(this));
         },
@@ -28025,7 +28024,7 @@ define('__component__$column-options@husky',[],function() {
          * returns all items that are visible
          * @param callbackFunction
          */
-            getSelectedItems = function(callbackFunction) {
+        getSelectedItems = function(callbackFunction) {
             var id, items,
                 $visibleItems = this.sandbox.dom.find('li:not(.disabled)', this.$el);
 
@@ -28042,7 +28041,7 @@ define('__component__$column-options@husky',[],function() {
          * returns all items that are visible
          * @param callbackFunction
          */
-            getAllItems = function(callbackFunction) {
+        getAllItems = function(callbackFunction) {
             var id, items,
                 $visibleItems = this.sandbox.dom.find('li', this.$el);
 
@@ -28070,7 +28069,7 @@ define('__component__$column-options@husky',[],function() {
          * otherwise a new id is generated for the element
          * @param item
          */
-            checkItemId = function(item) {
+        checkItemId = function(item) {
             // if item has no id, generate random id
             if (!item.id || !!this.items[item.id]) {
                 do {
@@ -28085,7 +28084,7 @@ define('__component__$column-options@husky',[],function() {
          * opens dropdown submenu
          * @param event
          */
-            customStopPropagation = function(event) {
+        customStopPropagation = function(event) {
             event.preventDefault();
             event.stopPropagation();
         },
@@ -28093,7 +28092,7 @@ define('__component__$column-options@husky',[],function() {
         /**
          * called when save was clicked
          */
-            submit = function() {
+        submit = function() {
             var $items = this.sandbox.dom.find('.column-options-list-item', this.$list),
                 items = [],
                 id;
@@ -28118,14 +28117,14 @@ define('__component__$column-options@husky',[],function() {
         /**
          * close dropdown - callback
          */
-            close = function() {
+        close = function() {
             this.sandbox.dom.remove(this.$el);
         },
 
         /**
          * renders list items
          */
-            renderItems = function() {
+        renderItems = function() {
             var $listItem;
 
             // create items array
@@ -28160,7 +28159,6 @@ define('__component__$column-options@husky',[],function() {
                     {
                         name: 'overlay@husky',
                         options: {
-                            triggerEl: this.options.trigger,
                             el: $element,
                             container: this.$el,
                             data: this.$list,
@@ -28187,7 +28185,7 @@ define('__component__$column-options@husky',[],function() {
          * toggles the classes of an item
          * @param event
          */
-            toggleVisibility = function(event) {
+        toggleVisibility = function(event) {
             event.preventDefault();
 
             var $listItem = this.sandbox.dom.parent(event.currentTarget),
@@ -28617,7 +28615,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.table = {};
             this.data = null;
             this.rowClicked = false;
-            this.isFocusoutHandlerEnabled = this.options.editable === true || this.options.editable === 'true';
+            this.preventFocusoutHandler = false;
             this.renderChildrenHidden = this.options.hideChildrenAtBeginning;
             this.tableCropped = false;
             this.cropBreakPoint = null;
@@ -28801,8 +28799,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.removeNewRecordRow();
             var $row = this.sandbox.dom.createElement(templates.row),
                 $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
-
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
+            record.id = (!!record.id) ? record.id : constants.newRecordId
             this.sandbox.dom.data($row, 'id', record.id);
 
             if (!!record.parent) {
@@ -28828,7 +28825,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Inserts a body row into the dom. Looks if a row needs to be overriden, or if a parent exists etc.
          * @param record {Object} the data object of the record
-         * @param $overrideElement {Object}
          * @param prepend {Boolean} true to prepend
          */
         insertBodyRow: function(record, $overrideElement, prepend) {
@@ -29058,6 +29054,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         removeNewRecordRow: function() {
             if (!!this.table.rows[constants.newRecordId]) {
+                this.preventFocusoutHandler = true;
                 this.sandbox.dom.remove(this.table.rows[constants.newRecordId].$el);
                 delete this.table.rows[constants.newRecordId];
             }
@@ -29271,7 +29268,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 $inputs = this.sandbox.dom.find('.' + constants.editableInputClass, this.table.rows[recordId].$el);
                 attribute = this.sandbox.dom.data(this.sandbox.dom.parents($inputs[0], 'td'), 'attribute');
             }
-            $cell = this.table.rows[recordId].cells[attribute].$el;
+            $cell = this.table.rows[recordId].cells[attribute].$el
             this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.inputWrapperClass, $cell));
             this.sandbox.dom.focus(this.sandbox.dom.find('.' + constants.editableInputClass, $cell));
             this.sandbox.dom.select(this.sandbox.dom.find('.' + constants.editableInputClass, $cell));
@@ -29287,6 +29284,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (event.keyCode === 13) {
                 this.sandbox.dom.stopPropagation(event);
                 recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
+                this.preventFocusoutHandler = true;
                 this.editRow(recordId);
             }
         },
@@ -29296,7 +29294,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         editableInputFocusoutHandler: function (event) {
-            if (!!this.isFocusoutHandlerEnabled) {
+            if (this.preventFocusoutHandler === false) {
                 this.sandbox.dom.stopPropagation(event);
                 var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
                 this.editRow(recordId);
@@ -29327,9 +29325,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         editedSuccessCallback: function (record) {
             var $row;
             if (!!record.id && !!this.table.rows[record.id]) {
-                $row = this.table.rows[record.id].$el;
+                $row = this.table.rows[record.id].$el
             } else if (!!this.table.rows[constants.newRecordId]) {
-                $row = this.table.rows[constants.newRecordId].$el;
+                $row = this.table.rows[constants.newRecordId].$el
             }
             if (!!$row && !!$row.length) {
                 this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.inputWrapperClass, $row));
@@ -37001,7 +36999,7 @@ define('__component__$select@husky',[], function() {
                     this.sandbox.dom.text(this.$label, this.options.defaultLabel);
                 } else {
 
-                    var text = "", labelWidth;
+                    var text = "";
                     this.sandbox.util.each(this.selectedElementsValues, function(index, value) {
                         text += ' ' + value + ',';
                     });
@@ -38169,7 +38167,7 @@ define('__component__$column-navigation@husky',[], function () {
                 // icons right (subpage, edit)
                 item.push('<span class="icons-right">');
                 if (!!this.options.showEditIcon) {
-                    item.push('<span class="' + this.options.editIcon + ' edit pull-left"></span>');
+                    item.push('<span class="' + this.options.editIcon + ' edit hidden pull-left"></span>');
                 }
                 !!data[this.options.hasSubName] ? item.push('<span class="fa-chevron-right arrow inactive pull-left"></span>') : '';
                 item.push('</span></li>');
@@ -38371,6 +38369,22 @@ define('__component__$ckeditor@husky',[], function() {
         },
 
         /**
+         * @event husky.ckeditor.destroy
+         * @description starts the used editor plugin
+         */
+        START = function() {
+            return eventNamespace + (this.options.instanceName !== null ? this.options.instanceName + '.' : '') + 'start';
+        },
+
+        /**
+         * @event husky.ckeditor.destroy
+         * @description destroys the used editor plugin
+         */
+        DESTROY = function() {
+            return eventNamespace + (this.options.instanceName !== null ? this.options.instanceName + '.' : '') + 'destroy';
+        },
+
+        /**
          * Removes the not needed elements from the config object for the ckeditor
          * @returns {Object} configuration object for ckeditor
          */
@@ -38425,9 +38439,9 @@ define('__component__$ckeditor@husky',[], function() {
 
         initialize: function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+            this.editorContent = null;
 
-            var config = getConfig.call(this);
-            this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
+            this.startEditor();
             this.data = this.editor.getData();
 
             this.bindChangeEvents();
@@ -38440,6 +38454,10 @@ define('__component__$ckeditor@husky',[], function() {
             this.editor.on('blur', function() {
                 this.sandbox.emit(FOCUSOUT.call(this), this.editor.getData(), this.$el);
             }.bind(this));
+
+            this.sandbox.on(START.call(this), this.startEditor.bind(this));
+
+            this.sandbox.on(DESTROY.call(this), this.destroyEditor.bind(this));
         },
 
         /**
@@ -38464,6 +38482,24 @@ define('__component__$ckeditor@husky',[], function() {
         emitChangedEvent: function() {
             this.data = this.editor.getData();
             this.sandbox.emit(CHANGED.call(this), this.data, this.$el);
+        },
+
+        startEditor: function() {
+            var config = getConfig.call(this);
+            this.editor = this.sandbox.ckeditor.init(this.$el, this.options.initializedCallback, config);
+            
+            if (!!this.editorContent) {
+                this.editor.setData(this.editorContent);
+            }
+        },
+
+        destroyEditor: function() {
+            this.editorContent = this.editor.getData();
+            this.editor.destroy();
+        },
+
+        remove: function() {
+            this.destroyEditor();
         }
     };
 
@@ -41161,7 +41197,7 @@ define('__component__$dropzone@husky',[], function () {
                             smallHeader: true,
                             top: coordinates.top,
                             left: coordinates.left,
-                            cancelCallback: function () {
+                            cancelCallback: function() {
                                 this.sandbox.dom.append(this.$el, this.$dropzone);
                                 this.sandbox.dom.height(this.$el, '');
                                 this.overlayOpened = false;
@@ -41239,7 +41275,7 @@ define('__component__$dropzone@husky',[], function () {
 
                             // call the after-drop callback on the last file
                             if (typeof that.options.afterDropCallback === 'function') {
-                                if (!!this.files && this.files.length > 0) {
+                                if (this.files.length === that.filesDropped) {
                                     that.options.afterDropCallback(file).then(function() {
                                         that.sandbox.util.foreach(this.files, function(file) {
                                             that.sandbox.util.delay(this.processFile.bind(this, file), 0);
@@ -42002,6 +42038,14 @@ define('__component__$input@husky',[], function() {
                         });
 
                         return $editor.editor;
+                    },
+
+                    getInstance: function(id) {
+                        var instance = CKEDITOR.instances[id];
+
+                        if (!!instance) {
+                            return instance;
+                        }
                     }
                 };
             }
