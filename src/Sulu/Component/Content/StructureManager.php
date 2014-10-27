@@ -95,10 +95,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Returns structure for given key and type
-     * @param string $key
-     * @param string $type
-     * @return Page|Snippet|StructureInterface
+     * {@inheritDoc}
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
@@ -115,48 +112,23 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * Returns a page structure for given key
-     *
-     * @deprecated Remove if not used
-     * @param $key string
-     * @throws Template\Exception\TemplateNotFoundException
-     * @return Page
+     * {@inheritDoc}
      */
-    public function getPage($key)
+    public function getStructures($type = Structure::TYPE_PAGE)
     {
-        return $this->getStructure($key, 'page');
-    }
+        $result = array();
+        foreach ($this->getTemplates($type) as $file) {
+            $fileInfo = pathinfo($file['path']);
+            $key = $fileInfo['filename'];
 
-    /**
-     * Returns a snippet structure for given key
-     *
-     * @deprecated Remove if not used
-     * @param $key string
-     * @throws Template\Exception\TemplateNotFoundException
-     * @return Snippet
-     */
-    public function getSnippet($key)
-    {
-        return $this->getStructure($key, 'snippet');
-    }
+            try {
+                $result[] = $this->getStructure($key, $type);
+            } catch (TemplateNotFoundException $e) {
+                $this->logger->warning($e->getMessage());
+            }
+        }
 
-    /**
-     * @return StructureInterface[]
-     * @deprecated
-     */
-    public function getStructures()
-    {
-        return $this->getPages();
-    }
-
-    public function getPages()
-    {
-        return $this->getStructuresByType('page');
-    }
-
-    public function getSnippets()
-    {
-        return $this->getStructuresByType('snippet');
+        return $result;
     }
 
     /**
@@ -205,7 +177,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * returns structure for given template key and file
+     * Returns structure for given template key and file
      * @param string $key
      * @param string $templateConfig
      * @return StructureInterface
@@ -279,7 +251,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * returns path to template
+     * Returns path to template
      * @param $key
      * @return bool|string
      */
@@ -324,7 +296,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     }
 
     /**
-     * returns a list of existing templates
+     * Returns a list of existing templates
      * @return string[]
      */
     private function getTemplates($type)
@@ -340,23 +312,6 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
                     'path' => $path,
                     'internal' => $templateDir['internal']
                 );
-            }
-        }
-
-        return $result;
-    }
-
-    private function getStructuresByType($type)
-    {
-        $result = array();
-        foreach ($this->getTemplates($type) as $file) {
-            $fileInfo = pathinfo($file['path']);
-            $key = $fileInfo['filename'];
-
-            try {
-                $result[] = $this->getStructure($key, $type);
-            } catch (TemplateNotFoundException $e) {
-                $this->logger->warning($e->getMessage());
             }
         }
 
