@@ -339,8 +339,10 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false)
     {
+        $limit = isset($filterConfig['limitResult']) ? $filterConfig['limitResult'] : null;
+
         $this->queryBuilder->init(array('config' => $filterConfig));
-        $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder, true, -1, $filterConfig['limitResult']);
+        $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder, true, -1, $limit);
 
         if ($api) {
             if (isset($filterConfig['dataSource'])) {
