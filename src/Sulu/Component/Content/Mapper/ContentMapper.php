@@ -174,12 +174,12 @@ class ContentMapper implements ContentMapperInterface
         PathCleanupInterface $cleaner,
         WebspaceManagerInterface $webspaceManager,
         TemplateResolverInterface $templateResolver,
+        SuluNodeHelper $nodeHelper,
         $defaultLanguage,
         $defaultTemplates,
         $languageNamespace,
         $internalPrefix,
-        $stopwatch = null,
-        SuluNodeHelper $nodeHelper
+        $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;

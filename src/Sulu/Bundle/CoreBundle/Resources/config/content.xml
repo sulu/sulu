@@ -51,6 +51,7 @@
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.template_resolver"/>
+            <argument type="service" id="sulu.util.node_helper"/>
             <argument>%sulu.content.language.default%</argument>
             <argument type="collection">
                 <argument key="page">%sulu.content.structure.default_type.page%</argument>
@@ -59,7 +60,6 @@
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-            <argument type="service" id="sulu.util.node_helper"/>
         </service>
 
         <service id="sulu.content.mapper.subscriber.node_order" class="%sulu.content.mapper.subscriber.node_order.class%">
