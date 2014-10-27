@@ -11,7 +11,9 @@
 namespace Sulu\Bundle\SnippetBundle\Content;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Mapper\ContentMapper;
@@ -24,18 +26,37 @@ use Sulu\Component\Content\Structure\Snippet;
  */
 class SnippetContent extends ComplexContentType
 {
+    /**
+     * @var ContentMapperInterface
+     */
     protected $contentMapper;
+
+    /**
+     * @var string
+     */
     protected $template;
+
+    /**
+     * @var string
+     */
     protected $defaultSnippetType;
 
     /**
-     * @param ContentMapper $contentMapper
-     * @param string $template Twig template resource
-     * @param string $defaultSnippetType Default structure type
+     * @var StructureResolverInterface
      */
-    public function __construct(ContentMapper $contentMapper, $template, $defaultSnippetType)
-    {
+    protected $structureResolver;
+
+    /**
+     * Constructor
+     */
+    public function __construct(
+        ContentMapperInterface $contentMapper,
+        StructureResolverInterface $structureResolver,
+        $template,
+        $defaultSnippetType
+    ) {
         $this->contentMapper = $contentMapper;
+        $this->structureResolver = $structureResolver;
         $this->template = $template;
         $this->defaultSnippetType = $defaultSnippetType;
     }
@@ -56,8 +77,7 @@ class SnippetContent extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    ) 
-    {
+    ) {
         $snippets = array();
 
         foreach ($refs as $i => $ref) {
@@ -102,16 +122,18 @@ class SnippetContent extends ComplexContentType
         $segmentKey
     ) {
         $snippetReferences = array();
-        foreach ((array) $property->getValue() as $value) {
+        foreach ((array)$property->getValue() as $value) {
             if ($value instanceof Snippet) {
                 $snippetReferences[] = $value->getUuid();
-            } elseif(UUIDHelper::isUUID($value)) {
+            } elseif (UUIDHelper::isUUID($value)) {
                 $snippetReferences[] = $value;
             } else {
-                throw new \InvalidArgumentException(sprintf(
-                    'Property value must either be a UUID or a Snippet, "%s" given.',
-                    gettype($value)
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Property value must either be a UUID or a Snippet, "%s" given.',
+                        gettype($value)
+                    )
+                );
             }
         }
 
@@ -148,7 +170,15 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        return array();
+        $snippets = $property->getValue();
+        $viewData = array();
+
+        foreach ($snippets as $snippet) {
+            $resolved = $this->structureResolver->resolve($snippet);
+            $viewData[] = $resolved['view'];
+        }
+
+        return $viewData;
     }
 
     /**
@@ -157,12 +187,13 @@ class SnippetContent extends ComplexContentType
     public function getContentData(PropertyInterface $property)
     {
         $snippets = $property->getValue();
-        $serializedSnippets = array();
+        $contentData = array();
 
         foreach ($snippets as $snippet) {
-            $serializedSnippets[] = $snippet->toArray(true);
+            $resolved = $this->structureResolver->resolve($snippet);
+            $contentData[] = $resolved['content'];
         }
 
-        return $serializedSnippets;
+        return $contentData;
     }
 }
