@@ -1651,7 +1651,8 @@ class ContentMapper implements ContentMapperInterface
                     $parentResourceLocator,
                     $move,
                     $webspaceKey,
-                    $locale->getLocalization()
+                    $locale->getLocalization(),
+                    $userId
                 );
 
                 // set changer of node
@@ -1684,6 +1685,7 @@ class ContentMapper implements ContentMapperInterface
      * @param boolean $move
      * @param string $webspaceKey
      * @param string $languageCode
+     * @param int $userId
      */
     private function adaptResourceLocator(
         StructureInterface $content,
@@ -1691,10 +1693,14 @@ class ContentMapper implements ContentMapperInterface
         $parentResourceLocator,
         $move,
         $webspaceKey,
-        $languageCode
+        $languageCode,
+        $userId
     ) {
-        // get strategy
-        $strategy = $this->getResourceLocator()->getStrategy();
+        // prepare objects
+        $property = $content->getPropertyByTagName('sulu.rlp');
+        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+        $contentType = $this->getResourceLocator();
+        $strategy = $contentType->getStrategy();
 
         // get resource locator pathes
         $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
@@ -1713,12 +1719,9 @@ class ContentMapper implements ContentMapperInterface
             $languageCode
         );
 
-        // move resourcelocator
-        if ($move) {
-            $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
-        } else {
-            $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
-        }
+        // save new resource-locator
+        $property->setValue($destResourceLocator);
+        $contentType->write($node, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
     }
 
     /**
