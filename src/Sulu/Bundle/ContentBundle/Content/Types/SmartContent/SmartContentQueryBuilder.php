@@ -78,7 +78,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             $sql2Where[] = $this->buildDatasourceWhere();
         } elseif (sizeof($this->ids) === 0) {
             $sql2Where[] = sprintf(
-                "ISDESCENDANTNODE(page, '/cmf/%s/contents')",
+                'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
                 $webspaceKey
             );
         }
