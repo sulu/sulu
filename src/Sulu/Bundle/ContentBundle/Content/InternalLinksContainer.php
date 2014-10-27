@@ -137,7 +137,9 @@ class InternalLinksContainer implements ArrayableInterface
             }
 
             foreach ($this->ids as $id) {
-                $result[] = $map[$id];
+                if (isset($map[$id])) {
+                    $result[] = $map[$id];
+                }
             }
         }
 

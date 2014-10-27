@@ -15,6 +15,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -260,17 +261,17 @@ class NodeRepository implements NodeRepositoryInterface
         $idString = '';
 
         if (!empty($ids)) {
-            foreach ($ids as $id) {
-                try {
-                    if (!empty($id)) {
-                        $result[] = $this->getNode($id, $webspaceKey, $languageCode);
-                    }
-                } catch (ItemNotFoundException $ex) {
-                    $this->logger->warning(
-                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
-                    );
-                }
-            }
+            $container = new InternalLinksContainer(
+                $ids,
+                $this->queryExecutor,
+                $this->queryBuilder,
+                array(),
+                $this->logger,
+                $webspaceKey,
+                $languageCode
+            );
+
+            $result = $container->getData();
             $idString = implode(',', $ids);
         }
 
@@ -318,7 +319,7 @@ class NodeRepository implements NodeRepositoryInterface
         $data = array('_embedded' => array('nodes' => array()));
 
         /** @var Webspace $webspace */
-        foreach ($this->webspaceManager->getWebspaceCollection()->toArray() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $data['_embedded']['nodes'][] = $this->createWebspaceNode($webspace->getKey(), $languageCode, 0);
         }
 
