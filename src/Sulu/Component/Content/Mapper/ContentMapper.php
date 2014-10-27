@@ -317,7 +317,6 @@ class ContentMapper implements ContentMapperInterface
 
         /** @var NodeInterface $node */
         if ($uuid === null) {
-
             // create a new node
             $path = $this->cleaner->cleanUp($title, $languageCode);
             $path = $this->getUniquePath($path, $root);
@@ -502,10 +501,6 @@ class ContentMapper implements ContentMapperInterface
             }
         }
         $session->save();
-
-        $contentNode = Structure::TYPE_PAGE === $structureType ?
-            $this->sessionManager->getContentNode($webspaceKey) :
-            $this->sessionManager->getSnippetNode($templateKey);
 
         if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions

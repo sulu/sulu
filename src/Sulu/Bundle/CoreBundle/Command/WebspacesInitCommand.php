@@ -97,7 +97,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
             // create content node
             $output->writeln("    content: '/{$contentsPath}'");
-            $content = $this->createRecursive($contentsPath, $root, 'sulu:page');
+            $content = $this->createRecursive($contentsPath, $root);
             $content->addMixin('sulu:page');
             $this->setBasicProperties($webspace, $content, $template, $userId);
             $session->save();
@@ -113,11 +113,13 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $this->createRecursive($tempPath, $root);
             $session->save();
 
-            // create snippets node
-            $output->writeln("    snippets: '/{$snippetsPath}'");
-            $this->createRecursive($snippetsPath, $root);
-            $session->save();
         }
+
+        // create snippets node
+        $output->writeln("    snippets: '/{$snippetsPath}'");
+        $this->createRecursive($snippetsPath, $root);
+        $session->save();
+
         $output->writeln('');
     }
 
@@ -132,8 +134,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         Localization $localization,
         NodeInterface $node,
         $template,
-        $userId,
-        $webspaceKey
+        $userId
     )
     {
         $this->properties->setLanguage(str_replace('-', '_', $localization->getLocalization()));
@@ -154,7 +155,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
             if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {
-                $this->setBasicLocalizationProperties($local, $node, $template, $userId, $webspaceKey);
+                $this->setBasicLocalizationProperties($local, $node, $template, $userId);
             }
         }
 
@@ -180,7 +181,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
      * @param NodeInterface $rootNode base node to begin
      * @return \PHPCR\NodeInterface
      */
-    private function createRecursive($path, $rootNode, $type = null)
+    private function createRecursive($path, $rootNode)
     {
         $pathParts = explode('/', ltrim($path, '/'));
         $curNode = $rootNode;

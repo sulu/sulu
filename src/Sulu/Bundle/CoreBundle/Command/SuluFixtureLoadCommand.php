@@ -25,27 +25,27 @@ The %command.name% command loads fixtures in YAML format as follows:
             sulu_io:
                 pages:
                     -
-                        locale: de
+                        locale: en
                         template: default
                         data:
-                            url: /artikles
-                            title: Artikles
-                            description: German articles page
+                            url: /article-one
+                            title: Article One
+                            description: My first article
                         children:
                             -
                                 locale: de
                                 template: default
                                 data:
-                                    url: /artikles/foobar
-                                    title: Foobar
-                                    description: Some foobar
+                                    url: /article-one/article-two
+                                    title: Article Two
+                                    description: My second article
         snippets:
             -
                 locale: de
                 template: hotel
                 data:
-                    name: The Grand Buddapest
-                    description: Some hotel somewhere
+                    name: The Grand Budapest
+                    description: Located in the fictional Republic of Zubrowka
 
 By default all YAML files in the <info>app/Resources/fixtures</info> directory will
 be parsed. This directory can be overridden with the <info>path</info> argument.
@@ -89,10 +89,13 @@ EOT
 
             $this->output->writeln('Loading: ' . $file);
 
-            $data = array_merge(array(
-                'webspaces' => array(),
-                'snippets' => array(),
-            ), Yaml::parse(file_get_contents($fixturePath . '/' . $file)));
+            $data = array_merge(
+                array(
+                    'webspaces' => array(),
+                    'snippets' => array(),
+                ), 
+                Yaml::parse(file_get_contents($fixturePath . '/' . $file))
+            );
 
             foreach ($data['webspaces'] as $webspaceKey => $webspaceData) {
                 $this->processWebspace($webspaceKey, $webspaceData);
@@ -133,7 +136,6 @@ EOT
 
         $this->sessionManager->getSession()->save();
 
-        // 
         foreach ($webspaceData['pages'] as $i => $page) {
             $this->processPage($webspaceKey, $page);
         }
