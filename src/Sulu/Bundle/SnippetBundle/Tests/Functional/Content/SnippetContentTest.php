@@ -19,7 +19,13 @@ class SnippetContentTypeTest extends BaseFunctionalTestCase
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->property = $this->getMock('Sulu\Component\Content\PropertyInterface');
 
-        $this->contentType = new SnippetContent($this->contentMapper, 'SomeTemplate.html.twig', 'somedefault');
+        $this->structureResolver = $this->getContainer()->get('sulu_website.structure_resolver');
+        $this->contentType = new SnippetContent(
+            $this->contentMapper,
+            $this->structureResolver,
+            'SomeTemplate.html.twig',
+            'somedefault'
+        );
     }
 
     public function testPropertyRead()
