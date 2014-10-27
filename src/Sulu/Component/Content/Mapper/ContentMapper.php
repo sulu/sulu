@@ -1274,39 +1274,6 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        if ($structureType === Structure::TYPE_PAGE) {
-            $structure->setPath(
-                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $contentNode->getPath())
-            );
-            $structure->setNodeState(
-                $contentNode->getPropertyValueWithDefault(
-                    $this->properties->getName('state'),
-                    StructureInterface::STATE_TEST
-                )
-            );
-            $structure->setNavContexts(
-                $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
-            );
-            $structure->setPublished(
-                $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
-            );
-
-            // load data of extensions
-            $data = array();
-            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
-                $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
-                $data[$extension->getName()] = $extension->load($contentNode, $webspaceKey, $availableLocalization);
-            }
-            $structure->setExt($data);
-
-            $this->loadInternalLinkDependencies(
-                $structure,
-                $localization,
-                $webspaceKey,
-                $loadGhostContent
-            );
-        }
-
         $structure->setNodeState(
             $contentNode->getPropertyValueWithDefault(
                 $this->properties->getName('state'),
@@ -1315,6 +1282,9 @@ class ContentMapper implements ContentMapperInterface
         );
 
         if ($structureType === Structure::TYPE_PAGE) {
+            $structure->setPath(
+                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $contentNode->getPath())
+            );
             $structure->setNavContexts(
                 $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
             );
