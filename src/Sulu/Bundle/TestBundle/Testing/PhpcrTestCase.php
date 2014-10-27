@@ -33,6 +33,7 @@ use Sulu\Component\Content\Types\TextArea;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
@@ -43,6 +44,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sulu\Component\Util\SuluNodeHelper;
 
 /**
  * prepares repository and basic classes for phpcr test cases
@@ -140,7 +142,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      * The default template for the content mapper
      * @var string
      */
-    protected $defaultTemplate = 'default';
+    protected $defaultTemplates = array('page' => 'default', 'snippet' => 'default');
 
     /**
      * The language namespace
@@ -185,6 +187,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
+            $nodeHelper = new SuluNodeHelper('i18n');
 
             $cleaner = new PathCleanup();
             $this->mapper = new ContentMapper(
@@ -197,9 +200,11 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->webspaceManager,
                 $this->templateResolver,
                 $this->language,
-                $this->defaultTemplate,
+                $this->defaultTemplates,
                 $this->languageNamespace,
-                $this->internalPrefix
+                $this->internalPrefix,
+                null,
+                $nodeHelper
             );
 
             $resourceLocator = new ResourceLocator(
@@ -424,6 +429,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SuluNodeType(), true);
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
+            $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PageNodeType(), true);
 
             NodeHelper::purgeWorkspace($this->session);
             $this->session->save();
@@ -447,7 +453,7 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->contents->setProperty($this->languageNamespace . ':en-changed', new DateTime());
             $this->contents->setProperty($this->languageNamespace . ':de-created', new DateTime());
             $this->contents->setProperty($this->languageNamespace . ':en-created', new DateTime());
-            $this->contents->addMixin('sulu:content');
+            $this->contents->addMixin('sulu:page');
             $this->session->save();
 
             $this->routes = $default->addNode('routes');
