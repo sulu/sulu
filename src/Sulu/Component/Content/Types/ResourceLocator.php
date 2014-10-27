@@ -43,16 +43,18 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        if ($node->hasProperty($property->getName())) {
+    public function read(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        if($node->hasProperty($property->getName())) {
             $value = $node->getPropertyValue($property->getName());
-        } else {
-            $value = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
-            $node->setProperty($property->getName(), $value);
-        }
 
-        $property->setValue($value);
+            $property->setValue($value);
+        }
     }
 
     /**
@@ -139,8 +141,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $webspaceKey,
         $languageCode,
         $segmentKey = null
-    )
-    {
+    ) {
         $value = $property->getValue();
         if ($value != null && $value != '') {
             $old = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
@@ -160,8 +161,13 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey=null)
-    {
+    public function remove(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
         $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
         $node->remove($property->getName());
     }
