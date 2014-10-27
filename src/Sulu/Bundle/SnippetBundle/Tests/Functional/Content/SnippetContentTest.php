@@ -104,7 +104,7 @@ class SnippetContentTypeTest extends BaseFunctionalTestCase
     {
         $this->property->expects($this->once())
             ->method('getValue')
-            ->will($this->returnValue('this-aint-nuffin'));
+            ->will($this->returnValue(array('ids' => 'this-aint-nuffin')));
 
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
         $this->contentType->write($pageNode, $this->property, 0, 'sulu_io', 'de', null);

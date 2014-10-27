@@ -138,10 +138,14 @@ class SnippetContent extends ComplexContentType
     ) {
 
         $snippetReferences = array();
-        $value = $property->getValue();
-        $ids = $value['ids'] ? : array();
+        $values = $property->getValue();
 
-        foreach ($ids as $value) {
+        $values = array_merge(array(
+            'ids' => array(),
+        ), $values);
+
+
+        foreach ((array) $values['ids'] as $value) {
             if ($value instanceof Snippet) {
                 $snippetReferences[] = $value->getUuid();
             } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
