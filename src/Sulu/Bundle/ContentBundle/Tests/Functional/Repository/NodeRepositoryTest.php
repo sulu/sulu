@@ -16,11 +16,13 @@ use Psr\Log\NullLogger;
 use ReflectionMethod;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
@@ -348,8 +350,8 @@ class NodeRepositoryTest extends PhpcrTestCase
             'default'
         );
 
-        $this->assertEquals('Testtitle1', $nodes[0]->title);
-        $this->assertEquals('Testtitle2', $nodes[1]->title);
+        $this->assertEquals('Testtitle1', $nodes[0]['title']);
+        $this->assertEquals('Testtitle2', $nodes[1]['title']);
 
         $nodes = $this->nodeRepository->getFilteredNodes(
             array('sortBy' => array('published'), 'sortMethod' => 'desc'),
@@ -357,8 +359,8 @@ class NodeRepositoryTest extends PhpcrTestCase
             'default'
         );
 
-        $this->assertEquals('Testtitle2', $nodes[0]->title);
-        $this->assertEquals('Testtitle1', $nodes[1]->title);
+        $this->assertEquals('Testtitle2', $nodes[0]['title']);
+        $this->assertEquals('Testtitle1', $nodes[1]['title']);
     }
 
     public function testGetFilteredNodesInOrderByTitle()
@@ -414,9 +416,9 @@ class NodeRepositoryTest extends PhpcrTestCase
             'default'
         );
 
-        $this->assertEquals('Hello me', $nodes[0]->title);
-        $this->assertEquals('hello you', $nodes[1]->title);
-        $this->assertEquals('Test', $nodes[2]->title);
+        $this->assertEquals('Hello me', $nodes[0]['title']);
+        $this->assertEquals('hello you', $nodes[1]['title']);
+        $this->assertEquals('Test', $nodes[2]['title']);
 
         $nodes = $this->nodeRepository->getFilteredNodes(
             array('sortBy' => array('title'), 'sortMethod' => 'desc'),
@@ -424,9 +426,9 @@ class NodeRepositoryTest extends PhpcrTestCase
             'default'
         );
 
-        $this->assertEquals('Hello me', $nodes[2]->title);
-        $this->assertEquals('hello you', $nodes[1]->title);
-        $this->assertEquals('Test', $nodes[0]->title);
+        $this->assertEquals('Hello me', $nodes[2]['title']);
+        $this->assertEquals('hello you', $nodes[1]['title']);
+        $this->assertEquals('Test', $nodes[0]['title']);
     }
 
     /**
@@ -970,6 +972,8 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->sessionManager,
             $this->userManager,
             $this->webspaceManager,
+            new SmartContentQueryBuilder($this->structureManager, $this->webspaceManager, $this->sessionManager, $this->languageNamespace),
+            new ContentQueryExecutor($this->sessionManager, $this->mapper),
             new NullLogger()
         );
     }
