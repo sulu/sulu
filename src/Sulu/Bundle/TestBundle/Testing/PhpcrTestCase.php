@@ -199,12 +199,12 @@ class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $cleaner,
                 $this->webspaceManager,
                 $this->templateResolver,
+                $nodeHelper,
                 $this->language,
                 $this->defaultTemplates,
                 $this->languageNamespace,
                 $this->internalPrefix,
-                null,
-                $nodeHelper
+                null
             );
 
             $resourceLocator = new ResourceLocator(
