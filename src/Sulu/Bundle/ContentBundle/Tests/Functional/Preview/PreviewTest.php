@@ -144,7 +144,7 @@ class PreviewTest extends PhpcrTestCase
     public function prepareStructureMock()
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array('overview', 'asdf', 'asdf', 2400)
         );
         $structureMock->setLanguageCode('en');

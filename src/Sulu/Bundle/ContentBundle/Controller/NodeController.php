@@ -199,7 +199,7 @@ class NodeController extends RestController implements ClassResourceInterface
     private function getNodesByIds(Request $request, $idString)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
+        $webspace = $this->getWebspace($request, false);
 
         $result = $this->getRepository()->getNodesByIds(
             preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),

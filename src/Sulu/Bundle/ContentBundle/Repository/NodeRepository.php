@@ -163,6 +163,7 @@ class NodeRepository implements NodeRepositoryInterface
         $complete = true,
         $loadGhostContent = false
     ) {
+        if($webspaceKey)
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
