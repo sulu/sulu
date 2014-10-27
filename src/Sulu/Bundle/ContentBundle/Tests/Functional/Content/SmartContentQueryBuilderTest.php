@@ -21,6 +21,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 /**
  * @group functional
@@ -129,7 +130,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'ext' => array(
                     'excerpt' => array(
                         'title' => 'Excerpt Title ' . $i,
-                        'tags' => array($i)
+                        'tags' => array()
                     )
                 )
             );
@@ -154,17 +155,15 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 $data['article'] = 'Blockarticle ' . $i;
             }
 
-            $node = $this->mapper->save(
-                $data,
-                $template,
-                'sulu_io',
-                'en',
-                1,
-                true,
-                null,
-                null,
-                Structure::STATE_PUBLISHED
-            );
+            $request = ContentMapperRequest::create()
+                ->setData($data)
+                ->setTemplateKey($template)
+                ->setWebspaceKey('sulu_io')
+                ->setLocale('en')
+                ->setUserId(1)
+                ->setType('page');
+
+            $node = $this->mapper->saveRequest($request);
             $nodes[$node->getUuid()] = $node;
         }
 
