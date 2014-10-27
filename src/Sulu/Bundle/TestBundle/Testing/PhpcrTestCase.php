@@ -50,7 +50,7 @@ use Sulu\Component\Util\SuluNodeHelper;
  * prepares repository and basic classes for phpcr test cases
  * @package Sulu\Bundle\TestBundle\Testing
  */
-class PhpcrTestCase extends \PHPUnit_Framework_TestCase
+abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SessionInterface
