@@ -45,11 +45,12 @@ class NodeController extends RestController implements ClassResourceInterface
     /**
      * returns webspace key from request
      * @param Request $request
+     * @param bool $force
      * @return string
      */
-    private function getWebspace(Request $request)
+    private function getWebspace(Request $request, $force = true)
     {
-        return $this->getRequestParameter($request, 'webspace', false);
+        return $this->getRequestParameter($request, 'webspace', $force);
     }
 
     /**
@@ -148,7 +149,7 @@ class NodeController extends RestController implements ClassResourceInterface
     private function getTreeForUuid(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
+        $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);

@@ -205,6 +205,12 @@ class NodeRepositoryTest extends PhpcrTestCase
 
     public function testGetWebspaceNodes()
     {
+        $this
+            ->webspaceCollection
+            ->expects($this->any())
+            ->method('toArray')
+            ->will($this->returnValue(array($this->webspace)));
+
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);

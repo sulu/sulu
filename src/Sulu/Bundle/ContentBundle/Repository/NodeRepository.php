@@ -301,7 +301,7 @@ class NodeRepository implements NodeRepositoryInterface
         $data = array('_embedded' => array('nodes' => array()));
 
         /** @var Webspace $webspace */
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection()->toArray() as $webspace) {
             $data['_embedded']['nodes'][] = $this->createWebspaceNode($webspace->getKey(), $languageCode, 0);
         }
 
