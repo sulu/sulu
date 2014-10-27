@@ -9,8 +9,9 @@
  */
 
 define([
-    'type/default'
-], function(Default) {
+    'type/default',
+    'app-config'
+], function(Default, AppConfig) {
 
     'use strict';
 
@@ -32,7 +33,6 @@ define([
 
                     this.id = this.$el.attr('id');
                     this.propertyName = App.dom.data(this.$el, 'mapperProperty');
-
                     this.types = selectData;
 
                     this.$addButton = $('#' + this.id + '-add');
@@ -97,12 +97,13 @@ define([
                 },
 
                 bindDomEvents: function() {
-                    this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeClick.bind(this));
+                    // TODO: this is crap. check for a better way to do it 
+                    $('#sort-text-blocks-' + this.id).on('click', this.showSortMode.bind(this));
+                    $('#edit-text-blocks-' + this.id).on('click', this.showEditMode.bind(this));
                 },
 
-                removeClick: function(event) {
-                    var $removeButton = $(event.target),
-                        $element = $removeButton.closest('.' + this.propertyName + '-element');
+                removeBlockHandler: function($trigger) {
+                    var $element = $trigger.closest('.' + this.propertyName + '-element');
 
                     if (this.canRemove()) {
                         this.form.removeFields($element);
@@ -161,14 +162,17 @@ define([
                                         trigger: App.dom.find('.drop-down-trigger', $template),
                                         setParentDropDown: true,
                                         instanceName: 'change' + options.index,
-                                        alignment: 'left',
+                                        alignment: 'right',
                                         valueName: 'title',
                                         translateLabels: true,
-                                        clickCallback: function(item) {
-                                            // TODO change type
-                                            var data = form.mapper.getData($template);
-
-                                            this.addChild(item.data, data, true, index);
+                                        clickCallback: function(item, $trigger) {
+                                            if (item.id === 'remove') {
+                                                this.removeBlockHandler($trigger);
+                                            } else {
+                                                // TODO change type
+                                                var data = form.mapper.getData($template);
+                                                this.addChild(item.data, data, true, index);
+                                            }
                                         }.bind(this),
                                         data: this.types
                                     }
@@ -264,6 +268,75 @@ define([
                         data.push(form.mapper.getData($(this)));
                     });
                     return data;
+                },
+
+                iterateBlockFields: function($blocks, cb) {
+                    if ($blocks.size()) {
+                        $.each($blocks, function(idx, block) {
+                            var $block = $(block),
+                                $fields = $block.find('[data-mapper-property]');
+
+                            if ($fields.size()) {
+                                $.each($fields, function(idx, field) {
+                                    var $field = $(field),
+                                        property = $field.data('property') || {},
+                                        tags = property.tags || [];
+
+                                    (cb || $.noop)($field, $block);
+                                });
+                            }
+                        });
+                    }
+                },
+
+                showSortMode: function() {
+                    var $blocks = this.getChildren(),
+                        section = AppConfig.getSection('sulu-content');
+
+                    $('#sort-text-blocks-' + this.id).addClass('hidden');
+                    $('#edit-text-blocks-' + this.id).removeClass('hidden'); 
+                    
+                    this.$el.addClass('is-sortmode');
+
+                    this.iterateBlockFields($blocks, function($field, $block) {
+                        var property = $field.data('property') || {},
+                            tags = property.tags || [];
+
+                        if (tags.length && _.where(tags, { name: section.showInSortModeTag }).length) {
+                            this.showSortModeField($field, $block);
+                        }
+                    }.bind(this));
+                },
+
+                showSortModeField: function($field, $block) {
+                    var content = $field.data('element').getValue(),
+                        fieldId = $field.attr('id'),
+                        $sortModeField = $('[data-sort-mode-id="' + fieldId + '"]', $block);
+
+                    $sortModeField
+                        .html(content)
+                        .addClass('show-in-sortmode');
+
+                    if ($field.data('type') === 'textEditor') {
+                        App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
+                    }
+                },
+
+                showEditMode: function() {
+                    var $blocks = this.getChildren();
+
+                    $('#sort-text-blocks-' + this.id).removeClass('hidden');
+                    $('#edit-text-blocks-' + this.id).addClass('hidden');
+
+                    this.$el.removeClass('is-sortmode');
+
+                    this.iterateBlockFields($blocks, function($field, $block) {
+                        $field.removeClass('show-in-sortmode');
+
+                        if ($field.data('type') === 'textEditor') {
+                            App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.start');
+                        }
+                    }.bind(this));
                 }
             };
 
