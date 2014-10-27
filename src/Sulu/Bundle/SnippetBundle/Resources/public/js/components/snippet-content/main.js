@@ -35,6 +35,27 @@ define([], function() {
             }
         },
 
+        /**
+         * namespace for events
+         * @type {string}
+         */
+        eventNamespace = 'sulu.snippets.',
+
+        /**
+         * raised when the overlay data has been changed
+         * @event sulu.internal-links.data-changed
+         */
+        DATA_CHANGED = function() {
+            return createEventName.call(this, 'data-changed');
+        },
+
+        /**
+         * returns normalized event names
+         */
+        createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        },
+
         data = {
             ids: []
         },
@@ -106,9 +127,9 @@ define([], function() {
             this.$configButton = this.sandbox.dom.find(getId.call(this, 'configButton'), this.$el);
 
             // set preselected values
-            if (!!this.sandbox.dom.data(this.$el, 'snippet-ids')) {
-                var snippetIds = this.sandbox.dom.data(this.$el, 'snippet-ids');
-                this.data.ids = snippetIds;
+            if (!!this.sandbox.dom.data(this.$el, 'snippets')) {
+                var data = this.sandbox.dom.data(this.$el, 'snippets');
+                this.data.ids = data.ids;
             }
 
             renderStartContent.call(this);
@@ -187,7 +208,7 @@ define([], function() {
                 renderFooter.call(this);
             }
             this.sandbox.emit('husky.column-navigation.'+ this.options.instanceName +'.unmark', dataId);
-            this.sandbox.emit('sulu.content.changed');
+            this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
         },
 
         /**
@@ -343,7 +364,7 @@ define([], function() {
                 setData.call(this, this.data);
                 setURIGet.call(this);
                 loadContent.call(this);
-                this.sandbox.emit('sulu.content.changed');
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
             }.bind(this));
         },
 
@@ -411,7 +432,7 @@ define([], function() {
          * set data of snippet-content
          */
         setData = function(data) {
-            this.sandbox.dom.data(this.$el, 'snippet-ids', this.data.ids);
+            this.sandbox.dom.data(this.$el, 'snippets', this.data);
         },
 
         /**
@@ -467,7 +488,9 @@ define([], function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            this.data = { ids: [] };
+            // we add some "junk" data to the payload so that it will not resolve as "false" when there
+            // are no IDs
+            this.data = { junk: 'junk', ids: [] };
             this.linkList = null;
 
             this.sandbox.util.each([

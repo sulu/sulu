@@ -78,13 +78,21 @@ class SnippetContent extends ComplexContentType
 
     /**
      * Set data to given property
+     * @param array $data
+     * @param PropertyInterface $property
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
      */
     protected function setData(
-        $refs,
+        $data,
         PropertyInterface $property,
         $webspaceKey,
-        $languageCode
-    ) {
+        $languageCode,
+        $segmentKey
+    ) 
+    {
+        $refs = isset($data['ids']) ? $data['ids'] : array();
         $snippets = array();
 
         foreach ($refs as $i => $ref) {
@@ -106,7 +114,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData($refs, $property, $webspaceKey, $languageCode);
+        $this->setData(array('ids' => $refs), $property, $webspaceKey, $languageCode, $segmentKey);
     }
 
     /**
@@ -128,8 +136,12 @@ class SnippetContent extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
+
         $snippetReferences = array();
-        foreach ((array)$property->getValue() as $value) {
+        $value = $property->getValue();
+        $ids = $value['ids'] ? : array();
+
+        foreach ($ids as $value) {
             if ($value instanceof Snippet) {
                 $snippetReferences[] = $value->getUuid();
             } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
