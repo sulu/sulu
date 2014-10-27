@@ -63,13 +63,4 @@
   61 => 'Symfony\\Bundle\\SecurityBundle\\Security\\FirewallMap',
   62 => 'Symfony\\Bundle\\SecurityBundle\\Security\\FirewallContext',
   63 => 'Symfony\\Component\\HttpFoundation\\RequestMatcher',
-  64 => 'Doctrine\\Common\\Annotations\\DocLexer',
-  65 => 'Doctrine\\Common\\Annotations\\FileCacheReader',
-  66 => 'Doctrine\\Common\\Annotations\\PhpParser',
-  67 => 'Doctrine\\Common\\Annotations\\Reader',
-  68 => 'Doctrine\\Common\\Lexer',
-  69 => 'Doctrine\\Common\\Persistence\\ConnectionRegistry',
-  70 => 'Doctrine\\Common\\Persistence\\Proxy',
-  71 => 'Doctrine\\Common\\Util\\ClassUtils',
-  72 => 'Doctrine\\Bundle\\DoctrineBundle\\Registry',
 );

@@ -49,14 +49,10 @@ class appPhpcrDebugProjectContainer extends Container
             'doctrine' => 'getDoctrineService',
             'doctrine.dbal.connection_factory' => 'getDoctrine_Dbal_ConnectionFactoryService',
             'doctrine.dbal.default_connection' => 'getDoctrine_Dbal_DefaultConnectionService',
-            'doctrine.orm.default_entity_listener_resolver' => 'getDoctrine_Orm_DefaultEntityListenerResolverService',
             'doctrine.orm.default_entity_manager' => 'getDoctrine_Orm_DefaultEntityManagerService',
             'doctrine.orm.default_manager_configurator' => 'getDoctrine_Orm_DefaultManagerConfiguratorService',
             'doctrine.orm.validator.unique' => 'getDoctrine_Orm_Validator_UniqueService',
             'doctrine.orm.validator_initializer' => 'getDoctrine_Orm_ValidatorInitializerService',
-            'doctrine_cache.providers.doctrine.orm.default_metadata_cache' => 'getDoctrineCache_Providers_Doctrine_Orm_DefaultMetadataCacheService',
-            'doctrine_cache.providers.doctrine.orm.default_query_cache' => 'getDoctrineCache_Providers_Doctrine_Orm_DefaultQueryCacheService',
-            'doctrine_cache.providers.doctrine.orm.default_result_cache' => 'getDoctrineCache_Providers_Doctrine_Orm_DefaultResultCacheService',
             'doctrine_phpcr' => 'getDoctrinePhpcrService',
             'doctrine_phpcr.console_dumper' => 'getDoctrinePhpcr_ConsoleDumperService',
             'doctrine_phpcr.default_session' => 'getDoctrinePhpcr_DefaultSessionService',
@@ -260,9 +256,6 @@ class appPhpcrDebugProjectContainer extends Container
         $this->aliases = array(
             'database_connection' => 'doctrine.dbal.default_connection',
             'debug.templating.engine.twig' => 'templating',
-            'doctrine.orm.default_metadata_cache' => 'doctrine_cache.providers.doctrine.orm.default_metadata_cache',
-            'doctrine.orm.default_query_cache' => 'doctrine_cache.providers.doctrine.orm.default_query_cache',
-            'doctrine.orm.default_result_cache' => 'doctrine_cache.providers.doctrine.orm.default_result_cache',
             'doctrine.orm.entity_manager' => 'doctrine.orm.default_entity_manager',
             'doctrine_phpcr.odm.document_manager' => 'doctrine_phpcr.odm.default_document_manager',
             'doctrine_phpcr.session' => 'doctrine_phpcr.default_session',
@@ -287,7 +280,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getAnnotationReaderService()
     {
-        return $this->services['annotation_reader'] = new \Doctrine\Common\Annotations\FileCacheReader(new \Doctrine\Common\Annotations\AnnotationReader(), '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/annotations', true);
+        return $this->services['annotation_reader'] = new \Doctrine\Common\Annotations\FileCacheReader(new \Doctrine\Common\Annotations\AnnotationReader(), '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/annotations', true);
     }
 
     /**
@@ -316,7 +309,7 @@ class appPhpcrDebugProjectContainer extends Container
         $a = $this->get('kernel');
         $b = $this->get('templating.filename_parser');
 
-        $c = new \Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder($a, $b, '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources');
+        $c = new \Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder($a, $b, '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources');
 
         return $this->services['cache_warmer'] = new \Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate(array(0 => new \Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplatePathsCacheWarmer($c, $this->get('templating.locator')), 1 => new \Symfony\Bundle\FrameworkBundle\CacheWarmer\RouterCacheWarmer($this->get('router')), 2 => new \Symfony\Bundle\TwigBundle\CacheWarmer\TemplateCacheCacheWarmer($this, $c), 3 => new \Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer($this->get('doctrine')), 4 => new \Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer($this->get('doctrine_phpcr')), 5 => $this->get('sulu.cache.warmer.structure')));
     }
@@ -481,7 +474,7 @@ class appPhpcrDebugProjectContainer extends Container
      * This service is shared.
      * This method always returns the same instance of the service.
      *
-     * @return \Doctrine\DBAL\Connection A Doctrine\DBAL\Connection instance.
+     * @return \stdClass A stdClass instance.
      */
     protected function getDoctrine_Dbal_DefaultConnectionService()
     {
@@ -503,19 +496,6 @@ class appPhpcrDebugProjectContainer extends Container
     }
 
     /**
-     * Gets the 'doctrine.orm.default_entity_listener_resolver' service.
-     *
-     * This service is shared.
-     * This method always returns the same instance of the service.
-     *
-     * @return \Doctrine\ORM\Mapping\DefaultEntityListenerResolver A Doctrine\ORM\Mapping\DefaultEntityListenerResolver instance.
-     */
-    protected function getDoctrine_Orm_DefaultEntityListenerResolverService()
-    {
-        return $this->services['doctrine.orm.default_entity_listener_resolver'] = new \Doctrine\ORM\Mapping\DefaultEntityListenerResolver();
-    }
-
-    /**
      * Gets the 'doctrine.orm.default_entity_manager' service.
      *
      * This service is shared.
@@ -525,27 +505,36 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getDoctrine_Orm_DefaultEntityManagerService()
     {
-        $a = new \Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver(array('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/doctrine' => 'Sulu\\Bundle\\TestBundle\\Entity'));
-        $a->setGlobalBasename('mapping');
+        $a = new \Doctrine\Common\Cache\ArrayCache();
+        $a->setNamespace('sf2orm_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1');
 
-        $b = new \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
-        $b->addDriver(new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->get('annotation_reader'), array(0 => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Entity')), 'Sulu\\Bundle\\CoreBundle\\Entity');
-        $b->addDriver($a, 'Sulu\\Bundle\\TestBundle\\Entity');
+        $b = new \Doctrine\Common\Cache\ArrayCache();
+        $b->setNamespace('sf2orm_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1');
 
-        $c = new \Doctrine\ORM\Configuration();
-        $c->setEntityNamespaces(array('SuluCoreBundle' => 'Sulu\\Bundle\\CoreBundle\\Entity', 'SuluTestBundle' => 'Sulu\\Bundle\\TestBundle\\Entity'));
-        $c->setMetadataCacheImpl($this->get('doctrine_cache.providers.doctrine.orm.default_metadata_cache'));
-        $c->setQueryCacheImpl($this->get('doctrine_cache.providers.doctrine.orm.default_query_cache'));
-        $c->setResultCacheImpl($this->get('doctrine_cache.providers.doctrine.orm.default_result_cache'));
-        $c->setMetadataDriverImpl($b);
-        $c->setProxyDir('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/orm/Proxies');
-        $c->setProxyNamespace('Proxies');
-        $c->setAutoGenerateProxyClasses(true);
-        $c->setClassMetadataFactoryName('Doctrine\\ORM\\Mapping\\ClassMetadataFactory');
-        $c->setDefaultRepositoryClassName('Doctrine\\ORM\\EntityRepository');
-        $c->setNamingStrategy(new \Doctrine\ORM\Mapping\DefaultNamingStrategy());
+        $c = new \Doctrine\Common\Cache\ArrayCache();
+        $c->setNamespace('sf2orm_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1');
 
-        $this->services['doctrine.orm.default_entity_manager'] = $instance = \Doctrine\ORM\EntityManager::create($this->get('doctrine.dbal.default_connection'), $c);
+        $d = new \Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver(array('/home/daniel/www/sulu-cmf/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/doctrine' => 'Sulu\\Bundle\\TestBundle\\Entity'));
+        $d->setGlobalBasename('mapping');
+
+        $e = new \Doctrine\ORM\Mapping\Driver\DriverChain();
+        $e->addDriver(new \Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->get('annotation_reader'), array(0 => '/home/daniel/www/sulu-cmf/sulu/src/Sulu/Bundle/CoreBundle/Entity')), 'Sulu\\Bundle\\CoreBundle\\Entity');
+        $e->addDriver($d, 'Sulu\\Bundle\\TestBundle\\Entity');
+
+        $f = new \Doctrine\ORM\Configuration();
+        $f->setEntityNamespaces(array('SuluCoreBundle' => 'Sulu\\Bundle\\CoreBundle\\Entity', 'SuluTestBundle' => 'Sulu\\Bundle\\TestBundle\\Entity'));
+        $f->setMetadataCacheImpl($a);
+        $f->setQueryCacheImpl($b);
+        $f->setResultCacheImpl($c);
+        $f->setMetadataDriverImpl($e);
+        $f->setProxyDir('/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/orm/Proxies');
+        $f->setProxyNamespace('Proxies');
+        $f->setAutoGenerateProxyClasses(true);
+        $f->setClassMetadataFactoryName('Doctrine\\ORM\\Mapping\\ClassMetadataFactory');
+        $f->setDefaultRepositoryClassName('Doctrine\\ORM\\EntityRepository');
+        $f->setNamingStrategy(new \Doctrine\ORM\Mapping\DefaultNamingStrategy());
+
+        $this->services['doctrine.orm.default_entity_manager'] = $instance = \Doctrine\ORM\EntityManager::create($this->get('doctrine.dbal.default_connection'), $f);
 
         $this->get('doctrine.orm.default_manager_configurator')->configure($instance);
 
@@ -589,57 +578,6 @@ class appPhpcrDebugProjectContainer extends Container
     protected function getDoctrine_Orm_ValidatorInitializerService()
     {
         return $this->services['doctrine.orm.validator_initializer'] = new \Symfony\Bridge\Doctrine\Validator\DoctrineInitializer($this->get('doctrine'));
-    }
-
-    /**
-     * Gets the 'doctrine_cache.providers.doctrine.orm.default_metadata_cache' service.
-     *
-     * This service is shared.
-     * This method always returns the same instance of the service.
-     *
-     * @return \Doctrine\Common\Cache\ArrayCache A Doctrine\Common\Cache\ArrayCache instance.
-     */
-    protected function getDoctrineCache_Providers_Doctrine_Orm_DefaultMetadataCacheService()
-    {
-        $this->services['doctrine_cache.providers.doctrine.orm.default_metadata_cache'] = $instance = new \Doctrine\Common\Cache\ArrayCache();
-
-        $instance->setNamespace('sf2orm_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c');
-
-        return $instance;
-    }
-
-    /**
-     * Gets the 'doctrine_cache.providers.doctrine.orm.default_query_cache' service.
-     *
-     * This service is shared.
-     * This method always returns the same instance of the service.
-     *
-     * @return \Doctrine\Common\Cache\ArrayCache A Doctrine\Common\Cache\ArrayCache instance.
-     */
-    protected function getDoctrineCache_Providers_Doctrine_Orm_DefaultQueryCacheService()
-    {
-        $this->services['doctrine_cache.providers.doctrine.orm.default_query_cache'] = $instance = new \Doctrine\Common\Cache\ArrayCache();
-
-        $instance->setNamespace('sf2orm_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c');
-
-        return $instance;
-    }
-
-    /**
-     * Gets the 'doctrine_cache.providers.doctrine.orm.default_result_cache' service.
-     *
-     * This service is shared.
-     * This method always returns the same instance of the service.
-     *
-     * @return \Doctrine\Common\Cache\ArrayCache A Doctrine\Common\Cache\ArrayCache instance.
-     */
-    protected function getDoctrineCache_Providers_Doctrine_Orm_DefaultResultCacheService()
-    {
-        $this->services['doctrine_cache.providers.doctrine.orm.default_result_cache'] = $instance = new \Doctrine\Common\Cache\ArrayCache();
-
-        $instance->setNamespace('sf2orm_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c');
-
-        return $instance;
     }
 
     /**
@@ -708,7 +646,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getDoctrinePhpcr_Jackalope_Repository_DefaultService()
     {
-        return $this->services['doctrine_phpcr.jackalope.repository.default'] = $this->get('doctrine_phpcr.jackalope.repository.factory.service.jackrabbit')->getRepository(array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server/', 'jackalope.check_login_on_server' => false));
+        return $this->services['doctrine_phpcr.jackalope.repository.default'] = $this->get('doctrine_phpcr.jackalope.repository.factory.service.jackrabbit')->getRepository(array('jackalope.jackrabbit_uri' => 'http://localhost:8080/server/', 'jackalope.check_login_on_server' => true));
     }
 
     /**
@@ -734,7 +672,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getDoctrinePhpcr_Jackalope_Repository_Factory_JackrabbitService()
     {
-        return $this->services['doctrine_phpcr.jackalope.repository.factory.jackrabbit'] = $this->get('doctrine_phpcr.jackalope.repository.factory.service.jackrabbit')->getRepository(array('jackalope.jackrabbit_check_login_on_server' => false));
+        return $this->services['doctrine_phpcr.jackalope.repository.factory.jackrabbit'] = $this->get('doctrine_phpcr.jackalope.repository.factory.service.jackrabbit')->getRepository(array());
     }
 
     /**
@@ -747,7 +685,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getDoctrinePhpcr_Jackalope_Repository_Factory_PrismicService()
     {
-        return $this->services['doctrine_phpcr.jackalope.repository.factory.prismic'] = $this->get('doctrine_phpcr.jackalope.repository.factory.service.prismic')->getRepository(array('jackalope.prismic_check_login_on_server' => false));
+        return $this->services['doctrine_phpcr.jackalope.repository.factory.prismic'] = $this->get('doctrine_phpcr.jackalope.repository.factory.service.prismic')->getRepository(array());
     }
 
     /**
@@ -813,16 +751,16 @@ class appPhpcrDebugProjectContainer extends Container
     protected function getDoctrinePhpcr_Odm_DefaultDocumentManagerService()
     {
         $a = new \Doctrine\Common\Cache\ArrayCache();
-        $a->setNamespace('sf2phpcr_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c');
+        $a->setNamespace('sf2phpcr_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1');
 
         $b = new \Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
-        $b->addDriver(new \Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver($this->get('annotation_reader'), array(0 => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document')), 'Doctrine\\ODM\\PHPCR\\Document');
+        $b->addDriver(new \Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver($this->get('annotation_reader'), array(0 => '/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document')), 'Doctrine\\ODM\\PHPCR\\Document');
 
         $c = new \Doctrine\ODM\PHPCR\Configuration();
         $c->setDocumentNamespaces(array('__PHPCRODM__' => 'Doctrine\\ODM\\PHPCR\\Document'));
         $c->setMetadataCacheImpl($a);
         $c->setMetadataDriverImpl($b, false);
-        $c->setProxyDir('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/PHPCRProxies');
+        $c->setProxyDir('/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/PHPCRProxies');
         $c->setProxyNamespace('PHPCRProxies');
         $c->setAutoGenerateProxyClasses(false);
         $c->setClassMetadataFactoryName('Doctrine\\ODM\\PHPCR\\Mapping\\ClassMetadataFactory');
@@ -867,7 +805,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getFileLocatorService()
     {
-        return $this->services['file_locator'] = new \Symfony\Component\HttpKernel\Config\FileLocator($this->get('kernel'), '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources');
+        return $this->services['file_locator'] = new \Symfony\Component\HttpKernel\Config\FileLocator($this->get('kernel'), '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources');
     }
 
     /**
@@ -954,11 +892,11 @@ class appPhpcrDebugProjectContainer extends Container
      * This service is shared.
      * This method always returns the same instance of the service.
      *
-     * @return \Doctrine\Bundle\PHPCRBundle\Form\PHPCRTypeGuesser A Doctrine\Bundle\PHPCRBundle\Form\PHPCRTypeGuesser instance.
+     * @return \Doctrine\Bundle\PHPCRBundle\Form\PhpcrOdmTypeGuesser A Doctrine\Bundle\PHPCRBundle\Form\PhpcrOdmTypeGuesser instance.
      */
     protected function getForm_TypeGuesser_DoctrinePhpcrService()
     {
-        return $this->services['form.type_guesser.doctrine_phpcr'] = new \Doctrine\Bundle\PHPCRBundle\Form\PHPCRTypeGuesser($this->get('doctrine_phpcr'), array());
+        return $this->services['form.type_guesser.doctrine_phpcr'] = new \Doctrine\Bundle\PHPCRBundle\Form\PhpcrOdmTypeGuesser($this->get('doctrine_phpcr'), array());
     }
 
     /**
@@ -1332,7 +1270,7 @@ class appPhpcrDebugProjectContainer extends Container
     protected function getJmsSerializerService()
     {
         $a = new \Metadata\MetadataFactory(new \Metadata\Driver\LazyLoadingDriver($this, 'jms_serializer.metadata_driver'), 'Metadata\\ClassHierarchyMetadata', true);
-        $a->setCache(new \Metadata\Cache\FileCache('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/jms_serializer'));
+        $a->setCache(new \Metadata\Cache\FileCache('/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/jms_serializer'));
 
         $b = new \JMS\Serializer\EventDispatcher\LazyEventDispatcher($this);
         $b->setListeners(array('serializer.pre_serialize' => array(0 => array(0 => array(0 => 'jms_serializer.stopwatch_subscriber', 1 => 'onPreSerialize'), 1 => NULL, 2 => NULL), 1 => array(0 => array(0 => 'jms_serializer.doctrine_proxy_subscriber', 1 => 'onPreSerialize'), 1 => NULL, 2 => NULL)), 'serializer.post_serialize' => array(0 => array(0 => array(0 => 'jms_serializer.stopwatch_subscriber', 1 => 'onPostSerialize'), 1 => NULL, 2 => NULL))));
@@ -1376,7 +1314,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getJmsSerializer_DatetimeHandlerService()
     {
-        return $this->services['jms_serializer.datetime_handler'] = new \JMS\Serializer\Handler\DateHandler('Y-m-d\\TH:i:sO', 'Europe/Zurich', true);
+        return $this->services['jms_serializer.datetime_handler'] = new \JMS\Serializer\Handler\DateHandler('Y-m-d\\TH:i:sO', 'Europe/Paris', true);
     }
 
     /**
@@ -1458,7 +1396,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getJmsSerializer_MetadataDriverService()
     {
-        $a = new \Metadata\Driver\FileLocator(array('Symfony\\Bundle\\FrameworkBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer', 'Symfony\\Bundle\\TwigBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer', 'Symfony\\Bundle\\MonologBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer', 'Symfony\\Bundle\\SecurityBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer', 'Doctrine\\Bundle\\DoctrineBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/doctrine-bundle/Resources/config/serializer', 'JMS\\SerializerBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer', 'FOS\\RestBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer', 'Doctrine\\Bundle\\PHPCRBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer', 'Sulu\\Bundle\\CoreBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer', 'Sulu\\Bundle\\TestBundle' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer'));
+        $a = new \Metadata\Driver\FileLocator(array('Symfony\\Bundle\\FrameworkBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer', 'Symfony\\Bundle\\TwigBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer', 'Symfony\\Bundle\\MonologBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer', 'Symfony\\Bundle\\SecurityBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer', 'Doctrine\\Bundle\\DoctrineBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer', 'JMS\\SerializerBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer', 'FOS\\RestBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer', 'Doctrine\\Bundle\\PHPCRBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer', 'Sulu\\Bundle\\CoreBundle' => '/home/daniel/www/sulu-cmf/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer', 'Sulu\\Bundle\\TestBundle' => '/home/daniel/www/sulu-cmf/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer'));
 
         return $this->services['jms_serializer.metadata_driver'] = new \JMS\Serializer\Metadata\Driver\DoctrinePHPCRTypeDriver(new \Metadata\Driver\DriverChain(array(0 => new \JMS\Serializer\Metadata\Driver\YamlDriver($a), 1 => new \JMS\Serializer\Metadata\Driver\XmlDriver($a), 2 => new \JMS\Serializer\Metadata\Driver\PhpDriver($a), 3 => new \JMS\Serializer\Metadata\Driver\AnnotationDriver($this->get('annotation_reader')))), $this->get('doctrine_phpcr'));
     }
@@ -1637,7 +1575,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getMonolog_Handler_NestedService()
     {
-        return $this->services['monolog.handler.nested'] = new \Monolog\Handler\StreamHandler('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/logs/phpcr.log', 100, true, NULL);
+        return $this->services['monolog.handler.nested'] = new \Monolog\Handler\StreamHandler('/home/daniel/www/sulu-cmf/sulu/tests/app/logs/phpcr.log', 100, true);
     }
 
     /**
@@ -1877,7 +1815,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getRouterService()
     {
-        return $this->services['router'] = new \Symfony\Bundle\FrameworkBundle\Routing\Router($this, '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/config/routing.yml', array('cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr', 'debug' => true, 'generator_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator', 'generator_base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator', 'generator_dumper_class' => 'Symfony\\Component\\Routing\\Generator\\Dumper\\PhpGeneratorDumper', 'generator_cache_class' => 'appPhpcrUrlGenerator', 'matcher_class' => 'Symfony\\Bundle\\FrameworkBundle\\Routing\\RedirectableUrlMatcher', 'matcher_base_class' => 'Symfony\\Bundle\\FrameworkBundle\\Routing\\RedirectableUrlMatcher', 'matcher_dumper_class' => 'Symfony\\Component\\Routing\\Matcher\\Dumper\\PhpMatcherDumper', 'matcher_cache_class' => 'appPhpcrUrlMatcher', 'strict_requirements' => true), $this->get('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE), $this->get('monolog.logger.router', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['router'] = new \Symfony\Bundle\FrameworkBundle\Routing\Router($this, '/home/daniel/www/sulu-cmf/sulu/tests/app/config/routing.yml', array('cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr', 'debug' => true, 'generator_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator', 'generator_base_class' => 'Symfony\\Component\\Routing\\Generator\\UrlGenerator', 'generator_dumper_class' => 'Symfony\\Component\\Routing\\Generator\\Dumper\\PhpGeneratorDumper', 'generator_cache_class' => 'appPhpcrUrlGenerator', 'matcher_class' => 'Symfony\\Bundle\\FrameworkBundle\\Routing\\RedirectableUrlMatcher', 'matcher_base_class' => 'Symfony\\Bundle\\FrameworkBundle\\Routing\\RedirectableUrlMatcher', 'matcher_dumper_class' => 'Symfony\\Component\\Routing\\Matcher\\Dumper\\PhpMatcherDumper', 'matcher_cache_class' => 'appPhpcrUrlMatcher', 'strict_requirements' => true), $this->get('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE), $this->get('monolog.logger.router', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -2000,7 +1938,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getSecurity_SecureRandomService()
     {
-        return $this->services['security.secure_random'] = new \Symfony\Component\Security\Core\Util\SecureRandom('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/secure_random.seed', $this->get('monolog.logger.security', ContainerInterface::NULL_ON_INVALID_REFERENCE));
+        return $this->services['security.secure_random'] = new \Symfony\Component\Security\Core\Util\SecureRandom('/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/secure_random.seed', $this->get('monolog.logger.security', ContainerInterface::NULL_ON_INVALID_REFERENCE));
     }
 
     /**
@@ -2052,7 +1990,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getSession_HandlerService()
     {
-        return $this->services['session.handler'] = new \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sessions');
+        return $this->services['session.handler'] = new \Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler('/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sessions');
     }
 
     /**
@@ -2065,7 +2003,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getSession_Storage_FilesystemService()
     {
-        return $this->services['session.storage.filesystem'] = new \Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sessions', 'MOCKSESSID', $this->get('session.storage.metadata_bag'));
+        return $this->services['session.storage.filesystem'] = new \Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage('/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sessions', 'MOCKSESSID', $this->get('session.storage.metadata_bag'));
     }
 
     /**
@@ -2239,7 +2177,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getSulu_Content_StructureManagerService()
     {
-        $this->services['sulu.content.structure_manager'] = $instance = new \Sulu\Component\Content\StructureManager(new \Sulu\Component\Content\Template\TemplateReader(), new \Sulu\Component\Content\Template\Dumper\PHPTemplateDumper('../Resources/Skeleton', true), $this->get('logger'), array('structure_paths' => array('pages' => array('path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/pages', 'internal' => false, 'type' => 'page'), 'templates' => array('path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/snippets', 'internal' => false, 'type' => 'snippet'), 'bundle' => array('path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/../../Content/templates', 'internal' => true, 'type' => 'page')), 'cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sulu', 'debug' => true));
+        $this->services['sulu.content.structure_manager'] = $instance = new \Sulu\Component\Content\StructureManager(new \Sulu\Component\Content\Template\TemplateReader(), new \Sulu\Component\Content\Template\Dumper\PHPTemplateDumper('../Resources/Skeleton', true), $this->get('logger'), array('structure_paths' => array('pages' => array('path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/pages', 'internal' => false, 'type' => 'page'), 'templates' => array('path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/snippets', 'internal' => false, 'type' => 'snippet'), 'bundle' => array('path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/../../Content/templates', 'internal' => true, 'type' => 'page')), 'cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sulu', 'debug' => true));
 
         $instance->setContainer($this);
 
@@ -2542,7 +2480,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getSuluCore_Webspace_WebspaceManagerService()
     {
-        return $this->services['sulu_core.webspace.webspace_manager'] = new \Sulu\Component\Webspace\Manager\WebspaceManager($this->get('sulu_core.webspace.loader.xml'), $this->get('logger'), array('config_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/webspaces', 'cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sulu', 'debug' => true, 'cache_class' => 'WebspaceCollectionCache', 'base_class' => 'WebspaceCollection'));
+        return $this->services['sulu_core.webspace.webspace_manager'] = new \Sulu\Component\Webspace\Manager\WebspaceManager($this->get('sulu_core.webspace.loader.xml'), $this->get('logger'), array('config_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/webspaces', 'cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sulu', 'debug' => true, 'cache_class' => 'WebspaceCollectionCache', 'base_class' => 'WebspaceCollection'));
     }
 
     /**
@@ -2656,7 +2594,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getTemplating_Helper_CodeService()
     {
-        return $this->services['templating.helper.code'] = new \Symfony\Bundle\FrameworkBundle\Templating\Helper\CodeHelper(NULL, '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app', 'UTF-8');
+        return $this->services['templating.helper.code'] = new \Symfony\Bundle\FrameworkBundle\Templating\Helper\CodeHelper(NULL, '/home/daniel/www/sulu-cmf/sulu/tests/app', 'UTF-8');
     }
 
     /**
@@ -3241,7 +3179,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getTranslator_DefaultService()
     {
-        return $this->services['translator.default'] = new \Symfony\Bundle\FrameworkBundle\Translation\Translator($this, $this->get('translator.selector'), array('translation.loader.php' => array(0 => 'php'), 'translation.loader.yml' => array(0 => 'yml'), 'translation.loader.xliff' => array(0 => 'xlf', 1 => 'xliff'), 'translation.loader.po' => array(0 => 'po'), 'translation.loader.mo' => array(0 => 'mo'), 'translation.loader.qt' => array(0 => 'ts'), 'translation.loader.csv' => array(0 => 'csv'), 'translation.loader.res' => array(0 => 'res'), 'translation.loader.dat' => array(0 => 'dat'), 'translation.loader.ini' => array(0 => 'ini'), 'translation.loader.json' => array(0 => 'json')), array('cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/translations', 'debug' => true));
+        return $this->services['translator.default'] = new \Symfony\Bundle\FrameworkBundle\Translation\Translator($this, $this->get('translator.selector'), array('translation.loader.php' => array(0 => 'php'), 'translation.loader.yml' => array(0 => 'yml'), 'translation.loader.xliff' => array(0 => 'xlf', 1 => 'xliff'), 'translation.loader.po' => array(0 => 'po'), 'translation.loader.mo' => array(0 => 'mo'), 'translation.loader.qt' => array(0 => 'ts'), 'translation.loader.csv' => array(0 => 'csv'), 'translation.loader.res' => array(0 => 'res'), 'translation.loader.dat' => array(0 => 'dat'), 'translation.loader.ini' => array(0 => 'ini'), 'translation.loader.json' => array(0 => 'json')), array('cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/translations', 'debug' => true));
     }
 
     /**
@@ -3254,12 +3192,12 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getTwigService()
     {
-        $this->services['twig'] = $instance = new \Twig_Environment($this->get('twig.loader'), array('exception_controller' => 'twig.controller.exception:showAction', 'autoescape_service' => NULL, 'autoescape_service_method' => NULL, 'cache' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/twig', 'charset' => 'UTF-8', 'debug' => true, 'paths' => array()));
+        $this->services['twig'] = $instance = new \Twig_Environment($this->get('twig.loader'), array('exception_controller' => 'twig.controller.exception:showAction', 'autoescape_service' => NULL, 'autoescape_service_method' => NULL, 'cache' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/twig', 'charset' => 'UTF-8', 'debug' => true, 'paths' => array()));
 
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\TranslationExtension($this->get('translator')));
         $instance->addExtension(new \Symfony\Bundle\TwigBundle\Extension\AssetsExtension($this, $this->get('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE)));
         $instance->addExtension(new \Symfony\Bundle\TwigBundle\Extension\ActionsExtension($this));
-        $instance->addExtension(new \Symfony\Bridge\Twig\Extension\CodeExtension(NULL, '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app', 'UTF-8'));
+        $instance->addExtension(new \Symfony\Bridge\Twig\Extension\CodeExtension(NULL, '/home/daniel/www/sulu-cmf/sulu/tests/app', 'UTF-8'));
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\RoutingExtension($this->get('router')));
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\YamlExtension());
         $instance->addExtension(new \Symfony\Bridge\Twig\Extension\StopwatchExtension($this->get('debug.stopwatch', ContainerInterface::NULL_ON_INVALID_REFERENCE)));
@@ -3313,11 +3251,11 @@ class appPhpcrDebugProjectContainer extends Container
     {
         $this->services['twig.loader'] = $instance = new \Symfony\Bundle\TwigBundle\Loader\FilesystemLoader($this->get('templating.locator'), $this->get('templating.name_parser'));
 
-        $instance->addPath('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views', 'Framework');
-        $instance->addPath('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views', 'Twig');
-        $instance->addPath('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/views', 'Security');
-        $instance->addPath('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/doctrine-bundle/Resources/views', 'Doctrine');
-        $instance->addPath('/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/views', 'DoctrinePHPCR');
+        $instance->addPath('/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views', 'Framework');
+        $instance->addPath('/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views', 'Twig');
+        $instance->addPath('/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/views', 'Security');
+        $instance->addPath('/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/views', 'Doctrine');
+        $instance->addPath('/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/views', 'DoctrinePHPCR');
 
         return $instance;
     }
@@ -3506,7 +3444,7 @@ class appPhpcrDebugProjectContainer extends Container
      */
     protected function getTemplating_LocatorService()
     {
-        return $this->services['templating.locator'] = new \Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator($this->get('file_locator'), '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr');
+        return $this->services['templating.locator'] = new \Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator($this->get('file_locator'), '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr');
     }
 
     /**
@@ -3577,12 +3515,12 @@ class appPhpcrDebugProjectContainer extends Container
     protected function getDefaultParameters()
     {
         return array(
-            'kernel.root_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app',
+            'kernel.root_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app',
             'kernel.environment' => 'phpcr',
             'kernel.debug' => true,
             'kernel.name' => 'app',
-            'kernel.cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr',
-            'kernel.logs_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/logs',
+            'kernel.cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr',
+            'kernel.logs_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/logs',
             'kernel.bundles' => array(
                 'FrameworkBundle' => 'Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle',
                 'TwigBundle' => 'Symfony\\Bundle\\TwigBundle\\TwigBundle',
@@ -3649,7 +3587,7 @@ class appPhpcrDebugProjectContainer extends Container
             'debug.errors_logger_listener.class' => 'Symfony\\Component\\HttpKernel\\EventListener\\ErrorsLoggerListener',
             'debug.event_dispatcher.class' => 'Symfony\\Component\\HttpKernel\\Debug\\TraceableEventDispatcher',
             'debug.stopwatch.class' => 'Symfony\\Component\\Stopwatch\\Stopwatch',
-            'debug.container.dump' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/appPhpcrDebugProjectContainer.xml',
+            'debug.container.dump' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/appPhpcrDebugProjectContainer.xml',
             'debug.controller_resolver.class' => 'Symfony\\Component\\HttpKernel\\Controller\\TraceableControllerResolver',
             'debug.debug_handlers_listener.class' => 'Symfony\\Component\\HttpKernel\\EventListener\\DebugHandlersListener',
             'kernel.secret' => 'secret',
@@ -3682,7 +3620,7 @@ class appPhpcrDebugProjectContainer extends Container
             'session.storage.options' => array(
                 'gc_probability' => 1,
             ),
-            'session.save_path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sessions',
+            'session.save_path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sessions',
             'session.metadata.update_threshold' => '0',
             'security.secure_random.class' => 'Symfony\\Component\\Security\\Core\\Util\\SecureRandom',
             'templating.engine.delegating.class' => 'Symfony\\Bundle\\FrameworkBundle\\Templating\\DelegatingEngine',
@@ -3743,7 +3681,7 @@ class appPhpcrDebugProjectContainer extends Container
             'router.request_context.host' => 'localhost',
             'router.request_context.scheme' => 'http',
             'router.request_context.base_url' => '',
-            'router.resource' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/config/routing.yml',
+            'router.resource' => '/home/daniel/www/sulu-cmf/sulu/tests/app/config/routing.yml',
             'router.cache_class_prefix' => 'appPhpcr',
             'request_listener.http_port' => 80,
             'request_listener.https_port' => 443,
@@ -3779,7 +3717,7 @@ class appPhpcrDebugProjectContainer extends Container
                 'exception_controller' => 'twig.controller.exception:showAction',
                 'autoescape_service' => NULL,
                 'autoescape_service_method' => NULL,
-                'cache' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/twig',
+                'cache' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/twig',
                 'charset' => 'UTF-8',
                 'debug' => true,
                 'paths' => array(
@@ -3812,7 +3750,6 @@ class appPhpcrDebugProjectContainer extends Container
             'monolog.handler.raven.class' => 'Monolog\\Handler\\RavenHandler',
             'monolog.handler.newrelic.class' => 'Monolog\\Handler\\NewRelicHandler',
             'monolog.handler.hipchat.class' => 'Monolog\\Handler\\HipChatHandler',
-            'monolog.handler.slack.class' => 'Monolog\\Handler\\SlackHandler',
             'monolog.handler.cube.class' => 'Monolog\\Handler\\CubeHandler',
             'monolog.handler.amqp.class' => 'Monolog\\Handler\\AmqpHandler',
             'monolog.handler.error_log.class' => 'Monolog\\Handler\\ErrorLogHandler',
@@ -3906,39 +3843,6 @@ class appPhpcrDebugProjectContainer extends Container
             'security.role_hierarchy.roles' => array(
 
             ),
-            'doctrine_cache.apc.class' => 'Doctrine\\Common\\Cache\\ApcCache',
-            'doctrine_cache.array.class' => 'Doctrine\\Common\\Cache\\ArrayCache',
-            'doctrine_cache.file_system.class' => 'Doctrine\\Common\\Cache\\FilesystemCache',
-            'doctrine_cache.php_file.class' => 'Doctrine\\Common\\Cache\\PhpFileCache',
-            'doctrine_cache.mongodb.class' => 'Doctrine\\Common\\Cache\\MongoDBCache',
-            'doctrine_cache.mongodb.collection.class' => 'MongoCollection',
-            'doctrine_cache.mongodb.connection.class' => 'MongoClient',
-            'doctrine_cache.mongodb.server' => 'localhost:27017',
-            'doctrine_cache.riak.class' => 'Doctrine\\Common\\Cache\\RiakCache',
-            'doctrine_cache.riak.bucket.class' => 'Riak\\Bucket',
-            'doctrine_cache.riak.connection.class' => 'Riak\\Connection',
-            'doctrine_cache.riak.bucket_property_list.class' => 'Riak\\BucketPropertyList',
-            'doctrine_cache.riak.host' => 'localhost',
-            'doctrine_cache.riak.port' => 8087,
-            'doctrine_cache.memcache.class' => 'Doctrine\\Common\\Cache\\MemcacheCache',
-            'doctrine_cache.memcache.connection.class' => 'Memcache',
-            'doctrine_cache.memcache.host' => 'localhost',
-            'doctrine_cache.memcache.port' => 11211,
-            'doctrine_cache.memcached.class' => 'Doctrine\\Common\\Cache\\MemcachedCache',
-            'doctrine_cache.memcached.connection.class' => 'Memcached',
-            'doctrine_cache.memcached.host' => 'localhost',
-            'doctrine_cache.memcached.port' => 11211,
-            'doctrine_cache.redis.class' => 'Doctrine\\Common\\Cache\\RedisCache',
-            'doctrine_cache.redis.connection.class' => 'Redis',
-            'doctrine_cache.redis.host' => 'localhost',
-            'doctrine_cache.redis.port' => 6379,
-            'doctrine_cache.couchbase.class' => 'Doctrine\\Common\\Cache\\CouchbaseCache',
-            'doctrine_cache.couchbase.connection.class' => 'Couchbase',
-            'doctrine_cache.couchbase.hostnames' => 'localhost:8091',
-            'doctrine_cache.wincache.class' => 'Doctrine\\Common\\Cache\\WinCacheCache',
-            'doctrine_cache.xcache.class' => 'Doctrine\\Common\\Cache\\XcacheCache',
-            'doctrine_cache.zenddata.class' => 'Doctrine\\Common\\Cache\\ZendDataCache',
-            'doctrine_cache.security.acl.cache.class' => 'Doctrine\\Bundle\\DoctrineCacheBundle\\Acl\\Model\\AclCache',
             'doctrine.dbal.logger.chain.class' => 'Doctrine\\DBAL\\Logging\\LoggerChain',
             'doctrine.dbal.logger.profiling.class' => 'Doctrine\\DBAL\\Logging\\DebugStack',
             'doctrine.dbal.logger.class' => 'Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger',
@@ -3980,7 +3884,7 @@ class appPhpcrDebugProjectContainer extends Container
             'doctrine.orm.cache.xcache.class' => 'Doctrine\\Common\\Cache\\XcacheCache',
             'doctrine.orm.cache.wincache.class' => 'Doctrine\\Common\\Cache\\WinCacheCache',
             'doctrine.orm.cache.zenddata.class' => 'Doctrine\\Common\\Cache\\ZendDataCache',
-            'doctrine.orm.metadata.driver_chain.class' => 'Doctrine\\Common\\Persistence\\Mapping\\Driver\\MappingDriverChain',
+            'doctrine.orm.metadata.driver_chain.class' => 'Doctrine\\ORM\\Mapping\\Driver\\DriverChain',
             'doctrine.orm.metadata.annotation.class' => 'Doctrine\\ORM\\Mapping\\Driver\\AnnotationDriver',
             'doctrine.orm.metadata.xml.class' => 'Doctrine\\ORM\\Mapping\\Driver\\SimplifiedXmlDriver',
             'doctrine.orm.metadata.yml.class' => 'Doctrine\\ORM\\Mapping\\Driver\\SimplifiedYamlDriver',
@@ -3992,19 +3896,10 @@ class appPhpcrDebugProjectContainer extends Container
             'doctrine.orm.validator_initializer.class' => 'Symfony\\Bridge\\Doctrine\\Validator\\DoctrineInitializer',
             'doctrine.orm.security.user.provider.class' => 'Symfony\\Bridge\\Doctrine\\Security\\User\\EntityUserProvider',
             'doctrine.orm.listeners.resolve_target_entity.class' => 'Doctrine\\ORM\\Tools\\ResolveTargetEntityListener',
-            'doctrine.orm.listeners.attach_entity_listeners.class' => 'Doctrine\\ORM\\Tools\\AttachEntityListenersListener',
             'doctrine.orm.naming_strategy.default.class' => 'Doctrine\\ORM\\Mapping\\DefaultNamingStrategy',
             'doctrine.orm.naming_strategy.underscore.class' => 'Doctrine\\ORM\\Mapping\\UnderscoreNamingStrategy',
-            'doctrine.orm.entity_listener_resolver.class' => 'Doctrine\\ORM\\Mapping\\DefaultEntityListenerResolver',
-            'doctrine.orm.second_level_cache.default_cache_factory.class' => 'Doctrine\\ORM\\Cache\\DefaultCacheFactory',
-            'doctrine.orm.second_level_cache.default_region.class' => 'Doctrine\\ORM\\Cache\\Region\\DefaultRegion',
-            'doctrine.orm.second_level_cache.filelock_region.class' => 'Doctrine\\ORM\\Cache\\Region\\FileLockRegion',
-            'doctrine.orm.second_level_cache.logger_chain.class' => 'Doctrine\\ORM\\Cache\\Logging\\CacheLoggerChain',
-            'doctrine.orm.second_level_cache.logger_statistics.class' => 'Doctrine\\ORM\\Cache\\Logging\\StatisticsCacheLogger',
-            'doctrine.orm.second_level_cache.cache_configuration.class' => 'Doctrine\\ORM\\Cache\\CacheConfiguration',
-            'doctrine.orm.second_level_cache.regions_configuration.class' => 'Doctrine\\ORM\\Cache\\RegionsConfiguration',
             'doctrine.orm.auto_generate_proxy_classes' => true,
-            'doctrine.orm.proxy_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/orm/Proxies',
+            'doctrine.orm.proxy_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/orm/Proxies',
             'doctrine.orm.proxy_namespace' => 'Proxies',
             'jms_serializer.metadata.file_locator.class' => 'Metadata\\Driver\\FileLocator',
             'jms_serializer.metadata.annotation_driver.class' => 'JMS\\Serializer\\Metadata\\Driver\\AnnotationDriver',
@@ -4064,7 +3959,7 @@ class appPhpcrDebugProjectContainer extends Container
             'fos_rest.violation_formatter.class' => 'FOS\\RestBundle\\Util\\ViolationFormatter',
             'fos_rest.request.param_fetcher.class' => 'FOS\\RestBundle\\Request\\ParamFetcher',
             'fos_rest.request.param_fetcher.reader.class' => 'FOS\\RestBundle\\Request\\ParamReader',
-            'fos_rest.cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/fos_rest',
+            'fos_rest.cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/fos_rest',
             'fos_rest.serializer.serialize_null' => false,
             'fos_rest.formats' => array(
                 'json' => false,
@@ -4101,7 +3996,6 @@ class appPhpcrDebugProjectContainer extends Container
 
             ),
             'fos_rest.converter.request_body.validation_errors_argument' => 'validationErrors',
-            'doctrine_phpcr.dump_max_line_length' => 120,
             'doctrine_phpcr.credentials.class' => 'PHPCR\\SimpleCredentials',
             'doctrine_phpcr.class' => 'Doctrine\\Bundle\\PHPCRBundle\\ManagerRegistry',
             'doctrine_phpcr.proxy.class' => 'Doctrine\\Common\\Proxy\\Proxy',
@@ -4122,6 +4016,7 @@ class appPhpcrDebugProjectContainer extends Container
             'doctrine_phpcr.logger.stop_watch.class' => 'Doctrine\\Bundle\\PHPCRBundle\\DataCollector\\StopWatchLogger',
             'doctrine_phpcr.data_collector.class' => 'Doctrine\\Bundle\\PHPCRBundle\\DataCollector\\PHPCRDataCollector',
             'doctrine_phpcr.session.event_manager.class' => 'Symfony\\Bridge\\Doctrine\\ContainerAwareEventManager',
+            'doctrine_phpcr.dump_max_line_length' => 120,
             'doctrine_phpcr.jackalope_doctrine_dbal.schema_listener.class' => 'Doctrine\\Bundle\\PHPCRBundle\\EventListener\\JackalopeDoctrineDbalSchemaListener',
             'doctrine_phpcr.jackalope_doctrine_dbal.repository_schema.class' => 'Jackalope\\Transport\\DoctrineDBAL\\RepositorySchema',
             'doctrine_phpcr.odm.configuration.class' => 'Doctrine\\ODM\\PHPCR\\Configuration',
@@ -4133,7 +4028,7 @@ class appPhpcrDebugProjectContainer extends Container
             'doctrine_phpcr.odm.cache.memcache_port' => 11211,
             'doctrine_phpcr.odm.cache.memcache_instance.class' => 'Memcache',
             'doctrine_phpcr.odm.cache.xcache.class' => 'Doctrine\\Common\\Cache\\XcacheCache',
-            'form.type_guesser.doctrine_phpcr.class' => 'Doctrine\\Bundle\\PHPCRBundle\\Form\\PHPCRTypeGuesser',
+            'form.type_guesser.doctrine_phpcr.class' => 'Doctrine\\Bundle\\PHPCRBundle\\Form\\PhpcrOdmTypeGuesser',
             'doctrine_phpcr.odm.form.path.type.class' => 'Doctrine\\Bundle\\PHPCRBundle\\Form\\Type\\PathType',
             'doctrine_phpcr.odm.metadata.driver_chain.class' => 'Doctrine\\Common\\Persistence\\Mapping\\Driver\\MappingDriverChain',
             'doctrine_phpcr.odm.metadata.annotation.class' => 'Doctrine\\ODM\\PHPCR\\Mapping\\Driver\\AnnotationDriver',
@@ -4143,12 +4038,12 @@ class appPhpcrDebugProjectContainer extends Container
             'doctrine_phpcr.odm.proxy_cache_warmer.class' => 'Symfony\\Bridge\\Doctrine\\CacheWarmer\\ProxyCacheWarmer',
             'doctrine_phpcr.odm.validator.valid_phpcr_odm.class' => 'Doctrine\\Bundle\\PHPCRBundle\\Validator\\Constraints\\ValidPhpcrOdmValidator',
             'doctrine_phpcr.odm.auto_generate_proxy_classes' => false,
-            'doctrine_phpcr.odm.proxy_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/PHPCRProxies',
+            'doctrine_phpcr.odm.proxy_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/PHPCRProxies',
             'doctrine_phpcr.odm.proxy_namespace' => 'PHPCRProxies',
             'doctrine_phpcr.form.type_guess' => array(
 
             ),
-            'sulu.cache_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sulu',
+            'sulu.cache_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sulu',
             'sulu.phpcr.session.class' => 'Sulu\\Component\\PHPCR\\SessionManager\\SessionManager',
             'sulu.content.language.namespace' => 'i18n',
             'sulu.content.language.default' => 'en',
@@ -4167,17 +4062,17 @@ class appPhpcrDebugProjectContainer extends Container
             'sulu.content.internal_prefix' => '',
             'sulu.content.structure.paths' => array(
                 'pages' => array(
-                    'path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/pages',
+                    'path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/pages',
                     'internal' => false,
                     'type' => 'page',
                 ),
                 'templates' => array(
-                    'path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/snippets',
+                    'path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/snippets',
                     'internal' => false,
                     'type' => 'snippet',
                 ),
                 'bundle' => array(
-                    'path' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/../../Content/templates',
+                    'path' => '/home/daniel/www/sulu-cmf/sulu/tests/app/../../Content/templates',
                     'internal' => true,
                     'type' => 'page',
                 ),
@@ -4204,7 +4099,7 @@ class appPhpcrDebugProjectContainer extends Container
             'sulu.content.localization_finder.null_webspace.class' => 'Sulu\\Component\\Content\\Mapper\\LocalizationFinder\\NullWebspaceFinder',
             'sulu.content.localization_finder.chain.class' => 'Sulu\\Component\\Content\\Mapper\\LocalizationFinder\\ChainFinder',
             'sulu.util.node_helper.class' => 'Sulu\\Component\\Util\\SuluNodeHelper',
-            'sulu_core.webspace.config_dir' => '/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/webspaces',
+            'sulu_core.webspace.config_dir' => '/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/webspaces',
             'sulu_core.webspace.request_analyzer.enabled' => true,
             'sulu_core.webspace.request_analyzer.priority' => 300,
             'sulu_core.webspace.webspace_manager.class' => 'Sulu\\Component\\Webspace\\Manager\\WebspaceManager',

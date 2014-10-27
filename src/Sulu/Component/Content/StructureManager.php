@@ -124,7 +124,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getPage($key)
     {
-        return $this->getStructureByType($key, 'page');
+        return $this->getStructure($key, 'page');
     }
 
     /**
@@ -137,7 +137,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getSnippet($key)
     {
-        return $this->getStructureByType($key, 'snippet');
+        return $this->getStructure($key, 'snippet');
     }
 
     /**
