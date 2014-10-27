@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
   <parameters>
-    <parameter key="kernel.root_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app</parameter>
+    <parameter key="kernel.root_dir">/home/daniel/www/sulu-cmf/sulu/tests/app</parameter>
     <parameter key="kernel.environment">phpcr</parameter>
     <parameter key="kernel.debug">true</parameter>
     <parameter key="kernel.name">app</parameter>
-    <parameter key="kernel.cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr</parameter>
-    <parameter key="kernel.logs_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/logs</parameter>
+    <parameter key="kernel.cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr</parameter>
+    <parameter key="kernel.logs_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/logs</parameter>
     <parameter key="kernel.bundles" type="collection">
       <parameter key="FrameworkBundle">Symfony\Bundle\FrameworkBundle\FrameworkBundle</parameter>
       <parameter key="TwigBundle">Symfony\Bundle\TwigBundle\TwigBundle</parameter>
@@ -73,7 +73,7 @@
     <parameter key="debug.errors_logger_listener.class">Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener</parameter>
     <parameter key="debug.event_dispatcher.class">Symfony\Component\HttpKernel\Debug\TraceableEventDispatcher</parameter>
     <parameter key="debug.stopwatch.class">Symfony\Component\Stopwatch\Stopwatch</parameter>
-    <parameter key="debug.container.dump">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/appPhpcrDebugProjectContainer.xml</parameter>
+    <parameter key="debug.container.dump">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/appPhpcrDebugProjectContainer.xml</parameter>
     <parameter key="debug.controller_resolver.class">Symfony\Component\HttpKernel\Controller\TraceableControllerResolver</parameter>
     <parameter key="debug.debug_handlers_listener.class">Symfony\Component\HttpKernel\EventListener\DebugHandlersListener</parameter>
     <parameter key="kernel.secret">secret</parameter>
@@ -100,7 +100,7 @@
     <parameter key="session.storage.options" type="collection">
       <parameter key="gc_probability">1</parameter>
     </parameter>
-    <parameter key="session.save_path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sessions</parameter>
+    <parameter key="session.save_path">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sessions</parameter>
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="security.secure_random.class">Symfony\Component\Security\Core\Util\SecureRandom</parameter>
     <parameter key="templating.engine.delegating.class">Symfony\Bundle\FrameworkBundle\Templating\DelegatingEngine</parameter>
@@ -159,7 +159,7 @@
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
-    <parameter key="router.resource">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/config/routing.yml</parameter>
+    <parameter key="router.resource">/home/daniel/www/sulu-cmf/sulu/tests/app/config/routing.yml</parameter>
     <parameter key="router.cache_class_prefix">appPhpcr</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
@@ -195,7 +195,7 @@
       <parameter key="exception_controller">twig.controller.exception:showAction</parameter>
       <parameter key="autoescape_service">null</parameter>
       <parameter key="autoescape_service_method">null</parameter>
-      <parameter key="cache">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/twig</parameter>
+      <parameter key="cache">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/twig</parameter>
       <parameter key="charset">UTF-8</parameter>
       <parameter key="debug">true</parameter>
       <parameter key="paths" type="collection"/>
@@ -226,7 +226,6 @@
     <parameter key="monolog.handler.raven.class">Monolog\Handler\RavenHandler</parameter>
     <parameter key="monolog.handler.newrelic.class">Monolog\Handler\NewRelicHandler</parameter>
     <parameter key="monolog.handler.hipchat.class">Monolog\Handler\HipChatHandler</parameter>
-    <parameter key="monolog.handler.slack.class">Monolog\Handler\SlackHandler</parameter>
     <parameter key="monolog.handler.cube.class">Monolog\Handler\CubeHandler</parameter>
     <parameter key="monolog.handler.amqp.class">Monolog\Handler\AmqpHandler</parameter>
     <parameter key="monolog.handler.error_log.class">Monolog\Handler\ErrorLogHandler</parameter>
@@ -316,39 +315,6 @@
     <parameter key="security.access.always_authenticate_before_granting">false</parameter>
     <parameter key="security.authentication.hide_user_not_found">true</parameter>
     <parameter key="security.role_hierarchy.roles" type="collection"/>
-    <parameter key="doctrine_cache.apc.class">Doctrine\Common\Cache\ApcCache</parameter>
-    <parameter key="doctrine_cache.array.class">Doctrine\Common\Cache\ArrayCache</parameter>
-    <parameter key="doctrine_cache.file_system.class">Doctrine\Common\Cache\FilesystemCache</parameter>
-    <parameter key="doctrine_cache.php_file.class">Doctrine\Common\Cache\PhpFileCache</parameter>
-    <parameter key="doctrine_cache.mongodb.class">Doctrine\Common\Cache\MongoDBCache</parameter>
-    <parameter key="doctrine_cache.mongodb.collection.class">MongoCollection</parameter>
-    <parameter key="doctrine_cache.mongodb.connection.class">MongoClient</parameter>
-    <parameter key="doctrine_cache.mongodb.server">localhost:27017</parameter>
-    <parameter key="doctrine_cache.riak.class">Doctrine\Common\Cache\RiakCache</parameter>
-    <parameter key="doctrine_cache.riak.bucket.class">Riak\Bucket</parameter>
-    <parameter key="doctrine_cache.riak.connection.class">Riak\Connection</parameter>
-    <parameter key="doctrine_cache.riak.bucket_property_list.class">Riak\BucketPropertyList</parameter>
-    <parameter key="doctrine_cache.riak.host">localhost</parameter>
-    <parameter key="doctrine_cache.riak.port">8087</parameter>
-    <parameter key="doctrine_cache.memcache.class">Doctrine\Common\Cache\MemcacheCache</parameter>
-    <parameter key="doctrine_cache.memcache.connection.class">Memcache</parameter>
-    <parameter key="doctrine_cache.memcache.host">localhost</parameter>
-    <parameter key="doctrine_cache.memcache.port">11211</parameter>
-    <parameter key="doctrine_cache.memcached.class">Doctrine\Common\Cache\MemcachedCache</parameter>
-    <parameter key="doctrine_cache.memcached.connection.class">Memcached</parameter>
-    <parameter key="doctrine_cache.memcached.host">localhost</parameter>
-    <parameter key="doctrine_cache.memcached.port">11211</parameter>
-    <parameter key="doctrine_cache.redis.class">Doctrine\Common\Cache\RedisCache</parameter>
-    <parameter key="doctrine_cache.redis.connection.class">Redis</parameter>
-    <parameter key="doctrine_cache.redis.host">localhost</parameter>
-    <parameter key="doctrine_cache.redis.port">6379</parameter>
-    <parameter key="doctrine_cache.couchbase.class">Doctrine\Common\Cache\CouchbaseCache</parameter>
-    <parameter key="doctrine_cache.couchbase.connection.class">Couchbase</parameter>
-    <parameter key="doctrine_cache.couchbase.hostnames">localhost:8091</parameter>
-    <parameter key="doctrine_cache.wincache.class">Doctrine\Common\Cache\WinCacheCache</parameter>
-    <parameter key="doctrine_cache.xcache.class">Doctrine\Common\Cache\XcacheCache</parameter>
-    <parameter key="doctrine_cache.zenddata.class">Doctrine\Common\Cache\ZendDataCache</parameter>
-    <parameter key="doctrine_cache.security.acl.cache.class">Doctrine\Bundle\DoctrineCacheBundle\Acl\Model\AclCache</parameter>
     <parameter key="doctrine.dbal.logger.chain.class">Doctrine\DBAL\Logging\LoggerChain</parameter>
     <parameter key="doctrine.dbal.logger.profiling.class">Doctrine\DBAL\Logging\DebugStack</parameter>
     <parameter key="doctrine.dbal.logger.class">Symfony\Bridge\Doctrine\Logger\DbalLogger</parameter>
@@ -388,7 +354,7 @@
     <parameter key="doctrine.orm.cache.xcache.class">Doctrine\Common\Cache\XcacheCache</parameter>
     <parameter key="doctrine.orm.cache.wincache.class">Doctrine\Common\Cache\WinCacheCache</parameter>
     <parameter key="doctrine.orm.cache.zenddata.class">Doctrine\Common\Cache\ZendDataCache</parameter>
-    <parameter key="doctrine.orm.metadata.driver_chain.class">Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain</parameter>
+    <parameter key="doctrine.orm.metadata.driver_chain.class">Doctrine\ORM\Mapping\Driver\DriverChain</parameter>
     <parameter key="doctrine.orm.metadata.annotation.class">Doctrine\ORM\Mapping\Driver\AnnotationDriver</parameter>
     <parameter key="doctrine.orm.metadata.xml.class">Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver</parameter>
     <parameter key="doctrine.orm.metadata.yml.class">Doctrine\ORM\Mapping\Driver\SimplifiedYamlDriver</parameter>
@@ -400,19 +366,10 @@
     <parameter key="doctrine.orm.validator_initializer.class">Symfony\Bridge\Doctrine\Validator\DoctrineInitializer</parameter>
     <parameter key="doctrine.orm.security.user.provider.class">Symfony\Bridge\Doctrine\Security\User\EntityUserProvider</parameter>
     <parameter key="doctrine.orm.listeners.resolve_target_entity.class">Doctrine\ORM\Tools\ResolveTargetEntityListener</parameter>
-    <parameter key="doctrine.orm.listeners.attach_entity_listeners.class">Doctrine\ORM\Tools\AttachEntityListenersListener</parameter>
     <parameter key="doctrine.orm.naming_strategy.default.class">Doctrine\ORM\Mapping\DefaultNamingStrategy</parameter>
     <parameter key="doctrine.orm.naming_strategy.underscore.class">Doctrine\ORM\Mapping\UnderscoreNamingStrategy</parameter>
-    <parameter key="doctrine.orm.entity_listener_resolver.class">Doctrine\ORM\Mapping\DefaultEntityListenerResolver</parameter>
-    <parameter key="doctrine.orm.second_level_cache.default_cache_factory.class">Doctrine\ORM\Cache\DefaultCacheFactory</parameter>
-    <parameter key="doctrine.orm.second_level_cache.default_region.class">Doctrine\ORM\Cache\Region\DefaultRegion</parameter>
-    <parameter key="doctrine.orm.second_level_cache.filelock_region.class">Doctrine\ORM\Cache\Region\FileLockRegion</parameter>
-    <parameter key="doctrine.orm.second_level_cache.logger_chain.class">Doctrine\ORM\Cache\Logging\CacheLoggerChain</parameter>
-    <parameter key="doctrine.orm.second_level_cache.logger_statistics.class">Doctrine\ORM\Cache\Logging\StatisticsCacheLogger</parameter>
-    <parameter key="doctrine.orm.second_level_cache.cache_configuration.class">Doctrine\ORM\Cache\CacheConfiguration</parameter>
-    <parameter key="doctrine.orm.second_level_cache.regions_configuration.class">Doctrine\ORM\Cache\RegionsConfiguration</parameter>
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
-    <parameter key="doctrine.orm.proxy_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/orm/Proxies</parameter>
+    <parameter key="doctrine.orm.proxy_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
     <parameter key="jms_serializer.metadata.file_locator.class">Metadata\Driver\FileLocator</parameter>
     <parameter key="jms_serializer.metadata.annotation_driver.class">JMS\Serializer\Metadata\Driver\AnnotationDriver</parameter>
@@ -470,7 +427,7 @@
     <parameter key="fos_rest.violation_formatter.class">FOS\RestBundle\Util\ViolationFormatter</parameter>
     <parameter key="fos_rest.request.param_fetcher.class">FOS\RestBundle\Request\ParamFetcher</parameter>
     <parameter key="fos_rest.request.param_fetcher.reader.class">FOS\RestBundle\Request\ParamReader</parameter>
-    <parameter key="fos_rest.cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/fos_rest</parameter>
+    <parameter key="fos_rest.cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/fos_rest</parameter>
     <parameter key="fos_rest.serializer.serialize_null">false</parameter>
     <parameter key="fos_rest.formats" type="collection">
       <parameter key="json">false</parameter>
@@ -501,7 +458,6 @@
     </parameter>
     <parameter key="fos_rest.mime_types" type="collection"/>
     <parameter key="fos_rest.converter.request_body.validation_errors_argument">validationErrors</parameter>
-    <parameter key="doctrine_phpcr.dump_max_line_length">120</parameter>
     <parameter key="doctrine_phpcr.credentials.class">PHPCR\SimpleCredentials</parameter>
     <parameter key="doctrine_phpcr.class">Doctrine\Bundle\PHPCRBundle\ManagerRegistry</parameter>
     <parameter key="doctrine_phpcr.proxy.class">Doctrine\Common\Proxy\Proxy</parameter>
@@ -522,6 +478,7 @@
     <parameter key="doctrine_phpcr.logger.stop_watch.class">Doctrine\Bundle\PHPCRBundle\DataCollector\StopWatchLogger</parameter>
     <parameter key="doctrine_phpcr.data_collector.class">Doctrine\Bundle\PHPCRBundle\DataCollector\PHPCRDataCollector</parameter>
     <parameter key="doctrine_phpcr.session.event_manager.class">Symfony\Bridge\Doctrine\ContainerAwareEventManager</parameter>
+    <parameter key="doctrine_phpcr.dump_max_line_length">120</parameter>
     <parameter key="doctrine_phpcr.jackalope_doctrine_dbal.schema_listener.class">Doctrine\Bundle\PHPCRBundle\EventListener\JackalopeDoctrineDbalSchemaListener</parameter>
     <parameter key="doctrine_phpcr.jackalope_doctrine_dbal.repository_schema.class">Jackalope\Transport\DoctrineDBAL\RepositorySchema</parameter>
     <parameter key="doctrine_phpcr.odm.configuration.class">Doctrine\ODM\PHPCR\Configuration</parameter>
@@ -533,7 +490,7 @@
     <parameter key="doctrine_phpcr.odm.cache.memcache_port">11211</parameter>
     <parameter key="doctrine_phpcr.odm.cache.memcache_instance.class">Memcache</parameter>
     <parameter key="doctrine_phpcr.odm.cache.xcache.class">Doctrine\Common\Cache\XcacheCache</parameter>
-    <parameter key="form.type_guesser.doctrine_phpcr.class">Doctrine\Bundle\PHPCRBundle\Form\PHPCRTypeGuesser</parameter>
+    <parameter key="form.type_guesser.doctrine_phpcr.class">Doctrine\Bundle\PHPCRBundle\Form\PhpcrOdmTypeGuesser</parameter>
     <parameter key="doctrine_phpcr.odm.form.path.type.class">Doctrine\Bundle\PHPCRBundle\Form\Type\PathType</parameter>
     <parameter key="doctrine_phpcr.odm.metadata.driver_chain.class">Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain</parameter>
     <parameter key="doctrine_phpcr.odm.metadata.annotation.class">Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver</parameter>
@@ -543,10 +500,10 @@
     <parameter key="doctrine_phpcr.odm.proxy_cache_warmer.class">Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer</parameter>
     <parameter key="doctrine_phpcr.odm.validator.valid_phpcr_odm.class">Doctrine\Bundle\PHPCRBundle\Validator\Constraints\ValidPhpcrOdmValidator</parameter>
     <parameter key="doctrine_phpcr.odm.auto_generate_proxy_classes">false</parameter>
-    <parameter key="doctrine_phpcr.odm.proxy_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/PHPCRProxies</parameter>
+    <parameter key="doctrine_phpcr.odm.proxy_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/PHPCRProxies</parameter>
     <parameter key="doctrine_phpcr.odm.proxy_namespace">PHPCRProxies</parameter>
     <parameter key="doctrine_phpcr.form.type_guess" type="collection"/>
-    <parameter key="sulu.cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sulu</parameter>
+    <parameter key="sulu.cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sulu</parameter>
     <parameter key="sulu.phpcr.session.class">Sulu\Component\PHPCR\SessionManager\SessionManager</parameter>
     <parameter key="sulu.content.language.namespace">i18n</parameter>
     <parameter key="sulu.content.language.default">en</parameter>
@@ -565,17 +522,17 @@
     <parameter key="sulu.content.internal_prefix"></parameter>
     <parameter key="sulu.content.structure.paths" type="collection">
       <parameter key="pages" type="collection">
-        <parameter key="path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/pages</parameter>
+        <parameter key="path">/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/pages</parameter>
         <parameter key="internal">false</parameter>
         <parameter key="type">page</parameter>
       </parameter>
       <parameter key="templates" type="collection">
-        <parameter key="path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/snippets</parameter>
+        <parameter key="path">/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/snippets</parameter>
         <parameter key="internal">false</parameter>
         <parameter key="type">snippet</parameter>
       </parameter>
       <parameter key="bundle" type="collection">
-        <parameter key="path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/../../Content/templates</parameter>
+        <parameter key="path">/home/daniel/www/sulu-cmf/sulu/tests/app/../../Content/templates</parameter>
         <parameter key="internal">true</parameter>
         <parameter key="type">page</parameter>
       </parameter>
@@ -602,7 +559,7 @@
     <parameter key="sulu.content.localization_finder.null_webspace.class">Sulu\Component\Content\Mapper\LocalizationFinder\NullWebspaceFinder</parameter>
     <parameter key="sulu.content.localization_finder.chain.class">Sulu\Component\Content\Mapper\LocalizationFinder\ChainFinder</parameter>
     <parameter key="sulu.util.node_helper.class">Sulu\Component\Util\SuluNodeHelper</parameter>
-    <parameter key="sulu_core.webspace.config_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/webspaces</parameter>
+    <parameter key="sulu_core.webspace.config_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/webspaces</parameter>
     <parameter key="sulu_core.webspace.request_analyzer.enabled">true</parameter>
     <parameter key="sulu_core.webspace.request_analyzer.priority">300</parameter>
     <parameter key="sulu_core.webspace.webspace_manager.class">Sulu\Component\Webspace\Manager\WebspaceManager</parameter>
@@ -667,7 +624,7 @@
               <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder" public="false">
                 <argument type="service" id="kernel"/>
                 <argument type="service" id="templating.filename_parser"/>
-                <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources</argument>
+                <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/Resources</argument>
               </service>
             </argument>
             <argument type="service" id="templating.locator"/>
@@ -687,7 +644,7 @@
               <service class="Symfony\Bundle\FrameworkBundle\CacheWarmer\TemplateFinder" public="false">
                 <argument type="service" id="kernel"/>
                 <argument type="service" id="templating.filename_parser"/>
-                <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources</argument>
+                <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/Resources</argument>
               </service>
             </argument>
           </service>
@@ -716,7 +673,7 @@
     <service id="filesystem" class="Symfony\Component\Filesystem\Filesystem"/>
     <service id="file_locator" class="Symfony\Component\HttpKernel\Config\FileLocator">
       <argument type="service" id="kernel"/>
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/Resources</argument>
     </service>
     <service id="uri_signer" class="Symfony\Component\HttpKernel\UriSigner">
       <argument>secret</argument>
@@ -801,7 +758,7 @@
         </argument>
       </argument>
       <argument type="collection">
-        <argument key="cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/translations</argument>
+        <argument key="cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/translations</argument>
         <argument key="debug">true</argument>
       </argument>
     </service>
@@ -1143,7 +1100,7 @@
     </service>
     <service id="security.secure_random" class="Symfony\Component\Security\Core\Util\SecureRandom">
       <tag name="monolog.logger" channel="security"/>
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/secure_random.seed</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/secure_random.seed</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="ignore"/>
     </service>
     <service id="templating.name_parser" class="Symfony\Bundle\FrameworkBundle\Templating\TemplateNameParser">
@@ -1152,7 +1109,7 @@
     <service id="templating.filename_parser" class="Symfony\Bundle\FrameworkBundle\Templating\TemplateFilenameParser"/>
     <service id="templating.locator" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator" public="false">
       <argument type="service" id="file_locator"/>
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr</argument>
     </service>
     <service id="templating.helper.slots" class="Symfony\Component\Templating\Helper\SlotsHelper">
       <tag name="templating.helper" alias="slots"/>
@@ -1190,7 +1147,7 @@
     <service id="templating.helper.code" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\CodeHelper">
       <tag name="templating.helper" alias="code"/>
       <argument>null</argument>
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app</argument>
       <argument>UTF-8</argument>
     </service>
     <service id="templating.helper.translator" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\TranslatorHelper">
@@ -1284,7 +1241,7 @@
         <argument key="exception_controller">twig.controller.exception:showAction</argument>
         <argument key="autoescape_service">null</argument>
         <argument key="autoescape_service_method">null</argument>
-        <argument key="cache">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/twig</argument>
+        <argument key="cache">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="debug">true</argument>
         <argument key="paths" type="collection"/>
@@ -1319,7 +1276,7 @@
           <service class="Symfony\Bridge\Twig\Extension\CodeExtension" public="false">
             <tag name="twig.extension"/>
             <argument>null</argument>
-            <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app</argument>
+            <argument>/home/daniel/www/sulu-cmf/sulu/tests/app</argument>
             <argument>UTF-8</argument>
           </service>
         </argument>
@@ -1428,10 +1385,9 @@
       <argument>null</argument>
     </service>
     <service id="monolog.handler.nested" class="Monolog\Handler\StreamHandler">
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/logs/phpcr.log</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/logs/phpcr.log</argument>
       <argument>100</argument>
       <argument>true</argument>
-      <argument>null</argument>
     </service>
     <service id="security.context" class="Symfony\Component\Security\Core\SecurityContext">
       <argument type="service" id="security.authentication.manager"/>
@@ -1621,7 +1577,7 @@
       <argument>default</argument>
       <argument>default</argument>
     </service>
-    <service id="doctrine.dbal.default_connection" class="Doctrine\DBAL\Connection" factory-method="createConnection" factory-service="doctrine.dbal.connection_factory">
+    <service id="doctrine.dbal.default_connection" class="stdClass" factory-method="createConnection" factory-service="doctrine.dbal.connection_factory">
       <argument type="collection">
         <argument key="driver">pdo_mysql</argument>
         <argument key="host">localhost</argument>
@@ -1699,22 +1655,6 @@
       <tag name="validator.initializer"/>
       <argument type="service" id="doctrine"/>
     </service>
-    <service id="doctrine_cache.providers.doctrine.orm.default_metadata_cache" class="Doctrine\Common\Cache\ArrayCache">
-      <call method="setNamespace">
-        <argument>sf2orm_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c</argument>
-      </call>
-    </service>
-    <service id="doctrine_cache.providers.doctrine.orm.default_result_cache" class="Doctrine\Common\Cache\ArrayCache">
-      <call method="setNamespace">
-        <argument>sf2orm_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c</argument>
-      </call>
-    </service>
-    <service id="doctrine_cache.providers.doctrine.orm.default_query_cache" class="Doctrine\Common\Cache\ArrayCache">
-      <call method="setNamespace">
-        <argument>sf2orm_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c</argument>
-      </call>
-    </service>
-    <service id="doctrine.orm.default_entity_listener_resolver" class="Doctrine\ORM\Mapping\DefaultEntityListenerResolver"/>
     <service id="doctrine.orm.default_manager_configurator" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator">
       <argument type="collection"/>
       <argument type="collection"/>
@@ -1730,23 +1670,41 @@
             </argument>
           </call>
           <call method="setMetadataCacheImpl">
-            <argument type="service" id="doctrine_cache.providers.doctrine.orm.default_metadata_cache"/>
+            <argument type="service">
+              <service class="Doctrine\Common\Cache\ArrayCache" public="false">
+                <call method="setNamespace">
+                  <argument>sf2orm_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1</argument>
+                </call>
+              </service>
+            </argument>
           </call>
           <call method="setQueryCacheImpl">
-            <argument type="service" id="doctrine_cache.providers.doctrine.orm.default_query_cache"/>
+            <argument type="service">
+              <service class="Doctrine\Common\Cache\ArrayCache" public="false">
+                <call method="setNamespace">
+                  <argument>sf2orm_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1</argument>
+                </call>
+              </service>
+            </argument>
           </call>
           <call method="setResultCacheImpl">
-            <argument type="service" id="doctrine_cache.providers.doctrine.orm.default_result_cache"/>
+            <argument type="service">
+              <service class="Doctrine\Common\Cache\ArrayCache" public="false">
+                <call method="setNamespace">
+                  <argument>sf2orm_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1</argument>
+                </call>
+              </service>
+            </argument>
           </call>
           <call method="setMetadataDriverImpl">
             <argument type="service">
-              <service class="Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain" public="false">
+              <service class="Doctrine\ORM\Mapping\Driver\DriverChain" public="false">
                 <call method="addDriver">
                   <argument type="service">
                     <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
                       <argument type="service" id="annotation_reader"/>
                       <argument type="collection">
-                        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Entity</argument>
+                        <argument>/home/daniel/www/sulu-cmf/sulu/src/Sulu/Bundle/CoreBundle/Entity</argument>
                       </argument>
                     </service>
                   </argument>
@@ -1756,7 +1714,7 @@
                   <argument type="service">
                     <service class="Doctrine\ORM\Mapping\Driver\SimplifiedXmlDriver" public="false">
                       <argument type="collection">
-                        <argument key="/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/doctrine">Sulu\Bundle\TestBundle\Entity</argument>
+                        <argument key="/home/daniel/www/sulu-cmf/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/doctrine">Sulu\Bundle\TestBundle\Entity</argument>
                       </argument>
                       <call method="setGlobalBasename">
                         <argument>mapping</argument>
@@ -1769,7 +1727,7 @@
             </argument>
           </call>
           <call method="setProxyDir">
-            <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/orm/Proxies</argument>
+            <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/orm/Proxies</argument>
           </call>
           <call method="setProxyNamespace">
             <argument>Proxies</argument>
@@ -2115,7 +2073,7 @@
     <service id="jms_serializer.datetime_handler" class="JMS\Serializer\Handler\DateHandler">
       <tag name="jms_serializer.subscribing_handler"/>
       <argument>Y-m-d\TH:i:sO</argument>
-      <argument>Europe/Zurich</argument>
+      <argument>Europe/Paris</argument>
       <argument>true</argument>
     </service>
     <service id="jms_serializer.array_collection_handler" class="JMS\Serializer\Handler\ArrayCollectionHandler">
@@ -2271,9 +2229,7 @@
     </service>
     <service id="doctrine_phpcr.jackalope.repository.factory.service.jackrabbit" class="Jackalope\RepositoryFactoryJackrabbit"/>
     <service id="doctrine_phpcr.jackalope.repository.factory.jackrabbit" class="Jackalope\Repository" factory-method="getRepository" factory-service="doctrine_phpcr.jackalope.repository.factory.service.jackrabbit">
-      <argument type="collection">
-        <argument key="jackalope.jackrabbit_check_login_on_server">false</argument>
-      </argument>
+      <argument type="collection"/>
     </service>
     <service id="doctrine_phpcr.jackalope.repository.factory.service.doctrinedbal" class="Jackalope\RepositoryFactoryDoctrineDBAL"/>
     <service id="doctrine_phpcr.jackalope.repository.factory.doctrinedbal" class="Jackalope\Repository" factory-method="getRepository" factory-service="doctrine_phpcr.jackalope.repository.factory.service.doctrinedbal">
@@ -2281,9 +2237,7 @@
     </service>
     <service id="doctrine_phpcr.jackalope.repository.factory.service.prismic" class="Jackalope\RepositoryFactoryPrismic"/>
     <service id="doctrine_phpcr.jackalope.repository.factory.prismic" class="Jackalope\Repository" factory-method="getRepository" factory-service="doctrine_phpcr.jackalope.repository.factory.service.prismic">
-      <argument type="collection">
-        <argument key="jackalope.prismic_check_login_on_server">false</argument>
-      </argument>
+      <argument type="collection"/>
     </service>
     <service id="doctrine_phpcr.jackalope_doctrine_dbal.schema_listener" class="Doctrine\Bundle\PHPCRBundle\EventListener\JackalopeDoctrineDbalSchemaListener">
       <argument type="service">
@@ -2293,7 +2247,7 @@
     <service id="doctrine_phpcr.jackalope.repository.default" class="Jackalope\Repository" factory-method="getRepository" factory-service="doctrine_phpcr.jackalope.repository.factory.service.jackrabbit">
       <argument type="collection">
         <argument key="jackalope.jackrabbit_uri">http://localhost:8080/server/</argument>
-        <argument key="jackalope.check_login_on_server">false</argument>
+        <argument key="jackalope.check_login_on_server">true</argument>
       </argument>
     </service>
     <service id="doctrine_phpcr.default_session" class="Jackalope\Session" factory-method="login" factory-service="doctrine_phpcr.jackalope.repository.default">
@@ -2317,7 +2271,7 @@
       <tag name="form.type" alias="phpcr_odm_path"/>
       <argument type="service" id="doctrine_phpcr"/>
     </service>
-    <service id="form.type_guesser.doctrine_phpcr" class="Doctrine\Bundle\PHPCRBundle\Form\PHPCRTypeGuesser">
+    <service id="form.type_guesser.doctrine_phpcr" class="Doctrine\Bundle\PHPCRBundle\Form\PhpcrOdmTypeGuesser">
       <tag name="form.type_guesser"/>
       <argument type="service" id="doctrine_phpcr"/>
       <argument type="collection"/>
@@ -2339,7 +2293,7 @@
             <argument type="service">
               <service class="Doctrine\Common\Cache\ArrayCache" public="false">
                 <call method="setNamespace">
-                  <argument>sf2phpcr_default_ed91bdd79ae55b22f370c2f7e36cbc68469b11ed55cccf8f61bb467aa93cb15c</argument>
+                  <argument>sf2phpcr_default_32bc1a0bdd9692ee89546518f32101cf43ccfe5e2f1cb999bb5d1f45c5545be1</argument>
                 </call>
               </service>
             </argument>
@@ -2352,7 +2306,7 @@
                     <service class="Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver" public="false">
                       <argument type="service" id="annotation_reader"/>
                       <argument type="collection">
-                        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document</argument>
+                        <argument>/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document</argument>
                       </argument>
                     </service>
                   </argument>
@@ -2363,7 +2317,7 @@
             <argument>false</argument>
           </call>
           <call method="setProxyDir">
-            <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/doctrine/PHPCRProxies</argument>
+            <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/doctrine/PHPCRProxies</argument>
           </call>
           <call method="setProxyNamespace">
             <argument>PHPCRProxies</argument>
@@ -2473,22 +2427,22 @@
       <argument type="collection">
         <argument key="structure_paths" type="collection">
           <argument key="pages" type="collection">
-            <argument key="path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/pages</argument>
+            <argument key="path">/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/pages</argument>
             <argument key="internal">false</argument>
             <argument key="type">page</argument>
           </argument>
           <argument key="templates" type="collection">
-            <argument key="path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/snippets</argument>
+            <argument key="path">/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/snippets</argument>
             <argument key="internal">false</argument>
             <argument key="type">snippet</argument>
           </argument>
           <argument key="bundle" type="collection">
-            <argument key="path">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/../../Content/templates</argument>
+            <argument key="path">/home/daniel/www/sulu-cmf/sulu/tests/app/../../Content/templates</argument>
             <argument key="internal">true</argument>
             <argument key="type">page</argument>
           </argument>
         </argument>
-        <argument key="cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sulu</argument>
+        <argument key="cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sulu</argument>
         <argument key="debug">true</argument>
       </argument>
       <call method="setContainer">
@@ -2545,8 +2499,8 @@
       <argument type="service" id="sulu_core.webspace.loader.xml"/>
       <argument type="service" id="logger"/>
       <argument type="collection">
-        <argument key="config_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/Resources/webspaces</argument>
-        <argument key="cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sulu</argument>
+        <argument key="config_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/Resources/webspaces</argument>
+        <argument key="cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sulu</argument>
         <argument key="debug">true</argument>
         <argument key="cache_class">WebspaceCollectionCache</argument>
         <argument key="base_class">WebspaceCollection</argument>
@@ -2656,12 +2610,12 @@
       <argument type="service" id="sulu_core.webspace.request_analyzer.admin"/>
     </service>
     <service id="session.storage.filesystem" class="Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage">
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sessions</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sessions</argument>
       <argument>MOCKSESSID</argument>
       <argument type="service" id="session.storage.metadata_bag"/>
     </service>
     <service id="session.handler" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler">
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/sessions</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/sessions</argument>
     </service>
     <service id="templating.loader" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\FilesystemLoader">
       <argument type="service" id="templating.locator"/>
@@ -2708,9 +2662,9 @@
     <service id="router" class="Symfony\Bundle\FrameworkBundle\Routing\Router">
       <tag name="monolog.logger" channel="router"/>
       <argument type="service" id="service_container"/>
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/config/routing.yml</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/config/routing.yml</argument>
       <argument type="collection">
-        <argument key="cache_dir">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr</argument>
+        <argument key="cache_dir">/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr</argument>
         <argument key="debug">true</argument>
         <argument key="generator_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
         <argument key="generator_base_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
@@ -2729,7 +2683,7 @@
       <argument type="service">
         <service class="Doctrine\Common\Annotations\AnnotationReader" public="false"/>
       </argument>
-      <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/annotations</argument>
+      <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/annotations</argument>
       <argument>true</argument>
     </service>
     <service id="twig.loader" class="Symfony\Bundle\TwigBundle\Loader\FilesystemLoader">
@@ -2737,23 +2691,23 @@
       <argument type="service" id="templating.locator"/>
       <argument type="service" id="templating.name_parser"/>
       <call method="addPath">
-        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views</argument>
+        <argument>/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views</argument>
         <argument>Framework</argument>
       </call>
       <call method="addPath">
-        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views</argument>
+        <argument>/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/views</argument>
         <argument>Twig</argument>
       </call>
       <call method="addPath">
-        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/views</argument>
+        <argument>/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/views</argument>
         <argument>Security</argument>
       </call>
       <call method="addPath">
-        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/doctrine-bundle/Resources/views</argument>
+        <argument>/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/views</argument>
         <argument>Doctrine</argument>
       </call>
       <call method="addPath">
-        <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/views</argument>
+        <argument>/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/views</argument>
         <argument>DoctrinePHPCR</argument>
       </call>
     </service>
@@ -2782,16 +2736,16 @@
                 <argument type="service">
                   <service class="Metadata\Driver\FileLocator" public="false">
                     <argument type="collection">
-                      <argument key="Symfony\Bundle\FrameworkBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\TwigBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\MonologBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\SecurityBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer</argument>
-                      <argument key="Doctrine\Bundle\DoctrineBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/doctrine-bundle/Resources/config/serializer</argument>
-                      <argument key="JMS\SerializerBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
-                      <argument key="FOS\RestBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer</argument>
-                      <argument key="Doctrine\Bundle\PHPCRBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer</argument>
-                      <argument key="Sulu\Bundle\CoreBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer</argument>
-                      <argument key="Sulu\Bundle\TestBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\FrameworkBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\TwigBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\MonologBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\SecurityBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer</argument>
+                      <argument key="Doctrine\Bundle\DoctrineBundle">/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer</argument>
+                      <argument key="JMS\SerializerBundle">/home/daniel/www/sulu-cmf/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
+                      <argument key="FOS\RestBundle">/home/daniel/www/sulu-cmf/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer</argument>
+                      <argument key="Doctrine\Bundle\PHPCRBundle">/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer</argument>
+                      <argument key="Sulu\Bundle\CoreBundle">/home/daniel/www/sulu-cmf/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer</argument>
+                      <argument key="Sulu\Bundle\TestBundle">/home/daniel/www/sulu-cmf/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer</argument>
                     </argument>
                   </service>
                 </argument>
@@ -2802,16 +2756,16 @@
                 <argument type="service">
                   <service class="Metadata\Driver\FileLocator" public="false">
                     <argument type="collection">
-                      <argument key="Symfony\Bundle\FrameworkBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\TwigBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\MonologBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\SecurityBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer</argument>
-                      <argument key="Doctrine\Bundle\DoctrineBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/doctrine-bundle/Resources/config/serializer</argument>
-                      <argument key="JMS\SerializerBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
-                      <argument key="FOS\RestBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer</argument>
-                      <argument key="Doctrine\Bundle\PHPCRBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer</argument>
-                      <argument key="Sulu\Bundle\CoreBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer</argument>
-                      <argument key="Sulu\Bundle\TestBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\FrameworkBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\TwigBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\MonologBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\SecurityBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer</argument>
+                      <argument key="Doctrine\Bundle\DoctrineBundle">/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer</argument>
+                      <argument key="JMS\SerializerBundle">/home/daniel/www/sulu-cmf/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
+                      <argument key="FOS\RestBundle">/home/daniel/www/sulu-cmf/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer</argument>
+                      <argument key="Doctrine\Bundle\PHPCRBundle">/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer</argument>
+                      <argument key="Sulu\Bundle\CoreBundle">/home/daniel/www/sulu-cmf/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer</argument>
+                      <argument key="Sulu\Bundle\TestBundle">/home/daniel/www/sulu-cmf/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer</argument>
                     </argument>
                   </service>
                 </argument>
@@ -2822,16 +2776,16 @@
                 <argument type="service">
                   <service class="Metadata\Driver\FileLocator" public="false">
                     <argument type="collection">
-                      <argument key="Symfony\Bundle\FrameworkBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\TwigBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\MonologBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer</argument>
-                      <argument key="Symfony\Bundle\SecurityBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer</argument>
-                      <argument key="Doctrine\Bundle\DoctrineBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/doctrine-bundle/Resources/config/serializer</argument>
-                      <argument key="JMS\SerializerBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
-                      <argument key="FOS\RestBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer</argument>
-                      <argument key="Doctrine\Bundle\PHPCRBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer</argument>
-                      <argument key="Sulu\Bundle\CoreBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer</argument>
-                      <argument key="Sulu\Bundle\TestBundle">/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\FrameworkBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\TwigBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/TwigBundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\MonologBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/monolog-bundle/Resources/config/serializer</argument>
+                      <argument key="Symfony\Bundle\SecurityBundle">/home/daniel/www/sulu-cmf/sulu/vendor/symfony/symfony/src/Symfony/Bundle/SecurityBundle/Resources/config/serializer</argument>
+                      <argument key="Doctrine\Bundle\DoctrineBundle">/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/doctrine-bundle/Doctrine/Bundle/DoctrineBundle/Resources/config/serializer</argument>
+                      <argument key="JMS\SerializerBundle">/home/daniel/www/sulu-cmf/sulu/vendor/jms/serializer-bundle/JMS/SerializerBundle/Resources/config/serializer</argument>
+                      <argument key="FOS\RestBundle">/home/daniel/www/sulu-cmf/sulu/vendor/friendsofsymfony/rest-bundle/FOS/RestBundle/Resources/config/serializer</argument>
+                      <argument key="Doctrine\Bundle\PHPCRBundle">/home/daniel/www/sulu-cmf/sulu/vendor/doctrine/phpcr-bundle/Doctrine/Bundle/PHPCRBundle/Resources/config/serializer</argument>
+                      <argument key="Sulu\Bundle\CoreBundle">/home/daniel/www/sulu-cmf/sulu/src/Sulu/Bundle/CoreBundle/Resources/config/serializer</argument>
+                      <argument key="Sulu\Bundle\TestBundle">/home/daniel/www/sulu-cmf/sulu/vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/config/serializer</argument>
                     </argument>
                   </service>
                 </argument>
@@ -2877,7 +2831,7 @@
           <call method="setCache">
             <argument type="service">
               <service class="Metadata\Cache\FileCache" public="false">
-                <argument>/Users/johannes/workspace/sulu/sulu-standard/vendor/sulu/sulu/Tests/app/cache/phpcr/jms_serializer</argument>
+                <argument>/home/daniel/www/sulu-cmf/sulu/tests/app/cache/phpcr/jms_serializer</argument>
               </service>
             </argument>
           </call>
@@ -2971,9 +2925,6 @@
     <service id="debug.templating.engine.twig" alias="templating"/>
     <service id="database_connection" alias="doctrine.dbal.default_connection"/>
     <service id="doctrine.orm.entity_manager" alias="doctrine.orm.default_entity_manager"/>
-    <service id="doctrine.orm.default_metadata_cache" alias="doctrine_cache.providers.doctrine.orm.default_metadata_cache"/>
-    <service id="doctrine.orm.default_result_cache" alias="doctrine_cache.providers.doctrine.orm.default_result_cache"/>
-    <service id="doctrine.orm.default_query_cache" alias="doctrine_cache.providers.doctrine.orm.default_query_cache"/>
     <service id="serializer" alias="jms_serializer"/>
     <service id="fos_rest.router" alias="router"/>
     <service id="fos_rest.templating" alias="templating"/>
