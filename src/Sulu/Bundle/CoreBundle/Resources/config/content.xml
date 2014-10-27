@@ -12,7 +12,7 @@
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
         <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
-        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PHPTemplateDumper</parameter>
+        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
         <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>

@@ -14,10 +14,10 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 
 /**
- * Class PHPTemplateDumper
+ * Class PhpTemplateDumper
  * @package Sulu\Component\Content\Template\Dumper
  */
-class PHPTemplateDumper
+class PhpTemplateDumper
 {
     /**
      * @var
