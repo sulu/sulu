@@ -14,28 +14,36 @@
  */
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
 
 interface CollectionManagerInterface
 {
     /**
-     * Returns collections with a given parent and/or a given depth-level
-     * if no arguments passed returns all collection
+     * Returns a collection with a given id
      * @param int $id the id of the collection
      * @param int $locale the locale which the collection should be return
-     * @return Collection[]
+     * @return Collection
      */
     public function getById($id, $locale);
 
     /**
-     * Returns a collection with a given id
+     * Returns collections with a given parent and/or a given depth-level
+     * if no arguments passed returns all collection
      * @param int $locale the locale which the collection should be return
-     * @param int $parent the parent id to filter for
-     * @param int $depth the depth to filter for
-     * @return Collection
+     * @param array $filter for parent or depth
+     * @param int $limit limit the output
+     * @param int $offset offset the output
+     * @return Paginator
      */
-    public function get($locale, $parent = null, $depth = null);
+    public function get($locale, $filter = array(), $limit = null, $offset = null);
+
+    /**
+     * Returns a collection count
+     * @return int
+     */
+    public function getCount();
 
     /**
      * Creates a new collection or overrides an existing one

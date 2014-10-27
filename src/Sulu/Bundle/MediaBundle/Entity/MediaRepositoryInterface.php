@@ -9,6 +9,7 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Entity;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * Defines the method for the doctrine repository
@@ -28,7 +29,15 @@ interface MediaRepositoryInterface
      * finds all media, can be filtered with parent
      * @param array $filter
      * @param int $limit
-     * @return mixed
+     * @param int $offset
+     * @return Paginator
      */
-    public function findMedia($filter = array(), $limit = null);
+    public function findMedia($filter = array(), $limit = null, $offset = null);
+
+    /**
+     * @param string $filename
+     * @param int $collectionId
+     * @return Media
+     */
+    public function findMediaWithFilenameInCollectionWithId($filename, $collectionId);
 }

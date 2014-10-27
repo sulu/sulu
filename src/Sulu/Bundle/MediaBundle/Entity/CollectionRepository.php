@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * CollectionRepository
@@ -81,8 +82,14 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
     /**
      * {@inheritdoc}
      */
-    public function findCollections($parent = null, $depth = null)
+    public function findCollections($filter = array(), $limit = null, $offset = null)
     {
+        list ($parent, $depth, $search) = array(
+            !empty($filter['parent']) ? $filter['parent'] : null,
+            !empty($filter['depth']) ? $filter['depth'] : null,
+            !empty($filter['search']) ? $filter['search'] : null,
+        );
+
         try {
             $qb = $this->createQueryBuilder('collection')
                 ->leftJoin('collection.meta', 'collectionMeta')
@@ -116,6 +123,15 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
             if ($depth !== null) {
                 $qb->where('collection.depth = :depth');
             }
+            if ($search !== null) {
+                $qb->where('collectionMeta.title LIKE :search');
+            }
+            if ($offset !== null) {
+                $qb->setFirstResult($offset);
+            }
+            if ($limit !== null) {
+                $qb->setMaxResults($limit);
+            }
 
             $query = $qb->getQuery();
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
@@ -125,8 +141,11 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
             if ($depth !== null) {
                 $query->setParameter('depth', $depth);
             }
+            if ($search !== null) {
+                $query->setParameter('search', '%'.$search.'%');
+            }
 
-            return $query->getResult();
+            return new Paginator($query);
         } catch (NoResultException $ex) {
             return null;
         }

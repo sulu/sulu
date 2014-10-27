@@ -25,9 +25,10 @@ interface CollectionRepositoryInterface
 
     /**
      * finds all collections, can be filtered with parent and depth
-     * @param int $parent the id of the parent
-     * @param int $depth the depth-level
+     * @param array $filter
+     * @param int $limit
+     * @param int $offset
      * @return Collection[]
      */
-    public function findCollections($parent = null, $depth = null);
+    public function findCollections($filter = array(), $limit = null, $offset = null);
 } 
