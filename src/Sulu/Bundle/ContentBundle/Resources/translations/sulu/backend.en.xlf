@@ -326,6 +326,14 @@
                 <source>sulu.content.form.settings.type.external-link.url</source>
                 <target>URL</target>
             </trans-unit>
+            <trans-unit id="abaaaaa382139fbed4a73a4123dfdf013" resname="sulu.content.sort.blocks">
+                <source>sulu.content.sort.blocks</source>
+                <target>Sort text blocks</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf013" resname="sulu.content.edit.blocks">
+                <source>sulu.content.edit.blocks</source>
+                <target>Edit text blocks</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
