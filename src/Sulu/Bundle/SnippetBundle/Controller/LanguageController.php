@@ -21,6 +21,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class LanguageController extends Controller implements ClassResourceInterface
 {
+    /**
+     * Returns all languages in admin
+     * @return JsonResponse
+     */
     public function cgetAction()
     {
         /** @var WebspaceManagerInterface $webspaceManager */

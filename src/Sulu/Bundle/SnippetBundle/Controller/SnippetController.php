@@ -63,6 +63,9 @@ class SnippetController
 
     protected $languageCode;
 
+    /**
+     * Constructor
+     */
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
@@ -79,6 +82,11 @@ class SnippetController
         $this->urlGenerator = $urlGenerator;
     }
 
+    /**
+     * Returns list of snippets
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getSnippetsAction(Request $request)
     {
         $this->initEnv($request);
@@ -115,15 +123,12 @@ class SnippetController
     }
 
     /**
-     * Retrieve snippet by ID(s)
-     *
-     * Note: the defaults below allow us to generate the base URL for the benefit
-     *       of the javascript code (i.e. we can pass the base URL without the UUID to the
-     *       javascript code).
-     *
-     * @Get(defaults={"uuid" = ""})
+     * Returns snippet by ID
+     * @param Request $request
+     * @param string $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getSnippetAction(Request $request, $uuid = null)
+    public function getSnippetAction(Request $request, $uuid)
     {
         $this->initEnv($request);
 
@@ -134,6 +139,11 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
+    /**
+     * Saves a new snippet
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function postSnippetAction(Request $request)
     {
         $this->initEnv($request);
@@ -153,6 +163,12 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
+    /**
+     * Saves a new existing snippet
+     * @param Request $request
+     * @param string $uuid
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function putSnippetAction(Request $request, $uuid)
     {
         $this->initEnv($request);
@@ -173,6 +189,12 @@ class SnippetController
         return $this->viewHandler->handle($view);
     }
 
+    /**
+     * Deletes an existing Snippet
+     * @param Request $request
+     * @param string $uuid
+     * @return JsonResponse
+     */
     public function deleteSnippetAction(Request $request, $uuid)
     {
         $webspaceKey = $request->query->get('webspace', null);
@@ -248,6 +270,9 @@ class SnippetController
         );
     }
 
+    /**
+     * Returns user
+     */
     private function getUser()
     {
         $token = $this->securityContext->getToken();
@@ -259,6 +284,9 @@ class SnippetController
         return $token->getUser();
     }
 
+    /**
+     * Initiates the environment
+     */
     private function initEnv(Request $request)
     {
         $this->languageCode = $request->query->get('language', null);
@@ -268,6 +296,9 @@ class SnippetController
         }
     }
 
+    /**
+     * Returns a required parameter
+     */
     private function getRequired(Request $request, $parameterName)
     {
         $value = $request->request->get($parameterName);
@@ -322,8 +353,6 @@ class SnippetController
 
     /**
      * Decorate snippets for HATEOAS
-     *
-     * @param array $snippets
      */
     private function decorateSnippets(array $snippets, $locale)
     {
@@ -337,8 +366,6 @@ class SnippetController
 
     /**
      * Decorate snippet for HATEOAS
-     *
-     * @param array $snippets
      */
     private function decorateSnippet(array $snippet, $locale)
     {

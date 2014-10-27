@@ -16,7 +16,6 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Component\Content\Structure\Snippet;
@@ -61,22 +60,30 @@ class SnippetContent extends ComplexContentType
         $this->defaultSnippetType = $defaultSnippetType;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getType()
     {
         return ContentTypeInterface::PRE_SAVE;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTemplate()
     {
         return $this->template;
     }
 
+    /**
+     * Set data to given property
+     */
     protected function setData(
         $refs,
         PropertyInterface $property,
         $webspaceKey,
-        $languageCode,
-        $segmentKey
+        $languageCode
     ) {
         $snippets = array();
 
@@ -99,7 +106,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData($refs, $property, $webspaceKey, $languageCode, $segmentKey);
+        $this->setData($refs, $property, $webspaceKey, $languageCode);
     }
 
     /**
@@ -107,7 +114,7 @@ class SnippetContent extends ComplexContentType
      */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $this->setData($data, $property, $webspaceKey, $languageCode, $segmentKey);
+        $this->setData($data, $property, $webspaceKey, $languageCode);
     }
 
     /**
@@ -141,12 +148,7 @@ class SnippetContent extends ComplexContentType
     }
 
     /**
-     * remove property from given node
-     * @param NodeInterface $node
-     * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {

@@ -24,6 +24,7 @@
              <argument type="collection">
                  <argument key="defaultType" type="string">%sulu.content.structure.default_type.snippet%</argument>
              </argument>
+
              <tag name="sulu.js_config"/>
         </service>
     </services>

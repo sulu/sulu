@@ -13,12 +13,15 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Admin for snippet
+ */
 class SuluSnippetAdmin extends Admin
 {
+    /**
+     * Constructor
+     */
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);

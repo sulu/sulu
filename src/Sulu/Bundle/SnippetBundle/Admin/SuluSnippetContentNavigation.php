@@ -13,8 +13,14 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 
+/**
+ * Class for snippet content navigation
+ */
 class SuluSnippetContentNavigation extends ContentNavigation
 {
+    /**
+     * Construct
+     */
     public function __construct()
     {
         parent::__construct();
