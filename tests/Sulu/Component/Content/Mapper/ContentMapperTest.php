@@ -2899,7 +2899,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(1, $test->getChanger());
 
         $test = $this->mapper->load($result->getUuid(), 'default', 'de', 4);
-        $this->assertEquals('/page-1/sub-2', $test->getResourceLocator());
+        $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
     }
 
