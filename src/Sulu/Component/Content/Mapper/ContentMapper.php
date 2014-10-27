@@ -922,7 +922,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function load($uuid, $webspaceKey = null, $languageCode, $loadGhostContent = false)
+    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
     {
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.load');
@@ -964,7 +964,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey = null, $languageCode, $segmentKey = null)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $session = $this->getSession();
         $uuid = $this->getResourceLocator()->loadContentNodeUuid(
@@ -1653,7 +1653,6 @@ class ContentMapper implements ContentMapperInterface
                     $content,
                     $node,
                     $parentResourceLocator,
-                    $move,
                     $webspaceKey,
                     $locale->getLocalization(),
                     $userId
@@ -1695,7 +1694,6 @@ class ContentMapper implements ContentMapperInterface
         StructureInterface $content,
         NodeInterface $node,
         $parentResourceLocator,
-        $move,
         $webspaceKey,
         $languageCode,
         $userId

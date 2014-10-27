@@ -910,10 +910,6 @@ abstract class Structure implements StructureInterface
         return $this->structureTags[$name];
     }
 
-    protected function getPhpcrPropertyName($name)
-    {
-    }
-
     public function getNodeState()
     {
         return Structure::STATE_PUBLISHED;
