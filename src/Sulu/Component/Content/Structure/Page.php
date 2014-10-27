@@ -5,6 +5,7 @@ namespace Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 abstract class Page extends Structure
 {
@@ -203,9 +204,8 @@ abstract class Page extends Structure
 
         if ($complete === true) {
             $result['published'] = $this->getPublished();
+            $result['ext'] = $this->extToArray();
         }
-
-        $result['ext'] = $this->extToArray();
 
         return $result;
     }
