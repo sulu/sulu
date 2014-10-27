@@ -153,7 +153,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT);
         }
 
-            if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
+        if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {
                 $this->setBasicLocalizationProperties($local, $node, $template, $userId);
             }
