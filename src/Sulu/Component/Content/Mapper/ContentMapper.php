@@ -1968,15 +1968,14 @@ class ContentMapper implements ContentMapperInterface
                     $locale
                 );
 
+                $key = $this->sessionManager->getWebspaceKeyByPath($path);
+                $shortPath = str_replace($this->sessionManager->getContentPath($key), '', $path);
+
                 return array_merge(
                     array(
                         'uuid' => $uuid,
                         'nodeType' => $nodeType,
-                        'path' => str_replace(
-                            $this->sessionManager->getContentPath($webspaceKey),
-                            '',
-                            $path
-                        ),
+                        'path' => $shortPath,
                         'changed' => $changed,
                         'changer' => $changer,
                         'created' => $created,
@@ -1984,6 +1983,7 @@ class ContentMapper implements ContentMapperInterface
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
                         'locale' => $locale,
+                        'webspaceKey' => $key,
                         'template' => $templateKey,
                         'parent' => $parent
                     ),
