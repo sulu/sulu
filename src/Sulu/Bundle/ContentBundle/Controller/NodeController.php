@@ -49,7 +49,7 @@ class NodeController extends RestController implements ClassResourceInterface
      */
     private function getWebspace(Request $request)
     {
-        return $this->getRequestParameter($request, 'webspace', true);
+        return $this->getRequestParameter($request, 'webspace', false);
     }
 
     /**
@@ -162,8 +162,10 @@ class NodeController extends RestController implements ClassResourceInterface
                     $excludeGhosts,
                     $appendWebspaceNode
                 );
-            } else {
+            } elseif ($webspace !== null) {
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
+            } else {
+                $result = $this->getRepository()->getWebspaceNodes($language);
             }
         } catch (ItemNotFoundException $ex) {
             // TODO return 404 and handle this edge case on client side

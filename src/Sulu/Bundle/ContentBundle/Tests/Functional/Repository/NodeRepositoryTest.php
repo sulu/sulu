@@ -203,6 +203,14 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
     }
 
+    public function testGetWebspaceNodes()
+    {
+        $result = $this->nodeRepository->getWebspaceNodes('en');
+
+        $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
+        // TODO add more webspaces when changed to SuluTestCase
+    }
+
     public function testGetNodesTree()
     {
         $data = $this->prepareGetTestData();

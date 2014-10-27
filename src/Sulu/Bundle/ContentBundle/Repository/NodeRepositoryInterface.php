@@ -67,6 +67,13 @@ interface NodeRepositoryInterface
     );
 
     /**
+     * Return all webspaces as nodes
+     * @param string $languageCode The desired language code
+     * @return array
+     */
+    public function getWebspaceNodes($languageCode);
+
+    /**
      * Returns the content of a smart content configuration
      * @param array $filterConfig The config of the smart content
      * @param string $languageCode The desired language code
