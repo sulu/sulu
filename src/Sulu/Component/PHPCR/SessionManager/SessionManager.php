@@ -125,18 +125,4 @@ class SessionManager implements SessionManagerInterface
 
         return $node;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getWebspaceKeyByPath($path)
-    {
-        $match = preg_match('/^\/(\w*)\/(\w*)\/(\w*)(\/.*)*$/', $path, $matches);
-
-        if ($match) {
-            return $matches[2];
-        } else {
-            return null;
-        }
-    }
 }
