@@ -23,7 +23,6 @@
                 <title lang="en">Title</title>
             </meta>
 
-            <tag name="sulu.node.name"/>
             <tag name="sulu.rlp.part"/>
         </property>
 

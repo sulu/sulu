@@ -63,13 +63,46 @@ abstract class SuluTestCase extends BaseTestCase
 
     /**
      * Purge the Doctrine ORM database
+        $this->import->resetPackages();
      */
     protected function purgeDatabase()
     {
+        $em = $this->db('ORM')->getOm();
+        $connection = $em->getConnection();
+
+        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+            $connection->executeUpdate("SET foreign_key_checks = 0;");
+        }
+
         $purger = new ORMPurger();
-        $executor = new ORMExecutor($this->db('ORM')->getOm(), $purger);
-        $referenceRepository = new ProxyReferenceRepository($this->db('ORM')->getOm());
+        $executor = new ORMExecutor($em, $purger);
+        $referenceRepository = new ProxyReferenceRepository($em);
         $executor->setReferenceRepository($referenceRepository);
         $executor->purge();
+
+        if ($connection->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+            $em->getConnection()->executeUpdate("SET foreign_key_checks = 1;");
+        }
+    }
+
+    /**
+     * Create an authenticated client
+     *
+     * @return Symfony\Bundle\FrameworkBundle\Client
+     */
+    protected function createAuthenticatedClient()
+    {
+        return $this->createClient(
+            array(),
+            array(
+                'PHP_AUTH_USER' => 'test',
+                'PHP_AUTH_PW' => 'test',
+            )
+        );
+    }
+
+    public function tearDown()
+    {
+        $this->db('ORM')->getOm()->getConnection()->close();
     }
 }
