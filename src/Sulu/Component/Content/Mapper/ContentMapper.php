@@ -1936,7 +1936,7 @@ class ContentMapper implements ContentMapperInterface
                     $locale
                 );
 
-                $key = $this->sessionManager->getWebspaceKeyByPath($path);
+                $key = $this->nodeHelper->extractWebspaceFromPath($path);
                 $shortPath = str_replace($this->sessionManager->getContentPath($key), '', $path);
 
                 return array_merge(
