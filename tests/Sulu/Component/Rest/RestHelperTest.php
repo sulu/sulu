@@ -148,15 +148,15 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->get();
         };
 
-        $delete = function () use ($mock) {
+        $delete = function() use ($mock) {
             $mock->delete();
         };
 
-        $update = function () use ($mock) {
+        $update = function() use ($mock) {
             $mock->update();
         };
 
-        $add = function () use ($mock) {
+        $add = function() use ($mock) {
             $mock->add();
         };
 
@@ -172,21 +172,21 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->once())->method('delete');
         $mock->expects($this->never())->method('update');
         $mock->expects($this->never())->method('add');
-        $mock->expects($this->once())->method('get');
+        $mock->expects($this->never())->method('get');
 
         $get = function() use ($mock) {
             $mock->get();
         };
 
-        $delete = function () use ($mock) {
+        $delete = function() use ($mock) {
             $mock->delete();
         };
 
-        $update = function () use ($mock) {
+        $update = function() use ($mock) {
             $mock->update();
         };
 
-        $add = function () use ($mock) {
+        $add = function() use ($mock) {
             $mock->add();
         };
 
@@ -217,15 +217,15 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             return $mock->get();
         };
 
-        $delete = function () use ($mock) {
+        $delete = function() use ($mock) {
             $mock->delete();
         };
 
-        $update = function () use ($mock) {
+        $update = function() use ($mock) {
             $mock->update();
         };
 
-        $add = function () use ($mock) {
+        $add = function() use ($mock) {
             $mock->add();
         };
 
@@ -257,15 +257,15 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             $mock->get();
         };
 
-        $delete = function () use ($mock) {
+        $delete = function() use ($mock) {
             $mock->delete();
         };
 
-        $update = function () use ($mock) {
+        $update = function() use ($mock) {
             $mock->update();
         };
 
-        $add = function () use ($mock) {
+        $add = function() use ($mock) {
             $mock->add();
         };
 
@@ -274,6 +274,67 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     'id' => 1
+                )
+            ),
+            $get,
+            $add,
+            $update,
+            $delete
+        );
+    }
+
+    public function testCompareEntitiesWithData()
+    {
+        $mockedObject = $this->getMock('stdClass', array('getId', 'getValue'));
+        $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
+        $mockedObject->expects($this->any())->method('getValue')->will($this->returnValue(2));
+
+        $mockedObject2 = clone $mockedObject;
+        $mockedObject3 = clone $mockedObject;
+
+        $mock = $this->getMock('stdClass', array('delete', 'update', 'add', 'get'));
+        $mock->expects($this->once())->method('delete');
+        $mock->expects($this->any())->method('update');
+        $mock->expects($this->once())->method('add');
+        $mock->expects($this->any())->method('get');
+
+        $get = function ($entity, $data) {
+            return
+                (isset($data['id']) && $data['id'] === $entity->getId()) ||
+                (isset($data['value']) && $data['value'] === $entity->getValue());
+        };
+
+        $delete = function() use ($mock) {
+            $mock->delete();
+            return true;
+        };
+
+        $update = function() use ($mock) {
+            $mock->update();
+            return true;
+        };
+
+        $add = function() use ($mock) {
+            $mock->add();
+            return true;
+        };
+
+        $this->restHelper->compareEntitiesWithData(
+            array(
+                $mockedObject,
+                $mockedObject2,
+                $mockedObject3
+            ),
+            array(
+                array(
+                    'id' => 1,
+                    'value' => 3
+                ),
+                array(
+                    'id' => 2,
+                ),
+                array(
+                    'value' => 2
                 )
             ),
             $get,
