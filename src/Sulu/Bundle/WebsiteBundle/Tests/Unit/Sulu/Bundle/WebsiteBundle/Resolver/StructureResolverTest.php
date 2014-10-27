@@ -60,7 +60,7 @@ class StructureResolverTest extends ProphecyTestCase
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
+        $structure = $this->prophesize('Sulu\Component\Content\Structure\Page');
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(array('excerpt' => array('test1' => 'test1')));
         $structure->getUuid()->willReturn('some-uuid');

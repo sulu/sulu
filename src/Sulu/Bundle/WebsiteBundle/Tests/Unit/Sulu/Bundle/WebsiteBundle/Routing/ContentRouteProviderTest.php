@@ -289,13 +289,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
 
-        $structure = $this->getStructureMock($uuid);
-        $structure->expects($this->any())
-            ->method('getNodeType')
-            ->will($this->returnValue(Structure::NODE_TYPE_INTERNAL_LINK));
-        $structure->expects($this->any())
-            ->method('getNodeState')
-            ->will($this->returnValue(Structure::STATE_PUBLISHED));
+        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_INTERNAL_LINK);
         $structure->expects($this->any())
             ->method('getResourceLocator')
             ->will($this->returnValue('/other-test'));
@@ -329,21 +323,22 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getStructureMock($uuid, $state = 2)
+    protected function getStructureMock($uuid, $state = Structure::STATE_PUBLISHED, $type = Structure::NODE_TYPE_CONTENT)
     {
         $structure = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\StructureInterface',
+            '\Sulu\Component\Content\Structure\Page',
             array(),
             '',
+            false,
             true,
             true,
-            true,
-            array('getUuid', 'getNodeState', 'getHasTranslation')
+            array('getResourceLocator')
         );
 
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
-        $structure->expects($this->any())->method('getNodeState')->will($this->returnValue($state));
-        $structure->expects($this->any())->method('getHasTranslation')->will($this->returnValue(true));
+        $structure->setUuid($uuid);
+        $structure->setNodeState($state);
+        $structure->setNodeType($type);
+        $structure->setHasTranslation(true);
 
         return $structure;
     }
