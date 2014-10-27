@@ -1851,7 +1851,11 @@ class ContentMapper implements ContentMapperInterface
         $fields,
         $maxDepth
     ) {
-        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        if ($webspaceKey !== null) {
+            $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        } else {
+            $rootDepth = 0;
+        }
 
         $result = array();
         foreach ($locales as $locale) {
@@ -2132,7 +2136,7 @@ class ContentMapper implements ContentMapperInterface
         $locale
     ) {
         // if homepage
-        if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
+        if ($webspaceKey !== null && $this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
             $url = '/';
         } else {
             if ($structure->hasTag('sulu.rlp')) {

@@ -14,6 +14,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Webspace\Localization;
@@ -65,7 +66,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 'state',
                 'template',
                 'navigation',
-                'published'
+                'published',
+                'nodeType'
             ),
             $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
@@ -146,8 +148,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
             $node->setProperty($this->properties->getName('published'), new DateTime());
         }
+        if (!$node->hasProperty($this->properties->getName('nodeType'))) {
+            $node->setProperty($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT);
+        }
 
-        if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
+            if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {
                 $this->setBasicLocalizationProperties($local, $node, $template, $userId, $webspaceKey);
             }
