@@ -1,15 +1,40 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Integration;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Structure\Snippet;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 class SnippetApiTest extends SuluTestCase
 {
+    /**
+     * @var Client
+     */
     protected $client;
+    /**
+     * @var Snippet
+     */
     protected $hotel1;
+
+    /**
+     * @var Snippet
+     */
     protected $hotel2;
+
+    /**
+     * @var ContentMapperInterface
+     */
     protected $contentMapper;
 
     public function setUp()

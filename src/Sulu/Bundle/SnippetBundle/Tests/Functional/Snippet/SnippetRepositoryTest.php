@@ -1,15 +1,31 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
-use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 
 class SnippetRepositoryTest extends BaseFunctionalTestCase
 {
+    /**
+     * @var ContentMapperInterface
+     */
+    protected $contentMapper;
+
+    /**
+     * @var SnippetRepository
+     */
+    protected $snippetRepository;
+
     public function setUp()
     {
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
