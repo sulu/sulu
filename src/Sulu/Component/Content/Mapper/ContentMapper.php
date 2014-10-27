@@ -1276,7 +1276,7 @@ class ContentMapper implements ContentMapperInterface
 
         if ($structureType === Structure::TYPE_PAGE) {
             $structure->setPath(
-                str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath())
+                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $contentNode->getPath())
             );
             $structure->setNodeState(
                 $contentNode->getPropertyValueWithDefault(
@@ -1460,7 +1460,9 @@ class ContentMapper implements ContentMapperInterface
                 );
                 $nodeName = $property->getValue();
                 $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-                $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
+                $structure->setPath(
+                    str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
+                );
 
                 // throw an content.node.load event (disabled for now)
                 //$event = new ContentNodeEvent($node, $structure);
@@ -1851,11 +1853,7 @@ class ContentMapper implements ContentMapperInterface
         $fields,
         $maxDepth
     ) {
-        if ($webspaceKey !== null) {
-            $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
-        } else {
-            $rootDepth = 0;
-        }
+        $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
         $result = array();
         foreach ($locales as $locale) {
@@ -1975,7 +1973,7 @@ class ContentMapper implements ContentMapperInterface
                         'uuid' => $uuid,
                         'nodeType' => $nodeType,
                         'path' => str_replace(
-                            $this->sessionManager->getContentNode($webspaceKey)->getPath(),
+                            $this->sessionManager->getContentPath($webspaceKey),
                             '',
                             $path
                         ),
@@ -2136,7 +2134,7 @@ class ContentMapper implements ContentMapperInterface
         $locale
     ) {
         // if homepage
-        if ($webspaceKey !== null && $this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
+        if ($webspaceKey !== null && $this->sessionManager->getContentPath($webspaceKey) === $path) {
             $url = '/';
         } else {
             if ($structure->hasTag('sulu.rlp')) {

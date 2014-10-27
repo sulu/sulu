@@ -83,11 +83,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
 
         // this preloads all node which should are selected in the statement before
         // prevent the system to load each node individual
-        if ($webspaceKey !== null) {
-            $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
-        } else {
-            $rootDepth = 0;
-        }
+        $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
         $paths = array();
         /** @var Row $row */
         foreach ($queryResult as $row) {
