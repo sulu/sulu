@@ -2,21 +2,14 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-class MultipleTranslatedPropertyTest extends \PHPUnit_Framework_TestCase
+use Sulu\Component\Util\SuluNodeHelper;
+
+class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 {
     protected $properties;
 
     public function setUp()
     {
-        $this->properties = new MultipleTranslatedProperties(
-            array(
-                'changer',
-                'shadow-base'
-            ),
-            'i18n',
-            '-' 
-        );
-
         $this->node = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
         $this->property1 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property2 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
@@ -48,11 +41,13 @@ class MultipleTranslatedPropertyTest extends \PHPUnit_Framework_TestCase
                 $this->property3,
                 $this->property4,
             )));
+
+        $this->helper = new SuluNodeHelper('i18n');
     }
 
-    public function testGetLanguages()
+    public function testGetLanguagesForNode()
     {
-        $languages = $this->properties->getLanguagesForNode($this->node);
+        $languages = $this->helper->getLanguagesForNode($this->node);
 
         // languages are only counted if they are on the "template" property
         $this->assertEquals(array('fr', 'de'), $languages);
