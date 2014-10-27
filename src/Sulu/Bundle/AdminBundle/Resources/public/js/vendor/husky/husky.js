@@ -27195,7 +27195,7 @@ define('__component__$navigation@husky',[],function() {
 
             // load Data
             if (!!this.options.url) {
-                this.sandbox.util.load(this.options.url)
+                this.sandbox.util.load(this.options.url, null, 'json')
                     .then(this.render.bind(this))
                     .fail(function(data) {
                         this.sandbox.logger.log("data could not be loaded:", data);
@@ -32209,7 +32209,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         }
                     }.bind(this))
                     .fail(function(jqXHR, textStatus, error) {
-                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), textStatus, error);
+                        this.sandbox.emit(DATA_SAVE_FAILED.call(this), jqXHR, textStatus, error);
 
                         if (typeof fail === 'function') {
                             fail(jqXHR, textStatus, error);
@@ -41269,7 +41269,7 @@ define('__component__$dropzone@husky',[], function () {
                             }.bind(that));
                         }
 
-                        // gets called if file gets added (drop or via the upload window)
+                        // gets called for each added file (drop or via the upload window)
                         this.on('addedfile', function (file) {
                             that.sandbox.dom.addClass(that.$dropzone, constants.droppedClass);
 
@@ -41290,7 +41290,7 @@ define('__component__$dropzone@husky',[], function () {
                             }.bind(that));
                         });
 
-                        // gets called before the file is sent
+                        // gets called before each file is sent
                         this.on('sending', function (file) {
                             if (typeof this.options.beforeSendingCallback === 'function') {
                                 this.options.beforeSendingCallback(file);
@@ -46913,21 +46913,27 @@ define('husky_extensions/util',[],function() {
                 }
             };
 
-            app.core.util.load = function(url, data) {
-                var deferred = new app.sandbox.data.deferred();
+            app.core.util.load = function(url, data, dataType) {
+                var deferred = new app.sandbox.data.deferred(),
+                    settings = {
+                        url: url,
+                        data: data || null,
+                        dataType: 'json',
 
-                app.sandbox.util.ajax({
-                    url: url,
-                    data: data || null,
+                        success: function(data, textStatus) {
+                            deferred.resolve(data, textStatus);
+                        }.bind(this),
 
-                    success: function(data, textStatus) {
-                        deferred.resolve(data, textStatus);
-                    }.bind(this),
+                        error: function(jqXHR, textStatus, error) {
+                            deferred.reject(textStatus, error);
+                        }
+                    };
 
-                    error: function(jqXHR, textStatus, error) {
-                        deferred.reject(textStatus, error);
-                    }
-                });
+                if (typeof(dataType) !== 'undefined') {
+                    settings.dataType = dataType;
+                }
+
+                app.sandbox.util.ajax(settings);
 
                 app.sandbox.emit('husky.util.load.data');
 
