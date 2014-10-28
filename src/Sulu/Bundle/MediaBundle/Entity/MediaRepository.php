@@ -39,12 +39,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
-                /*
                 ->leftJoin('media.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('media.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
-                */
                 ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
@@ -53,12 +51,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
                 ->addSelect('fileVersionPublishLanguage')
-                /*
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
-                */
                 ->where('media.id = :mediaId');
 
             $query = $qb->getQuery();
@@ -85,13 +81,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     public function findMedia($filter = array(), $limit = null, $offset = null)
     {
         try {
-            list($collection, $ids, $types, $paginator, $search) = array(
-                !empty($filter['collection']) ? $filter['collection'] : null,
-                !empty($filter['ids']) ? $filter['ids'] : null,
-                !empty($filter['types']) ? $filter['types'] : null,
-                !empty($filter['paginator']) ? $filter['paginator'] : true,
-                !empty($filter['search']) ? $filter['search'] : null,
-            );
+            // validate given filter array
+            $collection = array_key_exists('collection', $filter) ? $filter['collection'] : null;
+            $ids = array_key_exists('ids', $filter) ? $filter['ids'] : null;
+            $types = array_key_exists('types', $filter) ? $filter['types'] : null;
+            $paginator = array_key_exists('paginator', $filter) ? $filter['paginator'] : true;
+            $search = array_key_exists('search', $filter) ? $filter['search'] : null;
 
             // if empty array of ids is requested return empty array of medias
             if ($ids !== null && sizeof($ids) === 0) {
@@ -107,12 +102,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
                 ->leftJoin('fileVersion.publishLanguages', 'fileVersionPublishLanguage')
-                /*
                 ->leftJoin('media.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
                 ->leftJoin('media.changer', 'changer')
                 ->leftJoin('changer.contact', 'changerContact')
-                */
                 ->addSelect('type')
                 ->addSelect('collection')
                 ->addSelect('file')
@@ -120,12 +113,11 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->addSelect('fileVersion')
                 ->addSelect('fileVersionMeta')
                 ->addSelect('fileVersionContentLanguage')
-                ->addSelect('fileVersionPublishLanguage')/*
+                ->addSelect('fileVersionPublishLanguage')
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
-                ->addSelect('changerContact')*/
-            ;
+                ->addSelect('changerContact');
 
             if ($ids !== null) {
                 $qb->andWhere('media.id IN (:mediaIds)');
@@ -163,7 +155,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $query->setParameter('types', $types);
             }
             if ($search !== null) {
-                $query->setParameter('search', '%'.$search.'%');
+                $query->setParameter('search', '%' . $search . '%');
             }
 
             if (!$paginator) {
