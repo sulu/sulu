@@ -188,8 +188,9 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
 
             $this->templateResolver = new TemplateResolver();
             $nodeHelper = new SuluNodeHelper('i18n');
-
             $cleaner = new PathCleanup();
+            $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner);
+
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
                 $this->structureManager,
@@ -200,16 +201,14 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->webspaceManager,
                 $this->templateResolver,
                 $nodeHelper,
+                $strategy,
                 $this->language,
                 $this->defaultTemplates,
                 $this->languageNamespace,
-                $this->internalPrefix,
-                null
+                $this->internalPrefix
             );
 
-            $resourceLocator = new ResourceLocator(
-                new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner), 'not in use'
-            );
+            $resourceLocator = new ResourceLocator($strategy, 'not in use');
             $this->containerValueMap = array_merge(
                 $this->containerValueMap,
                 array(
