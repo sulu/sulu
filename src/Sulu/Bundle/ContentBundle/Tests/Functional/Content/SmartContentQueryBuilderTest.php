@@ -161,7 +161,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 ->setWebspaceKey('sulu_io')
                 ->setLocale('en')
                 ->setUserId(1)
-                ->setType('page');
+                ->setType('page')
+                ->setState(Structure::STATE_PUBLISHED);
 
             $node = $this->mapper->saveRequest($request);
             $nodes[$node->getUuid()] = $node;
