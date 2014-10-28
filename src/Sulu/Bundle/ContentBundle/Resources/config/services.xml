@@ -43,6 +43,7 @@
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type.resource_locator"/>
+            <argument type="service" id="sulu.content.mapper"/>
         </service>
 
         <!-- structure extension -->
