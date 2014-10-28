@@ -77,7 +77,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             'article' => 'Test'
         );
 
-        return $this->mapper->save($data, 'overview', 'default', 'en', 1);
+        return $this->mapper->save($data, 'overview', 'default', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 
     public function testGet()
@@ -207,12 +207,6 @@ class NodeRepositoryTest extends PhpcrTestCase
 
     public function testGetWebspaceNodes()
     {
-        $this
-            ->webspaceCollection
-            ->expects($this->any())
-            ->method('toArray')
-            ->will($this->returnValue(array($this->webspace)));
-
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
         $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
@@ -980,6 +974,12 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->webspaceManager->expects($this->any())
             ->method('findWebspaceByKey')
             ->will($this->returnValue($this->webspace));
+
+        $this
+            ->webspaceCollection
+            ->expects($this->any())
+            ->method('getIterator')
+            ->will($this->returnValue(new \ArrayIterator(array($this->webspace))));
 
         $this->nodeRepository = new NodeRepository(
             $this->mapper,
