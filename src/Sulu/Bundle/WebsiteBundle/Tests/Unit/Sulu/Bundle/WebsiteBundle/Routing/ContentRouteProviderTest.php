@@ -404,7 +404,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             '\Sulu\Component\Content\Mapper\ContentMapperInterface',
             array(),
             '',
-            true,
+            false,
             true,
             true,
             array('loadByResourceLocator')
