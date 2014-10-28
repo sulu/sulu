@@ -6,6 +6,7 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
+use Sulu\Component\Content\Structure;
 
 /**
  * Base test case for functional tests in Sulu
@@ -34,6 +35,7 @@ abstract class SuluTestCase extends BaseTestCase
     protected function initPhpcr()
     {
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
+        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
         if ($session->nodeExists('/cmf')) {
             $session->getNode('/cmf')->remove();
@@ -42,6 +44,13 @@ abstract class SuluTestCase extends BaseTestCase
         $session->save();
 
         $cmf = $session->getRootNode()->addNode('cmf');
+
+        $snippetsNode = $cmf->addNode('snippets');
+        $snippetStructures = $structureManager->getStructures(Structure::TYPE_SNIPPET);
+
+        foreach ($snippetStructures as $snippetStructure) {
+            $snippetsNode->addNode($snippetStructure->getKey());
+        }
 
         // we should use the doctrinephpcrbundle repository initializer to do this.
         $webspace = $cmf->addNode('sulu_io');
@@ -56,7 +65,6 @@ abstract class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-changed', new \DateTime());
         $content->addMixin('sulu:content');
         $webspace->addNode('temp');
-        $cmf->addNode('snippets');
 
         $session->save();
     }
