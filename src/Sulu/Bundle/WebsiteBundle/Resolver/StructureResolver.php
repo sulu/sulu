@@ -26,8 +26,10 @@ class StructureResolver implements StructureResolverInterface
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param StructureManagerInterface $structureManager
      */
-    public function __construct(ContentTypeManagerInterface $contentTypeManager, StructureManagerInterface $structureManager)
-    {
+    public function __construct(
+        ContentTypeManagerInterface $contentTypeManager,
+        StructureManagerInterface $structureManager
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
     }
@@ -47,7 +49,7 @@ class StructureResolver implements StructureResolverInterface
             'changed' => $structure->getChanged(),
         );
 
-        if($structure instanceof Page){
+        if ($structure instanceof Page) {
             $data['extension'] = $structure->getExt();
 
             foreach ($data['extension'] as $name => $value) {
