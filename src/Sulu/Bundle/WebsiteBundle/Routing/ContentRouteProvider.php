@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Liip\ThemeBundle\ActiveTheme;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -102,11 +103,15 @@ class ContentRouteProvider implements RouteProviderInterface
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
             try {
-                $content = $this->contentMapper->loadByResourceLocator(
-                    $resourceLocator,
-                    $portal->getWebspace()->getKey(),
-                    $language
-                );
+                try {
+                    $content = $this->contentMapper->loadByResourceLocator(
+                        $resourceLocator,
+                        $portal->getWebspace()->getKey(),
+                        $language
+                    );
+                } catch (RepositoryException $rex) {
+                    throw new ResourceLocatorNotFoundException();
+                }
 
                 if (
                     $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
