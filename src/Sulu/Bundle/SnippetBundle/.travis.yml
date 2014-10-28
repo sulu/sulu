@@ -5,7 +5,7 @@ php:
 
 before_script:
   - composer install
-  - sh ./vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/bin/travis.sh
+  - ./vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/bin/travis.sh
 
 script: phpunit --coverage-text
 

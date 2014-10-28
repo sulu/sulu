@@ -1,6 +1,8 @@
 SuluSnippetBundle
 =================
 
+[![Build Status](https://travis-ci.org/sulu-cmf/SuluSnippetBundle.svg?branch=refactor_for_preview)](https://travis-ci.org/sulu-cmf/SuluSnippetBundle)
+
 ## Usage
 
 Snippets can be managed using existing APIs.
