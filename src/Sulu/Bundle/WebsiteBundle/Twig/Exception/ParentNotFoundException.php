@@ -33,5 +33,4 @@ class ParentNotFoundException extends \Exception
     {
         return $this->uuid;
     }
-
 }

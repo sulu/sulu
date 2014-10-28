@@ -109,77 +109,32 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $this->parentNode = $this->prophesize('PHPCR\NodeInterface');
         $this->startPageNode = $this->prophesize('PHPCR\NodeInterface');
 
-        $webspace= new Webspace();
+        $webspace = new Webspace();
         $webspace->setKey('sulu_test');
 
         $locale = new Localization();
         $locale->setCountry('us');
         $locale->setLanguage('en');
 
-        $this
-            ->requestAnalyzer
-            ->getCurrentWebspace()
-            ->willReturn($webspace);
+        $this->requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
-        $this
-            ->requestAnalyzer
-            ->getCurrentLocalization()
-            ->willReturn($locale);
+        $this->contentTypeManager->get('text_line')->willReturn(new TextLine(''));
 
-        $this
-            ->contentTypeManager
-            ->get('text_line')
-            ->willReturn(new TextLine(''));
+        $this->sessionManager->getSession()->willReturn($this->session->reveal());
+        $this->sessionManager->getContentNode('sulu_test')->willReturn($this->startPageNode->reveal());
 
-        $this
-            ->sessionManager
-            ->getSession()
-            ->willReturn($this->session->reveal());
+        $this->session->getNodeByIdentifier('123-123-123')->willReturn($this->node->reveal());
+        $this->session->getNodeByIdentifier('321-321-321')->willReturn($this->parentNode->reveal());
 
-        $this
-            ->sessionManager
-            ->getContentNode('sulu_test')
-            ->willReturn($this->startPageNode->reveal());
+        $this->node->getIdentifier()->willReturn('123-123-123');
+        $this->node->getParent()->willReturn($this->parentNode->reveal());
+        $this->node ->getDepth()->willReturn(4);
 
-        $this
-            ->session
-            ->getNodeByIdentifier('123-123-123')
-            ->willReturn($this->node->reveal());
+        $this->parentNode->getIdentifier()->willReturn('321-321-321');
+        $this->parentNode->getDepth()->willReturn(3);
 
-        $this
-            ->session
-            ->getNodeByIdentifier('321-321-321')
-            ->willReturn($this->parentNode->reveal());
-
-        $this
-            ->node
-            ->getIdentifier()
-            ->willReturn('123-123-123');
-
-        $this
-            ->node
-            ->getParent()
-            ->willReturn($this->parentNode->reveal());
-
-        $this
-            ->node
-            ->getDepth()
-            ->willReturn(4);
-
-        $this
-            ->parentNode
-            ->getIdentifier()
-            ->willReturn('321-321-321');
-
-        $this
-            ->parentNode
-            ->getDepth()
-            ->willReturn(3);
-
-        $this
-            ->startPageNode
-            ->getDepth()
-            ->willReturn(3);
+        $this->startPageNode->getDepth()->willReturn(3);
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
