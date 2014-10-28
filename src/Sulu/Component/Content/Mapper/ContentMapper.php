@@ -344,6 +344,8 @@ class ContentMapper implements ContentMapperInterface
                         $translatedNodeNameProperty->getName()
                     ) !== $data[$nodeNameProperty->getName()];
 
+                // decide if the snippet template type has changed. If it has then we need to
+                // move it to the path of the new template type.
                 if ($structureType === Structure::TYPE_SNIPPET) {
                     $currentSnippetType = $this->nodeHelper->extractSnippetTypeFromPath($node->getPath());
                     if ($templateKey !== $currentSnippetType) {

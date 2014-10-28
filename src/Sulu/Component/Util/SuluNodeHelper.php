@@ -26,6 +26,7 @@ class SuluNodeHelper
 
     /**
      * @param string $languageNamespace
+     * @param array $paths Path segments from configuration
      */
     public function __construct($languageNamespace, $paths)
     {
@@ -71,7 +72,7 @@ class SuluNodeHelper
      */
     public function extractWebspaceFromPath($path)
     {
-        $match = preg_match('/^\\' . preg_quote($this->getPath('base')) . '\/(\w*)\/.*$/', $path, $matches);
+        $match = preg_match('/^\\' . $this->getPath('base') . '\/(\w*)\/.*$/', $path, $matches);
 
         if ($match) {
             return $matches[1];
