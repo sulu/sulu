@@ -180,8 +180,10 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * Returns structure for given template key and file
      * @param string $key
      * @param string $templateConfig
-     * @return StructureInterface
+     * @param string $type
      * @throws Template\Exception\TemplateNotFoundException
+     * @throws \InvalidArgumentException
+     * @return StructureInterface
      */
     private function getStructureByFile($key, $templateConfig, $type)
     {
