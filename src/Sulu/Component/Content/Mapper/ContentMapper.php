@@ -270,7 +270,6 @@ class ContentMapper implements ContentMapperInterface
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
-        $this->properties->setStructureType($structureType);
 
         // set default node-type
         if (!isset($data['nodeType'])) {
@@ -344,6 +343,16 @@ class ContentMapper implements ContentMapperInterface
                     $node->getPropertyValue(
                         $translatedNodeNameProperty->getName()
                     ) !== $data[$nodeNameProperty->getName()];
+
+                if ($structureType === Structure::TYPE_SNIPPET) {
+                    $currentSnippetType = $this->nodeHelper->extractSnippetTypeFromPath($node->getPath());
+                    if ($templateKey !== $currentSnippetType) {
+                        $session->move(
+                            $node->getPath(),
+                            $root->getPath() . '/' . PathHelper::getNodeName($node->getPath())
+                        );
+                    }
+                }
 
                 if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->cleaner->cleanUp($title, $languageCode);
@@ -1160,13 +1169,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
-            $structureType = Structure::TYPE_SNIPPET;
-        } else {
-            $structureType = Structure::TYPE_PAGE;
-        }
-
-        $this->properties->setStructureType($structureType);
+        // first set the language to the given language
         $this->properties->setLanguage($localization);
 
         if ($this->stopwatch) {
@@ -1210,6 +1213,12 @@ class ContentMapper implements ContentMapperInterface
             $this->properties->getName('nodeType'),
             Structure::NODE_TYPE_CONTENT
         );
+
+        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
+            $structureType = Structure::TYPE_SNIPPET;
+        } else {
+            $structureType = Structure::TYPE_PAGE;
+        }
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
