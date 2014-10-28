@@ -162,7 +162,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     {
         $structure = $this->prepareHistoryTestData();
 
-        $result = $this->repository->restore('/asdf', 'default', 'en');
+        $result = $this->repository->restore('/asdf', 1, 'default', 'en');
 
         $this->assertEquals('/asdf', $result['resourceLocator']);
 
