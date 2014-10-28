@@ -1185,6 +1185,7 @@ class ContentMapper implements ContentMapperInterface
         // first set the language to the given language
         $this->properties->setLanguage($localization);
         $this->properties->setStructureType($structureType);
+        $templatePropertyName = $this->properties->getName('template');
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
@@ -1230,9 +1231,10 @@ class ContentMapper implements ContentMapperInterface
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('template'),
+            $templatePropertyName,
             $originTemplateKey
         );
+
         $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
         $structure = $this->getStructure($templateKey, $structureType);
@@ -1246,7 +1248,7 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
+        $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('title')));
 
         $structure->setIsShadow($shadowOn);
         $structure->setShadowBaseLanguage($shadowBaseLanguage);
@@ -1313,7 +1315,7 @@ class ContentMapper implements ContentMapperInterface
             );
             $structure->setOriginTemplate(
                 $contentNode->getPropertyValueWithDefault(
-                    $this->properties->getName('template'),
+                    $templatePropertyName,
                     $this->defaultTemplates[$structureType]
                 )
             );
