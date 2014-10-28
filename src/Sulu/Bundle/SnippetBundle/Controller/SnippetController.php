@@ -127,8 +127,10 @@ class SnippetController
      * @param Request $request
      * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Get(defaults={"uuid" = ""})
      */
-    public function getSnippetAction(Request $request, $uuid)
+    public function getSnippetAction(Request $request, $uuid = null)
     {
         $this->initEnv($request);
 
