@@ -90,7 +90,7 @@ class SuluNodeHelper
      */
     public function extractSnippetTypeFromPath($path)
     {
-        if (!substr($path, 0, 1) === '/') {
+        if (substr($path, 0, 1) !== '/') {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Path must be absolute, got "%s"',
@@ -100,10 +100,10 @@ class SuluNodeHelper
         }
 
         $snippetsPath = $this->getPath('base') . '/' . $this->getPath('snippet');
-        $res = PathHelper::getParentPath($path);
-        $res = substr($res, strlen($snippetsPath));
+        $newPath = PathHelper::getParentPath($path);
+        $newPath = substr($newPath, strlen($snippetsPath));
 
-        if (false === $res) {
+        if (false === $newPath) {
             throw new \InvalidArgumentException(
                 sprintf(
                     'Cannot extract snippet template type from path "%s"',
@@ -112,7 +112,7 @@ class SuluNodeHelper
             );
         }
 
-        return $res;
+        return $newPath;
     }
 
     /**

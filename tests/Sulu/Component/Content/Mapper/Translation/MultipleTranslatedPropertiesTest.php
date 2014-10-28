@@ -8,7 +8,6 @@
  * with this source code in the file LICENSE.
  */
 
-
 namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
