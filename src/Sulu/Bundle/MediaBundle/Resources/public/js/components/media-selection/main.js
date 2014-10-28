@@ -479,7 +479,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     name: 'dropzone@husky',
                     options: {
                         el: getId.call(this, 'dropzone'),
-                        url: '/admin/api/media?collection%5Bid%5D=' + this.uploadCollection,
+                        url: '/admin/api/media?collection=' + this.uploadCollection,
                         method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,

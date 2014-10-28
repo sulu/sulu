@@ -227,7 +227,7 @@ define(function () {
                     name: 'dropzone@husky',
                     options: {
                         el: this.$find(constants.dropzoneSelector),
-                        url: '/admin/api/media?collection%5Bid%5D=' + this.options.data.id,
+                        url: '/admin/api/media?collection=' + this.options.data.id,
                         method: 'POST',
                         paramName: 'fileVersion',
                         instanceName: this.options.instanceName
