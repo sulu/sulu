@@ -187,7 +187,12 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
-            $nodeHelper = new SuluNodeHelper('i18n');
+            $nodeHelper = new SuluNodeHelper('i18n', array(
+                'base' => 'cmf',
+                'content' => 'contents',
+                'route' => 'routes',
+                'snippet' => 'snippets',
+            ));
             $cleaner = new PathCleanup();
             $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner);
 
