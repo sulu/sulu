@@ -72,12 +72,8 @@ class SnippetTwigExtension extends \Twig_Extension
         }
 
         $snippet = $this->contentMapper->load($uuid, $this->requestAnalyzer->getCurrentWebspace()->getKey(), $locale);
-        $resolved = $this->structureResolver->resolve($snippet);
 
-        return array(
-            'view' => $resolved['view'],
-            'content' => $resolved['content']
-        );
+        return $this->structureResolver->resolve($snippet);
     }
 
     /**
