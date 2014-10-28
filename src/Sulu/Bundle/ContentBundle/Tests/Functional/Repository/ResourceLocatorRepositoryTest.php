@@ -87,7 +87,10 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'url', 'resource_locator')
+                new Property('url', 'url', 'resource_locator', false, false, 1, 1, array(),
+                    array(
+                        new PropertyTag('sulu.rlp', 100)
+                    ))
             )
         );
 
