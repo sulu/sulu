@@ -56,3 +56,6 @@ massive_search:
 sulu_media:
     search:
         enabled: true
+    format_manager:
+        response_headers:
+            Expires: "+1 month"

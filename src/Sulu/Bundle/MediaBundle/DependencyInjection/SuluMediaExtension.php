@@ -34,6 +34,7 @@ class SuluMediaExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
+        $container->setParameter('sulu_media.format_manager.response_headers', $config['format_manager']['response_headers']);
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
@@ -58,6 +59,7 @@ class SuluMediaExtension extends Extension
             'image/vnd.adobe.photoshop',
             'application/pdf',
         ));
+
         $container->setParameter('sulu_media.image.formats', array(
             self::DEFAULT_FORMAT_NAME => array(
                 'name' => self::DEFAULT_FORMAT_NAME,
