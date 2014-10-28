@@ -81,6 +81,14 @@ EOT
         $dirHandle = opendir($fixturePath);
         $count = 0;
 
+        // purge snippets
+        $snippetNode = $this->sessionManager->getSnippetNode();
+        foreach ($snippetNode->getNodes() as $node) {
+            foreach ($node->getNodes() as $node) {
+                $node->remove();
+            }
+        }
+
         while ($file = readdir($dirHandle)) {
             if (substr($file, -4) !== '.yml') {
                 continue;
@@ -99,12 +107,6 @@ EOT
 
             foreach ($data['webspaces'] as $webspaceKey => $webspaceData) {
                 $this->processWebspace($webspaceKey, $webspaceData);
-            }
-
-            // purge snippets
-            $snippetNode = $this->sessionManager->getSnippetNode($webspaceKey);
-            foreach ($snippetNode->getNodes() as $node) {
-                $node->remove();
             }
 
             foreach ($data['snippets'] as $snippet) {

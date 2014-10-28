@@ -39,6 +39,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
      */
     private $properties;
 
+    /**
+     * @var StructureManager
+     */
+    private $structureManager;
+
     protected function configure()
     {
         $this->setName('sulu:webspaces:init')
@@ -55,6 +60,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
         $temp = $this->getContainer()->getParameter('sulu.content.node_names.temp');
         $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
         // properties
         $this->properties = new MultipleTranslatedProperties(
@@ -115,9 +121,13 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         }
 
-        // create snippets node
-        $output->writeln("    snippets: '/{$snippetsPath}'");
-        $this->createRecursive($snippetsPath, $root);
+        // create snippet nodes
+        $snippetStructures = $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
+        foreach ($snippetStructures as $snippetStructure) {
+            $snippetPath = $snippetsPath . '/' . $snippetStructure->getKey();
+            $output->writeln("    snippets: '/{$snippetPath}'");
+            $this->createRecursive($snippetPath, $root);
+        }
         $session->save();
 
         $output->writeln('');
@@ -162,8 +172,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         // set resource locator to node
 
         /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
-        $structure = $structureManager->getStructure($template);
+        $structure = $this->structureManager->getStructure($template);
 
         $property = $structure->getPropertyByTagName('sulu.rlp');
         $translatedProperty = new TranslatedProperty(
