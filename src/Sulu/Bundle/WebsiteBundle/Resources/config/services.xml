@@ -87,6 +87,7 @@
         <service id="sulu_website.twig.content" class="%sulu_website.twig.content.class%">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="sulu_website.resolver.structure"/>
+            <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
 
             <tag name="twig.extension"/>
