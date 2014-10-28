@@ -213,6 +213,7 @@ class ContentMapper implements ContentMapperInterface
                 'created',
                 'creator',
                 'state',
+                'title',
                 'template',
                 'published',
                 'nodeType',
@@ -270,6 +271,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
+        $this->properties->setStructureType($structureType);
 
         // set default node-type
         if (!isset($data['nodeType'])) {
@@ -334,15 +336,29 @@ class ContentMapper implements ContentMapperInterface
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
-            if (!$node->hasProperty($this->properties->getName('template'))) {
+            if (!$node->hasProperty($this->properties->getName('title'))) {
                 $newTranslatedNode($node);
             } else {
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
+
                 $hasSamePath = ($node->getPath() !== $root->getPath());
+
                 $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
                     $node->getPropertyValue(
                         $translatedNodeNameProperty->getName()
                     ) !== $data[$nodeNameProperty->getName()];
+
+                // decide if the snippet template type has changed. If it has then we need to
+                // move it to the path of the new template type.
+                if ($structureType === Structure::TYPE_SNIPPET) {
+                    $currentSnippetType = $this->nodeHelper->extractSnippetTypeFromPath($node->getPath());
+                    if ($templateKey !== $currentSnippetType) {
+                        $session->move(
+                            $node->getPath(),
+                            $root->getPath() . '/' . PathHelper::getNodeName($node->getPath())
+                        );
+                    }
+                }
 
                 if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->cleaner->cleanUp($title, $languageCode);
@@ -1159,8 +1175,15 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
+        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
+            $structureType = Structure::TYPE_SNIPPET;
+        } else {
+            $structureType = Structure::TYPE_PAGE;
+        }
+
         // first set the language to the given language
         $this->properties->setLanguage($localization);
+        $this->properties->setStructureType($structureType);
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
@@ -1204,11 +1227,6 @@ class ContentMapper implements ContentMapperInterface
             Structure::NODE_TYPE_CONTENT
         );
 
-        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
-            $structureType = Structure::TYPE_SNIPPET;
-        } else {
-            $structureType = Structure::TYPE_PAGE;
-        }
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
