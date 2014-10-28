@@ -70,10 +70,6 @@ class SitemapTwigExtension extends \Twig_Extension
      */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
-        if (strpos($url, '/') !== 0) {
-            return $url;
-        }
-
         if ($webspaceKey === null) {
             $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
         }
