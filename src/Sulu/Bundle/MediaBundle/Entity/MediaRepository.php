@@ -82,13 +82,15 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     /**
      * {@inheritdoc}
      */
-    public function findMedia($filter = array(), $limit = null)
+    public function findMedia($filter = array(), $limit = null, $offset = null)
     {
         try {
-            list($collection, $ids, $types) = array(
-                isset($filter['collection']) ? $filter['collection'] : null,
-                isset($filter['ids']) ? $filter['ids'] : null,
-                isset($filter['types']) ? $filter['types'] : null,
+            list($collection, $ids, $types, $paginator, $search) = array(
+                !empty($filter['collection']) ? $filter['collection'] : null,
+                !empty($filter['ids']) ? $filter['ids'] : null,
+                !empty($filter['types']) ? $filter['types'] : null,
+                !empty($filter['paginator']) ? $filter['paginator'] : true,
+                !empty($filter['search']) ? $filter['search'] : null,
             );
 
             // if empty array of ids is requested return empty array of medias
@@ -99,8 +101,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $qb = $this->createQueryBuilder('media')
                 ->leftJoin('media.type', 'type')
                 ->leftJoin('media.collection', 'collection')
-                ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion')
+                ->innerJoin('media.files', 'file')
+                ->innerJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
                 ->leftJoin('fileVersion.tags', 'tag')
                 ->leftJoin('fileVersion.meta', 'fileVersionMeta')
                 ->leftJoin('fileVersion.contentLanguages', 'fileVersionContentLanguage')
@@ -137,8 +139,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $qb->andWhere('type.name IN (:types)');
             }
 
+            if ($search !== null) {
+                $qb->andWhere('fileVersionMeta.title LIKE :search');
+            }
+
             if ($limit !== null) {
                 $qb->setMaxResults($limit);
+            }
+
+            if ($offset !== null) {
+                $qb->setFirstResult($offset);
             }
 
             $query = $qb->getQuery();
@@ -152,11 +162,49 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             if ($types !== null) {
                 $query->setParameter('types', $types);
             }
+            if ($search !== null) {
+                $query->setParameter('search', '%'.$search.'%');
+            }
 
-            return new Paginator($query, $fetchJoin = true);
+            if (!$paginator) {
+                return $query->getResult();
+            }
+
+            return new Paginator($query);
         } catch (NoResultException $ex) {
             return null;
         }
     }
 
+    /**
+     * Returns the most recent version of a media for the specified
+     * filename within a collection
+     *
+     * @param String $filename
+     * @param int $collectionId
+     *
+     * @return Media
+     */
+    public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
+    {
+        try {
+            $qb = $this->createQueryBuilder('media')
+                ->join('media.files', 'file')
+                ->join('file.fileVersions', 'fileVersion')
+                ->join('media.collection', 'collection')
+                ->orderBy('fileVersion.changed', 'DESC')
+                ->setMaxResults(1)
+                ->where('media.collection = :collectionId')
+                ->andWhere('fileVersion.name = :filename');
+
+            $query = $qb->getQuery();
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+            $query->setParameter('collectionId', $collectionId);
+            $query->setParameter('filename', $filename);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
 }

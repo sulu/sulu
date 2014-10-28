@@ -97,9 +97,14 @@ class MediaController extends RestController implements ClassResourceInterface
     public function cgetAction(Request $request)
     {
         try {
+            /** @var ListRestHelperInterface $listRestHelper */
+            $listRestHelper = $this->get('sulu_core.list_rest_helper');
+
             $collection = $request->get('collection');
-            $limit = $request->get('limit');
+            $limit = $request->get('limit', $listRestHelper->getLimit());
+            $offset = ($request->get('page', 1) - 1 ) * $limit;
             $ids = $request->get('ids');
+            $search = $request->get('search');
             if ($ids !== null) {
                 $ids = explode(',', $ids);
             }
@@ -108,17 +113,15 @@ class MediaController extends RestController implements ClassResourceInterface
                 $types = explode(',', $types);
             }
 
-            /** @var ListRestHelperInterface $listRestHelper */
-            $listRestHelper = $this->get('sulu_core.list_rest_helper');
-
             $mediaManager = $this->getMediaManager();
             $media = $mediaManager->get($this->getLocale($request->get('locale')), array(
                 'collection' => $collection,
                 'ids' => $ids,
-                'types' => $types
-            ), $limit);
+                'types' => $types,
+                'search' => $search
+            ), $limit, $offset);
 
-            $all = count($media); // TODO
+            $all = $mediaManager->getCount();
 
             $list = new ListRepresentation(
                 $media,

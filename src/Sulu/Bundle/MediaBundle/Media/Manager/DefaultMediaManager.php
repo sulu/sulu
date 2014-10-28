@@ -12,6 +12,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
@@ -56,7 +57,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * The repository for communication with the database
      * @var MediaRepositoryInterface
      */
-    private $mediaRepository;
+    protected $mediaRepository;
 
     /**
      * The repository for communication with the database
@@ -123,6 +124,11 @@ class DefaultMediaManager implements MediaManagerInterface
      * @var MediaType[]
      */
     private $mediaTypeEntities;
+
+    /**
+     * @var int
+     */
+    private $count;
 
     /**
      * @param MediaRepositoryInterface $mediaRepository
@@ -362,14 +368,23 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $filter = array(), $limit = null)
+    public function get($locale, $filter = array(), $limit = null, $offset = null)
     {
         $media = array();
-        $mediaEntities = $this->mediaRepository->findMedia($filter, $limit);
+        $mediaEntities = $this->mediaRepository->findMedia($filter, $limit, $offset);
+        $this->count = $mediaEntities instanceof Paginator ? $mediaEntities->count() : count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
         return $media;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCount()
+    {
+        return $this->count;
     }
 
     /**
@@ -674,7 +689,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @return object
      * @throws CollectionNotFoundException
      */
-    protected function getCollectionById($collectionId)
+    public function getCollectionById($collectionId)
     {
         $collection = $this->collectionRepository->find($collectionId);
         if (!$collection) {

@@ -35,7 +35,6 @@ class DefaultStructureCache extends \Sulu\Component\Content\Structure
             array(
             ),
             array(
-                'sulu.node.name' => new PropertyTag('sulu.node.name', 1),
                 'sulu.rlp.part' => new PropertyTag('sulu.rlp.part', 1),
             ),
             ''

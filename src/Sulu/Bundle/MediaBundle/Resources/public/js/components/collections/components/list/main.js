@@ -108,7 +108,6 @@ define(function () {
                         el: this.$find(constants.datagridSelector),
                         url: '/admin/api/collections',
                         view: 'group',
-                        pagination: false,
                         resultKey: 'collections',
                         matchings: [
                             {
