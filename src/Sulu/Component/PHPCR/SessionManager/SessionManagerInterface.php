@@ -66,11 +66,4 @@ interface SessionManagerInterface
      * @return \PHPCR\NodeInterface
      */
     public function getSnippetNode();
-
-    /**
-     * returns webspace by given path
-     * @param string $path path of node
-     * @return string
-     */
-    public function getWebspaceKeyByPath($path);
 }
