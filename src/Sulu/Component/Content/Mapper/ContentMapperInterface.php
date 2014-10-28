@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper;
 
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
 
