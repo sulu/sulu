@@ -270,6 +270,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
+        $this->properties->setStructureType($structureType);
 
         // set default node-type
         if (!isset($data['nodeType'])) {
@@ -1159,7 +1160,13 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        // first set the language to the given language
+        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
+            $structureType = Structure::TYPE_SNIPPET;
+        } else {
+            $structureType = Structure::TYPE_PAGE;
+        }
+
+        $this->properties->setStructureType($structureType);
         $this->properties->setLanguage($localization);
 
         if ($this->stopwatch) {
@@ -1203,12 +1210,6 @@ class ContentMapper implements ContentMapperInterface
             $this->properties->getName('nodeType'),
             Structure::NODE_TYPE_CONTENT
         );
-
-        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
-            $structureType = Structure::TYPE_SNIPPET;
-        } else {
-            $structureType = Structure::TYPE_PAGE;
-        }
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
