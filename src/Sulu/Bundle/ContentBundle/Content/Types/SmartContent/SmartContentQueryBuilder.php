@@ -76,6 +76,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         // build where clause for datasource
         if ($this->hasConfig('dataSource')) {
             $sql2Where[] = $this->buildDatasourceWhere();
+        } elseif (sizeof($this->ids) === 0) {
+            $sql2Where[] = sprintf(
+                'ISDESCENDANTNODE(page, "/cmf/%s/contents")',
+                $webspaceKey
+            );
         }
 
         // build where clause for tags
@@ -88,7 +93,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             foreach ($this->ids as $id) {
                 $idsWhere[] = sprintf("page.[jcr:uuid] = '%s'", $id);
             }
-            $sql2Where[] = implode(' OR ', $idsWhere);
+            $sql2Where[] = '(' . implode(' OR ', $idsWhere) . ')';
         }
 
         return implode(' AND ', $sql2Where);
@@ -113,8 +118,8 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildOrder($webspaceKey, $locale)
     {
-        $sortOrder = (isset($this->config['sortMethod']) && strtolower($this->config['sortMethod']) === 'asc')
-            ? 'ASC' : 'DESC';
+        $sortOrder = (isset($this->config['sortMethod']) && strtolower($this->config['sortMethod']) === 'desc')
+            ? 'DESC' : 'ASC';
 
         $sql2Order = array();
         $sortBy = $this->getConfig('sortBy', array());

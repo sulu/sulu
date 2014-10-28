@@ -35,11 +35,15 @@ sulu_core:
         username: admin
         password: admin
     content:
-        templates:
+        structure:
              paths:
-                 app:
-                     path: %kernel.root_dir%/Resources/templates
+                 pages:
+                     path: %kernel.root_dir%/Resources/pages
                      internal: false
+                 templates:
+                     path: %kernel.root_dir%/Resources/snippets
+                     internal: false
+                     type: snippet
                  bundle:
                      path: %kernel.root_dir%/../../Content/templates
                      internal: true

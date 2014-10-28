@@ -126,7 +126,31 @@ class NodeControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testPost()
+    public function providePost()
+    {
+        return array(
+            array(
+                array(
+                    'template' => 'default',
+                    'webspace' => 'sulu_io',
+                    'language' => 'en',
+                ),
+            ),
+        //    array(
+        //        array(
+        //            'template' => 'hotel',
+        //            'webspace' => 'sulu_io',
+        //            'language' => 'en',
+        //            'type' => 'snippet',
+        //        ),
+        //    ),
+        );
+    }
+
+    /**
+     * @dataProvider providePost
+     */
+    public function testPost($params)
     {
         $data = array(
             'title' => 'Testtitle',
@@ -146,7 +170,9 @@ class NodeControllerTest extends SuluTestCase
             )
         );
 
-        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $params = http_build_query($params);
+
+        $client->request('POST', '/api/nodes?' . $params, $data);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());

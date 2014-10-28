@@ -15,6 +15,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -22,6 +23,8 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Webspace\Webspace;
 
 /**
  * repository for node objects
@@ -161,6 +164,7 @@ class NodeRepository implements NodeRepositoryInterface
         $complete = true,
         $loadGhostContent = false
     ) {
+        if($webspaceKey)
         $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
@@ -257,17 +261,17 @@ class NodeRepository implements NodeRepositoryInterface
         $idString = '';
 
         if (!empty($ids)) {
-            foreach ($ids as $id) {
-                try {
-                    if(!empty($id)) {
-                        $result[] = $this->getNode($id, $webspaceKey, $languageCode);
-                    }
-                } catch (ItemNotFoundException $ex) {
-                    $this->logger->warning(
-                        sprintf("%s in internal links not found. Exception: %s", $id, $ex->getMessage())
-                    );
-                }
-            }
+            $container = new InternalLinksContainer(
+                $ids,
+                $this->queryExecutor,
+                $this->queryBuilder,
+                array(),
+                $this->logger,
+                $webspaceKey,
+                $languageCode
+            );
+
+            $result = $container->getData();
             $idString = implode(',', $ids);
         }
 
@@ -291,6 +295,51 @@ class NodeRepository implements NodeRepositoryInterface
         $depth = 1,
         $excludeGhosts = false
     ) {
+        // init result
+        $data = array();
+
+        // add default empty embedded property
+        $data['_embedded'] = array(
+            'nodes' => array($this->createWebspaceNode($webspaceKey, $languageCode, $depth, $excludeGhosts))
+        );
+        // add api links
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+        );
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWebspaceNodes($languageCode)
+    {
+        // init result
+        $data = array('_embedded' => array('nodes' => array()));
+
+        /** @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $data['_embedded']['nodes'][] = $this->createWebspaceNode($webspace->getKey(), $languageCode, 0);
+        }
+
+        // add api links
+        $data['_links'] = array(
+            'self' => $this->apiBasePath . '/entry?language=' . $languageCode
+        );
+
+        return $data;
+    }
+
+    /**
+     * Creates a webspace node
+     */
+    private function createWebspaceNode(
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $excludeGhosts = false
+    ) {
         $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace($webspaceKey);
 
         if ($depth > 0) {
@@ -308,7 +357,7 @@ class NodeRepository implements NodeRepositoryInterface
             $embedded = array();
         }
 
-        $node = array(
+        return array(
             'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
             'path' => '/',
             'title' => $webspace->getName(),
@@ -318,20 +367,6 @@ class NodeRepository implements NodeRepositoryInterface
                 'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
             )
         );
-
-        // init result
-        $data = array();
-
-        // add default empty embedded property
-        $data['_embedded'] = array(
-            'nodes' => array($node)
-        );
-        // add api links
-        $data['_links'] = array(
-            'self' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
-        );
-
-        return $data;
     }
 
     /**
@@ -441,6 +476,13 @@ class NodeRepository implements NodeRepositoryInterface
         );
 
         return $this->prepareNode($node, $webspaceKey, $languageCode);
+    }
+
+    public function saveNodeRequest(ContentMapperRequest $mapperRequest)
+    {
+        $node = $this->getMapper()->saveRequest($mapperRequest);
+
+        return $this->prepareNode($node, $mapperRequest->getWebspaceKey(), $mapperRequest->getLocale());
     }
 
     /**

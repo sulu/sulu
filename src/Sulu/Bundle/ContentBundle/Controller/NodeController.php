@@ -21,6 +21,8 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Structure;
 
 /**
  * handles content nodes
@@ -43,11 +45,12 @@ class NodeController extends RestController implements ClassResourceInterface
     /**
      * returns webspace key from request
      * @param Request $request
+     * @param bool $force
      * @return string
      */
-    private function getWebspace(Request $request)
+    private function getWebspace(Request $request, $force = true)
     {
-        return $this->getRequestParameter($request, 'webspace', true);
+        return $this->getRequestParameter($request, 'webspace', $force);
     }
 
     /**
@@ -146,7 +149,7 @@ class NodeController extends RestController implements ClassResourceInterface
     private function getTreeForUuid(Request $request, $uuid)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
+        $webspace = $this->getWebspace($request, false);
         $excludeGhosts = $this->getBooleanRequestParameter($request, 'exclude-ghosts', false, false);
 
         $appendWebspaceNode = $this->getBooleanRequestParameter($request, 'webspace-node', false, false);
@@ -160,8 +163,10 @@ class NodeController extends RestController implements ClassResourceInterface
                     $excludeGhosts,
                     $appendWebspaceNode
                 );
-            } else {
+            } elseif ($webspace !== null) {
                 $result = $this->getRepository()->getWebspaceNode($webspace, $language);
+            } else {
+                $result = $this->getRepository()->getWebspaceNodes($language);
             }
         } catch (ItemNotFoundException $ex) {
             // TODO return 404 and handle this edge case on client side
@@ -194,7 +199,7 @@ class NodeController extends RestController implements ClassResourceInterface
     private function getNodesByIds(Request $request, $idString)
     {
         $language = $this->getLanguage($request);
-        $webspace = $this->getWebspace($request);
+        $webspace = $this->getWebspace($request, false);
 
         $result = $this->getRepository()->getNodesByIds(
             preg_split('/[,]/', $idString, -1, PREG_SPLIT_NO_EMPTY),
@@ -346,6 +351,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
 
         $state = $this->getRequestParameter($request, 'state');
+        $type = $this->getRequestParameter($request, 'type') ? : 'page';
 
         if ($state !== null) {
             $state = intval($state);
@@ -353,18 +359,18 @@ class NodeController extends RestController implements ClassResourceInterface
 
         $data = $request->request->all();
 
-        $result = $this->getRepository()->saveNode(
-            $data,
-            $template,
-            $webspace,
-            $language,
-            $this->getUser()->getId(),
-            $uuid,
-            null, // parentUuid
-            $state,
-            $isShadow,
-            $shadowBaseLanguage
-        );
+        $mapperRequest = ContentMapperRequest::create()
+            ->setType($type)
+            ->setTemplateKey($template)
+            ->setWebspaceKey($webspace)
+            ->setUserId($this->getUser()->getId())
+            ->setState($state)
+            ->setIsShadow($isShadow)
+            ->setShadowBaseLanguage($shadowBaseLanguage)
+            ->setLocale($language)
+            ->setUuid($uuid)
+            ->setData($data);
+        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
 
         return $this->handleView(
             $this->view($result)
@@ -416,7 +422,6 @@ class NodeController extends RestController implements ClassResourceInterface
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
-        $navigation = $this->getRequestParameter($request, 'navigation');
         $isShadow = $this->getRequestParameter($request, 'isShadow', false);
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
         $parent = $this->getRequestParameter($request, 'parent');
@@ -424,21 +429,23 @@ class NodeController extends RestController implements ClassResourceInterface
         if ($state !== null) {
             $state = intval($state);
         }
+        $type = $request->query->get('type', Structure::TYPE_PAGE);
 
         $data = $request->request->all();
 
-        $result = $this->getRepository()->saveNode(
-            $data,
-            $template,
-            $webspace,
-            $language,
-            $this->getUser()->getId(),
-            null, // uuid
-            $parent,
-            $state,
-            $isShadow,
-            $shadowBaseLanguage
-        );
+        $mapperRequest = ContentMapperRequest::create()
+            ->setType($type)
+            ->setTemplateKey($template)
+            ->setWebspaceKey($webspace)
+            ->setUserId($this->getUser()->getId())
+            ->setState($state)
+            ->setIsShadow($isShadow)
+            ->setShadowBaseLanguage($shadowBaseLanguage)
+            ->setLocale($language)
+            ->setParentUuid($parent)
+            ->setData($data);
+
+        $result = $this->getRepository()->saveNodeRequest($mapperRequest);
 
         return $this->handleView(
             $this->view($result)

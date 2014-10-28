@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+
 /**
  * repository for node objects
  */
@@ -63,6 +65,13 @@ interface NodeRepositoryInterface
         $depth = 1,
         $excludeGhosts = false
     );
+
+    /**
+     * Return all webspaces as nodes
+     * @param string $languageCode The desired language code
+     * @return array
+     */
+    public function getWebspaceNodes($languageCode);
 
     /**
      * Returns the content of a smart content configuration
@@ -140,6 +149,13 @@ interface NodeRepositoryInterface
         $excludeGhosts = false,
         $appendWebspaceNode = false
     );
+
+    /**
+     * executes a content request and prepares api result
+     * @param ContentMapperRequest $mapperRequest
+     * @return array
+     */
+    public function saveNodeRequest(ContentMapperRequest $mapperRequest);
 
     /**
      * returns data of given extension api ready

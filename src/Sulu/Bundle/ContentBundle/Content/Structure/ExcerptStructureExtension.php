@@ -17,6 +17,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * extends structure with seo content
@@ -76,6 +77,10 @@ class ExcerptStructureExtension extends StructureExtension
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
+        if ($data instanceof ArrayableInterface) {
+            $data = $data->toArray();
+        }
+
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 

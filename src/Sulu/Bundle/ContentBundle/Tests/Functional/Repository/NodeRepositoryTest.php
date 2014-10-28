@@ -77,7 +77,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             'article' => 'Test'
         );
 
-        return $this->mapper->save($data, 'overview', 'default', 'en', 1);
+        return $this->mapper->save($data, 'overview', 'default', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 
     public function testGet()
@@ -203,6 +203,14 @@ class NodeRepositoryTest extends PhpcrTestCase
         $result = $this->nodeRepository->getWebspaceNode('default', 'en');
 
         $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
+    }
+
+    public function testGetWebspaceNodes()
+    {
+        $result = $this->nodeRepository->getWebspaceNodes('en');
+
+        $this->assertEquals('Test', $result['_embedded']['nodes'][0]['title']);
+        // TODO add more webspaces when changed to SuluTestCase
     }
 
     public function testGetNodesTree()
@@ -967,6 +975,12 @@ class NodeRepositoryTest extends PhpcrTestCase
             ->method('findWebspaceByKey')
             ->will($this->returnValue($this->webspace));
 
+        $this
+            ->webspaceCollection
+            ->expects($this->any())
+            ->method('getIterator')
+            ->will($this->returnValue(new \ArrayIterator(array($this->webspace))));
+
         $this->nodeRepository = new NodeRepository(
             $this->mapper,
             $this->sessionManager,
@@ -1027,7 +1041,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     public function getStructureMockInternal()
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array('internal_link', 'asdf', 'asdf', 2400)
         );
 
@@ -1064,7 +1078,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     public function getStructureMockExternal()
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array('internal_link', 'asdf', 'asdf', 2400)
         );
 
@@ -1113,7 +1127,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     public function getStructureMock($type = 1)
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array('overview', 'asdf', 'asdf', 2400)
         );
 

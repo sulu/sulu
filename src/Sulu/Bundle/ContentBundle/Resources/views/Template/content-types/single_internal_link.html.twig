@@ -7,6 +7,6 @@
      data-aura-component="single-internal-link@sulucontent"
      data-aura-instance-name="{{ id|raw }}"
      data-aura-result-key="nodes"
-     data-aura-url="/admin/api/nodes{/uuid}?depth=1&webspace={{ webspaceKey }}&language={{ languageCode }}&webspace-node=true"
-     data-aura-column-navigation-url="/admin/api/nodes{/uuid}?tree=true&webspace={{ webspaceKey }}&language={{ languageCode }}&webspace-node=true">
+     data-aura-url="/admin/api/nodes{/uuid}?depth=1{% if webspaceKey is defined %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true"
+     data-aura-column-navigation-url="/admin/api/nodes{/uuid}?tree=true{% if webspaceKey is defined %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true">
 </div>

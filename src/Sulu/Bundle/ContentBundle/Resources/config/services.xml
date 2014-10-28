@@ -43,6 +43,7 @@
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.type.resource_locator"/>
+            <argument type="service" id="sulu.content.mapper"/>
         </service>
 
         <!-- structure extension -->
@@ -61,7 +62,7 @@
         <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
             <argument type="string">sulu-content</argument>
             <argument type="collection">
-                <argument key="defaultTemplate" type="string">%sulu.content.template.default%</argument>
+                <argument key="defaultTemplate" type="string">%sulu.content.structure.default_type.page%</argument>
                 <argument key="wsPort" type="string">%sulu_content.preview.websocket.port%</argument>
                 <argument key="wsUrl" type="string">%sulu_content.preview.websocket.url%</argument>
                 <argument key="showInSortModeTag" type="string">sulu.show_in_sortmode</argument>

@@ -233,6 +233,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
+        $node = (array)json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $history = (array)json_decode($this->client->getResponse()->getContent(), true);
 

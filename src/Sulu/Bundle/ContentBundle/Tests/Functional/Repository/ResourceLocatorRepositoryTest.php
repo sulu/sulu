@@ -43,7 +43,8 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
         $this->repository = new ResourceLocatorRepository(
             $strategy,
             $this->structureManager,
-            $this->containerValueMap['sulu.content.type.resource_locator']
+            $this->containerValueMap['sulu.content.type.resource_locator'],
+            $this->mapper
         );
     }
 
@@ -62,7 +63,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     public function getStructureMock()
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array('overview', 'asdf', 'asdf', 2400)
         );
 
@@ -86,7 +87,10 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property('url', 'url', 'resource_locator')
+                new Property('url', 'url', 'resource_locator', false, false, 1, 1, array(),
+                    array(
+                        new PropertyTag('sulu.rlp', 100)
+                    ))
             )
         );
 
@@ -161,7 +165,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     {
         $structure = $this->prepareHistoryTestData();
 
-        $result = $this->repository->restore('/asdf', 'default', 'en');
+        $result = $this->repository->restore('/asdf', 1, 'default', 'en');
 
         $this->assertEquals('/asdf', $result['resourceLocator']);
 

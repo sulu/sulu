@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Repository;
 
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
@@ -36,6 +37,11 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     private $resourceLocator;
 
     /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
      * @var string[]
      */
     private $apiBasePath = array(
@@ -45,19 +51,19 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     );
 
     /**
-     * @param RlpStrategyInterface $strategy
-     * @param StructureManagerInterface $structureManager
-     * @param ResourceLocatorInterface $resourceLocator
+     * Constructor
      */
     function __construct(
         RlpStrategyInterface $strategy,
         StructureManagerInterface $structureManager,
-        ResourceLocatorInterface $resourceLocator
+        ResourceLocatorInterface $resourceLocator,
+        ContentMapperInterface $contentMapper
     )
     {
         $this->strategy = $strategy;
         $this->structureManager = $structureManager;
         $this->resourceLocator = $resourceLocator;
+        $this->contentMapper = $contentMapper;
     }
 
     /**
@@ -133,9 +139,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function restore($path, $webspaceKey, $languageCode, $segmentKey = null)
+    public function restore($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $this->resourceLocator->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $this->contentMapper->restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey);
 
         return array('resourceLocator' => $path, '_links' => array());
     }

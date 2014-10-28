@@ -14,6 +14,7 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * handles resource locator api
@@ -35,7 +36,7 @@ class NodeResourcelocatorController extends RestController implements ClassResou
         $templateKey = $this->getRequestParameter($this->getRequest(), 'template', true);
 
         if ($templateKey === null) {
-            $templateKey = $this->container->getParameter('sulu.content.template.default');
+            $templateKey = $this->container->getParameter('sulu.content.structure.default_type.page');
         }
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
 
@@ -80,14 +81,15 @@ class NodeResourcelocatorController extends RestController implements ClassResou
 
     /**
      * restores url with given path
+     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putRestoreAction()
+    public function putRestoreAction(Request $request)
     {
         list($webspaceKey, $languageCode) = $this->getWebspaceAndLanguage();
-        $path = $this->getRequestParameter($this->getRequest(), 'path', true);
+        $path = $this->getRequestParameter($request, 'path', true);
 
-        $result = $this->getResourceLocatorRepository()->restore($path, $webspaceKey, $languageCode);
+        $result = $this->getResourceLocatorRepository()->restore($path,$this->getUser()->getId(), $webspaceKey, $languageCode);
 
         return $this->handleView($this->view($result));
     }
