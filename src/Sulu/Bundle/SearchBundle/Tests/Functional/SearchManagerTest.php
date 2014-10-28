@@ -10,9 +10,6 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
-use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
-use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
-
 class SearchManagerTest extends BaseTestCase
 {
     public function testSearchManager()

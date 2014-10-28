@@ -15,11 +15,12 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Structure\Page;
 
 /**
  * DefaultStructureCache
  */
-class DefaultStructureCache extends \Sulu\Component\Content\Structure
+class DefaultStructureCache extends Page
 {
     public function __construct()
     {

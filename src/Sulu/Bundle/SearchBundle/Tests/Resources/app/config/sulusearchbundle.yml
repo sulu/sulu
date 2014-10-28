@@ -12,7 +12,7 @@ sulu_core:
     webspace:
         config_dir: %kernel.root_dir%/Resources/webspaces
     content:
-        templates:
+        structure:
             paths:
                 app:
                     path: "%kernel.root_dir%/Resources/templates"

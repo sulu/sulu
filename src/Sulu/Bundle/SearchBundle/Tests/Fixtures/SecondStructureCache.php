@@ -15,11 +15,12 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Structure\Page;
 
 /**
  * This structure cache has more search features than DefaultStructureCache
  */
-class SecondStructureCache extends \Sulu\Component\Content\Structure
+class SecondStructureCache extends Page
 {
     public function __construct()
     {
