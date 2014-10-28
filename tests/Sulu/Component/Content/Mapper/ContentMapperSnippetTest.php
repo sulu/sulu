@@ -81,6 +81,32 @@ class ContentMapperSnippetTest extends SuluTestCase
             $this->assertTrue(true);
         }
 
-        $this->session->getNode('/cmf/snippets/hotel/elephpant');
+        $node = $this->session->getNode('/cmf/snippets/hotel/elephpant');
+        $node->getPropertyValue('template');
+    }
+
+    public function testRenameSnippet()
+    {
+        $req = ContentMapperRequest::create()
+            ->setUuid($this->snippet1->getUuid())
+            ->setType(Structure::TYPE_SNIPPET)
+            ->setTemplateKey('animal')
+            ->setLocale('de')
+            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setUserId(1)
+            ->setData(array(
+                'title' => 'ElePHPant 123123',
+            ));
+        $this->contentMapper->saveRequest($req);
+
+        try {
+            $this->session->getNode($this->snippet1OriginalPath);
+            $this->assertTrue(false);
+        } catch (\PHPCR\PathNotFoundException $e) {
+            $this->assertTrue(true);
+        }
+
+        $node = $this->session->getNode('/cmf/snippets/hotel/elephpant');
+        $node->getPropertyValue('template');
     }
 }

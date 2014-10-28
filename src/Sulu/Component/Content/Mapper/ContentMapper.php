@@ -213,6 +213,7 @@ class ContentMapper implements ContentMapperInterface
                 'created',
                 'creator',
                 'state',
+                'title',
                 'template',
                 'published',
                 'nodeType',
@@ -270,6 +271,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
+        $this->properties->setStructureType($structureType);
 
         // set default node-type
         if (!isset($data['nodeType'])) {
@@ -334,7 +336,7 @@ class ContentMapper implements ContentMapperInterface
         } else {
             $node = $session->getNodeByIdentifier($uuid);
 
-            if (!$node->hasProperty($this->properties->getName('template'))) {
+            if (!$node->hasProperty($this->properties->getName('title'))) {
                 $newTranslatedNode($node);
             } else {
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);

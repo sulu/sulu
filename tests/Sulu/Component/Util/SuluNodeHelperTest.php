@@ -53,8 +53,8 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->helper = new SuluNodeHelper(
             'i18n',
             array(
-                'base' => '/cmf',
-                'snippet' => '/snippets'
+                'base' => 'cmf',
+                'snippet' => 'snippets'
             )
         );
     }
@@ -95,6 +95,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             array('/cmf/snippets/bar-foo/snippet2', 'bar-foo'),
             array('/cmf/snippets', null, false),
             array('/cmf/snippets/bar', null, false),
+            array('/cmf/snippets/animal/elephpant', 'animal'),
             array('', null, false),
         );
     }

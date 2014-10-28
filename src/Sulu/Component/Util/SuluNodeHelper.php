@@ -72,7 +72,7 @@ class SuluNodeHelper
      */
     public function extractWebspaceFromPath($path)
     {
-        $match = preg_match('/^\\' . $this->getPath('base') . '\/(\w*)\/.*$/', $path, $matches);
+        $match = preg_match('/^\/' . $this->getPath('base') . '\/(\w*)\/.*$/', $path, $matches);
 
         if ($match) {
             return $matches[1];
@@ -99,7 +99,7 @@ class SuluNodeHelper
             );
         }
 
-        $snippetsPath = $this->getPath('base') . '/' . $this->getPath('snippet');
+        $snippetsPath = '/' . $this->getPath('base') . '/' . $this->getPath('snippet') . '/';
         $newPath = PathHelper::getParentPath($path);
         $newPath = substr($newPath, strlen($snippetsPath));
 
