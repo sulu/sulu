@@ -6,6 +6,7 @@
     <parameters>
         <parameter key="sulu_snippet.repository.class">Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository</parameter>
         <parameter key="sulu_snippet.controller.snippet.class">Sulu\Bundle\SnippetBundle\Controller\SnippetController</parameter>
+        <parameter key="sulu_snippet.twig.snippet.class">Sulu\Bundle\SnippetBundle\Twig\SnippetTwigExtension</parameter>
     </parameters>
 
     <services>
@@ -22,6 +23,13 @@
             <argument type="service" id="security.context" on-invalid="ignore"/>
             <argument type="service" id="router" />
         </service>
+
+        <service id="sulu_snippet.twig.snippet" class="%sulu_snippet.twig.snippet.class%">
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument type="service" id="sulu_website.resolver.structure"/>
+
+            <tag name="twig.extension"/>
+        </service>
     </services>
 </container>
-
