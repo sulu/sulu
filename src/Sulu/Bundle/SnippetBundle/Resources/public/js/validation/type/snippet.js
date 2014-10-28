@@ -14,20 +14,35 @@ define([
 
     'use strict';
 
+    var dataChangedHandler = function (data, $el) {
+        App.emit('sulu.preview.update', $el, data);
+        App.emit('sulu.content.changed');
+    };
+
     return function($el, options) {
         var defaults = {},
 
             subType = {
+                initializeSub: function() {
+                    var dataChangedEvent = 'sulu.snippets.' + options.instanceName + '.data-changed';
+
+                    App.off(dataChangedEvent, dataChangedHandler);
+                    App.on(dataChangedEvent, dataChangedHandler);
+                },
+
                 setValue: function(value) {
-                    var ids = [];
+                    var data = {
+                        ids: []
+                    };
+
                     $.each(value, function (i, value) {
-                        ids.push(value.uuid);
+                        data.ids.push(value.uuid);
                     });
-                    App.dom.data($el, 'snippet-ids', ids);
+                    App.dom.data($el, 'snippets', data);
                 },
 
                 getValue: function() {
-                    return App.dom.data($el, 'snippet-ids');
+                    return App.dom.data($el, 'snippets');
                 },
 
                 needsValidation: function() {
