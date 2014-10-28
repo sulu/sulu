@@ -8989,11 +8989,7 @@ a.btn-black, a.btn-highlight {
   top: inherit;
   bottom: 5px;
 }
-<<<<<<< HEAD
 /* line 82, ../scss/modules/select.scss */
-=======
-/* line 83, ../scss/modules/select.scss */
->>>>>>> 014f0d4d76f3ab72dbc68b95d55bdf93ab29f07a
 .husky-select-container .dropdown-list .disabled,
 .husky-select-container .dropdown-list .disabled:hover {
   background: none;
@@ -9038,11 +9034,7 @@ a.btn-black, a.btn-highlight {
   overflow: hidden;
   white-space: nowrap;
 }
-<<<<<<< HEAD
 /* line 121, ../scss/modules/select.scss */
-=======
-/* line 122, ../scss/modules/select.scss */
->>>>>>> 014f0d4d76f3ab72dbc68b95d55bdf93ab29f07a
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
   background-color: #52B6CA;
   cursor: pointer;
@@ -9053,11 +9045,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 130, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover > div {
-<<<<<<< HEAD
   color: #fff;
-=======
-  color: white;
->>>>>>> 014f0d4d76f3ab72dbc68b95d55bdf93ab29f07a
 }
 /* line 138, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
@@ -9616,11 +9604,7 @@ a.btn-black, a.btn-highlight {
   margin-top: -30px;
 }
 
-<<<<<<< HEAD
 /* line 1, ../scss/modules/label.scss */
-=======
-/* line 3, ../scss/modules/label.scss */
->>>>>>> 014f0d4d76f3ab72dbc68b95d55bdf93ab29f07a
 .husky-label-error,
 .husky-label-warning,
 .husky-label-success {
