@@ -55,6 +55,8 @@
         <!-- optional request_analyzer: in admin not available -->
         <service id="sulu_website.twig.content_path" class="%sulu_website.twig.content_path.class%">
             <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
 
             <tag name="twig.extension"/>
