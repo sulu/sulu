@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 
@@ -25,8 +26,10 @@ class StructureResolver implements StructureResolverInterface
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param StructureManagerInterface $structureManager
      */
-    public function __construct(ContentTypeManagerInterface $contentTypeManager, StructureManagerInterface $structureManager)
-    {
+    public function __construct(
+        ContentTypeManagerInterface $contentTypeManager,
+        StructureManagerInterface $structureManager
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
     }
@@ -39,7 +42,6 @@ class StructureResolver implements StructureResolverInterface
         $data = array(
             'view' => array(),
             'content' => array(),
-            'extension' => $structure->getExt(),
             'uuid' => $structure->getUuid(),
             'creator' => $structure->getCreator(),
             'changer' => $structure->getChanger(),
@@ -47,15 +49,19 @@ class StructureResolver implements StructureResolverInterface
             'changed' => $structure->getChanged(),
         );
 
+        if ($structure instanceof Page) {
+            $data['extension'] = $structure->getExt();
+
+            foreach ($data['extension'] as $name => $value) {
+                $extension = $this->structureManager->getExtension($structure->getKey(), $name);
+                $data['extension'][$name] = $extension->getContentData($value);
+            }
+        }
+
         foreach ($structure->getProperties(true) as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $data['view'][$property->getName()] = $contentType->getViewData($property);
             $data['content'][$property->getName()] = $contentType->getContentData($property);
-        }
-
-        foreach ($data['extension'] as $name => $value) {
-            $extension = $this->structureManager->getExtension($structure->getKey(), $name);
-            $data['extension'][$name] = $extension->getContentData($value);
         }
 
         return $data;

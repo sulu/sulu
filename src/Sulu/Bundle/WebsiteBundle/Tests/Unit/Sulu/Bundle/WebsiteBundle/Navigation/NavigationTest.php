@@ -253,7 +253,7 @@ class NavigationTest extends PhpcrTestCase
     private function getStructureMock($name, $rlp = true)
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure',
+            '\Sulu\Component\Content\Structure\Page',
             array($name, 'asdf', 'asdf', 2400)
         );
 
@@ -383,8 +383,8 @@ class NavigationTest extends PhpcrTestCase
         $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals('News-1', $result[0]['title']);
-        $this->assertEquals('SubNews', $result[1]['title']);
-        $this->assertEquals('News-2', $result[2]['title']);
+        $this->assertEquals('News-2', $result[1]['title']);
+        $this->assertEquals('SubNews', $result[2]['title']);
     }
 
     public function testNavigationExcerpt()
@@ -418,11 +418,11 @@ class NavigationTest extends PhpcrTestCase
         $this->assertEquals('News-1', $result[0]['title']);
         $this->assertEquals('Excerpt News 1', $result[0]['excerpt']['title']);
 
-        $this->assertEquals('SubNews', $result[1]['title']);
-        $this->assertEquals('', $result[1]['excerpt']['title']);
+        $this->assertEquals('News-2', $result[1]['title']);
+        $this->assertEquals('Excerpt News 2', $result[1]['excerpt']['title']);
 
-        $this->assertEquals('News-2', $result[2]['title']);
-        $this->assertEquals('Excerpt News 2', $result[2]['excerpt']['title']);
+        $this->assertEquals('SubNews', $result[2]['title']);
+        $this->assertEquals('', $result[2]['excerpt']['title']);
     }
 
     public function testBreadcrumb()
