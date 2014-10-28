@@ -88,8 +88,7 @@ class SnippetContent extends ComplexContentType
         $data,
         PropertyInterface $property,
         $webspaceKey,
-        $languageCode,
-        $segmentKey
+        $languageCode
     ) 
     {
         $refs = isset($data['ids']) ? $data['ids'] : array();
@@ -114,7 +113,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData(array('ids' => $refs), $property, $webspaceKey, $languageCode, $segmentKey);
+        $this->setData(array('ids' => $refs), $property, $webspaceKey, $languageCode);
     }
 
     /**
