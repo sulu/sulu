@@ -13,11 +13,10 @@
     ],
     "require": {
         "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "friendsofsymfony/rest-bundle": "dev-master",
-        "jms/serializer-bundle": "@dev",
+        "doctrine/orm": "2.4.*",
+        "friendsofsymfony/rest-bundle": "1.4.*",
         "sulu/sulu": "dev-develop",
-        "stof/doctrine-extensions-bundle": "1.1.*@dev",
+        "stof/doctrine-extensions-bundle": "1.1.*",
         "sulu/admin-bundle": "dev-develop",
         "willdurand/hateoas-bundle": "0.3.*"
     },
@@ -27,14 +26,12 @@
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "sulu/test-bundle": "dev-develop",
-        "phpunit/phpunit": "4.0.*",
-        "friendsofsymfony/http-cache": "@dev"
+        "phpunit/phpunit": "4.0.*"
     },
     "autoload": {
         "psr-0": {
             "Sulu\\Bundle\\CategoryBundle": ""
         }
     },
-    "target-dir": "Sulu/Bundle/CategoryBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Sulu/Bundle/CategoryBundle"
 }
