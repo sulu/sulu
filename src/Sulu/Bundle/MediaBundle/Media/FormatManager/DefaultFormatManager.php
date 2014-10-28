@@ -69,6 +69,11 @@ class DefaultFormatManager implements FormatManagerInterface
     private $previewMimeTypes = array();
 
     /**
+     * @var array
+     */
+    private $tempFiles = array();
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
@@ -162,6 +167,8 @@ class DefaultFormatManager implements FormatManagerInterface
             // return default image
             return $this->returnFallbackImage($format);
         }
+
+        $this->clearTempFiles();
 
         // return image
         return new Response($image, 200, $headers);
@@ -364,7 +371,22 @@ class DefaultFormatManager implements FormatManagerInterface
         fwrite($handle, $content);
         fclose($handle);
 
+        $this->tempFiles[] = $tempFile;
+
         return $tempFile;
+    }
+
+    /**
+     * delete all created temp files
+     * @return $this
+     */
+    protected function clearTempFiles()
+    {
+        foreach ($this->tempFiles as $tempFile) {
+            @unlink($tempFile);
+        }
+
+        return $this;
     }
 
     /**
