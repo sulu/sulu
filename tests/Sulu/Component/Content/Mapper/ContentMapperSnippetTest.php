@@ -98,15 +98,7 @@ class ContentMapperSnippetTest extends SuluTestCase
                 'title' => 'ElePHPant FOOBAR',
             ));
         $this->contentMapper->saveRequest($req);
-
-        try {
-            $this->session->getNode($this->snippet1OriginalPath);
-            $this->assertTrue(false);
-        } catch (\PHPCR\PathNotFoundException $e) {
-            $this->assertTrue(true);
-        }
-
-        $node = $this->session->getNode('/cmf/snippets/hotel/elephpant');
+        $node = $this->session->getNode('/cmf/snippets/animal/elephpant');
         $node->getPropertyValue('template');
     }
 
