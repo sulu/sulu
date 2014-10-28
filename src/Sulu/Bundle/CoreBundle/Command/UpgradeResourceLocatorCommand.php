@@ -35,9 +35,7 @@ class UpgradeResourceLocatorCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this
-            ->setName('sulu:upgrade:0.9.0:resource-locator')
-            ->setDescription('Upgrades resourcelocators to 0.9.0');
+        $this->setName('sulu:upgrade:0.9.0:resource-locator')->setDescription('Upgrades resource-locators to 0.9.0');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -111,7 +109,9 @@ class UpgradeResourceLocatorCommand extends ContainerAwareCommand
         $resourceLocator = $this->getContainer()->get('sulu.content.type.resource_locator');
 
         $property = $page->getPropertyByTagName('sulu.rlp');
-        if ($property->getContentTypeName() !== 'resource_locator' && $page->getNodeType() !== Structure::NODE_TYPE_CONTENT) {
+        if ($property->getContentTypeName() !== 'resource_locator' && $page->getNodeType(
+            ) !== Structure::NODE_TYPE_CONTENT
+        ) {
             return;
         }
 
