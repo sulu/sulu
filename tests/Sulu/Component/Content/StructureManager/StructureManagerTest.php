@@ -86,7 +86,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetStructure()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getPage('template');
+        $structure = $this->structureManager->getStructure('template');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -230,7 +230,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetBlockStructure()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getPage('template_block');
+        $structure = $this->structureManager->getStructure('template_block');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -461,7 +461,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testBlockMultipleTypes()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getPage('template_block_types');
+        $structure = $this->structureManager->getStructure('template_block_types');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -514,7 +514,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testSections()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getPage('template_sections');
+        $structure = $this->structureManager->getStructure('template_sections');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -555,7 +555,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testNestedParams()
     {
-        $structure = $this->structureManager->getPage('template_nesting_params');
+        $structure = $this->structureManager->getStructure('template_nesting_params');
 
         $this->assertEquals(
             array(
@@ -569,7 +569,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testBooleanParams()
     {
-        $structure = $this->structureManager->getPage('template_boolean_params');
+        $structure = $this->structureManager->getStructure('template_boolean_params');
 
         $params = $structure->getProperty('title')->getParams();
 

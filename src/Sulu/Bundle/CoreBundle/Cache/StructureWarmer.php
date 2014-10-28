@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Cache;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure;
 
 /**
  * Generates the Structure cache files
@@ -32,10 +33,10 @@ class StructureWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         // warmup the pages
-        $this->structureManager->getPages();
+        $this->structureManager->getStructures(Structure::TYPE_PAGE);
 
         // warm up the snippets
-        $this->structureManager->getSnippets();
+        $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
     }
 
     public function isOptional()
