@@ -719,6 +719,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         // create translated properties
         $this->properties->setLanguage($languageCode);
+        $this->properties->setStructureType(Structure::TYPE_PAGE);
 
         // get node from session
         $session = $this->getSession();
@@ -1227,7 +1228,6 @@ class ContentMapper implements ContentMapperInterface
             Structure::NODE_TYPE_CONTENT
         );
 
-
         $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
             $this->properties->getName('template'),
@@ -1400,6 +1400,7 @@ class ContentMapper implements ContentMapperInterface
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey)
     {
         $this->properties->setLanguage($languageCode);
+        $this->properties->setStructureType(Structure::TYPE_PAGE);
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadBreadcrumb');
@@ -1870,6 +1871,7 @@ class ContentMapper implements ContentMapperInterface
         // reset cache
         $this->initializeExtensionCache();
         $this->properties->setLanguage($locale);
+        $this->properties->setStructureType(Structure::TYPE_PAGE);
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
