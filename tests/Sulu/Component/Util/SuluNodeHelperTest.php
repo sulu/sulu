@@ -42,7 +42,13 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
                 $this->property4,
             )));
 
-        $this->helper = new SuluNodeHelper('i18n');
+        $this->helper = new SuluNodeHelper(
+            'i18n',
+            array(
+                'base' => '/cmf',
+                'snippet' => '/snippets'
+            )
+        );
     }
 
     public function testGetLanguagesForNode()
@@ -57,7 +63,9 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('/cmf/sulu_io/content/articles/article-one', 'sulu_io'),
-            array('/cmfcontent/articles/article-one', 'articles'),
+            array('/cmfcontent/articles/article-one', null),
+            array('/cmf/webspace_five', null),
+            array('/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'),
             array('', null),
             array('asdasd', null),
         );
@@ -69,6 +77,30 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
     public function testExtractWebspaceFromPath($path, $expected)
     {
         $res = $this->helper->extractWebspaceFromPath($path);
+        $this->assertEquals($expected, $res);
+    }
+
+    public function provideExtractSnippetTypeFromPath()
+    {
+        return array(
+            array('/cmf/snippets/foobar/snippet1', 'foobar'),
+            array('/cmf/snippets/bar-foo/snippet2', 'bar-foo'),
+            array('/cmf/snippets', null, false),
+            array('/cmf/snippets/bar', null, false),
+            array('', null, false),
+        );
+    }
+
+    /**
+     * @dataProvider provideExtractSnippetTypeFromPath
+     */
+    public function testExtractSnippetTypeFromPath($path, $expected, $valid = true)
+    {
+        if (false === $valid) {
+            $this->setExpectedException('\InvalidArgumentException');
+        }
+
+        $res = $this->helper->extractSnippetTypeFromPath($path);
         $this->assertEquals($expected, $res);
     }
 }
