@@ -1173,8 +1173,15 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
+        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
+            $structureType = Structure::TYPE_SNIPPET;
+        } else {
+            $structureType = Structure::TYPE_PAGE;
+        }
+
         // first set the language to the given language
         $this->properties->setLanguage($localization);
+        $this->properties->setStructureType($structureType);
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
@@ -1218,11 +1225,6 @@ class ContentMapper implements ContentMapperInterface
             Structure::NODE_TYPE_CONTENT
         );
 
-        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
-            $structureType = Structure::TYPE_SNIPPET;
-        } else {
-            $structureType = Structure::TYPE_PAGE;
-        }
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
