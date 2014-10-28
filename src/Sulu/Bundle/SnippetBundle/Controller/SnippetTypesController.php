@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +31,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     {
         /** @var StructureManagerInterface $structureManager */
         $structureManager = $this->get('sulu.content.structure_manager');
-        $types = $structureManager->getSnippets();
+        $types = $structureManager->getStructures(Structure::TYPE_SNIPPET);
 
         $templates = array();
         foreach ($types as $type) {
