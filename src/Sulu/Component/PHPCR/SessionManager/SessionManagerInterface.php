@@ -31,11 +31,27 @@ interface SessionManagerInterface
     public function getRouteNode($webspaceKey, $languageCode, $segment = null);
 
     /**
+     * returns the route path for given webspace
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segment
+     * @return string
+     */
+    public function getRoutePath($webspaceKey, $languageCode, $segment = null);
+
+    /**
      * returns the content node for given webspace
      * @param string $webspaceKey
      * @return NodeInterface
      */
     public function getContentNode($webspaceKey);
+
+    /**
+     * returns the content path for given webspace
+     * @param string $webspaceKey
+     * @return string
+     */
+    public function getContentPath($webspaceKey);
 
     /**
      * returns the temp node for given webspace
@@ -44,4 +60,17 @@ interface SessionManagerInterface
      * @return \PHPCR\NodeInterface
      */
     public function getTempNode($webspaceKey, $alias);
+
+    /**
+     * returns the snippet node
+     * @return \PHPCR\NodeInterface
+     */
+    public function getSnippetNode();
+
+    /**
+     * returns webspace by given path
+     * @param string $path path of node
+     * @return string
+     */
+    public function getWebspaceKeyByPath($path);
 }

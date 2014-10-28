@@ -3,6 +3,8 @@
 /composer.phar
 /composer.lock
 /tests/Resources/cache/*
+/tests/app/cache/*
+/tests/app/logs/*
 
 
 # IDEs

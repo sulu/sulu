@@ -18,6 +18,7 @@ use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
+use Sulu\Component\Content\Structure;
 
 /**
  * reads a template xml and returns a array representation
@@ -58,7 +59,7 @@ class TemplateReader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = Structure::TYPE_PAGE)
     {
         // init running vars
         $tags = array();
@@ -71,7 +72,7 @@ class TemplateReader implements LoaderInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
         // init result
-        $result = $this->loadTemplateAttributes($xpath);
+        $result = $this->loadTemplateAttributes($xpath, $type);
 
         // load properties
         $result['properties'] = $this->loadProperties($result['key'], '/x:template/x:properties/x:*', $tags, $xpath);
@@ -88,21 +89,34 @@ class TemplateReader implements LoaderInterface
     /**
      * load basic template attributes
      */
-    private function loadTemplateAttributes(\DOMXPath $xpath)
+    private function loadTemplateAttributes(\DOMXPath $xpath, $type)
     {
-        $result = array(
-            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-            'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
-            'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-        );
+        if ($type === 'page') {
+            $result = array(
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            );
 
-        $result = array_filter($result);
+            $result = array_filter($result);
 
-        if (sizeof($result) < 4) {
-            throw new InvalidXmlException($result['key']);
+            if (sizeof($result) < 4) {
+                throw new InvalidXmlException($result['key']);
+            }
+        } else {
+            $result = array(
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            );
+
+            $result = array_filter($result);
+
+            if (sizeof($result) < 1) {
+                throw new InvalidXmlException($result['key']);
+            }
         }
 
         return $result;

@@ -32,7 +32,10 @@ class StructureWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         // warmup the pages
-        $this->structureManager->getStructures();
+        $this->structureManager->getPages();
+
+        // warm up the snippets
+        $this->structureManager->getSnippets();
     }
 
     public function isOptional()

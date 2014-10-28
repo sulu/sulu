@@ -45,7 +45,13 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $value = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
+        if ($node->hasProperty($property->getName())) {
+            $value = $node->getPropertyValue($property->getName());
+        } else {
+            $value = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
+            $node->setProperty($property->getName(), $value);
+        }
+
         $property->setValue($value);
     }
 
@@ -72,12 +78,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * reads the value for given property out of the database + sets the value of the property
-     * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @return string
+     * {@inheritdoc}
      */
     public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -149,6 +150,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
                 } else {
                     $this->getStrategy()->save($node, $value, $webspaceKey, $languageCode, $segmentKey);
                 }
+                $node->setProperty($property->getName(), $value);
             }
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
@@ -160,7 +162,8 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey=null)
     {
-        // TODO: Implement remove() method.
+        $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
+        $node->remove($property->getName());
     }
 
     /**

@@ -19,10 +19,11 @@ use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\Template\Dumper\PHPTemplateDumper;
+use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,7 +33,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public $loader;
 
     /**
-     * @var PHPTemplateDumper
+     * @var PhpTemplateDumper
      */
     public $dumper;
 
@@ -49,62 +50,43 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @var array
      */
-    private $cacheFiles;
+    private $cacheDir;
+
+    /**
+     * @var Filesystem
+     */
+    private $fs;
 
     public function setUp()
     {
-        $cacheDir = __DIR__ . '/../../../../Resources/cache';
+        $this->fs = new Filesystem();
+        $this->cacheDir = __DIR__ . '/../../../../Resources/cache';
 
-        $this->cacheFiles = array(
-            $cacheDir . '/TemplateStructureCache.php',
-            $cacheDir . '/Template_Structure_template.php',
-            $cacheDir . '/Template_blockStructureCache.php',
-            $cacheDir . '/Template_block_typesStructureCache.php',
-            $cacheDir . '/Template_SectionsStructureCache.php',
-            $cacheDir . '/Template_nesting_paramsStructureCache.php',
-            $cacheDir . '/Template_boolean_paramsStructureCache.php'
-        );
+        $this->fs->remove($this->cacheDir);
 
-        if (!is_dir($cacheDir)) {
-            mkdir($cacheDir);
-        } else {
-            foreach ($this->cacheFiles as $cacheFile) {
-                if (is_file($cacheFile)) {
-                    unlink($cacheFile);
-                }
-            }
-        }
         $this->loader = new TemplateReader();
-        $this->dumper = new PHPTemplateDumper('../Resources/Skeleton', false);
+        $this->dumper = new PhpTemplateDumper('../Resources/Skeleton', false);
         $this->logger = $this->getMock('\Psr\Log\LoggerInterface');
         $this->structureManager = new StructureManager(
             $this->loader,
             $this->dumper,
             $this->logger,
             array(
-                'template_dir' => array(
+                'structure_paths' => array(
                     array(
-                        'path' => __DIR__ . '/../../../../Resources/DataFixtures/Template',
-                        'internal' => false
+                        'path' => __DIR__ . '/../../../../Resources/DataFixtures/Page',
+                        'internal' => false,
+                        'type' => 'page',
                     )
                 ),
-                'cache_dir' => $cacheDir
+                'cache_dir' => $this->cacheDir
             ));
-    }
-
-    public function tearDown()
-    {
-        foreach ($this->cacheFiles as $cacheFile) {
-            if (is_file($cacheFile)) {
-                unlink($cacheFile);
-            }
-        }
     }
 
     public function testGetStructure()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getStructure('template');
+        $structure = $this->structureManager->getPage('template');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -248,7 +230,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetBlockStructure()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getStructure('template_block');
+        $structure = $this->structureManager->getPage('template_block');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -479,7 +461,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testBlockMultipleTypes()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getStructure('template_block_types');
+        $structure = $this->structureManager->getPage('template_block_types');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -532,7 +514,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     public function testSections()
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getStructure('template_sections');
+        $structure = $this->structureManager->getPage('template_sections');
 
         // should implement interface
         $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
@@ -573,7 +555,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testNestedParams()
     {
-        $structure = $this->structureManager->getStructure('template_nesting_params');
+        $structure = $this->structureManager->getPage('template_nesting_params');
 
         $this->assertEquals(
             array(
@@ -587,7 +569,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testBooleanParams()
     {
-        $structure = $this->structureManager->getStructure('template_boolean_params');
+        $structure = $this->structureManager->getPage('template_boolean_params');
 
         $params = $structure->getProperty('title')->getParams();
 
