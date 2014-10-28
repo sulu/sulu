@@ -15,6 +15,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * provides the content_path function to generate real urls for frontend
@@ -32,9 +33,25 @@ class ContentPathTwigExtension extends \Twig_Extension
      */
     private $contentMapper;
 
-    function __construct(ContentMapperInterface $contentMapper, RequestAnalyzerInterface $requestAnalyzer = null)
-    {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
+     * @var string
+     */
+    private $environment;
+
+    function __construct(
+        ContentMapperInterface $contentMapper,
+        WebspaceManagerInterface $webspaceManager,
+        $environment,
+        RequestAnalyzerInterface $requestAnalyzer = null
+    ) {
         $this->contentMapper = $contentMapper;
+        $this->webspaceManager = $webspaceManager;
+        $this->environment = $environment;
         $this->requestAnalyzer = $requestAnalyzer;
     }
 
@@ -52,15 +69,31 @@ class ContentPathTwigExtension extends \Twig_Extension
     /**
      * generates real url for given content
      * @param string $url
+     * @param string $webspaceKey
      * @return string
      */
-    public function contentPathFunction($url)
+    public function contentPathFunction($url, $webspaceKey = null)
     {
-        if (strpos($url, '/') === 0 && $this->requestAnalyzer) {
+        if (
+            $webspaceKey !== null &&
+            $this->requestAnalyzer &&
+            $this->requestAnalyzer->getCurrentWebspace()->getKey() !== $webspaceKey
+        ) {
+            $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
+                $url,
+                $this->environment,
+                $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $webspaceKey
+            );
+
+            if (sizeof($portalUrls) > 0) {
+                return rtrim($portalUrls[0], '/');
+            }
+        } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
             return rtrim($this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $url, '/');
-        } else {
-            return $url;
         }
+
+        return $url;
     }
 
     /**
