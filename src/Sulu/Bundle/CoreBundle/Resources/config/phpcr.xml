@@ -21,6 +21,7 @@
 
         <service id="sulu.phpcr.initializer" class="Sulu\Bundle\CoreBundle\Initializer\SuluInitializer">
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu.content.mapper" />
             <argument key="base">%sulu.content.node_names.base%</argument>
             <argument key="content">%sulu.content.node_names.content%</argument>
             <argument key="route">%sulu.content.node_names.route%</argument>
