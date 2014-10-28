@@ -84,9 +84,9 @@ abstract class WebsiteController extends Controller
             }
 
             return $response;
-        } catch (InvalidArgumentException $ex) {
+        } catch (InvalidArgumentException $e) {
             // template not found
-            throw new HttpException(406);
+            throw new HttpException(406, 'Error encountered when rendering content', $e);
         }
     }
 
