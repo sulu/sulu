@@ -86,7 +86,8 @@ class TemplateReader implements LoaderInterface
 
             // check all section properties as well
             foreach ($result['properties'] as $property) {
-                if ($property['type'] == 'section'
+                if (!$requiredPropertyNameFound
+                    && $property['type'] == 'section'
                     && array_key_exists($requiredPropertyName, $property['properties'])
                 ) {
                     $requiredPropertyNameFound = true;
