@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -75,6 +76,16 @@ class DefaultFormatManager implements FormatManagerInterface
     private $responseHeaders = array();
 
     /**
+     * @var array
+     */
+    private $tempFiles = array();
+
+    /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
@@ -102,6 +113,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->saveImage = $saveImage == 'true' ? true : false;
         $this->previewMimeTypes = $previewMimeTypes;
         $this->responseHeaders = $responseHeaders;
+        $this->fileSystem = new Filesystem();
     }
 
     /**
@@ -169,6 +181,9 @@ class DefaultFormatManager implements FormatManagerInterface
             // return default image
             list($image, $status, $imageExtension) = $this->returnFallbackImage($format);
         }
+
+        // clear temp files
+        $this->clearTempFiles();
 
         // set header
         $headers = $this->getResponseHeaders($imageExtension);
@@ -393,7 +408,20 @@ class DefaultFormatManager implements FormatManagerInterface
         fwrite($handle, $content);
         fclose($handle);
 
+        $this->tempFiles[] = $tempFile;
+
         return $tempFile;
+    }
+
+    /**
+     * delete all created temp files
+     * @return $this
+     */
+    protected function clearTempFiles()
+    {
+        $this->fileSystem->remove($this->tempFiles);
+
+        return $this;
     }
 
     /**
