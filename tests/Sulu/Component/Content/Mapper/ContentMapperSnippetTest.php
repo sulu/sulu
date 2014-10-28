@@ -95,7 +95,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setUserId(1)
             ->setData(array(
-                'title' => 'ElePHPant 123123',
+                'title' => 'ElePHPant FOOBAR',
             ));
         $this->contentMapper->saveRequest($req);
 
@@ -108,5 +108,20 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $node = $this->session->getNode('/cmf/snippets/hotel/elephpant');
         $node->getPropertyValue('template');
+    }
+
+    public function testLoad()
+    {
+        $node = $this->session->getNode($this->snippet1OriginalPath);
+        $snippet = $this->contentMapper->loadByNode(
+            $node,
+            'de',
+            null,
+            false,
+            true
+        );
+
+        $templateKey = $snippet->getKey();
+        $this->assertEquals('animal', $templateKey);
     }
 }

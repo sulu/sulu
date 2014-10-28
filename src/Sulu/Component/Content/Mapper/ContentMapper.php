@@ -340,7 +340,9 @@ class ContentMapper implements ContentMapperInterface
                 $newTranslatedNode($node);
             } else {
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
+
                 $hasSamePath = ($node->getPath() !== $root->getPath());
+
                 $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
                     $node->getPropertyValue(
                         $translatedNodeNameProperty->getName()
