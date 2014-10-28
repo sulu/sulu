@@ -52,6 +52,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.template_resolver"/>
             <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.language.default%</argument>
             <argument type="collection">
                 <argument key="page">%sulu.content.structure.default_type.page%</argument>

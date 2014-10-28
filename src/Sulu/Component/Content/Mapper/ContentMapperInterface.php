@@ -299,4 +299,15 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function saveRequest(ContentMapperRequest $request);
+
+    /**
+     * restores given resourcelocator
+     * @param string $path
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return StructureInterface
+     */
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

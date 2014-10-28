@@ -20,7 +20,6 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -44,6 +43,7 @@ use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -165,6 +165,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $nodeHelper;
 
+    /**
+     * @var RlpStrategyInterface
+     */
+    private $strategy;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -175,6 +180,7 @@ class ContentMapper implements ContentMapperInterface
         WebspaceManagerInterface $webspaceManager,
         TemplateResolverInterface $templateResolver,
         SuluNodeHelper $nodeHelper,
+        RlpStrategyInterface $strategy,
         $defaultLanguage,
         $defaultTemplates,
         $languageNamespace,
@@ -194,6 +200,7 @@ class ContentMapper implements ContentMapperInterface
         $this->webspaceManager = $webspaceManager;
         $this->templateResolver = $templateResolver;
         $this->nodeHelper = $nodeHelper;
+        $this->strategy = $strategy;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -1970,9 +1977,9 @@ class ContentMapper implements ContentMapperInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = &$fieldsData[$field['target']];
+                $target = & $fieldsData[$field['target']];
             } else {
-                $target = &$fieldsData;
+                $target = & $fieldsData;
             }
 
             // create target
@@ -2119,6 +2126,32 @@ class ContentMapper implements ContentMapperInterface
     // ===============================
     // END: Row to array mapping logic
     // ===============================
+
+    /**
+     * {@inheritdoc}
+     */
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->strategy->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+
+        $content = $this->loadByResourceLocator($path, $webspaceKey, $languageCode, $segmentKey);
+        $property = $content->getPropertyByTagName('sulu.rlp');
+        $property->setValue($path);
+
+        $node = $this->sessionManager->getSession()->getNodeByIdentifier($content->getUuid());
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $contentType->write(
+            $node,
+            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
+        $this->sessionManager->getSession()->save();
+    }
 
     /**
      * Validate the content mapper request
