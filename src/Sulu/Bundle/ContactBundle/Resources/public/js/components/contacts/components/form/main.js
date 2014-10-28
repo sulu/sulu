@@ -17,7 +17,8 @@ define([], function() {
         constants = {
             tagsId: '#tags',
             addressAddId: '#address-add',
-            addAddressWrapper: '.grid-row'
+            addAddressWrapper: '.grid-row',
+            addressesSelector: '#addresses'
         },
 
         setHeaderToolbar = function() {
@@ -255,6 +256,7 @@ define([], function() {
                     this.sandbox.dom.after(this.sandbox.dom.find('#addresses'), addIcon);
                 } else if (numberOfAddresses === 0 && $addIcon.length > 0) {
                     this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addAddressWrapper));
+                    this.sandbox.emit('sulu.contact-form.update.addAddressLabel', constants.addressesSelector);
                 }
             },
 
