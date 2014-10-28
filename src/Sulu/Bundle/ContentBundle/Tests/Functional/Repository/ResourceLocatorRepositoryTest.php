@@ -43,7 +43,8 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
         $this->repository = new ResourceLocatorRepository(
             $strategy,
             $this->structureManager,
-            $this->containerValueMap['sulu.content.type.resource_locator']
+            $this->containerValueMap['sulu.content.type.resource_locator'],
+            $this->mapper
         );
     }
 
