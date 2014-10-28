@@ -153,6 +153,15 @@ define([
 
             // bind events for add-fields overlay
             bindAddEvents.call(this);
+
+            // update label when only one address-row left (for the case when the last address has been removed and
+            // the add-address-label should be shown)
+            this.sandbox.on('sulu.contact-form.update.addAddressLabel', function(selector){
+                var $addresses = this.sandbox.dom.children(selector);
+                if($addresses.length === 1) {
+                    cropLabelOfElement.call(this, $addresses[0]);
+                }
+            }.bind(this));
         },
 
         bindDomEvents = function() {
@@ -220,6 +229,7 @@ define([
          */
         removeAddress = function($el) {
             var mapperID = this.sandbox.dom.data(this.sandbox.dom.closest($el, constants.addressComponentSelector), 'mapper-id');
+
             this.sandbox.form.removeFromCollection(this.form, mapperID);
             this.sandbox.emit(EVENT_CHANGED.call(this));
             this.sandbox.emit(EVENT_REMOVED_ADDRESS.call(this));
