@@ -106,13 +106,16 @@ class ResourceLocatorTest extends SuluTestCase
     public function testLoadFromNode()
     {
         $property = new Property('url', array(), 'resource_locator');
+        $property->setValue('/test');
 
         $node = $this->sessionManager->getContentNode('sulu_io')->addNode('test');
         $node->addMixin('sulu:content');
         $this->session->save();
 
-        $this->rlpMapper->save($node, '/test', 'sulu_io', 'en');
+        $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
         $this->session->save();
+
+        $property->setValue('not-good');
 
         $this->resourceLocator->read($node, $property, 'sulu_io', 'en');
 
