@@ -31,16 +31,20 @@ class LanguageController extends Controller implements ClassResourceInterface
         $webspaceManager = $this->get('sulu_core.webspace.webspace_manager');
 
         $localizations = array();
+        $locales = array();
 
         /** @var Webspace $webspace */
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $i = 0;
             foreach ($webspace->getAllLocalizations() as $localization) {
-                $localizations[] = array(
-                    'localization' => $localization->getLocalization(),
-                    'name' => $localization->getLocalization('-'),
-                    'id' => $i++
-                );
+                if (!in_array($localization->getLocalization(), $locales)) {
+                    $locales[] = $localization->getLocalization();
+                    $localizations[] = array(
+                        'localization' => $localization->getLocalization(),
+                        'name' => $localization->getLocalization('-'),
+                        'id' => $i++
+                    );
+                }
             }
         }
 
