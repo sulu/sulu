@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
+use PHPCR\RepositoryException;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -318,6 +320,95 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $route = $routes->getIterator()->current();
         $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
         $this->assertEquals('/de/other-test', $route->getDefaults()['url']);
+    }
+
+    public function testGetCollectionEndingSlash()
+    {
+        // Set up test
+        $path = '/qwertz/';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+        $localization = new Localization();
+        $localization->setLanguage('de');
+
+        $structure = $this->getStructureMock($uuid);
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            $localization,
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            'sulu.lo',
+            'sulu.lo/en-us'
+        );
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will(
+            $this->throwException(new RepositoryException())
+        );
+
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(0, $routes);
+    }
+
+    public function testGetCollectionMovedResourceLocator()
+    {
+        // Set up test
+        $path = '/qwertz/';
+        $prefix = '/de';
+        $uuid = 1;
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $theme = new Theme();
+        $theme->setKey('theme');
+        $webspace = new Webspace();
+        $webspace->setTheme($theme);
+        $portal->setWebspace($webspace);
+        $localization = new Localization();
+        $localization->setLanguage('de');
+
+        $structure = $this->getStructureMock($uuid);
+        $requestAnalyzer = $this->getRequestAnalyzerMock(
+            $portal,
+            $path,
+            $prefix,
+            $localization,
+            RequestAnalyzerInterface::MATCH_TYPE_FULL,
+            'sulu.lo',
+            'sulu.lo/en-us'
+        );
+        $activeTheme = $this->getActiveThemeMock();
+
+        $contentMapper = $this->getContentMapperMock($structure);
+        $contentMapper->expects($this->any())->method('loadByResourceLocator')->will(
+            $this->throwException(new ResourceLocatorMovedException('/new-test', '123-123-123'))
+        );
+
+        $portalRouteProvider = new ContentRouteProvider($contentMapper, $requestAnalyzer, $activeTheme);
+
+        $request = $this->getRequestMock($path);
+
+        // Test the route provider
+        $routes = $portalRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(1, $routes);
+        $route = $routes->getIterator()->current();
+        $this->assertEquals('SuluWebsiteBundle:Default:redirect', $route->getDefaults()['_controller']);
+        $this->assertEquals('/de/new-test', $route->getDefaults()['url']);
     }
 
     /**

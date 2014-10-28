@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
 use Liip\ThemeBundle\ActiveTheme;
+use PHPCR\RepositoryException;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
@@ -136,7 +138,21 @@ class ContentRouteProvider implements RouteProviderInterface
 
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
-            } catch (ResourceLocatorNotFoundException $rlnfe) {
+            } catch (ResourceLocatorNotFoundException $exc) {
+                // just do not add any routes to the collection
+            } catch (ResourceLocatorMovedException $exc) {
+                $newUrl = $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $exc->getNewResourceLocator();
+
+                // redirect to new url
+                $route = new Route(
+                    $request->getRequestUri(), array(
+                        '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                        'url' => $newUrl
+                    )
+                );
+
+                $collection->add($exc->getNewResourceLocatorUuid() . '_' . uniqid(), $route);
+            } catch (RepositoryException $exc) {
                 // just do not add any routes to the collection
             }
         }
