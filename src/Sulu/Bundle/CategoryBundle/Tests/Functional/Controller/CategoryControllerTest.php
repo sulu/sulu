@@ -15,8 +15,9 @@ use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
 use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class CategoryControllerTest extends DatabaseTestCase
+class CategoryControllerTest extends SuluTestCase
 {
     /**
      * @var array
@@ -25,8 +26,14 @@ class CategoryControllerTest extends DatabaseTestCase
 
     public function setUp()
     {
-        $this->setUpSchema();
+        $this->em = $this->db('ORM')->getOm();
 
+        $this->initOrm();
+    }
+
+    public function initOrm()
+    {
+        $this->db('ORM')->purgeDatabase();
         /* First Category
         -------------------------------------*/
         $category = new Category();
@@ -49,7 +56,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $categoryMeta->setCategory($category);
         $category->addMeta($categoryMeta);
 
-        self::$em->persist($category);
+        $this->em->persist($category);
 
         /* Second Category
         -------------------------------------*/
@@ -80,7 +87,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $categoryMeta3->setCategory($category2);
         $category2->addMeta($categoryMeta3);
 
-        self::$em->persist($category2);
+        $this->em->persist($category2);
 
         /* Third Category (child of first)
         -------------------------------------*/
@@ -104,7 +111,7 @@ class CategoryControllerTest extends DatabaseTestCase
         $categoryMeta4->setCategory($category3);
         $category3->addMeta($categoryMeta4);
 
-        self::$em->persist($category3);
+        $this->em->persist($category3);
 
         /* Fourth Category (child of third)
         -------------------------------------*/
@@ -128,31 +135,9 @@ class CategoryControllerTest extends DatabaseTestCase
         $categoryMeta5->setCategory($category4);
         $category4->addMeta($categoryMeta5);
 
-        self::$em->persist($category4);
+        $this->em->persist($category4);
 
-        self::$em->flush();
-    }
-
-    public function setUpSchema()
-    {
-        self::$tool = new SchemaTool(self::$em);
-
-        self::$entities = array(
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestContact'),
-            self::$em->getClassMetadata('Sulu\Bundle\TestBundle\Entity\TestUser'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\Category'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryMeta'),
-            self::$em->getClassMetadata('Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation'),
-        );
-
-        self::$tool->dropSchema(self::$entities);
-        self::$tool->createSchema(self::$entities);
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        self::$tool->dropSchema(self::$entities);
+        $this->em->flush();
     }
 
     private function createTestClient()
