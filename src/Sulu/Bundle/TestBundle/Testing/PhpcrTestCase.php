@@ -457,6 +457,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->contents->setProperty($this->languageNamespace . ':en-changed', new DateTime());
             $this->contents->setProperty($this->languageNamespace . ':de-created', new DateTime());
             $this->contents->setProperty($this->languageNamespace . ':en-created', new DateTime());
+            $this->contents->setProperty($this->languageNamespace . ':en-url', '/');
             $this->contents->addMixin('sulu:page');
             $this->session->save();
 
