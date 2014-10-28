@@ -103,15 +103,11 @@ class ContentRouteProvider implements RouteProviderInterface
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
             try {
-                try {
-                    $content = $this->contentMapper->loadByResourceLocator(
-                        $resourceLocator,
-                        $portal->getWebspace()->getKey(),
-                        $language
-                    );
-                } catch (RepositoryException $rex) {
-                    throw new ResourceLocatorNotFoundException();
-                }
+                $content = $this->contentMapper->loadByResourceLocator(
+                    $resourceLocator,
+                    $portal->getWebspace()->getKey(),
+                    $language
+                );
 
                 if (
                     $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
@@ -142,10 +138,10 @@ class ContentRouteProvider implements RouteProviderInterface
 
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
-            } catch (ResourceLocatorNotFoundException $rlnfe) {
+            } catch (ResourceLocatorNotFoundException $exc) {
                 // just do not add any routes to the collection
-            } catch (ResourceLocatorMovedException $rlmoved) {
-                $newUrl = $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $rlmoved->getNewResourceLocator();
+            } catch (ResourceLocatorMovedException $exc) {
+                $newUrl = $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $exc->getNewResourceLocator();
 
                 // redirect to new url
                 $route = new Route(
@@ -155,7 +151,9 @@ class ContentRouteProvider implements RouteProviderInterface
                     )
                 );
 
-                $collection->add($rlmoved->getNewResourceLocatorUuid() . '_' . uniqid(), $route);
+                $collection->add($exc->getNewResourceLocatorUuid() . '_' . uniqid(), $route);
+            } catch (RepositoryException $exc) {
+                // just do not add any routes to the collection
             }
         }
 
