@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use DateTime;
 use Imagick;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine;
@@ -25,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -71,7 +73,17 @@ class DefaultFormatManager implements FormatManagerInterface
     /**
      * @var array
      */
+    private $responseHeaders = array();
+
+    /**
+     * @var array
+     */
     private $tempFiles = array();
+
+    /**
+     * @var Filesystem
+     */
+    private $fileSystem;
 
     /**
      * @param MediaRepository $mediaRepository
@@ -81,6 +93,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $ghostScriptPath
      * @param string $saveImage
      * @param array $previewMimeTypes
+     * @param array $responseHeaders
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -89,7 +102,8 @@ class DefaultFormatManager implements FormatManagerInterface
         ImageConverterInterface $converter,
         $ghostScriptPath,
         $saveImage,
-        $previewMimeTypes
+        $previewMimeTypes,
+        $responseHeaders
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -98,6 +112,8 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->ghostScriptPath = $ghostScriptPath;
         $this->saveImage = $saveImage == 'true' ? true : false;
         $this->previewMimeTypes = $previewMimeTypes;
+        $this->responseHeaders = $responseHeaders;
+        $this->fileSystem = new Filesystem();
     }
 
     /**
@@ -144,10 +160,8 @@ class DefaultFormatManager implements FormatManagerInterface
                 // get image
                 $image = $image->get($imageExtension, $this->getOptionsFromImage($image, $imageExtension));
 
-                // set header
-                $headers = array(
-                    'Content-Type' => 'image/' . $imageExtension
-                );
+                // HTTP Status
+                $status = 200;
 
                 // save image
                 if ($this->saveImage) {
@@ -161,17 +175,21 @@ class DefaultFormatManager implements FormatManagerInterface
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                return $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
+                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
             }
         } catch (MediaException $e) {
             // return default image
-            return $this->returnFallbackImage($format);
+            list($image, $status, $imageExtension) = $this->returnFallbackImage($format);
         }
 
+        // clear temp files
         $this->clearTempFiles();
 
+        // set header
+        $headers = $this->getResponseHeaders($imageExtension);
+
         // return image
-        return new Response($image, 200, $headers);
+        return new Response($image, $status, $headers);
     }
 
     /**
@@ -183,10 +201,6 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $imageExtension = 'png';
 
-        $headers = array(
-            'Content-Type' => 'image/' . $imageExtension
-        );
-
         $placeholder = dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png';
 
         if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png')) {
@@ -197,7 +211,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
         $image = $image->get($imageExtension);
 
-        return new Response($image, 200, $headers);
+        return array($image, 200, $imageExtension);
     }
 
     /**
@@ -208,17 +222,37 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $imageExtension = 'png';
 
-        $headers = array(
-            'Content-Type' => 'image/' . $imageExtension
-        );
-
         $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
 
         $image = $this->converter->convert($placeholder, $format);
 
         $image = $image->get($imageExtension);
 
-        return new Response($image, 404, $headers);
+        return array($image, 404, $imageExtension);
+    }
+
+    /**
+     * @param $imageExtension
+     * @return array
+     */
+    protected function getResponseHeaders($imageExtension = '')
+    {
+        $headers = array();
+
+        if (!empty($this->responseHeaders)) {
+            $headers = $this->responseHeaders;
+            if (isset($this->responseHeaders['Expires'])) {
+                $date = new \DateTime();
+                $date->modify($this->responseHeaders['Expires']);
+                $headers['Expires'] = $date->format('D, d M Y H:i:s \G\M\T');
+            }
+        }
+
+        if (!empty($imageExtension)) {
+            $headers['Content-Type'] = 'image/' . $imageExtension;
+        }
+
+        return $headers;
     }
 
     /**
@@ -253,7 +287,7 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param sstring $path
+     * @param string $path
      * @throws GhostScriptNotFoundException
      */
     protected function convertPdfToImage($path)
@@ -280,6 +314,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
     /**
      * @param $path
+     * @throws MediaException
      */
     protected function convertPsdToImage($path)
     {
@@ -288,6 +323,8 @@ class DefaultFormatManager implements FormatManagerInterface
             $image = $imagine->open($path);
             $image = $image->layers()[0];
             file_put_contents($path, $image->get('png'));
+        } else {
+            throw new InvalidMimeTypeForPreviewException('image/vnd.adobe.photoshop');
         }
     }
 
@@ -382,9 +419,7 @@ class DefaultFormatManager implements FormatManagerInterface
      */
     protected function clearTempFiles()
     {
-        foreach ($this->tempFiles as $tempFile) {
-            @unlink($tempFile);
-        }
+        $this->fileSystem->remove($this->tempFiles);
 
         return $this;
     }
