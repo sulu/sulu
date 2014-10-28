@@ -20,7 +20,6 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -44,6 +43,7 @@ use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -165,6 +165,11 @@ class ContentMapper implements ContentMapperInterface
      */
     private $nodeHelper;
 
+    /**
+     * @var RlpStrategyInterface
+     */
+    private $strategy;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -174,12 +179,13 @@ class ContentMapper implements ContentMapperInterface
         PathCleanupInterface $cleaner,
         WebspaceManagerInterface $webspaceManager,
         TemplateResolverInterface $templateResolver,
+        SuluNodeHelper $nodeHelper,
+        RlpStrategyInterface $strategy,
         $defaultLanguage,
         $defaultTemplates,
         $languageNamespace,
         $internalPrefix,
-        $stopwatch = null,
-        SuluNodeHelper $nodeHelper
+        $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -194,6 +200,7 @@ class ContentMapper implements ContentMapperInterface
         $this->webspaceManager = $webspaceManager;
         $this->templateResolver = $templateResolver;
         $this->nodeHelper = $nodeHelper;
+        $this->strategy = $strategy;
 
         // optional
         $this->stopwatch = $stopwatch;
@@ -317,7 +324,6 @@ class ContentMapper implements ContentMapperInterface
 
         /** @var NodeInterface $node */
         if ($uuid === null) {
-
             // create a new node
             $path = $this->cleaner->cleanUp($title, $languageCode);
             $path = $this->getUniquePath($path, $root);
@@ -502,10 +508,6 @@ class ContentMapper implements ContentMapperInterface
             }
         }
         $session->save();
-
-        $contentNode = Structure::TYPE_PAGE === $structureType ?
-            $this->sessionManager->getContentNode($webspaceKey) :
-            $this->sessionManager->getSnippetNode($templateKey);
 
         if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
@@ -1936,7 +1938,7 @@ class ContentMapper implements ContentMapperInterface
                     $locale
                 );
 
-                $key = $this->sessionManager->getWebspaceKeyByPath($path);
+                $key = $this->nodeHelper->extractWebspaceFromPath($path);
                 $shortPath = str_replace($this->sessionManager->getContentPath($key), '', $path);
 
                 return array_merge(
@@ -2124,6 +2126,32 @@ class ContentMapper implements ContentMapperInterface
     // ===============================
     // END: Row to array mapping logic
     // ===============================
+
+    /**
+     * {@inheritdoc}
+     */
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->strategy->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+
+        $content = $this->loadByResourceLocator($path, $webspaceKey, $languageCode, $segmentKey);
+        $property = $content->getPropertyByTagName('sulu.rlp');
+        $property->setValue($path);
+
+        $node = $this->sessionManager->getSession()->getNodeByIdentifier($content->getUuid());
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $contentType->write(
+            $node,
+            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
+        $this->sessionManager->getSession()->save();
+    }
 
     /**
      * Validate the content mapper request

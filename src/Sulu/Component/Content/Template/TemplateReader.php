@@ -77,8 +77,24 @@ class TemplateReader implements LoaderInterface
         // load properties
         $result['properties'] = $this->loadProperties($result['key'], '/x:template/x:properties/x:*', $tags, $xpath);
 
+        // check if required properties are existing
         foreach ($this->requiredPropertyNames as $requiredPropertyName) {
-            if (!array_key_exists($requiredPropertyName, $result['properties'])) {
+            $requiredPropertyNameFound = false;
+            if (array_key_exists($requiredPropertyName, $result['properties'])) {
+                $requiredPropertyNameFound = true;
+            }
+
+            // check all section properties as well
+            foreach ($result['properties'] as $property) {
+                if (!$requiredPropertyNameFound
+                    && $property['type'] == 'section'
+                    && array_key_exists($requiredPropertyName, $property['properties'])
+                ) {
+                    $requiredPropertyNameFound = true;
+                }
+            }
+
+            if (!$requiredPropertyNameFound) {
                 throw new RequiredPropertyNameNotFoundException($result['key'], $requiredPropertyName);
             }
         }
@@ -163,7 +179,7 @@ class TemplateReader implements LoaderInterface
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
-        $result['tags'] = $this->loadTags('x:tag',  $tags, $xpath, $node);
+        $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
 

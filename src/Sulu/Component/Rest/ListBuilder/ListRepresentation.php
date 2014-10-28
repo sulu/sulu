@@ -34,7 +34,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "find",
  *      href = @Route(
  *          "expr(object.getRoute())",
- *          parameters = "expr({ search: '{searchString}', searchFields: '{searchFields}' } + object.getParameters())",
+ *          parameters = "expr({ search: '{searchString}', searchFields: '{searchFields}', page: 1 } + object.getParameters())",
  *          absolute = "expr(object.isAbsolute())",
  *      )
  * )

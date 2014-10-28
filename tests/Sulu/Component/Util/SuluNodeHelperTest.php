@@ -52,4 +52,23 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         // languages are only counted if they are on the "template" property
         $this->assertEquals(array('fr', 'de'), $languages);
     }
+
+    public function provideExtractWebspaceFromPath()
+    {
+        return array(
+            array('/cmf/sulu_io/content/articles/article-one', 'sulu_io'),
+            array('/cmfcontent/articles/article-one', 'articles'),
+            array('', null),
+            array('asdasd', null),
+        );
+    }
+
+    /**
+     * @dataProvider provideExtractWebspaceFromPath
+     */
+    public function testExtractWebspaceFromPath($path, $expected)
+    {
+        $res = $this->helper->extractWebspaceFromPath($path);
+        $this->assertEquals($expected, $res);
+    }
 }

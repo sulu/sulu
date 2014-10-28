@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper;
 
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
 
@@ -50,7 +51,7 @@ interface ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $type
+        $structureType = Structure::TYPE_PAGE
     );
 
     /**
@@ -299,4 +300,15 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function saveRequest(ContentMapperRequest $request);
+
+    /**
+     * restores given resourcelocator
+     * @param string $path
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return StructureInterface
+     */
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

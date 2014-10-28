@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Component\Content\Structure;
 
@@ -6,6 +14,10 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\StructureInterface;
 
+/**
+ * This structure represents some encapsulated content. For example
+ * a Snippet might represent a hotel or a page footer.
+ */
 abstract class Snippet extends Structure
 {
     /**

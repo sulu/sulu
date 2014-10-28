@@ -30,10 +30,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'tags' => array(
                 array(
                     'name' => 'some.random.structure.tag',
-                    'attributes' => array('foo' => 'bar', 'bar' => 'foo'
-                )),
+                    'attributes' => array(
+                        'foo' => 'bar',
+                        'bar' => 'foo'
+                    )
+                ),
             ),
-
             'properties' => array(
                 'title' => array(
                     'name' => 'title',
@@ -175,6 +177,50 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $templateReader = new TemplateReader();
         $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template.xml');
+
+        $this->assertEquals($template, $result);
+        $x = $this->arrayRecursiveDiff($result, $template);
+        $this->assertEquals(0, sizeof($x));
+    }
+
+    public function testReadTitleInSection()
+    {
+        $template = array(
+            'key' => 'template',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => '2400',
+            'properties' => array(
+                'title_section' => array(
+                    'name' => 'title_section',
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'type' => 'section',
+                    'params' => array(),
+                    'meta' => array(),
+                    'properties' => array(
+                        'title' => array(
+                            'name' => 'title',
+                            'type' => 'text_line',
+                            'minOccurs' => null,
+                            'maxOccurs' => null,
+                            'colspan' => null,
+                            'cssClass' => null,
+                            'mandatory' => true,
+                            'multilingual' => true,
+                            'tags' => array(),
+                            'params' => array(),
+                            'meta' => array()
+                        ),
+                    )
+                ),
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_title_in_section.xml'
+        );
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -903,8 +949,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'cssClass' => null,
                     'mandatory' => true,
                     'multilingual' => true,
-                    'tags' => array(
-                    ),
+                    'tags' => array(),
                     'params' => array(
                         array('name' => 'minLinks', 'value' => '1', 'type' => 'string'),
                         array('name' => 'maxLinks', 'value' => '10', 'type' => 'string'),

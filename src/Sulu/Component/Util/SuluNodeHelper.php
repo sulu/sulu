@@ -51,4 +51,24 @@ class SuluNodeHelper
 
         return array_values($languages);
     }
+
+
+    /**
+     * Extracts webspace key from given path
+     *
+     * TODO: We should inject the base path here
+     *
+     * @param string $path path of node
+     * @return string
+     */
+    public function extractWebspaceFromPath($path)
+    {
+        $match = preg_match('/^\/(\w*)\/(\w*)\/.*$/', $path, $matches);
+
+        if ($match) {
+            return $matches[2];
+        } else {
+            return null;
+        }
+    }
 }

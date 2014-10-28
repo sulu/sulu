@@ -121,27 +121,8 @@ class SessionManager implements SessionManagerInterface
             $nodePath = $snippetPath;
         }
 
-        try {
-            $node = $this->getSession()->getNode($nodePath);
-        } catch (PathNotFoundException $e) {
-            $snippetNode = $this->getSession()->getNode($snippetPath);
-            $node = $snippetNode->addNode($templateKey);
-        }
+        $node = $this->getSession()->getNode($nodePath);
 
         return $node;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getWebspaceKeyByPath($path)
-    {
-        $match = preg_match('/^\/(\w*)\/(\w*)\/(\w*)(\/.*)*$/', $path, $matches);
-
-        if ($match) {
-            return $matches[2];
-        } else {
-            return null;
-        }
     }
 }
