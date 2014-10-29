@@ -98,7 +98,7 @@ define([
 
                 bindDomEvents: function() {
                     this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeBlockHandler.bind(this));
-                    
+
                     $('#sort-text-blocks-' + this.id).on('click', this.showSortMode.bind(this));
                     $('#edit-text-blocks-' + this.id).on('click', this.showEditMode.bind(this));
                 },
@@ -315,9 +315,11 @@ define([
                         fieldId = $field.attr('id'),
                         $sortModeField = $('[data-sort-mode-id="' + fieldId + '"]', $block);
 
-                    $sortModeField
-                        .html(content)
-                        .addClass('show-in-sortmode');
+                    if ($sortModeField.size()) {
+                        $sortModeField
+                            .html(!!content && content.replace(/<(?:.|\n)*?>/gm, ''))
+                            .addClass('show-in-sortmode');
+                    }
                 },
 
                 showEditMode: function() {
