@@ -108,6 +108,10 @@ class UpgradeResourceLocatorCommand extends ContainerAwareCommand
         /** @var ResourceLocator $resourceLocator */
         $resourceLocator = $this->getContainer()->get('sulu.content.type.resource_locator');
 
+        if(!$page->hasTag('sulu.rlp')){
+            return;
+        }
+
         $property = $page->getPropertyByTagName('sulu.rlp');
         if (
             $property->getContentTypeName() !== 'resource_locator' &&
