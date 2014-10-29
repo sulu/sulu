@@ -116,4 +116,23 @@ class ContentMapperSnippetTest extends SuluTestCase
         $templateKey = $snippet->getKey();
         $this->assertEquals('animal', $templateKey);
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Cannot change the structure type of
+     */
+    public function testUpdatePageWrongType()
+    {
+        $req = ContentMapperRequest::create()
+            ->setUuid($this->snippet1->getUuid())
+            ->setType(Structure::TYPE_PAGE)
+            ->setWebspaceKey('sulu_io')
+            ->setTemplateKey('test_page')
+            ->setLocale('de')
+            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setUserId(1)
+            ->setData(array('title' => 'Foo'));
+
+        $this->contentMapper->saveRequest($req);
+    }
 }

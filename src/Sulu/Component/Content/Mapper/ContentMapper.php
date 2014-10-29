@@ -212,6 +212,14 @@ class ContentMapper implements ContentMapperInterface
 
     }
 
+    /**
+     * Create a new property translator
+     *
+     * @param string $languageCode
+     * @param string $structureType
+     *
+     * @return MultipleTranslatedProperties
+     */
     protected function createPropertyTranslator($languageCode, $structureType = Structure::TYPE_PAGE)
     {
         $properties = new MultipleTranslatedProperties(
@@ -234,7 +242,6 @@ class ContentMapper implements ContentMapperInterface
             $this->internalPrefix
         );
 
-        // create translated properties
         $properties->setLanguage($languageCode);
         $properties->setStructureType($structureType);
 
@@ -347,6 +354,16 @@ class ContentMapper implements ContentMapperInterface
             $node->addMixin('sulu:' . $structureType);
         } else {
             $node = $session->getNodeByIdentifier($uuid);
+
+            if (false === NodeHelper::hasMixin($node, 'sulu:' . $structureType)) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Cannot change the structure type of "%s" to "%s"',
+                        $node->getPath(),
+                        $structureType
+                    )
+                );
+            }
 
             if (!$node->hasProperty($propertyTranslator->getName('title'))) {
                 $newTranslatedNode($node);
