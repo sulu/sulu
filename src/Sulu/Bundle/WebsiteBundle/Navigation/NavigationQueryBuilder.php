@@ -40,6 +40,8 @@ class NavigationQueryBuilder extends ContentQueryBuilder
         }
         if ($this->parent !== null) {
             $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", $this->parent);
+        } else {
+            $where[] = sprintf("ISDESCENDANTNODE(page, '%s')", '/cmf/' . $webspaceKey . '/contents');
         }
 
         return implode(' AND ', $where);
