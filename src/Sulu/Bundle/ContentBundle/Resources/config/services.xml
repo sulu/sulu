@@ -65,7 +65,7 @@
                 <argument key="defaultTemplate" type="string">%sulu.content.structure.default_type.page%</argument>
                 <argument key="wsPort" type="string">%sulu_content.preview.websocket.port%</argument>
                 <argument key="wsUrl" type="string">%sulu_content.preview.websocket.url%</argument>
-                <argument key="showInSortModeTag" type="string">sulu.show_in_sortmode</argument>
+                <argument key="showInSortModeTag" type="string">sulu.content.sortmode.show</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
