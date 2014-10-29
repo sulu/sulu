@@ -27,7 +27,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->property1->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('i18n:fr-template'));
+            ->will($this->returnValue('i18n:fr-title'));
         $this->property2->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('bas:barfoo'));
@@ -36,7 +36,7 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('i18n:it-barfoo'));
         $this->property4->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('i18n:de-template'));
+            ->will($this->returnValue('i18n:de-title'));
         $this->property5->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('i18n:de-bbbaaaa'));
