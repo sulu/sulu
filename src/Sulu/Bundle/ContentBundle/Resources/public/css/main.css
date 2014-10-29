@@ -238,6 +238,13 @@
   cursor: default;
 }
 
+/** multiple property */
+/* line 56, ../scss/modules/general.scss */
+#sulu-content-container .multiple-property .move::before {
+  left: -18px;
+  top: 2px;
+}
+
 /* line 1, ../scss/modules/seo.scss */
 .seo-excerpt {
   background: #fff;
