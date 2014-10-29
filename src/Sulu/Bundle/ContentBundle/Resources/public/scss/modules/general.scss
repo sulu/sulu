@@ -50,3 +50,11 @@
         cursor: default;
     }
 }
+
+/** multiple property */
+#sulu-content-container .multiple-property {
+    .move::before {
+        left: -18px;
+        top: 2px;
+    }
+}

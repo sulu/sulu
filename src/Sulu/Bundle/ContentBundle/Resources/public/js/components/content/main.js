@@ -154,7 +154,7 @@ define([
                     if (this.options.id === 'index') {
                         data.id = this.options.id;
                     }
-                    
+
                     this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.localization);
                 } else {
                     this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);

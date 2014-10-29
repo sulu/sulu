@@ -1,6 +1,6 @@
 <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
     <div class="grid">
-        <div class="sortable grid-row"
+        <div class="sortable grid-row multiple-property"
              id="{{ id|raw }}"
              data-type="collection"
              data-type-min="{{ property.minOccurs }}"
@@ -11,16 +11,16 @@
 
             <script id="{{ id|raw }}-tpl" type="text/template">
                 <div class="text-block {{ property.name }}-element">
-                    <div class="head">
-                        <label class="move" title="{{ property.getInfoText(userLocale) }}">
-                            {{ property.getTitle(userLocale) }}
-                        </label>
-
-                        <div data-mapper-remove="{{ property.name }}"
-                             class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
-                    </div>
-
                     <div class="container">
+                        <div class="head">
+                            <label class="move" title="{{ property.getInfoText(userLocale) }}">
+                                {{ property.getTitle(userLocale) }}
+                            </label>
+
+                            <div data-mapper-remove="{{ property.name }}"
+                                 class="fa-times options-remove mapper-remove-{{ property.name }}"></div>
+                        </div>
+
                         {% include type.template with {'property': property, 'params':params, 'type': type, 'id': id ~ '-' ~ property.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
                     </div>
                 </div>
