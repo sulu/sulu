@@ -156,6 +156,7 @@ define([], function() {
                         cssClass: 'single-internal-overlay',
                         el: $element,
                         container: this.$el,
+                        removeOnClose: false,
                         instanceName: 'single-internal-link.' + this.options.instanceName,
                         skin: 'wide',
                         slides: [
