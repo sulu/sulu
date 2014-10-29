@@ -97,13 +97,15 @@ define([
                 },
 
                 bindDomEvents: function() {
-                    // TODO: this is crap. check for a better way to do it 
+                    this.$el.on('click', '*[data-mapper-remove="' + this.propertyName + '"]', this.removeBlockHandler.bind(this));
+                    
                     $('#sort-text-blocks-' + this.id).on('click', this.showSortMode.bind(this));
                     $('#edit-text-blocks-' + this.id).on('click', this.showEditMode.bind(this));
                 },
 
-                removeBlockHandler: function($trigger) {
-                    var $element = $trigger.closest('.' + this.propertyName + '-element');
+                removeBlockHandler: function(event) {
+                    var $removeButton = $(event.target),
+                        $element = $removeButton.closest('.' + this.propertyName + '-element');
 
                     if (this.canRemove()) {
                         this.form.removeFields($element);
@@ -166,13 +168,9 @@ define([
                                         valueName: 'title',
                                         translateLabels: true,
                                         clickCallback: function(item, $trigger) {
-                                            if (item.id === 'remove') {
-                                                this.removeBlockHandler($trigger);
-                                            } else {
-                                                // TODO change type
-                                                var data = form.mapper.getData($template);
-                                                this.addChild(item.data, data, true, index);
-                                            }
+                                            // TODO change type
+                                            var data = form.mapper.getData($template);
+                                            this.addChild(item.data, data, true, index);
                                         }.bind(this),
                                         data: this.types
                                     }
@@ -302,6 +300,10 @@ define([
                         var property = $field.data('property') || {},
                             tags = property.tags || [];
 
+                        if ($field.data('type') === 'textEditor') {
+                            App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
+                        }
+
                         if (tags.length && _.where(tags, { name: section.showInSortModeTag }).length) {
                             this.showSortModeField($field, $block);
                         }
@@ -316,10 +318,6 @@ define([
                     $sortModeField
                         .html(content)
                         .addClass('show-in-sortmode');
-
-                    if ($field.data('type') === 'textEditor') {
-                        App.emit('husky.ckeditor.' + $field.data('aura-instance-name') + '.destroy');
-                    }
                 },
 
                 showEditMode: function() {
