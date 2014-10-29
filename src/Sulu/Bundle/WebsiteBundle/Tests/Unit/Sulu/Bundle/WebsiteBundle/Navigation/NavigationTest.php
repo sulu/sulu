@@ -141,37 +141,37 @@ class NavigationTest extends PhpcrTestCase
         $data = array(
             'news' => array(
                 'title' => 'News',
-                'rl' => '/news',
+                'url' => '/news',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News')),
                 'navContexts' => array('footer')
             ),
             'products' => array(
                 'title' => 'Products',
-                'rl' => '/products',
+                'url' => '/products',
                 'ext' => array('excerpt' => array('title' => 'Excerpt Products')),
                 'navContexts' => array('main')
             ),
             'news/news-1' => array(
                 'title' => 'News-1',
-                'rl' => '/news/news-1',
+                'url' => '/news/news-1',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News 1')),
                 'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
                 'title' => 'News-2',
-                'rl' => '/news/news-2',
+                'url' => '/news/news-2',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News 2')),
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
                 'title' => 'Products-1',
-                'rl' => '/products/products-1',
+                'url' => '/products/products-1',
                 'ext' => array('excerpt' => array('title' => 'Excerpt Products 1')),
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
                 'title' => 'Products-2',
-                'rl' => '/products/products-2',
+                'url' => '/products/products-2',
                 'ext' => array('excerpt' => array('title' => 'Excerpt Products 2')),
                 'navContexts' => array('main')
             )
@@ -283,7 +283,7 @@ class NavigationTest extends PhpcrTestCase
                 $structureMock,
                 array(
                     new Property(
-                        'rl',
+                        'url',
                         '',
                         'resource_locator',
                         true,
@@ -367,7 +367,7 @@ class NavigationTest extends PhpcrTestCase
         $data['news'] = $this->mapper->save(
             array(
                 'title' => 'SubNews',
-                'rl' => '/asdf',
+                'url' => '/asdf',
                 'navContexts' => array('footer')
             ),
             'simple',
@@ -392,7 +392,7 @@ class NavigationTest extends PhpcrTestCase
         $data['news'] = $this->mapper->save(
             array(
                 'title' => 'SubNews',
-                'rl' => '/asdf',
+                'url' => '/asdf',
                 'navContexts' => array('footer')
             ),
             'simple',
@@ -546,7 +546,7 @@ class NavigationTest extends PhpcrTestCase
     {
         $data = array(
             'title' => 'Products-3',
-            'rl' => '/products/products-3'
+            'url' => '/products/products-3'
         );
 
         $this->data['products/products-3'] = $this->mapper->save(
@@ -591,7 +591,7 @@ class NavigationTest extends PhpcrTestCase
 
         $data = array(
             'title' => 'Products-3',
-            'rl' => '/products/products-3',
+            'url' => '/products/products-3',
             'navContexts' => array('main')
         );
         $this->data['products/products-3'] = $this->mapper->save(
