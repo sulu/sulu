@@ -14,6 +14,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Structure;
 
 /**
  * enables to translate multiple properties
@@ -35,6 +36,11 @@ class MultipleTranslatedProperties
      * @var string
      */
     private $languageNamespace;
+
+    /**
+     * @var string
+     */
+    private $structureType = Structure::TYPE_PAGE;
 
     function __construct(
         $names,
@@ -73,10 +79,26 @@ class MultipleTranslatedProperties
      */
     public function getName($key)
     {
+        // templates do not translate the template key
+        if ($this->structureType === Structure::TYPE_SNIPPET) {
+            if ($key === 'template') {
+                return $key;
+            }
+        }
+
         if (isset($this->translatedProperties[$key])) {
             return $this->translatedProperties[$key]->getName();
         } else {
             throw new NoSuchPropertyException($key);
         }
+    }
+
+    /**
+     * Set the structure type
+     * @param string $structureType
+     */
+    public function setStructureType($structureType)
+    {
+        $this->structureType = $structureType;
     }
 }

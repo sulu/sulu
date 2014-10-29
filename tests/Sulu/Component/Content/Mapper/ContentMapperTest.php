@@ -2803,6 +2803,27 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(2, $test->getChanger());
     }
 
+    public function testChangeSnippetTemplate()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $result = $this->mapper->move($data[6]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
+
+        $this->assertEquals($data[6]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/subpage', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals(2, sizeof($test));
+
+        $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
+        $this->assertEquals(2, $test->getChanger());
+    }
+
     public function testMoveExistingName()
     {
         $data = $this->prepareCopyMoveTestData();

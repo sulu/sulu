@@ -72,10 +72,12 @@ EOT
         );
 
         if (!file_exists($fixturePath)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Fixture path "%s" does not exist',
+            $this->output->writeln(sprintf(
+                'Sulu fixtures path "%s" does not exist, skipping.',
                 $fixturePath
             ));
+
+            return 0;
         }
 
         $dirHandle = opendir($fixturePath);

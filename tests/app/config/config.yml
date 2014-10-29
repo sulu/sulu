@@ -40,7 +40,7 @@ sulu_core:
                  pages:
                      path: %kernel.root_dir%/Resources/pages
                      internal: false
-                 templates:
+                 snippets:
                      path: %kernel.root_dir%/Resources/snippets
                      internal: false
                      type: snippet
