@@ -63,6 +63,31 @@ class SuluNodeHelper
 
 
     /**
+     * Return true if the given node has the given
+     * nodeType property (or properties).
+     *
+     * The sulu node type is the localname of node types
+     * with the sulu namespace.
+     *
+     * Example:
+     *   sulu:snippet is the PHPCR node type
+     *   snippet is the Sulu node type
+     *
+     * @param NodeInterface $nodeTypes
+     * @param string|array $nodeTypes One or more node sulu types
+     */
+    public function hasSuluNodeType($node, $suluNodeTypes)
+    {
+        foreach ((array) $suluNodeTypes as $suluNodeType) {
+            if (in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', array()))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Extracts webspace key from given path
      *
      * TODO: We should inject the base path here

@@ -1502,9 +1502,9 @@ class ContentMapper implements ContentMapperInterface
     public function delete($uuid, $webspaceKey)
     {
         $session = $this->getSession();
-        $contentNode = $session->getNodeByIdentifier($uuid);
+        $node = $session->getNodeByIdentifier($uuid);
 
-        $this->deleteRecursively($contentNode);
+        $this->deleteRecursively($node);
         $session->save();
     }
 
@@ -1750,9 +1750,13 @@ class ContentMapper implements ContentMapperInterface
     {
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
-                $this->deleteRecursively($ref->getParent());
+                $child = $ref->getParent();
             } else {
-                $this->deleteRecursively($ref);
+                $child = $ref;
+            }
+
+            if ($this->nodeHelper->hasSuluNodeType($child, array('sulu:path'))) {
+                $this->deleteRecursively($child);
             }
         }
         $node->remove();
