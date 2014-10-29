@@ -135,4 +135,30 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $this->helper->getStructureTypeForNode($this->node));
     }
+
+
+    public function provideHasSuluNodeType()
+    {
+        return array(
+            array('sulu:snippet', true),
+            array(array('sulu:foobar', 'sulu:snippet'), true),
+            array('sulu:page', false),
+            array('sulu:foobar', false),
+            array('', false),
+        );
+    }
+
+    /**
+     * @dataProvider provideHasSuluNodeType
+     */
+    public function testHasSuluNodeType($nodeTypes, $expected)
+    {
+        $this->node->expects($this->any())
+            ->method('getPropertyValueWithDefault')
+            ->with('jcr:mixinTypes', array())
+            ->will($this->returnValue(array('sulu:snippet')));
+
+        $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
+    }
 }
+

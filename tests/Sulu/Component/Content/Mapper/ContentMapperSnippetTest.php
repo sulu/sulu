@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Mapper;
 use Sulu\Component\Content\Structure;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\StructureInterface;
+use PHPCR\PropertyType;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -100,6 +101,52 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->contentMapper->saveRequest($req);
         $node = $this->session->getNode('/cmf/snippets/animal/elephpant');
         $node->getPropertyValue('template');
+    }
+
+    public function testRemoveSnippet()
+    {
+        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io');
+
+        try {
+            $this->session->getNode($this->snippet1OriginalPath);
+            $this->assertTrue(false, 'Snippet was found FAIL');
+        } catch (\PHPCR\PathNotFoundException $e) {
+            $this->assertTrue(true);
+        }
+    }
+
+    public function provideRemoveSnippetsWithReferences()
+    {
+        return array(
+            array('sulu:page', 'cannot be removed'),
+            array('sulu:content', 'cannot be removed'),
+            array('sulu:path'),
+        );
+    }
+
+    /**
+     * @dataProvider provideRemoveSnippetsWithReferences
+     */
+    public function testRemoveSnippetWithReferences($referrerType, $exceptionMessage = null)
+    {
+        if (null !== $exceptionMessage) {
+            $this->setExpectedException('PHPCR\ReferentialIntegrityException', $exceptionMessage);
+        }
+
+        $node = $this->session->getNode('/cmf')->addNode('test');
+        $node->addMixin($referrerType);
+
+        $node->setProperty('sulu:content', $this->snippet1->getUuid(), PropertyType::REFERENCE);
+        $this->session->save();
+
+        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io');
+
+        try {
+            $this->session->getNode($this->snippet1OriginalPath);
+            $this->assertTrue(false, 'Snippet was found FAIL');
+        } catch (\PHPCR\PathNotFoundException $e) {
+            $this->assertTrue(true);
+        }
     }
 
     public function testLoad()
