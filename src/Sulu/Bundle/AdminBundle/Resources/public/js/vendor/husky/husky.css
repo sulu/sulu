@@ -10028,11 +10028,19 @@ a.btn-black, a.btn-highlight {
 .sortable.is-sortmode .hide-in-sortmode {
   display: none;
 }
-/* line 22, ../scss/modules/content-types.scss */
+/* line 21, ../scss/modules/content-types.scss */
+.sortable.is-sortmode .text-block label {
+  display: none;
+}
+/* line 25, ../scss/modules/content-types.scss */
+.sortable.is-sortmode .text-block .form-group {
+  margin-top: 0;
+}
+/* line 32, ../scss/modules/content-types.scss */
 .sortable .text-block .move {
   position: relative;
 }
-/* line 25, ../scss/modules/content-types.scss */
+/* line 35, ../scss/modules/content-types.scss */
 .sortable .text-block .move::before {
   content: "";
   cursor: move;
@@ -10047,45 +10055,45 @@ a.btn-black, a.btn-highlight {
   text-align: center;
 }
 
-/* line 43, ../scss/modules/content-types.scss */
+/* line 53, ../scss/modules/content-types.scss */
+.text-block-controls {
+  margin-bottom: -20px;
+}
+
+/* line 57, ../scss/modules/content-types.scss */
 .text-block {
   margin-bottom: 20px;
 }
-/* line 48, ../scss/modules/content-types.scss */
+/* line 62, ../scss/modules/content-types.scss */
 .text-block .head label {
   float: left;
   font-size: 16px;
   margin-bottom: 10px;
   cursor: default;
 }
-/* line 55, ../scss/modules/content-types.scss */
-.text-block .head .options-remove {
-  float: right;
-  cursor: pointer;
-  margin-top: 5px;
-  margin-left: 8px;
-  display: none;
-  font-size: 16px;
-}
-/* line 64, ../scss/modules/content-types.scss */
+/* line 69, ../scss/modules/content-types.scss */
 .text-block .head::after {
   content: "";
   display: block;
   clear: both;
 }
-/* line 71, ../scss/modules/content-types.scss */
+/* line 76, ../scss/modules/content-types.scss */
 .text-block .options-change {
-  position: absolute;
-  right: 20px;
-  top: 10px;
   cursor: pointer;
   font-size: 16px;
 }
-/* line 78, ../scss/modules/content-types.scss */
+/* line 80, ../scss/modules/content-types.scss */
 .text-block .options-change .dropdown-toggle::after {
   margin-left: 0;
 }
-/* line 83, ../scss/modules/content-types.scss */
+/* line 85, ../scss/modules/content-types.scss */
+.text-block .options-remove {
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+  font-size: 16px;
+}
+/* line 92, ../scss/modules/content-types.scss */
 .text-block .container {
   padding: 10px 20px 20px 20px;
   background: #ddd;
@@ -10094,33 +10102,25 @@ a.btn-black, a.btn-highlight {
   -webkit-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
 }
-/* line 89, ../scss/modules/content-types.scss */
+/* line 98, ../scss/modules/content-types.scss */
 .text-block .container label {
   margin-bottom: 10px;
 }
-/* line 93, ../scss/modules/content-types.scss */
+/* line 102, ../scss/modules/content-types.scss */
 .text-block .container textarea {
   max-width: 100%;
   min-width: 100%;
   width: 100%;
 }
-/* line 101, ../scss/modules/content-types.scss */
-.text-block:hover .head .options-remove, .text-block:hover .head .options-change {
-  display: block;
-}
 
-/* line 107, ../scss/modules/content-types.scss */
+/* line 110, ../scss/modules/content-types.scss */
 .text-blocks-toggle-btn {
   padding: 5px 0;
   height: auto;
 }
 
-/* line 114, ../scss/modules/content-types.scss */
-.empty .text-block .head .options-remove {
-  display: none;
-}
 /* line 117, ../scss/modules/content-types.scss */
-.empty .text-block:hover .head .options-remove {
+.empty .text-block .options-remove {
   display: none;
 }
 
