@@ -354,8 +354,9 @@ class ContentMapper implements ContentMapperInterface
             $node->addMixin('sulu:' . $structureType);
         } else {
             $node = $session->getNodeByIdentifier($uuid);
+            $nodeStructureType = $this->nodeHelper->getStructureTypeForNode($node);
 
-            if (false === NodeHelper::hasMixin($node, 'sulu:' . $structureType)) {
+            if (null !== $nodeStructureType && $nodeStructureType !== $structureType) {
                 throw new \InvalidArgumentException(
                     sprintf(
                         'Cannot change the structure type of "%s" to "%s"',
@@ -1201,11 +1202,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        if (NodeHelper::hasMixin($contentNode, 'sulu:snippet')) {
-            $structureType = Structure::TYPE_SNIPPET;
-        } else {
-            $structureType = Structure::TYPE_PAGE;
-        }
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ? : Structure::TYPE_PAGE;
 
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
