@@ -55,4 +55,29 @@
             </div>
         </div>
     </div>
+
+    <div class="grid-row small">
+        <div class="grid-col-6">
+            <div class="form-group">
+                <label for="contact-position"><%=translate('contact.contacts.position')%></label>
+
+                <div id="contact-position"
+                     data-form="true"
+                     data-aura-url="/admin/api/contact/positions"
+                     data-aura-result-key="positions"
+                     data-aura-default-label="<%=translate('public.please-choose')%>"
+                     data-aura-component="select@husky"
+                     data-aura-instance-name="position-select"
+                     data-aura-editable="true"
+                     data-aura-direction="bottom"
+                     data-aura-value-name="position"
+                     data-aura-deselect-field="select.no-choice"
+                     data-type="husky-select"
+                     data-mapper-return-value="id"
+                     data-aura-pre-selected-elements="[]"
+                     data-mapper-property="position">
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
