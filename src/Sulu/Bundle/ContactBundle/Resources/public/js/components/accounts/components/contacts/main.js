@@ -51,6 +51,7 @@ define([
 
             // add new record to datagrid
             this.sandbox.on('sulu.contacts.accounts.contact.created', function(model) {
+                model.position = model.position.position;
                 this.sandbox.emit('husky.datagrid.record.add', model);
             }, this);
 
