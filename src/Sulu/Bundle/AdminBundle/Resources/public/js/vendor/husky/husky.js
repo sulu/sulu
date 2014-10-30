@@ -42053,16 +42053,27 @@ define('__component__$input@husky',[], function() {
                                     linkOptions = infoTab.get('linkType'),
                                     targetOptions = targetTab.get('linkTargetType'),
 
-                                    // list of excluded link target options
+                                    // list of included link options
+                                    includedLinkOptions = [
+                                        'url',
+                                        'email'
+                                    ],
+                                    selectedLinkOption = [],
+
+                                    // list of included link target options
                                     includedTargetOptions = [
                                         'notSet',
                                         '_blank',
                                         '_self'
                                     ],
                                     selectedTargetOptions = [];
-                            
-                                // remove 'link to anchor' option
-                                linkOptions.items.splice(1, 1);
+                                    
+                                // just show included link options
+                                for (var i = 0; i < linkOptions.items.length; i++) {
+                                    if (includedLinkOptions.indexOf(linkOptions.items[i][1]) !== -1) {
+                                        selectedLinkOption.push(linkOptions.items[i]);
+                                    }
+                                }
 
                                 // just show included target options
                                 for (var i = 0; i < targetOptions.items.length; i++) {
@@ -42071,6 +42082,7 @@ define('__component__$input@husky',[], function() {
                                     }
                                 }
 
+                                linkOptions.items = selectedLinkOption;
                                 targetOptions.items = selectedTargetOptions;
                             }
                         });

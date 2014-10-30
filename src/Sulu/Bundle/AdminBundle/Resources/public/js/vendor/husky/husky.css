@@ -6489,7 +6489,12 @@ textarea.form-element.small, textarea.small.husky-input {
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 337, ../scss/modules/form.scss */
+/* line 335, ../scss/modules/form.scss */
+.cke_hidpi .cke_dialog_close_button {
+  background-image: none !important;
+}
+
+/* line 341, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
   color: #ea524e;
