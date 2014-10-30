@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* line 2, ../scss/abstract/abstract-validation.scss */
 .husky-auto-complete-error label, .husky-validate-error label,
 .husky-auto-complete-error .control-label,
@@ -434,33 +433,45 @@ table {
 }
 
 @-webkit-keyframes HIGHLIGHT-ANIMATION {
+  /* line 2, ../scss/animations.scss */
   0% {
     background-color: rgba(255, 254, 176, 0.5);
   }
+
+  /* line 3, ../scss/animations.scss */
   100% {
     opacity: 1;
   }
 }
 @-moz-keyframes HIGHLIGHT-ANIMATION {
+  /* line 6, ../scss/animations.scss */
   0% {
     background-color: rgba(255, 254, 176, 0.5);
   }
+
+  /* line 7, ../scss/animations.scss */
   100% {
     opacity: 1;
   }
 }
 @-o-keyframes HIGHLIGHT-ANIMATION {
+  /* line 10, ../scss/animations.scss */
   0% {
     background-color: rgba(255, 254, 176, 0.5);
   }
+
+  /* line 11, ../scss/animations.scss */
   100% {
     opacity: 1;
   }
 }
 @keyframes HIGHLIGHT-ANIMATION {
+  /* line 14, ../scss/animations.scss */
   0% {
     background-color: rgba(255, 254, 176, 0.5);
   }
+
+  /* line 15, ../scss/animations.scss */
   100% {
     opacity: 1;
   }
@@ -481,6 +492,7 @@ table {
 **  Rotate 360 animation
 **/
 @-webkit-keyframes ROTATE-ANIMATION {
+  /* line 31, ../scss/animations.scss */
   0% {
     -moz-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
@@ -488,6 +500,8 @@ table {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
+  /* line 36, ../scss/animations.scss */
   100% {
     -moz-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
@@ -497,6 +511,7 @@ table {
   }
 }
 @-moz-keyframes ROTATE-ANIMATION {
+  /* line 43, ../scss/animations.scss */
   0% {
     -moz-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
@@ -504,6 +519,8 @@ table {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
+  /* line 48, ../scss/animations.scss */
   100% {
     -moz-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
@@ -513,6 +530,7 @@ table {
   }
 }
 @-o-keyframes ROTATE-ANIMATION {
+  /* line 55, ../scss/animations.scss */
   0% {
     -moz-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
@@ -520,6 +538,8 @@ table {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
+  /* line 60, ../scss/animations.scss */
   100% {
     -moz-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
@@ -529,6 +549,7 @@ table {
   }
 }
 @keyframes ROTATE-ANIMATION {
+  /* line 67, ../scss/animations.scss */
   0% {
     -moz-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
@@ -536,6 +557,8 @@ table {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
+  /* line 72, ../scss/animations.scss */
   100% {
     -moz-transform: rotate(360deg);
     -ms-transform: rotate(360deg);
@@ -627,20 +650,20 @@ table {
 /* line 76, ../scss/utilities.scss */
 .editable:focus,
 .editable:active {
-  background: #fff;
-  border: 1px solid #ccc;
+  background: white;
+  border: 1px solid #cccccc;
   outline: 0;
 }
 
 /* line 83, ../scss/utilities.scss */
 .editable:hover {
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   outline: 0;
 }
 
 /* line 90, ../scss/utilities.scss */
 .clickable {
-  color: #000 !important;
+  color: black !important;
 }
 
 /* line 94, ../scss/utilities.scss */
@@ -854,12 +877,12 @@ h5,
 h6 {
   font-family: inherit;
   font-weight: normal;
-  color: #999;
+  color: #999999;
 }
 
 /* line 26, ../scss/typo.scss */
 h1 {
-  color: #52B6CA;
+  color: #52b6ca;
   font-size: 36px;
   line-height: 40px;
   margin: 10px 0 40px 0;
@@ -905,7 +928,7 @@ h6 {
 
 /* line 68, ../scss/typo.scss */
 .compoundedHeadlines :first-child {
-  color: #52B6CA;
+  color: #52b6ca;
   font-size: 14px;
   margin: 0;
   line-height: 20px;
@@ -930,7 +953,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   width: 100%;
   height: 1px;
   content: '\a0';
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 
 /* line 100, ../scss/typo.scss */
@@ -950,7 +973,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 
 /* line 117, ../scss/typo.scss */
 .grey-font {
-  color: #999;
+  color: #999999;
 }
 
 /* line 19, ../scss/various.scss */
@@ -1037,7 +1060,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   height: 33.33%;
   background: #262626;
   cursor: pointer;
-  border: 1px solid #fff;
+  border: 1px solid white;
 }
 /* line 102, ../scss/various.scss */
 .husky-position .left {
@@ -1054,7 +1077,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 /* line 112, ../scss/various.scss */
 .husky-position .selected {
-  background: #52B6CA;
+  background: #52b6ca;
 }
 /* line 115, ../scss/various.scss */
 .husky-position .inactive {
@@ -1331,9 +1354,9 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   display: inline-block;
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
-  border-bottom: 7px solid #999;
+  border-bottom: 7px solid #999999;
   border-top: 0;
-  border-bottom-color: #666;
+  border-bottom-color: #666666;
   position: absolute;
 }
 /* line 44, ../scss/datepicker.scss */
@@ -1342,7 +1365,7 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
   display: inline-block;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid #fff;
+  border-bottom: 6px solid white;
   border-top: 0;
   position: absolute;
 }
@@ -1374,13 +1397,13 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 .datepicker-dropdown.datepicker-orient-bottom:before {
   bottom: -7px;
   border-bottom: 0;
-  border-top: 7px solid #999;
+  border-top: 7px solid #999999;
 }
 /* line 83, ../scss/datepicker.scss */
 .datepicker-dropdown.datepicker-orient-bottom:after {
   bottom: -6px;
   border-bottom: 0;
-  border-top: 6px solid #fff;
+  border-top: 6px solid white;
 }
 
 /* line 92, ../scss/datepicker.scss */
@@ -1422,104 +1445,104 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 }
 /* line 131, ../scss/datepicker.scss */
 .datepicker table tr td.old, .datepicker table tr td.new {
-  color: #999;
+  color: #999999;
 }
 /* line 134, ../scss/datepicker.scss */
 .datepicker table tr td.disabled {
   background: none;
-  color: #999;
+  color: #999999;
   cursor: default;
 }
 /* line 138, ../scss/datepicker.scss */
 .datepicker table tr td.disabled:hover {
   background: none;
-  color: #999;
+  color: #999999;
   cursor: default;
 }
 /* line 144, ../scss/datepicker.scss */
 .datepicker table tr td.today {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 148, ../scss/datepicker.scss */
 .datepicker table tr td.today:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 153, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 157, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 163, ../scss/datepicker.scss */
 .datepicker table tr td.today:hover, .datepicker table tr td.today.disabled:hover, .datepicker table tr td.today:focus, .datepicker table tr td.today:hover:focus {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 169, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled:focus, .datepicker table tr td.today.disabled:hover:focus {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 175, ../scss/datepicker.scss */
 .datepicker table tr td.today:active, .datepicker table tr td.today:hover:active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 181, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled:active, .datepicker table tr td.today.disabled:hover:active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 187, ../scss/datepicker.scss */
 .datepicker table tr td.today.active, .datepicker table tr td.today:hover.active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 193, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled.active, .datepicker table tr td.today.disabled:hover.active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 202, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.today {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 206, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.today:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 211, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.today.disabled {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 215, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.today.disabled:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 224, ../scss/datepicker.scss */
@@ -1558,161 +1581,161 @@ h1.divider:after, h2.divider:after, h3.divider:after, h4.divider:after, h5.divid
 
 /* line 256, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled, .datepicker table tr td.today:hover.disabled {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 261, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled.disabled, .datepicker table tr td.today.disabled:hover.disabled {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 266, ../scss/datepicker.scss */
 .datepicker table tr td.today[disabled], .datepicker table tr td.today:hover[disabled] {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 271, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled[disabled], .datepicker table tr td.today.disabled:hover[disabled] {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 278, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 281, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 285, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today.disabled {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 288, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today.disabled:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 296, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled:hover, .datepicker table tr td.today[disabled]:hover, .datepicker table tr td.today.disabled[disabled]:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 303, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today:hover, fieldset[disabled] .datepicker table tr td.today.disabled:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 310, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled:focus, .datepicker table tr td.today:hover.disabled:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 315, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled.disabled:focus, .datepicker table tr td.today.disabled:hover.disabled:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 320, ../scss/datepicker.scss */
 .datepicker table tr td.today[disabled]:focus, .datepicker table tr td.today:hover[disabled]:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 325, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled[disabled]:focus, .datepicker table tr td.today.disabled:hover[disabled]:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 333, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today:focus, fieldset[disabled] .datepicker table tr td.today:hover:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 338, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today.disabled:focus, fieldset[disabled] .datepicker table tr td.today.disabled:hover:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 346, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled:active, .datepicker table tr td.today:hover.disabled:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 351, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled.disabled:active, .datepicker table tr td.today.disabled:hover.disabled:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 356, ../scss/datepicker.scss */
 .datepicker table tr td.today[disabled]:active, .datepicker table tr td.today:hover[disabled]:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 361, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled[disabled]:active, .datepicker table tr td.today.disabled:hover[disabled]:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 369, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today:active, fieldset[disabled] .datepicker table tr td.today:hover:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 374, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today.disabled:active, fieldset[disabled] .datepicker table tr td.today.disabled:hover:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 382, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled.active, .datepicker table tr td.today:hover.disabled.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 387, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled.disabled.active, .datepicker table tr td.today.disabled:hover.disabled.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 392, ../scss/datepicker.scss */
 .datepicker table tr td.today[disabled].active, .datepicker table tr td.today:hover[disabled].active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 397, ../scss/datepicker.scss */
 .datepicker table tr td.today.disabled[disabled].active, .datepicker table tr td.today.disabled:hover[disabled].active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 405, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today.active, fieldset[disabled] .datepicker table tr td.today:hover.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 410, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.today.disabled.active, fieldset[disabled] .datepicker table tr td.today.disabled:hover.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 419, ../scss/datepicker.scss */
 .datepicker table tr td.today:hover:hover {
-  color: #000;
+  color: black;
 }
 /* line 422, ../scss/datepicker.scss */
 .datepicker table tr td.today.active:hover {
-  color: #fff;
+  color: white;
 }
 /* line 426, ../scss/datepicker.scss */
 .datepicker table tr td.range {
@@ -1736,92 +1759,92 @@ fieldset[disabled] .datepicker table tr td.today.disabled.active, fieldset[disab
 }
 /* line 441, ../scss/datepicker.scss */
 .datepicker table tr td.range.today {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
   border-radius: 0;
 }
 /* line 446, ../scss/datepicker.scss */
 .datepicker table tr td.range.today:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
   border-radius: 0;
 }
 /* line 452, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
   border-radius: 0;
 }
 /* line 457, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
   border-radius: 0;
 }
 /* line 464, ../scss/datepicker.scss */
 .datepicker table tr td.range.today:hover, .datepicker table tr td.range.today.disabled:hover, .datepicker table tr td.range.today:focus, .datepicker table tr td.range.today:hover:focus {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 470, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled:focus, .datepicker table tr td.range.today.disabled:hover:focus {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 476, ../scss/datepicker.scss */
 .datepicker table tr td.range.today:active, .datepicker table tr td.range.today:hover:active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 482, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled:active, .datepicker table tr td.range.today.disabled:hover:active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 488, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.active, .datepicker table tr td.range.today:hover.active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 494, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled.active, .datepicker table tr td.range.today.disabled:hover.active {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 504, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.range.today {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 508, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.range.today:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 513, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.range.today.disabled {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 517, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.range.today.disabled:hover {
-  color: #000;
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  color: black;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 526, ../scss/datepicker.scss */
@@ -1860,237 +1883,237 @@ fieldset[disabled] .datepicker table tr td.today.disabled.active, fieldset[disab
 
 /* line 558, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled, .datepicker table tr td.range.today:hover.disabled {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 563, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled.disabled, .datepicker table tr td.range.today.disabled:hover.disabled {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 568, ../scss/datepicker.scss */
 .datepicker table tr td.range.today[disabled], .datepicker table tr td.range.today:hover[disabled] {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 573, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled[disabled], .datepicker table tr td.range.today.disabled:hover[disabled] {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 580, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 583, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 587, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today.disabled {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 590, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today.disabled:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 598, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled:hover, .datepicker table tr td.range.today[disabled]:hover, .datepicker table tr td.range.today.disabled[disabled]:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 605, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today:hover, fieldset[disabled] .datepicker table tr td.range.today.disabled:hover {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 612, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled:focus, .datepicker table tr td.range.today:hover.disabled:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 617, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled.disabled:focus, .datepicker table tr td.range.today.disabled:hover.disabled:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 622, ../scss/datepicker.scss */
 .datepicker table tr td.range.today[disabled]:focus, .datepicker table tr td.range.today:hover[disabled]:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 627, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled[disabled]:focus, .datepicker table tr td.range.today.disabled:hover[disabled]:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 635, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today:focus, fieldset[disabled] .datepicker table tr td.range.today:hover:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 640, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today.disabled:focus, fieldset[disabled] .datepicker table tr td.range.today.disabled:hover:focus {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 648, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled:active, .datepicker table tr td.range.today:hover.disabled:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 653, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled.disabled:active, .datepicker table tr td.range.today.disabled:hover.disabled:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 658, ../scss/datepicker.scss */
 .datepicker table tr td.range.today[disabled]:active, .datepicker table tr td.range.today:hover[disabled]:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 663, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled[disabled]:active, .datepicker table tr td.range.today.disabled:hover[disabled]:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 671, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today:active, fieldset[disabled] .datepicker table tr td.range.today:hover:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 676, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today.disabled:active, fieldset[disabled] .datepicker table tr td.range.today.disabled:hover:active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 684, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled.active, .datepicker table tr td.range.today:hover.disabled.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 689, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled.disabled.active, .datepicker table tr td.range.today.disabled:hover.disabled.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 694, ../scss/datepicker.scss */
 .datepicker table tr td.range.today[disabled].active, .datepicker table tr td.range.today:hover[disabled].active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 699, ../scss/datepicker.scss */
 .datepicker table tr td.range.today.disabled[disabled].active, .datepicker table tr td.range.today.disabled:hover[disabled].active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 707, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today.active, fieldset[disabled] .datepicker table tr td.range.today:hover.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 /* line 712, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.range.today.disabled.active, fieldset[disabled] .datepicker table tr td.range.today.disabled:hover.active {
-  background-color: #FFFEB0;
-  border-color: #F2D212;
+  background-color: #fffeb0;
+  border-color: #f2d212;
 }
 
 /* line 719, ../scss/datepicker.scss */
 .datepicker table tr td.selected {
-  color: #fff;
-  background-color: #999;
-  border-color: #666;
+  color: white;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 723, ../scss/datepicker.scss */
 .datepicker table tr td.selected:hover {
-  color: #fff;
-  background-color: #999;
-  border-color: #666;
+  color: white;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 728, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled {
-  color: #fff;
-  background-color: #999;
-  border-color: #666;
+  color: white;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 732, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled:hover {
-  color: #fff;
-  background-color: #999;
-  border-color: #666;
+  color: white;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 738, ../scss/datepicker.scss */
 .datepicker table tr td.selected:hover, .datepicker table tr td.selected.disabled:hover, .datepicker table tr td.selected:focus, .datepicker table tr td.selected:hover:focus {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 744, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled:focus, .datepicker table tr td.selected.disabled:hover:focus {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 750, ../scss/datepicker.scss */
 .datepicker table tr td.selected:active, .datepicker table tr td.selected:hover:active {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 756, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled:active, .datepicker table tr td.selected.disabled:hover:active {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 762, ../scss/datepicker.scss */
 .datepicker table tr td.selected.active, .datepicker table tr td.selected:hover.active {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 768, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled.active, .datepicker table tr td.selected.disabled:hover.active {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 
 /* line 776, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.selected {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 780, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.selected:hover {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 785, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.selected.disabled {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 /* line 789, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.selected.disabled:hover {
-  color: #fff;
-  background-color: #999;
+  color: white;
+  background-color: #999999;
   border-color: #3e3e3e;
 }
 
@@ -2130,238 +2153,238 @@ fieldset[disabled] .datepicker table tr td.range.today.disabled.active, fieldset
 
 /* line 830, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled, .datepicker table tr td.selected:hover.disabled {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 835, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled.disabled, .datepicker table tr td.selected.disabled:hover.disabled {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 840, ../scss/datepicker.scss */
 .datepicker table tr td.selected[disabled], .datepicker table tr td.selected:hover[disabled] {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 845, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled[disabled], .datepicker table tr td.selected.disabled:hover[disabled] {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 852, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 855, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected:hover {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 859, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected.disabled {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 862, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected.disabled:hover {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 870, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled:hover, .datepicker table tr td.selected[disabled]:hover, .datepicker table tr td.selected.disabled[disabled]:hover {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 877, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected:hover, fieldset[disabled] .datepicker table tr td.selected.disabled:hover {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 884, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled:focus, .datepicker table tr td.selected:hover.disabled:focus {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 889, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled.disabled:focus, .datepicker table tr td.selected.disabled:hover.disabled:focus {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 894, ../scss/datepicker.scss */
 .datepicker table tr td.selected[disabled]:focus, .datepicker table tr td.selected:hover[disabled]:focus {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 899, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled[disabled]:focus, .datepicker table tr td.selected.disabled:hover[disabled]:focus {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 907, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected:focus, fieldset[disabled] .datepicker table tr td.selected:hover:focus {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 912, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected.disabled:focus, fieldset[disabled] .datepicker table tr td.selected.disabled:hover:focus {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 920, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled:active, .datepicker table tr td.selected:hover.disabled:active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 925, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled.disabled:active, .datepicker table tr td.selected.disabled:hover.disabled:active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 930, ../scss/datepicker.scss */
 .datepicker table tr td.selected[disabled]:active, .datepicker table tr td.selected:hover[disabled]:active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 935, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled[disabled]:active, .datepicker table tr td.selected.disabled:hover[disabled]:active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 943, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected:active, fieldset[disabled] .datepicker table tr td.selected:hover:active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 948, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected.disabled:active, fieldset[disabled] .datepicker table tr td.selected.disabled:hover:active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 956, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled.active, .datepicker table tr td.selected:hover.disabled.active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 961, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled.disabled.active, .datepicker table tr td.selected.disabled:hover.disabled.active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 966, ../scss/datepicker.scss */
 .datepicker table tr td.selected[disabled].active, .datepicker table tr td.selected:hover[disabled].active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 971, ../scss/datepicker.scss */
 .datepicker table tr td.selected.disabled[disabled].active, .datepicker table tr td.selected.disabled:hover[disabled].active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 979, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected.active, fieldset[disabled] .datepicker table tr td.selected:hover.active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 /* line 984, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.selected.disabled.active, fieldset[disabled] .datepicker table tr td.selected.disabled:hover.active {
-  background-color: #999;
-  border-color: #666;
+  background-color: #999999;
+  border-color: #666666;
 }
 
 /* line 991, ../scss/datepicker.scss */
 .datepicker table tr td.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 995, ../scss/datepicker.scss */
 .datepicker table tr td.active:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1000, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1004, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1010, ../scss/datepicker.scss */
 .datepicker table tr td.active:hover, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active:focus, .datepicker table tr td.active:hover:focus {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1016, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled:focus, .datepicker table tr td.active.disabled:hover:focus {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1022, ../scss/datepicker.scss */
 .datepicker table tr td.active:active, .datepicker table tr td.active:hover:active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1028, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled:active, .datepicker table tr td.active.disabled:hover:active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1034, ../scss/datepicker.scss */
 .datepicker table tr td.active.active, .datepicker table tr td.active:hover.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1040, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled.active, .datepicker table tr td.active.disabled:hover.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1048, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1052, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.active:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1057, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.active.disabled {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1061, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td.active.disabled:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1070, ../scss/datepicker.scss */
@@ -2400,152 +2423,152 @@ fieldset[disabled] .datepicker table tr td.selected.disabled.active, fieldset[di
 
 /* line 1102, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled, .datepicker table tr td.active:hover.disabled {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1107, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled.disabled, .datepicker table tr td.active.disabled:hover.disabled {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1112, ../scss/datepicker.scss */
 .datepicker table tr td.active[disabled], .datepicker table tr td.active:hover[disabled] {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1117, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled[disabled], .datepicker table tr td.active.disabled:hover[disabled] {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1124, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1127, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1131, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active.disabled {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1134, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active.disabled:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1142, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active[disabled]:hover, .datepicker table tr td.active.disabled[disabled]:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1149, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active:hover, fieldset[disabled] .datepicker table tr td.active.disabled:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1156, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled:focus, .datepicker table tr td.active:hover.disabled:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1161, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled.disabled:focus, .datepicker table tr td.active.disabled:hover.disabled:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1166, ../scss/datepicker.scss */
 .datepicker table tr td.active[disabled]:focus, .datepicker table tr td.active:hover[disabled]:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1171, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled[disabled]:focus, .datepicker table tr td.active.disabled:hover[disabled]:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1179, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active:focus, fieldset[disabled] .datepicker table tr td.active:hover:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1184, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active.disabled:focus, fieldset[disabled] .datepicker table tr td.active.disabled:hover:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1192, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled:active, .datepicker table tr td.active:hover.disabled:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1197, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled.disabled:active, .datepicker table tr td.active.disabled:hover.disabled:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1202, ../scss/datepicker.scss */
 .datepicker table tr td.active[disabled]:active, .datepicker table tr td.active:hover[disabled]:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1207, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled[disabled]:active, .datepicker table tr td.active.disabled:hover[disabled]:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1215, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active:active, fieldset[disabled] .datepicker table tr td.active:hover:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1220, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active.disabled:active, fieldset[disabled] .datepicker table tr td.active.disabled:hover:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1228, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled.active, .datepicker table tr td.active:hover.disabled.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1233, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled.disabled.active, .datepicker table tr td.active.disabled:hover.disabled.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1238, ../scss/datepicker.scss */
 .datepicker table tr td.active[disabled].active, .datepicker table tr td.active:hover[disabled].active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1243, ../scss/datepicker.scss */
 .datepicker table tr td.active.disabled[disabled].active, .datepicker table tr td.active.disabled:hover[disabled].active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1251, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active.active, fieldset[disabled] .datepicker table tr td.active:hover.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1256, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td.active.disabled.active, fieldset[disabled] .datepicker table tr td.active.disabled:hover.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1263, ../scss/datepicker.scss */
@@ -2566,99 +2589,99 @@ fieldset[disabled] .datepicker table tr td.active.disabled.active, fieldset[disa
 /* line 1275, ../scss/datepicker.scss */
 .datepicker table tr td span.disabled {
   background: none;
-  color: #999;
+  color: #999999;
   cursor: default;
 }
 /* line 1279, ../scss/datepicker.scss */
 .datepicker table tr td span.disabled:hover {
   background: none;
-  color: #999;
+  color: #999999;
   cursor: default;
 }
 /* line 1285, ../scss/datepicker.scss */
 .datepicker table tr td span.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1289, ../scss/datepicker.scss */
 .datepicker table tr td span.active:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1294, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1298, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1304, ../scss/datepicker.scss */
 .datepicker table tr td span.active:hover, .datepicker table tr td span.active.disabled:hover, .datepicker table tr td span.active:focus, .datepicker table tr td span.active:hover:focus {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1310, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled:focus, .datepicker table tr td span.active.disabled:hover:focus {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1316, ../scss/datepicker.scss */
 .datepicker table tr td span.active:active, .datepicker table tr td span.active:hover:active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1322, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled:active, .datepicker table tr td span.active.disabled:hover:active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1328, ../scss/datepicker.scss */
 .datepicker table tr td span.active.active, .datepicker table tr td span.active:hover.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1334, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled.active, .datepicker table tr td span.active.disabled:hover.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1343, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td span.active {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1347, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td span.active:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1352, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td span.active.disabled {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1356, ../scss/datepicker.scss */
 .open .dropdown-toggle.datepicker table tr td span.active.disabled:hover {
-  color: #fff;
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  color: white;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1365, ../scss/datepicker.scss */
@@ -2697,157 +2720,157 @@ fieldset[disabled] .datepicker table tr td.active.disabled.active, fieldset[disa
 
 /* line 1397, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled, .datepicker table tr td span.active:hover.disabled {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1402, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled.disabled, .datepicker table tr td span.active.disabled:hover.disabled {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1407, ../scss/datepicker.scss */
 .datepicker table tr td span.active[disabled], .datepicker table tr td span.active:hover[disabled] {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1412, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled[disabled], .datepicker table tr td span.active.disabled:hover[disabled] {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1419, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1422, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1426, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active.disabled {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1429, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active.disabled:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1437, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled:hover, .datepicker table tr td span.active[disabled]:hover, .datepicker table tr td span.active.disabled[disabled]:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1444, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active:hover, fieldset[disabled] .datepicker table tr td span.active.disabled:hover {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1451, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled:focus, .datepicker table tr td span.active:hover.disabled:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1456, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled.disabled:focus, .datepicker table tr td span.active.disabled:hover.disabled:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1461, ../scss/datepicker.scss */
 .datepicker table tr td span.active[disabled]:focus, .datepicker table tr td span.active:hover[disabled]:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1466, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled[disabled]:focus, .datepicker table tr td span.active.disabled:hover[disabled]:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1474, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active:focus, fieldset[disabled] .datepicker table tr td span.active:hover:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1479, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active.disabled:focus, fieldset[disabled] .datepicker table tr td span.active.disabled:hover:focus {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1487, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled:active, .datepicker table tr td span.active:hover.disabled:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1492, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled.disabled:active, .datepicker table tr td span.active.disabled:hover.disabled:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1497, ../scss/datepicker.scss */
 .datepicker table tr td span.active[disabled]:active, .datepicker table tr td span.active:hover[disabled]:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1502, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled[disabled]:active, .datepicker table tr td span.active.disabled:hover[disabled]:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1510, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active:active, fieldset[disabled] .datepicker table tr td span.active:hover:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1515, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active.disabled:active, fieldset[disabled] .datepicker table tr td span.active.disabled:hover:active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1523, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled.active, .datepicker table tr td span.active:hover.disabled.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1528, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled.disabled.active, .datepicker table tr td span.active.disabled:hover.disabled.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1533, ../scss/datepicker.scss */
 .datepicker table tr td span.active[disabled].active, .datepicker table tr td span.active:hover[disabled].active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1538, ../scss/datepicker.scss */
 .datepicker table tr td span.active.disabled[disabled].active, .datepicker table tr td span.active.disabled:hover[disabled].active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1546, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active.active, fieldset[disabled] .datepicker table tr td span.active:hover.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 /* line 1551, ../scss/datepicker.scss */
 fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
-  background-color: #52B6CA;
-  border-color: #52B6CA;
+  background-color: #52b6ca;
+  border-color: #52b6ca;
 }
 
 /* line 1560, ../scss/datepicker.scss */
 .datepicker table tr td span.old, .datepicker table tr td span.new {
-  color: #999;
+  color: #999999;
 }
 /* line 1564, ../scss/datepicker.scss */
 .datepicker th.datepicker-switch {
@@ -2903,7 +2926,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   text-align: center;
   vertical-align: middle;
   background-color: #efefef;
-  border: solid #ccc;
+  border: solid #cccccc;
   border-width: 1px 0;
   margin-left: -5px;
   margin-right: -5px;
@@ -2919,8 +2942,8 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   display: none;
   min-width: 160px;
   list-style: none;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: white;
+  border: 1px solid #cccccc;
   border-radius: 3px;
   -moz-background-clip: padding;
   background-clip: padding-box;
@@ -3024,7 +3047,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 /* line 4, ../scss/fontsawesome/_bordered-pulled.scss */
 .fa-border {
   padding: .2em .25em .15em;
-  border: solid 0.08em #eee;
+  border: solid 0.08em #eeeeee;
   border-radius: .1em;
 }
 
@@ -3056,34 +3079,46 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 
 @-moz-keyframes spin {
+  /* line 12, ../scss/fontsawesome/_spinning.scss */
   0% {
     -moz-transform: rotate(0deg);
   }
+
+  /* line 13, ../scss/fontsawesome/_spinning.scss */
   100% {
     -moz-transform: rotate(359deg);
   }
 }
 @-webkit-keyframes spin {
+  /* line 16, ../scss/fontsawesome/_spinning.scss */
   0% {
     -webkit-transform: rotate(0deg);
   }
+
+  /* line 17, ../scss/fontsawesome/_spinning.scss */
   100% {
     -webkit-transform: rotate(359deg);
   }
 }
 @-o-keyframes spin {
+  /* line 20, ../scss/fontsawesome/_spinning.scss */
   0% {
     -o-transform: rotate(0deg);
   }
+
+  /* line 21, ../scss/fontsawesome/_spinning.scss */
   100% {
     -o-transform: rotate(359deg);
   }
 }
 @keyframes spin {
+  /* line 24, ../scss/fontsawesome/_spinning.scss */
   0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
+
+  /* line 28, ../scss/fontsawesome/_spinning.scss */
   100% {
     -webkit-transform: rotate(359deg);
     transform: rotate(359deg);
@@ -3169,1585 +3204,1585 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 
 /* line 20, ../scss/fontsawesome/_stacked.scss */
 .fa-inverse {
-  color: #fff;
+  color: white;
 }
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
 /* line 4, ../scss/fontsawesome/_icons.scss */
 .fa-glass:before {
-  content: "";
+  content: "\f000";
 }
 
 /* line 5, ../scss/fontsawesome/_icons.scss */
 .fa-music:before {
-  content: "";
+  content: "\f001";
 }
 
 /* line 6, ../scss/fontsawesome/_icons.scss */
 .fa-search:before {
-  content: "";
+  content: "\f002";
 }
 
 /* line 7, ../scss/fontsawesome/_icons.scss */
 .fa-envelope-o:before {
-  content: "";
+  content: "\f003";
 }
 
 /* line 8, ../scss/fontsawesome/_icons.scss */
 .fa-heart:before {
-  content: "";
+  content: "\f004";
 }
 
 /* line 9, ../scss/fontsawesome/_icons.scss */
 .fa-star:before {
-  content: "";
+  content: "\f005";
 }
 
 /* line 10, ../scss/fontsawesome/_icons.scss */
 .fa-star-o:before {
-  content: "";
+  content: "\f006";
 }
 
 /* line 11, ../scss/fontsawesome/_icons.scss */
 .fa-user:before {
-  content: "";
+  content: "\f007";
 }
 
 /* line 12, ../scss/fontsawesome/_icons.scss */
 .fa-film:before {
-  content: "";
+  content: "\f008";
 }
 
 /* line 13, ../scss/fontsawesome/_icons.scss */
 .fa-th-large:before {
-  content: "";
+  content: "\f009";
 }
 
 /* line 14, ../scss/fontsawesome/_icons.scss */
 .fa-th:before {
-  content: "";
+  content: "\f00a";
 }
 
 /* line 15, ../scss/fontsawesome/_icons.scss */
 .fa-th-list:before {
-  content: "";
+  content: "\f00b";
 }
 
 /* line 16, ../scss/fontsawesome/_icons.scss */
 .fa-check:before {
-  content: "";
+  content: "\f00c";
 }
 
 /* line 17, ../scss/fontsawesome/_icons.scss */
 .fa-times:before {
-  content: "";
+  content: "\f00d";
 }
 
 /* line 18, ../scss/fontsawesome/_icons.scss */
 .fa-search-plus:before {
-  content: "";
+  content: "\f00e";
 }
 
 /* line 19, ../scss/fontsawesome/_icons.scss */
 .fa-search-minus:before {
-  content: "";
+  content: "\f010";
 }
 
 /* line 20, ../scss/fontsawesome/_icons.scss */
 .fa-power-off:before {
-  content: "";
+  content: "\f011";
 }
 
 /* line 21, ../scss/fontsawesome/_icons.scss */
 .fa-signal:before {
-  content: "";
+  content: "\f012";
 }
 
 /* line 22, ../scss/fontsawesome/_icons.scss */
 .fa-gear:before,
 .fa-cog:before {
-  content: "";
+  content: "\f013";
 }
 
 /* line 24, ../scss/fontsawesome/_icons.scss */
 .fa-trash-o:before {
-  content: "";
+  content: "\f014";
 }
 
 /* line 25, ../scss/fontsawesome/_icons.scss */
 .fa-home:before {
-  content: "";
+  content: "\f015";
 }
 
 /* line 26, ../scss/fontsawesome/_icons.scss */
 .fa-file-o:before {
-  content: "";
+  content: "\f016";
 }
 
 /* line 27, ../scss/fontsawesome/_icons.scss */
 .fa-clock-o:before {
-  content: "";
+  content: "\f017";
 }
 
 /* line 28, ../scss/fontsawesome/_icons.scss */
 .fa-road:before {
-  content: "";
+  content: "\f018";
 }
 
 /* line 29, ../scss/fontsawesome/_icons.scss */
 .fa-download:before {
-  content: "";
+  content: "\f019";
 }
 
 /* line 30, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-o-down:before {
-  content: "";
+  content: "\f01a";
 }
 
 /* line 31, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-o-up:before {
-  content: "";
+  content: "\f01b";
 }
 
 /* line 32, ../scss/fontsawesome/_icons.scss */
 .fa-inbox:before {
-  content: "";
+  content: "\f01c";
 }
 
 /* line 33, ../scss/fontsawesome/_icons.scss */
 .fa-play-circle-o:before {
-  content: "";
+  content: "\f01d";
 }
 
 /* line 34, ../scss/fontsawesome/_icons.scss */
 .fa-rotate-right:before,
 .fa-repeat:before {
-  content: "";
+  content: "\f01e";
 }
 
 /* line 36, ../scss/fontsawesome/_icons.scss */
 .fa-refresh:before {
-  content: "";
+  content: "\f021";
 }
 
 /* line 37, ../scss/fontsawesome/_icons.scss */
 .fa-list-alt:before {
-  content: "";
+  content: "\f022";
 }
 
 /* line 38, ../scss/fontsawesome/_icons.scss */
 .fa-lock:before {
-  content: "";
+  content: "\f023";
 }
 
 /* line 39, ../scss/fontsawesome/_icons.scss */
 .fa-flag:before {
-  content: "";
+  content: "\f024";
 }
 
 /* line 40, ../scss/fontsawesome/_icons.scss */
 .fa-headphones:before {
-  content: "";
+  content: "\f025";
 }
 
 /* line 41, ../scss/fontsawesome/_icons.scss */
 .fa-volume-off:before {
-  content: "";
+  content: "\f026";
 }
 
 /* line 42, ../scss/fontsawesome/_icons.scss */
 .fa-volume-down:before {
-  content: "";
+  content: "\f027";
 }
 
 /* line 43, ../scss/fontsawesome/_icons.scss */
 .fa-volume-up:before {
-  content: "";
+  content: "\f028";
 }
 
 /* line 44, ../scss/fontsawesome/_icons.scss */
 .fa-qrcode:before {
-  content: "";
+  content: "\f029";
 }
 
 /* line 45, ../scss/fontsawesome/_icons.scss */
 .fa-barcode:before {
-  content: "";
+  content: "\f02a";
 }
 
 /* line 46, ../scss/fontsawesome/_icons.scss */
 .fa-tag:before {
-  content: "";
+  content: "\f02b";
 }
 
 /* line 47, ../scss/fontsawesome/_icons.scss */
 .fa-tags:before {
-  content: "";
+  content: "\f02c";
 }
 
 /* line 48, ../scss/fontsawesome/_icons.scss */
 .fa-book:before {
-  content: "";
+  content: "\f02d";
 }
 
 /* line 49, ../scss/fontsawesome/_icons.scss */
 .fa-bookmark:before {
-  content: "";
+  content: "\f02e";
 }
 
 /* line 50, ../scss/fontsawesome/_icons.scss */
 .fa-print:before {
-  content: "";
+  content: "\f02f";
 }
 
 /* line 51, ../scss/fontsawesome/_icons.scss */
 .fa-camera:before {
-  content: "";
+  content: "\f030";
 }
 
 /* line 52, ../scss/fontsawesome/_icons.scss */
 .fa-font:before {
-  content: "";
+  content: "\f031";
 }
 
 /* line 53, ../scss/fontsawesome/_icons.scss */
 .fa-bold:before {
-  content: "";
+  content: "\f032";
 }
 
 /* line 54, ../scss/fontsawesome/_icons.scss */
 .fa-italic:before {
-  content: "";
+  content: "\f033";
 }
 
 /* line 55, ../scss/fontsawesome/_icons.scss */
 .fa-text-height:before {
-  content: "";
+  content: "\f034";
 }
 
 /* line 56, ../scss/fontsawesome/_icons.scss */
 .fa-text-width:before {
-  content: "";
+  content: "\f035";
 }
 
 /* line 57, ../scss/fontsawesome/_icons.scss */
 .fa-align-left:before {
-  content: "";
+  content: "\f036";
 }
 
 /* line 58, ../scss/fontsawesome/_icons.scss */
 .fa-align-center:before {
-  content: "";
+  content: "\f037";
 }
 
 /* line 59, ../scss/fontsawesome/_icons.scss */
 .fa-align-right:before {
-  content: "";
+  content: "\f038";
 }
 
 /* line 60, ../scss/fontsawesome/_icons.scss */
 .fa-align-justify:before {
-  content: "";
+  content: "\f039";
 }
 
 /* line 61, ../scss/fontsawesome/_icons.scss */
 .fa-list:before {
-  content: "";
+  content: "\f03a";
 }
 
 /* line 62, ../scss/fontsawesome/_icons.scss */
 .fa-dedent:before,
 .fa-outdent:before {
-  content: "";
+  content: "\f03b";
 }
 
 /* line 64, ../scss/fontsawesome/_icons.scss */
 .fa-indent:before {
-  content: "";
+  content: "\f03c";
 }
 
 /* line 65, ../scss/fontsawesome/_icons.scss */
 .fa-video-camera:before {
-  content: "";
+  content: "\f03d";
 }
 
 /* line 66, ../scss/fontsawesome/_icons.scss */
 .fa-photo:before,
 .fa-image:before,
 .fa-picture-o:before {
-  content: "";
+  content: "\f03e";
 }
 
 /* line 69, ../scss/fontsawesome/_icons.scss */
 .fa-pencil:before {
-  content: "";
+  content: "\f040";
 }
 
 /* line 70, ../scss/fontsawesome/_icons.scss */
 .fa-map-marker:before {
-  content: "";
+  content: "\f041";
 }
 
 /* line 71, ../scss/fontsawesome/_icons.scss */
 .fa-adjust:before {
-  content: "";
+  content: "\f042";
 }
 
 /* line 72, ../scss/fontsawesome/_icons.scss */
 .fa-tint:before {
-  content: "";
+  content: "\f043";
 }
 
 /* line 73, ../scss/fontsawesome/_icons.scss */
 .fa-edit:before,
 .fa-pencil-square-o:before {
-  content: "";
+  content: "\f044";
 }
 
 /* line 75, ../scss/fontsawesome/_icons.scss */
 .fa-share-square-o:before {
-  content: "";
+  content: "\f045";
 }
 
 /* line 76, ../scss/fontsawesome/_icons.scss */
 .fa-check-square-o:before {
-  content: "";
+  content: "\f046";
 }
 
 /* line 77, ../scss/fontsawesome/_icons.scss */
 .fa-arrows:before {
-  content: "";
+  content: "\f047";
 }
 
 /* line 78, ../scss/fontsawesome/_icons.scss */
 .fa-step-backward:before {
-  content: "";
+  content: "\f048";
 }
 
 /* line 79, ../scss/fontsawesome/_icons.scss */
 .fa-fast-backward:before {
-  content: "";
+  content: "\f049";
 }
 
 /* line 80, ../scss/fontsawesome/_icons.scss */
 .fa-backward:before {
-  content: "";
+  content: "\f04a";
 }
 
 /* line 81, ../scss/fontsawesome/_icons.scss */
 .fa-play:before {
-  content: "";
+  content: "\f04b";
 }
 
 /* line 82, ../scss/fontsawesome/_icons.scss */
 .fa-pause:before {
-  content: "";
+  content: "\f04c";
 }
 
 /* line 83, ../scss/fontsawesome/_icons.scss */
 .fa-stop:before {
-  content: "";
+  content: "\f04d";
 }
 
 /* line 84, ../scss/fontsawesome/_icons.scss */
 .fa-forward:before {
-  content: "";
+  content: "\f04e";
 }
 
 /* line 85, ../scss/fontsawesome/_icons.scss */
 .fa-fast-forward:before {
-  content: "";
+  content: "\f050";
 }
 
 /* line 86, ../scss/fontsawesome/_icons.scss */
 .fa-step-forward:before {
-  content: "";
+  content: "\f051";
 }
 
 /* line 87, ../scss/fontsawesome/_icons.scss */
 .fa-eject:before {
-  content: "";
+  content: "\f052";
 }
 
 /* line 88, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-left:before {
-  content: "";
+  content: "\f053";
 }
 
 /* line 89, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-right:before {
-  content: "";
+  content: "\f054";
 }
 
 /* line 90, ../scss/fontsawesome/_icons.scss */
 .fa-plus-circle:before {
-  content: "";
+  content: "\f055";
 }
 
 /* line 91, ../scss/fontsawesome/_icons.scss */
 .fa-minus-circle:before {
-  content: "";
+  content: "\f056";
 }
 
 /* line 92, ../scss/fontsawesome/_icons.scss */
 .fa-times-circle:before {
-  content: "";
+  content: "\f057";
 }
 
 /* line 93, ../scss/fontsawesome/_icons.scss */
 .fa-check-circle:before {
-  content: "";
+  content: "\f058";
 }
 
 /* line 94, ../scss/fontsawesome/_icons.scss */
 .fa-question-circle:before {
-  content: "";
+  content: "\f059";
 }
 
 /* line 95, ../scss/fontsawesome/_icons.scss */
 .fa-info-circle:before {
-  content: "";
+  content: "\f05a";
 }
 
 /* line 96, ../scss/fontsawesome/_icons.scss */
 .fa-crosshairs:before {
-  content: "";
+  content: "\f05b";
 }
 
 /* line 97, ../scss/fontsawesome/_icons.scss */
 .fa-times-circle-o:before {
-  content: "";
+  content: "\f05c";
 }
 
 /* line 98, ../scss/fontsawesome/_icons.scss */
 .fa-check-circle-o:before {
-  content: "";
+  content: "\f05d";
 }
 
 /* line 99, ../scss/fontsawesome/_icons.scss */
 .fa-ban:before {
-  content: "";
+  content: "\f05e";
 }
 
 /* line 100, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-left:before {
-  content: "";
+  content: "\f060";
 }
 
 /* line 101, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-right:before {
-  content: "";
+  content: "\f061";
 }
 
 /* line 102, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-up:before {
-  content: "";
+  content: "\f062";
 }
 
 /* line 103, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-down:before {
-  content: "";
+  content: "\f063";
 }
 
 /* line 104, ../scss/fontsawesome/_icons.scss */
 .fa-mail-forward:before,
 .fa-share:before {
-  content: "";
+  content: "\f064";
 }
 
 /* line 106, ../scss/fontsawesome/_icons.scss */
 .fa-expand:before {
-  content: "";
+  content: "\f065";
 }
 
 /* line 107, ../scss/fontsawesome/_icons.scss */
 .fa-compress:before {
-  content: "";
+  content: "\f066";
 }
 
 /* line 108, ../scss/fontsawesome/_icons.scss */
 .fa-plus:before {
-  content: "";
+  content: "\f067";
 }
 
 /* line 109, ../scss/fontsawesome/_icons.scss */
 .fa-minus:before {
-  content: "";
+  content: "\f068";
 }
 
 /* line 110, ../scss/fontsawesome/_icons.scss */
 .fa-asterisk:before {
-  content: "";
+  content: "\f069";
 }
 
 /* line 111, ../scss/fontsawesome/_icons.scss */
 .fa-exclamation-circle:before {
-  content: "";
+  content: "\f06a";
 }
 
 /* line 112, ../scss/fontsawesome/_icons.scss */
 .fa-gift:before {
-  content: "";
+  content: "\f06b";
 }
 
 /* line 113, ../scss/fontsawesome/_icons.scss */
 .fa-leaf:before {
-  content: "";
+  content: "\f06c";
 }
 
 /* line 114, ../scss/fontsawesome/_icons.scss */
 .fa-fire:before {
-  content: "";
+  content: "\f06d";
 }
 
 /* line 115, ../scss/fontsawesome/_icons.scss */
 .fa-eye:before {
-  content: "";
+  content: "\f06e";
 }
 
 /* line 116, ../scss/fontsawesome/_icons.scss */
 .fa-eye-slash:before {
-  content: "";
+  content: "\f070";
 }
 
 /* line 117, ../scss/fontsawesome/_icons.scss */
 .fa-warning:before,
 .fa-exclamation-triangle:before {
-  content: "";
+  content: "\f071";
 }
 
 /* line 119, ../scss/fontsawesome/_icons.scss */
 .fa-plane:before {
-  content: "";
+  content: "\f072";
 }
 
 /* line 120, ../scss/fontsawesome/_icons.scss */
 .fa-calendar:before {
-  content: "";
+  content: "\f073";
 }
 
 /* line 121, ../scss/fontsawesome/_icons.scss */
 .fa-random:before {
-  content: "";
+  content: "\f074";
 }
 
 /* line 122, ../scss/fontsawesome/_icons.scss */
 .fa-comment:before {
-  content: "";
+  content: "\f075";
 }
 
 /* line 123, ../scss/fontsawesome/_icons.scss */
 .fa-magnet:before {
-  content: "";
+  content: "\f076";
 }
 
 /* line 124, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-up:before {
-  content: "";
+  content: "\f077";
 }
 
 /* line 125, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-down:before {
-  content: "";
+  content: "\f078";
 }
 
 /* line 126, ../scss/fontsawesome/_icons.scss */
 .fa-retweet:before {
-  content: "";
+  content: "\f079";
 }
 
 /* line 127, ../scss/fontsawesome/_icons.scss */
 .fa-shopping-cart:before {
-  content: "";
+  content: "\f07a";
 }
 
 /* line 128, ../scss/fontsawesome/_icons.scss */
 .fa-folder:before {
-  content: "";
+  content: "\f07b";
 }
 
 /* line 129, ../scss/fontsawesome/_icons.scss */
 .fa-folder-open:before {
-  content: "";
+  content: "\f07c";
 }
 
 /* line 130, ../scss/fontsawesome/_icons.scss */
 .fa-arrows-v:before {
-  content: "";
+  content: "\f07d";
 }
 
 /* line 131, ../scss/fontsawesome/_icons.scss */
 .fa-arrows-h:before {
-  content: "";
+  content: "\f07e";
 }
 
 /* line 132, ../scss/fontsawesome/_icons.scss */
 .fa-bar-chart-o:before {
-  content: "";
+  content: "\f080";
 }
 
 /* line 133, ../scss/fontsawesome/_icons.scss */
 .fa-twitter-square:before {
-  content: "";
+  content: "\f081";
 }
 
 /* line 134, ../scss/fontsawesome/_icons.scss */
 .fa-facebook-square:before {
-  content: "";
+  content: "\f082";
 }
 
 /* line 135, ../scss/fontsawesome/_icons.scss */
 .fa-camera-retro:before {
-  content: "";
+  content: "\f083";
 }
 
 /* line 136, ../scss/fontsawesome/_icons.scss */
 .fa-key:before {
-  content: "";
+  content: "\f084";
 }
 
 /* line 137, ../scss/fontsawesome/_icons.scss */
 .fa-gears:before,
 .fa-cogs:before {
-  content: "";
+  content: "\f085";
 }
 
 /* line 139, ../scss/fontsawesome/_icons.scss */
 .fa-comments:before {
-  content: "";
+  content: "\f086";
 }
 
 /* line 140, ../scss/fontsawesome/_icons.scss */
 .fa-thumbs-o-up:before {
-  content: "";
+  content: "\f087";
 }
 
 /* line 141, ../scss/fontsawesome/_icons.scss */
 .fa-thumbs-o-down:before {
-  content: "";
+  content: "\f088";
 }
 
 /* line 142, ../scss/fontsawesome/_icons.scss */
 .fa-star-half:before {
-  content: "";
+  content: "\f089";
 }
 
 /* line 143, ../scss/fontsawesome/_icons.scss */
 .fa-heart-o:before {
-  content: "";
+  content: "\f08a";
 }
 
 /* line 144, ../scss/fontsawesome/_icons.scss */
 .fa-sign-out:before {
-  content: "";
+  content: "\f08b";
 }
 
 /* line 145, ../scss/fontsawesome/_icons.scss */
 .fa-linkedin-square:before {
-  content: "";
+  content: "\f08c";
 }
 
 /* line 146, ../scss/fontsawesome/_icons.scss */
 .fa-thumb-tack:before {
-  content: "";
+  content: "\f08d";
 }
 
 /* line 147, ../scss/fontsawesome/_icons.scss */
 .fa-external-link:before {
-  content: "";
+  content: "\f08e";
 }
 
 /* line 148, ../scss/fontsawesome/_icons.scss */
 .fa-sign-in:before {
-  content: "";
+  content: "\f090";
 }
 
 /* line 149, ../scss/fontsawesome/_icons.scss */
 .fa-trophy:before {
-  content: "";
+  content: "\f091";
 }
 
 /* line 150, ../scss/fontsawesome/_icons.scss */
 .fa-github-square:before {
-  content: "";
+  content: "\f092";
 }
 
 /* line 151, ../scss/fontsawesome/_icons.scss */
 .fa-upload:before {
-  content: "";
+  content: "\f093";
 }
 
 /* line 152, ../scss/fontsawesome/_icons.scss */
 .fa-lemon-o:before {
-  content: "";
+  content: "\f094";
 }
 
 /* line 153, ../scss/fontsawesome/_icons.scss */
 .fa-phone:before {
-  content: "";
+  content: "\f095";
 }
 
 /* line 154, ../scss/fontsawesome/_icons.scss */
 .fa-square-o:before {
-  content: "";
+  content: "\f096";
 }
 
 /* line 155, ../scss/fontsawesome/_icons.scss */
 .fa-bookmark-o:before {
-  content: "";
+  content: "\f097";
 }
 
 /* line 156, ../scss/fontsawesome/_icons.scss */
 .fa-phone-square:before {
-  content: "";
+  content: "\f098";
 }
 
 /* line 157, ../scss/fontsawesome/_icons.scss */
 .fa-twitter:before {
-  content: "";
+  content: "\f099";
 }
 
 /* line 158, ../scss/fontsawesome/_icons.scss */
 .fa-facebook:before {
-  content: "";
+  content: "\f09a";
 }
 
 /* line 159, ../scss/fontsawesome/_icons.scss */
 .fa-github:before {
-  content: "";
+  content: "\f09b";
 }
 
 /* line 160, ../scss/fontsawesome/_icons.scss */
 .fa-unlock:before {
-  content: "";
+  content: "\f09c";
 }
 
 /* line 161, ../scss/fontsawesome/_icons.scss */
 .fa-credit-card:before {
-  content: "";
+  content: "\f09d";
 }
 
 /* line 162, ../scss/fontsawesome/_icons.scss */
 .fa-rss:before {
-  content: "";
+  content: "\f09e";
 }
 
 /* line 163, ../scss/fontsawesome/_icons.scss */
 .fa-hdd-o:before {
-  content: "";
+  content: "\f0a0";
 }
 
 /* line 164, ../scss/fontsawesome/_icons.scss */
 .fa-bullhorn:before {
-  content: "";
+  content: "\f0a1";
 }
 
 /* line 165, ../scss/fontsawesome/_icons.scss */
 .fa-bell:before {
-  content: "";
+  content: "\f0f3";
 }
 
 /* line 166, ../scss/fontsawesome/_icons.scss */
 .fa-certificate:before {
-  content: "";
+  content: "\f0a3";
 }
 
 /* line 167, ../scss/fontsawesome/_icons.scss */
 .fa-hand-o-right:before {
-  content: "";
+  content: "\f0a4";
 }
 
 /* line 168, ../scss/fontsawesome/_icons.scss */
 .fa-hand-o-left:before {
-  content: "";
+  content: "\f0a5";
 }
 
 /* line 169, ../scss/fontsawesome/_icons.scss */
 .fa-hand-o-up:before {
-  content: "";
+  content: "\f0a6";
 }
 
 /* line 170, ../scss/fontsawesome/_icons.scss */
 .fa-hand-o-down:before {
-  content: "";
+  content: "\f0a7";
 }
 
 /* line 171, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-left:before {
-  content: "";
+  content: "\f0a8";
 }
 
 /* line 172, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-right:before {
-  content: "";
+  content: "\f0a9";
 }
 
 /* line 173, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-up:before {
-  content: "";
+  content: "\f0aa";
 }
 
 /* line 174, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-down:before {
-  content: "";
+  content: "\f0ab";
 }
 
 /* line 175, ../scss/fontsawesome/_icons.scss */
 .fa-globe:before {
-  content: "";
+  content: "\f0ac";
 }
 
 /* line 176, ../scss/fontsawesome/_icons.scss */
 .fa-wrench:before {
-  content: "";
+  content: "\f0ad";
 }
 
 /* line 177, ../scss/fontsawesome/_icons.scss */
 .fa-tasks:before {
-  content: "";
+  content: "\f0ae";
 }
 
 /* line 178, ../scss/fontsawesome/_icons.scss */
 .fa-filter:before {
-  content: "";
+  content: "\f0b0";
 }
 
 /* line 179, ../scss/fontsawesome/_icons.scss */
 .fa-briefcase:before {
-  content: "";
+  content: "\f0b1";
 }
 
 /* line 180, ../scss/fontsawesome/_icons.scss */
 .fa-arrows-alt:before {
-  content: "";
+  content: "\f0b2";
 }
 
 /* line 181, ../scss/fontsawesome/_icons.scss */
 .fa-group:before,
 .fa-users:before {
-  content: "";
+  content: "\f0c0";
 }
 
 /* line 183, ../scss/fontsawesome/_icons.scss */
 .fa-chain:before,
 .fa-link:before {
-  content: "";
+  content: "\f0c1";
 }
 
 /* line 185, ../scss/fontsawesome/_icons.scss */
 .fa-cloud:before {
-  content: "";
+  content: "\f0c2";
 }
 
 /* line 186, ../scss/fontsawesome/_icons.scss */
 .fa-flask:before {
-  content: "";
+  content: "\f0c3";
 }
 
 /* line 187, ../scss/fontsawesome/_icons.scss */
 .fa-cut:before,
 .fa-scissors:before {
-  content: "";
+  content: "\f0c4";
 }
 
 /* line 189, ../scss/fontsawesome/_icons.scss */
 .fa-copy:before,
 .fa-files-o:before {
-  content: "";
+  content: "\f0c5";
 }
 
 /* line 191, ../scss/fontsawesome/_icons.scss */
 .fa-paperclip:before {
-  content: "";
+  content: "\f0c6";
 }
 
 /* line 192, ../scss/fontsawesome/_icons.scss */
 .fa-save:before,
 .fa-floppy-o:before {
-  content: "";
+  content: "\f0c7";
 }
 
 /* line 194, ../scss/fontsawesome/_icons.scss */
 .fa-square:before {
-  content: "";
+  content: "\f0c8";
 }
 
 /* line 195, ../scss/fontsawesome/_icons.scss */
 .fa-navicon:before,
 .fa-reorder:before,
 .fa-bars:before {
-  content: "";
+  content: "\f0c9";
 }
 
 /* line 198, ../scss/fontsawesome/_icons.scss */
 .fa-list-ul:before {
-  content: "";
+  content: "\f0ca";
 }
 
 /* line 199, ../scss/fontsawesome/_icons.scss */
 .fa-list-ol:before {
-  content: "";
+  content: "\f0cb";
 }
 
 /* line 200, ../scss/fontsawesome/_icons.scss */
 .fa-strikethrough:before {
-  content: "";
+  content: "\f0cc";
 }
 
 /* line 201, ../scss/fontsawesome/_icons.scss */
 .fa-underline:before {
-  content: "";
+  content: "\f0cd";
 }
 
 /* line 202, ../scss/fontsawesome/_icons.scss */
 .fa-table:before {
-  content: "";
+  content: "\f0ce";
 }
 
 /* line 203, ../scss/fontsawesome/_icons.scss */
 .fa-magic:before {
-  content: "";
+  content: "\f0d0";
 }
 
 /* line 204, ../scss/fontsawesome/_icons.scss */
 .fa-truck:before {
-  content: "";
+  content: "\f0d1";
 }
 
 /* line 205, ../scss/fontsawesome/_icons.scss */
 .fa-pinterest:before {
-  content: "";
+  content: "\f0d2";
 }
 
 /* line 206, ../scss/fontsawesome/_icons.scss */
 .fa-pinterest-square:before {
-  content: "";
+  content: "\f0d3";
 }
 
 /* line 207, ../scss/fontsawesome/_icons.scss */
 .fa-google-plus-square:before {
-  content: "";
+  content: "\f0d4";
 }
 
 /* line 208, ../scss/fontsawesome/_icons.scss */
 .fa-google-plus:before {
-  content: "";
+  content: "\f0d5";
 }
 
 /* line 209, ../scss/fontsawesome/_icons.scss */
 .fa-money:before {
-  content: "";
+  content: "\f0d6";
 }
 
 /* line 210, ../scss/fontsawesome/_icons.scss */
 .fa-caret-down:before {
-  content: "";
+  content: "\f0d7";
 }
 
 /* line 211, ../scss/fontsawesome/_icons.scss */
 .fa-caret-up:before {
-  content: "";
+  content: "\f0d8";
 }
 
 /* line 212, ../scss/fontsawesome/_icons.scss */
 .fa-caret-left:before {
-  content: "";
+  content: "\f0d9";
 }
 
 /* line 213, ../scss/fontsawesome/_icons.scss */
 .fa-caret-right:before {
-  content: "";
+  content: "\f0da";
 }
 
 /* line 214, ../scss/fontsawesome/_icons.scss */
 .fa-columns:before {
-  content: "";
+  content: "\f0db";
 }
 
 /* line 215, ../scss/fontsawesome/_icons.scss */
 .fa-unsorted:before,
 .fa-sort:before {
-  content: "";
+  content: "\f0dc";
 }
 
 /* line 217, ../scss/fontsawesome/_icons.scss */
 .fa-sort-down:before,
 .fa-sort-desc:before {
-  content: "";
+  content: "\f0dd";
 }
 
 /* line 219, ../scss/fontsawesome/_icons.scss */
 .fa-sort-up:before,
 .fa-sort-asc:before {
-  content: "";
+  content: "\f0de";
 }
 
 /* line 221, ../scss/fontsawesome/_icons.scss */
 .fa-envelope:before {
-  content: "";
+  content: "\f0e0";
 }
 
 /* line 222, ../scss/fontsawesome/_icons.scss */
 .fa-linkedin:before {
-  content: "";
+  content: "\f0e1";
 }
 
 /* line 223, ../scss/fontsawesome/_icons.scss */
 .fa-rotate-left:before,
 .fa-undo:before {
-  content: "";
+  content: "\f0e2";
 }
 
 /* line 225, ../scss/fontsawesome/_icons.scss */
 .fa-legal:before,
 .fa-gavel:before {
-  content: "";
+  content: "\f0e3";
 }
 
 /* line 227, ../scss/fontsawesome/_icons.scss */
 .fa-dashboard:before,
 .fa-tachometer:before {
-  content: "";
+  content: "\f0e4";
 }
 
 /* line 229, ../scss/fontsawesome/_icons.scss */
 .fa-comment-o:before {
-  content: "";
+  content: "\f0e5";
 }
 
 /* line 230, ../scss/fontsawesome/_icons.scss */
 .fa-comments-o:before {
-  content: "";
+  content: "\f0e6";
 }
 
 /* line 231, ../scss/fontsawesome/_icons.scss */
 .fa-flash:before,
 .fa-bolt:before {
-  content: "";
+  content: "\f0e7";
 }
 
 /* line 233, ../scss/fontsawesome/_icons.scss */
 .fa-sitemap:before {
-  content: "";
+  content: "\f0e8";
 }
 
 /* line 234, ../scss/fontsawesome/_icons.scss */
 .fa-umbrella:before {
-  content: "";
+  content: "\f0e9";
 }
 
 /* line 235, ../scss/fontsawesome/_icons.scss */
 .fa-paste:before,
 .fa-clipboard:before {
-  content: "";
+  content: "\f0ea";
 }
 
 /* line 237, ../scss/fontsawesome/_icons.scss */
 .fa-lightbulb-o:before {
-  content: "";
+  content: "\f0eb";
 }
 
 /* line 238, ../scss/fontsawesome/_icons.scss */
 .fa-exchange:before {
-  content: "";
+  content: "\f0ec";
 }
 
 /* line 239, ../scss/fontsawesome/_icons.scss */
 .fa-cloud-download:before {
-  content: "";
+  content: "\f0ed";
 }
 
 /* line 240, ../scss/fontsawesome/_icons.scss */
 .fa-cloud-upload:before {
-  content: "";
+  content: "\f0ee";
 }
 
 /* line 241, ../scss/fontsawesome/_icons.scss */
 .fa-user-md:before {
-  content: "";
+  content: "\f0f0";
 }
 
 /* line 242, ../scss/fontsawesome/_icons.scss */
 .fa-stethoscope:before {
-  content: "";
+  content: "\f0f1";
 }
 
 /* line 243, ../scss/fontsawesome/_icons.scss */
 .fa-suitcase:before {
-  content: "";
+  content: "\f0f2";
 }
 
 /* line 244, ../scss/fontsawesome/_icons.scss */
 .fa-bell-o:before {
-  content: "";
+  content: "\f0a2";
 }
 
 /* line 245, ../scss/fontsawesome/_icons.scss */
 .fa-coffee:before {
-  content: "";
+  content: "\f0f4";
 }
 
 /* line 246, ../scss/fontsawesome/_icons.scss */
 .fa-cutlery:before {
-  content: "";
+  content: "\f0f5";
 }
 
 /* line 247, ../scss/fontsawesome/_icons.scss */
 .fa-file-text-o:before {
-  content: "";
+  content: "\f0f6";
 }
 
 /* line 248, ../scss/fontsawesome/_icons.scss */
 .fa-building-o:before {
-  content: "";
+  content: "\f0f7";
 }
 
 /* line 249, ../scss/fontsawesome/_icons.scss */
 .fa-hospital-o:before {
-  content: "";
+  content: "\f0f8";
 }
 
 /* line 250, ../scss/fontsawesome/_icons.scss */
 .fa-ambulance:before {
-  content: "";
+  content: "\f0f9";
 }
 
 /* line 251, ../scss/fontsawesome/_icons.scss */
 .fa-medkit:before {
-  content: "";
+  content: "\f0fa";
 }
 
 /* line 252, ../scss/fontsawesome/_icons.scss */
 .fa-fighter-jet:before {
-  content: "";
+  content: "\f0fb";
 }
 
 /* line 253, ../scss/fontsawesome/_icons.scss */
 .fa-beer:before {
-  content: "";
+  content: "\f0fc";
 }
 
 /* line 254, ../scss/fontsawesome/_icons.scss */
 .fa-h-square:before {
-  content: "";
+  content: "\f0fd";
 }
 
 /* line 255, ../scss/fontsawesome/_icons.scss */
 .fa-plus-square:before {
-  content: "";
+  content: "\f0fe";
 }
 
 /* line 256, ../scss/fontsawesome/_icons.scss */
 .fa-angle-double-left:before {
-  content: "";
+  content: "\f100";
 }
 
 /* line 257, ../scss/fontsawesome/_icons.scss */
 .fa-angle-double-right:before {
-  content: "";
+  content: "\f101";
 }
 
 /* line 258, ../scss/fontsawesome/_icons.scss */
 .fa-angle-double-up:before {
-  content: "";
+  content: "\f102";
 }
 
 /* line 259, ../scss/fontsawesome/_icons.scss */
 .fa-angle-double-down:before {
-  content: "";
+  content: "\f103";
 }
 
 /* line 260, ../scss/fontsawesome/_icons.scss */
 .fa-angle-left:before {
-  content: "";
+  content: "\f104";
 }
 
 /* line 261, ../scss/fontsawesome/_icons.scss */
 .fa-angle-right:before {
-  content: "";
+  content: "\f105";
 }
 
 /* line 262, ../scss/fontsawesome/_icons.scss */
 .fa-angle-up:before {
-  content: "";
+  content: "\f106";
 }
 
 /* line 263, ../scss/fontsawesome/_icons.scss */
 .fa-angle-down:before {
-  content: "";
+  content: "\f107";
 }
 
 /* line 264, ../scss/fontsawesome/_icons.scss */
 .fa-desktop:before {
-  content: "";
+  content: "\f108";
 }
 
 /* line 265, ../scss/fontsawesome/_icons.scss */
 .fa-laptop:before {
-  content: "";
+  content: "\f109";
 }
 
 /* line 266, ../scss/fontsawesome/_icons.scss */
 .fa-tablet:before {
-  content: "";
+  content: "\f10a";
 }
 
 /* line 267, ../scss/fontsawesome/_icons.scss */
 .fa-mobile-phone:before,
 .fa-mobile:before {
-  content: "";
+  content: "\f10b";
 }
 
 /* line 269, ../scss/fontsawesome/_icons.scss */
 .fa-circle-o:before {
-  content: "";
+  content: "\f10c";
 }
 
 /* line 270, ../scss/fontsawesome/_icons.scss */
 .fa-quote-left:before {
-  content: "";
+  content: "\f10d";
 }
 
 /* line 271, ../scss/fontsawesome/_icons.scss */
 .fa-quote-right:before {
-  content: "";
+  content: "\f10e";
 }
 
 /* line 272, ../scss/fontsawesome/_icons.scss */
 .fa-spinner:before {
-  content: "";
+  content: "\f110";
 }
 
 /* line 273, ../scss/fontsawesome/_icons.scss */
 .fa-circle:before {
-  content: "";
+  content: "\f111";
 }
 
 /* line 274, ../scss/fontsawesome/_icons.scss */
 .fa-mail-reply:before,
 .fa-reply:before {
-  content: "";
+  content: "\f112";
 }
 
 /* line 276, ../scss/fontsawesome/_icons.scss */
 .fa-github-alt:before {
-  content: "";
+  content: "\f113";
 }
 
 /* line 277, ../scss/fontsawesome/_icons.scss */
 .fa-folder-o:before {
-  content: "";
+  content: "\f114";
 }
 
 /* line 278, ../scss/fontsawesome/_icons.scss */
 .fa-folder-open-o:before {
-  content: "";
+  content: "\f115";
 }
 
 /* line 279, ../scss/fontsawesome/_icons.scss */
 .fa-smile-o:before {
-  content: "";
+  content: "\f118";
 }
 
 /* line 280, ../scss/fontsawesome/_icons.scss */
 .fa-frown-o:before {
-  content: "";
+  content: "\f119";
 }
 
 /* line 281, ../scss/fontsawesome/_icons.scss */
 .fa-meh-o:before {
-  content: "";
+  content: "\f11a";
 }
 
 /* line 282, ../scss/fontsawesome/_icons.scss */
 .fa-gamepad:before {
-  content: "";
+  content: "\f11b";
 }
 
 /* line 283, ../scss/fontsawesome/_icons.scss */
 .fa-keyboard-o:before {
-  content: "";
+  content: "\f11c";
 }
 
 /* line 284, ../scss/fontsawesome/_icons.scss */
 .fa-flag-o:before {
-  content: "";
+  content: "\f11d";
 }
 
 /* line 285, ../scss/fontsawesome/_icons.scss */
 .fa-flag-checkered:before {
-  content: "";
+  content: "\f11e";
 }
 
 /* line 286, ../scss/fontsawesome/_icons.scss */
 .fa-terminal:before {
-  content: "";
+  content: "\f120";
 }
 
 /* line 287, ../scss/fontsawesome/_icons.scss */
 .fa-code:before {
-  content: "";
+  content: "\f121";
 }
 
 /* line 288, ../scss/fontsawesome/_icons.scss */
 .fa-mail-reply-all:before,
 .fa-reply-all:before {
-  content: "";
+  content: "\f122";
 }
 
 /* line 290, ../scss/fontsawesome/_icons.scss */
 .fa-star-half-empty:before,
 .fa-star-half-full:before,
 .fa-star-half-o:before {
-  content: "";
+  content: "\f123";
 }
 
 /* line 293, ../scss/fontsawesome/_icons.scss */
 .fa-location-arrow:before {
-  content: "";
+  content: "\f124";
 }
 
 /* line 294, ../scss/fontsawesome/_icons.scss */
 .fa-crop:before {
-  content: "";
+  content: "\f125";
 }
 
 /* line 295, ../scss/fontsawesome/_icons.scss */
 .fa-code-fork:before {
-  content: "";
+  content: "\f126";
 }
 
 /* line 296, ../scss/fontsawesome/_icons.scss */
 .fa-unlink:before,
 .fa-chain-broken:before {
-  content: "";
+  content: "\f127";
 }
 
 /* line 298, ../scss/fontsawesome/_icons.scss */
 .fa-question:before {
-  content: "";
+  content: "\f128";
 }
 
 /* line 299, ../scss/fontsawesome/_icons.scss */
 .fa-info:before {
-  content: "";
+  content: "\f129";
 }
 
 /* line 300, ../scss/fontsawesome/_icons.scss */
 .fa-exclamation:before {
-  content: "";
+  content: "\f12a";
 }
 
 /* line 301, ../scss/fontsawesome/_icons.scss */
 .fa-superscript:before {
-  content: "";
+  content: "\f12b";
 }
 
 /* line 302, ../scss/fontsawesome/_icons.scss */
 .fa-subscript:before {
-  content: "";
+  content: "\f12c";
 }
 
 /* line 303, ../scss/fontsawesome/_icons.scss */
 .fa-eraser:before {
-  content: "";
+  content: "\f12d";
 }
 
 /* line 304, ../scss/fontsawesome/_icons.scss */
 .fa-puzzle-piece:before {
-  content: "";
+  content: "\f12e";
 }
 
 /* line 305, ../scss/fontsawesome/_icons.scss */
 .fa-microphone:before {
-  content: "";
+  content: "\f130";
 }
 
 /* line 306, ../scss/fontsawesome/_icons.scss */
 .fa-microphone-slash:before {
-  content: "";
+  content: "\f131";
 }
 
 /* line 307, ../scss/fontsawesome/_icons.scss */
 .fa-shield:before {
-  content: "";
+  content: "\f132";
 }
 
 /* line 308, ../scss/fontsawesome/_icons.scss */
 .fa-calendar-o:before {
-  content: "";
+  content: "\f133";
 }
 
 /* line 309, ../scss/fontsawesome/_icons.scss */
 .fa-fire-extinguisher:before {
-  content: "";
+  content: "\f134";
 }
 
 /* line 310, ../scss/fontsawesome/_icons.scss */
 .fa-rocket:before {
-  content: "";
+  content: "\f135";
 }
 
 /* line 311, ../scss/fontsawesome/_icons.scss */
 .fa-maxcdn:before {
-  content: "";
+  content: "\f136";
 }
 
 /* line 312, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-circle-left:before {
-  content: "";
+  content: "\f137";
 }
 
 /* line 313, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-circle-right:before {
-  content: "";
+  content: "\f138";
 }
 
 /* line 314, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-circle-up:before {
-  content: "";
+  content: "\f139";
 }
 
 /* line 315, ../scss/fontsawesome/_icons.scss */
 .fa-chevron-circle-down:before {
-  content: "";
+  content: "\f13a";
 }
 
 /* line 316, ../scss/fontsawesome/_icons.scss */
 .fa-html5:before {
-  content: "";
+  content: "\f13b";
 }
 
 /* line 317, ../scss/fontsawesome/_icons.scss */
 .fa-css3:before {
-  content: "";
+  content: "\f13c";
 }
 
 /* line 318, ../scss/fontsawesome/_icons.scss */
 .fa-anchor:before {
-  content: "";
+  content: "\f13d";
 }
 
 /* line 319, ../scss/fontsawesome/_icons.scss */
 .fa-unlock-alt:before {
-  content: "";
+  content: "\f13e";
 }
 
 /* line 320, ../scss/fontsawesome/_icons.scss */
 .fa-bullseye:before {
-  content: "";
+  content: "\f140";
 }
 
 /* line 321, ../scss/fontsawesome/_icons.scss */
 .fa-ellipsis-h:before {
-  content: "";
+  content: "\f141";
 }
 
 /* line 322, ../scss/fontsawesome/_icons.scss */
 .fa-ellipsis-v:before {
-  content: "";
+  content: "\f142";
 }
 
 /* line 323, ../scss/fontsawesome/_icons.scss */
 .fa-rss-square:before {
-  content: "";
+  content: "\f143";
 }
 
 /* line 324, ../scss/fontsawesome/_icons.scss */
 .fa-play-circle:before {
-  content: "";
+  content: "\f144";
 }
 
 /* line 325, ../scss/fontsawesome/_icons.scss */
 .fa-ticket:before {
-  content: "";
+  content: "\f145";
 }
 
 /* line 326, ../scss/fontsawesome/_icons.scss */
 .fa-minus-square:before {
-  content: "";
+  content: "\f146";
 }
 
 /* line 327, ../scss/fontsawesome/_icons.scss */
 .fa-minus-square-o:before {
-  content: "";
+  content: "\f147";
 }
 
 /* line 328, ../scss/fontsawesome/_icons.scss */
 .fa-level-up:before {
-  content: "";
+  content: "\f148";
 }
 
 /* line 329, ../scss/fontsawesome/_icons.scss */
 .fa-level-down:before {
-  content: "";
+  content: "\f149";
 }
 
 /* line 330, ../scss/fontsawesome/_icons.scss */
 .fa-check-square:before {
-  content: "";
+  content: "\f14a";
 }
 
 /* line 331, ../scss/fontsawesome/_icons.scss */
 .fa-pencil-square:before {
-  content: "";
+  content: "\f14b";
 }
 
 /* line 332, ../scss/fontsawesome/_icons.scss */
 .fa-external-link-square:before {
-  content: "";
+  content: "\f14c";
 }
 
 /* line 333, ../scss/fontsawesome/_icons.scss */
 .fa-share-square:before {
-  content: "";
+  content: "\f14d";
 }
 
 /* line 334, ../scss/fontsawesome/_icons.scss */
 .fa-compass:before {
-  content: "";
+  content: "\f14e";
 }
 
 /* line 335, ../scss/fontsawesome/_icons.scss */
 .fa-toggle-down:before,
 .fa-caret-square-o-down:before {
-  content: "";
+  content: "\f150";
 }
 
 /* line 337, ../scss/fontsawesome/_icons.scss */
 .fa-toggle-up:before,
 .fa-caret-square-o-up:before {
-  content: "";
+  content: "\f151";
 }
 
 /* line 339, ../scss/fontsawesome/_icons.scss */
 .fa-toggle-right:before,
 .fa-caret-square-o-right:before {
-  content: "";
+  content: "\f152";
 }
 
 /* line 341, ../scss/fontsawesome/_icons.scss */
 .fa-euro:before,
 .fa-eur:before {
-  content: "";
+  content: "\f153";
 }
 
 /* line 343, ../scss/fontsawesome/_icons.scss */
 .fa-gbp:before {
-  content: "";
+  content: "\f154";
 }
 
 /* line 344, ../scss/fontsawesome/_icons.scss */
 .fa-dollar:before,
 .fa-usd:before {
-  content: "";
+  content: "\f155";
 }
 
 /* line 346, ../scss/fontsawesome/_icons.scss */
 .fa-rupee:before,
 .fa-inr:before {
-  content: "";
+  content: "\f156";
 }
 
 /* line 348, ../scss/fontsawesome/_icons.scss */
@@ -4755,574 +4790,574 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 .fa-rmb:before,
 .fa-yen:before,
 .fa-jpy:before {
-  content: "";
+  content: "\f157";
 }
 
 /* line 352, ../scss/fontsawesome/_icons.scss */
 .fa-ruble:before,
 .fa-rouble:before,
 .fa-rub:before {
-  content: "";
+  content: "\f158";
 }
 
 /* line 355, ../scss/fontsawesome/_icons.scss */
 .fa-won:before,
 .fa-krw:before {
-  content: "";
+  content: "\f159";
 }
 
 /* line 357, ../scss/fontsawesome/_icons.scss */
 .fa-bitcoin:before,
 .fa-btc:before {
-  content: "";
+  content: "\f15a";
 }
 
 /* line 359, ../scss/fontsawesome/_icons.scss */
 .fa-file:before {
-  content: "";
+  content: "\f15b";
 }
 
 /* line 360, ../scss/fontsawesome/_icons.scss */
 .fa-file-text:before {
-  content: "";
+  content: "\f15c";
 }
 
 /* line 361, ../scss/fontsawesome/_icons.scss */
 .fa-sort-alpha-asc:before {
-  content: "";
+  content: "\f15d";
 }
 
 /* line 362, ../scss/fontsawesome/_icons.scss */
 .fa-sort-alpha-desc:before {
-  content: "";
+  content: "\f15e";
 }
 
 /* line 363, ../scss/fontsawesome/_icons.scss */
 .fa-sort-amount-asc:before {
-  content: "";
+  content: "\f160";
 }
 
 /* line 364, ../scss/fontsawesome/_icons.scss */
 .fa-sort-amount-desc:before {
-  content: "";
+  content: "\f161";
 }
 
 /* line 365, ../scss/fontsawesome/_icons.scss */
 .fa-sort-numeric-asc:before {
-  content: "";
+  content: "\f162";
 }
 
 /* line 366, ../scss/fontsawesome/_icons.scss */
 .fa-sort-numeric-desc:before {
-  content: "";
+  content: "\f163";
 }
 
 /* line 367, ../scss/fontsawesome/_icons.scss */
 .fa-thumbs-up:before {
-  content: "";
+  content: "\f164";
 }
 
 /* line 368, ../scss/fontsawesome/_icons.scss */
 .fa-thumbs-down:before {
-  content: "";
+  content: "\f165";
 }
 
 /* line 369, ../scss/fontsawesome/_icons.scss */
 .fa-youtube-square:before {
-  content: "";
+  content: "\f166";
 }
 
 /* line 370, ../scss/fontsawesome/_icons.scss */
 .fa-youtube:before {
-  content: "";
+  content: "\f167";
 }
 
 /* line 371, ../scss/fontsawesome/_icons.scss */
 .fa-xing:before {
-  content: "";
+  content: "\f168";
 }
 
 /* line 372, ../scss/fontsawesome/_icons.scss */
 .fa-xing-square:before {
-  content: "";
+  content: "\f169";
 }
 
 /* line 373, ../scss/fontsawesome/_icons.scss */
 .fa-youtube-play:before {
-  content: "";
+  content: "\f16a";
 }
 
 /* line 374, ../scss/fontsawesome/_icons.scss */
 .fa-dropbox:before {
-  content: "";
+  content: "\f16b";
 }
 
 /* line 375, ../scss/fontsawesome/_icons.scss */
 .fa-stack-overflow:before {
-  content: "";
+  content: "\f16c";
 }
 
 /* line 376, ../scss/fontsawesome/_icons.scss */
 .fa-instagram:before {
-  content: "";
+  content: "\f16d";
 }
 
 /* line 377, ../scss/fontsawesome/_icons.scss */
 .fa-flickr:before {
-  content: "";
+  content: "\f16e";
 }
 
 /* line 378, ../scss/fontsawesome/_icons.scss */
 .fa-adn:before {
-  content: "";
+  content: "\f170";
 }
 
 /* line 379, ../scss/fontsawesome/_icons.scss */
 .fa-bitbucket:before {
-  content: "";
+  content: "\f171";
 }
 
 /* line 380, ../scss/fontsawesome/_icons.scss */
 .fa-bitbucket-square:before {
-  content: "";
+  content: "\f172";
 }
 
 /* line 381, ../scss/fontsawesome/_icons.scss */
 .fa-tumblr:before {
-  content: "";
+  content: "\f173";
 }
 
 /* line 382, ../scss/fontsawesome/_icons.scss */
 .fa-tumblr-square:before {
-  content: "";
+  content: "\f174";
 }
 
 /* line 383, ../scss/fontsawesome/_icons.scss */
 .fa-long-arrow-down:before {
-  content: "";
+  content: "\f175";
 }
 
 /* line 384, ../scss/fontsawesome/_icons.scss */
 .fa-long-arrow-up:before {
-  content: "";
+  content: "\f176";
 }
 
 /* line 385, ../scss/fontsawesome/_icons.scss */
 .fa-long-arrow-left:before {
-  content: "";
+  content: "\f177";
 }
 
 /* line 386, ../scss/fontsawesome/_icons.scss */
 .fa-long-arrow-right:before {
-  content: "";
+  content: "\f178";
 }
 
 /* line 387, ../scss/fontsawesome/_icons.scss */
 .fa-apple:before {
-  content: "";
+  content: "\f179";
 }
 
 /* line 388, ../scss/fontsawesome/_icons.scss */
 .fa-windows:before {
-  content: "";
+  content: "\f17a";
 }
 
 /* line 389, ../scss/fontsawesome/_icons.scss */
 .fa-android:before {
-  content: "";
+  content: "\f17b";
 }
 
 /* line 390, ../scss/fontsawesome/_icons.scss */
 .fa-linux:before {
-  content: "";
+  content: "\f17c";
 }
 
 /* line 391, ../scss/fontsawesome/_icons.scss */
 .fa-dribbble:before {
-  content: "";
+  content: "\f17d";
 }
 
 /* line 392, ../scss/fontsawesome/_icons.scss */
 .fa-skype:before {
-  content: "";
+  content: "\f17e";
 }
 
 /* line 393, ../scss/fontsawesome/_icons.scss */
 .fa-foursquare:before {
-  content: "";
+  content: "\f180";
 }
 
 /* line 394, ../scss/fontsawesome/_icons.scss */
 .fa-trello:before {
-  content: "";
+  content: "\f181";
 }
 
 /* line 395, ../scss/fontsawesome/_icons.scss */
 .fa-female:before {
-  content: "";
+  content: "\f182";
 }
 
 /* line 396, ../scss/fontsawesome/_icons.scss */
 .fa-male:before {
-  content: "";
+  content: "\f183";
 }
 
 /* line 397, ../scss/fontsawesome/_icons.scss */
 .fa-gittip:before {
-  content: "";
+  content: "\f184";
 }
 
 /* line 398, ../scss/fontsawesome/_icons.scss */
 .fa-sun-o:before {
-  content: "";
+  content: "\f185";
 }
 
 /* line 399, ../scss/fontsawesome/_icons.scss */
 .fa-moon-o:before {
-  content: "";
+  content: "\f186";
 }
 
 /* line 400, ../scss/fontsawesome/_icons.scss */
 .fa-archive:before {
-  content: "";
+  content: "\f187";
 }
 
 /* line 401, ../scss/fontsawesome/_icons.scss */
 .fa-bug:before {
-  content: "";
+  content: "\f188";
 }
 
 /* line 402, ../scss/fontsawesome/_icons.scss */
 .fa-vk:before {
-  content: "";
+  content: "\f189";
 }
 
 /* line 403, ../scss/fontsawesome/_icons.scss */
 .fa-weibo:before {
-  content: "";
+  content: "\f18a";
 }
 
 /* line 404, ../scss/fontsawesome/_icons.scss */
 .fa-renren:before {
-  content: "";
+  content: "\f18b";
 }
 
 /* line 405, ../scss/fontsawesome/_icons.scss */
 .fa-pagelines:before {
-  content: "";
+  content: "\f18c";
 }
 
 /* line 406, ../scss/fontsawesome/_icons.scss */
 .fa-stack-exchange:before {
-  content: "";
+  content: "\f18d";
 }
 
 /* line 407, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-o-right:before {
-  content: "";
+  content: "\f18e";
 }
 
 /* line 408, ../scss/fontsawesome/_icons.scss */
 .fa-arrow-circle-o-left:before {
-  content: "";
+  content: "\f190";
 }
 
 /* line 409, ../scss/fontsawesome/_icons.scss */
 .fa-toggle-left:before,
 .fa-caret-square-o-left:before {
-  content: "";
+  content: "\f191";
 }
 
 /* line 411, ../scss/fontsawesome/_icons.scss */
 .fa-dot-circle-o:before {
-  content: "";
+  content: "\f192";
 }
 
 /* line 412, ../scss/fontsawesome/_icons.scss */
 .fa-wheelchair:before {
-  content: "";
+  content: "\f193";
 }
 
 /* line 413, ../scss/fontsawesome/_icons.scss */
 .fa-vimeo-square:before {
-  content: "";
+  content: "\f194";
 }
 
 /* line 414, ../scss/fontsawesome/_icons.scss */
 .fa-turkish-lira:before,
 .fa-try:before {
-  content: "";
+  content: "\f195";
 }
 
 /* line 416, ../scss/fontsawesome/_icons.scss */
 .fa-plus-square-o:before {
-  content: "";
+  content: "\f196";
 }
 
 /* line 417, ../scss/fontsawesome/_icons.scss */
 .fa-space-shuttle:before {
-  content: "";
+  content: "\f197";
 }
 
 /* line 418, ../scss/fontsawesome/_icons.scss */
 .fa-slack:before {
-  content: "";
+  content: "\f198";
 }
 
 /* line 419, ../scss/fontsawesome/_icons.scss */
 .fa-envelope-square:before {
-  content: "";
+  content: "\f199";
 }
 
 /* line 420, ../scss/fontsawesome/_icons.scss */
 .fa-wordpress:before {
-  content: "";
+  content: "\f19a";
 }
 
 /* line 421, ../scss/fontsawesome/_icons.scss */
 .fa-openid:before {
-  content: "";
+  content: "\f19b";
 }
 
 /* line 422, ../scss/fontsawesome/_icons.scss */
 .fa-institution:before,
 .fa-bank:before,
 .fa-university:before {
-  content: "";
+  content: "\f19c";
 }
 
 /* line 425, ../scss/fontsawesome/_icons.scss */
 .fa-mortar-board:before,
 .fa-graduation-cap:before {
-  content: "";
+  content: "\f19d";
 }
 
 /* line 427, ../scss/fontsawesome/_icons.scss */
 .fa-yahoo:before {
-  content: "";
+  content: "\f19e";
 }
 
 /* line 428, ../scss/fontsawesome/_icons.scss */
 .fa-google:before {
-  content: "";
+  content: "\f1a0";
 }
 
 /* line 429, ../scss/fontsawesome/_icons.scss */
 .fa-reddit:before {
-  content: "";
+  content: "\f1a1";
 }
 
 /* line 430, ../scss/fontsawesome/_icons.scss */
 .fa-reddit-square:before {
-  content: "";
+  content: "\f1a2";
 }
 
 /* line 431, ../scss/fontsawesome/_icons.scss */
 .fa-stumbleupon-circle:before {
-  content: "";
+  content: "\f1a3";
 }
 
 /* line 432, ../scss/fontsawesome/_icons.scss */
 .fa-stumbleupon:before {
-  content: "";
+  content: "\f1a4";
 }
 
 /* line 433, ../scss/fontsawesome/_icons.scss */
 .fa-delicious:before {
-  content: "";
+  content: "\f1a5";
 }
 
 /* line 434, ../scss/fontsawesome/_icons.scss */
 .fa-digg:before {
-  content: "";
+  content: "\f1a6";
 }
 
 /* line 435, ../scss/fontsawesome/_icons.scss */
 .fa-pied-piper-square:before,
 .fa-pied-piper:before {
-  content: "";
+  content: "\f1a7";
 }
 
 /* line 437, ../scss/fontsawesome/_icons.scss */
 .fa-pied-piper-alt:before {
-  content: "";
+  content: "\f1a8";
 }
 
 /* line 438, ../scss/fontsawesome/_icons.scss */
 .fa-drupal:before {
-  content: "";
+  content: "\f1a9";
 }
 
 /* line 439, ../scss/fontsawesome/_icons.scss */
 .fa-joomla:before {
-  content: "";
+  content: "\f1aa";
 }
 
 /* line 440, ../scss/fontsawesome/_icons.scss */
 .fa-language:before {
-  content: "";
+  content: "\f1ab";
 }
 
 /* line 441, ../scss/fontsawesome/_icons.scss */
 .fa-fax:before {
-  content: "";
+  content: "\f1ac";
 }
 
 /* line 442, ../scss/fontsawesome/_icons.scss */
 .fa-building:before {
-  content: "";
+  content: "\f1ad";
 }
 
 /* line 443, ../scss/fontsawesome/_icons.scss */
 .fa-child:before {
-  content: "";
+  content: "\f1ae";
 }
 
 /* line 444, ../scss/fontsawesome/_icons.scss */
 .fa-paw:before {
-  content: "";
+  content: "\f1b0";
 }
 
 /* line 445, ../scss/fontsawesome/_icons.scss */
 .fa-spoon:before {
-  content: "";
+  content: "\f1b1";
 }
 
 /* line 446, ../scss/fontsawesome/_icons.scss */
 .fa-cube:before {
-  content: "";
+  content: "\f1b2";
 }
 
 /* line 447, ../scss/fontsawesome/_icons.scss */
 .fa-cubes:before {
-  content: "";
+  content: "\f1b3";
 }
 
 /* line 448, ../scss/fontsawesome/_icons.scss */
 .fa-behance:before {
-  content: "";
+  content: "\f1b4";
 }
 
 /* line 449, ../scss/fontsawesome/_icons.scss */
 .fa-behance-square:before {
-  content: "";
+  content: "\f1b5";
 }
 
 /* line 450, ../scss/fontsawesome/_icons.scss */
 .fa-steam:before {
-  content: "";
+  content: "\f1b6";
 }
 
 /* line 451, ../scss/fontsawesome/_icons.scss */
 .fa-steam-square:before {
-  content: "";
+  content: "\f1b7";
 }
 
 /* line 452, ../scss/fontsawesome/_icons.scss */
 .fa-recycle:before {
-  content: "";
+  content: "\f1b8";
 }
 
 /* line 453, ../scss/fontsawesome/_icons.scss */
 .fa-automobile:before,
 .fa-car:before {
-  content: "";
+  content: "\f1b9";
 }
 
 /* line 455, ../scss/fontsawesome/_icons.scss */
 .fa-cab:before,
 .fa-taxi:before {
-  content: "";
+  content: "\f1ba";
 }
 
 /* line 457, ../scss/fontsawesome/_icons.scss */
 .fa-tree:before {
-  content: "";
+  content: "\f1bb";
 }
 
 /* line 458, ../scss/fontsawesome/_icons.scss */
 .fa-spotify:before {
-  content: "";
+  content: "\f1bc";
 }
 
 /* line 459, ../scss/fontsawesome/_icons.scss */
 .fa-deviantart:before {
-  content: "";
+  content: "\f1bd";
 }
 
 /* line 460, ../scss/fontsawesome/_icons.scss */
 .fa-soundcloud:before {
-  content: "";
+  content: "\f1be";
 }
 
 /* line 461, ../scss/fontsawesome/_icons.scss */
 .fa-database:before {
-  content: "";
+  content: "\f1c0";
 }
 
 /* line 462, ../scss/fontsawesome/_icons.scss */
 .fa-file-pdf-o:before {
-  content: "";
+  content: "\f1c1";
 }
 
 /* line 463, ../scss/fontsawesome/_icons.scss */
 .fa-file-word-o:before {
-  content: "";
+  content: "\f1c2";
 }
 
 /* line 464, ../scss/fontsawesome/_icons.scss */
 .fa-file-excel-o:before {
-  content: "";
+  content: "\f1c3";
 }
 
 /* line 465, ../scss/fontsawesome/_icons.scss */
 .fa-file-powerpoint-o:before {
-  content: "";
+  content: "\f1c4";
 }
 
 /* line 466, ../scss/fontsawesome/_icons.scss */
 .fa-file-photo-o:before,
 .fa-file-picture-o:before,
 .fa-file-image-o:before {
-  content: "";
+  content: "\f1c5";
 }
 
 /* line 469, ../scss/fontsawesome/_icons.scss */
 .fa-file-zip-o:before,
 .fa-file-archive-o:before {
-  content: "";
+  content: "\f1c6";
 }
 
 /* line 471, ../scss/fontsawesome/_icons.scss */
 .fa-file-sound-o:before,
 .fa-file-audio-o:before {
-  content: "";
+  content: "\f1c7";
 }
 
 /* line 473, ../scss/fontsawesome/_icons.scss */
 .fa-file-movie-o:before,
 .fa-file-video-o:before {
-  content: "";
+  content: "\f1c8";
 }
 
 /* line 475, ../scss/fontsawesome/_icons.scss */
 .fa-file-code-o:before {
-  content: "";
+  content: "\f1c9";
 }
 
 /* line 476, ../scss/fontsawesome/_icons.scss */
 .fa-vine:before {
-  content: "";
+  content: "\f1ca";
 }
 
 /* line 477, ../scss/fontsawesome/_icons.scss */
 .fa-codepen:before {
-  content: "";
+  content: "\f1cb";
 }
 
 /* line 478, ../scss/fontsawesome/_icons.scss */
 .fa-jsfiddle:before {
-  content: "";
+  content: "\f1cc";
 }
 
 /* line 479, ../scss/fontsawesome/_icons.scss */
@@ -5330,107 +5365,107 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 .fa-life-saver:before,
 .fa-support:before,
 .fa-life-ring:before {
-  content: "";
+  content: "\f1cd";
 }
 
 /* line 483, ../scss/fontsawesome/_icons.scss */
 .fa-circle-o-notch:before {
-  content: "";
+  content: "\f1ce";
 }
 
 /* line 484, ../scss/fontsawesome/_icons.scss */
 .fa-ra:before,
 .fa-rebel:before {
-  content: "";
+  content: "\f1d0";
 }
 
 /* line 486, ../scss/fontsawesome/_icons.scss */
 .fa-ge:before,
 .fa-empire:before {
-  content: "";
+  content: "\f1d1";
 }
 
 /* line 488, ../scss/fontsawesome/_icons.scss */
 .fa-git-square:before {
-  content: "";
+  content: "\f1d2";
 }
 
 /* line 489, ../scss/fontsawesome/_icons.scss */
 .fa-git:before {
-  content: "";
+  content: "\f1d3";
 }
 
 /* line 490, ../scss/fontsawesome/_icons.scss */
 .fa-hacker-news:before {
-  content: "";
+  content: "\f1d4";
 }
 
 /* line 491, ../scss/fontsawesome/_icons.scss */
 .fa-tencent-weibo:before {
-  content: "";
+  content: "\f1d5";
 }
 
 /* line 492, ../scss/fontsawesome/_icons.scss */
 .fa-qq:before {
-  content: "";
+  content: "\f1d6";
 }
 
 /* line 493, ../scss/fontsawesome/_icons.scss */
 .fa-wechat:before,
 .fa-weixin:before {
-  content: "";
+  content: "\f1d7";
 }
 
 /* line 495, ../scss/fontsawesome/_icons.scss */
 .fa-send:before,
 .fa-paper-plane:before {
-  content: "";
+  content: "\f1d8";
 }
 
 /* line 497, ../scss/fontsawesome/_icons.scss */
 .fa-send-o:before,
 .fa-paper-plane-o:before {
-  content: "";
+  content: "\f1d9";
 }
 
 /* line 499, ../scss/fontsawesome/_icons.scss */
 .fa-history:before {
-  content: "";
+  content: "\f1da";
 }
 
 /* line 500, ../scss/fontsawesome/_icons.scss */
 .fa-circle-thin:before {
-  content: "";
+  content: "\f1db";
 }
 
 /* line 501, ../scss/fontsawesome/_icons.scss */
 .fa-header:before {
-  content: "";
+  content: "\f1dc";
 }
 
 /* line 502, ../scss/fontsawesome/_icons.scss */
 .fa-paragraph:before {
-  content: "";
+  content: "\f1dd";
 }
 
 /* line 503, ../scss/fontsawesome/_icons.scss */
 .fa-sliders:before {
-  content: "";
+  content: "\f1de";
 }
 
 /* line 504, ../scss/fontsawesome/_icons.scss */
 .fa-share-alt:before {
-  content: "";
+  content: "\f1e0";
 }
 
 /* line 505, ../scss/fontsawesome/_icons.scss */
 .fa-share-alt-square:before {
-  content: "";
+  content: "\f1e1";
 }
 
 /* line 506, ../scss/fontsawesome/_icons.scss */
 .fa-bomb:before {
-  content: "";
+  content: "\f1e2";
 }
 
 /* line 20, ../scss/fontsawesome/font-awesome.scss */
@@ -5441,7 +5476,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 /* line 4, ../scss/dropdown-menu.scss */
 .custom-dropdown-menu {
   background-color: white;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   display: block;
   position: absolute;
   top: 100%;
@@ -5472,7 +5507,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 /* line 35, ../scss/dropdown-menu.scss */
 .custom-dropdown-menu li.is-selected, .custom-dropdown-menu li:hover {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   cursor: pointer;
 }
 /* line 39, ../scss/dropdown-menu.scss */
@@ -5487,7 +5522,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 /* line 48, ../scss/dropdown-menu.scss */
 .custom-dropdown-menu li.disabled:hover a, .custom-dropdown-menu li.disabled a {
   cursor: default;
-  color: #999;
+  color: #999999;
 }
 /* line 54, ../scss/dropdown-menu.scss */
 .custom-dropdown-menu li:active {
@@ -5498,7 +5533,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
-  background-color: #ddd;
+  background-color: #dddddd;
 }
 /* line 65, ../scss/dropdown-menu.scss */
 .custom-dropdown-menu li a {
@@ -5512,7 +5547,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   position: fixed;
   top: 0;
   left: 50%;
-  background-color: #fff;
+  background-color: white;
   z-index: 1000;
   border-radius: 3px;
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
@@ -5572,20 +5607,20 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 /* line 63, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header {
-  background: #EA524E;
-  color: #fff;
+  background: #ea524e;
+  color: white;
 }
 /* line 66, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header .title {
-  color: #000;
+  color: black;
 }
 /* line 73, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header {
-  background: #F2D212;
+  background: #f2d212;
 }
 /* line 75, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header .title {
-  color: #000;
+  color: black;
 }
 /* line 81, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides {
@@ -5611,7 +5646,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 }
 /* line 99, ../scss/modules/overlay.scss */
 .overlay-header .title {
-  color: #999;
+  color: #999999;
   font-size: 23px;
   vertical-align: text-top;
   display: block;
@@ -5652,7 +5687,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 /* line 139, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 10px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
   text-align: center;
   border-radius: 0 0 3px 3px;
 }
@@ -5711,7 +5746,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
 .overlay-content .message {
   padding: 20px 0 25px 0;
   font-size: 16px;
-  color: #999;
+  color: #999999;
 }
 
 /* line 196, ../scss/modules/overlay.scss */
@@ -5732,8 +5767,8 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 3px solid #fff;
-  background: #5DC774;
+  border: 3px solid white;
+  background: #5dc774;
   font-size: medium !important;
   margin-bottom: -1px;
 }
@@ -5745,8 +5780,8 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 3px solid #fff;
-  background: #EA524E;
+  border: 3px solid white;
+  background: #ea524e;
   font-size: medium !important;
   margin-bottom: -1px;
 }
@@ -5758,20 +5793,20 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  border: 3px solid #fff;
-  background: #F2D212;
+  border: 3px solid white;
+  background: #f2d212;
   font-size: medium !important;
   margin-bottom: -1px;
 }
 
 /* line 48, ../scss/modules/custom-icons.scss */
 .fa-shadow-node:before {
-  content: "";
+  content: "\f064";
 }
 
 /* line 49, ../scss/modules/custom-icons.scss */
 .fa-internal-link:before {
-  content: "";
+  content: "\f0c1";
 }
 
 /* line 8, ../scss/modules/core.scss */
@@ -5790,7 +5825,7 @@ body {
 /* line 17, ../scss/modules/core.scss */
 body {
   font-size: 14px;
-  color: #000;
+  color: black;
   background: #f1f1f1;
 }
 
@@ -5804,8 +5839,8 @@ hr.divider {
 }
 /* line 29, ../scss/modules/core.scss */
 hr.divider.dark {
-  color: #ccc;
-  border-color: #ccc;
+  color: #cccccc;
+  border-color: #cccccc;
 }
 /* line 33, ../scss/modules/core.scss */
 hr.divider.small {
@@ -5868,12 +5903,12 @@ hr.divider.small {
 
 /* line 34, ../scss/modules/column-options.scss */
 .column-options-list-item.is-selected, .column-options-list-item.hover-style {
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 /* line 39, ../scss/modules/column-options.scss */
 .column-options-list-item.disabled {
   cursor: default;
-  color: #999;
+  color: #999999;
 }
 /* line 42, ../scss/modules/column-options.scss */
 .column-options-list-item.disabled.hover-style {
@@ -5938,7 +5973,7 @@ hr.divider.small {
 .grid-row.divider {
   margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc;
 }
 /* line 32, ../scss/modules/grid.scss */
 .grid-row::after {
@@ -6158,16 +6193,16 @@ hr.divider.small {
 .form-element, .husky-input {
   width: 100%;
   height: 30px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   padding: 0 5px;
   font-size: 14px;
   border-radius: 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
 }
 /* line 14, ../scss/modules/form.scss */
 .form-element:focus, .husky-input:focus {
   outline: 0;
-  border-color: #ccc;
+  border-color: #cccccc;
 }
 /* line 19, ../scss/modules/form.scss */
 .form-element.input-large, .input-large.husky-input {
@@ -6177,7 +6212,7 @@ hr.divider.small {
 /* line 24, ../scss/modules/form.scss */
 .form-element[readonly], [readonly].husky-input {
   background: none;
-  color: #999;
+  color: #999999;
 }
 
 /* line 32, ../scss/modules/form.scss */
@@ -6190,12 +6225,12 @@ input
 .input-description {
   margin-top: -5px;
   font-size: 10px;
-  color: #999;
+  color: #999999;
 }
 
 /* line 44, ../scss/modules/form.scss */
 .input-placeholder-style, input::-webkit-input-placeholder, input:-moz-placeholder, input ::-moz-placeholder, input :-ms-input-placeholder {
-  color: #999;
+  color: #999999;
   font-weight: normal;
 }
 
@@ -6268,7 +6303,7 @@ label.large {
 /* line 132, ../scss/modules/form.scss */
 label .form-element, label .husky-input {
   margin-top: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
 }
 /* line 137, ../scss/modules/form.scss */
 label.inline {
@@ -6316,16 +6351,16 @@ label.spacing-left {
 }
 /* line 184, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon, .custom-checkbox input.is-checked + .icon {
-  border-color: #5DC774;
-  background-color: #5DC774;
-  color: #fff;
+  border-color: #5dc774;
+  background-color: #5dc774;
+  color: white;
 }
 /* line 188, ../scss/modules/form.scss */
 .custom-checkbox input:checked + .icon::after, .custom-checkbox input.is-checked + .icon::after {
   display: inline-block;
   margin-top: -1px;
   margin-left: -1px;
-  content: "";
+  content: "\f00c";
 }
 /* line 198, ../scss/modules/form.scss */
 .custom-checkbox input + .icon {
@@ -6337,7 +6372,7 @@ label.spacing-left {
   display: block;
   width: 15px;
   height: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   background-color: #fff;
   font-size: 15px;
   line-height: 13px;
@@ -6411,7 +6446,7 @@ textarea.form-element.small, textarea.small.husky-input {
 }
 /* line 284, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon, .custom-radio input.is-checked + .icon {
-  border-color: #fff;
+  border-color: white;
 }
 /* line 287, ../scss/modules/form.scss */
 .custom-radio input:checked + .icon::after, .custom-radio input.is-checked + .icon::after {
@@ -6420,7 +6455,7 @@ textarea.form-element.small, textarea.small.husky-input {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: #5DC774;
+  background-color: #5dc774;
 }
 /* line 298, ../scss/modules/form.scss */
 .custom-radio input + .icon {
@@ -6432,8 +6467,8 @@ textarea.form-element.small, textarea.small.husky-input {
   height: 15px;
   padding: 2px;
   border-radius: 15px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid #cccccc;
+  background-color: white;
   text-align: center;
   margin: 0;
 }
@@ -6445,7 +6480,7 @@ textarea.form-element.small, textarea.small.husky-input {
 }
 /* line 325, ../scss/modules/form.scss */
 .cke .cke_inner {
-  border: 1px solid #ccc !important;
+  border: 1px solid #cccccc !important;
 }
 /* line 328, ../scss/modules/form.scss */
 .cke .cke_inner,
@@ -6454,15 +6489,10 @@ textarea.form-element.small, textarea.small.husky-input {
   border-bottom-right-radius: 3px !important;
 }
 
-/* line 335, ../scss/modules/form.scss */
-.cke_hidpi .cke_dialog_close_button {
-  background-image: none !important;
-}
-
-/* line 341, ../scss/modules/form.scss */
+/* line 337, ../scss/modules/form.scss */
 span.error {
   font-size: 14px;
-  color: #EA524E;
+  color: #ea524e;
   font-weight: bold;
 }
 
@@ -6510,7 +6540,7 @@ span.error {
   position: relative;
   top: 0px;
   left: 0px;
-  background-color: #21272E;
+  background-color: #21272e;
   overflow-x: visible;
   z-index: 101;
 }
@@ -6529,7 +6559,7 @@ span.error {
   width: 30px;
   left: 100%;
   top: 0;
-  background-color: #21272E;
+  background-color: #21272e;
   line-height: 30px;
   vertical-align: center;
   color: white;
@@ -6586,7 +6616,7 @@ span.error {
 .navigation-header-title {
   display: inline-block;
   font-size: 18px;
-  color: #fff;
+  color: white;
   margin: 0;
   line-height: 30px;
 }
@@ -6618,12 +6648,12 @@ span.error {
 /* line 181, ../scss/modules/navigation.scss */
 li.is-active > .navigation-items-toggle a,
 li.is-active > .navigation-subitems-toggle a {
-  color: #fff;
+  color: white;
 }
 /* line 186, ../scss/modules/navigation.scss */
 li.is-active > div > a.navigation-settings-icon {
   display: block;
-  color: #999;
+  color: #999999;
 }
 
 /* line 192, ../scss/modules/navigation.scss */
@@ -6638,11 +6668,11 @@ li.is-active > div > a.navigation-settings-icon {
 }
 /* line 199, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items:hover:not(.is-active) {
-  background-color: #191D22;
+  background-color: #191d22;
 }
 /* line 203, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items:hover:not(.is-active).is-expanded .navigation-items-toggle {
-  border-bottom-color: #21272E;
+  border-bottom-color: #21272e;
 }
 /* line 209, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items > div {
@@ -6657,7 +6687,7 @@ li.is-active > div > a.navigation-settings-icon {
 }
 /* line 220, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-active.is-expanded .navigation-items-toggle {
-  border-bottom-color: #21272E;
+  border-bottom-color: #21272e;
 }
 /* line 226, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-expanded {
@@ -6719,7 +6749,7 @@ li.is-active > div > a.navigation-settings-icon {
 /* line 278, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before {
   font-size: 12px;
-  content: "";
+  content: "\f0da";
   display: inline-block;
   height: 15px;
   text-align: right;
@@ -6736,7 +6766,7 @@ li.is-active > div > a.navigation-settings-icon {
 /* line 287, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li.is-selected a::before {
   font-size: 12px;
-  content: "";
+  content: "\f0da";
   display: inline-block;
   height: 15px;
   text-align: right;
@@ -6858,7 +6888,7 @@ li a.navigation-settings-icon {
 /* line 395, ../scss/modules/navigation.scss */
 .navigation footer .user {
   font-size: 12px;
-  color: #fff;
+  color: white;
   margin-bottom: 15px;
   height: 20px;
   white-space: nowrap;
@@ -6866,7 +6896,7 @@ li a.navigation-settings-icon {
 }
 /* line 403, ../scss/modules/navigation.scss */
 .navigation footer .user .pic {
-  color: #fff;
+  color: white;
   text-align: right;
   font-size: 20px;
   display: inline-block;
@@ -6890,7 +6920,7 @@ li a.navigation-settings-icon {
 }
 /* line 426, ../scss/modules/navigation.scss */
 .navigation footer .options .locale-dropdown {
-  color: #000;
+  color: black;
   width: 60px;
 }
 /* line 431, ../scss/modules/navigation.scss */
@@ -6918,7 +6948,7 @@ li a.navigation-settings-icon {
 }
 /* line 453, ../scss/modules/navigation.scss */
 .navigation footer .version a {
-  color: #fff;
+  color: white;
   text-decoration: none;
 }
 
@@ -7186,8 +7216,8 @@ li a.navigation-settings-icon {
   margin-top: -5px;
   margin-left: 5px;
   margin-bottom: 40px;
-  background-color: #fff;
-  border: 1px solid #ccc;
+  background-color: white;
+  border: 1px solid #cccccc;
   z-index: 90;
   border-radius: 3px;
 }
@@ -7211,9 +7241,9 @@ li a.navigation-settings-icon {
 }
 /* line 54, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li:hover, .dropdown-menu > ul > li.hover {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   cursor: pointer;
-  color: #fff;
+  color: white;
 }
 /* line 60, ../scss/modules/dropdown.scss */
 .dropdown-menu > ul > li.divider {
@@ -7221,7 +7251,7 @@ li a.navigation-settings-icon {
   margin: 5px 0 10px 0;
   padding: 0;
   overflow: hidden;
-  background-color: #ddd;
+  background-color: #dddddd;
   cursor: default;
 }
 
@@ -7261,7 +7291,7 @@ li a.navigation-settings-icon {
   height: 30px;
   line-height: 30px;
   text-align: center;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 3px;
   padding: 0 10px;
   cursor: pointer;
@@ -7283,7 +7313,7 @@ table {
 }
 /* line 19, ../scss/modules/tables.scss */
 .table tr {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc;
   height: 50px;
 }
 /* line 26, ../scss/modules/tables.scss */
@@ -7293,13 +7323,13 @@ table {
 /* line 30, ../scss/modules/tables.scss */
 .table thead th {
   vertical-align: bottom;
-  color: #999;
+  color: #999999;
   font-size: 16px;
   font-weight: normal;
 }
 /* line 36, ../scss/modules/tables.scss */
 .table thead th a {
-  color: #000;
+  color: black;
   text-decoration: none;
 }
 /* line 40, ../scss/modules/tables.scss */
@@ -7308,7 +7338,7 @@ table {
 }
 /* line 47, ../scss/modules/tables.scss */
 .table thead tr {
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid #cccccc;
 }
 /* line 53, ../scss/modules/tables.scss */
 .table tbody td {
@@ -7351,13 +7381,13 @@ table {
 }
 /* line 28, ../scss/modules/btns.scss */
 .btn.action {
-  background-color: #52B6CA;
-  color: #fff;
+  background-color: #52b6ca;
+  color: white;
 }
 /* line 33, ../scss/modules/btns.scss */
 .btn.action2 {
-  background-color: #F2D212;
-  color: #fff;
+  background-color: #f2d212;
+  color: white;
 }
 /* line 38, ../scss/modules/btns.scss */
 .btn.large {
@@ -7381,22 +7411,22 @@ table {
 }
 /* line 58, ../scss/modules/btns.scss */
 .btn.grey, .btn.gray {
-  background-color: #ccc;
-  color: #fff;
+  background-color: #cccccc;
+  color: white;
 }
 /* line 63, ../scss/modules/btns.scss */
 .btn.black-text {
-  color: #000;
+  color: black;
 }
 /* line 67, ../scss/modules/btns.scss */
 .btn.gray-dark {
-  background-color: #999;
-  color: #fff;
+  background-color: #999999;
+  color: white;
 }
 /* line 72, ../scss/modules/btns.scss */
 .btn.black {
-  background-color: #000;
-  color: #fff;
+  background-color: black;
+  color: white;
 }
 /* line 77, ../scss/modules/btns.scss */
 .btn.inactive {
@@ -7449,24 +7479,24 @@ a.btn {
 /* line 123, ../scss/modules/btns.scss */
 .btn-black {
   background-color: #000;
-  color: #fff;
+  color: white;
 }
 
 /* line 128, ../scss/modules/btns.scss */
 .btn-highlight {
-  background-color: #52B6CA;
-  color: #fff;
+  background-color: #52b6ca;
+  color: white;
 }
 
 /* line 133, ../scss/modules/btns.scss */
 a.btn-black, a.btn-highlight {
-  color: #fff;
+  color: white;
 }
 
 /* line 138, ../scss/modules/btns.scss */
 .btn-gray {
-  background-color: #ccc;
-  color: #000;
+  background-color: #cccccc;
+  color: black;
 }
 
 /* line 144, ../scss/modules/btns.scss */
@@ -7475,7 +7505,7 @@ a.btn-black, a.btn-highlight {
   display: inline-block;
   font-size: 12px;
   color: white;
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   padding: 0 10px;
   height: 20px;
   line-height: 20px;
@@ -7484,7 +7514,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 157, ../scss/modules/btns.scss */
 .addButton:before {
-  content: "";
+  content: "\f055";
   font-size: 10px;
   padding-right: 5px;
 }
@@ -7525,8 +7555,8 @@ a.btn-black, a.btn-highlight {
   margin: 0;
   display: inline-block;
   list-style: none;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
   padding: 0 10px;
   line-height: 28px;
   height: 30px;
@@ -7534,7 +7564,7 @@ a.btn-black, a.btn-highlight {
 /* line 41, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev {
   padding: 0 13px 0 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 0 3px 3px 0;
   line-height: 32px;
   height: 30px;
@@ -7542,14 +7572,14 @@ a.btn-black, a.btn-highlight {
 }
 /* line 49, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-prev::after {
-  content: "";
+  content: "\f054";
   display: inline-block;
   font-size: 16px;
 }
 /* line 57, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next {
   padding: 0 13px 0 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 3px 0 0 3px;
   line-height: 32px;
   height: 30px;
@@ -7557,7 +7587,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 65, ../scss/modules/pagination.scss */
 .pagination-wrapper.dropdowns .pagination .pagination-next::after {
-  content: "";
+  content: "\f053";
   display: inline-block;
   font-size: 16px;
 }
@@ -7572,7 +7602,7 @@ a.btn-black, a.btn-highlight {
 .pagination-wrapper.showall .square {
   width: 50px;
   height: 50px;
-  border: 1px dashed #ccc;
+  border: 1px dashed #cccccc;
   float: left;
 }
 /* line 87, ../scss/modules/pagination.scss */
@@ -7595,7 +7625,7 @@ a.btn-black, a.btn-highlight {
 .avatar > img {
   float: left;
   margin-right: 15px;
-  border: solid 2px #ccc;
+  border: solid 2px #cccccc;
 }
 
 /* line 23, ../scss/modules/avatar.scss */
@@ -7605,7 +7635,7 @@ a.btn-black, a.btn-highlight {
 
 /* line 64, ../scss/modules/input.scss */
 .husky-input {
-  background: #fff;
+  background: white;
   position: relative;
   top: 0px;
   left: 0px;
@@ -7622,16 +7652,16 @@ a.btn-black, a.btn-highlight {
   line-height: 20px;
   margin: 5px 0 0 0;
   padding-right: 5px;
-  border-right: 1px solid #ccc;
-  color: #999;
+  border-right: 1px solid #cccccc;
+  color: #999999;
   font-size: 16px;
 }
 /* line 15, ../scss/modules/input.scss */
 .husky-input .front .color-field {
   width: 15px;
   height: 15px;
-  border: 1px solid #999;
-  background-color: #ccc;
+  border: 1px solid #999999;
+  background-color: #cccccc;
   display: inline-block;
   margin-top: 2px;
 }
@@ -7643,7 +7673,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 29, ../scss/modules/input.scss */
 .husky-input .front a.clickable {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 /* line 36, ../scss/modules/input.scss */
@@ -7653,8 +7683,8 @@ a.btn-black, a.btn-highlight {
   right: 0px;
   line-height: 20px;
   padding: 5px 10px 0 5px;
-  background: #fff;
-  color: #999;
+  background: white;
+  color: #999999;
   font-size: 16px;
 }
 /* line 47, ../scss/modules/input.scss */
@@ -7679,12 +7709,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 79, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 /* line 86, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 
@@ -7711,9 +7741,9 @@ a.btn-black, a.btn-highlight {
   display: table;
   width: 100%;
   font-size: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 3px 3px 0 0;
-  background: #fff;
+  background: white;
 }
 /* line 6, ../scss/modules/input.scss */
 .husky-auto-complete .front {
@@ -7721,16 +7751,16 @@ a.btn-black, a.btn-highlight {
   line-height: 20px;
   margin: 5px 0 0 0;
   padding-right: 5px;
-  border-right: 1px solid #ccc;
-  color: #999;
+  border-right: 1px solid #cccccc;
+  color: #999999;
   font-size: 16px;
 }
 /* line 15, ../scss/modules/input.scss */
 .husky-auto-complete .front .color-field {
   width: 15px;
   height: 15px;
-  border: 1px solid #999;
-  background-color: #ccc;
+  border: 1px solid #999999;
+  background-color: #cccccc;
   display: inline-block;
   margin-top: 2px;
 }
@@ -7742,7 +7772,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 29, ../scss/modules/input.scss */
 .husky-auto-complete .front a.clickable {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 /* line 36, ../scss/modules/input.scss */
@@ -7752,8 +7782,8 @@ a.btn-black, a.btn-highlight {
   right: 0px;
   line-height: 20px;
   padding: 5px 10px 0 5px;
-  background: #fff;
-  color: #999;
+  background: white;
+  color: #999999;
   font-size: 16px;
 }
 /* line 47, ../scss/modules/input.scss */
@@ -7802,14 +7832,14 @@ a.btn-black, a.btn-highlight {
 .tt-suggestions {
   width: 100%;
   top: 37px;
-  background: #fff;
+  background: white;
   border-radius: 3px;
 }
 
 /* line 57, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
   width: 100%;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   margin-top: -1px;
   border-radius: 3px;
 }
@@ -7828,8 +7858,8 @@ a.btn-black, a.btn-highlight {
 /* line 74, ../scss/modules/auto-complete.scss */
 .suggestion:hover,
 .tt-is-under-cursor .suggestion {
-  background: #52B6CA;
-  color: #fff;
+  background: #52b6ca;
+  color: white;
 }
 /* line 79, ../scss/modules/auto-complete.scss */
 .suggestion:hover.disabled,
@@ -7840,7 +7870,7 @@ a.btn-black, a.btn-highlight {
 /* line 84, ../scss/modules/auto-complete.scss */
 .suggestion {
   white-space: nowrap;
-  color: #000;
+  color: black;
   padding: 0 6px;
   position: relative;
 }
@@ -7875,7 +7905,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 119, ../scss/modules/auto-complete.scss */
 .suggestion.disabled {
-  color: #999;
+  color: #999999;
   cursor: default;
 }
 
@@ -7909,7 +7939,7 @@ a.btn-black, a.btn-highlight {
   padding-right: 10px;
   border: 0;
   margin: 0;
-  background-color: #999;
+  background-color: #999999;
   color: #3e3e3e;
 }
 /* line 4, ../scss/mixins.scss */
@@ -7934,7 +7964,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 38, ../scss/modules/search.scss */
 .search-container .search-input:focus {
-  background-color: #fff;
+  background-color: white;
 }
 /* line 43, ../scss/modules/search.scss */
 .search-container .search-icon {
@@ -7953,7 +7983,7 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   vertical-align: middle;
   margin: auto;
-  background-color: #fff;
+  background-color: white;
   padding-left: 3px;
   text-decoration: none;
 }
@@ -7993,7 +8023,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 82, ../scss/modules/search.scss */
 .search-container.gray.focus .search-input {
-  background-color: #fff;
+  background-color: white;
 }
 /* line 85, ../scss/modules/search.scss */
 .search-container.gray.focus .search-icon,
@@ -8002,11 +8032,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 94, ../scss/modules/search.scss */
 .search-container.white .search-input {
-  background-color: #fff;
+  background-color: white;
 }
 /* line 96, ../scss/modules/search.scss */
 .search-container.white .search-input:focus {
-  background-color: #fff;
+  background-color: white;
 }
 /* line 103, ../scss/modules/search.scss */
 .search-container.small .search-input {
@@ -8020,7 +8050,7 @@ a.btn-black, a.btn-highlight {
 
 /* line 5, ../scss/modules/tabs.scss */
 .tabs-container {
-  background-color: #fff;
+  background-color: white;
   border-bottom: 1px solid #f1f1f1;
   padding: 20px 50px 0 50px;
   /**
@@ -8055,17 +8085,17 @@ a.btn-black, a.btn-highlight {
 }
 /* line 35, ../scss/modules/tabs.scss */
 .tabs-container ul li.is-selected a {
-  color: #52B6CA;
+  color: #52b6ca;
   font-weight: bold;
 }
 /* line 45, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li a, .tabs-container.deactivated ul li a:hover {
-  color: #999;
+  color: #999999;
   cursor: default;
 }
 /* line 49, ../scss/modules/tabs.scss */
 .tabs-container.deactivated ul li.is-selected a {
-  color: #52B6CA;
+  color: #52b6ca;
 }
 /* line 58, ../scss/modules/tabs.scss */
 .tabs-container.overlay {
@@ -8075,7 +8105,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 64, ../scss/modules/tabs.scss */
 .tabs-container.overlay ul li.is-selected {
-  background-color: #fff;
+  background-color: white;
 }
 
 /*styles related to the whole container*/
@@ -8148,7 +8178,7 @@ a.btn-black, a.btn-highlight {
 /* line 70, ../scss/modules/toolbar.scss */
 .group .toolbar-item {
   border-style: solid;
-  border-color: #CACACA;
+  border-color: #cacaca;
   border-width: 1px 1px 1px 0;
 }
 /* line 75, ../scss/modules/toolbar.scss */
@@ -8203,7 +8233,7 @@ a.btn-black, a.btn-highlight {
 /* line 120, ../scss/modules/toolbar.scss */
 .toolbar-item.disabled:hover a, .toolbar-item.disabled a {
   cursor: default;
-  color: #999;
+  color: #999999;
 }
 /* line 126, ../scss/modules/toolbar.scss */
 .toolbar-item.hidden {
@@ -8211,12 +8241,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 130, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   border-color: transparent;
 }
 /* line 134, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight.disabled:hover, .toolbar-item.highlight.disabled {
-  background-color: #ccc;
+  background-color: #cccccc;
   border-color: transparent;
   cursor: default;
 }
@@ -8235,32 +8265,32 @@ a.btn-black, a.btn-highlight {
 }
 /* line 152, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight > a {
-  color: #fff;
+  color: white;
 }
 /* line 155, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight > a.dropdown-toggle::after {
-  border-top-color: #fff;
+  border-top-color: white;
 }
 /* line 160, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight.is-expanded {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
 }
 /* line 165, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight-gray {
-  background-color: #ccc;
+  background-color: #cccccc;
   border-color: transparent;
 }
 /* line 169, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight-gray:hover {
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 /* line 172, ../scss/modules/toolbar.scss */
 .toolbar-item.highlight-gray:active {
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 /* line 178, ../scss/modules/toolbar.scss */
 .toolbar-item.is-expanded {
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 /* line 181, ../scss/modules/toolbar.scss */
 .toolbar-item.is-expanded ul.toolbar-dropdown-menu {
@@ -8268,7 +8298,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 186, ../scss/modules/toolbar.scss */
 .toolbar-item:hover {
-  background-color: #ccc;
+  background-color: #cccccc;
 }
 /* line 189, ../scss/modules/toolbar.scss */
 .toolbar-item:active {
@@ -8309,7 +8339,7 @@ a.btn-black, a.btn-highlight {
 /* line 226, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu {
   background-color: white;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 2px;
   display: none;
   position: absolute;
@@ -8353,16 +8383,16 @@ a.btn-black, a.btn-highlight {
 }
 /* line 271, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.is-selected, .toolbar-dropdown-menu li:hover {
-  background-color: #52B6CA;
-  color: #fff;
+  background-color: #52b6ca;
+  color: white;
 }
 /* line 275, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.is-selected a, .toolbar-dropdown-menu li:hover a {
-  color: #fff;
+  color: white;
 }
 /* line 281, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.marked::before {
-  content: "";
+  content: "\f0da";
   display: block;
   position: absolute;
   top: 9px;
@@ -8377,7 +8407,7 @@ a.btn-black, a.btn-highlight {
 /* line 296, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li.disabled:hover a, .toolbar-dropdown-menu li.disabled a {
   cursor: default;
-  color: #999;
+  color: #999999;
 }
 /* line 302, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li:active {
@@ -8388,7 +8418,7 @@ a.btn-black, a.btn-highlight {
   height: 1px;
   margin: 5px 0;
   overflow: hidden;
-  background-color: #ddd;
+  background-color: #dddddd;
 }
 /* line 313, ../scss/modules/toolbar.scss */
 .toolbar-dropdown-menu li a {
@@ -8399,19 +8429,19 @@ a.btn-black, a.btn-highlight {
 /* line 327, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item {
   background-color: #b4dfe8;
-  border-color: #52B6CA;
+  border-color: #52b6ca;
 }
 /* line 331, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight {
-  background-color: #E8CE33;
+  background-color: #e8ce33;
 }
 /* line 333, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight > a {
-  color: #000;
+  color: black;
 }
 /* line 338, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight-white {
-  background-color: #fff;
+  background-color: white;
 }
 /* line 340, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.highlight-white .title {
@@ -8420,15 +8450,15 @@ a.btn-black, a.btn-highlight {
 /* line 345, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled, .blueish .toolbar-item.disabled:hover {
   background-color: #b4dfe8;
-  border-color: #52B6CA;
+  border-color: #52b6ca;
 }
 /* line 349, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a, .blueish .toolbar-item.disabled:hover a {
-  color: #fff;
+  color: white;
 }
 /* line 351, ../scss/modules/toolbar.scss */
 .blueish .toolbar-item.disabled a.dropdown-toggle::after, .blueish .toolbar-item.disabled:hover a.dropdown-toggle::after {
-  border-top-color: #fff;
+  border-top-color: white;
 }
 
 /* line 5, ../scss/modules/matrix.scss */
@@ -8461,12 +8491,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 32, ../scss/modules/matrix.scss */
 .table.matrix td.section {
-  color: #999;
+  color: #999999;
 }
 /* line 37, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon {
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid black;
+  color: black;
   border-radius: 12px;
   width: 24px;
   height: 24px;
@@ -8476,9 +8506,9 @@ a.btn-black, a.btn-highlight {
 }
 /* line 50, ../scss/modules/matrix.scss */
 .table.matrix .matrix-icon.is-active {
-  color: #fff;
-  border-color: #5DC774;
-  background-color: #5DC774;
+  color: white;
+  border-color: #5dc774;
+  background-color: #5dc774;
 }
 
 /* line 14, ../scss/modules/validation.scss */
@@ -8499,7 +8529,7 @@ a.btn-black, a.btn-highlight {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: #666;
+  background-color: #666666;
   opacity: 0.6;
   position: absolute;
   top: 0;
@@ -8515,17 +8545,23 @@ a.btn-black, a.btn-highlight {
 }
 
 @-webkit-keyframes bounce {
+  /* line 29, ../scss/modules/loader.scss */
   0%, 100% {
     -webkit-transform: scale(0);
   }
+
+  /* line 30, ../scss/modules/loader.scss */
   50% {
     -webkit-transform: scale(1);
   }
 }
 @keyframes bounce {
+  /* line 34, ../scss/modules/loader.scss */
   0%, 100% {
     transform: scale(0);
   }
+
+  /* line 35, ../scss/modules/loader.scss */
   50% {
     transform: scale(1);
   }
@@ -8552,9 +8588,9 @@ a.btn-black, a.btn-highlight {
 .column-navigation-wrapper .column-navigation {
   height: 100%;
   width: 100%;
-  background-color: #fff;
+  background-color: white;
   border-style: solid;
-  border-color: #ccc;
+  border-color: #cccccc;
   border-width: 0 1px 1px 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -8576,7 +8612,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 48, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column {
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #cccccc;
   overflow-y: auto;
   overflow-x: hidden;
   display: inline-block;
@@ -8593,7 +8629,7 @@ a.btn-black, a.btn-highlight {
   left: 0px;
   width: 100%;
   text-align: center;
-  color: #ccc;
+  color: #cccccc;
   height: 160px;
   margin-top: -55px;
 }
@@ -8654,11 +8690,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 117, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .inactive {
-  color: #ccc;
+  color: #cccccc;
 }
 /* line 121, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .column ul .not-published {
-  color: #E8CE33;
+  color: #e8ce33;
   margin-top: 2px;
   font-size: 40px;
 }
@@ -8671,15 +8707,15 @@ a.btn-black, a.btn-highlight {
 }
 /* line 136, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .item-text.ghost {
-  color: #999;
+  color: #999999;
 }
 /* line 140, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .ghost {
-  background: #52B6CA;
+  background: #52b6ca;
   padding: 0 2px;
   margin-right: 5px;
   margin-top: 3px;
-  color: #fff;
+  color: white;
   border-radius: 3px;
   font-size: 10px;
 }
@@ -8688,7 +8724,7 @@ a.btn-black, a.btn-highlight {
   width: 14px;
   margin-right: 5px;
   margin-top: 1px;
-  color: #999;
+  color: #999999;
   display: none;
 }
 /* line 156, ../scss/modules/column-navigation.scss */
@@ -8725,10 +8761,10 @@ a.btn-black, a.btn-highlight {
 }
 /* line 182, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .column-navigation .edit {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   padding: 0px 10px;
   font-size: 12px;
-  color: #fff;
+  color: white;
   border-radius: 3px;
   display: none;
   margin-right: 0;
@@ -8747,16 +8783,16 @@ a.btn-black, a.btn-highlight {
   font-size: 12px;
   vertical-align: middle;
   text-align: right;
-  color: #000;
+  color: black;
   margin: 0;
 }
 /* line 209, ../scss/modules/column-navigation.scss */
 .column-navigation-wrapper .add {
   display: inline-block;
   width: 50%;
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   padding: 5px 0;
-  color: #fff;
+  color: white;
   border-bottom-left-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomleft: 5px;
@@ -8766,7 +8802,7 @@ a.btn-black, a.btn-highlight {
 .column-navigation-wrapper .settings {
   display: inline-block;
   width: 50%;
-  background-color: #ccc;
+  background-color: #cccccc;
   padding: 5px 0;
   border-bottom-right-radius: 5px;
   -webkit-border-bottom-right-radius: 5px;
@@ -8818,7 +8854,7 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
   background-color: #fff;
   margin: 0;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
 }
 /* line 43, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list .husky-auto-complete {
@@ -8865,7 +8901,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 79, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-selection .tm-tag-remove::before {
-  content: "";
+  content: "\f00d";
 }
 
 /* line 90, ../scss/modules/auto-complete-list.scss */
@@ -8905,7 +8941,7 @@ a.btn-black, a.btn-highlight {
 /* line 121, ../scss/modules/auto-complete-list.scss */
 .auto-complete-list-suggestions .deactivated {
   cursor: auto;
-  color: #999;
+  color: #999999;
 }
 
 /* line 1, ../scss/modules/select.scss */
@@ -8924,7 +8960,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 17, ../scss/modules/select.scss */
 .husky-select-container .dropdown-label {
-  background: #ccc;
+  background: #cccccc;
   padding: 0px 5px 0px 10px;
   line-height: 30px;
   border-radius: 3px;
@@ -8958,8 +8994,8 @@ a.btn-black, a.btn-highlight {
 }
 /* line 44, ../scss/modules/select.scss */
 .husky-select-container.disabled .dropdown-label {
-  background: #ddd;
-  color: #666;
+  background: #dddddd;
+  color: #666666;
   cursor: default;
 }
 /* line 51, ../scss/modules/select.scss */
@@ -8978,7 +9014,7 @@ a.btn-black, a.btn-highlight {
   left: 0px;
   margin-top: 5px;
   background-color: #FFF;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   z-index: 2000;
   border-radius: 3px;
 }
@@ -9003,7 +9039,7 @@ a.btn-black, a.btn-highlight {
 /* line 86, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .disabled .item-value,
 .husky-select-container .dropdown-list .disabled:hover .item-value {
-  color: #999;
+  color: #999999;
 }
 /* line 90, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list .check {
@@ -9041,16 +9077,16 @@ a.btn-black, a.btn-highlight {
 }
 /* line 121, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover, .husky-select-container .dropdown-list > ul > li.hover {
-  background-color: #52B6CA;
+  background-color: #52b6ca;
   cursor: pointer;
 }
 /* line 126, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover .item-value {
-  color: #fff;
+  color: white;
 }
 /* line 130, ../scss/modules/select.scss */
 .husky-select-container .dropdown-list > ul > li:hover > div {
-  color: #fff;
+  color: white;
 }
 /* line 138, ../scss/modules/select.scss */
 .husky-select-container.small .dropdown-label {
@@ -9075,12 +9111,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 159, ../scss/modules/select.scss */
 .husky-select-container.white .dropdown-label {
-  background: #fff;
+  background: white;
 }
 /* line 165, ../scss/modules/select.scss */
 .husky-select-container.action .dropdown-label {
-  background: #52B6CA;
-  color: #fff;
+  background: #52b6ca;
+  color: white;
 }
 
 /* line 1, ../scss/modules/datagrid.scss */
@@ -9162,8 +9198,8 @@ a.btn-black, a.btn-highlight {
 /* line 67, ../scss/modules/datagrid.scss */
 .husky-datagrid .husky-table.overflow:after {
   display: block;
-  content: "";
-  color: #999;
+  content: "\f061";
+  color: #999999;
   font-size: 16px;
   position: absolute;
   right: 5px;
@@ -9257,7 +9293,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 173, ../scss/modules/datagrid.scss */
 .husky-datagrid table td .server-validation-error .editable-input {
-  border-color: #EA524E !important;
+  border-color: #ea524e !important;
   border-width: 2px !important;
 }
 /* line 178, ../scss/modules/datagrid.scss */
@@ -9287,7 +9323,7 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid thead tr {
   height: 30px;
   padding-top: 10px;
-  border-color: #ccc;
+  border-color: #cccccc;
 }
 /* line 203, ../scss/modules/datagrid.scss */
 .husky-datagrid thead tr th {
@@ -9312,7 +9348,7 @@ a.btn-black, a.btn-highlight {
 /* line 218, ../scss/modules/datagrid.scss */
 .husky-datagrid thead tr th.sorted-asc .cell-content::after {
   margin-left: 5px;
-  content: "";
+  content: "\f0d8";
   font-size: 12px;
 }
 /* line 225, ../scss/modules/datagrid.scss */
@@ -9322,7 +9358,7 @@ a.btn-black, a.btn-highlight {
 /* line 227, ../scss/modules/datagrid.scss */
 .husky-datagrid thead tr th.sorted-desc .cell-content::after {
   margin-left: 5px;
-  content: "";
+  content: "\f0d7";
   font-size: 12px;
 }
 /* line 236, ../scss/modules/datagrid.scss */
@@ -9530,15 +9566,15 @@ a.btn-black, a.btn-highlight {
 }
 /* line 283, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody tr.selected {
-  background: #fff;
+  background: white;
 }
 /* line 287, ../scss/modules/datagrid.scss */
 .husky-datagrid tbody .grid-icon {
   width: 30px;
   height: 20px;
   cursor: pointer;
-  color: #fff;
-  background: #52B6CA;
+  color: white;
+  background: #52b6ca;
   text-align: center;
   border-radius: 2px;
   margin-left: 10px;
@@ -9588,9 +9624,9 @@ a.btn-black, a.btn-highlight {
 /* line 338, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list {
   text-align: center;
-  color: #ccc;
+  color: #cccccc;
   padding: 20px 0;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid #cccccc;
 }
 /* line 344, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list .icon {
@@ -9619,7 +9655,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
   border-radius: 0 0 3px 3px;
-  color: #fff;
+  color: white;
   line-height: 30px;
   padding-left: 20px;
   font-size: 12px;
@@ -9648,17 +9684,17 @@ a.btn-black, a.btn-highlight {
 
 /* line 32, ../scss/modules/label.scss */
 .husky-label-error {
-  background: #EA524E;
+  background: #ea524e;
 }
 
 /* line 36, ../scss/modules/label.scss */
 .husky-label-warning {
-  background: #F2D212;
+  background: #f2d212;
 }
 
 /* line 40, ../scss/modules/label.scss */
 .husky-label-success {
-  background: #5DC774;
+  background: #5dc774;
 }
 
 /* line 7, ../scss/modules/matcher.scss */
@@ -9677,9 +9713,9 @@ a.btn-black, a.btn-highlight {
 }
 /* line 20, ../scss/modules/matcher.scss */
 .husky-matcher.overflow .wrapper:after {
-  color: #ccc;
+  color: #cccccc;
   font-size: 22px;
-  content: "";
+  content: "\f061";
   position: absolute;
   right: -35px;
   top: 110px;
@@ -9704,7 +9740,7 @@ a.btn-black, a.btn-highlight {
 /* line 43, ../scss/modules/matcher.scss */
 .husky-matcher .column .match-header {
   height: 138px;
-  background: #fff;
+  background: white;
   position: relative;
   top: 0px;
   left: 0px;
@@ -9727,14 +9763,14 @@ a.btn-black, a.btn-highlight {
 /* line 63, ../scss/modules/matcher.scss */
 .husky-matcher .column .match-header .matched-desc {
   display: block;
-  color: #999;
+  color: #999999;
   line-height: 18px;
 }
 /* line 68, ../scss/modules/matcher.scss */
 .husky-matcher .column .match-header .button {
   float: left;
   clear: both;
-  background: #ccc;
+  background: #cccccc;
   height: 30px;
   line-height: 30px;
   padding: 0 20px;
@@ -9747,7 +9783,7 @@ a.btn-black, a.btn-highlight {
   height: 40px;
   line-height: 40px;
   font-weight: bold;
-  color: #fff;
+  color: white;
   padding-left: 10px;
   -moz-transition: background 0.3s;
   -o-transition: background 0.3s;
@@ -9767,15 +9803,15 @@ a.btn-black, a.btn-highlight {
 }
 /* line 95, ../scss/modules/matcher.scss */
 .husky-matcher .column .samples span:first-child {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid white;
 }
 /* line 100, ../scss/modules/matcher.scss */
 .husky-matcher .column.unmatched {
-  border-color: #EA524E;
+  border-color: #ea524e;
 }
 /* line 103, ../scss/modules/matcher.scss */
 .husky-matcher .column.unmatched .column-title {
-  background: #EA524E;
+  background: #ea524e;
 }
 /* line 106, ../scss/modules/matcher.scss */
 .husky-matcher .column.unmatched .samples span {
@@ -9783,11 +9819,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 110, ../scss/modules/matcher.scss */
 .husky-matcher .column.matched {
-  border-color: #5DC774;
+  border-color: #5dc774;
 }
 /* line 113, ../scss/modules/matcher.scss */
 .husky-matcher .column.matched .column-title {
-  background: #5DC774;
+  background: #5dc774;
 }
 /* line 116, ../scss/modules/matcher.scss */
 .husky-matcher .column.matched .samples span {
@@ -9795,11 +9831,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 120, ../scss/modules/matcher.scss */
 .husky-matcher .column.edit {
-  border-color: #52B6CA;
+  border-color: #52b6ca;
 }
 /* line 123, ../scss/modules/matcher.scss */
 .husky-matcher .column.edit .column-title {
-  background: #52B6CA;
+  background: #52b6ca;
 }
 /* line 126, ../scss/modules/matcher.scss */
 .husky-matcher .column.edit .samples span {
@@ -9807,7 +9843,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 130, ../scss/modules/matcher.scss */
 .husky-matcher .column.edit .match-header .headline {
-  color: #999;
+  color: #999999;
 }
 /* line 133, ../scss/modules/matcher.scss */
 .husky-matcher .column.edit .match-header .ok-button {
@@ -9833,15 +9869,15 @@ a.btn-black, a.btn-highlight {
 }
 /* line 154, ../scss/modules/matcher.scss */
 .husky-matcher .column.skipped {
-  border-color: #666;
+  border-color: #666666;
 }
 /* line 157, ../scss/modules/matcher.scss */
 .husky-matcher .column.skipped .column-title {
-  background: #666;
+  background: #666666;
 }
 /* line 160, ../scss/modules/matcher.scss */
 .husky-matcher .column.skipped .samples span {
-  background: #999;
+  background: #999999;
 }
 
 /* line 11, ../scss/modules/process.scss */
@@ -9858,12 +9894,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 22, ../scss/modules/process.scss */
 .husky-process .process.first .back {
-  background: #CACACA;
+  background: #cacaca;
   border-radius: 3px 0 0 3px;
 }
 /* line 28, ../scss/modules/process.scss */
 .husky-process .process.last .front {
-  background: #CACACA;
+  background: #cacaca;
   border-radius: 0 3px 3px 0;
 }
 /* line 33, ../scss/modules/process.scss */
@@ -9876,7 +9912,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 40, ../scss/modules/process.scss */
 .husky-process .process .name {
-  background: #CACACA;
+  background: #cacaca;
   float: left;
   text-align: center;
   line-height: 20px;
@@ -9903,16 +9939,16 @@ a.btn-black, a.btn-highlight {
 }
 /* line 67, ../scss/modules/process.scss */
 .husky-process .process.active.first .back {
-  background: #52B6CA;
+  background: #52b6ca;
 }
 /* line 72, ../scss/modules/process.scss */
 .husky-process .process.active.last .front {
-  background: #52B6CA;
+  background: #52b6ca;
 }
 /* line 76, ../scss/modules/process.scss */
 .husky-process .process.active .name {
-  background: #52B6CA;
-  color: #fff;
+  background: #52b6ca;
+  color: white;
 }
 /* line 80, ../scss/modules/process.scss */
 .husky-process .process.active .back {
@@ -9938,20 +9974,20 @@ a.btn-black, a.btn-highlight {
 }
 /* line 22, ../scss/modules/toggler.scss */
 .husky-toggler.outline .toggler-wrapper {
-  border-color: #ACDAE6;
+  border-color: #acdae6;
   height: 22px;
   border-radius: 11px;
 }
 /* line 27, ../scss/modules/toggler.scss */
 .husky-toggler.outline .switch {
-  border-color: #ACDAE6;
+  border-color: #acdae6;
   top: 1px;
   left: 1px;
 }
 /* line 35, ../scss/modules/toggler.scss */
 .husky-toggler .toggler-wrapper {
-  background: #fff;
-  border: 1px solid #ccc;
+  background: white;
+  border: 1px solid #cccccc;
   border-radius: 10px;
   position: relative;
   width: 35px;
@@ -9970,11 +10006,11 @@ a.btn-black, a.btn-highlight {
 }
 /* line 48, ../scss/modules/toggler.scss */
 .husky-toggler .switch {
-  background: #fff;
+  background: white;
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   margin: -1px 0 0 -1px;
   position: absolute;
   top: 0px;
@@ -9999,7 +10035,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 74, ../scss/modules/toggler.scss */
 .husky-toggler.checked.outline .toggler-wrapper {
-  border-color: #ACDAE6;
+  border-color: #acdae6;
 }
 /* line 76, ../scss/modules/toggler.scss */
 .husky-toggler.checked.outline .toggler-wrapper .switch {
@@ -10007,12 +10043,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 82, ../scss/modules/toggler.scss */
 .husky-toggler.checked .toggler-wrapper {
-  background: #5DC774;
-  border-color: #5DC774;
+  background: #5dc774;
+  border-color: #5dc774;
 }
 /* line 87, ../scss/modules/toggler.scss */
 .husky-toggler.checked .switch {
-  border-color: #5DC774;
+  border-color: #5dc774;
   left: 15px;
 }
 /* line 91, ../scss/modules/toggler.scss */
@@ -10047,7 +10083,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 35, ../scss/modules/content-types.scss */
 .sortable .text-block .move::before {
-  content: "";
+  content: "\f142";
   cursor: move;
   padding-right: 5px;
   position: absolute;
@@ -10101,8 +10137,8 @@ a.btn-black, a.btn-highlight {
 /* line 92, ../scss/modules/content-types.scss */
 .text-block .container {
   padding: 10px 20px 20px 20px;
-  background: #ddd;
-  border: 1px solid #ccc;
+  background: #dddddd;
+  border: 1px solid #cccccc;
   -moz-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.06) 2px 2px 0px 0px;
@@ -10136,12 +10172,12 @@ a.btn-black, a.btn-highlight {
 /* line 126, ../scss/modules/content-types.scss */
 .text-block-footer .desc {
   font-size: 12px;
-  color: #999;
+  color: #999999;
   padding-left: 10px;
 }
 /* line 131, ../scss/modules/content-types.scss */
 .text-block-footer .btn.full {
-  background-color: #ccc;
+  background-color: #cccccc;
   cursor: default;
 }
 
@@ -10159,14 +10195,14 @@ a.btn-black, a.btn-highlight {
 .white-box {
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: white;
   border-radius: 0 0 3px 3px;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
 }
 /* line 157, ../scss/modules/content-types.scss */
 .white-box .text {
   font-size: 12px;
-  color: #999;
+  color: #999999;
 }
 /* line 162, ../scss/modules/content-types.scss */
 .white-box .header {
@@ -10174,7 +10210,7 @@ a.btn-black, a.btn-highlight {
   top: 0px;
   left: 0px;
   height: 50px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #dddddd;
   line-height: 50px;
   padding-left: 20px;
   padding-right: 20px;
@@ -10201,12 +10237,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 186, ../scss/modules/content-types.scss */
 .white-box .header .icon.action {
-  background: #52B6CA;
-  color: #fff;
+  background: #52b6ca;
+  color: white;
 }
 /* line 190, ../scss/modules/content-types.scss */
 .white-box .header .icon.border {
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   box-sizing: initial;
   height: 28px;
   line-height: 28px;
@@ -10274,13 +10310,13 @@ a.btn-black, a.btn-highlight {
 .white-box .content .items-list li {
   font-size: 14px;
   line-height: 50px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc;
   position: relative;
 }
 /* line 255, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .icon {
   cursor: move;
-  color: #999;
+  color: #999999;
   font-size: 15px;
   padding-right: 15px;
 }
@@ -10293,12 +10329,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 267, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .num {
-  color: #999;
+  color: #999999;
   padding-right: 10px;
 }
 /* line 271, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .value {
-  color: #999;
+  color: #999999;
 }
 /* line 274, ../scss/modules/content-types.scss */
 .white-box .content .items-list li .remove {
@@ -10316,7 +10352,7 @@ a.btn-black, a.btn-highlight {
 .white-box .footer {
   padding: 15px 20px 20px 20px;
   line-height: 14px;
-  color: #999;
+  color: #999999;
   font-size: 12px;
 }
 /* line 293, ../scss/modules/content-types.scss */
@@ -10333,7 +10369,7 @@ a.btn-black, a.btn-highlight {
   padding-bottom: 20px;
   width: 100%;
   height: auto;
-  border: 1px dashed #ccc;
+  border: 1px dashed #cccccc;
   border-radius: 3px;
   cursor: pointer;
   -moz-transition: opacity 300ms;
@@ -10357,7 +10393,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 35, ../scss/modules/dropzone.scss */
 .husky-dropzone .description .icon {
-  color: #52B6CA;
+  color: #52b6ca;
   font-size: 72px;
   line-height: 72px;
   margin-bottom: 5px;
@@ -10389,8 +10425,8 @@ a.btn-black, a.btn-highlight {
 .husky-dropzone .upload-items .item {
   width: 70px;
   height: 90px;
-  border: 1px solid #fff;
-  background: #fff;
+  border: 1px solid white;
+  background: white;
   border-radius: 2px;
   margin-right: 20px;
   margin-bottom: 20px;
@@ -10409,7 +10445,7 @@ a.btn-black, a.btn-highlight {
   text-align: center;
   font-size: 9px;
   line-height: 10px;
-  color: #999;
+  color: #999999;
   padding-top: 15px;
   padding-bottom: 5px;
 }
@@ -10422,20 +10458,20 @@ a.btn-black, a.btn-highlight {
   width: 50px;
   height: 6px;
   margin: 0 auto;
-  background: #ccc;
+  background: #cccccc;
   border-radius: 3px;
   overflow: hidden;
 }
 /* line 92, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .progress .bar {
   height: 100%;
-  background: #52B6CA;
+  background: #52b6ca;
   width: 0%;
 }
 /* line 98, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .icon {
   height: 25px;
-  color: #999;
+  color: #999999;
   font-size: 25px;
   text-align: center;
   display: block;
@@ -10460,14 +10496,14 @@ a.btn-black, a.btn-highlight {
 /* line 120, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item .tick {
   text-align: center;
-  color: #999;
+  color: #999999;
   font-size: 15px;
   line-height: 15px;
   display: block;
 }
 /* line 128, ../scss/modules/dropzone.scss */
 .husky-dropzone .upload-items .item.dz-success {
-  border-color: #ccc;
+  border-color: #cccccc;
   background: transparent;
 }
 /* line 131, ../scss/modules/dropzone.scss */
@@ -10532,7 +10568,7 @@ a.btn-black, a.btn-highlight {
 
 /* line 64, ../scss/modules/input.scss */
 .husky-input {
-  background: #fff;
+  background: white;
   position: relative;
   top: 0px;
   left: 0px;
@@ -10549,16 +10585,16 @@ a.btn-black, a.btn-highlight {
   line-height: 20px;
   margin: 5px 0 0 0;
   padding-right: 5px;
-  border-right: 1px solid #ccc;
-  color: #999;
+  border-right: 1px solid #cccccc;
+  color: #999999;
   font-size: 16px;
 }
 /* line 15, ../scss/modules/input.scss */
 .husky-input .front .color-field {
   width: 15px;
   height: 15px;
-  border: 1px solid #999;
-  background-color: #ccc;
+  border: 1px solid #999999;
+  background-color: #cccccc;
   display: inline-block;
   margin-top: 2px;
 }
@@ -10570,7 +10606,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 29, ../scss/modules/input.scss */
 .husky-input .front a.clickable {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 /* line 36, ../scss/modules/input.scss */
@@ -10580,8 +10616,8 @@ a.btn-black, a.btn-highlight {
   right: 0px;
   line-height: 20px;
   padding: 5px 10px 0 5px;
-  background: #fff;
-  color: #999;
+  background: white;
+  color: #999999;
   font-size: 16px;
 }
 /* line 47, ../scss/modules/input.scss */
@@ -10606,12 +10642,12 @@ a.btn-black, a.btn-highlight {
 }
 /* line 79, ../scss/modules/input.scss */
 .husky-input.colorpicker .front {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 /* line 86, ../scss/modules/input.scss */
 .husky-input.pickdate .front {
-  color: #000;
+  color: black;
   cursor: pointer;
 }
 
@@ -10643,7 +10679,7 @@ a.btn-black, a.btn-highlight {
 /* line 22, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .description {
   font-size: 10px;
-  color: #999;
+  color: #999999;
 }
 /* line 26, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .text {
@@ -10717,11 +10753,11 @@ a.btn-black, a.btn-highlight {
   line-height: 70px;
   z-index: 5;
   font-size: 25px;
-  color: #ccc;
+  color: #cccccc;
 }
 /* line 89, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item.large {
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   width: 187px;
   height: 248px;
   margin-bottom: 40px;
@@ -10773,15 +10809,15 @@ a.btn-black, a.btn-highlight {
   height: 160px;
   line-height: 160px;
   font-size: 70px;
-  color: #ccc;
+  color: #cccccc;
 }
 /* line 140, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover, .husky-thumbnails .item.is-selected {
-  background: #fff;
+  background: white;
 }
 /* line 144, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover.large, .husky-thumbnails .item.is-selected.large {
-  border-color: #fff;
+  border-color: white;
 }
 /* line 147, ../scss/modules/thumbnails.scss */
 .husky-thumbnails .item:hover .checkbox, .husky-thumbnails .item.is-selected .checkbox {
@@ -10823,8 +10859,8 @@ a.btn-black, a.btn-highlight {
   /* Firefox, other Gecko */
   box-sizing: border-box;
   /* Opera/IE 8+ */
-  border: 3px solid #fff;
-  background: #fff;
+  border: 3px solid white;
+  background: white;
   border-radius: 2px;
   -moz-transition: all 200ms ease 200ms;
   -o-transition: all 200ms ease 200ms;
@@ -10842,11 +10878,11 @@ a.btn-black, a.btn-highlight {
 .husky-groups .grid-group .thumbnails .thumbnail.empty {
   width: 145px;
   height: 95px;
-  background: #fff;
+  background: white;
   text-align: center;
   line-height: 95px;
   font-size: 40px;
-  color: #ccc;
+  color: #cccccc;
 }
 /* line 204, ../scss/modules/thumbnails.scss */
 .husky-groups .grid-group .thumbnails .thumbnail.first {
@@ -10941,6 +10977,8 @@ a.btn-black, a.btn-highlight {
   display: block;
   text-align: center;
   font-size: 10px;
-  color: #999;
+  color: #999999;
   line-height: 14px;
 }
+
+/*# sourceMappingURL=husky.css.map */

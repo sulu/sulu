@@ -30565,8 +30565,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
  * @param {Object} [options.data] if no url is provided (some functionality like search & sort will not work)
  * @param {String} [options.resultKey] the name of the data-array in the embedded in the response
  * @param {String} [options.defaultMeasureUnit=px] the unit that should be taken
- * @param {Boolean|String} [options.pagination=dropdown] name of the pagination to use. If false no pagination will be initialized
  * @param {String} [options.view='table'] name of the view to use
+ * @param {Boolean|String} [options.pagination=dropdown] name of the pagination to use. If false no pagination will be initialized
  * @param {Object} [options.paginationOptions] Configuration Object for the pagination
  * @param {Object} [options.viewOptions] Configuration Object for the view
  * @param {Boolean} [options.sortable] Defines if records are sortable
@@ -30980,6 +30980,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
         },
 
         /**
+         * triggers husky.datagrid.items.selected event, which returns all selected item data
+         * @event husky.datagrid.data.get-selected
+         * @param  {Function} callback function receives array of selected items
+         */
+        DATA_GET_SELECTED = function() {
+            return this.createEventName('data.get-selected');
+        },
+
+        /**
          * Private Methods
          * --------------------------------------------------------------------
          */
@@ -31093,10 +31102,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         url: url
                     });
 
-                } else if (!!this.options.data.items) {
+                } else if (!!this.options.data) {
 
                     this.sandbox.logger.log('load data from array');
-                    this.data = this.options.data;
+                    this.data = {};
+                    if (!!this.options.resultKey && !!this.options.data[this.options.resultKey]) {
+                        this.data.embedded = this.options.data[this.options.resultKey];
+                    } else {
+                        this.data.embedded = this.options.data;
+                    }
 
                     this.renderView();
                     if (!!this.paginations[this.paginationId]) {
@@ -31625,6 +31639,11 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     callback(this.getSelectedItemIds());
                 }.bind(this));
 
+                // trigger selectedItems
+                this.sandbox.on(DATA_GET_SELECTED.call(this), function(callback) {
+                    callback(this.getSelectedItemData());
+                }.bind(this));
+
                 // add a single data record
                 this.sandbox.on(RECORD_ADD.call(this), this.addRecordHandler.bind(this));
                 // add multiple data records
@@ -31826,13 +31845,36 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Array} array with all ids
              */
             getSelectedItemIds: function() {
-                var ids = [], i, length;
+                var data = [];
+                this.iterateSelectedItems(function(item) {
+                    data.push(item.id);
+                });
+                return data;
+            },
+
+            /**
+             * Returns the data of all selected items
+             * @return {Array} array of objects containing the selected data
+             */
+            getSelectedItemData: function() {
+                var data = [];
+                this.iterateSelectedItems(function(item) {
+                    data.push(item);
+                });
+                return data;
+            },
+
+            /**
+             * function which iterates through data. on every selected item a callback is called
+             * @param callback Selected item is passed
+             */
+            iterateSelectedItems: function(callback) {
+                var i, length;
                 for (i = -1, length = this.data.embedded.length; ++i < length;) {
                     if (this.data.embedded[i].selected === true) {
-                        ids.push(this.data.embedded[i].id);
+                        callback(this.data.embedded[i]);
                     }
                 }
-                return ids;
             },
 
             /**
@@ -42011,27 +42053,16 @@ define('__component__$input@husky',[], function() {
                                     linkOptions = infoTab.get('linkType'),
                                     targetOptions = targetTab.get('linkTargetType'),
 
-                                    // list of included link options
-                                    includedLinkOptions = [
-                                        'url',
-                                        'email'
-                                    ],
-                                    selectedLinkOption = [],
-
-                                    // list of included link target options
+                                    // list of excluded link target options
                                     includedTargetOptions = [
                                         'notSet',
                                         '_blank',
                                         '_self'
                                     ],
                                     selectedTargetOptions = [];
-                                    
-                                // just show included link options
-                                for (var i = 0; i < linkOptions.items.length; i++) {
-                                    if (includedLinkOptions.indexOf(linkOptions.items[i][1]) !== -1) {
-                                        selectedLinkOption.push(linkOptions.items[i]);
-                                    }
-                                }
+                            
+                                // remove 'link to anchor' option
+                                linkOptions.items.splice(1, 1);
 
                                 // just show included target options
                                 for (var i = 0; i < targetOptions.items.length; i++) {
@@ -42040,7 +42071,6 @@ define('__component__$input@husky',[], function() {
                                     }
                                 }
 
-                                linkOptions.items = selectedLinkOption;
                                 targetOptions.items = selectedTargetOptions;
                             }
                         });
