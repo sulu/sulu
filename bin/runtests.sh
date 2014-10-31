@@ -13,8 +13,7 @@ function header {
 }
 
 function comment {
-    echo ""
-    echo -e "\e[33"$1"\e[0m"
+    echo -e "\e[33m"$1"\e[0m"
     echo ""
 }
 
@@ -28,7 +27,10 @@ cat <<EOT
                                             
 EOT
 
-header "Initializing database"
+header "Sulu CMF Test Suite"
+
+comment "Initializing database"
+
 ./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
 
 if [ -z $BUNDLE ]; then
@@ -55,16 +57,16 @@ for BUNDLE in $BUNDLES; do
 
     cd $BUNDLE_DIR
 
+    if [ ! -e vendor ]; then
+        ln -s $OCWD"/vendor" vendor
+    fi
+
     if [[ ! -z "$KERNEL_DIR" ]]; then
         comment "Kernel: "$KERNEL_DIR
         env KERNEL_DIR=$OCWD"/"$KERNEL_DIR $OCWD/bin/console doctrine:schema:update --force
     fi
 
-    if [ ! -e vendor ]; then
-        ln -s $OCWD"/vendor" vendor
-    fi
-
     cd -
 
-    phpunit --configuration phpunit.travis.xml.dist --stop-on-error $BUNDLE_DIR/Tests
+    phpunit --configuration phpunit.travis.xml.dist --stop-on-failure --stop-on-error $BUNDLE_DIR/Tests
 done
