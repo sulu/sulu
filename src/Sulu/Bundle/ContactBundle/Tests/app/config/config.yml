@@ -1,0 +1,94 @@
+framework:
+    secret: secret
+    router: { resource: "%kernel.root_dir%/config/routing.yml" }
+    templating: { engines: ['twig'] }
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+sulu_admin:
+    name: SULU 2.0
+
+parameters:
+    # Just a dirty hack to get the jms serializer bundle correctly working
+    # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
+    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+
+sulu_core:
+    phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        workspace: test
+        username: admin
+        password: admin
+    content:
+        ~
+    webspace:
+        request_analyzer:
+            enabled: false
+
+# define the account types and form of address
+# tabs key must match tab-id specified in content-navigation
+sulu_contact:
+    account_types:
+        basic:
+            id: 0
+            name: basic
+            translation: contact.account.type.basic
+            tabs:
+                financials: false
+            convertableTo:
+                lead: true
+                customer: true
+        lead:
+            id: 1
+            name: lead
+            translation: contact.account.type.lead
+            tabs:
+                financials: false
+            convertableTo:
+                customer: true
+        customer:
+            id: 2
+            name: customer
+            translation: contact.account.type.customer
+            tabs:
+                financials: true
+        supplier:
+            id: 3
+            name: supplier
+            translation: contact.account.type.supplier
+            tabs:
+                financials: true
+    form_of_address:
+        male:
+            id: 0
+            name: male
+            translation: contact.contacts.formOfAddress.male
+        female:
+            id: 1
+            name: female
+            translation: contact.contacts.formOfAddress.female

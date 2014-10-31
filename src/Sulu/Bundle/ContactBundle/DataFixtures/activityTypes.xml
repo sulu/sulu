@@ -1,0 +1,23 @@
+<ActivityTypes>
+    <ActivityType>
+        <Name>contact.activity.type.phone.intern</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.phone.extern</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.mail.intern</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.mail.extern</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.appointment</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.noInterest</Name>
+    </ActivityType>
+    <ActivityType>
+        <Name>contact.activity.type.recall</Name>
+    </ActivityType>
+</ActivityTypes>

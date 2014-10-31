@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel"],function(a){return a({urlRoot:"/admin/api/account/categories",defaults:{id:null,category:""}})});

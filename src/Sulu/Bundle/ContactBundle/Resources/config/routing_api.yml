@@ -1,0 +1,41 @@
+sulu_contact.contacts:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactController
+
+sulu_contact.accounts:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountController
+
+sulu_contact.contacttitle:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactTitleController
+
+sulu_contact.contactposition:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\PositionController
+
+sulu_contact.accountcategory:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountCategoryController
+
+sulu_contact.termsofpayment:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\TermsOfPaymentController
+
+sulu_contact.termsofdelivers:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\TermsOfDeliveryController
+
+sulu_contact.activities:
+    type: rest
+    resource: Sulu\Bundle\ContactBundle\Controller\ActivityController
+
+sulu_contact.account_medias:
+    type: rest
+    parent: sulu_contact.accounts
+    resource: Sulu\Bundle\ContactBundle\Controller\AccountMediaController
+
+sulu_contact.contact_medias:
+    type: rest
+    parent: sulu_contact.contacts
+    resource: Sulu\Bundle\ContactBundle\Controller\ContactMediaController

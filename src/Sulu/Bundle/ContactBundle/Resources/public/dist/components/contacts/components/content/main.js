@@ -1,0 +1,1 @@
+define(function(){"use strict";return{header:{tabs:{url:"/admin/contact/navigation/contact"},toolbar:{template:"default"}}}});
