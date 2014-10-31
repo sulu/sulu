@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_content.admin.class">Sulu\Bundle\ContentBundle\Admin\SuluContentAdmin</parameter>
+        <parameter key="sulu_content.twig_extension.class">Sulu\Bundle\ContentBundle\Twig\ContentExtension</parameter>
+        <parameter key="sulu_content.admin.content_navigation.class">Sulu\Bundle\ContentBundle\Admin\SuluContentContentNavigation</parameter>
+        <parameter key="sulu_content.node_repository.class">Sulu\Bundle\ContentBundle\Repository\NodeRepository</parameter>
+        <parameter key="sulu_content.rl_repository.class">Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository</parameter>
+        <parameter key="sulu_content.extension.seo.class">Sulu\Bundle\ContentBundle\Content\Structure\SeoStructureExtension</parameter>
+        <parameter key="sulu_content.extension.excerpt.class">Sulu\Bundle\ContentBundle\Content\Structure\ExcerptStructureExtension</parameter>
+        <parameter key="sulu_content.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
+    </parameters>
+    <services>
+        <!-- admin class -->
+        <service id="sulu_content.admin" class="%sulu_content.admin.class%">
+            <tag name="sulu.admin"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument>%sulu_admin.name%</argument>
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <!-- content -->
+        <service id="sulu_content.admin.content_navigation" class="%sulu_content.admin.content_navigation.class%"/>
+        <service id="sulu_content.twig_extension" class="%sulu_content.twig_extension.class%">
+            <tag name="twig.extension"/>
+            <argument type="service" id="sulu.content.type_manager"/>
+        </service>
+
+        <!-- nodes -->
+        <service id="sulu_content.node_repository" class="%sulu_content.node_repository.class%">
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu_security.user_manager"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu.content.type.smart_content.query_builder"/>
+            <argument type="service" id="sulu.content.query_executor"/>
+            <argument type="service" id="logger"/>
+        </service>
+
+        <!-- resource locator -->
+        <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
+            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type.resource_locator"/>
+            <argument type="service" id="sulu.content.mapper"/>
+        </service>
+
+        <!-- structure extension -->
+        <service id="sulu_content.extension.seo" class="%sulu_content.extension.seo.class%">
+            <tag name="sulu.structure.extension"/>
+        </service>
+
+        <!-- structure extension -->
+        <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu.content.type_manager"/>
+            <tag name="sulu.structure.extension"/>
+        </service>
+
+        <!-- JsConfig -->
+        <service id="sulu_content.jsconfig" class="%sulu_content.jsconfig.class%">
+            <argument type="string">sulu-content</argument>
+            <argument type="collection">
+                <argument key="defaultTemplate" type="string">%sulu.content.structure.default_type.page%</argument>
+                <argument key="wsPort" type="string">%sulu_content.preview.websocket.port%</argument>
+                <argument key="wsUrl" type="string">%sulu_content.preview.websocket.url%</argument>
+                <argument key="showInSortModeTag" type="string">sulu.content.sortmode.show</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+        </service>
+    </services>
+</container>
