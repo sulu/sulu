@@ -40,7 +40,7 @@ sulu_core:
     webspace:
         ~
     content:
-        templates:
+        structure:
             paths:
                 app:
                     path: %kernel.root_dir%/Resources/templates

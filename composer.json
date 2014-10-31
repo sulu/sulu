@@ -46,7 +46,7 @@
         "matthiasnoback/symfony-config-test": "v0.1.1",
         "matthiasnoback/symfony-dependency-injection-test": "v0.7.1",
         "phpspec/prophecy-phpunit": "~1.0",
-        "phpunit/phpunit": "3.7.*",
+        "phpunit/phpunit": "~4.0.0",
         "sensio/framework-extra-bundle": "~3.0",
         "symfony-cmf/testing": "~1.1",
         "symfony/doctrine-bridge": "~2.2",
