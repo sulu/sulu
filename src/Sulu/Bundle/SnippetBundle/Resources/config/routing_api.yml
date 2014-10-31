@@ -1,0 +1,11 @@
+sulu_snippet.snippet:
+    type: rest
+    resource: sulu_snippet.controller.snippet
+
+sulu_snippet.snippet-types:
+    type: rest
+    resource: Sulu\Bundle\SnippetBundle\Controller\SnippetTypesController
+
+sulu_snippet.languages:
+    type: rest
+    resource: Sulu\Bundle\SnippetBundle\Controller\LanguageController

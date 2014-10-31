@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_snippet.content.snippet.class">Sulu\Bundle\SnippetBundle\Content\SnippetContent</parameter>
+    </parameters>
+
+    <services>
+        <service id="sulu_snippet.content.snippet" class="%sulu_snippet.content.snippet.class%">
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu_website.resolver.structure" />
+            <argument>%sulu_snippet.content-type.template%</argument>
+            <argument>%sulu.content.structure.default_type.snippet%</argument>
+
+            <tag name="sulu.content.type" alias="snippet"/>
+        </service>
+    </services>
+</container>
