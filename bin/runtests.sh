@@ -68,7 +68,6 @@ for BUNDLE in $BUNDLES; do
         export KERNEL_DIR=""
     fi
 
-
     cd $BUNDLE_DIR
 
     if [ ! -e vendor ]; then
@@ -90,9 +89,11 @@ for BUNDLE in $BUNDLES; do
 done
 
 if [[ ! -s /tmp/failed.tests ]]; then
+    # Everything was OK
     header "Everythig is AWESOME! \o/"
     exit 0
 else
+    # There were failures
     echo ""
     echo -e "\e[31m======================================================\e[0m"
     echo "Oh no, "`cat /tmp/failed.tests | wc -l`" Component(s) failed:"

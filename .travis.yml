@@ -1,9 +1,7 @@
 language: php
 
 php:
-  - 5.4
   - 5.5
-  - hhvm
 
 before_script:
   - composer self-update
@@ -11,7 +9,9 @@ before_script:
   - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
   - 
-script: time ./bin/runtests.sh
+script: 
+    - time ./bin/runtests.sh
+    - phpunit
 
 
 matrix:

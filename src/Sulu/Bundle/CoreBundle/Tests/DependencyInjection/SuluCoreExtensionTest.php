@@ -1,8 +1,9 @@
 <?php
 
-namespace Sulu\Bundle\CoreBundle\DependencyInjection;
+namespace Sulu\Bundle\CoreBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {

@@ -1,8 +1,9 @@
 <?php
 
-namespace Sulu\Bundle\CoreBundle\Cache;
+namespace Sulu\Bundle\CoreBundle\Tests\Cache;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
+use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 
 class StructureWarmerTest extends ProphecyTestCase
 {
