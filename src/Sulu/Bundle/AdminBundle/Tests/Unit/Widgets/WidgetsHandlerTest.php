@@ -114,8 +114,8 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
             array('widget-2', 'widget-1', 'widget-3'),
             array('testParam' => 'super')
         ));
-        $this->assertNotFalse($param);
-        $this->assertNotFalse($template);
+        $this->assertTrue(false !== $param);
+        $this->assertTrue(false !== $template);
 
         $this->assertEquals('SuluAdminBundle:Widgets:widgets.html.twig', $template);
         $this->assertEquals(
@@ -185,8 +185,8 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             $this->widgetsHandler->renderWidgetGroup('test-group', array('testParam' => 'super'))
         );
-        $this->assertNotFalse($param);
-        $this->assertNotFalse($template);
+        $this->assertTrue(false !== $param);
+        $this->assertTrue(false !== $template);
         $this->assertEquals('SuluAdminBundle:Widgets:widgets.html.twig', $template);
         $this->assertEquals(
             array(
