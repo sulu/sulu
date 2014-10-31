@@ -1,0 +1,11 @@
+sulu_media.website.image.proxy:
+    path: /uploads/media/{slug}
+    defaults: { _controller: SuluMediaBundle:MediaStream:getImage }
+    requirements:
+        slug: .*
+
+sulu_media.website.media.download:
+    path: /media/{id}/download/{slug}
+    defaults: { _controller: SuluMediaBundle:MediaStream:download }
+    requirements:
+        slug: .*
