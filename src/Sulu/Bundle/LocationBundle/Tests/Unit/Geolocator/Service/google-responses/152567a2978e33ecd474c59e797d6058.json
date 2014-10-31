@@ -1,0 +1,63 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "Dornbirn",
+               "short_name" : "Dornbirn",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Dornbirn",
+               "short_name" : "Dornbirn",
+               "types" : [ "administrative_area_level_3", "political" ]
+            },
+            {
+               "long_name" : "Dornbirn District",
+               "short_name" : "Dornbirn District",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Vorarlberg",
+               "short_name" : "Vbg.",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "Austria",
+               "short_name" : "AT",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "Dornbirn, Austria",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 47.44948000000001,
+                  "lng" : 9.848509999999999
+               },
+               "southwest" : {
+                  "lat" : 47.28435,
+                  "lng" : 9.69253
+               }
+            },
+            "location" : {
+               "lat" : 47.4124,
+               "lng" : 9.743789999999999
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 47.44948000000001,
+                  "lng" : 9.848509999999999
+               },
+               "southwest" : {
+                  "lat" : 47.28435,
+                  "lng" : 9.69253
+               }
+            }
+         },
+         "types" : [ "locality", "political" ]
+      }
+   ],
+   "status" : "OK"
+}
