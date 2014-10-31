@@ -1,0 +1,3 @@
+sulu_website.cache.remove:
+    pattern: /cache/clear
+    defaults: { _controller: SuluWebsiteBundle:Cache:clear }
