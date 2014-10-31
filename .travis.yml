@@ -10,9 +10,9 @@ before_script:
   - composer install
   - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
-  - ./bin/runtests.sh
+  - 
+script: time ./bin/runtests.sh
 
-script: phpunit --coverage-text
 
 matrix:
   allow_failures:

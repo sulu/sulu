@@ -17,6 +17,14 @@ function comment {
     echo ""
 }
 
+function error {
+    echo ""
+    echo -e "\e[31m======================================================\e[0m"
+    echo $1
+    echo -e "\e[31m======================================================\e[0m"
+    echo ""
+}
+
 cat <<EOT
    _____       _        _____ __  __ ______ 
   / ____|     | |      / ____|  \/  |  ____|
@@ -32,6 +40,12 @@ header "Sulu CMF Test Suite"
 comment "Initializing database"
 
 ./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
+
+if [ -e /tmp/failed.tests ]; then
+    rm /tmp/failed.tests
+fi
+
+touch /tmp/failed.tests
 
 if [ -z $BUNDLE ]; then
     BUNDLES=`find ./src/Sulu/Bundle/* -maxdepth 1 -name "phpunit.xml.dist"`
@@ -69,4 +83,24 @@ for BUNDLE in $BUNDLES; do
     cd -
 
     phpunit --configuration phpunit.travis.xml.dist --stop-on-failure --stop-on-error $BUNDLE_DIR/Tests
+
+    if [ $? -ne 0 ]; then
+        echo $BUNDLE_NAME >> /tmp/failed.tests
+    fi
 done
+
+if [[ ! -s /tmp/failed.tests ]]; then
+    header "Everythig is AWESOME! \o/"
+    exit 0
+else
+    echo ""
+    echo -e "\e[31m======================================================\e[0m"
+    echo "Oh no, "`cat /tmp/failed.tests | wc -l`" Component(s) failed:"
+    echo ""
+    for line in `cat /tmp/failed.tests`; do
+        comment " - "$line
+    done
+    echo -e "\e[31m======================================================\e[0m"
+    echo ""
+    exit 1
+fi
