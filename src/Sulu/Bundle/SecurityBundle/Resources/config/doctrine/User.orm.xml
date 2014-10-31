@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\User" table="se_users"
+            repository-class="Sulu\Bundle\SecurityBundle\Entity\UserRepository">
+
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <field name="username" type="string" column="username" length="60" unique="true"/>
+        <field name="password" type="string" column="password" length="128"/>
+        <field name="locale" type="string" column="locale" length="60"/>
+        <field name="salt" type="string" column="salt" length="60"/>
+        <field name="locked" column="locked" type="boolean">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="enabled" column="enabled" type="boolean">
+            <options>
+                <option name="default">1</option>
+            </options>
+        </field>
+        <field name="lastLogin" column="lastLogin" type="datetime" nullable="true" />
+        <field name="confirmationKey" column="confirmationKey" type="string" length="128" nullable="true" />
+        <field name="privateKey" type="string" column="privateKey" length="2000" nullable="true"/>
+        <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
+
+        <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
+            <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
+        </one-to-one>
+
+        <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="user"/>
+        <one-to-many field="userGroups" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserGroup" mapped-by="user"/>
+        <one-to-many field="userSettings" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserSetting"
+                     mapped-by="user"/>
+
+    </entity>
+</doctrine-mapping>

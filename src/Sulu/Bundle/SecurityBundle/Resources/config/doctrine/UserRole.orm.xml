@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\SecurityBundle\Entity\UserRole" table="se_user_roles">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="locale" type="string" length="60"/>
+
+        <many-to-one field="user" target-entity="Sulu\Bundle\SecurityBundle\Entity\User" inversed-by="userRoles">
+            <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-one field="role" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" inversed-by="userRoles">
+            <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>
