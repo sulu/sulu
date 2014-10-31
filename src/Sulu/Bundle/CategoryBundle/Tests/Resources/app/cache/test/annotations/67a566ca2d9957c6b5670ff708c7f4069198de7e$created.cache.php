@@ -1,0 +1,1 @@
+<?php return unserialize('a:1:{i:0;O:43:"Doctrine\\ODM\\PHPCR\\Mapping\\Annotations\\Date":6:{s:4:"type";s:4:"date";s:10:"translated";b:0;s:8:"property";s:11:"jcr:created";s:10:"multivalue";b:0;s:5:"assoc";N;s:8:"nullable";b:0;}}');

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
+
+    <name>Sulu CMF</name>
+    <key>sulu_io</key>
+
+    <localizations>
+        <localization language="en" country="us" shadow="auto"/>
+        <localization language="de" country="at"/>
+        <localization language="de"/>
+    </localizations>
+
+    <theme>
+        <key>default</key>
+        <excluded>
+            <template>overview</template>
+        </excluded>
+    </theme>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <portals>
+        <portal>
+            <name>Sulu CMF AT</name>
+            <key>sulucmf_at</key>
+            <resource-locator>
+                <strategy>tree</strategy>
+            </resource-locator>
+
+            <localizations>
+                <localization language="de" country="at" default="true"/>
+            </localizations>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="de" country="at">sulu.at</url>
+                        <url redirect="sulu.at">www.sulu.at</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="de" country="at">sulu.lo</url>
+                        <url language="de" country="at">localhost</url>
+                        <url redirect="sulu.lo">sulu-redirect.lo</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url language="de" country="at">sulu.lo</url>
+                        <url language="de" country="at">localhost</url>
+                        <url redirect="sulu.lo">sulu-redirect.lo</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>
