@@ -1,0 +1,35 @@
+{
+    "name": "{{ namespace|lower|replace({'\\':'/'})|replace({'/bundle/':'/'})|replace({'bundle':''}) }}-bundle",
+    "type": "sulu-bundle",
+    "description": "TODO",
+    "license": "MIT",
+    "keywords": ["TODO"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/{{ bundle }}/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "doctrine/orm": ">=2.2.3,<2.4-dev",
+        "friendsofsymfony/rest-bundle": "@dev",
+        "jms/serializer-bundle": "@dev",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "sensio/framework-extra-bundle": "~3.0",
+        "symfony/monolog-bundle": "2.4.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "phpunit/phpunit": "4.1.*",
+        "sulu/test-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "{{ namespace|replace({'\\': '\\\\'}) }}": ""
+        }
+    },
+    "target-dir": "{{ namespace|replace({'\\':  '/'}) }}"
+}
