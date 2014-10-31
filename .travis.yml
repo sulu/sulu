@@ -10,7 +10,7 @@ before_script:
   - composer install
   - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
-  - ./vendor/sulu/test-bundle/Sulu/Bundle/TestBundle/Resources/bin/travis.sh
+  - ./bin/runtests.sh
 
 script: phpunit --coverage-text
 
