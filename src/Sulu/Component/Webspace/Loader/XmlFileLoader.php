@@ -11,6 +11,7 @@
 namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidPortalDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
@@ -118,7 +119,7 @@ class XmlFileLoader extends FileLoader
     private function validate()
     {
         $this->validateWebspaceDefaultLocalization();
-        $this->validatePortalLocalization();
+        $this->validateDefaultPortalLocalization();
         $this->validateWebspaceDefaultSegment();
     }
 
@@ -415,16 +416,10 @@ class XmlFileLoader extends FileLoader
      */
     private function validateWebspaceDefaultLocalization()
     {
-        // check if there are duplicate defaults in the webspace localizations
-        $webspaceDefaultLocalizationFound = false;
-        foreach ($this->webspace->getLocalizations() as $webspaceLocalization) {
-            if ($webspaceLocalization->isDefault()) {
-                // throw an exception, if a new default localization is found, although there already is one
-                if ($webspaceDefaultLocalizationFound) {
-                    throw new InvalidWebspaceDefaultLocalizationException($this->webspace);
-                }
-                $webspaceDefaultLocalizationFound = true;
-            }
+        try {
+            $this->validateDefaultLocalization($this->webspace->getLocalizations());
+        } catch (InvalidDefaultLocalizationException $ex) {
+            throw new InvalidWebspaceDefaultLocalizationException($this->webspace);
         }
     }
 
@@ -433,25 +428,19 @@ class XmlFileLoader extends FileLoader
      * @throws Exception\PortalDefaultLocalizationNotFoundException
      * @throws Exception\InvalidPortalDefaultLocalizationException
      */
-    private function validatePortalLocalization()
+    private function validateDefaultPortalLocalization()
     {
         // check all portal localizations
         foreach ($this->webspace->getPortals() as $portal) {
-            $portalDefaultLocalizationFound = false;
-            foreach ($portal->getLocalizations() as $portalLocalizations) {
-                if ($portalLocalizations->isDefault()) {
-                    if ($portalDefaultLocalizationFound) {
-                        throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
+            try {
+                if (!$this->validateDefaultLocalization($portal->getLocalizations())) {
+                    // try to load the webspace localizations before throwing an exception
+                    if (!$this->loadPortalLocalizationDefaultFromWebspace($portal)) {
+                        throw new PortalDefaultLocalizationNotFoundException($this->webspace, $portal);
                     }
-                    $portalDefaultLocalizationFound = true;
                 }
-            }
-
-            if (!$portalDefaultLocalizationFound) {
-                // try to load the webspace localizations before throwing an exception
-                if (!$this->loadPortalLocalizationDefaultFromWebspace($portal)) {
-                    throw new PortalDefaultLocalizationNotFoundException($this->webspace, $portal);
-                }
+            } catch (InvalidDefaultLocalizationException $ex) {
+                throw new InvalidPortalDefaultLocalizationException($this->webspace, $portal);
             }
         }
     }
@@ -481,5 +470,26 @@ class XmlFileLoader extends FileLoader
                 throw new WebspaceDefaultSegmentNotFoundException($this->webspace);
             }
         }
+    }
+
+    /**
+     * Returns true if there is one default localization
+     * @param $localizations
+     * @return bool
+     * @throws Exception\InvalidDefaultLocalizationException
+     */
+    private function validateDefaultLocalization($localizations)
+    {
+        $result = false;
+        foreach ($localizations as $localization) {
+            if ($localization->isDefault()) {
+                if ($result) {
+                    throw new InvalidDefaultLocalizationException();
+                }
+                $result = true;
+            }
+        }
+
+        return $result;
     }
 }
