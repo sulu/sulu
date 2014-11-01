@@ -109,19 +109,18 @@ class CodeRepository extends EntityRepository
     public function findByCatalogueWithSuggestion($catalogueId)
     {
         // FIXME Don't use sub queries
-
-        $dqlDefaultCatalogue = 'SELECT ca2.id
-                                FROM Sulu\Bundle\TranslateBundle\Entity\Catalogue ca1
-                                    LEFT JOIN ca1.package p1
-                                    LEFT JOIN p1.catalogues ca2
-                                WHERE ca1.id = :id AND ca2.isDefault = :isDefault';
-
         $dql = 'SELECT c, t
                 FROM Sulu\Bundle\TranslateBundle\Entity\Code c
                     LEFT JOIN c.package p
                     LEFT JOIN p.catalogues ca
                     LEFT JOIN c.translations t WITH t.catalogue = ca
-                WHERE ca.id = :id OR ca.id in (' . $dqlDefaultCatalogue . ')';
+                WHERE ca.id = :id OR ca.id in (
+                    SELECT ca2.id
+                                FROM Sulu\Bundle\TranslateBundle\Entity\Catalogue ca1
+                                    LEFT JOIN ca1.package p1
+                                    LEFT JOIN p1.catalogues ca2
+                                WHERE ca1.id = :id AND ca2.isDefault = :isDefault
+                )';
 
         $query = $this->getEntityManager()
             ->createQuery($dql);
