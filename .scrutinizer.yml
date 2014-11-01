@@ -2,4 +2,4 @@ imports:
     - php
 
 filter:
-    excluded_paths: [/tests/*, /src/Sulu/Bundle/*/Tests]
+    excluded_paths: [/tests/*, /src/Sulu/Bundle/*/Tests/*]
