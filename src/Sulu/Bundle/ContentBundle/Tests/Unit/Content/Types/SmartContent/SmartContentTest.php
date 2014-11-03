@@ -376,6 +376,44 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array_merge($config, array('page' => 1, 'hasNextPage' => true)), $viewData);
     }
 
+    public function testGetContentData()
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue', 'getParams')
+        );
+        $structure = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\StructureInterface'
+        );
+
+        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $smartContentContainer->expects($this->once())
+            ->method('getData')
+            ->with($this->equalTo(array('123-123-123')), $this->equalTo(6), $this->equalTo(0))
+            ->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
+
+        $property->expects($this->exactly(1))->method('getValue')
+            ->will($this->returnValue($smartContentContainer));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array()));
+        $property->expects($this->exactly(1))->method('getStructure')
+            ->will($this->returnValue($structure));
+
+        $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
+
+        $contentData = $this->smartContent->getContentData($property);
+
+        $this->assertEquals(array(1, 2, 3, 4, 5, 6), $contentData);
+    }
+
     public function testGetContentDataPaged()
     {
         $property = $this->getMockForAbstractClass(
