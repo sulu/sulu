@@ -330,7 +330,7 @@ class NodeController extends RestController implements ClassResourceInterface
             $webspaceKey,
             true,
             true,
-            $exclude!== null ? array($exclude) : array()
+            $exclude !== null ? array($exclude) : array()
         );
 
         return $this->handleView($this->view($content));
