@@ -17,7 +17,8 @@ define([
         model: CollectionModel,
 
         url: function() {
-            return '/admin/api/collections?depth=0';
+            // TODO remove high limit and paginate correctly
+            return '/admin/api/collections?limit=99999&depth=0';
         },
 
         parse: function(resp) {
