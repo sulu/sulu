@@ -1,0 +1,43 @@
+{
+    "name": "sulu/contact-bundle",
+    "type": "sulu-bundle",
+    "description": "The sulu bundle for managing contacts",
+    "license": "MIT",
+    "keywords": ["contact", "crm"],
+    "version": "dev-develop",
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluContactBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "doctrine/orm": "2.4.*",
+        "friendsofsymfony/rest-bundle": "1.4.*",
+        "friendsofsymfony/http-cache": "1.0.*",
+        "stof/doctrine-extensions-bundle": "1.1.*",
+        "willdurand/hateoas-bundle": "0.3.*",
+
+        "sulu/sulu": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/media-bundle": "dev-develop",
+        "sulu/category-bundle": "dev-develop"
+    },
+    "require-dev": {
+        "sensio/framework-extra-bundle":  "~3.0",
+        "symfony/symfony": "2.5.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "4.0.*",
+        "sulu/test-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\ContactBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/ContactBundle"
+}

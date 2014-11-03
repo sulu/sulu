@@ -1,0 +1,37 @@
+<form id="bank-account-form" class="form-vertical">
+    <div id="bank-accounts">
+        <div class="bank-account-item m-bottom-10">
+
+            <div class="grid-row small">
+                <div class="grid-col-12">
+                    <div class="form-group-vertical">
+                        <label for="bankName"><%=translate('contact.accounts.bankName')%></label>
+                        <input id="bankName" type="text" class="form-element" data-mapper-property="bankName"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-row m-bottom-40">
+                <div class="grid-col-6">
+                    <div class="form-group-vertical">
+                        <label for="iban" class="required"><%=translate('public.iban')%></label>
+                        <input id="iban" type="text" class="form-element" data-mapper-property="iban" data-validation-required="true" value=""/>
+                    </div>
+                </div>
+                <div class="grid-col-6">
+                    <div class="form-group-vertical">
+                        <label for="bic"><%=translate('public.bic')%></label>
+                        <div id="bic"
+                             data-aura-component="input@husky"
+                             data-aura-front-icon="bank"
+                             data-aura-instance-name="bic-input"
+                             data-form="true"
+                             data-type="bic-input"
+                             data-validation-required="true"
+                             data-mapper-property="bic"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

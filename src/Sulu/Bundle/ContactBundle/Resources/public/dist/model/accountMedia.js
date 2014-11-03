@@ -1,0 +1,1 @@
+define(["mvc/relationalmodel"],function(a){"use strict";return a({accountId:null,urlRoot:function(){return"/admin/api/accounts/"+this.accountId+"/medias"},defaults:{id:null}})});

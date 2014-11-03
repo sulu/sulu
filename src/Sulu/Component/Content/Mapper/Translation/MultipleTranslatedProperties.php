@@ -10,11 +10,11 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Structure;
 
 /**
  * enables to translate multiple properties
@@ -37,12 +37,16 @@ class MultipleTranslatedProperties
      */
     private $languageNamespace;
 
+    /**
+     * @var string
+     */
+    private $structureType = Structure::TYPE_PAGE;
+
     function __construct(
         $names,
         $languageNamespace,
         $namespace = ''
-    )
-    {
+    ) {
         $this->languageNamespace = $languageNamespace;
         $this->properties = array();
         foreach ($names as $name) {
@@ -75,6 +79,13 @@ class MultipleTranslatedProperties
      */
     public function getName($key)
     {
+        // templates do not translate the template key
+        if ($this->structureType === Structure::TYPE_SNIPPET) {
+            if ($key === 'template') {
+                return $key;
+            }
+        }
+
         if (isset($this->translatedProperties[$key])) {
             return $this->translatedProperties[$key]->getName();
         } else {
@@ -82,17 +93,12 @@ class MultipleTranslatedProperties
         }
     }
 
-    public function getLanguagesForNode(NodeInterface $node)
+    /**
+     * Set the structure type
+     * @param string $structureType
+     */
+    public function setStructureType($structureType)
     {
-        $languages = array();
-        foreach ($node->getProperties() as $property) {
-            preg_match('/^' . $this->languageNamespace . ':(.*?)-template/', $property->getName(), $matches);
-
-            if ($matches) {
-                $languages[$matches[1]] = $matches[1];
-            }
-        }
-
-        return array_values($languages);
+        $this->structureType = $structureType;
     }
 }

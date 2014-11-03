@@ -1,0 +1,37 @@
+{
+    "name": "sulu/category-bundle",
+    "type": "sulu-bundle",
+    "description": "Adds category functionality to sulu",
+    "license": "MIT",
+    "keywords": ["sulu", "categories"],
+    "version": "dev-develop",
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluCategoryBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "doctrine/orm": "2.4.*",
+        "friendsofsymfony/rest-bundle": "1.4.*",
+        "sulu/sulu": "dev-develop",
+        "stof/doctrine-extensions-bundle": "1.1.*",
+        "sulu/admin-bundle": "dev-develop",
+        "willdurand/hateoas-bundle": "0.3.*"
+    },
+    "require-dev": {
+        "sensio/framework-extra-bundle":  "~3.0",
+        "symfony/symfony": "2.5.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "sulu/test-bundle": "dev-develop",
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\CategoryBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/CategoryBundle"
+}

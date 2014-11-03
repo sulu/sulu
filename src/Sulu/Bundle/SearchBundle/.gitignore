@@ -1,0 +1,15 @@
+Tests/Resources/app/cache
+Tests/Resources/app/logs
+Tests/Resources/app/data
+composer.lock
+vendor
+
+# IDEs
+.idea/*
+*.iml
+
+# System files
+.DS_Store
+
+#PHPunit
+phpunit.xml

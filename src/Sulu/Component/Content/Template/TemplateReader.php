@@ -11,11 +11,14 @@
 namespace Sulu\Component\Content\Template;
 
 use Exception;
+use Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException;
+use Sulu\Component\Content\Template\Exception\ReservedPropertyNameException;
 use Sulu\Exception\FeatureNotImplementedException;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
+use Sulu\Component\Content\Structure;
 
 /**
  * reads a template xml and returns a array representation
@@ -29,8 +32,8 @@ class TemplateReader implements LoaderInterface
      * TODO should be possible to inject from config
      * @var array
      */
-    private $requiredTags = array(
-        'sulu.node.name'
+    private $requiredPropertyNames = array(
+        'title'
     );
 
     /**
@@ -56,11 +59,9 @@ class TemplateReader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = Structure::TYPE_PAGE)
     {
         // init running vars
-        // DEEP COPY
-        $requiredTags = array_merge(array(), $this->requiredTags);
         $tags = array();
 
         // read file
@@ -71,18 +72,31 @@ class TemplateReader implements LoaderInterface
         $xpath->registerNamespace('x', 'http://schemas.sulu.io/template/template');
 
         // init result
-        $result = $this->loadTemplateAttributes($xpath);
+        $result = $this->loadTemplateAttributes($xpath, $type);
 
         // load properties
-        $result['properties'] = $this->loadProperties('/x:template/x:properties/x:*', $requiredTags, $tags, $xpath);
+        $result['properties'] = $this->loadProperties($result['key'], '/x:template/x:properties/x:*', $tags, $xpath);
 
-        if (sizeof($requiredTags) > 0) {
-            throw new InvalidXmlException(
-                sprintf(
-                    'Tag(s) %s required but not found',
-                    join(',', $requiredTags)
-                )
-            );
+        // check if required properties are existing
+        foreach ($this->requiredPropertyNames as $requiredPropertyName) {
+            $requiredPropertyNameFound = false;
+            if (array_key_exists($requiredPropertyName, $result['properties'])) {
+                $requiredPropertyNameFound = true;
+            }
+
+            // check all section properties as well
+            foreach ($result['properties'] as $property) {
+                if (!$requiredPropertyNameFound
+                    && $property['type'] == 'section'
+                    && array_key_exists($requiredPropertyName, $property['properties'])
+                ) {
+                    $requiredPropertyNameFound = true;
+                }
+            }
+
+            if (!$requiredPropertyNameFound) {
+                throw new RequiredPropertyNameNotFoundException($result['key'], $requiredPropertyName);
+            }
         }
 
         return $result;
@@ -91,21 +105,34 @@ class TemplateReader implements LoaderInterface
     /**
      * load basic template attributes
      */
-    private function loadTemplateAttributes(\DOMXPath $xpath)
+    private function loadTemplateAttributes(\DOMXPath $xpath, $type)
     {
-        $result = array(
-            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-            'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
-            'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-        );
+        if ($type === 'page') {
+            $result = array(
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+                'cacheLifetime' => $this->getValueFromXPath('/x:template/x:cacheLifetime', $xpath),
+                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            );
 
-        $result = array_filter($result);
+            $result = array_filter($result);
 
-        if (sizeof($result) < 4) {
-            throw new InvalidXmlException();
+            if (sizeof($result) < 4) {
+                throw new InvalidXmlException($result['key']);
+            }
+        } else {
+            $result = array(
+                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+            );
+
+            $result = array_filter($result);
+
+            if (sizeof($result) < 1) {
+                throw new InvalidXmlException($result['key']);
+            }
         }
 
         return $result;
@@ -114,20 +141,20 @@ class TemplateReader implements LoaderInterface
     /**
      * load properties from given context
      */
-    private function loadProperties($path, &$requiredTags, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadProperties($templateKey, $path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
             if ($node->tagName === 'property') {
-                $value = $this->loadProperty($xpath, $node, $requiredTags, $tags);
+                $value = $this->loadProperty($templateKey, $xpath, $node, $tags);
                 $result[$value['name']] = $value;
             } elseif ($node->tagName === 'block') {
-                $value = $this->loadBlock($xpath, $node, $requiredTags, $tags);
+                $value = $this->loadBlock($templateKey, $xpath, $node, $tags);
                 $result[$value['name']] = $value;
             } elseif ($node->tagName === 'section') {
-                $value = $this->loadSection($xpath, $node, $requiredTags, $tags);
+                $value = $this->loadSection($templateKey, $xpath, $node, $tags);
                 $result[$value['name']] = $value;
             }
         }
@@ -138,7 +165,7 @@ class TemplateReader implements LoaderInterface
     /**
      * load single property
      */
-    private function loadProperty(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    private function loadProperty($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadAttributeValues(
             $xpath,
@@ -147,14 +174,12 @@ class TemplateReader implements LoaderInterface
         );
 
         if (in_array($result['name'], $this->reservedPropertyNames)) {
-            throw new InvalidXmlException(
-                sprintf('Property name %s is a reserved name', $result['name'])
-            );
+            throw new ReservedPropertyNameException($templateKey, $result['name']);
         }
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['multilingual'] = $this->getBooleanValueFromXPath('@multilingual', $xpath, $node, true);
-        $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
+        $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['values'] = $this->loadValues('x:values', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
@@ -165,7 +190,7 @@ class TemplateReader implements LoaderInterface
     /**
      * load single block
      */
-    private function loadBlock(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    private function loadBlock($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadAttributeValues(
             $xpath,
@@ -175,10 +200,10 @@ class TemplateReader implements LoaderInterface
 
         $result['mandatory'] = $this->getBooleanValueFromXPath('@mandatory', $xpath, $node, false);
         $result['type'] = 'block';
-        $result['tags'] = $this->loadTags('x:tag', $requiredTags, $tags, $xpath, $node);
+        $result['tags'] = $this->loadTags('x:tag', $tags, $xpath, $node);
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
-        $result['types'] = $this->loadTypes('x:types/x:type', $requiredTags, $tags, $xpath, $node);
+        $result['types'] = $this->loadTypes($templateKey, 'x:types/x:type', $tags, $xpath, $node);
 
         return $result;
     }
@@ -186,7 +211,7 @@ class TemplateReader implements LoaderInterface
     /**
      * load single block
      */
-    private function loadSection(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    private function loadSection($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadAttributeValues(
             $xpath,
@@ -197,7 +222,7 @@ class TemplateReader implements LoaderInterface
         $result['type'] = 'section';
         $result['params'] = $this->loadParams('x:params/x:param', $xpath, $node);
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
-        $result['properties'] = $this->loadProperties('x:properties/x:*', $requiredTags, $tags, $xpath, $node);
+        $result['properties'] = $this->loadProperties($templateKey, 'x:properties/x:*', $tags, $xpath, $node);
 
         return $result;
     }
@@ -205,14 +230,14 @@ class TemplateReader implements LoaderInterface
     /**
      * load tags from given tag and validates them
      */
-    private function loadTags($path, &$requiredTags, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadTags($path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
             $tag = $this->loadTag($xpath, $node);
-            $this->validateTag($tag, $requiredTags, $tags);
+            $this->validateTag($tag, $tags);
 
             $result[] = $tag;
         }
@@ -259,11 +284,8 @@ class TemplateReader implements LoaderInterface
     /**
      * validates a single tag
      */
-    private function validateTag($tag, &$requiredTags, &$tags)
+    private function validateTag($tag, &$tags)
     {
-        // remove tag from required tags
-        $requiredTags = array_diff($requiredTags, array($tag['name']));
-
         if (!isset($tags[$tag['name']])) {
             $tags[$tag['name']] = array();
         }
@@ -382,13 +404,13 @@ class TemplateReader implements LoaderInterface
     /**
      * load types from given node
      */
-    private function loadTypes($path, &$requiredTags, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadTypes($templateKey, $path, &$tags, \DOMXPath $xpath, \DOMNode $context = null)
     {
         $result = array();
 
         /** @var \DOMElement $node */
         foreach ($xpath->query($path, $context) as $node) {
-            $value = $this->loadType($xpath, $node, $requiredTags, $tags);
+            $value = $this->loadType($templateKey, $xpath, $node, $tags);
             $result[$value['name']] = $value;
         }
 
@@ -398,12 +420,12 @@ class TemplateReader implements LoaderInterface
     /**
      * load single param
      */
-    private function loadType(\DOMXPath $xpath, \DOMNode $node, &$requiredTags, &$tags)
+    private function loadType($templateKey, \DOMXPath $xpath, \DOMNode $node, &$tags)
     {
         $result = $this->loadAttributeValues($xpath, $node, array('name'));
 
         $result['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
-        $result['properties'] = $this->loadProperties('x:properties/x:*', $requiredTags, $tags, $xpath, $node);
+        $result['properties'] = $this->loadProperties($templateKey, 'x:properties/x:*', $tags, $xpath, $node);
 
         return $result;
     }

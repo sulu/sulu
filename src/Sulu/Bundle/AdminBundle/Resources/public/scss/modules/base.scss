@@ -1,0 +1,40 @@
+@import "compass/css3/transition";
+
+
+// BODY
+
+body {
+    background-color: $backgroundColor;
+}
+
+// Control elements
+/*----------------------------------------*/
+.control-label {
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+// font family Helvetica / Arial for user generated content
+/*----------------------------------------*/
+input, select {
+    font-family: Helvetica, Arial;
+}
+
+// Utility
+/*----------------------------------------*/
+
+.pointer {
+    cursor: pointer;
+}
+
+.block {
+    display: block;
+}
+
+// Additional Margins
+/*----------------------------------------*/
+
+.m-top-1 {
+    margin-top: 1px !important;
+}

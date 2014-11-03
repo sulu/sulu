@@ -43,10 +43,18 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey = null)
-    {
-        $value = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
-        $property->setValue($value);
+    public function read(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        if($node->hasProperty($property->getName())) {
+            $value = $node->getPropertyValue($property->getName());
+
+            $property->setValue($value);
+        }
     }
 
     /**
@@ -72,12 +80,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     }
 
     /**
-     * reads the value for given property out of the database + sets the value of the property
-     * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @return string
+     * {@inheritdoc}
      */
     public function getResourceLocator(NodeInterface $node, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -138,8 +141,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $webspaceKey,
         $languageCode,
         $segmentKey = null
-    )
-    {
+    ) {
         $value = $property->getValue();
         if ($value != null && $value != '') {
             $old = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
@@ -149,6 +151,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
                 } else {
                     $this->getStrategy()->save($node, $value, $webspaceKey, $languageCode, $segmentKey);
                 }
+                $node->setProperty($property->getName(), $value);
             }
         } else {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
@@ -158,9 +161,15 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     /**
      * {@inheritdoc}
      */
-    public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey=null)
-    {
-        // TODO: Implement remove() method.
+    public function remove(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
+        $node->remove($property->getName());
     }
 
     /**

@@ -39,6 +39,13 @@ interface ListBuilderInterface
     public function addField(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
+     * Checks if field by name has been already added
+     * @param $name
+     * @return bool
+     */
+    public function hasField($name);
+
+    /**
      * Adds a field descriptor, which will be used for search
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @return ListBuilderInterface
@@ -101,6 +108,13 @@ interface ListBuilderInterface
      * @return mixed
      */
     public function whereNot(AbstractFieldDescriptor $fieldDescriptor, $value);
+
+    /**
+     * Defines GROUP BY
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @return mixed
+     */
+    public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
      * Defines a constraint

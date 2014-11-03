@@ -1,0 +1,24 @@
+{% if data is defined and data is not null %}
+    <div class="grid-row m-bottom-30">
+        <h5 class="label"><%=translate('contacts.sidebar.mainCompany')%></h5>
+        <h4 class="m-top-0 m-bottom-0 action" data-id="{{ data.id }}" id="main-account">{{ data.name }}</h4>
+
+        {% if data.phone is not empty %}
+            <span class="block grey">(<%=translate('public.phone')%>) {{ data.phone }}</span>
+        {% endif %}
+
+        <span class="block">
+             <a class="action" href="mailto:{{ data.email }}">
+                 {{ data.email }}
+             </a>
+         </span>
+
+        {% if data.url is not empty %}
+        <span class="block">
+             <a class="action" href="http://{{ data.url }}" target="_blank">
+                 {{ data.url }}
+             </a>
+         </span>
+        {% endif %}
+    </div>
+{% endif %}

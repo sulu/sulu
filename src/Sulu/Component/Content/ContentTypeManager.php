@@ -54,8 +54,9 @@ class ContentTypeManager extends ContainerAware implements ContentTypeManagerInt
     {
         if (!isset($this->aliasServiceIdMap[$alias])) {
             throw new \InvalidArgumentException(sprintf(
-                'Content type with alias "%s" has not been registered.',
-                $alias
+                'Content type with alias "%s" has not been registered. Known content types are: "%s"',
+                $alias,
+                implode('", "', array_keys($this->aliasServiceIdMap))
             ));
         }
 

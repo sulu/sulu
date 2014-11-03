@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1" resname="navigation.snippets">
+                <source>navigation.snippets</source>
+                <target>Schnipsel</target>
+            </trans-unit>
+            <trans-unit id="2" resname="snippets.snippet.title">
+                <source>snippets.snippet.title</source>
+                <target>Schnipsel</target>
+            </trans-unit>
+            <trans-unit id="3" resname="snippets.list.template">
+                <source>snippets.list.template</source>
+                <target>Typ</target>
+            </trans-unit>
+            <trans-unit id="4" resname="content-navigation.snippets.details">
+                <source>content-navigation.snippets.details</source>
+                <target>Details</target>
+            </trans-unit>
+            <trans-unit id="5" resname="navigation.global-content">
+                <source>navigation.global-content</source>
+                <target>Globale Inhalte</target>
+            </trans-unit>
+            <trans-unit id="6" resname="snippet-content.add">
+                <source>snippet-content.add</source>
+                <target>Schnipsel auswählen</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

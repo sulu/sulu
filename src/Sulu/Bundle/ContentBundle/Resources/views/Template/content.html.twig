@@ -1,0 +1,30 @@
+<form id="content-form" class="grid">
+    {% for property in template.properties %}
+
+        {# get params for property #}
+        {% set params = getParams(property) %}
+
+        {% if property.contentTypeName == 'section' %}
+            {% include 'SuluContentBundle:Template:macros/section.html.twig' with {'property': property, 'params': params, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+        {% else %}
+            {# get type for property #}
+            {% set type = getType(property.contentTypeName) %}
+
+            {% if property.contentTypeName == 'block' %}
+                {% include type.template with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+            {% elseif property is multiple %}
+                {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+            {% else %}
+                {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': property, 'params': params, 'type': type, 'id': property.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</form>
+
+<script type="text/javascript">
+    (function() {
+        {% if fireEvent %}
+        App.emit('sulu.content.contents.default-template', '{{ templateKey }}');
+        {% endif %}
+    })();
+</script>

@@ -13,7 +13,10 @@ namespace Sulu\Bundle\CoreBundle\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -36,6 +39,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
      */
     private $properties;
 
+    /**
+     * @var StructureManager
+     */
+    private $structureManager;
+
     protected function configure()
     {
         $this->setName('sulu:webspaces:init')
@@ -51,6 +59,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $contents = $this->getContainer()->getParameter('sulu.content.node_names.content');
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
         $temp = $this->getContainer()->getParameter('sulu.content.node_names.temp');
+        $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
         // properties
         $this->properties = new MultipleTranslatedProperties(
@@ -62,7 +72,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 'state',
                 'template',
                 'navigation',
-                'published'
+                'published',
+                'nodeType'
             ),
             $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
@@ -86,14 +97,15 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
             $tempPath = $base . '/' . $webspace->getKey() . '/' . $temp;
+            $snippetsPath = $base . '/' . $snippets;
 
             $output->writeln("  {$webspace->getName()}");
 
             // create content node
             $output->writeln("    content: '/{$contentsPath}'");
             $content = $this->createRecursive($contentsPath, $root);
+            $content->addMixin('sulu:page');
             $this->setBasicProperties($webspace, $content, $template, $userId);
-            $content->addMixin('sulu:content');
             $session->save();
 
             // create routes node
@@ -106,18 +118,34 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $output->writeln("    temp: '/{$tempPath}'");
             $this->createRecursive($tempPath, $root);
             $session->save();
+
         }
+
+        // create snippet nodes
+        $snippetStructures = $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
+        foreach ($snippetStructures as $snippetStructure) {
+            $snippetPath = $snippetsPath . '/' . $snippetStructure->getKey();
+            $output->writeln("    snippets: '/{$snippetPath}'");
+            $this->createRecursive($snippetPath, $root);
+        }
+        $session->save();
+
         $output->writeln('');
     }
 
     private function setBasicProperties(Webspace $webspace, NodeInterface $node, $template, $userId)
     {
         foreach ($webspace->getAllLocalizations() as $local) {
-            $this->setBasicLocalizationProperties($local, $node, $template, $userId);
+            $this->setBasicLocalizationProperties($local, $node, $template, $userId, $webspace->getKey());
         }
     }
 
-    private function setBasicLocalizationProperties(Localization $localization, NodeInterface $node, $template, $userId)
+    private function setBasicLocalizationProperties(
+        Localization $localization,
+        NodeInterface $node,
+        $template,
+        $userId
+    )
     {
         $this->properties->setLanguage(str_replace('-', '_', $localization->getLocalization()));
 
@@ -127,10 +155,12 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('changed'), new DateTime());
             $node->setProperty($this->properties->getName('creator'), $userId);
             $node->setProperty($this->properties->getName('created'), new DateTime());
-
             $node->setProperty($this->properties->getName('navigation'), true);
             $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
             $node->setProperty($this->properties->getName('published'), new DateTime());
+        }
+        if (!$node->hasProperty($this->properties->getName('nodeType'))) {
+            $node->setProperty($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT);
         }
 
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
@@ -138,6 +168,20 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 $this->setBasicLocalizationProperties($local, $node, $template, $userId);
             }
         }
+
+        // set resource locator to node
+
+        /** @var StructureManagerInterface $structureManager */
+        $structure = $this->structureManager->getStructure($template);
+
+        $property = $structure->getPropertyByTagName('sulu.rlp');
+        $translatedProperty = new TranslatedProperty(
+            $property,
+            $localization->getLocalization(),
+            $this->getContainer()->getParameter('sulu.content.language.namespace')
+        );
+        $translatedProperty->setValue('/');
+        $node->setProperty($translatedProperty->getName(), $translatedProperty->getValue());
     }
 
     /**
@@ -183,7 +227,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty('sulu:content', $content);
             $node->setProperty('sulu:history', false);
 
-            $output->writeln("      * '{$node->getPath()}'");
+            $output->writeln('      - ' . $node->getPath());
         }
     }
 }

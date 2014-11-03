@@ -16,13 +16,8 @@ class {{ cache_class }} extends {{ base_class }}
 {
     public function __construct()
     {
-        parent::__construct(
-            '{{ content.key }}',
-            '{{ content.view }}',
-            '{{ content.controller }}',
-            '{{ content.cacheLifetime }}',
-            {{ _self.renderArray(content.meta) }}
-        );
+    {% block parent_constructor %}
+    {% endblock %}
 
         {% for property in content.properties %}
             {{ _self.buildProperty(property, '$this', 1) }}

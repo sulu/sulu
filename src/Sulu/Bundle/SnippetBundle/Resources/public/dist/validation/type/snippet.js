@@ -1,0 +1,1 @@
+define(["type/default"],function(a){"use strict";return function(b,c){var d={},e={setValue:function(a){var c=[];$.each(a,function(a,b){c.push(b.uuid)}),App.dom.data(b,"snippet-ids",c)},getValue:function(){return App.dom.data(b,"snippet-ids")},needsValidation:function(){return!1},validate:function(){return!0}};return new a(b,d,c,"snippet",e)}});

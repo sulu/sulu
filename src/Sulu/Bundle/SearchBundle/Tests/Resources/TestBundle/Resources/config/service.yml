@@ -1,0 +1,5 @@
+services:
+    structure_metadata_load_listener:
+        class: Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\EventListener\StructureMetadataLoadListener
+        tags:
+            - { name: kernel.event_listener, event: sulu_search.structure.load.metadata, method: handleStructureLoadMetadata }

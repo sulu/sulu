@@ -17,5 +17,5 @@ The SuluContentBundle builds on other sulu-cmf bundles. It provides basic functi
 
 ## Requirements
 
-* Symfony: 2.3.*
+* Symfony: >= 2.3.*
 * See also the require section of [composer.json](https://github.com/sulu-cmf/sulu/blob/develop/composer.json)

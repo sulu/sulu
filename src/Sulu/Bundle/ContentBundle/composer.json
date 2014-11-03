@@ -1,0 +1,46 @@
+{
+    "name": "sulu/content-bundle",
+    "type": "sulu-bundle",
+    "description": "The bundle responsible for content management in Sulu",
+    "license": "MIT",
+    "keywords": ["content", "cmf"],
+    "version": "dev-develop",
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluContentBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+        "sulu/security-bundle": "dev-develop",
+        "sulu/website-bundle": "dev-develop",
+        "sulu/tag-bundle": "dev-develop",
+	    "sulu/category-bundle": "dev-develop",
+        "sulu/media-bundle": "dev-develop",
+
+        "jackalope/jackalope-jackrabbit": "1.1.*",
+
+        "cboden/ratchet": "0.3.*",
+        "doctrine/phpcr-bundle": "1.1.*",
+        "doctrine/phpcr-odm": "1.1.*"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "sensio/framework-extra-bundle":  "~3.0",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "3.7.*",
+        "phpspec/prophecy-phpunit": "~1.0",
+        "sulu/test-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\ContentBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/ContentBundle"
+}

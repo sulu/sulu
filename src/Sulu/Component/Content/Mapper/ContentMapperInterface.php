@@ -12,7 +12,9 @@ namespace Sulu\Component\Content\Mapper;
 
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
+use PHPCR\Query\QueryInterface;
 
 /**
  * Interface of ContentMapper
@@ -28,12 +30,14 @@ interface ContentMapperInterface
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
      * @param string $uuid uuid of node if exists
-     * @param string $parentUuid uuid of parent node
+     * @param string $parent uuid or path of parent node
      * @param int $state state of node
      * @param null $isShadow
      * @param null $shadowBaseLanguage
      *
      * @return StructureInterface
+     *
+     * @deprecated Use the saveRequest method instead.
      */
     public function save(
         $data,
@@ -43,10 +47,11 @@ interface ContentMapperInterface
         $userId,
         $partialUpdate = true,
         $uuid = null,
-        $parentUuid = null,
+        $parent = null,
         $state = null,
         $isShadow = null,
-        $shadowBaseLanguage = null
+        $shadowBaseLanguage = null,
+        $structureType = Structure::TYPE_PAGE
     );
 
     /**
@@ -152,6 +157,17 @@ interface ContentMapperInterface
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null);
 
     /**
+     * load Structures for the given QOM\QueryInterface instance.
+     * @param QueryInterface $query The query, which returns the content
+     * @param string $languageCode The language code
+     * @param string $webspaceKey The webspace key
+     * @param bool $excludeGhost
+     * @param bool $loadGhostContent
+     * @return StructureInterface[]
+     */
+    public function loadByQuery(QueryInterface $query, $languageCode, $webspaceKey, $excludeGhost = true, $loadGhostContent = false);
+
+    /**
      * load tree from root to given path
      * @param string $uuid
      * @param string $languageCode
@@ -224,6 +240,17 @@ interface ContentMapperInterface
     public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
 
     /**
+     * Copies the content from one node from one localization to the other
+     * @param string $uuid
+     * @param $userId
+     * @param $webspaceKey
+     * @param $srcLanguageCode
+     * @param $destLanguageCode
+     * @return StructureInterface
+     */
+    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode);
+
+    /**
      * order node with uuid before the node with beforeUuid
      * !IMPORTANT! both nodes should have the same parent
      * @param string $uuid
@@ -265,4 +292,23 @@ interface ContentMapperInterface
         $fields,
         $maxDepth
     );
+
+    /**
+     * Map and save the content given in the request object.
+     *
+     * @param ContentMapperRequest
+     * @return StructureInterface
+     */
+    public function saveRequest(ContentMapperRequest $request);
+
+    /**
+     * restores given resourcelocator
+     * @param string $path
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param string $segmentKey
+     * @return StructureInterface
+     */
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 }

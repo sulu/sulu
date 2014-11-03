@@ -1,0 +1,14 @@
+<div id="{{ id|raw }}"
+     class="hide-in-sortmode"
+     data-property='{{ property|json_encode }}'
+     data-mapper-property="{{ property.name }}"
+     data-aura-component="location@sululocation"
+     data-type="location"
+     data-type-instance-name="{{ id|raw }}"
+     data-instance-name="{{ id|raw }}"
+     data-form="true"
+     data-aura-countries="{{ params.countries|json_encode }}"
+     data-aura-map-providers="{{ params.mapProviders|json_encode }}"
+     data-geolocator-url="{{ path('sulu_location_geolocator_query') }}"
+     >
+ </div>

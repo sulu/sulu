@@ -1,0 +1,59 @@
+[
+  {
+    "id":"f4b997fb-304a-4ed9-8c9e-1ba46a7e69fd",
+    "path":"\/cmf\/snippets\/hotel\/le-grande-budapest",
+    "nodeType":1,
+    "internal":false,
+    "enabledShadowLanguages":[
+      
+    ],
+    "concreteLanguages":[
+      "de"
+    ],
+    "shadowOn":false,
+    "shadowBaseLanguage":false,
+    "template":"hotel",
+    "hasSub":false,
+    "creator":1,
+    "changer":1,
+    "created":"2014-10-10T15:04:05+0200",
+    "changed":"2014-10-10T15:04:05+0200",
+    "title":"Le grande budapest",
+    "description":"",
+    "_links":{
+      "self":"\/snippets\/f4b997fb-304a-4ed9-8c9e-1ba46a7e69fd",
+      "delete":"TODO",
+      "new":"\/snippets",
+      "update":"\/snippets\/f4b997fb-304a-4ed9-8c9e-1ba46a7e69fd"
+    }
+  },
+  {
+    "id":"7a2b22dc-dac5-47cb-b560-9c61e65abdb4",
+    "path":"\/cmf\/snippets\/hotel\/lhtel-new-hampshire",
+    "nodeType":1,
+    "internal":false,
+    "enabledShadowLanguages":[
+      
+    ],
+    "concreteLanguages":[
+      "de"
+    ],
+    "shadowOn":false,
+    "shadowBaseLanguage":false,
+    "template":"hotel",
+    "hasSub":false,
+    "creator":1,
+    "changer":1,
+    "created":"2014-10-10T15:04:05+0200",
+    "changed":"2014-10-10T15:04:05+0200",
+    "title":"L'H\u00f4tel New Hampshire",
+    "description":"",
+    "_links":{
+      "self":"\/snippets\/7a2b22dc-dac5-47cb-b560-9c61e65abdb4",
+      "delete":"TODO",
+      "new":"\/snippets",
+      "update":"\/snippets\/7a2b22dc-dac5-47cb-b560-9c61e65abdb4"
+    }
+  }
+]
+

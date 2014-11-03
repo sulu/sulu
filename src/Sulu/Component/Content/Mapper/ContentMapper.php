@@ -43,17 +43,26 @@ use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
+use Sulu\Component\Util\SuluNodeHelper;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
+ *
+ * Short term todo:
+ *
+ * - Rename localization, languageCode, language etc. to "locale"
+ *
  * @package Sulu\Component\Content\Mapper
  */
 class ContentMapper implements ContentMapperInterface
@@ -103,9 +112,9 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * default template
-     * @var string
+     * @var string[]
      */
-    private $defaultTemplate;
+    private $defaultTemplates;
 
     /**
      * @var Stopwatch
@@ -156,6 +165,16 @@ class ContentMapper implements ContentMapperInterface
      */
     private $extensionDataCache;
 
+    /**
+     * @var SuluNodeHelper
+     */
+    private $nodeHelper;
+
+    /**
+     * @var RlpStrategyInterface
+     */
+    private $strategy;
+
     public function __construct(
         ContentTypeManager $contentTypeManager,
         StructureManagerInterface $structureManager,
@@ -165,8 +184,10 @@ class ContentMapper implements ContentMapperInterface
         PathCleanupInterface $cleaner,
         WebspaceManagerInterface $webspaceManager,
         TemplateResolverInterface $templateResolver,
+        SuluNodeHelper $nodeHelper,
+        RlpStrategyInterface $strategy,
         $defaultLanguage,
-        $defaultTemplate,
+        $defaultTemplates,
         $languageNamespace,
         $internalPrefix,
         $stopwatch = null
@@ -177,24 +198,38 @@ class ContentMapper implements ContentMapperInterface
         $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLanguage = $defaultLanguage;
-        $this->defaultTemplate = $defaultTemplate;
+        $this->defaultTemplates = $defaultTemplates;
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
         $this->webspaceManager = $webspaceManager;
         $this->templateResolver = $templateResolver;
+        $this->nodeHelper = $nodeHelper;
+        $this->strategy = $strategy;
 
         // optional
         $this->stopwatch = $stopwatch;
 
-        // properties
-        $this->properties = new MultipleTranslatedProperties(
+    }
+
+    /**
+     * Create a new property translator
+     *
+     * @param string $languageCode
+     * @param string $structureType
+     *
+     * @return MultipleTranslatedProperties
+     */
+    protected function createPropertyTranslator($languageCode, $structureType = Structure::TYPE_PAGE)
+    {
+        $properties = new MultipleTranslatedProperties(
             array(
                 'changer',
                 'changed',
                 'created',
                 'creator',
                 'state',
+                'title',
                 'template',
                 'published',
                 'nodeType',
@@ -206,9 +241,39 @@ class ContentMapper implements ContentMapperInterface
             $this->languageNamespace,
             $this->internalPrefix
         );
+
+        $properties->setLanguage($languageCode);
+        $properties->setStructureType($structureType);
+
+        return $properties;
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function saveRequest(ContentMapperRequest $request)
+    {
+        $this->validateRequest($request);
+
+        return $this->save(
+            $request->getData(),
+            $request->getTemplateKey(),
+            $request->getWebspaceKey(),
+            $request->getLocale(),
+            $request->getUserId(),
+            $request->getPartialUpdate(),
+            $request->getUuid(),
+            $request->getParentUuid(),
+            $request->getState(),
+            $request->getIsShadow(),
+            $request->getShadowBaseLanguage(),
+            $request->getType()
+        );
+    }
+
+    /**
+     * @deprecated
+     *
      * {@inheritdoc}
      */
     public function save(
@@ -222,10 +287,10 @@ class ContentMapper implements ContentMapperInterface
         $parentUuid = null,
         $state = null,
         $isShadow = null,
-        $shadowBaseLanguage = null
+        $shadowBaseLanguage = null,
+        $structureType = Structure::TYPE_PAGE
     ) {
-        // create translated properties
-        $this->properties->setLanguage($languageCode);
+        $propertyTranslator = $this->createPropertyTranslator($languageCode, $structureType);
 
         // set default node-type
         if (!isset($data['nodeType'])) {
@@ -233,17 +298,21 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $resolvedTemplateKey = $this->templateResolver->resolve($data['nodeType'], $templateKey);
-        $structure = $this->getStructure($resolvedTemplateKey);
+        $structure = $this->getStructure($resolvedTemplateKey, $structureType);
 
         $session = $this->getSession();
 
-        if ($parentUuid !== null) {
-            $root = $session->getNodeByIdentifier($parentUuid);
+        if (Structure::TYPE_PAGE === $structureType) {
+            if ($parentUuid !== null) {
+                $root = $session->getNodeByIdentifier($parentUuid);
+            } else {
+                $root = $this->getContentNode($webspaceKey);
+            }
         } else {
-            $root = $this->getContentNode($webspaceKey);
+            $root = $this->sessionManager->getSnippetNode($resolvedTemplateKey);
         }
 
-        $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+        $nodeNameProperty = $structure->getProperty('title');
         $translatedNodeNameProperty = new TranslatedProperty(
             $nodeNameProperty,
             $languageCode,
@@ -252,17 +321,27 @@ class ContentMapper implements ContentMapperInterface
 
         $dateTime = new \DateTime();
 
-        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state) {
-            $node->setProperty($this->properties->getName('creator'), $userId);
-            $node->setProperty($this->properties->getName('created'), $dateTime);
+        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, $propertyTranslator) {
+            $node->setProperty($propertyTranslator->getName('creator'), $userId);
+            $node->setProperty($propertyTranslator->getName('created'), $dateTime);
 
             if (!isset($state)) {
                 $state = StructureInterface::STATE_TEST;
             }
         };
 
+        $nodeNamePropertyName = $nodeNameProperty->getName();
+        if (!isset($data[$nodeNamePropertyName])) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'You must set the "%s" data key',
+                    $nodeNamePropertyName
+                )
+            );
+        }
+
         // title should not have a slash
-        $title = str_replace('/', '-', $data[$nodeNameProperty->getName()]);
+        $title = str_replace('/', '-', $data[$nodeNamePropertyName]);
 
         /** @var NodeInterface $node */
         if ($uuid === null) {
@@ -272,19 +351,44 @@ class ContentMapper implements ContentMapperInterface
             $node = $root->addNode($path);
             $newTranslatedNode($node);
 
-            $node->addMixin('sulu:content');
+            $node->addMixin('sulu:' . $structureType);
         } else {
             $node = $session->getNodeByIdentifier($uuid);
+            $nodeStructureType = $this->nodeHelper->getStructureTypeForNode($node);
 
-            if (!$node->hasProperty($this->properties->getName('template'))) {
+            if (null !== $nodeStructureType && $nodeStructureType !== $structureType) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Cannot change the structure type of "%s" to "%s"',
+                        $node->getPath(),
+                        $structureType
+                    )
+                );
+            }
+
+            if (!$node->hasProperty($propertyTranslator->getName('title'))) {
                 $newTranslatedNode($node);
             } else {
                 $hasSameLanguage = ($languageCode == $this->defaultLanguage);
-                $hasSamePath = ($node->getPath() !== $this->getContentNode($webspaceKey)->getPath());
+
+                $hasSamePath = ($node->getPath() !== $root->getPath());
+
                 $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
                     $node->getPropertyValue(
                         $translatedNodeNameProperty->getName()
                     ) !== $data[$nodeNameProperty->getName()];
+
+                // decide if the snippet template type has changed. If it has then we need to
+                // move it to the path of the new template type.
+                if ($structureType === Structure::TYPE_SNIPPET) {
+                    $currentSnippetType = $this->nodeHelper->extractSnippetTypeFromPath($node->getPath());
+                    if ($templateKey !== $currentSnippetType) {
+                        $session->move(
+                            $node->getPath(),
+                            $root->getPath() . '/' . PathHelper::getNodeName($node->getPath())
+                        );
+                    }
+                }
 
                 if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->cleaner->cleanUp($title, $languageCode);
@@ -321,39 +425,54 @@ class ContentMapper implements ContentMapperInterface
 
         $shadowChanged = false;
 
-        if ($node->hasProperty($this->properties->getName('shadow-on'))) {
-            $oldShadowStatus = $node->getPropertyValue($this->properties->getName('shadow-on'));
+        if ($node->hasProperty($propertyTranslator->getName('shadow-on'))) {
+            $oldShadowStatus = $node->getPropertyValue($propertyTranslator->getName('shadow-on'));
             if ($isShadow !== $oldShadowStatus) {
                 $shadowChanged = true;
             }
         }
 
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), $dateTime);
-        $node->setProperty($this->properties->getName('template'), $templateKey);
-        $node->setProperty($this->properties->getName('shadow-on'), $isShadow);
-        $node->setProperty($this->properties->getName('shadow-base'), $shadowBaseLanguage);
+        $node->setProperty($propertyTranslator->getName('changer'), $userId);
+        $node->setProperty($propertyTranslator->getName('changed'), $dateTime);
+        $node->setProperty($propertyTranslator->getName('template'), $templateKey);
+        $node->setProperty($propertyTranslator->getName('shadow-on'), $isShadow);
+        $node->setProperty($propertyTranslator->getName('shadow-base'), $shadowBaseLanguage);
 
         if (isset($data['nodeType'])) {
-            $node->setProperty($this->properties->getName('nodeType'), $data['nodeType']);
+            $node->setProperty($propertyTranslator->getName('nodeType'), $data['nodeType']);
         }
 
-        // do not state transition for root (contents) node
-        $contentRootNode = $this->getContentNode($webspaceKey);
-        if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
+        if (Structure::TYPE_PAGE === $structureType) {
+            // do not state transition for root (contents) node
+            $contentRootNode = $this->getContentNode($webspaceKey);
+            if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
+                $this->changeState(
+                    $node,
+                    $state,
+                    $structure,
+                    $propertyTranslator->getName('state'),
+                    $propertyTranslator->getName('published')
+                );
+            }
+        } else {
             $this->changeState(
                 $node,
                 $state,
                 $structure,
-                $this->properties->getName('state'),
-                $this->properties->getName('published')
+                $propertyTranslator->getName('state'),
+                $propertyTranslator->getName('published')
             );
         }
 
-        if (isset($data['navContexts']) && $data['navContexts'] !== false
-            && $this->validateNavContexts($data['navContexts'], $this->webspaceManager->findWebspaceByKey($webspaceKey))
-        ) {
-            $node->setProperty($this->properties->getName('navContexts'), $data['navContexts']);
+        if (Structure::TYPE_PAGE === $structureType) {
+            if (isset($data['navContexts']) && $data['navContexts'] !== false
+                && $this->validateNavContexts(
+                    $data['navContexts'],
+                    $this->webspaceManager->findWebspaceByKey($webspaceKey)
+                )
+            ) {
+                $node->setProperty($propertyTranslator->getName('navContexts'), $data['navContexts']);
+            }
         }
 
         // if the shadow status has changed, do not process the rest of the form.
@@ -436,7 +555,7 @@ class ContentMapper implements ContentMapperInterface
         }
         $session->save();
 
-        if (false === $shadowChanged) {
+        if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
             $ext = array();
             foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
@@ -461,41 +580,48 @@ class ContentMapper implements ContentMapperInterface
         $session->save();
 
         $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
         $structure->setNodeType(
-            $node->getPropertyValueWithDefault($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT)
+            $node->getPropertyValueWithDefault($propertyTranslator->getName('nodeType'), Structure::NODE_TYPE_CONTENT)
         );
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($languageCode);
-        $structure->setCreator($node->getPropertyValue($this->properties->getName('creator')));
-        $structure->setChanger($node->getPropertyValue($this->properties->getName('changer')));
-        $structure->setCreated($node->getPropertyValue($this->properties->getName('created')));
-        $structure->setChanged($node->getPropertyValue($this->properties->getName('changed')));
-        $structure->setIsShadow($node->getPropertyValueWithDefault($this->properties->getNAme('shadow-on'), false));
+        $structure->setCreator($node->getPropertyValue($propertyTranslator->getName('creator')));
+        $structure->setChanger($node->getPropertyValue($propertyTranslator->getName('changer')));
+        $structure->setCreated($node->getPropertyValue($propertyTranslator->getName('created')));
+        $structure->setChanged($node->getPropertyValue($propertyTranslator->getName('changed')));
+        $structure->setIsShadow($node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false));
         $structure->setShadowBaseLanguage(
-            $node->getPropertyValueWithDefault($this->properties->getName('shadow-base'), null)
+            $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-base'), null)
         );
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($node)
         );
-        $structure->setConcreteLanguages($this->properties->getLanguagesForNode($node));
+        $structure->setConcreteLanguages($this->getConcreteLanguages($node));
 
-        $structure->setNavContexts(
-            $node->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
-        );
         $structure->setPublished(
-            $node->getPropertyValueWithDefault($this->properties->getName('published'), null)
-        );
-        $structure->setOriginTemplate(
-            $node->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultLanguage)
+            $node->getPropertyValueWithDefault($propertyTranslator->getName('published'), null)
         );
 
-        // load dependencies for internal links
-        $this->loadInternalLinkDependencies(
-            $structure,
-            $languageCode,
-            $webspaceKey
-        );
+        if (Structure::TYPE_PAGE === $structureType) {
+            $structure->setPath(
+                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
+            );
+            $structure->setNavContexts(
+                $node->getPropertyValueWithDefault($propertyTranslator->getName('navContexts'), array())
+            );
+            $structure->setOriginTemplate(
+                $node->getPropertyValueWithDefault(
+                    $propertyTranslator->getName('template'),
+                    $this->defaultTemplates[$structureType]
+                )
+            );
+            // load dependencies for internal links
+            $this->loadInternalLinkDependencies(
+                $structure,
+                $languageCode,
+                $webspaceKey
+            );
+        }
 
         // throw an content.node.save event
         $event = new ContentNodeEvent($node, $structure);
@@ -539,7 +665,6 @@ class ContentMapper implements ContentMapperInterface
                 )
             );
         }
-
     }
 
     /**
@@ -551,18 +676,16 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getEnabledShadowLanguages(NodeInterface $node)
     {
-        $nodeLanguages = $this->properties->getLanguagesForNode($node);
+        $nodeLanguages = $this->nodeHelper->getLanguagesForNode($node);
         $shadowBaseLanguages = array();
 
         foreach ($nodeLanguages as $nodeLanguage) {
-            $propertyMap = clone $this->properties;
-            $propertyMap->setLanguage($nodeLanguage);
-
-            $shadowOn = $node->getPropertyValueWithDefault($propertyMap->getName('shadow-on'), null);
+            $propertyTranslator = $this->createPropertyTranslator($nodeLanguage);
+            $shadowOn = $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), null);
 
             if ($shadowOn) {
                 $nodeShadowBaseLanguage = $node->getPropertyValueWithDefault(
-                    $propertyMap->getName('shadow-base'),
+                    $propertyTranslator->getName('shadow-base'),
                     null
                 );
 
@@ -585,7 +708,7 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getConcreteLanguages(NodeInterface $node)
     {
-        $enabledLanguages = $this->properties->getLanguagesForNode($node);
+        $enabledLanguages = $this->nodeHelper->getLanguagesForNode($node);
         $enabledShadowLanguages = $this->getEnabledShadowLanguages($node);
         $concreteTranslations = array_diff($enabledLanguages, array_values($enabledShadowLanguages));
 
@@ -622,8 +745,7 @@ class ContentMapper implements ContentMapperInterface
         $languageCode,
         $userId
     ) {
-        // create translated properties
-        $this->properties->setLanguage($languageCode);
+        $propertyTranslator = $this->createPropertyTranslator($languageCode);
 
         // get node from session
         $session = $this->getSession();
@@ -643,8 +765,8 @@ class ContentMapper implements ContentMapperInterface
 
         // set changer / changed
         $dateTime = new \DateTime();
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), $dateTime);
+        $node->setProperty($propertyTranslator->getName('changer'), $userId);
+        $node->setProperty($propertyTranslator->getName('changed'), $dateTime);
 
         // save data of extensions
         $extension = $this->structureManager->getExtension($structure->getKey(), $extensionName);
@@ -688,6 +810,8 @@ class ContentMapper implements ContentMapperInterface
             }
         } else {
             $oldState = $node->getPropertyValue($statePropertyName);
+            $oldState = intval($oldState);
+            $state = intval($state);
 
             if ($oldState === $state) {
                 $structure->setNodeState($state);
@@ -894,6 +1018,7 @@ class ContentMapper implements ContentMapperInterface
             $languageCode,
             $segmentKey
         );
+
         $contentNode = $session->getNodeByIdentifier($uuid);
 
         return $this->loadByNode($contentNode, $languageCode, $webspaceKey, true, false, false);
@@ -904,14 +1029,33 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
     {
-        $structures = array();
-
         $query = $this->createSql2Query($sql2, $limit);
+
+        return $this->loadByQuery($query, $languageCode, $webspaceKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function loadByQuery(
+        QueryInterface $query,
+        $languageCode,
+        $webspaceKey = null,
+        $excludeGhost = true,
+        $loadGhostContent = false
+    ) {
         $result = $query->execute();
+        $structures = array();
 
         foreach ($result as $row) {
             try {
-                $structure = $this->loadByNode($row->getNode(), $languageCode, $webspaceKey);
+                $structure = $this->loadByNode(
+                    $row->getNode(),
+                    $languageCode,
+                    $webspaceKey,
+                    $excludeGhost,
+                    $loadGhostContent
+                );
                 if (null !== $structure) {
                     $structures[] = $structure;
                 }
@@ -929,7 +1073,7 @@ class ContentMapper implements ContentMapperInterface
     public function loadTreeByUuid(
         $uuid,
         $languageCode,
-        $webspaceKey,
+        $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
@@ -1050,16 +1194,17 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    private function loadByNode(
+    public function loadByNode(
         NodeInterface $contentNode,
         $localization,
-        $webspaceKey,
+        $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        // first set the language to the given language
-        $this->properties->setLanguage($localization);
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ? : Structure::TYPE_PAGE;
+
+        $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
@@ -1081,9 +1226,9 @@ class ContentMapper implements ContentMapperInterface
             $this->stopwatch->start('contentManager.loadByNode.mapping');
         }
 
-        $shadowOn = $contentNode->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
+        $shadowOn = $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false);
         $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('shadow-base'),
+            $propertyTranslator->getName('shadow-base'),
             false
         );
 
@@ -1095,21 +1240,23 @@ class ContentMapper implements ContentMapperInterface
 
         // now switch the language to the available localization
         if ($availableLocalization != $localization) {
-            $this->properties->setLanguage($availableLocalization);
+            $propertyTranslator->setLanguage($availableLocalization);
         }
 
         $nodeType = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('nodeType'),
+            $propertyTranslator->getName('nodeType'),
             Structure::NODE_TYPE_CONTENT
         );
 
+        $originTemplateKey = $this->defaultTemplates[$structureType];
         $templateKey = $contentNode->getPropertyValueWithDefault(
-            $this->properties->getName('template'),
-            $this->defaultTemplate
+            $propertyTranslator->getName('template'),
+            $originTemplateKey
         );
+
         $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
 
-        $structure = $this->getStructure($templateKey);
+        $structure = $this->getStructure($templateKey, $structureType);
 
         // set structure to ghost, if the available localization does not match the requested one
         if ($availableLocalization != $localization) {
@@ -1120,45 +1267,28 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        $structure->setHasTranslation($contentNode->hasProperty($this->properties->getName('template')));
+        $structure->setHasTranslation($contentNode->hasProperty($propertyTranslator->getName('title')));
 
         $structure->setIsShadow($shadowOn);
         $structure->setShadowBaseLanguage($shadowBaseLanguage);
         $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $contentNode->getPath()));
         $structure->setNodeType(
             $contentNode->getPropertyValueWithDefault(
-                $this->properties->getName('nodeType'),
+                $propertyTranslator->getName('nodeType'),
                 Structure::NODE_TYPE_CONTENT
             )
         );
         $structure->setWebspaceKey($webspaceKey);
         $structure->setLanguageCode($localization);
-        $structure->setCreator($contentNode->getPropertyValueWithDefault($this->properties->getName('creator'), 0));
-        $structure->setChanger($contentNode->getPropertyValueWithDefault($this->properties->getName('changer'), 0));
+        $structure->setCreator($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('creator'), 0));
+        $structure->setChanger($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changer'), 0));
         $structure->setCreated(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('created'), new \DateTime())
+            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('created'), new \DateTime())
         );
         $structure->setChanged(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('changed'), new \DateTime())
+            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changed'), new \DateTime())
         );
         $structure->setHasChildren($contentNode->hasNodes());
-
-        $structure->setNodeState(
-            $contentNode->getPropertyValueWithDefault(
-                $this->properties->getName('state'),
-                StructureInterface::STATE_TEST
-            )
-        );
-        $structure->setNavContexts(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('navContexts'), array())
-        );
-        $structure->setPublished(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('published'), null)
-        );
-        $structure->setOriginTemplate(
-            $contentNode->getPropertyValueWithDefault($this->properties->getName('template'), $this->defaultTemplate)
-        );
         $structure->setEnabledShadowLanguages(
             $this->getEnabledShadowLanguages($contentNode)
         );
@@ -1185,20 +1315,45 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        // load data of extensions
-        $data = array();
-        foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
-            $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
-            $data[$extension->getName()] = $extension->load($contentNode, $webspaceKey, $availableLocalization);
-        }
-        $structure->setExt($data);
-
-        $this->loadInternalLinkDependencies(
-            $structure,
-            $localization,
-            $webspaceKey,
-            $loadGhostContent
+        $structure->setNodeState(
+            $contentNode->getPropertyValueWithDefault(
+                $propertyTranslator->getName('state'),
+                StructureInterface::STATE_TEST
+            )
         );
+
+        if ($structureType === Structure::TYPE_PAGE) {
+            $structure->setPath(
+                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $contentNode->getPath())
+            );
+            $structure->setNavContexts(
+                $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('navContexts'), array())
+            );
+            $structure->setPublished(
+                $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('published'), null)
+            );
+            $structure->setOriginTemplate(
+                $contentNode->getPropertyValueWithDefault(
+                    $propertyTranslator->getName('template'),
+                    $this->defaultTemplates[$structureType]
+                )
+            );
+
+            // load data of extensions
+            $data = array();
+            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
+                $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
+                $data[$extension->getName()] = $extension->load($contentNode, $webspaceKey, $availableLocalization);
+            }
+            $structure->setExt($data);
+
+            $this->loadInternalLinkDependencies(
+                $structure,
+                $localization,
+                $webspaceKey,
+                $loadGhostContent
+            );
+        }
 
         // throw an content.node.load event (disabled for now)
         //$event = new ContentNodeEvent($contentNode, $structure);
@@ -1217,11 +1372,12 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getShadowLocale(NodeInterface $node, $defaultLocale)
     {
-        $shadowOn = $node->getPropertyValueWithDefault($this->properties->getName('shadow-on'), false);
+        $propertyTranslator = $this->createPropertyTranslator($defaultLocale);
+        $shadowOn = $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false);
         $shadowBaseLanguage = null;
         if (true === $shadowOn) {
             $shadowBaseLanguage = $node->getPropertyValueWithDefault(
-                $this->properties->getName('shadow-base'),
+                $propertyTranslator->getName('shadow-base'),
                 false
             );
 
@@ -1265,7 +1421,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadBreadcrumb($uuid, $languageCode, $webspaceKey)
     {
-        $this->properties->setLanguage($languageCode);
+        $propertyTranslator = $this->createPropertyTranslator($languageCode);
 
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadBreadcrumb');
@@ -1300,11 +1456,11 @@ class ContentMapper implements ContentMapperInterface
             if ($depth >= 0) {
                 // title
                 $templateKey = $node->getPropertyValueWithDefault(
-                    $this->properties->getName('template'),
-                    $this->defaultTemplate
+                    $propertyTranslator->getName('template'),
+                    $this->defaultTemplates[Structure::TYPE_PAGE]
                 );
                 $structure = $this->getStructure($templateKey);
-                $nodeNameProperty = $structure->getPropertyByTagName('sulu.node.name');
+                $nodeNameProperty = $structure->getProperty('title');
                 $property = $structure->getProperty($nodeNameProperty->getName());
                 $type = $this->getContentType($property->getContentTypeName());
                 $type->read(
@@ -1316,7 +1472,9 @@ class ContentMapper implements ContentMapperInterface
                 );
                 $nodeName = $property->getValue();
                 $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-                $structure->setPath(str_replace($this->getContentNode($webspaceKey)->getPath(), '', $node->getPath()));
+                $structure->setPath(
+                    str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
+                );
 
                 // throw an content.node.load event (disabled for now)
                 //$event = new ContentNodeEvent($node, $structure);
@@ -1341,9 +1499,9 @@ class ContentMapper implements ContentMapperInterface
     public function delete($uuid, $webspaceKey)
     {
         $session = $this->getSession();
-        $contentNode = $session->getNodeByIdentifier($uuid);
+        $node = $session->getNodeByIdentifier($uuid);
 
-        $this->deleteRecursively($contentNode);
+        $this->deleteRecursively($node);
         $session->save();
     }
 
@@ -1366,6 +1524,20 @@ class ContentMapper implements ContentMapperInterface
         $this->getSession()->refresh(false);
 
         return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode)
+    {
+        $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
+
+        $data = $structure->toArray(true);
+
+        $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
+
+        return $structure;
     }
 
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode)
@@ -1438,6 +1610,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $move = true)
     {
+        $propertyTranslator = $this->createPropertyTranslator($languageCode);
         // find localizations
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $localizations = $webspace->getAllLocalizations();
@@ -1451,7 +1624,11 @@ class ContentMapper implements ContentMapperInterface
 
         // prepare content node
         $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
-        $nodeName = $content->getPropertyValueByTagName('sulu.node.name');
+        $nodeName = $content->getPropertyValue('title');
+
+        // node name should not have a slash
+        $nodeName = str_replace('/', '-', $nodeName);
+
         $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
         $nodeName = $this->getUniquePath($nodeName, $parentNode);
 
@@ -1489,15 +1666,15 @@ class ContentMapper implements ContentMapperInterface
                     $content,
                     $node,
                     $parentResourceLocator,
-                    $move,
                     $webspaceKey,
-                    $locale->getLocalization()
+                    $locale->getLocalization(),
+                    $userId
                 );
 
                 // set changer of node
-                $this->properties->setLanguage($languageCode);
-                $node->setProperty($this->properties->getName('changer'), $userId);
-                $node->setProperty($this->properties->getName('changed'), new DateTime());
+                $propertyTranslator->setLanguage($languageCode);
+                $node->setProperty($propertyTranslator->getName('changer'), $userId);
+                $node->setProperty($propertyTranslator->getName('changed'), new DateTime());
             }
         }
 
@@ -1511,9 +1688,9 @@ class ContentMapper implements ContentMapperInterface
 
     private function setChanger(NodeInterface $node, $userId, $languageCode)
     {
-        $this->properties->setLanguage($languageCode);
-        $node->setProperty($this->properties->getName('changer'), $userId);
-        $node->setProperty($this->properties->getName('changed'), new DateTime());
+        $propertyTranslator = $this->createPropertyTranslator($languageCode);
+        $node->setProperty($propertyTranslator->getName('changer'), $userId);
+        $node->setProperty($propertyTranslator->getName('changed'), new DateTime());
     }
 
     /**
@@ -1524,17 +1701,21 @@ class ContentMapper implements ContentMapperInterface
      * @param boolean $move
      * @param string $webspaceKey
      * @param string $languageCode
+     * @param int $userId
      */
     private function adaptResourceLocator(
         StructureInterface $content,
         NodeInterface $node,
         $parentResourceLocator,
-        $move,
         $webspaceKey,
-        $languageCode
+        $languageCode,
+        $userId
     ) {
-        // get strategy
-        $strategy = $this->getResourceLocator()->getStrategy();
+        // prepare objects
+        $property = $content->getPropertyByTagName('sulu.rlp');
+        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+        $contentType = $this->getResourceLocator();
+        $strategy = $contentType->getStrategy();
 
         // get resource locator pathes
         $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
@@ -1542,7 +1723,7 @@ class ContentMapper implements ContentMapperInterface
         if ($srcResourceLocator !== null) {
             $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
         } else {
-            $resourceLocatorPart = $content->getPropertyValueByTagName('sulu.node.name');
+            $resourceLocatorPart = $content->getPropertyValue('title');
         }
 
         // generate new resourcelocator
@@ -1553,12 +1734,9 @@ class ContentMapper implements ContentMapperInterface
             $languageCode
         );
 
-        // move resourcelocator
-        if ($move) {
-            $strategy->move($srcResourceLocator, $destResourceLocator, $webspaceKey, $languageCode);
-        } else {
-            $strategy->save($node, $destResourceLocator, $webspaceKey, $languageCode);
-        }
+        // save new resource-locator
+        $property->setValue($destResourceLocator);
+        $contentType->write($node, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
     }
 
     /**
@@ -1569,9 +1747,13 @@ class ContentMapper implements ContentMapperInterface
     {
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
-                $this->deleteRecursively($ref->getParent());
+                $child = $ref->getParent();
             } else {
-                $this->deleteRecursively($ref);
+                $child = $ref;
+            }
+
+            if ($this->nodeHelper->hasSuluNodeType($child, array('sulu:path'))) {
+                $this->deleteRecursively($child);
             }
         }
         $node->remove();
@@ -1582,9 +1764,21 @@ class ContentMapper implements ContentMapperInterface
      * @param string $key key of content type
      * @return StructureInterface
      */
-    protected function getStructure($key)
+    protected function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        return $this->structureManager->getStructure($key);
+        $structure = $this->structureManager->getStructure($key, $type);
+
+        if (!$structure) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Could not find "%s" structure template for key "%s"',
+                    $type,
+                    $key
+                )
+            );
+        }
+
+        return $structure;
     }
 
     /**
@@ -1674,18 +1868,16 @@ class ContentMapper implements ContentMapperInterface
         $fields,
         $maxDepth
     ) {
-        $rootDepth = substr_count($this->sessionManager->getContentNode($webspaceKey)->getPath(), '/');
+        $rootDepth = substr_count($this->sessionManager->getContentPath($webspaceKey), '/');
 
         $result = array();
         foreach ($locales as $locale) {
-            $routesPath = $this->sessionManager->getRouteNode($webspaceKey, $locale)->getPath();
-
             /** @var \Jackalope\Query\Row $row */
             foreach ($queryResult->getRows() as $row) {
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
-                    $item = $this->rowToArray($row, $locale, $webspaceKey, $routesPath, $fields);
+                    $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
 
                     if (false !== $item && !in_array($item, $result)) {
                         $result[] = $item;
@@ -1700,26 +1892,26 @@ class ContentMapper implements ContentMapperInterface
     /**
      * converts a query row to an array
      */
-    private function rowToArray(Row $row, $locale, $webspaceKey, $routesPath, $fields)
+    private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
     {
         // reset cache
         $this->initializeExtensionCache();
-        $this->properties->setLanguage($locale);
+        $propertyTranslator = $this->createPropertyTranslator($locale);
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
         if (
-            $node->hasProperty($this->properties->getName('template')) &&
-            $node->hasProperty($this->properties->getName('nodeType'))
+            $node->hasProperty($propertyTranslator->getName('template')) &&
+            $node->hasProperty($propertyTranslator->getName('nodeType'))
         ) {
             if (
-                $node->getPropertyValue($this->properties->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
+                $node->getPropertyValue($propertyTranslator->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
             ) {
-                $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+                $nodeType = $node->getPropertyValue($propertyTranslator->getName('nodeType'));
                 $parent = $node->getParent()->getIdentifier();
 
                 // get structure (without data)
-                $templateKey = $node->getPropertyValue($this->properties->getName('template'));
+                $templateKey = $node->getPropertyValue($propertyTranslator->getName('template'));
                 $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
                 $structure = $this->structureManager->getStructure($templateKey);
 
@@ -1737,16 +1929,16 @@ class ContentMapper implements ContentMapperInterface
 
             $originLocale = $locale;
             $locale = $this->getShadowLocale($node, $locale);
-            $this->properties->setLanguage($locale);
+            $propertyTranslator->setLanguage($locale);
 
             // load default data
             $uuid = $node->getIdentifier();
 
-            $templateKey = $node->getPropertyValue($this->properties->getName('template'));
+            $templateKey = $node->getPropertyValue($propertyTranslator->getName('template'));
 
             // if nodetype is set before (internal link)
             if (!isset($nodeType)) {
-                $nodeType = $node->getPropertyValue($this->properties->getName('nodeType'));
+                $nodeType = $node->getPropertyValue($propertyTranslator->getName('nodeType'));
             }
 
             // if parent is set before (internal link)
@@ -1754,45 +1946,51 @@ class ContentMapper implements ContentMapperInterface
                 $parent = $node->getParent()->getIdentifier();
             }
 
-            $nodeState = $node->getPropertyValue($this->properties->getName('state'));
+            $nodeState = $node->getPropertyValue($propertyTranslator->getName('state'));
 
             // if page is not piblished ignore it
             if ($nodeState !== Structure::STATE_PUBLISHED) {
                 return false;
             }
 
-            $changed = $node->getPropertyValue($this->properties->getName('changed'));
-            $changer = $node->getPropertyValue($this->properties->getName('changer'));
-            $created = $node->getPropertyValue($this->properties->getName('created'));
-            $creator = $node->getPropertyValue($this->properties->getName('creator'));
+            $changed = $node->getPropertyValue($propertyTranslator->getName('changed'));
+            $changer = $node->getPropertyValue($propertyTranslator->getName('changer'));
+            $created = $node->getPropertyValue($propertyTranslator->getName('created'));
+            $creator = $node->getPropertyValue($propertyTranslator->getName('creator'));
 
             $path = $row->getPath('page');
 
             // get structure
             $templateKey = $this->templateResolver->resolve(
-                $node->getPropertyValue($this->properties->getName('nodeType')),
+                $node->getPropertyValue($propertyTranslator->getName('nodeType')),
                 $templateKey
             );
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
-                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale, $routesPath);
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale);
             }
 
             // get url returns false if route is not this language
             if ($url !== false) {
                 // generate field data
-                $fieldsData = $this->getFieldsData($row, $node, $fields[$originLocale], $templateKey, $webspaceKey, $locale);
+                $fieldsData = $this->getFieldsData(
+                    $row,
+                    $node,
+                    $fields[$originLocale],
+                    $templateKey,
+                    $webspaceKey,
+                    $locale
+                );
+
+                $key = $this->nodeHelper->extractWebspaceFromPath($path);
+                $shortPath = str_replace($this->sessionManager->getContentPath($key), '', $path);
 
                 return array_merge(
                     array(
                         'uuid' => $uuid,
                         'nodeType' => $nodeType,
-                        'path' => str_replace(
-                            $this->sessionManager->getContentNode($webspaceKey)->getPath(),
-                            '',
-                            $path
-                        ),
+                        'path' => $shortPath,
                         'changed' => $changed,
                         'changer' => $changer,
                         'created' => $created,
@@ -1800,6 +1998,7 @@ class ContentMapper implements ContentMapperInterface
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
                         'locale' => $locale,
+                        'webspaceKey' => $key,
                         'template' => $templateKey,
                         'parent' => $parent
                     ),
@@ -1823,9 +2022,9 @@ class ContentMapper implements ContentMapperInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = &$fieldsData[$field['target']];
+                $target = & $fieldsData[$field['target']];
             } else {
-                $target = &$fieldsData;
+                $target = & $fieldsData;
             }
 
             // create target
@@ -1928,12 +2127,7 @@ class ContentMapper implements ContentMapperInterface
             $locale
         );
 
-        // insure array
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
-        return $data;
+        return $extension->getContentData($data);
     }
 
     /**
@@ -1941,7 +2135,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getTitle(NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale)
     {
-        return $this->getPropertyData($node, $structure->getPropertyByTagName('sulu.node.name'), $webspaceKey, $locale);
+        return $this->getPropertyData($node, $structure->getProperty('title'), $webspaceKey, $locale);
     }
 
     /**
@@ -1952,40 +2146,22 @@ class ContentMapper implements ContentMapperInterface
         Row $row,
         StructureInterface $structure,
         $webspaceKey,
-        $locale,
-        $routesPath
+        $locale
     ) {
-        $url = '';
         // if homepage
-        if ($this->sessionManager->getContentNode($webspaceKey)->getPath() === $path) {
+        if ($webspaceKey !== null && $this->sessionManager->getContentPath($webspaceKey) === $path) {
             $url = '/';
         } else {
             if ($structure->hasTag('sulu.rlp')) {
                 $property = $structure->getPropertyByTagName('sulu.rlp');
 
                 if ($property->getContentTypeName() !== 'resource_locator') {
-                    return 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                    $url = 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
+                } else {
+                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
                 }
             } else {
-                return '';
-            }
-
-            try {
-                $routePath = $row->getPath('route');
-
-                $nextChar = substr($routePath, strlen($routesPath), 1);
-                $position = strpos($routePath, $routesPath);
-                if ($position === 0 && ($nextChar === '/' || $nextChar === false)) {
-                    $url = str_replace($routesPath, '', $routePath);
-                } else {
-                    return false;
-                }
-            } catch (RepositoryException $e) {
-                // ignore exception because no route node exists
-                // could have several reasons:
-                //  - external links has text-line as "rlp"
-                //  - internal links has a "reference" on another node
-                //  - no url exists
+                $url = '';
             }
         }
 
@@ -1995,4 +2171,75 @@ class ContentMapper implements ContentMapperInterface
     // ===============================
     // END: Row to array mapping logic
     // ===============================
+
+    /**
+     * {@inheritdoc}
+     */
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    {
+        $this->strategy->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+
+        $content = $this->loadByResourceLocator($path, $webspaceKey, $languageCode, $segmentKey);
+        $property = $content->getPropertyByTagName('sulu.rlp');
+        $property->setValue($path);
+
+        $node = $this->sessionManager->getSession()->getNodeByIdentifier($content->getUuid());
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $contentType->write(
+            $node,
+            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+
+        $this->sessionManager->getSession()->save();
+    }
+
+    /**
+     * Validate the content mapper request
+     *
+     * TODO: We should be validating the domain object, i.e. the Page or Snippet structure
+     *       types. But this requires refactoring the ContentMapper
+     */
+    private function validateRequest(ContentMapperRequest $request)
+    {
+        $this->validateRequired(
+            $request,
+            array(
+                'templateKey',
+                'userId',
+                'locale',
+                'type',
+            )
+        );
+
+        if ($request->getType() === Structure::TYPE_PAGE) {
+            $this->validateRequired(
+                $request,
+                array(
+                    'webspaceKey',
+                )
+            );
+        }
+    }
+
+    private function validateRequired(ContentMapperRequest $request, $keys)
+    {
+        foreach ($keys as $required) {
+            $method = 'get' . ucfirst($required);
+            $val = $request->$method();
+
+            if (null === $val) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'ContentMapperRequest "%s" cannot be null',
+                        $required
+                    )
+                );
+            }
+        }
+    }
 }

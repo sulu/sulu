@@ -1,0 +1,43 @@
+{
+    "name": "sulu/location-bundle",
+    "type": "sulu-bundle",
+    "description": "TODO",
+    "license": "MIT",
+    "keywords": ["TODO"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluLocationBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/content-bundle": "dev-develop",
+        "guzzle/http": "3.*",
+        "guzzle/plugin-log": "3.9.*",
+
+        "sulu/contact-bundle": "@dev",
+        "sulu/security-bundle": "@dev",
+        "sulu/website-bundle": "@dev",
+        "sulu/tag-bundle": "@dev",
+        "sulu/category-bundle": "@dev",
+        "sulu/media-bundle": "@dev"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "4.1.*",
+        "sulu/test-bundle": "dev-develop",
+        "guzzle/plugin-mock": "3.9.*",
+        "matthiasnoback/symfony-dependency-injection-test": "v0.7.1",
+        "matthiasnoback/symfony-config-test": "v0.1.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\LocationBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/LocationBundle"
+}

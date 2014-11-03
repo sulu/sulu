@@ -1,0 +1,23 @@
+<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating section section-{{ property.name }}">
+    <h2 class="divider m-bottom-20"
+        title="{{ property.getInfoText(userLocale) }}">{{ property.getTitle(userLocale) }}</h2>
+
+    <div class="grid">
+        <div class="grid-row">
+            {% for child in property.childProperties %}
+                {# get Type for property #}
+                {% set type = getType(child.contentTypeName) %}
+                {# get params for property #}
+                {% set params = getParams(child) %}
+
+                {% if child.contentTypeName == 'block' %}
+                    {% include type.template with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                {% elseif child is multiple %}
+                    {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                {% else %}
+                    {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': child.name, 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -6,12 +6,13 @@
     <parameters>
         <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
         <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
+
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
         <parameter key="sulu.content.mapper.subscriber.node_order.class">Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber</parameter>
 
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
         <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
-        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PHPTemplateDumper</parameter>
+        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
         <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
@@ -23,10 +24,16 @@
 
         <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
-        <parameter key="sulu.content.parent_child_any_finder.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
+
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
 
         <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
+
+        <parameter key="sulu.content.localization_finder.parent_child_any.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
+        <parameter key="sulu.content.localization_finder.null_webspace.class">Sulu\Component\Content\Mapper\LocalizationFinder\NullWebspaceFinder</parameter>
+        <parameter key="sulu.content.localization_finder.chain.class">Sulu\Component\Content\Mapper\LocalizationFinder\ChainFinder</parameter>
+
+        <parameter key="sulu.util.node_helper.class">Sulu\Component\Util\SuluNodeHelper</parameter>
     </parameters>
 
     <services>
@@ -44,8 +51,13 @@
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.template_resolver"/>
+            <argument type="service" id="sulu.util.node_helper"/>
+            <argument type="service" id="sulu.content.rlp.strategy.tree"/>
             <argument>%sulu.content.language.default%</argument>
-            <argument>%sulu.content.template.default%</argument>
+            <argument type="collection">
+                <argument key="page">%sulu.content.structure.default_type.page%</argument>
+                <argument key="snippet">%sulu.content.structure.default_type.snippet%</argument>
+            </argument>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
@@ -55,11 +67,24 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <!-- localization finder -->
-        <service id="sulu.content.localization_finder" class="%sulu.content.parent_child_any_finder.class%">
+        <!-- localization finders -->
+        <service id="sulu.content.localization_finder.parent_child_any" class="%sulu.content.localization_finder.parent_child_any.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
+        </service>
+
+        <service id="sulu.content.localization_finder.null_webspace" class="%sulu.content.localization_finder.null_webspace.class%">
+            <argument type="service" id="sulu.util.node_helper"/>
+        </service>
+
+        <service id="sulu.content.localization_finder" class="%sulu.content.localization_finder.chain.class%">
+            <call method="addFinder">
+                <argument type="service" id="sulu.content.localization_finder.parent_child_any" />
+            </call>
+            <call method="addFinder">
+                <argument type="service" id="sulu.content.localization_finder.null_webspace" />
+            </call>
         </service>
 
         <!-- content type manager -->
@@ -78,7 +103,7 @@
             <argument type="service" id="sulu.content.structure_manager.dumper"/>
             <argument type="service" id="logger"/>
             <argument type="collection">
-                <argument key="template_dir">%sulu.content.template.paths%</argument>
+                <argument key="structure_paths">%sulu.content.structure.paths%</argument>
                 <argument key="cache_dir">%sulu.cache_dir%</argument>
                 <argument key="debug">%kernel.debug%</argument>
             </argument>
@@ -137,6 +162,18 @@
         <service id="sulu.cache.warmer.structure" class="%sulu.cache.warmer.structure.class%">
             <argument type="service" id="sulu.content.structure_manager" />
             <tag name="kernel.cache_warmer" />
+        </service>
+
+        <!-- sulu node helper -->
+        <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%">
+            <argument>%sulu.content.language.namespace%</argument>
+            <argument type="collection">
+                <argument key="base">%sulu.content.node_names.base%</argument>
+                <argument key="content">%sulu.content.node_names.content%</argument>
+                <argument key="route">%sulu.content.node_names.route%</argument>
+                <argument key="temp">%sulu.content.node_names.temp%</argument>
+                <argument key="snippet">%sulu.content.node_names.snippet%</argument>
+            </argument>
         </service>
     </services>
 </container>

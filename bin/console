@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__.'/../tests/bootstrap.php';
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
+
+$kernelDir = getenv('KERNEL_DIR');
+
+if (!$kernelDir) {
+    echo "You must define the KERNEL_DIR environment variable";
+    die(1);
+}
+
+$kernelFile = $kernelDir.'/AppKernel.php';
+
+if (!file_exists($kernelFile)) {
+    throw new \Exception(sprintf(
+        'Cannot find kernel file "%s"',
+        $kernelFile
+    ));
+}
+
+require_once $kernelFile;
+
+$input = new ArgvInput();
+$env = $input->getParameterOption(array('--env', '-e'), 'phpcr');
+$kernel =  new AppKernel($env, true);
+
+$application = new Application($kernel);
+$application->run($input);

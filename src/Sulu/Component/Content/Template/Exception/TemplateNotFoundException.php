@@ -10,15 +10,18 @@
 
 namespace Sulu\Component\Content\Template\Exception;
 
+use Exception;
+
 /**
  * indicates an exception in template loading
  */
-class TemplateNotFoundException extends \Exception
+class TemplateNotFoundException extends Exception
 {
     /**
      * @var string
      */
     private $templateKey;
+
     /**
      * @var string
      */
@@ -31,6 +34,4 @@ class TemplateNotFoundException extends \Exception
         $this->path = $path;
         $this->templateKey = $templateKey;
     }
-
-
-} 
+}

@@ -1,17 +1,18 @@
 language: php
 
 php:
-  - 5.4
   - 5.5
-  - hhvm
 
 before_script:
   - composer self-update
   - composer install
   - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
+  - 
+script: 
+    - time ./bin/runtests.sh
+    - phpunit
 
-script: phpunit --coverage-text
 
 matrix:
   allow_failures:

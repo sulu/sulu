@@ -1,0 +1,18 @@
+{
+  "name": "sulu-location",
+  "version": "0.4.0",
+  "homepage": "https://github.com/massiveart/SuluLocationBundle",
+  "authors": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "leaflet": "0.7.3",
+    "requirejs-plugins": "~1.0.2"
+  }
+}

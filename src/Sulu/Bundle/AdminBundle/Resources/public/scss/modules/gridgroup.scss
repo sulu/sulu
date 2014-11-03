@@ -1,0 +1,55 @@
+//
+// Collections-list style
+// --------------------------------------------------
+
+.sulu-grid-group {
+  border-bottom: 2px solid #cccccc;
+
+  .group-slide {
+    width: 100%;
+    overflow-x: hidden;
+    padding-bottom: 1px;
+  }
+  .entity {
+    $rowHeight: 50px;
+    &:last-child {
+      margin-bottom: -1px;
+    }
+
+    .head {
+      height: $rowHeight;
+      line-height: $rowHeight;
+      border-bottom: 1px solid #cccccc;
+      cursor: pointer;
+
+      .icon {
+        float: left;
+        font-size: 16px;
+        padding: 0 10px 0 5px;
+        color: #3E3E3E;
+        line-height: $rowHeight;
+        text-align: center;
+      }
+      &::after {
+        display: table;
+        content: "";
+        clear: both;
+      }
+    }
+    .color {
+      float: left;
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    .entity-title {
+      float: left;
+      font-size: 14px;
+      margin-top: 5px;
+      padding-right: 5px;
+      border-radius: 3px;
+      line-height: $rowHeight - 12px;
+    }
+  }
+}
