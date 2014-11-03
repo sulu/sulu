@@ -1,0 +1,53 @@
+framework:
+    secret: secret
+    router: { resource: "%kernel.root_dir%/config/routing.php" }
+    templating: { engines: ['twig'] }
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     localhost
+        dbname:   sulu_test
+        user:     root
+        password:
+        charset:  UTF8
+    orm:
+        ~
+
+sulu_core:
+    phpcr:
+        backend:
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        username: admin
+        password: admin
+        workspace: test
+    webspace:
+        config_dir: %kernel.root_dir%/Resources/webspaces
+    content:
+        structure:
+            paths:
+                app:
+                    path: "%kernel.root_dir%/Resources/templates"
+                    internal: false
+
+massive_search:
+    adapters:
+        zend_lucene:
+            hide_index_exception: true
