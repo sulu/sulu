@@ -314,11 +314,15 @@ class SmartContent extends ComplexContentType
         $offset = ($page - 1) * $limit;
 
         $position = $limit * $page;
-        if ($limitResult !== null && $position > $limitResult) {
+        if ($limitResult !== null && $position >= $limitResult) {
             $limit = $limitResult - $offset;
             $loadLimit = $limit;
         } else {
             $loadLimit = $limit + 1;
+        }
+
+        if ($limit < 0) {
+            return array();
         }
 
         $data = $container->getData(array($excludeUuid), $loadLimit, $offset);

@@ -475,6 +475,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array(2, 3, 3, 8, '123-123-123', array(4, 5, 6, 7), array(4, 5, 6), 4),
             // third page page-size 3 (only two pages because of the limit-result)
             array(3, 3, 6, 8, '123-123-123', array(7, 8), array(7, 8), 2),
+            // fourth page page-size 3 (empty result)
+            array(4, 3, 6, 8, '123-123-123', array(), array(), null),
             // test empty string (should be ignored)
             array(3, 3, 6, '', '123-123-123', array(7, 8), array(7, 8), 4),
         );
@@ -507,11 +509,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $config = array('limitResult' => $limitResult);
         $smartContentContainer->expects($this->exactly(1))->method('getConfig')->will($this->returnValue($config));
 
-        $smartContentContainer->expects($this->once())
-            ->method('getData')
-            ->with($this->equalTo(array($uuid)), $this->equalTo($limit), $this->equalTo($offset))
-            ->will($this->returnValue($data));
-
+        if ($limit) {
+            $smartContentContainer->expects($this->once())
+                ->method('getData')
+                ->with($this->equalTo(array($uuid)), $this->equalTo($limit), $this->equalTo($offset))
+                ->will($this->returnValue($data));
+        }
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($smartContentContainer));
         $property->expects($this->exactly(1))->method('getParams')
