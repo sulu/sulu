@@ -268,7 +268,7 @@ class SmartContent extends ComplexContentType
             // determine current page
             $this->page = $this->getCurrentPage($params['page_parameter']);
 
-            $contentData = $this->contentData = $this->getPagedContentData(
+            $contentData = $this->getPagedContentData(
                 $container,
                 $this->page,
                 $params['max_per_page'],
