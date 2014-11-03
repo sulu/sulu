@@ -405,6 +405,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Starts the grid group
          */
         startGridGroup = function () {
+            // TODO remove high limit and implement automatic reload pagination
+            var gridUrl = '/admin/api/media?limit=99999&' +
+                (this.options.types != '' ? 'types=' + this.options.types + '&' : '');
+
             this.sandbox.start([
                 {
                     name: 'grid-group@suluadmin',
@@ -412,6 +416,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         data: this.collectionArray,
                         el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
                         instanceName: this.options.instanceName,
+                        gridUrl: gridUrl,
                         preselected: this.data.ids,
                         resultKey: this.options.resultKey,
                         dataGridOptions: {
