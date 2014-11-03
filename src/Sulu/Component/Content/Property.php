@@ -83,6 +83,14 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     private $value;
 
+    /**
+     * @var StructureInterface
+     */
+    private $structure;
+
+    /**
+     * Constructor
+     */
     function __construct(
         $name,
         $metaData,
@@ -307,6 +315,23 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * returns structure
+     * @return StructureInterface
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    /**
+     * @param StructureInterface $structure
+     */
+    public function setStructure($structure)
+    {
+        $this->structure = $structure;
     }
 
     /**
