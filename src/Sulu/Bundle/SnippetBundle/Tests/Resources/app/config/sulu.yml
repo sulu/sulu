@@ -38,7 +38,7 @@ sulu_core:
     phpcr:
         backend: 
             type: doctrinedbal
-        workspace: test
+        workspace: default
         username: admin
         password: admin
     webspace:
