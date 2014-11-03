@@ -93,7 +93,6 @@ define(function () {
         render: function () {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/list'));
             this.initializeGrid();
-            this.initializeOverlay();
         },
 
         /**
@@ -138,9 +137,9 @@ define(function () {
         },
 
         /**
-         * Initializes the overlay for adding a new collection
+         * Opens a overlay for a new collection
          */
-        initializeOverlay: function () {
+        openOverlay: function () {
             var $container = this.sandbox.dom.createElement('<div class="overlay-element"/>');
             this.sandbox.dom.append(this.$el, $container);
 
@@ -159,17 +158,11 @@ define(function () {
                         title: this.sandbox.translate('sulu.media.add-collection'),
                         instanceName: 'add-collection',
                         data: this.$overlayContent,
-                        okCallback: this.addCollection.bind(this)
+                        okCallback: this.addCollection.bind(this),
+                        openOnStart: true
                     }
                 }
             ]);
-        },
-
-        /**
-         * Opens the add collection overlay
-         */
-        openOverlay: function () {
-            this.sandbox.emit('husky.overlay.add-collection.open');
         },
 
         /**
