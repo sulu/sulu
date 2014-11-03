@@ -308,7 +308,7 @@ class SmartContent extends ComplexContentType
     private function getPagedContentData(SmartContentContainer $container, $page, $pageSize, $excludeUuid)
     {
         $config = $container->getConfig();
-        $limitResult = isset($config['limitResult']) ? intval($config['limitResult']) : null;
+        $limitResult = isset($config['limitResult']) && !empty($config['limitResult']) ? intval($config['limitResult']) : null;
 
         $limit = intval($pageSize);
         $offset = ($page - 1) * $limit;
