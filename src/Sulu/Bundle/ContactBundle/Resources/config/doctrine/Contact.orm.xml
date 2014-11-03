@@ -57,10 +57,10 @@
         <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-table name="co_contact_medias">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idMedias" referenced-column-name="id"/>
+                    <join-column name="idMedias" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -71,10 +71,10 @@
         <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
             <join-table name="co_contact_categories">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idCategories" referenced-column-name="id"/>
+                    <join-column name="idCategories" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
