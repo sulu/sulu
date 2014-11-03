@@ -48,9 +48,9 @@ input, select {
   position: relative;
   overflow: hidden;
   min-width: 510px;
-  -webkit-transition: width 700ms;
   -moz-transition: width 700ms;
   -o-transition: width 700ms;
+  -webkit-transition: width 700ms;
   transition: width 700ms;
 }
 /* line 16, ../scss/modules/layout.scss */
@@ -62,9 +62,9 @@ input, select {
   height: 100%;
   overflow: auto;
   padding: 40px 50px 40px 50px;
-  -webkit-transition: padding-left 700ms, padding-right 700ms;
   -moz-transition: padding-left 700ms, padding-right 700ms;
   -o-transition: padding-left 700ms, padding-right 700ms;
+  -webkit-transition: padding-left 700ms, padding-right 700ms;
   transition: padding-left 700ms, padding-right 700ms;
 }
 /* line 26, ../scss/modules/layout.scss */
@@ -93,16 +93,16 @@ input, select {
 }
 /* line 51, ../scss/modules/layout.scss */
 .content-column.no-transitions {
-  -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
+  -webkit-transition: none;
   transition: none;
 }
 /* line 53, ../scss/modules/layout.scss */
 .content-column.no-transitions #content {
-  -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
+  -webkit-transition: none;
   transition: none;
 }
 /* line 58, ../scss/modules/layout.scss */
@@ -291,9 +291,9 @@ input, select {
   left: 0px;
   margin: 0 50px;
   height: 150px;
-  -webkit-transition: margin 700ms;
   -moz-transition: margin 700ms;
   -o-transition: margin 700ms;
+  -webkit-transition: margin 700ms;
   transition: margin 700ms;
 }
 /* line 19, ../scss/modules/header.scss */
@@ -319,9 +319,9 @@ input, select {
   color: white;
   cursor: pointer;
   opacity: 1;
-  -webkit-transition: opacity 0.5s;
   -moz-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
   transition: opacity 0.5s;
 }
 /* line 42, ../scss/modules/header.scss */
@@ -373,9 +373,9 @@ input, select {
 }
 /* line 85, ../scss/modules/header.scss */
 .sulu-header .tabs .tabs-container {
-  -webkit-transition: padding 700ms;
   -moz-transition: padding 700ms;
   -o-transition: padding 700ms;
+  -webkit-transition: padding 700ms;
   transition: padding 700ms;
 }
 /* line 90, ../scss/modules/header.scss */
@@ -543,3 +543,5 @@ input, select {
   border-radius: 3px;
   line-height: 38px;
 }
+
+/*# sourceMappingURL=main.css.map */

@@ -363,7 +363,7 @@ define([], function() {
             var def = this.sandbox.data.deferred();
             this.showColumn();
             this.startLoader();
-            this.sandbox.util.load(url).then(function(widget) {
+            this.sandbox.util.load(url, null, 'html').then(function(widget) {
                 this.stopLoader();
                 def.resolve(widget);
             }.bind(this));
