@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -44,6 +45,12 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      * @var array
      */
     private $ids = array();
+
+    /**
+     * array of excluded pages
+     * @var array
+     */
+    private $excluded = array();
 
     /**
      * @var WebspaceManagerInterface
@@ -89,11 +96,11 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         }
 
         if (sizeof($this->ids) > 0) {
-            $idsWhere = array();
-            foreach ($this->ids as $id) {
-                $idsWhere[] = sprintf("page.[jcr:uuid] = '%s'", $id);
-            }
-            $sql2Where[] = '(' . implode(' OR ', $idsWhere) . ')';
+            $sql2Where[] = $this->buildPageSelector();
+        }
+
+        if (sizeof($this->excluded) > 0) {
+            $sql2Where = array_merge($sql2Where, $this->buildPageExclude());
         }
 
         return implode(' AND ', $sql2Where);
@@ -149,6 +156,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         $this->propertiesConfig = isset($options['properties']) ? $options['properties'] : array();
         $this->ids = isset($options['ids']) ? $options['ids'] : array();
         $this->config = isset($options['config']) ? $options['config'] : array();
+        $this->excluded = isset($options['excluded']) ? $options['excluded'] : array();
     }
 
     /**
@@ -172,7 +180,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
-        foreach ($this->structureManager->getStructures() as $structure) {
+        foreach ($this->structureManager->getStructures(Page::TYPE_PAGE) as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
                 $additionalFields[$locale][] = array(
@@ -260,5 +268,31 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
         }
 
         return $this->config[$name];
+    }
+
+    /**
+     * build select for uuids
+     */
+    protected function buildPageSelector()
+    {
+        $idsWhere = array();
+        foreach ($this->ids as $id) {
+            $idsWhere[] = sprintf("page.[jcr:uuid] = '%s'", $id);
+        }
+
+        return '(' . implode(' OR ', $idsWhere) . ')';
+    }
+
+    /**
+     * build sql for exluded Pages
+     */
+    private function buildPageExclude()
+    {
+        $idsWhere = array();
+        foreach ($this->excluded as $id) {
+            $idsWhere[] = sprintf("NOT (page.[jcr:uuid] = '%s')", $id);
+        }
+
+        return $idsWhere;
     }
 }

@@ -56,6 +56,21 @@ class SmartContent extends ComplexContentType
      */
     private $stopwatch;
 
+    /**
+     * @var array
+     */
+    private $contentData;
+
+    /**
+     * @var boolean
+     */
+    private $hasNextPage;
+
+    /**
+     * @var int
+     */
+    private $page;
+
     function __construct(
         ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
@@ -208,7 +223,15 @@ class SmartContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        return $property->getValue()->getConfig();
+        $this->getContentData($property);
+
+        return array_merge(
+            $property->getValue()->getConfig(),
+            array(
+                'page' => $this->page,
+                'hasNextPage' => $this->hasNextPage
+            )
+        );
     }
 
     /**
@@ -216,23 +239,41 @@ class SmartContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
+        if ($this->contentData !== null) {
+            return $this->contentData;
+        }
+
         $params = array_merge(
             $this->getDefaultParams(),
             $property->getParams()
         );
 
-        $data = $property->getValue()->getData();
-
+        $value = $property->getValue();
         // paginate
-        if (isset($params['max_per_page'])) {
+        if ($value instanceof SmartContentContainer && isset($params['max_per_page'])) {
+            // determine current page
             if ($this->requestStack->getCurrentRequest() !== null) {
-                $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
+                $this->page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
             } else {
-                $page = 1;
+                $this->page = 1;
             }
-            $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+
+            $limit = $params['max_per_page'];
+            $offset = ($this->page - 1) * $limit;
+            $data = $value->getData(array( /* TODO current uuid */), $limit + 1, $offset);
+
+            $this->hasNextPage = false;
+            if (sizeof($data) > $limit) {
+                // TODO next page available
+                $this->hasNextPage = true;
+                $data = array_splice($data, $offset, $limit);
+            }
+        } else {
+            $data = array();
         }
 
-        return $data;
+        $this->contentData = $data;
+
+        return $this->contentData;
     }
 }

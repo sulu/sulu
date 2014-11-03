@@ -361,4 +361,35 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($config, $viewData);
     }
+
+    public function testGetContentDataPaged()
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue', 'getParams')
+        );
+
+        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $smartContentContainer->expects($this->once())
+            ->method('getData')
+            ->with($this->equalTo(array()), $this->equalTo(6), $this->equalTo(0))
+            ->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
+
+        $property->expects($this->exactly(1))->method('getValue')
+            ->will($this->returnValue($smartContentContainer));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('max_per_page' => 5)));
+
+        $contentData = $this->smartContent->getContentData($property);
+
+        $this->assertEquals(array(1, 2, 3, 4, 5), $contentData);
+    }
 }
