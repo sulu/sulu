@@ -1,0 +1,235 @@
+{% autoescape false %}
+<script type="text/javascript">
+    var init = function() {
+                if (ws.supported()) {
+                    ws.init();
+                } else {
+                    ajax.init();
+                }
+            },
+            debug = function(message) {
+                {% if debug is defined and debug %}
+                console.log('PREVIEW', message);
+                {% endif %}
+            },
+            ws = {
+                conn: null,
+                opened: false,
+
+                url: '{{ wsUrl }}',
+                port: '{{ wsPort }}',
+
+                supported: function() {
+                    var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
+                    // no support
+                    if (support === null) {
+                        debug("Your browser doesn't support Websockets.");
+                        return false;
+                    }
+                    // let's invite Firefox to the party.
+                    if (window.MozWebSocket) {
+                        window.WebSocket = window.MozWebSocket;
+                    }
+                    // support exists
+                    return true;
+                },
+
+                init: function() {
+                    try {
+                        // create websocket
+                        this.conn = new WebSocket(this.url + ':' + this.port);
+
+                        // on open
+                        this.conn.onopen = function(e) {
+                            debug("Connection established!");
+                            this.opened = true;
+
+                            var message = {
+                                command: 'start',
+                                content: '{{ contentUuid }}',
+                                type: 'preview',
+                                user: {{ userId }},
+                                webspaceKey: '{{ webspaceKey }}',
+                                languageCode: '{{ languageCode }}'
+                            };
+                            this.conn.send(JSON.stringify(message));
+                        }.bind(this);
+
+                        // on message
+                        this.conn.onmessage = function(e) {
+                            var data = JSON.parse(e.data);
+                            debug(data);
+                            if (data.command === 'changes') {
+                                handleChanges(data.changes);
+                            }
+                        }.bind(this);
+
+                        this.conn.onclose = function(e) {
+                            if (!!this.opened) {
+                                window.close();
+                            } else {
+                                // safari no connection established
+                                ajax.init();
+                            }
+                        }.bind(this);
+
+                        this.conn.onerror = function(e) {
+                            console.warn(e);
+
+                            if (!this.opened) {
+                                // no connection can be opened use fallback
+                                ajax.init();
+                            }
+                        }.bind(this);
+                    } catch (ex) {
+                        ajax.init();
+                    }
+                }
+            },
+            ajax = {
+                http: null,
+
+                // config
+                interval: {{ interval }},
+                url: '{{ ajaxUrl }}',
+
+                // activate only once
+                activated: false,
+
+                init: function() {
+                    if (!this.activated) {
+                        setTimeout(this.request.bind(this), this.interval);
+                        this.activated = true;
+                    }
+                },
+
+                getHttp: function(type, url, callback) {
+                    var http;
+                    if (window.XMLHttpRequest) {
+                        http = new XMLHttpRequest();
+                    } else if (window.ActiveXObject) {
+                        http = new ActiveXObject("Microsoft.XMLHTTP");
+                    } else {
+                        debug('no ajax supported');
+                        return false;
+                    }
+
+                    http.open(type, url, true);
+                    http.onreadystatechange = callback.bind(this);
+
+                    return http;
+                },
+
+                request: function() {
+                    if (!!this.http) {
+                        // if not: callback will be called multiple
+                        this.http.onreadystatechange = null;
+                    }
+                    // init httpRequest object
+                    this.http = this.getHttp('GET', this.url, this.response);
+                    if (!!this.http) {
+                        // send request
+                        this.http.send(null);
+                    } else {
+                        throw 'browser not supported';
+                    }
+                },
+
+                response: function() {
+                    // if OK 200
+                    if (this.http.readyState == 4) {
+                        var result = JSON.parse(this.http.responseText);
+
+                        debug(result);
+                        handleChanges(result);
+
+                        // start next request in a interval
+                        setTimeout(this.request.bind(this), this.interval);
+                    }
+                }
+            },
+            handleChanges = function(changes) {
+                if (!!changes.reload) {
+                    location.reload();
+                } else {
+                    // foreach property which was changed
+                    for (var propertyName in changes) {
+                        if (changes.hasOwnProperty(propertyName)) {
+                            if (-1 !== propertyName.indexOf(',')) {
+                                handleSequence(propertyName, changes[propertyName]);
+                            } else {
+                                handleSingle(propertyName, changes[propertyName]);
+                            }
+                        }
+                    }
+                }
+            },
+            handleSequence = function(propertyName, content) {
+                var sequence = propertyName.split(','),
+                        filter = '',
+                        elements,
+                        nodeArray,
+                        i, item, before;
+
+                for (item in sequence) {
+                    // check of integer
+                    if (!/^\+?(0|[1-9]\d*)$/.test(sequence[item])) {
+                        before = sequence[item];
+                        filter += ' *[property="' + sequence[item] + '"]';
+                    } else {
+                        filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                    }
+                }
+
+                // find rdfa node
+                elements = document.querySelectorAll(filter);
+                i = 0;
+                // foreach node
+                nodeArray = [].slice.call(elements);
+                nodeArray.forEach(function(element) {
+                    // set content and highlight class
+                    if (typeof content[i] !== 'undefined') {
+                        element.innerHTML = content[i];
+                    } else {
+                        element.innerHTML = '';
+                    }
+                    // FIXME jump to element jump in from to: element.scrollIntoView();
+                    i++;
+                });
+            },
+            handleSingle = function(propertyName, content) {
+                // not is not supported ...
+                // check if one parent is a property
+                var filter = '*[property="' + propertyName + '"]',
+                        cur,
+                // find rdfa node
+                        elements = document.querySelectorAll(filter),
+                // foreach node
+                        nodeArray = [].slice.call(elements),
+                        i = 0;
+
+                nodeArray.forEach(function(element) {
+                    // no parent have property
+                    cur = element.parentNode;
+                    while (null !== cur.parentNode) {
+                        if (cur.hasAttribute('property')) {
+                            return;
+                        }
+                        cur = cur.parentNode;
+                    }
+                    // set content and highlight class
+                    if (typeof content[i] !== 'undefined') {
+                        element.innerHTML = content[i];
+                    } else {
+                        element.innerHTML = '';
+                    }
+                    // FIXME jump to element jump in from to: element.scrollIntoView();
+                    i++;
+                });
+            };
+
+    (function() {
+        init();
+    })();
+</script>
+{% endautoescape %}

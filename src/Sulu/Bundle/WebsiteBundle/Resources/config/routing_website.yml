@@ -1,0 +1,3 @@
+sulu_website.preview.xml:
+    path:      /sitemap.xml
+    defaults:  { _controller: SuluWebsiteBundle:Sitemap:index }

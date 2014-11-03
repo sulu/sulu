@@ -1,0 +1,154 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Location Content Demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="stylesheet" href="/bundles/suluadmin/js/vendor/husky/husky.min.css">
+        <link rel="stylesheet" href="../../css/main.css">
+        <link rel="stylesheet" href="../../js/vendor/leaflet/leaflet.css">
+        <style type="text/css">
+            h1 {
+                padding: 20px 0 0 00px;
+            }
+
+            #location-content,
+            #location-content2 {
+                padding: 50px 0 0 0px;
+            }
+
+            .fixed-width {
+                width: 820px;
+            }
+
+            #setConfigs {
+                margin: 10px 0 0 0px;
+            }
+
+            body {
+                margin-left: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Location Content Husky Demo</h1>
+
+        <script src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
+        <script type="text/javascript">
+            var data = {
+                'address_1': {
+                    'title': 'First Address',
+                    'number': '7564',
+                    'street': 'Ridiculus Rd',
+                    'town': 'Sambalpur',
+                    'code': '10401',
+                    'country': 'Uzebekistan',
+                    'long': 47.36691,
+                    'lat': 9.77052,
+                    'zoom': 1,
+                    'mapProvider': 'google'
+                },
+                'address_2': {
+                    'title': 'Second Address',
+                    'number': '571',
+                    'street': 'Amet. Street',
+                    'town': 'Mineapolis',
+                    'code': '462764',
+                    'country': 'Uzebekistan',
+                    'long': 50.6136,
+                    'lat': -2.4590,
+                    'zoom': 12
+                }
+            }
+
+            function set_data(dataIndex) {
+                $('#location_content').data('location', data[dataIndex]);
+            }
+
+            var App;
+
+            require.config({
+                baseUrl: '..',
+                paths: {
+                    "map/leaflet": '../../sululocation/js/map/leaflet',
+                    "map/google": '../../sululocation/js/map/google',
+                    "leaflet": '../../sululocation/js/vendor/leaflet/leaflet',
+                    "async": '../../sululocation/js/vendor/requirejs-plugins/async'
+                }
+            });
+
+            require(['husky'], function(Husky) {
+                'use strict';
+
+                set_data('address_1');
+
+                var app = Husky({ debug: { enable: true }});
+                var _ = app.sandbox.util._;
+
+                App = app;
+
+                app.components.addSource('sululocation', '/bundles/sululocation/js/components');
+
+                app.start([
+                    {
+                        name: 'location@sululocation',
+                        options: {
+                            el: '#location_content',
+                            instanceName: 'i1',
+                            mapProviders: {
+                                leaflet: {
+                                    title: 'Leaflet (OSM)',
+                                },
+                                google: {
+                                    title: 'Google',
+                                    api_key: null,
+                                }
+                            },
+                            geolocatorUrl: '/admin/sulu_location/geolocator',
+                            countries: {
+                                'England': 'England',
+                                'France': 'France',
+                                'Austria': 'Austria',
+                                'Germany': 'Germany',
+                                'Spain': 'Spain'
+                            }
+                        }
+                    }
+                ]).then(function() {
+                    app.logger.log('Aura started...');
+
+                    $('.load_data_button').on('click', function () {
+                        set_data($(this).attr('rel'));
+                        app.sandbox.emit('sulu.location.reload_data');
+                    });
+                });
+            });
+        </script>
+
+        <div class="container">
+            <div class="grid">
+                <div class="grid-row">
+                    <div class="grid-col-3 fixed-width">
+                        <button rel="address_1" class="load_data_button">Load Data 1</button>
+                        <button rel="address_2" class="load_data_button">Load Data 2</button>
+                    </div>
+                </div>
+                <div class="grid-row">
+                    <div class="grid-col-6 fixed-width">
+                        <div id="location_content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

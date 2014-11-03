@@ -1,0 +1,35 @@
+navigation_contact:
+    path: /navigation/contact
+    defaults: { _controller: SuluContactBundle:Navigation:contact }
+
+navigation_account:
+    path: /navigation/account
+    defaults: { _controller: SuluContactBundle:Navigation:account }
+
+contact_form:
+    pattern: /template/contact/form.html
+    defaults: { _controller: SuluContactBundle:Template:contactForm }
+
+contact_activities:
+    pattern: /template/contact/activities.html
+    defaults: { _controller: SuluContactBundle:Template:contactActivities }
+
+account_form:
+    pattern: /template/account/form.html
+    defaults: { _controller: SuluContactBundle:Template:accountForm }
+
+contact_list:
+    pattern: /template/contact/list.html
+    defaults: { _controller: SuluContactBundle:Template:contactList }
+
+account_list:
+    pattern: /template/account/list.html
+    defaults: { _controller: SuluContactBundle:Template:accountList }
+
+account_financials:
+    pattern: /template/account/financials.html
+    defaults: { _controller: SuluContactBundle:Template:accountFinancials }
+
+basic_documents:
+    pattern: /template/basic/documents.html
+    defaults: { _controller: SuluContactBundle:Template:basicDocuments }

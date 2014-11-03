@@ -1,0 +1,20 @@
+{% block extends %}
+{{ "{% extends '::base.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+{{ "{% block body -%}" }}
+    <h1>{{ entity }} edit</h1>
+
+    <form action="{{ "{{ path('" ~ route_name_prefix ~ "_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(edit_form) }}" }}>
+        <input type="hidden" name="_method" value="PUT" />
+        {{ "{{ form_widget(edit_form) }}" }}
+        <p>
+            <button type="submit">Edit</button>
+        </p>
+    </form>
+
+    {% set hide_edit, hide_delete = true, false %}
+    {% include 'crud/views/others/record_actions.html.twig.twig' %}
+{{ "{% endblock %}" }}
+{% endblock body %}

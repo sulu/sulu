@@ -1,0 +1,33 @@
+{
+    "name": "sulu/test-bundle",
+    "type": "sulu-bundle",
+    "description": "Test Bundle for the Sulu CMF",
+    "license": "MIT",
+    "version": "dev-develop",
+    "keywords": ["sulu", "test"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/sulu-cmf/SuluTestBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "sulu/sulu": "dev-develop",
+
+        "phpspec/prophecy-phpunit": "~1.0",
+        "symfony-cmf/testing": "~1.2"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\TestBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/TestBundle"
+}

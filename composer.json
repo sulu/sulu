@@ -1,39 +1,86 @@
 {
     "name": "sulu/sulu",
     "type": "library",
-    "description": "Symfony bundle that provides basic core functionality",
+    "description": "SuluCMF core distribution",
     "license": "MIT",
-    "keywords": ["core", "sulu"],
-    "version": "0.9.0",
+    "keywords": [
+        "core",
+        "sulu"
+    ],
+    "version": "0.10.0",
     "authors": [
         {
             "name": "Sulu Community",
-            "homepage": "https://github.com/massiveart/SuluContactBundle/contributors"
+            "homepage": "https://github.com/sulu-cmf/sulu/contributors"
         }
     ],
     "require": {
-        "php": ">=5.4",
+        "cboden/ratchet": "0.3.*",
         "doctrine/orm": "2.4.*",
-        "symfony/framework-bundle": "2.5.*",
-        "sensio/distribution-bundle": "2.3.*",
-        "friendsofsymfony/rest-bundle": "1.4.*",
-        "friendsofsymfony/http-cache": "1.0.*",
-        "jackalope/jackalope-jackrabbit": "1.1.*",
         "doctrine/phpcr-bundle": "1.1.*",
         "doctrine/phpcr-odm": "1.1.*",
-        "willdurand/hateoas-bundle": "0.3.*",
-        "oro/doctrine-extensions": "1.0.*"
+        "friendsofsymfony/http-cache": "1.0.*",
+        "friendsofsymfony/rest-bundle": "~1.4",
+        "guzzle/http": "3.*",
+        "guzzle/plugin-log": "3.9.*",
+        "imagine/imagine": "~0.6.1",
+        "jackalope/jackalope-jackrabbit": "1.1.*",
+        "liip/theme-bundle": "1.1.*",
+        "massive/search-bundle": "~0.3.1",
+        "php": ">=5.4",
+        "phpspec/prophecy-phpunit": "~1.0",
+        "sensio/framework-extra-bundle": "3.0.*",
+        "stof/doctrine-extensions-bundle": "1.1.*",
+        "symfony-cmf/routing-bundle": "1.2.*",
+        "symfony-cmf/testing": "~1.2",
+        "symfony/console": "~2.0",
+        "symfony/framework-bundle": "~2.2",
+        "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
-        "symfony/symfony": "2.5.*",
-        "phpunit/phpunit": "4.0.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
+        "doctrine/orm": "~2.2,>=2.2.3",
+        "guzzle/plugin-mock": "3.9.*",
+        "massive/build-bundle": "0.2.*",
+        "matthiasnoback/symfony-config-test": "v0.1.1",
+        "matthiasnoback/symfony-dependency-injection-test": "v0.7.1",
         "phpspec/prophecy-phpunit": "~1.0",
-        "sulu/test-bundle": "0.9.*",
-        "jackalope/jackalope-doctrine-dbal": "1.1.*",
-        "matthiasnoback/symfony-dependency-injection-test": "~0.1"
+        "phpunit/phpunit": "~4.0.0",
+        "sensio/framework-extra-bundle": "~3.0",
+        "symfony-cmf/testing": "~1.1",
+        "symfony/doctrine-bridge": "~2.2",
+        "symfony/monolog-bundle": "2.4.*",
+        "symfony/symfony": "2.5.*",
+        "twig/twig": "~1.11",
+        "zendframework/zend-stdlib": "~2.3",
+        "zendframework/zendsearch": "@dev"
+    },
+    "replace": {
+        "sulu/media-bundle": "self.version",
+        "sulu/tag-bundle": "self.version",
+        "sulu/category-bundle": "self.version",
+        "sulu/test-bundle": "self.version",
+        "sulu/search-bundle": "self.version",
+        "sulu/security-bundle": "self.version",
+        "sulu/website-bundle": "self.version",
+        "sulu/admin-bundle": "self.version",
+        "sulu/generator-bundle": "self.version",
+        "sulu/contact-bundle": "self.version",
+        "sulu/snippet-bundle": "self.version",
+        "sulu/location-bundle": "self.version",
+        "sulu/translate-bundle": "self.version",
+        "sulu/content-bundle": "self.version"
     },
     "suggest": {
-        "massive/build-bundle": "For initializing the Sulu environment"
+        "sensio/framework-extra-bundle": "~3.0",
+        "symfony/symfony": "2.5.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "3.7.*",
+        "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
+        "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
+        "massive/build-bundle": "0.2.*"
     },
     "autoload": {
         "psr-0": {

@@ -1,0 +1,3 @@
+sulu_snippet.content_navigation.snippet:
+    path: /navigation/snippet
+    defaults: { _controller: SuluSnippetBundle:Navigation:snippet }

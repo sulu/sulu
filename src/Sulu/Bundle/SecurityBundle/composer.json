@@ -1,0 +1,43 @@
+{
+    "name": "sulu/security-bundle",
+    "type": "sulu-bundle",
+    "description": "Security Bundle for the Sulu CMS",
+    "license": "MIT",
+    "keywords": ["sulu", "security"],
+    "version": "dev-develop",
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluSecurityBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "doctrine/orm": "2.4.*",
+        "stof/doctrine-extensions-bundle": "1.1.*",
+        "willdurand/hateoas-bundle": "0.3.*",
+
+        "sulu/sulu": "dev-develop",
+        "sulu/admin-bundle": "dev-develop",
+        "sulu/contact-bundle": "dev-develop",
+
+        "sulu/media-bundle": "@dev",
+        "sulu/category-bundle": "@dev",
+        "sulu/tag-bundle": "@dev"
+    },
+    "require-dev": {
+        "sensio/framework-extra-bundle":  "~3.0",
+        "symfony/symfony": "2.5.*",
+        "doctrine/doctrine-bundle": "1.2.*",
+        "doctrine/doctrine-fixtures-bundle": "2.2.*",
+        "symfony/monolog-bundle": "2.4.*",
+        "phpunit/phpunit": "3.7.*",
+        "sulu/test-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\SecurityBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/SecurityBundle"
+}

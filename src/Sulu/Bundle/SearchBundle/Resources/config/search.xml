@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_search.event_listener.node_save.class">Sulu\Bundle\SearchBundle\EventListener\NodeSaveListener</parameter>
+        <parameter key="sulu_search.event_listener.search.class">Sulu\Bundle\SearchBundle\EventListener\SearchListener</parameter>
+    </parameters>
+
+    <services>
+        <!-- node save event listener -->
+        <service id="sulu_search.event_listener.node_save" class="%sulu_search.event_listener.node_save.class%">
+            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="sulu.phpcr.session" />
+            <argument type="string">%sulu.content.node_names.base%</argument>
+            <argument type="string">%sulu.content.node_names.temp%</argument>
+
+            <tag name="kernel.event_listener" event="sulu.content.node.save" method="onNodeSave" />
+        </service>
+
+        <!-- search event to be sure that all structures are loaded (generated) -->
+        <service id="sulu_search.event_listener.search" class="%sulu_search.event_listener.search.class%">
+            <argument type="service" id="sulu.content.structure_manager" />
+
+            <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
+        </service>
+    </services>
+</container>

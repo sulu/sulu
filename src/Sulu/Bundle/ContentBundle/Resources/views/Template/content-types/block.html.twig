@@ -1,0 +1,65 @@
+<div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
+    <div class="grid">
+        <div class="text-blocks-header">
+            <div id="sort-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.sort.blocks') %></div>
+            <div id="edit-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right hidden"><%= translate('sulu.content.edit.blocks') %></div>
+            <div class="clear"></div>
+        </div>
+        <div class="sortable grid-row"
+             id="{{ id|raw }}"
+             data-form="true"
+             data-type="block"
+             data-type-config='[{% for type in property.types %}{"data": "{{ type.name }}", "title": "{{ type.getTitle(userLocale) }}", "tpl": "{{ type.name }}-{{ id|raw }}-tpl"}{{ loop.last==false?',':'' }}{% endfor %}]'
+             data-type-min="{{ property.minOccurs }}"
+             data-type-max="{{ property.maxOccurs }}"
+             data-type-default="{{ property.defaultTypeName }}"
+             data-mapper-property="{{ property.name }}"
+             data-mapper-full-class="full"
+             data-mapper-empty-class="empty">
+            {% for type in property.types %}
+                <script id="{{ type.name }}-{{ id|raw }}-tpl" type="text/template">
+                    <div class="text-block {{ type.name }}-element {{ property.name }}-element"
+                         data-mapper-property-tpl="{{ type.name }}">
+                        <div class="show-in-sortmode move"></div>
+                        <input type="hidden" data-mapper-property="type" value="{{ type.name }}"/>
+
+                        <div class="container grid pos-rel">
+                            <div class="text-block-controls pull-right">
+                                <div data-mapper-remove="{{ property.name }}"
+                                     class="fa-trash-o options-remove hide-in-sortmode pull-right m-left-20 mapper-remove-{{ type.name }}"></div>
+
+                                <div class="options-change hide-in-sortmode pull-right" id="change<~=index~>">
+                                    <span data-mapper-change-type="{{ property.name }}"
+                                          class="fa-gear drop-down-trigger"></span>
+                                            <span class="dropdown-toggle drop-down-trigger"></span>
+                                </div>
+
+                                <div class="clear"></div>
+                            </div>
+                            <div class="block block-{{ property.name }} grid-row">
+                                {% for child in type.childProperties %}
+
+                                    {# get Type for property #}
+                                    {% set type = getType(child.contentTypeName) %}
+                                    {# get params for property #}
+                                    {% set params = getParams(child) %}
+
+                                    {% if child is multiple %}
+                                        {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                                    {% else %}
+                                        {% include 'SuluContentBundle:Template:macros/single.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            {% endfor %}
+        </div>
+
+        <div class="text-block-footer" id="{{ id|raw }}-add" style="width: 200px">
+
+        </div>
+    </div>
+</div>

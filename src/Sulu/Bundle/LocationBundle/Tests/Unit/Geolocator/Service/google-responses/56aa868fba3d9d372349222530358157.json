@@ -1,0 +1,73 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "10",
+               "short_name" : "10",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "Rue Alexandre Dumas",
+               "short_name" : "Rue Alexandre Dumas",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Paris",
+               "short_name" : "Paris",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Paris",
+               "short_name" : "75",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Île-de-France",
+               "short_name" : "IDF",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "France",
+               "short_name" : "FR",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "75011",
+               "short_name" : "75011",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "10 Rue Alexandre Dumas, 75011 Paris, France",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 48.8529765,
+                  "lng" : 2.3897064
+               },
+               "southwest" : {
+                  "lat" : 48.8529649,
+                  "lng" : 2.3897012
+               }
+            },
+            "location" : {
+               "lat" : 48.8529649,
+               "lng" : 2.3897064
+            },
+            "location_type" : "RANGE_INTERPOLATED",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 48.8543196802915,
+                  "lng" : 2.391052780291501
+               },
+               "southwest" : {
+                  "lat" : 48.8516217197085,
+                  "lng" : 2.388354819708498
+               }
+            }
+         },
+         "types" : [ "street_address" ]
+      }
+   ],
+   "status" : "OK"
+}

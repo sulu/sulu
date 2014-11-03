@@ -1,0 +1,14 @@
+imports:
+    - { resource: config.yml }
+
+doctrine:
+    dbal:
+        driver:   pdo_pgsql
+        host:     localhost
+        dbname:   sulu_test
+        user:     postgres
+        password:
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true

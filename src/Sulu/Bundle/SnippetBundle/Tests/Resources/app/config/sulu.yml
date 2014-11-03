@@ -1,0 +1,81 @@
+framework:
+    secret: secret
+    router: { resource: "%kernel.root_dir%/config/routing.php" }
+    templating: { engines: ['twig'] }
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+doctrine:
+    dbal:
+        driver:   pdo_mysql
+        host:     localhost
+        dbname:   sulu_test
+        user:     root
+        password:
+        charset:  UTF8
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        resolve_target_entities:
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
+
+sulu_core:
+    phpcr:
+        backend: 
+            type: jackrabbit
+            url: http://localhost:8080/server/
+        workspace: default
+        username: admin
+        password: admin
+    webspace:
+        config_dir: %kernel.root_dir%/Resources/webspaces
+    content:
+        structure:
+            paths:
+                structure:
+                    path: "%kernel.root_dir%/Resources/snippets"
+                    internal: false
+                    type: snippet
+                page:
+                    path: "%kernel.root_dir%/Resources/pages"
+                    internal: false
+                    type: page
+    http_cache:
+        ~
+
+sulu_admin:
+    name: sulu 2.0
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:

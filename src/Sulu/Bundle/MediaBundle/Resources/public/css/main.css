@@ -1,0 +1,33 @@
+/* line 6, ../scss/modules/collection-list.scss */
+#collections-list-container .toggle-all {
+  display: inline-block;
+  cursor: pointer;
+  font-size: 12px;
+}
+/* line 10, ../scss/modules/collection-list.scss */
+#collections-list-container .toggle-all .icon {
+  font-size: 14px;
+  color: #3E3E3E;
+  margin-right: 5px;
+}
+
+/* line 1, ../scss/modules/collection.scss */
+.datagrid-container {
+  margin-top: 30px;
+}
+
+/* line 6, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add .heading {
+  width: 100%;
+  border-bottom: 2px #cccccc solid;
+}
+/* line 10, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add h3 {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+/* line 15, ../scss/modules/media-selection.scss */
+.media-selection-overlay-add .overlay-loader {
+  margin: 20px 0;
+}

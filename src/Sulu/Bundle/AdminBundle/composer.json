@@ -1,0 +1,28 @@
+{
+    "name": "sulu/admin-bundle",
+    "type": "library",
+    "description": "Symfony bundle that provides administration functionality",
+    "license": "MIT",
+    "version": "dev-develop",
+    "keywords": ["admin", "cmf", "symfony"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/massiveart/SuluAdminBundle/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "sulu/sulu": "dev-develop"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\AdminBundle": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/AdminBundle"
+}

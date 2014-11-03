@@ -1,0 +1,11 @@
+<ActivityPriorities>
+    <ActivityPriority>
+        <Name>contact.activity.priority.low</Name>
+    </ActivityPriority>
+    <ActivityPriority>
+        <Name>contact.activity.priority.mid</Name>
+    </ActivityPriority>
+    <ActivityPriority>
+        <Name>contact.activity.priority.high</Name>
+    </ActivityPriority>
+</ActivityPriorities>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="de" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="a50af522ac181350142c0b4720e29a3f" resname="contacts.sidebar.web-and-mail">
+                <source>contacts.sidebar.web-and-mail</source>
+                <target>Web &amp; Email</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a4f" resname="contacts.sidebar.mainContact">
+                <source>contacts.sidebar.mainContact</source>
+                <target>Hauptansprechpartner</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a5f" resname="public.company">
+                <source>public.company</source>
+                <target>Unternehmen</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a6f" resname="contacts.sidebar.mainCompany">
+                <source>contacts.sidebar.mainCompany</source>
+                <target>Hauptunternehmen</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a7f" resname="content-navigation.accounts.documents">
+                <source>content-navigation.accounts.documents</source>
+                <target>Dokumente</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e29a8f" resname="content-navigation.contacts.documents">
+                <source>content-navigation.contacts.documents</source>
+                <target>Dokumente</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e39a7f" resname="contact.contacts.assignment">
+                <source>contact.contacts.assignment</source>
+                <target>Zuordnung</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e49a8f" resname="contact.contacts.categories.label">
+                <source>contact.contacts.categories.label</source>
+                <target>Kategorien</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e41a8f" resname="contact.account.add-account-contact">
+                <source>contact.account.add-account-contact</source>
+                <target>Kontakt hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="a50af522ac181350142c0b4720e42a8f" resname="contact.accounts.add-new-contact-to-account">
+                <source>contact.accounts.add-new-contact-to-account</source>
+                <target>Kontakt erstellen und hinzufügen</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -1,0 +1,11 @@
+<ActivityStatuses>
+    <ActivityStatus>
+        <Name>contact.activity.state.open</Name>
+    </ActivityStatus>
+    <ActivityStatus>
+        <Name>contact.activity.state.closed</Name>
+    </ActivityStatus>
+    <ActivityStatus>
+        <Name>contact.activity.state.inProgress</Name>
+    </ActivityStatus>
+</ActivityStatuses>

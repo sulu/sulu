@@ -1,0 +1,65 @@
+sulu_content.content_form:
+    pattern: /template/form/{key}.html
+    defaults: { _controller: SuluContentBundle:Template:content }
+
+sulu_content.content_form.default:
+    pattern: /template/form.html
+    defaults: { _controller: SuluContentBundle:Template:content }
+
+sulu_content.template.get:
+    pattern: /template
+    defaults: { _controller: SuluContentBundle:Template:get }
+
+sulu_content.languages.get:
+    pattern: /languages/{webspaceKey}
+    defaults: { _controller: SuluContentBundle:Template:getLanguages }
+
+sulu_content.content_navigation:
+    path: /navigation/content
+    defaults: { _controller: SuluContentBundle:Navigation:content }
+
+sulu_content.content_list:
+    pattern: /template/content/list.html
+    defaults: { _controller: SuluContentBundle:Template:list }
+
+sulu_content.content_column:
+    pattern: /template/content/column/{webspaceKey}/{languageCode}.html
+    defaults: { _controller: SuluContentBundle:Template:column }
+
+sulu_content.seo:
+    pattern: /template/content/seo.html
+    defaults: { _controller: SuluContentBundle:Template:seo }
+
+sulu_content.excerpt:
+    pattern: /template/content/excerpt.html
+    defaults: { _controller: SuluContentBundle:Template:excerpt }
+
+sulu_content.template.settings:
+    pattern: /template/content/settings.html
+    defaults: { _controller: SuluContentBundle:Template:settings }
+
+# Preview
+sulu_content.preview.start:
+    pattern: /preview/{contentUuid}/start
+    methods: [GET,POST]
+    defaults: { _controller: SuluContentBundle:Preview:start }
+
+sulu_content.preview.stop:
+    pattern: /preview/{contentUuid}/stop
+    methods: [GET,POST]
+    defaults: { _controller: SuluContentBundle:Preview:stop }
+
+sulu_content.preview.render:
+    pattern: /preview/{contentUuid}/render
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Preview:render }
+
+sulu_content.preview.update:
+    pattern: /preview/{contentUuid}/update
+    methods: POST
+    defaults: { _controller: SuluContentBundle:Preview:update }
+
+sulu_content.preview.changes:
+    pattern: /preview/{contentUuid}/changes
+    methods: GET
+    defaults: { _controller: SuluContentBundle:Preview:changes }
