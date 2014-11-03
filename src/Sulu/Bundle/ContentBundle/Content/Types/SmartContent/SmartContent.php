@@ -260,7 +260,7 @@ class SmartContent extends ComplexContentType
 
             $limit = $params['max_per_page'];
             $offset = ($this->page - 1) * $limit;
-            $data = $value->getData(array( /* TODO current uuid */), $limit + 1, $offset);
+            $data = $value->getData(array($property->getStructure()->getUuid()), $limit + 1, $offset);
 
             $this->hasNextPage = false;
             if (sizeof($data) > $limit) {
