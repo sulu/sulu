@@ -325,7 +325,7 @@ class SmartContent extends ComplexContentType
 
         $this->hasNextPage = false;
         if (sizeof($data) > $limit) {
-            $this->hasNextPage = ($position < $limitResult);
+            $this->hasNextPage = true;
             $data = array_splice($data, 0, $limit);
         }
 
