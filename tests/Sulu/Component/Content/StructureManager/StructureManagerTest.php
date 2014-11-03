@@ -224,6 +224,11 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertTrue($structure->hasStructureTag('some.random.structure.tag'));
+        $this->assertFalse($structure->hasStructureTag('some.random.other.structure.tag'));
+
+        foreach ($structure->getProperties(true) as $property) {
+            $this->assertEquals($structure, $property->getStructure());
+        }
     }
 
 
