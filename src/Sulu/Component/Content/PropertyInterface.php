@@ -134,4 +134,10 @@ interface PropertyInterface extends ArrayableInterface
      * @return string
      */
     public function getPlaceholder($languageCode);
+
+    /**
+     * returns the property values
+     * @return array
+     */
+    public function getValues();
 }

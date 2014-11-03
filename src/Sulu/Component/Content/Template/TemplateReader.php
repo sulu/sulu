@@ -349,32 +349,34 @@ class TemplateReader implements LoaderInterface
             $result[] = array(
                 'type' => $type,
                 'id' => $id,
-                'values' => $this->loadValue($xpath, $node)
+                'values' => $this->loadValue('x:value', $xpath, $node)
             );
         }
 
         return $result;
     }
+
     /**
      * load single param
      */
-    private function loadValue(\DOMXPath $xpath, \DOMNode $node)
+    private function loadValue($path, \DOMXPath $xpath, \DOMNode $context = null)
     {
-        $meta = $this->loadMeta('x:meta/x:*', $xpath, $node);
+        $result = array();
 
-        switch ($type) {
-            case 'collection':
-                $value = $this->loadParams('x:param', $xpath, $node);
-                break;
-            default:
-                $value = $this->getValueFromXPath('@value', $xpath, $node, 'string');
-                break;
+        /** @var \DOMElement $node */
+        foreach ($xpath->query($path, $context) as $node) {
+            $value = $this->loadAttributeValues($xpath, $node);
+            $value['meta'] = $this->loadMeta('x:meta/x:*', $xpath, $node);
+            $value['children'] = $this->loadValues('x:values', $xpath, $node);
+
+            if (isset($value['key'])) {
+                $result[$value['key']] = $value;
+            } else {
+                $result[] = $value;
+            }
         }
 
-        return array(
-            'meta' => $meta,
-            'type' => $type
-        );
+        return $result;
     }
 
     /**
@@ -427,12 +429,18 @@ class TemplateReader implements LoaderInterface
     /**
      * load values defined by key from given node
      */
-    private function loadAttributeValues(\DOMXPath $xpath, \DOMNode $node, $keys, $prefix = '@')
+    private function loadAttributeValues(\DOMXPath $xpath, \DOMNode $node, $keys = array(), $prefix = '@')
     {
         $result = array();
 
-        foreach ($keys as $key) {
-            $result[$key] = $this->getValueFromXPath($prefix . $key, $xpath, $node);
+        if (empty($keys) && $node->hasAttributes()) {
+            foreach ($node->attributes as $attrKey => $attr) {
+                $result[$attrKey] = $attr->nodeValue;
+            }
+        } else {
+            foreach ($keys as $key) {
+                $result[$key] = $this->getValueFromXPath($prefix . $key, $xpath, $node);
+            }
         }
 
         return $result;

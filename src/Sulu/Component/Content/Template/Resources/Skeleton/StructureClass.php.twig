@@ -24,129 +24,140 @@ class {{ cache_class }} extends {{ base_class }}
             {{ _self.renderArray(content.meta) }}
         );
 
-{% for property in content.properties %}
-{{ _self.buildProperty(property, '$this', 1) }}
-{% endfor %}
+        {% for property in content.properties %}
+            {{ _self.buildProperty(property, '$this', 1) }}
+        {% endfor %}
 
-    {% for tag in content.tags %}
-        $this->addStructureTag(new StructureTag('{{ tag.name }}', {{ _self.renderArray(tag.attributes) }}));
-    {% endfor %}
+        {% for tag in content.tags %}
+                $this->addStructureTag(new StructureTag('{{ tag.name }}', {{ _self.renderArray(tag.attributes) }}));
+        {% endfor %}
     }
 }
 
 {% macro buildProperty(property, parent, layer) %}
-{% set child = '$prop'~layer %}
-{% if property.type == 'block' %}
+    {% set child = '$prop'~layer %}
+    {% if property.type == 'block' %}
         {{ child }} = {{ _self.blockPropertyConstructor(property) }}
         {{ parent }}->addChild({{ child }});
-{% for type in property.types %}
-{{ _self.buildTypes(type, child, layer, loop.index) }}
-{% endfor %}
-{% elseif property.type == 'section' %}
-{{ _self.buildSection(property, parent, layer) }}
-{% else %}
+        {% for type in property.types %}
+            {{ _self.buildTypes(type, child, layer, loop.index) }}
+        {% endfor %}
+    {% elseif property.type == 'section' %}
+        {{ _self.buildSection(property, parent, layer) }}
+    {% else %}
         {{ child }} = {{ _self.propertyConstructor(property) }}
         {{ parent }}->addChild({{ child }});
-{% endif %}
+    {% endif %}
 {% endmacro %}
 
 {% macro buildSection(section, parent, layer) %}
-        // section {{ section.name }}
-        {% set sectionVar = '$section'~layer~typeIndex %}
-        {{ sectionVar }} = new SectionProperty(
-            '{{ section.name }}',
-            {{ _self.renderArray(section.meta) }},
-            '{{ section.colspan }}'
-        );
-{% for property in section.properties %}
-{{ _self.buildProperty(property, sectionVar, layer) }}
-{% endfor %}
-        {{ parent }}->addChild({{ sectionVar }});
+    // section {{ section.name }}
+    {% set sectionVar = '$section'~layer~typeIndex %}
+    {{ sectionVar }} = new SectionProperty(
+        '{{ section.name }}',
+        {{ _self.renderArray(section.meta) }},
+        '{{ section.colspan }}'
+    );
+    {% for property in section.properties %}
+        {{ _self.buildProperty(property, sectionVar, layer) }}
+    {% endfor %}
+    {{ parent }}->addChild({{ sectionVar }});
 {% endmacro %}
 
 {% macro buildTypes(type, parent, layer, typeIndex) %}
-{% set typeVar = '$type'~layer~typeIndex %}
-        {{ typeVar }} = new BlockPropertyType(
-            '{{ type.name }}',
-{{ _self.renderArray(type.meta) }}
-        );
-        {{ parent }}->addType({{ typeVar }});
-{% for childProperty in type.properties %}
-{{ _self.buildProperty(childProperty, typeVar, layer+1) }}
-{% endfor %}
+    {% set typeVar = '$type'~layer~typeIndex %}
+    {{ typeVar }} = new BlockPropertyType(
+        '{{ type.name }}',
+        {{ _self.renderArray(type.meta) }}
+    );
+    {{ parent }}->addType({{ typeVar }});
+    {% for childProperty in type.properties %}
+        {{ _self.buildProperty(childProperty, typeVar, layer+1) }}
+    {% endfor %}
 {% endmacro %}
 
 {% macro propertyConstructor(property) %}
-new Property(
-            '{{ property.name }}',
-{{ _self.renderArray(property.meta) }},
-            '{{ property.type }}',
-            {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is same as(false) ? 'false' : 'true' }},
-            {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
-            {{ property.minOccurs != null ? property.minOccurs : 1 }},
-            {{ _self.renderParams(property.params) }},
-            array(
-{% for tag in property.tags %}
+    new Property(
+        '{{ property.name }}',
+        {{ _self.renderArray(property.meta) }},
+        '{{ property.type }}',
+        {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
+        {{ property.multilingual is same as(false) ? 'false' : 'true' }},
+        {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
+        {{ property.minOccurs != null ? property.minOccurs : 1 }},
+        {{ _self.renderParams(property.params) }},
+        array(
+            {% for tag in property.tags %}
                 '{{ tag.name }}' => {{ _self.propertyTag(tag) }},
-{% endfor %}
-            ),
-            '{{ property.colspan }}',
-            {{ property.indexField ? 'true' : 'false'}}
-        );
-        {% endmacro %}
+            {% endfor %}
+        ),
+        '{{ property.colspan }}',
+        {{ property.indexField ? 'true' : 'false'}},
+        {{ _self.renderParams(property.values) }}
+    );
+{% endmacro %}
 
 {% macro blockPropertyConstructor(property) %}
-new BlockProperty(
-            '{{ property.name }}',
-{{ _self.renderArray(property.meta) }},
-            '{{ property['default-type'] }}',
-            {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
-            {{ property.multilingual is same as(false) ? 'false' : 'true' }},
-            {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
-            {{ property.minOccurs != null ? property.minOccurs : 1 }},
-            array(
-{% for param in property.params %}
+    new BlockProperty(
+        '{{ property.name }}',
+        {{ _self.renderArray(property.meta) }},
+        '{{ property['default-type'] }}',
+        {{ property.mandatory != null and property.mandatory ? 'true' : 'false' }},
+        {{ property.multilingual is same as(false) ? 'false' : 'true' }},
+        {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
+        {{ property.minOccurs != null ? property.minOccurs : 1 }},
+        array(
+            {% for param in property.params %}
                 '{{ param.name }}' => '{{ param.value }}',
-{% endfor %}
-            ),
-            array(
-{% for tag in property.tags %}
+            {% endfor %}
+        ),
+        array(
+            {% for tag in property.tags %}
                 '{{ tag.name }}' => {{ _self.propertyTag(tag) }},
-{% endfor %}
-            ),
-            '{{ property.colspan }}'
-        );{% endmacro %}
+            {% endfor %}
+        ),
+        '{{ property.colspan }}'
+    );
+{% endmacro %}
 
 {% macro propertyTag(tag) %}
-new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? tag.priority : '1' }}, array({% for attrName, attrValue in tag.attributes %}'{{ attrName }}' => '{{ attrValue }}'{% if not loop.last %},{% endif %}{% endfor %}))
+    new PropertyTag(
+        '{{ tag.name }}'
+        {{ tag.priority is defined and tag.priority ? tag.priority : '1' }},
+        array(
+            {% for attrName, attrValue in tag.attributes %}
+                '{{ attrName }}' => '{{ attrValue }}'{% if not loop.last %},{% endif %}
+            {% endfor %}
+        )
+    )
 {% endmacro %}
 
 {% macro renderArray(array) %}
-            array(
-{% for key, value in array %}
-{% if is_array(value) %}
+    array(
+        {% for key, value in array %}
+            {% if is_array(value) %}
                 '{{ key }}' => {{ _self.renderArray(value) }},
-{% else %}
+            {% else %}
                 '{{ key }}' => '{{ value }}',
-{% endif %}
-{% endfor %}
-            ){% endmacro %}
+            {% endif %}
+        {% endfor %}
+    )
+{% endmacro %}
 
 {% macro renderParams(params) %}
-            array(
-{% for param in params %}
-{% if param.type == 'collection'  %}
-                '{{ param.name }}' => {{ _self.renderParams(param.value) }},
-{% elseif param.type|lower == 'string'  %}
-{% if param.value|lower == 'true' %}
-                '{{ param.name }}' => {{ param.value|lower }},
-{% elseif param.value|lower == 'false' %}
-                '{{ param.name }}' => {{ param.value|lower }},
-{% else %}
-                '{{ param.name }}' => '{{ param.value }}',
-{% endif %}
-{% endif %}
-{% endfor %}
-            )
+    array(
+        {% for param in params %}
+            {% if param.type == 'collection'  %}
+                            '{{ param.name }}' => {{ _self.renderParams(param.value) }},
+            {% elseif param.type|lower == 'string'  %}
+                {% if param.value|lower == 'true' %}
+                                '{{ param.name }}' => {{ param.value|lower }},
+                {% elseif param.value|lower == 'false' %}
+                                '{{ param.name }}' => {{ param.value|lower }},
+                {% else %}
+                                '{{ param.name }}' => '{{ param.value }}',
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    )
 {% endmacro %}

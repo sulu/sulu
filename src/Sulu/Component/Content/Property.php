@@ -83,6 +83,12 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     private $value;
 
+    /**
+     * property defined values
+     * @var array
+     */
+    private $values;
+
     function __construct(
         $name,
         $metaData,
@@ -93,7 +99,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = 1,
         $params = array(),
         $tags = array(),
-        $col = null
+        $col = null,
+        $values = array()
     )
     {
         $this->contentTypeName = $contentTypeName;
@@ -106,6 +113,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags =$tags;
         $this->col = $col;
+        $this->values = $values;
     }
 
     /**
@@ -307,6 +315,14 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * @return PropertyValueInterface[]
+     */
+    public function getValues()
+    {
+        return array(); // TODO
     }
 
     /**
