@@ -372,11 +372,22 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function getFilteredNodes(array $filterConfig, $languageCode, $webspaceKey, $preview = false, $api = false)
+    public function getFilteredNodes(
+        array $filterConfig,
+        $languageCode,
+        $webspaceKey,
+        $preview = false,
+        $api = false,
+        $exclude = array()
+    )
     {
         $limit = isset($filterConfig['limitResult']) ? $filterConfig['limitResult'] : null;
+        $initParams = array('config' => $filterConfig);
+        if ($exclude) {
+            $initParams['excluded'] = $exclude;
+        }
 
-        $this->queryBuilder->init(array('config' => $filterConfig));
+        $this->queryBuilder->init($initParams);
         $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder, true, -1, $limit);
 
         if ($api) {
