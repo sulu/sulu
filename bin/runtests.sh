@@ -75,11 +75,16 @@ for BUNDLE in $BUNDLES; do
     fi
 
     if [[ ! -z "$KERNEL_DIR" ]]; then
+        CONSOLE="env KERNEL_DIR=$OCWD"/"$KERNEL_DIR $OCWD/bin/console"
         comment "Kernel: "$KERNEL_DIR
-        env KERNEL_DIR=$OCWD"/"$KERNEL_DIR $OCWD/bin/console doctrine:schema:update --force
+
+        $CONSOLE container:debug | cut -d' ' -f2 | grep "^doctrine.orm" &> /dev/null \
+            && comment "Doctrine ORM detected" \
+            && $CONSOLE doctrine:schema:update --force
     fi
 
     cd -
+    comment "Running tests"
 
     phpunit --configuration phpunit.travis.xml.dist --stop-on-failure --stop-on-error $BUNDLE_DIR/Tests
 
