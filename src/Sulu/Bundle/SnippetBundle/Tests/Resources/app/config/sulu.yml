@@ -37,7 +37,8 @@ doctrine:
 sulu_core:
     phpcr:
         backend: 
-            type: doctrinedbal
+            type: jackrabbit
+            url: http://localhost:8080/server/
         workspace: default
         username: admin
         password: admin

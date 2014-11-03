@@ -84,7 +84,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
             //    array('hotel1', 'hotel2', 'car1'), 'en', 3
             //),
             array(
-                array('hotel1', 'invalid', 'car1'), 'de', 2
+                array('hotel1', '842e61c0-09ab-42a9-1111-111111111111', 'car1'), 'de', 2
             ),
             array(
                 array(), 'de', 0
