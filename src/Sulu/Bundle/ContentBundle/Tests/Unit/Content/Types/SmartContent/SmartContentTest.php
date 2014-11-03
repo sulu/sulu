@@ -397,7 +397,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $smartContentContainer->expects($this->once())
             ->method('getData')
-            ->with($this->equalTo(array('123-123-123')), $this->equalTo(6), $this->equalTo(0))
+            ->with($this->equalTo(array('123-123-123')))
             ->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
 
         $property->expects($this->exactly(1))->method('getValue')
