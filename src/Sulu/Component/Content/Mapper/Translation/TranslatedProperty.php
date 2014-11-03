@@ -269,4 +269,15 @@ class TranslatedProperty implements PropertyInterface
     {
         return $this->property->toArray($depth);
     }
+
+    /**
+     * returns the property values
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->property->getValues();
+    }
+
+
 }
