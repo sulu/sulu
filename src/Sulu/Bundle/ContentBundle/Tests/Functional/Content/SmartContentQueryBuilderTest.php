@@ -641,4 +641,26 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->assertArrayHasKey($result[0]['uuid'], $nodes);
         $this->assertArrayHasKey($result[1]['uuid'], $nodes);
     }
+
+    public function testExcluded()
+    {
+        $nodes = $this->propertiesProvider();
+        $uuids = array_keys($nodes);
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        $builder->init(array('excluded' => array($uuids[0])));
+
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+
+        $this->assertEquals(14, sizeof($result));
+        unset($uuids[0]);
+        foreach ($result as $item) {
+            $this->assertContains($item['uuid'], $uuids);
+        }
+    }
 }
