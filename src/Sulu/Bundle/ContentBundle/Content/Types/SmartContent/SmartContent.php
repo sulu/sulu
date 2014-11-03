@@ -271,7 +271,7 @@ class SmartContent extends ComplexContentType
             $contentData = $this->getPagedContentData(
                 $container,
                 $this->page,
-                $params['max_per_page'],
+                intval($params['max_per_page']),
                 $property->getStructure()->getUuid()
             );
         } else {
@@ -299,7 +299,7 @@ class SmartContent extends ComplexContentType
             $page = 1;
         }
 
-        return $page;
+        return intval($page);
     }
 
     /**
@@ -307,14 +307,26 @@ class SmartContent extends ComplexContentType
      */
     private function getPagedContentData(SmartContentContainer $container, $page, $pageSize, $excludeUuid)
     {
-        $limit = $pageSize;
+        $config = $container->getConfig();
+        $limitResult = isset($config['limitResult']) ? intval($config['limitResult']) : null;
+
+        $limit = intval($pageSize);
         $offset = ($page - 1) * $limit;
-        $data = $container->getData(array($excludeUuid), $limit + 1, $offset);
+
+        $position = $limit * $page;
+        if ($limitResult !== null && $position > $limitResult) {
+            $limit = $limitResult - $offset;
+            $loadLimit = $limit;
+        } else {
+            $loadLimit = $limit + 1;
+        }
+
+        $data = $container->getData(array($excludeUuid), $loadLimit, $offset);
 
         $this->hasNextPage = false;
         if (sizeof($data) > $limit) {
-            $this->hasNextPage = true;
-            $data = array_splice($data, $offset, $limit);
+            $this->hasNextPage = ($position < $limitResult);
+            $data = array_splice($data, 0, $limit);
         }
 
         return $data;
