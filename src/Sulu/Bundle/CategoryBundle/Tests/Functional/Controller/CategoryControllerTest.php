@@ -19,10 +19,29 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CategoryControllerTest extends SuluTestCase
 {
+    /**
+     * @var Category
+     */
     private $category1;
+
+    /**
+     * @var Category
+     */
     private $category2;
+
+    /**
+     * @var Category
+     */
     private $category3;
+
+    /**
+     * @var Category
+     */
     private $category4;
+
+    /**
+     * @var Category
+     */
     private $meta1;
 
     public function setUp()
@@ -185,8 +204,6 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGet()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
-
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
@@ -196,12 +213,22 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(4, count($response->_embedded->categories));
+
+        $categories = $response->_embedded->categories;
+
+        $this->assertEquals('First Category', $categories[0]->name);
+        $this->assertEquals('Third Category', $categories[0]->children[0]->name);
+        $this->assertEquals('Fourth Category', $categories[0]->children[0]->children[0]->name);
+        $this->assertEquals('second-category-key', $categories[1]->key);
+
+        $this->assertCount(2, $categories);
+        $this->assertCount(1, $categories[0]->children);
+        $this->assertCount(1, $categories[0]->children[0]->children);
     }
 
     public function testCGetWithParent()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
+        $this->markTestSkipped('Fix dme: https://github.com/sulu-cmf/sulu/issues/355');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -219,7 +246,7 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testCGetWithDepth()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
+        $this->markTestSkipped('Fix dme: https://github.com/sulu-cmf/sulu/issues/355');
 
         $client = $this->createAuthenticatedClient();
         $client->request(
@@ -253,8 +280,6 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testPost()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
-
         $client = $this->createAuthenticatedClient();
         $client->request(
             'POST',
@@ -288,13 +313,17 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories'
+            '/api/categories/' . $response->id
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(5, count($response->_embedded->categories));
+        $this->assertEquals('New Category', $response->name);
+        $this->assertEquals('new-category-key', $response->key);
+        $this->assertEquals(1, count($response->meta));
+        $this->assertEquals('myKey', $response->meta[0]->key);
+        $this->assertEquals('myValue', $response->meta[0]->value);
     }
 
     public function testPut()
@@ -447,8 +476,6 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
-
         $client = $this->createAuthenticatedClient();
         $client->request(
             'DELETE',
@@ -460,15 +487,10 @@ class CategoryControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/categories'
+            '/api/categories' . $this->category2->getId()
         );
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(3, count($response->_embedded->categories));
-        $this->assertEquals($this->category1->getId(), $response->_embedded->categories[0]->id);
-        $this->assertEquals($this->category3->getId(), $response->_embedded->categories[1]->id);
-        $this->assertEquals($this->category4->getId(), $response->_embedded->categories[2]->id);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     public function testDeleteOfParent()
@@ -495,8 +517,6 @@ class CategoryControllerTest extends SuluTestCase
 
     public function testGetChildren()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
-
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
@@ -506,14 +526,13 @@ class CategoryControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals(2, count($response->_embedded->categories));
-        $this->assertEquals(3, $response->_embedded->categories[0]->id);
-        $this->assertEquals(4, $response->_embedded->categories[1]->id);
+        $this->assertCount(1, $response->_embedded->categories);
+        $this->assertEquals($this->category3->getId(), $response->_embedded->categories[0]->id);
     }
 
     public function testGetChildrenAsList()
     {
-        $this->markTestSkipped('Fix me: https://github.com/sulu-cmf/sulu/issues/355');
+        $this->markTestSkipped('Fix dme: https://github.com/sulu-cmf/sulu/issues/355');
 
         $client = $this->createAuthenticatedClient();
         $client->request(

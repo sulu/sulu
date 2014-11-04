@@ -11,10 +11,6 @@ framework:
     profiler:
         enabled: false
 
-fos_rest:
-    routing_loader:
-        default_format: json
-
 monolog:
     handlers:
         main:
@@ -45,8 +41,3 @@ sulu_core:
                 app:
                     path: %kernel.root_dir%/Resources/templates
                     internal: false
-            
-parameters:
-    # Just a dirty hack to get the jms serializer bundle correctly working
-    # schmittjoh/JMSSerializerBundle#270 (comment)
-    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy

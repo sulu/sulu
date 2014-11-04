@@ -140,4 +140,16 @@ interface PropertyInterface extends ArrayableInterface
      * @return array
      */
     public function getValues();
+
+    /**
+     * returns structure
+     * @return StructureInterface
+     */
+    public function getStructure();
+
+    /**
+     * sets structure
+     * @param StructureInterface $structure
+     */
+    public function setStructure($structure);
 }

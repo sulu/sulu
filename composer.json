@@ -26,7 +26,7 @@
         "imagine/imagine": "~0.6.1",
         "jackalope/jackalope-jackrabbit": "1.1.*",
         "liip/theme-bundle": "1.1.*",
-        "massive/search-bundle": "0.3.1",
+        "massive/search-bundle": "~0.3.1",
         "php": ">=5.4",
         "phpspec/prophecy-phpunit": "~1.0",
         "sensio/framework-extra-bundle": "3.0.*",

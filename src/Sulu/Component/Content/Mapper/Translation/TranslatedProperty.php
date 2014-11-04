@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * Wrapper for translated properties
@@ -280,4 +281,19 @@ class TranslatedProperty implements PropertyInterface
     }
 
 
+    /**
+     * {@inheritdoc
+     */
+    public function getStructure()
+    {
+        return $this->property->getStructure();
+    }
+
+    /**
+     * {@inheritdoc
+     */
+    public function setStructure($structure)
+    {
+        $this->property->setStructure($structure);
+    }
 }

@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('fixture')
-                            ->defaultValue('vendor/sulu/sulu/src/Sulu/Bundle/SecurityBundle/DataFixtures/security-types.xml')
+                            ->defaultValue(__DIR__ . '/../DataFixtures/security-types.xml')
                         ->end()
                     ->end()
                 ->end()

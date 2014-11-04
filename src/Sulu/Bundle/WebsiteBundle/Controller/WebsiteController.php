@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
+use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentPageNotFoundException;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,10 +42,11 @@ abstract class WebsiteController extends Controller
         }
 
         $viewTemplate = $structure->getView() . '.' . $requestFormat . '.twig';
-        // get attributes to render template
-        $data = $this->getAttributes($attributes, $structure, $preview);
 
         try {
+            // get attributes to render template
+            $data = $this->getAttributes($attributes, $structure, $preview);
+
             // if partial render only content block else full page
             if ($partial) {
                 $content = $this->renderBlock(
