@@ -57,6 +57,12 @@ interface StructureInterface extends \JsonSerializable
     public function setUuid($uuid);
 
     /**
+     * gets user id of creator
+     * @return int
+     */
+    public function getCreator();
+
+    /**
      * sets user id of creator
      * @param $userId int id of creator
      */
