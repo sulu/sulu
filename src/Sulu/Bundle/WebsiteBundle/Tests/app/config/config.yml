@@ -8,20 +8,6 @@ framework:
     profiler:
         enabled: false
 
-fos_rest:
-    routing_loader:
-        default_format: json
-
-doctrine:
-    dbal:
-        host: localhost
-        dbname: sulu_test
-        user: root
-        password:
-    orm:
-        auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
-
 monolog:
     handlers:
         main:
@@ -32,17 +18,3 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
-
-sulu_core:
-    phpcr:
-        backend:
-            type: jackrabbit
-            url: http://localhost:8080/server/
-        workspace: test
-        username: admin
-        password: admin
-    content:
-        templates:
-            default_path: %kernel.root_dir%/../Resources/templates
-    webspace:
-        ~
