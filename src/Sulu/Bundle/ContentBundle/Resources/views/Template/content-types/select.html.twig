@@ -1,0 +1,20 @@
+<div id="{{ id|raw }}"
+    data-type="husky-select"
+    data-form="true"
+    data-property='{{ property|json_encode }}'
+    data-mapper-property="{{ property.name }}"
+    data-aura-component="select@husky"
+    data-aura-instance-name="{{ id|raw }}"
+    data-aura-value-name="{{ property.params.valueName is defined ? property.params.valueName : 'name' }}"
+    {{ property.params.multiple ? 'data-aura-multiple-select="true"' : '' }}
+    data-type="husky-select"
+    {{ "data-aura-style=" ~ property.params.style ~ "" }}
+    {{ property.params.repeatSelect is defined and property.params.repeatSelect ? 'data-aura-repeat-select="true"' : '' }}
+    {{ property.params.fixedLabel is defined and property.params.fixedLabel ? 'data-aura-fixed-label="true"' : '' }}
+    {{ property.params.disabled is defined and property.params.disabled ? 'data-aura-disabled="true"' : '' }}
+    {{ property.params.icon is defined and property.params.icon ? "data-aura-icon=" ~ property.params.icon ~ "" : '' }}
+    {{ property.params.defaultLabel is defined and property.params.icon ? "data-aura-default-label=" ~ property.params.defaultLabel ~ "" : '' }}
+    {{ property.params.preSelected is defined and property.params.preSelected ? "data-aura-selected-elements=" ~ property.params.preSelected ~ "" : '' }}
+    data-aura-data='[{"id": 0,"name": "Deutsch"},{"id": 1,"name": "English"},{"id": 2,"name": "Espanol"},{"id": 3,"name": "Français"}]'
+    {% if property.mandatory %}data-validation-required="true"{% endif %}
+></div>

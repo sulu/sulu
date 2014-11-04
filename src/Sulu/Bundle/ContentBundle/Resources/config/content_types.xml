@@ -9,6 +9,7 @@
         <parameter key="sulu.content.type.single_internal_link.class">Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink</parameter>
         <parameter key="sulu.content.type.phone.class">Sulu\Bundle\ContentBundle\Content\Types\Phone</parameter>
         <parameter key="sulu.content.type.password.class">Sulu\Bundle\ContentBundle\Content\Types\Password</parameter>
+        <parameter key="sulu.content.type.select.class">Sulu\Bundle\ContentBundle\Content\Types\Select</parameter>
         <parameter key="sulu.content.type.url.class">Sulu\Bundle\ContentBundle\Content\Types\Url</parameter>
         <parameter key="sulu.content.type.email.class">Sulu\Bundle\ContentBundle\Content\Types\Email</parameter>
         <parameter key="sulu.content.type.date.class">Sulu\Bundle\ContentBundle\Content\Types\Date</parameter>
@@ -41,6 +42,12 @@
             <argument type="service" id="logger"/>
             <argument>%sulu.content.type.internal_links.template%</argument>
             <tag name="sulu.content.type" alias="internal_links"/>
+        </service>
+
+        <service id="sulu.content.type.select" class="%sulu.content.type.select.class%">
+            <argument type="service" id="logger"/>
+            <argument>%sulu.content.type.select.template%</argument>
+            <tag name="sulu.content.type" alias="select"/>
         </service>
 
         <service id="sulu.content.type.single_internal_link" class="%sulu.content.type.single_internal_link.class%">
