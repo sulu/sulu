@@ -9,9 +9,7 @@
         <loc>{{ url }}</loc>
         <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
 {% for locale, url in site.urls if url is not null %}
-{% if locale != site.locale %}
         <xhtml:link rel="alternate" hreflang="{{ locale }}" href="{{ content_path(url, site.webspaceKey, locale) }}"/>
-{% endif %}
 {% endfor %}
     </url>
 {% endif %}
