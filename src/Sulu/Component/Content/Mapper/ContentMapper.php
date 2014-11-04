@@ -36,6 +36,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -621,6 +622,8 @@ class ContentMapper implements ContentMapperInterface
                 $languageCode,
                 $webspaceKey
             );
+
+            $this->loadAllUrls($structure, $node, $webspaceKey, null);
         }
 
         // throw an content.node.save event
@@ -1353,6 +1356,8 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $loadGhostContent
             );
+
+            $this->loadAllUrls($structure, $contentNode, $webspaceKey, null);
         }
 
         // throw an content.node.load event (disabled for now)
@@ -1491,6 +1496,36 @@ class ContentMapper implements ContentMapperInterface
         ksort($result);
 
         return $result;
+    }
+
+    /**
+     * Loads urls for given page for all locales in webspace
+     */
+    private function loadAllUrls(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    {
+        if (!$page->hasTag('sulu.rlp')) {
+            $page->setUrls(array());
+        }
+
+        $property = clone($page->getPropertyByTagName('sulu.rlp'));
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+
+        $result = array();
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            // prepare translation vars
+            $locale = $localization->getLocalization();
+            $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
+
+            // set default value
+            $property->setValue(null);
+            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+            $result[$locale] = $property->getValue();
+        }
+
+        $page->setUrls($result);
     }
 
     /**
