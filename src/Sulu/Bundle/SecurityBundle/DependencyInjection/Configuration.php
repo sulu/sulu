@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('fixture')
-                            ->defaultValue(dirname(__FILE__) .'/../DataFixtures/security-types.xml')
+                            ->defaultValue(__DIR__ . '/../DataFixtures/security-types.xml')
                         ->end()
                     ->end()
                 ->end()
