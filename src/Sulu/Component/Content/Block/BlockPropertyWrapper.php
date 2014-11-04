@@ -274,4 +274,15 @@ class BlockPropertyWrapper implements PropertyInterface
     {
         $this->property->setStructure($structure);
     }
+
+    /**
+     * returns the property values
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->property->getValues();
+    }
+
+
 }
