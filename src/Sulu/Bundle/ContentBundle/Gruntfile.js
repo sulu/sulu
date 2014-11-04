@@ -103,10 +103,10 @@ module.exports = function (grunt) {
                     preserveLicenseComments: false,
                     paths: {
                         'sulucontent': './',
-                        'type/default': '../../../vendor/sulu/admin-bundle/Sulu/Bundle/AdminBundle/Resources/public/js/vendor/husky/husky',
-                        'form/util': '../../../vendor/sulu/admin-bundle/Sulu/Bundle/AdminBundle/Resources/public/js/vendor/husky/husky',
-                        'app-config': '../../../vendor/sulu/admin-bundle/Sulu/Bundle/AdminBundle/Resources/public/js/vendor/husky/husky',
-                        'mvc/relationalmodel': '../../../vendor/sulu/admin-bundle/Sulu/Bundle/AdminBundle/Resources/public/js/components/app-config/main',
+                        'type/default': '../AdminBundle/Resources/public/js/vendor/husky/husky',
+                        'form/util': '../AdminBundle/Resources/public/js/vendor/husky/husky',
+                        'app-config': '../AdminBundle/Resources/public/js/vendor/husky/husky',
+                        'mvc/relationalmodel': '../AdminBundle/Resources/public/js/components/app-config/main',
 
                         'sulucontent/main': 'main',
                         'type/resourceLocator': 'validation/types/resourceLocator',
