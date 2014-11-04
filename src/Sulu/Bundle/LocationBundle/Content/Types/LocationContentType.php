@@ -12,7 +12,6 @@ namespace Sulu\Bundle\LocationBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Bundle\LocationBundle\Map\MapManager;
@@ -42,7 +41,7 @@ class LocationContentType extends ComplexContentType
      */
     private $geolocatorName;
 
-    function __construct(NodeRepositoryInterface $nodeRepository, $template, MapManager $mapManager, $geolocatorName)
+    public function __construct(NodeRepositoryInterface $nodeRepository, $template, MapManager $mapManager, $geolocatorName)
     {
         $this->nodeRepository = $nodeRepository;
         $this->template = $template;
@@ -145,4 +144,3 @@ class LocationContentType extends ComplexContentType
         // TODO: Implement remove() method.
     }
 }
-

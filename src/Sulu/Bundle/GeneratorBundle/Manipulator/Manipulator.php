@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\GeneratorBundle\Manipulator;
 
-
 /**
  * Changes the PHP code of a Kernel.
  */

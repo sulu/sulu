@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\PHPCR\NodeTypes\Path;
 
-
 use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;

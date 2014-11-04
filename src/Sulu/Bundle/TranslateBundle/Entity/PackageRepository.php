@@ -48,7 +48,8 @@ class PackageRepository extends EntityRepository
      * @param $name
      * @return Package|null
      */
-    public function getPackageByName($name) {
+    public function getPackageByName($name)
+    {
         try {
             $qb = $this->createQueryBuilder('package')
                 ->leftJoin('package.catalogues', 'catalogues')

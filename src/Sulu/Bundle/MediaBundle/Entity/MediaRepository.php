@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 
 /**
  * MediaRepository

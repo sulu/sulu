@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 
-use Monolog\Logger;
 use PHPCR\NodeInterface;
 use Psr\Log\NullLogger;
 use ReflectionMethod;
@@ -1194,7 +1193,7 @@ class TestExtension extends StructureExtension
         'b'
     );
 
-    function __construct($name, $additionalPrefix = null)
+    public function __construct($name, $additionalPrefix = null)
     {
         $this->name = $name;
         $this->additionalPrefix = $additionalPrefix;
@@ -1220,4 +1219,3 @@ class TestExtension extends StructureExtension
         );
     }
 }
-

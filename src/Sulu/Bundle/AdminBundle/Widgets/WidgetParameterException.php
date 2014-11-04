@@ -14,7 +14,7 @@ class WidgetParameterException extends WidgetException
 {
     protected $param;
 
-    function __construct($message, $widget, $param)
+    public function __construct($message, $widget, $param)
     {
         parent::__construct($message, $widget);
         $this->param = $param;

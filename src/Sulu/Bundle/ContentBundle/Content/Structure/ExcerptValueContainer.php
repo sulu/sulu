@@ -19,12 +19,12 @@ class ExcerptValueContainer implements ArrayableInterface
      */
     private $data = array();
 
-    function __construct($data)
+    public function __construct($data)
     {
         $this->data = $data;
     }
 
-    function __get($name)
+    public function __get($name)
     {
         if ($this->__isset($name)) {
             return $this->data[$name];
@@ -33,7 +33,7 @@ class ExcerptValueContainer implements ArrayableInterface
         }
     }
 
-    function __isset($name)
+    public function __isset($name)
     {
         return array_key_exists($name, $this->data);
     }

@@ -34,7 +34,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     private $defaultTypeName;
 
-    function __construct(
+    public function __construct(
         $name,
         $metadata,
         $defaultTypeName,
@@ -215,7 +215,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
         return true;
     }
 
-    function __clone()
+    public function __clone()
     {
         $clone = new BlockProperty(
             $this->getName(),

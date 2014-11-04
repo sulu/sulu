@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Content;
 
 use JMS\Serializer\Serializer;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -88,15 +87,7 @@ class SmartContentContainer implements ArrayableInterface
     private $stopwatch;
 
     /**
-     * @param ContentQueryExecutorInterface $contentQuery
-     * @param ContentQueryBuilderInterface $contentQueryBuilder
-     * @param TagManagerInterface $tagManager
-     * @param array $params
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @param bool $preview
-     * @param Stopwatch $stopwatch
+     * Constructor
      */
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
@@ -141,9 +132,12 @@ class SmartContentContainer implements ArrayableInterface
 
     /**
      * Lazy loads the data based on the filter criteria from the config
+     * @param array $excludeUuids
+     * @param int $limit
+     * @param int $offset
      * @return StructureInterface[]
      */
-    public function getData()
+    public function getData($excludeUuids = array(), $limit = null, $offset = null)
     {
         if ($this->data === null) {
             // resolve tagNames to ids for loading data
@@ -152,7 +146,12 @@ class SmartContentContainer implements ArrayableInterface
                 $config['tags'] = $this->tagManager->resolveTagNames($config['tags']);
             }
 
-            $this->data = $this->loadData($config);
+            // determine limit
+            if ($limit === null && isset($config['limitResult'])) {
+                $limit = $config['limitResult'];
+            }
+
+            $this->data = $this->loadData($config, $excludeUuids, $limit, $offset);
         }
 
         return $this->data;
@@ -161,21 +160,24 @@ class SmartContentContainer implements ArrayableInterface
     /**
      * lazy load data
      */
-    private function loadData($config)
+    private function loadData($config, $excludeUuids, $limit, $offset)
     {
         if ($this->stopwatch) {
             $this->stopwatch->start('SmartContent:loadData');
         }
         $result = array();
         if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
-            $this->contentQueryBuilder->init(array('config' => $config, 'properties' => $this->params['properties']));
+            $this->contentQueryBuilder->init(
+                array('config' => $config, 'properties' => $this->params['properties'], 'excluded' => $excludeUuids)
+            );
             $result = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,
                 array($this->languageCode),
                 $this->contentQueryBuilder,
                 true,
                 -1,
-                isset($config['limitResult']) ? $config['limitResult'] : null
+                $limit,
+                $offset
             );
         }
 
@@ -197,6 +199,7 @@ class SmartContentContainer implements ArrayableInterface
             case 'config':
                 return $this->getConfig();
         }
+
         return null;
     }
 

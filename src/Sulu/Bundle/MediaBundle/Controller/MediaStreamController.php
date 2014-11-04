@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
@@ -21,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -105,7 +103,7 @@ class MediaStreamController extends Controller
 
         $path = $this->getStorage()->load($fileName, $version, $storageOptions);
 
-        $response = new StreamedResponse(function() use($path) {
+        $response = new StreamedResponse(function () use ($path) {
             flush(); // send headers
             $handle = fopen($path, 'r');
             while (!feof($handle)) {
@@ -195,6 +193,7 @@ class MediaStreamController extends Controller
         if ($this->storage === null) {
             $this->storage = $this->get('sulu_media.storage');
         }
+
         return $this->storage;
     }
 }

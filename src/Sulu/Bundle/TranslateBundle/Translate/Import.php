@@ -22,12 +22,10 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Translation\Loader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
-use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Console\Helper\ProgressHelper;
 use Symfony\Component\Console\Output\NullOutput;
-
 
 /**
  * Configures and starts an import from an translation catalogue
@@ -107,7 +105,7 @@ class Import
      */
     private $packageId;
 
-    function __construct(EntityManager $em, KernelInterface $kernel)
+    public function __construct(EntityManager $em, KernelInterface $kernel)
     {
         $this->em = $em;
         $this->kernel = $kernel;
@@ -435,6 +433,7 @@ class Import
             $this->em->persist($package);
             $this->em->flush($package);
         }
+
         return $package;
     }
 

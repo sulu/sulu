@@ -30,4 +30,4 @@ class TemplateController extends Controller
     {
         return $this->render('SuluCategoryBundle:Template:category.form.details.html.twig');
     }
-} 
+}

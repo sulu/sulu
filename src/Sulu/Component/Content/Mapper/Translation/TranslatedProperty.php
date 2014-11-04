@@ -269,4 +269,20 @@ class TranslatedProperty implements PropertyInterface
     {
         return $this->property->toArray($depth);
     }
+
+    /**
+     * {@inheritdoc
+     */
+    public function getStructure()
+    {
+        return $this->property->getStructure();
+    }
+
+    /**
+     * {@inheritdoc
+     */
+    public function setStructure($structure)
+    {
+        $this->property->setStructure($structure);
+    }
 }

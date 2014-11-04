@@ -12,23 +12,18 @@ namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class BaseTestCase extends SymfonyCmfBaseTestCase
+class BaseTestCase extends SuluTestCase
 {
     protected $session;
 
-    public function getKernelConfiguration()
-    {
-        return array('environment' => 'dev');
-    }
-
     public function setUp()
     {
-        $fs = new Filesystem;
+        $fs = new Filesystem();
         $fs->remove(__DIR__ . '/../Resources/app/data');
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->purgeNode('/cmf/sulu_io/routes/de');
@@ -38,6 +33,7 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
     public function getSearchManager()
     {
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
+
         return $searchManager;
     }
 
@@ -73,10 +69,12 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
     {
         $node = $this->session->getNode($path);
         foreach ($node->getNodes() as $child) {
+            foreach ($child->getReferences() as $referrer) {
+                $referrer->getParent()->remove();
+            }
             $child->remove();
         }
 
         $this->session->save();
     }
 }
-

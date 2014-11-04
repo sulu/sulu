@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\NoResultException;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -32,7 +31,6 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
  * Makes the users accessible through a rest api
@@ -486,6 +484,7 @@ class UserController extends RestController implements ClassResourceInterface
 
         $get = function ($entity) {
             /** @var User $entity */
+
             return $entity->getId();
         };
 
@@ -518,6 +517,7 @@ class UserController extends RestController implements ClassResourceInterface
 
         $get = function ($entity) {
             /** @var User $entity */
+
             return $entity->getId();
         };
 
@@ -689,7 +689,7 @@ class UserController extends RestController implements ClassResourceInterface
      */
     private function isValidId($id)
     {
-        return (is_int((int)$id) && $id > 0);
+        return (is_int((int) $id) && $id > 0);
     }
 
     /**

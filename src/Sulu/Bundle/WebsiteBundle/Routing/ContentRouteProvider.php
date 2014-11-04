@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Routing;
 
-use Liip\ThemeBundle\ActiveTheme;
 use PHPCR\RepositoryException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -18,7 +17,6 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Cmf\Bundle\RoutingBundle\Model\RedirectRoute;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;

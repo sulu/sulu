@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Template\Dumper;
 
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
 
 /**
  * Class PhpTemplateDumper
@@ -28,7 +27,7 @@ class PhpTemplateDumper
      * @param string $path path to twig templates
      * @param boolean $debug
      */
-    function __construct($path, $debug)
+    public function __construct($path, $debug)
     {
         if (strpos($path, '/') !== 0) {
             $path = __DIR__ . '/' . $path;

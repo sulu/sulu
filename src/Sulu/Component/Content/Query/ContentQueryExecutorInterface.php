@@ -23,7 +23,16 @@ interface ContentQueryExecutorInterface
      * @param bool $flat
      * @param integer $depth
      * @param integer $limit
+     * @param integer $offset
      * @return array
      */
-    public function execute($webspaceKey, $locales, ContentQueryBuilderInterface $contentQueryBuilder, $flat = true, $depth = -1, $limit = null);
-} 
+    public function execute(
+        $webspaceKey,
+        $locales,
+        ContentQueryBuilderInterface $contentQueryBuilder,
+        $flat = true,
+        $depth = -1,
+        $limit = null,
+        $offset = null
+    );
+}

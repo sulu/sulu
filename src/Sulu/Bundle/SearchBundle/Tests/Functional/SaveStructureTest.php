@@ -10,19 +10,14 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondStructureCache;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 class SaveStructureTest extends BaseTestCase
 {
-    public function getKernelConfiguration()
-    {
-        return array('environment' => 'dev');
-    }
-
     /**
      * Check that the automatic indexing works
      */
@@ -52,6 +47,7 @@ class SaveStructureTest extends BaseTestCase
 
         $data = array(
             'title' => 'Places',
+            'url' => '/places',
             'block' => array(
                 array(
                     'type' => 'article',
@@ -66,7 +62,18 @@ class SaveStructureTest extends BaseTestCase
             ),
         );
 
-        $mapper->save($data, 'blocks', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $request = ContentMapperRequest::create()
+            ->setData($data)
+            ->setTemplateKey('blocks')
+            ->setWebspaceKey('sulu_io')
+            ->setLocale('de')
+            ->setUserId(1)
+            ->setPartialUpdate(true)
+            ->setUuid(null)
+            ->setParentUuid(null)
+            ->setState(Structure::STATE_PUBLISHED);
+
+        $mapper->saveRequest($request);
 
         $searchManager = $this->getSearchManager();
 
@@ -103,12 +110,12 @@ class SaveStructureTest extends BaseTestCase
         $searchManager->index($structure);
 
         $res = $searchManager->createSearch('Giraffe')->locale('de')->index('content')->execute();
-        $this->assertCount(1, $res); 
+        $this->assertCount(1, $res);
 
         $structure->getProperty('title')->setValue('Pen and Paper');
         $searchManager->index($structure);
 
         // $res = $searchManager->createSearch('Pen')->locale('de')->index('content')->execute();
-        // $this->assertCount(1, $res); 
+        // $this->assertCount(1, $res);
     }
 }

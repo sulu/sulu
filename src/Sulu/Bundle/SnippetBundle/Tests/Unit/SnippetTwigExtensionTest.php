@@ -17,7 +17,6 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Webspace;
 
 class SnippetTwigExtensionTest extends SuluTestCase

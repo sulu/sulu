@@ -28,6 +28,7 @@ class RequestParametersTraitTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')->getMock();
         $request->expects($this->any())->method('get')->will($this->returnValueMap($parametersValueMap));
+
         return $request;
     }
 

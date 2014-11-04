@@ -17,7 +17,6 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
-use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\BreadcrumbItem;
@@ -46,7 +45,6 @@ use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -54,7 +52,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 use Sulu\Component\Util\SuluNodeHelper;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes

@@ -10,14 +10,8 @@
 
 namespace Sulu\Component\Content\Query;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
-use PHPCR\NodeInterface;
-use PHPCR\Query\QueryResultInterface;
-use PHPCR\RepositoryException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -41,7 +35,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
      */
     private $stopwatch;
 
-    function __construct(
+    public function __construct(
         SessionManagerInterface $sessionManager,
         ContentMapperInterface $contentMapper,
         Stopwatch $stopwatch = null
@@ -60,7 +54,8 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
         ContentQueryBuilderInterface $contentQueryBuilder,
         $flat = true,
         $depth = -1,
-        $limit = null
+        $limit = null,
+        $offset = null
     ) {
         if ($this->stopwatch) {
             $this->stopwatch->start('ContentQuery::execute.build-query');
@@ -73,7 +68,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $this->stopwatch->start('ContentQuery::execute.execute-query');
         }
 
-        $query = $this->createSql2Query($sql2, $limit);
+        $query = $this->createSql2Query($sql2, $limit, $offset);
         $queryResult = $query->execute();
 
         if ($this->stopwatch) {
@@ -137,12 +132,16 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
     /**
      * returns a sql2 query
      */
-    private function createSql2Query($sql2, $limit = null)
+    private function createSql2Query($sql2, $limit = null, $offset =null)
     {
         $queryManager = $this->sessionManager->getSession()->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
+
         if ($limit) {
             $query->setLimit($limit);
+        }
+        if ($offset) {
+            $query->setOffset($offset);
         }
 
         return $query;

@@ -41,6 +41,7 @@ class {{ cache_class }} extends {{ base_class }}
 {{ _self.buildSection(property, parent, layer) }}
 {% else %}
         {{ child }} = {{ _self.propertyConstructor(property) }}
+        {{ child }}->setStructure($this);
         {{ parent }}->addChild({{ child }});
 {% endif %}
 {% endmacro %}

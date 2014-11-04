@@ -25,9 +25,9 @@ class Navigation
      */
     private $keys = array();
 
-    function __construct($contexts = array())
+    public function __construct($contexts = array())
     {
-        foreach($contexts as $context){
+        foreach ($contexts as $context) {
             $this->addContext($context);
         }
     }

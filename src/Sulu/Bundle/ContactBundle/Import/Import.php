@@ -14,16 +14,13 @@ use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\UnitOfWork;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\Position;
@@ -72,7 +69,6 @@ class Import
     protected $titleEntityName = 'SuluContactBundle:ContactTitle';
     protected $positionEntityName = 'SuluContactBundle:Position';
     protected $countryEntityName = 'SuluContactBundle:Country';
-
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -145,7 +141,6 @@ class Import
      * @var array
      */
     protected $headerData = array();
-
 
     // TODO: split mappings for accounts and contacts
     /**
@@ -258,7 +253,7 @@ class Import
      * @param $configAccountTypes
      * @param $configFormOfAddress
      */
-    function __construct(EntityManager $em, $accountManager, $contactManager, $configDefaults, $configAccountTypes, $configFormOfAddress)
+    public function __construct(EntityManager $em, $accountManager, $contactManager, $configDefaults, $configAccountTypes, $configFormOfAddress)
     {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
@@ -349,8 +344,10 @@ class Import
                 if (array_key_exists('formOfAddress', $mappings)) {
                     $this->setFormOfAddressMappings($mappings['formOfAddress']);
                 }
+
                 return $mappings;
             }
+
             return false;
         } catch (\Exception $e) {
             throw new NotFoundResourceException($mappingsFile);
@@ -395,7 +392,6 @@ class Import
         $this->debug("Create Contacts:\n");
         $this->processCsvLoop($filename, $createContact);
     }
-
 
     /**
      * Loads the CSV Files and the Entities for the import
@@ -583,6 +579,7 @@ class Import
                 return $data[$identifier . $i];
             }
         }
+
         return false;
     }
 
@@ -741,7 +738,7 @@ class Import
             $title = $this->titles[$titleName];
         } else {
             $title = new ContactTitle();
-            $title ->setTitle($titleName);
+            $title->setTitle($titleName);
             $this->em->persist($title);
             $this->titles[$title->getTitle()] = $title;
         }
@@ -760,7 +757,7 @@ class Import
             $position = $this->positions[$positionName];
         } else {
             $position = new Position();
-            $position ->setPosition($positionName);
+            $position->setPosition($positionName);
             $this->em->persist($position);
             $this->positions[$position->getPosition()] = $position;
         }
@@ -838,8 +835,10 @@ class Import
         if ($addAddress) {
             $address->setAddressType($this->defaultTypes['addressType']);
             $this->em->persist($address);
+
             return $address;
         }
+
         return null;
     }
 
@@ -1103,6 +1102,7 @@ class Import
                 throw new \InvalidArgumentException($data[$index] . ' exceeds max length of ' . $index);
             }
         }
+
         return $isDataSet;
     }
 
@@ -1173,6 +1173,7 @@ class Import
                 $associativeData[($headerData[$index])] = $value;
             }
         }
+
         return $associativeData;
     }
 
@@ -1469,7 +1470,6 @@ class Import
         fclose($file);
     }
 
-
     /**
      * maps a certain index to a mappings array and returns it's index as defined in config array
      * mapping is defined as mappingindex => $index
@@ -1484,6 +1484,7 @@ class Import
             if (array_key_exists($mappingIndex, $config)) {
                 return $config[$mappingIndex]['id'];
             }
+
             return $mappingIndex;
         } else {
             return $index;
@@ -1504,6 +1505,7 @@ class Import
             if (array_key_exists($mappingIndex, $config)) {
                 return $config[$mappingIndex]['id'];
             }
+
             return $mappingIndex;
         } else {
             return $index;
@@ -1527,6 +1529,7 @@ class Import
         } else {
             $externalId = $this->accountExternalIds[$row - 1];
         }
+
         return $externalId;
 
     }
@@ -1535,7 +1538,8 @@ class Import
      * @param $entity
      * @return AbstractContactManager
      */
-    protected function getManager($entity) {
+    protected function getManager($entity)
+    {
         if ($entity instanceof Contact) {
             return $this->getContactManager();
         } else {

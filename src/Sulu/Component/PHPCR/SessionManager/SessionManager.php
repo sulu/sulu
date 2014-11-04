@@ -10,14 +10,7 @@
 
 namespace Sulu\Component\PHPCR\SessionManager;
 
-use PHPCR\CredentialsInterface;
-use PHPCR\NodeInterface;
-use PHPCR\RepositoryFactoryInterface;
-use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
-use PHPCR\SimpleCredentials;
-use PHPCR\ItemNotFoundException;
-use PHPCR\PathNotFoundException;
 
 class SessionManager implements SessionManagerInterface
 {
@@ -31,7 +24,7 @@ class SessionManager implements SessionManagerInterface
      */
     private $session;
 
-    function __construct(SessionInterface $session, $nodeNames)
+    public function __construct(SessionInterface $session, $nodeNames)
     {
         $this->session = $session;
         $this->nodeNames = $nodeNames;

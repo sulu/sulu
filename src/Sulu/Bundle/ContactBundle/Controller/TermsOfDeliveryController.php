@@ -12,9 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
@@ -68,6 +66,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
         $list = new CollectionRepresentation($termsOfDelivery, self::$entityKey);
 
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -206,6 +205,7 @@ class TermsOfDeliveryController extends RestController implements ClassResourceI
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
 

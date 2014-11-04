@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 /**
  * ContactAddress
@@ -30,7 +29,6 @@ class ContactAddress
      */
     private $contact;
 
-
     /**
      * Set main
      *
@@ -40,7 +38,7 @@ class ContactAddress
     public function setMain($main)
     {
         $this->main = $main;
-    
+
         return $this;
     }
 
@@ -57,7 +55,7 @@ class ContactAddress
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,14 +70,14 @@ class ContactAddress
     public function setAddress(\Sulu\Bundle\ContactBundle\Entity\Address $address)
     {
         $this->address = $address;
-    
+
         return $this;
     }
 
     /**
      * Get address
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Address 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Address
      */
     public function getAddress()
     {
@@ -95,14 +93,14 @@ class ContactAddress
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact)
     {
         $this->contact = $contact;
-    
+
         return $this;
     }
 
     /**
      * Get contact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getContact()
     {

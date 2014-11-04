@@ -10,9 +10,6 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-
 /**
  * Builder for loading the fictures
  */

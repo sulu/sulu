@@ -10,7 +10,6 @@
 
 namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
-use Sulu\Bundle\WebsiteBundle\EventListener\SetThemeEventListener;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 
@@ -44,5 +43,3 @@ class SuluWebsiteExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderNotHasService('sulu_website.data_collector.sulu_collector');
     }
 }
-
-

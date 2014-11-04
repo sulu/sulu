@@ -3,7 +3,6 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 

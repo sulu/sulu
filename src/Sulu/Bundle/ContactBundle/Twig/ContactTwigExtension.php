@@ -29,7 +29,7 @@ class ContactTwigExtension extends \Twig_Extension
      */
     private $cache;
 
-    function __construct(Cache $cache, UserRepository $userRepository)
+    public function __construct(Cache $cache, UserRepository $userRepository)
     {
         $this->cache = $cache;
         $this->userRepository = $userRepository;

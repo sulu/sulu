@@ -22,15 +22,11 @@ use Sulu\Bundle\ContactBundle\Entity\UrlType as UrlTypeEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
-use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
-use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * Makes accounts available through a REST API
@@ -146,8 +142,9 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processEmails($contact, $emails)
     {
-        $get = function($email) {
+        $get = function ($email) {
             /** @var EmailEntity $email */
+
             return $email->getId();
         };
 
@@ -238,7 +235,7 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processUrls($contact, $urls)
     {
-        $get = function($url) {
+        $get = function ($url) {
             return $url->getId();
         };
 
@@ -270,7 +267,7 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processCategories($contact, $categories)
     {
-        $get = function($category) {
+        $get = function ($category) {
             return $category->getId();
         };
 
@@ -381,7 +378,7 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processPhones($contact, $phones)
     {
-        $get = function($phone) {
+        $get = function ($phone) {
             return $phone->getId();
         };
 
@@ -472,7 +469,7 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processFaxes($contact, $faxes)
     {
-        $get = function($fax) {
+        $get = function ($fax) {
             return $fax->getId();
         };
 
@@ -590,7 +587,7 @@ abstract class AbstractContactController extends RestController implements Class
             $address->setCity($addressData['city']);
             $address->setState($addressData['state']);
 
-            if(isset($addressData['note'])){
+            if (isset($addressData['note'])) {
                 $address->setNote($addressData['note']);
             }
             if (isset($addressData['primaryAddress'])) {
@@ -624,6 +621,7 @@ abstract class AbstractContactController extends RestController implements Class
 
             $em->persist($address);
         }
+
         return $address;
     }
 
@@ -663,7 +661,7 @@ abstract class AbstractContactController extends RestController implements Class
                 $address->setCountry($country);
                 $address->setAddressType($addressType);
 
-                if(isset($entry['note'])){
+                if (isset($entry['note'])) {
                     $address->setNote($entry['note']);
                 }
 
@@ -702,12 +700,13 @@ abstract class AbstractContactController extends RestController implements Class
      * @param $value
      * @return bool
      */
-    protected function getBooleanValue($value){
-        if(is_string($value)){
+    protected function getBooleanValue($value)
+    {
+        if (is_string($value)) {
             return $value === 'true' ? true : false;
-        } else if(is_bool($value)){
+        } elseif (is_bool($value)) {
             return $value;
-        } else if(is_numeric($value)){
+        } elseif (is_numeric($value)) {
             return $value === 1 ? true : false;
         }
     }
@@ -721,12 +720,13 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processNotes($contact, $notes)
     {
-        $get = function($note) {
+        $get = function ($note) {
             return $note->getId();
         };
 
         $delete = function ($note) use ($contact) {
             $contact->removeNote($note);
+
             return true;
         };
 
@@ -790,7 +790,7 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processTags($contact, $tags)
     {
-        $get = function($tag) {
+        $get = function ($tag) {
             return $tag->getId();
         };
 
@@ -915,12 +915,13 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function processAddresses($contact, $addresses)
     {
-        $getAddressId = function($addressRelation) {
+        $getAddressId = function ($addressRelation) {
             return $addressRelation->getAddress()->getId();
         };
 
         $delete = function ($addressRelation) use ($contact) {
             $this->getContactManager()->removeAddressRelation($contact, $addressRelation);
+
             return true;
         };
 
@@ -938,6 +939,7 @@ abstract class AbstractContactController extends RestController implements Class
         $add = function ($addressData) use ($contact) {
             $address = $this->createAddress($addressData, $isMain);
             $this->getContactManager()->addAddress($contact, $address, $isMain);
+
             return true;
         };
 
@@ -959,6 +961,7 @@ abstract class AbstractContactController extends RestController implements Class
       if ($id) {
           return $this->getDoctrine()->getRepository(self::$positionEntityName)->find($id);
       }
+
       return null;
     }
 

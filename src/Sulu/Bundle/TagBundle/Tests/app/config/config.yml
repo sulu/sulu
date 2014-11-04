@@ -54,7 +54,7 @@ sulu_core:
     webspace:
         request_analyzer:
             enabled: false
-            
+
 # Configuration file for security in the test environment
 # Grants access to every User
 # DO NOT USE IN PRODUCTION ENVIRONMENT

@@ -60,7 +60,7 @@ class MediaSelectionContainer implements ArrayableInterface
      */
     private $mediaManager;
 
-    function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
+    public function __construct($config, $displayOption, $ids, $locale, $types, $mediaManager)
     {
         $this->config = $config;
         $this->displayOption = $displayOption;
@@ -143,6 +143,7 @@ class MediaSelectionContainer implements ArrayableInterface
             case 'types':
                 return $this->getTypes();
         }
+
         return null;
     }
 

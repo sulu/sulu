@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
-
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -196,14 +194,12 @@ class GroupControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(2, count($response->_embedded->groups));
 
-
         $client->request(
             'DELETE',
             '/api/groups/' . $this->group1->getId()
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
-
 
         $client->request(
             'GET',
@@ -214,4 +210,4 @@ class GroupControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(1, count($response->_embedded->groups));
     }
-} 
+}

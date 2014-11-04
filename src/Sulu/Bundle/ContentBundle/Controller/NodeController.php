@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
+use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -281,6 +282,7 @@ class NodeController extends RestController implements ClassResourceInterface
         $tagNames = $this->getRequestParameter($request, 'tags');
         $sortBy = $this->getRequestParameter($request, 'sortBy');
         $sortMethod = $this->getRequestParameter($request, 'sortMethod', false, 'asc');
+        $exclude = $this->getRequestParameter($request, 'exclude');
         $webspaceKey = $this->getWebspace($request);
         $languageCode = $this->getLanguage($request);
 
@@ -320,12 +322,15 @@ class NodeController extends RestController implements ClassResourceInterface
             'sortMethod' => $sortMethod
         );
 
-        $content = $this->get('sulu_content.node_repository')->getFilteredNodes(
+        /** @var NodeRepository $repository */
+        $repository = $this->get('sulu_content.node_repository');
+        $content = $repository->getFilteredNodes(
             $filterConfig,
             $languageCode,
             $webspaceKey,
             true,
-            true
+            true,
+            $exclude !== null ? array($exclude) : array()
         );
 
         return $this->handleView($this->view($content));

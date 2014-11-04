@@ -87,7 +87,7 @@ class NavigationItem implements \Iterator
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
      */
-    function __construct($name, $parent = null)
+    public function __construct($name, $parent = null)
     {
         $this->name = $name;
         $this->disabled = false;

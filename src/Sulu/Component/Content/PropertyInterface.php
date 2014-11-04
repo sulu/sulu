@@ -134,4 +134,16 @@ interface PropertyInterface extends ArrayableInterface
      * @return string
      */
     public function getPlaceholder($languageCode);
+
+    /**
+     * returns structure
+     * @return StructureInterface
+     */
+    public function getStructure();
+
+    /**
+     * sets structure
+     * @param StructureInterface $structure
+     */
+    public function setStructure($structure);
 }

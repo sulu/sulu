@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Tag;
 
-
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;

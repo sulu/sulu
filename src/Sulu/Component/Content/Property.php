@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content;
 
 use Sulu\Component\Util\ArrayableInterface;
-use Sulu\Component\Content\PropertyTag;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
@@ -83,7 +82,15 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     private $value;
 
-    function __construct(
+    /**
+     * @var StructureInterface
+     */
+    private $structure;
+
+    /**
+     * Constructor
+     */
+    public function __construct(
         $name,
         $metaData,
         $contentTypeName,
@@ -310,6 +317,23 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
+     * returns structure
+     * @return StructureInterface
+     */
+    public function getStructure()
+    {
+        return $this->structure;
+    }
+
+    /**
+     * @param StructureInterface $structure
+     */
+    public function setStructure($structure)
+    {
+        $this->structure = $structure;
+    }
+
+    /**
      * magic getter for twig templates
      * @param $property
      * @return null
@@ -349,7 +373,7 @@ class Property implements PropertyInterface, \JsonSerializable
         return $result;
     }
 
-    function __clone()
+    public function __clone()
     {
         $clone = new Property(
             $this->getName(),

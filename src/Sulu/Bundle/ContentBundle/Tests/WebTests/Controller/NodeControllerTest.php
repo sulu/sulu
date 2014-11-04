@@ -3,15 +3,8 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use PHPCR\NodeInterface;
-use PHPCR\SimpleCredentials;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
-use PHPCR\SessionInterface;
-use PHPCR\Util\NodeHelper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -21,10 +14,6 @@ use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 
 use DateTime;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
-use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
@@ -299,7 +288,7 @@ class NodeControllerTest extends SuluTestCase
 
         for ($i = 0; $i < count($data); $i++) {
             $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[$i]);
-            $data[$i] = (array)json_decode($client->getResponse()->getContent(), true);
+            $data[$i] = (array) json_decode($client->getResponse()->getContent(), true);
         }
 
         return $data;
@@ -377,10 +366,10 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($this->getTestUserId(), $response->creator);
         $this->assertEquals($this->getTestUserId(), $response->creator);
 
-        $this->assertEquals(2, sizeof((array)$response->ext));
+        $this->assertEquals(2, sizeof((array) $response->ext));
 
-        $this->assertEquals(6, sizeof((array)$response->ext->seo));
-        $this->assertEquals(7, sizeof((array)$response->ext->excerpt));
+        $this->assertEquals(6, sizeof((array) $response->ext->seo));
+        $this->assertEquals(7, sizeof((array) $response->ext->excerpt));
 
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');
 
@@ -469,59 +458,59 @@ class NodeControllerTest extends SuluTestCase
             )
         );
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
-        $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
 
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
-        $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'POST',
             '/api/nodes?template=default&webspace=sulu_io&language=en&parent=' . $data[1]['id'],
             $data[2]
         );
-        $data[2] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'POST',
             '/api/nodes?template=default&webspace=sulu_io&language=en&parent=' . $data[1]['id'],
             $data[3]
         );
-        $data[3] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'POST',
             '/api/nodes?template=default&webspace=sulu_io&language=en&parent=' . $data[3]['id'],
             $data[4]
         );
-        $data[4] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         $client->request(
             'PUT',
             '/api/nodes/' . $data[0]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
             $data[0]
         );
-        $data[0] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[1]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
             $data[1]
         );
-        $data[1] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[1] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[2]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
             $data[2]
         );
-        $data[2] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[2] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[3]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
             $data[3]
         );
-        $data[3] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[3] = (array) json_decode($client->getResponse()->getContent(), true);
         $client->request(
             'PUT',
             '/api/nodes/' . $data[4]['id'] . '?state=2&template=default&webspace=sulu_io&language=en',
             $data[4]
         );
-        $data[4] = (array)json_decode($client->getResponse()->getContent(), true);
+        $data[4] = (array) json_decode($client->getResponse()->getContent(), true);
 
         return $data;
     }

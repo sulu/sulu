@@ -35,4 +35,4 @@ interface ContentTypeManagerInterface
      * @return ContentTypeInterface[]
      */
     public function getAll();
-} 
+}

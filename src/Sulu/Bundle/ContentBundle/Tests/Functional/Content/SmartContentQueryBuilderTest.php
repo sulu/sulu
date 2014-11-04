@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -640,5 +639,27 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->assertEquals(2, sizeof($result));
         $this->assertArrayHasKey($result[0]['uuid'], $nodes);
         $this->assertArrayHasKey($result[1]['uuid'], $nodes);
+    }
+
+    public function testExcluded()
+    {
+        $nodes = $this->propertiesProvider();
+        $uuids = array_keys($nodes);
+
+        $builder = new SmartContentQueryBuilder(
+            $this->structureManager,
+            $this->webspaceManager,
+            $this->sessionManager,
+            $this->languageNamespace
+        );
+        $builder->init(array('excluded' => array($uuids[0])));
+
+        $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
+
+        $this->assertEquals(14, sizeof($result));
+        unset($uuids[0]);
+        foreach ($result as $item) {
+            $this->assertContains($item['uuid'], $uuids);
+        }
     }
 }

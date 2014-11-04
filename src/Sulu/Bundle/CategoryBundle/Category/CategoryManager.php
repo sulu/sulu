@@ -19,7 +19,6 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
 use Sulu\Component\Security\UserRepositoryInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;

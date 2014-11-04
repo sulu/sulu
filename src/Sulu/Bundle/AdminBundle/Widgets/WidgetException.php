@@ -16,7 +16,7 @@ class WidgetException extends Exception
 {
     protected $subject;
 
-    function __construct($message, $subject)
+    public function __construct($message, $subject)
     {
         parent::__construct($message);
         $this->subject = $subject;

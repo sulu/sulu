@@ -50,10 +50,8 @@ class ImportCommand extends ContainerAwareCommand
         $limit = $input->getOption('limit');
         $mappings = $input->getOption('mappings');
 
-
         /** @var Import $import */
         $import = $this->getContainer()->get('sulu_contact.import');
-
 
         // TODO: do not
         $import->setAccountFile($accountFile);

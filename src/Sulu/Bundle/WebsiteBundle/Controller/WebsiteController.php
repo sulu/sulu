@@ -41,10 +41,11 @@ abstract class WebsiteController extends Controller
         }
 
         $viewTemplate = $structure->getView() . '.' . $requestFormat . '.twig';
-        // get attributes to render template
-        $data = $this->getAttributes($attributes, $structure, $preview);
 
         try {
+            // get attributes to render template
+            $data = $this->getAttributes($attributes, $structure, $preview);
+
             // if partial render only content block else full page
             if ($partial) {
                 $content = $this->renderBlock(
@@ -130,4 +131,4 @@ abstract class WebsiteController extends Controller
 
         return $template->renderBlock($block, $attributes);
     }
-} 
+}

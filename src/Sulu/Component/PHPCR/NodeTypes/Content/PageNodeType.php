@@ -10,10 +10,6 @@
 
 namespace Sulu\Component\PHPCR\NodeTypes\Content;
 
-use PHPCR\NodeType\NodeDefinitionInterface;
-use PHPCR\NodeType\NodeTypeDefinitionInterface;
-use PHPCR\NodeType\PropertyDefinitionInterface;
-
 /**
  * Node type for representing sulu pages in the PHPCR
  */

@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * BaseRole
  */

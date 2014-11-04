@@ -11,10 +11,8 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Serializable;
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
@@ -455,14 +453,14 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function setLocked($locked)
     {
         $this->locked = $locked;
-    
+
         return $this;
     }
 
     /**
      * Get locked
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getLocked()
     {
@@ -478,7 +476,7 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
-    
+
         return $this;
     }
 
@@ -501,14 +499,14 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function setLastLogin($lastLogin)
     {
         $this->lastLogin = $lastLogin;
-    
+
         return $this;
     }
 
     /**
      * Get lastLogin
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastLogin()
     {
@@ -524,14 +522,14 @@ class User extends ApiEntity implements UserInterface, Serializable
     public function setConfirmationKey($confirmationKey)
     {
         $this->confirmationKey = $confirmationKey;
-    
+
         return $this;
     }
 
     /**
      * Get confirmationKey
      *
-     * @return string 
+     * @return string
      */
     public function getConfirmationKey()
     {

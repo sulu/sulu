@@ -11,17 +11,13 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -39,7 +35,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountMediaControllerTest extends SuluTestCase
@@ -314,7 +309,8 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($collectionMeta2);
     }
 
-    public function testAccountMediaPost(){
+    public function testAccountMediaPost()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -344,7 +340,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(2, count($response->medias));
 
-        if($response->medias[0]->id == 1) {
+        if ($response->medias[0]->id == 1) {
             $this->assertNotNull($response->medias[0]->id);
             $this->assertNotNull($response->medias[1]->id);
         } else {
@@ -353,7 +349,8 @@ class AccountMediaControllerTest extends SuluTestCase
         }
     }
 
-    public function testAccountMediaPostNotExistingMedia(){
+    public function testAccountMediaPostNotExistingMedia()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -383,7 +380,8 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertEquals(1, count($response->medias));
     }
 
-    public function testAccountMediaDelete(){
+    public function testAccountMediaDelete()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -402,7 +400,8 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertEquals(0, count($response->medias));
     }
 
-    public function testAccountMediaDeleteNotExistingRelation(){
+    public function testAccountMediaDeleteNotExistingRelation()
+    {
         $client = $this->createAuthenticatedClient();
         $client->request(
             'DELETE',

@@ -51,4 +51,4 @@ interface FormatManagerInterface
      * @return bool
      */
     public function purge($idMedia, $fileName, $options);
-} 
+}

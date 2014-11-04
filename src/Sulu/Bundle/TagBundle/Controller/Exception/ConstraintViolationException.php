@@ -17,7 +17,8 @@ use Sulu\Component\Rest\Exception\RestException;
  * This exception should be thrown when a constraint violation for a enitity occures
  * @package Sulu\Bundle\TagBundle\Controller\Exception
  */
-class ConstraintViolationException extends RestException {
+class ConstraintViolationException extends RestException
+{
     /**
      * Error code for non unique tag name
      * @var int

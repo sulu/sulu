@@ -10,10 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Twig;
 
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -43,7 +40,7 @@ class ContentPathTwigExtension extends \Twig_Extension
      */
     private $environment;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         WebspaceManagerInterface $webspaceManager,
         $environment,

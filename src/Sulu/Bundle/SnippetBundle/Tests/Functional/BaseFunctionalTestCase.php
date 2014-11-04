@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Component\Content\StructureInterface;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
@@ -31,6 +30,14 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
      * @var Snippet
      */
     protected $car1;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getKernelConfiguration()
+    {
+        return array('environment' => 'dev');
+    }
 
     /**
      * Load fixtures for snippet functional tests
@@ -110,4 +117,3 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
         $this->contentMapper->saveRequest($req);
     }
 }
-

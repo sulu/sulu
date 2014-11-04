@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Permission;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * A helper class to convert the mask between the numerical and array representation.
  * Also offered as a service by this bundle.
@@ -55,13 +53,13 @@ class MaskConverter
     public function convertPermissionsToArray($permissions)
     {
         $permissionsData = array(
-            'view' => (bool)($permissions & $this->permissions['view']),
-            'add' => (bool)($permissions & $this->permissions['add']),
-            'edit' => (bool)($permissions & $this->permissions['edit']),
-            'delete' => (bool)($permissions & $this->permissions['delete']),
-            'archive' => (bool)($permissions & $this->permissions['archive']),
-            'live' => (bool)($permissions & $this->permissions['live']),
-            'security' => (bool)($permissions & $this->permissions['security']),
+            'view' => (bool) ($permissions & $this->permissions['view']),
+            'add' => (bool) ($permissions & $this->permissions['add']),
+            'edit' => (bool) ($permissions & $this->permissions['edit']),
+            'delete' => (bool) ($permissions & $this->permissions['delete']),
+            'archive' => (bool) ($permissions & $this->permissions['archive']),
+            'live' => (bool) ($permissions & $this->permissions['live']),
+            'security' => (bool) ($permissions & $this->permissions['security']),
         );
 
         return $permissionsData;

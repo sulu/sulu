@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\TestBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Sulu\Component\Security\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -190,14 +189,14 @@ class TestUser implements UserInterface
     public function setContact(\Sulu\Bundle\TestBundle\Entity\TestContact $contact = null)
     {
         $this->contact = $contact;
-    
+
         return $this;
     }
 
     /**
      * Get contact
      *
-     * @return \Sulu\Bundle\TestBundle\Entity\TestContact 
+     * @return \Sulu\Bundle\TestBundle\Entity\TestContact
      */
     public function getContact()
     {
