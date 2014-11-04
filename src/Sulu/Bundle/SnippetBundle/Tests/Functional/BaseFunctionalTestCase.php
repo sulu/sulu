@@ -33,6 +33,14 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
     protected $car1;
 
     /**
+     * {@inheritDoc}
+     */
+    public function getKernelConfiguration()
+    {
+        return array('environment' => 'dev');
+    }
+
+    /**
      * Load fixtures for snippet functional tests
      */
     protected function loadFixtures()

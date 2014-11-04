@@ -87,7 +87,7 @@ class SnippetApiTest extends SuluTestCase
         $this->client->request('GET', sprintf(
             '/snippets?ids=%s,%s,%s%s',
             $this->hotel1->getUuid(),
-            '1234',
+            '842e61c0-09ab-42a9-5555-222222222222',
             $this->hotel2->getUuid(),
             '&language=de'
         ));

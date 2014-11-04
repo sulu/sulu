@@ -1,1 +1,0 @@
-<?php return unserialize('a:1:{i:0;O:44:"Doctrine\\ODM\\PHPCR\\Mapping\\Annotations\\Child":2:{s:8:"nodeName";s:11:"jcr:content";s:7:"cascade";a:1:{i:0;s:3:"all";}}}');

@@ -27,5 +27,6 @@ class WebsiteIntegrationTest extends BaseTestCase
         $this->client->request('GET', '/de/search?query=Structure');
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
+
     }
 }

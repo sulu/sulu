@@ -16,15 +16,11 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestC
 use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class BaseTestCase extends SymfonyCmfBaseTestCase
+class BaseTestCase extends SuluTestCase
 {
     protected $session;
-
-    public function getKernelConfiguration()
-    {
-        return array('environment' => 'dev');
-    }
 
     public function setUp()
     {
@@ -73,6 +69,9 @@ class BaseTestCase extends SymfonyCmfBaseTestCase
     {
         $node = $this->session->getNode($path);
         foreach ($node->getNodes() as $child) {
+            foreach ($child->getReferences() as $referrer) {
+                $referrer->getParent()->remove();
+            }
             $child->remove();
         }
 

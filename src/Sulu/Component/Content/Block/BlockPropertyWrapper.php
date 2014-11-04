@@ -12,6 +12,7 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\StructureInterface;
 
 class BlockPropertyWrapper implements PropertyInterface
 {
@@ -257,5 +258,21 @@ class BlockPropertyWrapper implements PropertyInterface
     public function toArray($depth = null)
     {
         return $this->property->toArray($depth);
+    }
+
+    /**
+     * {@inheritdoc
+     */
+    public function getStructure()
+    {
+        return $this->property->getStructure();
+    }
+
+    /**
+     * {@inheritdoc
+     */
+    public function setStructure($structure)
+    {
+        $this->property->setStructure($structure);
     }
 }

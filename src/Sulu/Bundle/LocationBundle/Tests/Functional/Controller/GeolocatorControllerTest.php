@@ -2,24 +2,18 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Functional\Controller;
 
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Guzzle\Plugin\Mock\MockPlugin;
 use Guzzle\Http\Message\Response;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class GeolocatorControllerTest extends DatabaseTestCase
+class GeolocatorControllerTest extends SuluTestCase
 {
     protected $mockPlugin;
     protected $client;
 
     public function setUp()
     {
-        $this->client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $this->client = $this->createAuthenticatedClient();
 
         $guzzleClient = $this->client->getContainer()->get('sulu_location.geolocator.guzzle.client');
         $this->mockPlugin = new MockPlugin();
