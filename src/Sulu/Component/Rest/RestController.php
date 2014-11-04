@@ -156,6 +156,7 @@ abstract class RestController extends FOSRestController
                 $lang = $this->container->getParameter('locale');
             }
         }
+
         return $lang;
     }
 
@@ -278,6 +279,7 @@ abstract class RestController extends FOSRestController
                         $this->fieldsValidation[$field] : null,
             );
         }
+
         return $fieldsArray;
     }
 
@@ -448,7 +450,6 @@ abstract class RestController extends FOSRestController
         // create pagination link
         $paginationLink = $this->replaceOrAddUrlString($path, 'limit=', '{limit}');
 
-
         return array(
             'self' => $path,
             'first' => ($pages > 1) ?
@@ -484,6 +485,7 @@ abstract class RestController extends FOSRestController
             } else {
                 if ($add) {
                     $and = (strpos($url, '?') === false) ? '?' : '&';
+
                     return $url . $and . $key . $value;
                 }
             }
@@ -496,6 +498,7 @@ abstract class RestController extends FOSRestController
                 if (strpos($url, '?' . $key)) {
                     $result = preg_replace('/&/', '?', $result, 1);
                 }
+
                 return $result;
             }
 
@@ -567,7 +570,7 @@ abstract class RestController extends FOSRestController
         $success = true;
         // default for entityIdCallback
         if ($entityIdCallback === null) {
-            $entityIdCallback = function($entity) {
+            $entityIdCallback = function ($entity) {
                 return $entity->getId();
             };
         }

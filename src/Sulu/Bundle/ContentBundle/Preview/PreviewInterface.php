@@ -99,4 +99,4 @@ interface PreviewInterface
         $partial = false,
         $property = null
     );
-} 
+}

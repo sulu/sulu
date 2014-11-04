@@ -42,4 +42,4 @@ class TagAlreadyExistsException extends Exception
     {
         return $this->name;
     }
-} 
+}

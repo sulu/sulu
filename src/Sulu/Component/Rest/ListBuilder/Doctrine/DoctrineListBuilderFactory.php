@@ -40,4 +40,4 @@ class DoctrineListBuilderFactory
     {
         return new DoctrineListBuilder($this->em, $entityName);
     }
-} 
+}

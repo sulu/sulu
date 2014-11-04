@@ -12,11 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
 use DateTime;
 use Doctrine\ORM\Tools\SchemaTool;
-use Jackalope\RepositoryFactoryJackrabbit;
-use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use PHPCR\SimpleCredentials;
-use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -24,10 +20,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 /**
@@ -135,7 +127,6 @@ class PreviewControllerTest extends SuluTestCase
 
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
-
 
         $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');

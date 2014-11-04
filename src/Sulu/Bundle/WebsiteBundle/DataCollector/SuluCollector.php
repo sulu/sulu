@@ -96,4 +96,3 @@ class SuluCollector extends DataCollector
         return 'sulu';
     }
 }
-

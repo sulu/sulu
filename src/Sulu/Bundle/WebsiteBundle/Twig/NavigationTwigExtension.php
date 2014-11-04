@@ -14,7 +14,6 @@ use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Localization;
 
 /**
  * provides the navigation function
@@ -37,7 +36,7 @@ class NavigationTwigExtension extends \Twig_Extension
      */
     private $requestAnalyzer;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         NavigationMapperInterface $navigationMapper,
         RequestAnalyzerInterface $requestAnalyzer = null

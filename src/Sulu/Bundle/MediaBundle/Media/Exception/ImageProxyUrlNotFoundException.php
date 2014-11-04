@@ -22,4 +22,4 @@ class ImageProxyUrlNotFoundException extends ImageProxyException
     {
         parent::__construct($message, self::EXCEPTION_CODE_IMAGE_PROXY_URL_NOT_FOUND);
     }
-} 
+}

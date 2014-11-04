@@ -31,9 +31,11 @@ class WidgetGroupsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function groupAction($groupAlias, Request $request) {
+    public function groupAction($groupAlias, Request $request)
+    {
         try {
             $groupAlias = str_replace('-', '_', $groupAlias);
+
             return new Response(
                 $this->getWidgetsHandler()->renderWidgetGroup(
                     $groupAlias,
@@ -55,6 +57,7 @@ class WidgetGroupsController extends Controller
         if ($this->widgetsHandler === null) {
             $this->widgetsHandler = $this->get('sulu_admin.widgets_handler');
         }
+
         return $this->widgetsHandler;
     }
 }

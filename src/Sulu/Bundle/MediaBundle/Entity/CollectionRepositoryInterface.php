@@ -31,4 +31,4 @@ interface CollectionRepositoryInterface
      * @return Collection[]
      */
     public function findCollections($filter = array(), $limit = null, $offset = null);
-} 
+}

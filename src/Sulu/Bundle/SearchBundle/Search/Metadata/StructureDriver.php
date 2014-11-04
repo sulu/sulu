@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SearchBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\DriverInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

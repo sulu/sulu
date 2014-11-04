@@ -15,7 +15,6 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -50,4 +49,4 @@ class PreviewServerCommand extends ContainerAwareCommand
     {
         return $this->getContainer()->get('sulu_content.preview.message_component');
     }
-} 
+}

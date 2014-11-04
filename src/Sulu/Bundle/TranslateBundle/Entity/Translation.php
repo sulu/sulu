@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
@@ -34,7 +33,6 @@ class Translation extends ApiEntity
      * @Exclude
      */
     private $catalogue;
-
 
     /**
      * Set value

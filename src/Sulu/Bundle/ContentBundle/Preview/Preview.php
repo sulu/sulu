@@ -39,7 +39,7 @@ class Preview implements PreviewInterface
      */
     private $contentTypeManager;
 
-    function __construct(
+    public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         PreviewCacheProviderInterface $previewCache,
         PreviewRenderer $renderer,

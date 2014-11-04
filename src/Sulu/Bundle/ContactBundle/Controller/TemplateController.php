@@ -4,7 +4,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sulu\Component\Rest\RestController;
-use Hateoas\Representation\CollectionRepresentation;
 
 class TemplateController extends RestController
 {
@@ -90,6 +89,7 @@ class TemplateController extends RestController
     public function contactActivitiesAction()
     {
         $values = $this->getActivityDropdownValues();
+
         return $this->render('SuluContactBundle:Template:contact.activities.html.twig', $values);
     }
 

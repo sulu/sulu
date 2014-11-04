@@ -22,11 +22,11 @@ abstract class AbstractDoctrineFieldDescriptor extends AbstractFieldDescriptor
      * Returns the select statement for this field without the alias
      * @return string
      */
-    abstract function getSelect();
+    abstract public function getSelect();
 
     /**
      * Returns all the joins required for this field
      * @return DoctrineJoinDescriptor[]
      */
-    abstract function getJoins();
-} 
+    abstract public function getJoins();
+}

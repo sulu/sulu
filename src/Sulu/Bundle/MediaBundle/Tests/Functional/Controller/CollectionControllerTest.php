@@ -11,12 +11,10 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CollectionControllerTest extends SuluTestCase
@@ -252,7 +250,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->_embedded->collections[1]));
         $responseSecondEntity = $response->_embedded->collections[1];
 
-
         $style = new \stdClass();
         $style->type = 'circle';
         $style->color = $generateColor;
@@ -295,7 +292,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
-
 
         // get collection in locale 'en-gb'
         $client = $this->createAuthenticatedClient();
@@ -343,7 +339,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->created)));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($responseSecondEntity->changed)));
         $this->assertEquals('Test Collection 2', $responseSecondEntity->title);
-
 
         // get collection in locale 'en'
         $client = $this->createAuthenticatedClient();

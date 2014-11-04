@@ -79,4 +79,4 @@ class TagRepository extends EntityRepository implements TagRepositoryInterface
             return null;
         }
     }
-} 
+}

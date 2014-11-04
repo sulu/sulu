@@ -79,7 +79,6 @@ class SuluBundleGenerator extends BundleGenerator
         // /tests/resources/app/Resources/webspaces/sulu.io.xml
         $this->renderfile('sulu/travis/Tests/Resources/app/Resources/webspaces/sulu.io.xml.twig', $dir . '/Tests/Resources/app/Resources/webspaces/sulu.io.xml', $parameters);
 
-
         // Basic Structure
         if ($structure) {
             $this->getFileSystem()->mkdir($dir . '/Controller');

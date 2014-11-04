@@ -10,9 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Exclude;
-
 /**
  * File
  */
@@ -65,7 +62,7 @@ class File
     {
         $this->fileVersions = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set created
      *
@@ -75,14 +72,14 @@ class File
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -98,14 +95,14 @@ class File
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -121,14 +118,14 @@ class File
     public function setVersion($version)
     {
         $this->version = $version;
-    
+
         return $this;
     }
 
     /**
      * Get version
      *
-     * @return integer 
+     * @return integer
      */
     public function getVersion()
     {
@@ -138,7 +135,7 @@ class File
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -154,7 +151,7 @@ class File
     public function addFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersions)
     {
         $this->fileVersions[] = $fileVersions;
-    
+
         return $this;
     }
 
@@ -171,7 +168,7 @@ class File
     /**
      * Get fileVersions
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFileVersions()
     {
@@ -187,14 +184,14 @@ class File
     public function setMedia(\Sulu\Bundle\MediaBundle\Entity\Media $media)
     {
         $this->media = $media;
-    
+
         return $this;
     }
 
     /**
      * Get media
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Media 
+     * @return \Sulu\Bundle\MediaBundle\Entity\Media
      */
     public function getMedia()
     {
@@ -210,7 +207,7 @@ class File
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
@@ -233,7 +230,7 @@ class File
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 

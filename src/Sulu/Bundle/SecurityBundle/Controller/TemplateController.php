@@ -10,7 +10,6 @@
 namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
-use Sulu\Bundle\SecurityBundle\Entity\SecurityTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class TemplateController extends Controller

@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TermsOfDeliveryControllerTest extends SuluTestCase
@@ -21,7 +19,6 @@ class TermsOfDeliveryControllerTest extends SuluTestCase
      * @var array
      */
     protected static $entities;
-
 
     public function setUp()
     {
@@ -276,7 +273,7 @@ class TermsOfDeliveryControllerTest extends SuluTestCase
 
         $this->assertEquals(3, count($response2->_embedded->termsOfDeliveries));
 
-        if($response2->_embedded->termsOfDeliveries[0]->terms == 'Changed Term') {
+        if ($response2->_embedded->termsOfDeliveries[0]->terms == 'Changed Term') {
             $this->assertEquals('Changed Term', $response2->_embedded->termsOfDeliveries[0]->terms);
             $this->assertNotNull($response2->_embedded->termsOfDeliveries[0]->id);
 

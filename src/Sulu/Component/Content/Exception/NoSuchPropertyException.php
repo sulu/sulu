@@ -10,10 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\StructureInterface;
-
 class NoSuchPropertyException extends \Exception
 {
     /**
@@ -21,7 +17,7 @@ class NoSuchPropertyException extends \Exception
      */
     private $propertyName;
 
-    function __construct($propertyName)
+    public function __construct($propertyName)
     {
         parent::__construct(sprintf('Property with name "%s" does not exist', $propertyName));
         $this->propertyName = $propertyName;

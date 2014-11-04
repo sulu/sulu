@@ -107,7 +107,6 @@ class TagController extends RestController implements ClassResourceInterface
         return $this->responsePersistSettings();
     }
 
-
     /**
      * Returns a single tag with the given id
      * @param $id
@@ -160,6 +159,7 @@ class TagController extends RestController implements ClassResourceInterface
         }
 
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -316,6 +316,5 @@ class TagController extends RestController implements ClassResourceInterface
 
         return $this->handleView($view);
     }
-
 
 }

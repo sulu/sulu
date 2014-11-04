@@ -10,11 +10,9 @@
 
 namespace Sulu\Component\Content\Structure;
 
-require_once(__DIR__ . '/StructureTestCase.php');
+require_once __DIR__ . '/StructureTestCase.php';
 
 use DateTime;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Sulu\Component\Content\StructureTag;
 use Sulu\Component\Content\StructureType;
 
 class PageTest extends StructureTestCase
@@ -37,4 +35,3 @@ class PageTest extends StructureTestCase
         return $structure;
     }
 }
-

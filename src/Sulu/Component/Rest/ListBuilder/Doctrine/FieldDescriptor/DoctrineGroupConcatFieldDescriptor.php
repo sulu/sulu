@@ -52,7 +52,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
      * Returns the select statement for this field without the alias
      * @return string
      */
-    function getSelect()
+    public function getSelect()
     {
         return 'GROUP_CONCAT(' . $this->fieldDescriptor->getSelect() . ' SEPARATOR \'' . $this->glue . '\')';
     }
@@ -61,7 +61,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
      * Returns all the joins required for this field
      * @return DoctrineJoinDescriptor[]
      */
-    function getJoins()
+    public function getJoins()
     {
         return $this->fieldDescriptor->getJoins();
     }

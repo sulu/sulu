@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
 
 use Psr\Log\NullLogger;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 

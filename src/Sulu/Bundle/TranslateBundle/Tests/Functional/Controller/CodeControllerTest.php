@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Location;
@@ -771,7 +770,6 @@ class CodeControllerTest extends SuluTestCase
         $this->assertEquals($this->code1->getLength(), $response->length);
         $this->assertEquals($this->code1->getLocation()->getId(), $response->location->id);
     }
-
 
     public function testDeleteById()
     {

@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContactBundle\Api;
 
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
-use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;

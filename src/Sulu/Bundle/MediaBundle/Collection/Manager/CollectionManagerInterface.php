@@ -71,4 +71,4 @@ interface CollectionManagerInterface
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);
-} 
+}

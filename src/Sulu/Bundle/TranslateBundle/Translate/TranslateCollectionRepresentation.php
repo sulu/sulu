@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Translate;
 
-
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
@@ -41,6 +40,7 @@ class TranslateCollectionRepresentation extends CollectionRepresentation
     public function setTotal($total)
     {
         $this->total = $total;
+
         return $this;
     }
-} 
+}

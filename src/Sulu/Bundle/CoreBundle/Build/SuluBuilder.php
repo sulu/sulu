@@ -12,7 +12,6 @@ namespace Sulu\Bundle\CoreBundle\Build;
 
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -55,7 +54,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
     protected function execCommand($description, $command, $args = array(''))
     {
         $this->output->getFormatter()->setIndentLevel(1);
-        $formatter = new FormatterHelper;
+        $formatter = new FormatterHelper();
 
         if (!empty($args)) {
             $this->output->writeln(sprintf('<comment>%s </comment> (%s)', $command, json_encode($args)));

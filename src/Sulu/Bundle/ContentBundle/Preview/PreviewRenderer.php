@@ -34,7 +34,7 @@ class PreviewRenderer
      */
     private $controllerResolver;
 
-    function __construct(ActiveTheme $activeTheme, ControllerResolverInterface $controllerResolver, WebspaceManagerInterface $webspaceManager)
+    public function __construct(ActiveTheme $activeTheme, ControllerResolverInterface $controllerResolver, WebspaceManagerInterface $webspaceManager)
     {
         $this->activeTheme = $activeTheme;
         $this->controllerResolver = $controllerResolver;
@@ -60,6 +60,7 @@ class PreviewRenderer
 
         /** @var Response $response */
         $response = $controller[0]->{$controller[1]}($content, true, $partial);
+
         return $response->getContent();
     }
-} 
+}

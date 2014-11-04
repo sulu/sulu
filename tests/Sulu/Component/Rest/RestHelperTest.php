@@ -144,19 +144,19 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->never())->method('add');
         $mock->expects($this->never())->method('get');
 
-        $get = function() use ($mock) {
+        $get = function () use ($mock) {
             $mock->get();
         };
 
-        $delete = function() use ($mock) {
+        $delete = function () use ($mock) {
             $mock->delete();
         };
 
-        $update = function() use ($mock) {
+        $update = function () use ($mock) {
             $mock->update();
         };
 
-        $add = function() use ($mock) {
+        $add = function () use ($mock) {
             $mock->add();
         };
 
@@ -174,19 +174,19 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->never())->method('add');
         $mock->expects($this->never())->method('get');
 
-        $get = function() use ($mock) {
+        $get = function () use ($mock) {
             $mock->get();
         };
 
-        $delete = function() use ($mock) {
+        $delete = function () use ($mock) {
             $mock->delete();
         };
 
-        $update = function() use ($mock) {
+        $update = function () use ($mock) {
             $mock->update();
         };
 
-        $add = function() use ($mock) {
+        $add = function () use ($mock) {
             $mock->add();
         };
 
@@ -213,19 +213,19 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->never())->method('add');
         $mock->expects($this->once())->method('get')->willReturn($mockedObject->getId());
 
-        $get = function() use ($mock) {
+        $get = function () use ($mock) {
             return $mock->get();
         };
 
-        $delete = function() use ($mock) {
+        $delete = function () use ($mock) {
             $mock->delete();
         };
 
-        $update = function() use ($mock) {
+        $update = function () use ($mock) {
             $mock->update();
         };
 
-        $add = function() use ($mock) {
+        $add = function () use ($mock) {
             $mock->add();
         };
 
@@ -253,19 +253,19 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
         $mock->expects($this->once())->method('add');
         $mock->expects($this->never())->method('get');
 
-        $get = function() use ($mock) {
+        $get = function () use ($mock) {
             $mock->get();
         };
 
-        $delete = function() use ($mock) {
+        $delete = function () use ($mock) {
             $mock->delete();
         };
 
-        $update = function() use ($mock) {
+        $update = function () use ($mock) {
             $mock->update();
         };
 
-        $add = function() use ($mock) {
+        $add = function () use ($mock) {
             $mock->add();
         };
 
@@ -304,18 +304,21 @@ class RestHelperTest extends \PHPUnit_Framework_TestCase
                 (isset($data['value']) && $data['value'] === $entity->getValue());
         };
 
-        $delete = function() use ($mock) {
+        $delete = function () use ($mock) {
             $mock->delete();
+
             return true;
         };
 
-        $update = function() use ($mock) {
+        $update = function () use ($mock) {
             $mock->update();
+
             return true;
         };
 
-        $add = function() use ($mock) {
+        $add = function () use ($mock) {
             $mock->add();
+
             return true;
         };
 

@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;

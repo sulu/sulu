@@ -30,7 +30,7 @@ class SectionProperty extends Property implements SectionPropertyInterface
      * @param array $metadata
      * @param string $col
      */
-    function __construct($name, $metadata, $col)
+    public function __construct($name, $metadata, $col)
     {
         parent::__construct($name, $metadata, 'section', false, false, 1, 1, array(), array(), $col);
     }
@@ -50,4 +50,4 @@ class SectionProperty extends Property implements SectionPropertyInterface
     {
         $this->childProperties[] = $property;
     }
-} 
+}

@@ -68,7 +68,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     protected $excerpt = true;
 
-    function __construct(StructureManagerInterface $structureManager, $languageNamespace)
+    public function __construct(StructureManagerInterface $structureManager, $languageNamespace)
     {
         $this->structureManager = $structureManager;
         $this->languageNamespace = $languageNamespace;
@@ -158,12 +158,12 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
     /**
      * Returns custom select statement
      */
-    protected abstract function buildWhere($webspaceKey, $locale);
+    abstract protected function buildWhere($webspaceKey, $locale);
 
     /**
      * Returns custom where statement
      */
-    protected abstract function buildSelect($webspaceKey, $locale, &$additionalFields);
+    abstract protected function buildSelect($webspaceKey, $locale, &$additionalFields);
 
     /**
      * Returns custom order statement

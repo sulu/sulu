@@ -12,7 +12,6 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
-use Sulu\Component\Content\StructureInterface;
 
 class BlockPropertyWrapper implements PropertyInterface
 {

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListRestHelperTest extends \PHPUnit_Framework_TestCase

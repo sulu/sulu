@@ -18,7 +18,7 @@ interface CurrentUserDataInterface
      * @return Boolean
      */
     public function isLoggedIn();
-    
+
     /**
      * returns id
      * @return int
@@ -67,4 +67,4 @@ interface CurrentUserDataInterface
      * @param $value
      */
     public function setUserSetting($key, $value);
-} 
+}

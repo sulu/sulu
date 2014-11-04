@@ -29,7 +29,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $environment;
 
-    function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->environment = $environment;
         $this->webspaceManager = $webspaceManager;
@@ -74,4 +74,4 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
             )
         );
     }
-} 
+}

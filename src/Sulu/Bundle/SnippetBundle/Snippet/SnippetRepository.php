@@ -65,6 +65,7 @@ class SnippetRepository
                 // ignore not found items
             }
         }
+
         return $snippets;
     }
 

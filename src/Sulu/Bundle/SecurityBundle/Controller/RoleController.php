@@ -56,7 +56,8 @@ class RoleController extends RestController implements ClassResourceInterface
     /**
      * TODO: move the field descriptors to a manager
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->fieldDescriptors = array();
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor(
             'id',
@@ -101,7 +102,8 @@ class RoleController extends RestController implements ClassResourceInterface
      * @Get("roles/fields")
      * @return mixed
      */
-    public function getFieldsAction() {
+    public function getFieldsAction()
+    {
         // default contacts list
         return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
     }
@@ -110,7 +112,8 @@ class RoleController extends RestController implements ClassResourceInterface
      * persists a setting
      * @Put("roles/fields")
      */
-    public function putFieldsAction() {
+    public function putFieldsAction()
+    {
         return $this->responsePersistSettings();
     }
 
@@ -153,9 +156,9 @@ class RoleController extends RestController implements ClassResourceInterface
             $list = new CollectionRepresentation($convertedRoles, static::$entityKey);
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
-
 
     /**
      * Returns the role with the given id
@@ -309,8 +312,9 @@ class RoleController extends RestController implements ClassResourceInterface
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $get = function($entity) {
+        $get = function ($entity) {
             /** @var Permission $entity */
+
             return $entity->getId();
         };
 

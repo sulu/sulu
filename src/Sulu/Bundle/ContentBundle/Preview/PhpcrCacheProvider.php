@@ -36,7 +36,7 @@ class PhpcrCacheProvider implements PreviewCacheProviderInterface
      */
     private $prefix;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         SessionManagerInterface $sessionManager,
         $prefix = 'preview'

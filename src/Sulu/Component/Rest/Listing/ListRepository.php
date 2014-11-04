@@ -113,7 +113,7 @@ class ListRepository extends EntityRepository
             // check if fields do contain id, else skip
             if (sizeof($fields = $this->helper->getFields()) > 0 && array_search('id', $fields)!==false) {
                 $ids = array();
-                foreach($results as $result) {
+                foreach ($results as $result) {
                     $id = $result['id'];
                     // check if result already in resultset
                     if (!array_key_exists($id, $ids)) {
@@ -134,6 +134,7 @@ class ListRepository extends EntityRepository
                 $results = $filteredResults;
             }
         }
+
         return $results;
     }
 
@@ -144,12 +145,14 @@ class ListRepository extends EntityRepository
      * @param string $key
      * @return bool|int|string
      */
-    private function getArrayIndexByKeyValue($array, $value, $key = 'id') {
+    private function getArrayIndexByKeyValue($array, $value, $key = 'id')
+    {
         foreach ($array as $index => $result) {
             if ($result[$key] === $value) {
                 return $index;
             }
         }
+
         return false;
     }
 
@@ -184,6 +187,7 @@ class ListRepository extends EntityRepository
         if (!is_null($intersectArray)) {
             $result = array_intersect($result, $intersectArray);
         }
+
         return $result;
     }
 }

@@ -10,28 +10,19 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Hateoas\Representation\CollectionRepresentation;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaFieldDescriptorInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
-use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Security\UserInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
 
@@ -60,6 +51,7 @@ class MediaController extends RestController implements ClassResourceInterface
     public function getFieldsAction()
     {
         $fieldDescriptors = array_values($this->getMediaManager()->getFieldDescriptors());
+
         return $this->handleView($this->view($fieldDescriptors, 200));
     }
 

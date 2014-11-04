@@ -40,4 +40,4 @@ class TagDeleteEvent extends Event
     {
         return $this->tag;
     }
-} 
+}

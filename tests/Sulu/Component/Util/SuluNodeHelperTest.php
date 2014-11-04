@@ -136,7 +136,6 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->helper->getStructureTypeForNode($this->node));
     }
 
-
     public function provideHasSuluNodeType()
     {
         return array(
@@ -161,4 +160,3 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
     }
 }
-

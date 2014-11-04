@@ -62,7 +62,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private $sessionManager;
 
-    function __construct(
+    public function __construct(
         StructureManagerInterface $structureManager,
         WebspaceManagerInterface $webspaceManager,
         SessionManagerInterface $sessionManager,

@@ -14,7 +14,7 @@ class WidgetEntityNotFoundException extends WidgetException
 {
     protected $id;
 
-    function __construct($message, $widget, $id)
+    public function __construct($message, $widget, $id)
     {
         parent::__construct($message, $widget);
         $this->id = $id;

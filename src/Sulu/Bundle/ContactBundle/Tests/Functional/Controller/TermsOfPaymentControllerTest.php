@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TermsOfPaymentControllerTest extends SuluTestCase
@@ -279,7 +277,7 @@ class TermsOfPaymentControllerTest extends SuluTestCase
 
         $this->assertEquals(3, count($response2->_embedded->termsOfPayments));
 
-        if($response2->_embedded->termsOfPayments[0]->terms == 'Changed Term') {
+        if ($response2->_embedded->termsOfPayments[0]->terms == 'Changed Term') {
             $this->assertEquals('Changed Term', $response2->_embedded->termsOfPayments[0]->terms);
             $this->assertNotNull($response2->_embedded->termsOfPayments[0]->id);
 

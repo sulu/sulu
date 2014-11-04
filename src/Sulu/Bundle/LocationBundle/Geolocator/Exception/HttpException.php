@@ -8,6 +8,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * Thrown when the third-party geolocator returns a non
  * OK response
  */
-class GeolocatorHttpException extends HttpException
+class HttpException extends HttpException
 {
 }

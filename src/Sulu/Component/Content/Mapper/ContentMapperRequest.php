@@ -88,7 +88,7 @@ class ContentMapperRequest
      *
      * @return string
      */
-    public function getType() 
+    public function getType()
     {
         return $this->type;
     }
@@ -99,16 +99,16 @@ class ContentMapperRequest
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
-    
 
     /**
      * Return the template key
      *
      * @return string
      */
-    public function getTemplateKey() 
+    public function getTemplateKey()
     {
         return $this->templateKey;
     }
@@ -119,6 +119,7 @@ class ContentMapperRequest
     public function setTemplateKey($templateKey)
     {
         $this->templateKey = $templateKey;
+
         return $this;
     }
 
@@ -127,7 +128,7 @@ class ContentMapperRequest
      *
      * @return array
      */
-    public function getData() 
+    public function getData()
     {
         return $this->data;
     }
@@ -138,6 +139,7 @@ class ContentMapperRequest
     public function setData($data)
     {
         $this->data = $data;
+
         return $this;
     }
 
@@ -146,7 +148,7 @@ class ContentMapperRequest
      *
      * @return string
      */
-    public function getWebspaceKey() 
+    public function getWebspaceKey()
     {
         return $this->webspaceKey;
     }
@@ -159,6 +161,7 @@ class ContentMapperRequest
     public function setWebspaceKey($webspaceKey)
     {
         $this->webspaceKey = $webspaceKey;
+
         return $this;
     }
 
@@ -167,7 +170,7 @@ class ContentMapperRequest
      *
      * @return integer
      */
-    public function getUserId() 
+    public function getUserId()
     {
         return $this->userId;
     }
@@ -180,6 +183,7 @@ class ContentMapperRequest
     public function setUserId($userId)
     {
         $this->userId = $userId;
+
         return $this;
     }
 
@@ -189,7 +193,7 @@ class ContentMapperRequest
      *
      * @return string
      */
-    public function getUuid() 
+    public function getUuid()
     {
         return $this->uuid;
     }
@@ -202,6 +206,7 @@ class ContentMapperRequest
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
+
         return $this;
     }
 
@@ -210,7 +215,7 @@ class ContentMapperRequest
      *
      * @return integer
      */
-    public function getState() 
+    public function getState()
     {
         return $this->state;
     }
@@ -223,6 +228,7 @@ class ContentMapperRequest
     public function setState($state)
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -231,7 +237,7 @@ class ContentMapperRequest
      *
      * @return boolean
      */
-    public function getIsShadow() 
+    public function getIsShadow()
     {
         return $this->isShadow;
     }
@@ -244,6 +250,7 @@ class ContentMapperRequest
     public function setIsShadow($isShadow)
     {
         $this->isShadow = $isShadow;
+
         return $this;
     }
 
@@ -252,7 +259,7 @@ class ContentMapperRequest
      *
      * @return string
      */
-    public function getShadowBaseLanguage() 
+    public function getShadowBaseLanguage()
     {
         return $this->shadowBaseLanguage;
     }
@@ -265,6 +272,7 @@ class ContentMapperRequest
     public function setShadowBaseLanguage($shadowBaseLanguage)
     {
         $this->shadowBaseLanguage = $shadowBaseLanguage;
+
         return $this;
     }
 
@@ -273,7 +281,7 @@ class ContentMapperRequest
      *
      * @return boolean
      */
-    public function getPartialUpdate() 
+    public function getPartialUpdate()
     {
         return $this->partialUpdate;
     }
@@ -286,6 +294,7 @@ class ContentMapperRequest
     public function setPartialUpdate($partialUpdate)
     {
         $this->partialUpdate = $partialUpdate;
+
         return $this;
     }
 
@@ -294,7 +303,7 @@ class ContentMapperRequest
      *
      * @return string
      */
-    public function getParentUuid() 
+    public function getParentUuid()
     {
         return $this->parentUuid;
     }
@@ -308,6 +317,7 @@ class ContentMapperRequest
     public function setParentUuid($parentUuid)
     {
         $this->parentUuid = $parentUuid;
+
         return $this;
     }
 
@@ -316,7 +326,7 @@ class ContentMapperRequest
      *
      * @return string
      */
-    public function getLocale() 
+    public function getLocale()
     {
         return $this->locale;
     }
@@ -329,7 +339,8 @@ class ContentMapperRequest
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
         return $this;
     }
-    
+
 }

@@ -31,4 +31,4 @@ class TemplateResolver implements TemplateResolverInterface
 
         return $templateKey;
     }
-} 
+}

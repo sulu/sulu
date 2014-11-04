@@ -22,4 +22,4 @@ class ImageProxyInvalidFormatOptionsException extends ImageProxyException
     {
         parent::__construct($message, self::EXCEPTION_CODE_IMAGE_PROXY_INVALID_FORMAT_OPTIONS);
     }
-} 
+}

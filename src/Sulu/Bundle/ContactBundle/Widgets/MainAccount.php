@@ -28,7 +28,7 @@ class MainAccount implements WidgetInterface
     protected $widgetName = 'MainAccount';
     protected $contactEntityName = 'SuluContactBundle:Contact';
 
-    function __construct(EntityManager $em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
@@ -77,6 +77,7 @@ class MainAccount implements WidgetInterface
                     $id
                 );
             }
+
             return $this->parseMainAccount($contact);
         } else {
             throw new WidgetParameterException(
@@ -104,6 +105,7 @@ class MainAccount implements WidgetInterface
             $data['phone'] = $account->getMainPhone();
             $data['email'] = $account->getMainEmail();
             $data['url'] = $account->getMainUrl();
+
             return $data;
         } else {
             return null;

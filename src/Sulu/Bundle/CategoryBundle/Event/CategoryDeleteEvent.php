@@ -40,4 +40,4 @@ class CategoryDeleteEvent extends Event
     {
         return $this->category;
     }
-} 
+}

@@ -37,7 +37,7 @@ class SnippetTwigExtension extends \Twig_Extension
     /**
      * Constructor
      */
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         RequestAnalyzerInterface $requestAnalyzer,
         StructureResolverInterface $structureResolver

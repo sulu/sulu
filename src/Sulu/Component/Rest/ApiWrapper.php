@@ -7,7 +7,8 @@ use JMS\Serializer\Annotation\Exclude;
  * The abstract base class for an API object, which wraps another entity
  * @package Sulu\Bundle\CoreBundle\Entity
  */
-class ApiWrapper {
+class ApiWrapper
+{
     /**
      * the entity which is wrapped by this class
      * @var object
@@ -22,7 +23,8 @@ class ApiWrapper {
      */
     protected $locale;
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
-} 
+}
