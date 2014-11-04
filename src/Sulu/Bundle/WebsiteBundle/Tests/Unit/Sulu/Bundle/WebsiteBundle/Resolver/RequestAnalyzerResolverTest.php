@@ -73,9 +73,13 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
 
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $localization->setCountry('at');
+
         $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer');
         $requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
-        $requestAnalyzer->getCurrentLocalization()->willReturn('de');
+        $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
         $requestAnalyzer->getCurrentPortalUrl()->willReturn('sulu.io/de');
         $requestAnalyzer->getCurrentResourceLocatorPrefix()->willReturn('/de');
         $requestAnalyzer->getCurrentResourceLocator()->willReturn('/search');
@@ -87,7 +91,7 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
             array(
                 'request' => array(
                     'webspaceKey' => 'sulu_io',
-                    'locale' => 'de',
+                    'locale' => 'de_at',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
