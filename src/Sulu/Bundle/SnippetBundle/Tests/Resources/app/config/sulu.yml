@@ -39,7 +39,7 @@ sulu_core:
         backend: 
             type: jackrabbit
             url: http://localhost:8080/server/
-        workspace: default
+        workspace: test
         username: admin
         password: admin
     webspace:
