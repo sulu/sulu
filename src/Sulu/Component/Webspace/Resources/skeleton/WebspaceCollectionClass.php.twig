@@ -44,6 +44,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0->setLanguage('{{ localization.language }}');
         $localization0->setCountry('{{ localization.country }}');
         $localization0->setShadow('{{ (localization.shadow) }}');
+        $localization0->setDefault('{{ localization.default }}');
 {% for childLocalization in localization.children %}
 {{ _self.create_localizations(childLocalization, 1, 0, webspace) }}
 {% endfor %}
@@ -84,6 +85,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization = new Localization();
         $localization->setLanguage('{{ localization.language }}');
         $localization->setCountry('{{ localization.country }}');
+        $localization->setDefault('{{ localization.default }}');
         $portal->addLocalization($localization);
 {% endfor %}
 
@@ -171,6 +173,7 @@ class {{ cache_class }} extends {{ base_class }}
     $localization{{ count }}->setCountry('{{ localization.country }}');
     $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
     $localization{{ count }}->setParent($localization{{ parent }});
+    $localization{{ count }}->setDefault('{{ localization.default }}');
 
     $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization{{ count }};
 
