@@ -7,7 +7,6 @@
 /tests/app/logs/*
 /src/Sulu/Bundle/*/vendor
 
-
 # IDEs
 .idea/*
 *.iml

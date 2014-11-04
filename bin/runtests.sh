@@ -2,7 +2,7 @@
 
 DB=mysql
 OCWD=`pwd`
-BUNDLE=$1
+BUNDLE=""
 
 function header {
     echo ""
@@ -25,6 +25,46 @@ function error {
     echo ""
 }
 
+function init_database {
+    comment "Initializing database"
+
+    ./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
+}
+
+function show_help {
+    echo "Sulu Test Runner"
+    echo ""
+    echo "Usage:"
+    echo ""
+    echo "  ./bin/runtests.sh -i -a # initialize and run all tests"
+    echo "  ./bin/runtests.sh -t LocationBundle # run only LocationBundle tests"
+    echo ""
+    echo "Options:"
+    echo ""
+    echo "  i) Execute the initializaction script before running the tests"
+    echo "  t) Specify a target bundle"
+    echo "  a) Run all tests"
+    exit 0
+}
+
+
+while getopts ":ait:" OPT; do
+    case $OPT in
+        i)
+            init_database
+            ;;
+        t)
+            BUNDLE=$OPTARG
+            ;;
+        a)
+            ;;
+    esac
+done
+
+if [[ -z $1 ]]; then
+    show_help
+fi
+
 cat <<EOT
    _____       _        _____ __  __ ______ 
   / ____|     | |      / ____|  \/  |  ____|
@@ -36,10 +76,6 @@ cat <<EOT
 EOT
 
 header "Sulu CMF Test Suite"
-
-comment "Initializing database"
-
-./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
 
 if [ -e /tmp/failed.tests ]; then
     rm /tmp/failed.tests
@@ -75,11 +111,16 @@ for BUNDLE in $BUNDLES; do
     fi
 
     if [[ ! -z "$KERNEL_DIR" ]]; then
+        CONSOLE="env KERNEL_DIR=$OCWD"/"$KERNEL_DIR $OCWD/bin/console"
         comment "Kernel: "$KERNEL_DIR
-        env KERNEL_DIR=$OCWD"/"$KERNEL_DIR $OCWD/bin/console doctrine:schema:update --force
+
+        $CONSOLE container:debug | cut -d' ' -f2 | grep "^doctrine.orm" &> /dev/null \
+            && comment "Doctrine ORM detected" \
+            && $CONSOLE doctrine:schema:update --force
     fi
 
     cd -
+    comment "Running tests"
 
     phpunit --configuration phpunit.travis.xml.dist --stop-on-failure --stop-on-error $BUNDLE_DIR/Tests
 

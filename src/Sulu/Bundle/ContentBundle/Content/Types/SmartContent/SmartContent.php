@@ -56,6 +56,21 @@ class SmartContent extends ComplexContentType
      */
     private $stopwatch;
 
+    /**
+     * @var array
+     */
+    private $contentData;
+
+    /**
+     * @var boolean
+     */
+    private $hasNextPage;
+
+    /**
+     * @var int
+     */
+    private $page;
+
     function __construct(
         ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
@@ -208,7 +223,15 @@ class SmartContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        return $property->getValue()->getConfig();
+        $this->getContentData($property);
+
+        return array_merge(
+            $property->getValue()->getConfig(),
+            array(
+                'page' => $this->page,
+                'hasNextPage' => $this->hasNextPage
+            )
+        );
     }
 
     /**
@@ -216,23 +239,108 @@ class SmartContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
+        if ($this->contentData !== null) {
+            return $this->contentData;
+        }
+
         $params = array_merge(
             $this->getDefaultParams(),
             $property->getParams()
         );
 
-        $data = $property->getValue()->getData();
-
+        $value = $property->getValue();
         // paginate
+        if ($value instanceof SmartContentContainer) {
+            $this->contentData = $this->loadData($value, $property, $params);
+        } else {
+            $this->contentData = array();
+        }
+
+        return $this->contentData;
+    }
+
+    /**
+     * load data from container
+     */
+    private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
+    {
         if (isset($params['max_per_page'])) {
-            if ($this->requestStack->getCurrentRequest() !== null) {
-                $page = $this->requestStack->getCurrentRequest()->get($params['page_parameter'], 1);
-            } else {
-                $page = 1;
-            }
-            $data = array_slice($data, ($page - 1) * $params['max_per_page'], $params['max_per_page']);
+            // determine current page
+            $this->page = $this->getCurrentPage($params['page_parameter']);
+
+            $contentData = $this->getPagedContentData(
+                $container,
+                $this->page,
+                intval($params['max_per_page']),
+                $property->getStructure()->getUuid()
+            );
+        } else {
+            // set default values
+            $this->page = 1;
+            $this->hasNextPage = false;
+
+            $contentData = $this->getNotPagedContentData(
+                $container,
+                $property->getStructure()->getUuid()
+            );
+        }
+
+        return $contentData;
+    }
+
+    /**
+     * determine current page from current request
+     */
+    private function getCurrentPage($pageParameter)
+    {
+        if ($this->requestStack->getCurrentRequest() !== null) {
+            $page = $this->requestStack->getCurrentRequest()->get($pageParameter, 1);
+        } else {
+            $page = 1;
+        }
+
+        return intval($page);
+    }
+
+    /**
+     * Returns paged content
+     */
+    private function getPagedContentData(SmartContentContainer $container, $page, $pageSize, $excludeUuid)
+    {
+        $config = $container->getConfig();
+        $limitResult = isset($config['limitResult']) && !empty($config['limitResult']) ? intval($config['limitResult']) : null;
+
+        $limit = intval($pageSize);
+        $offset = ($page - 1) * $limit;
+
+        $position = $limit * $page;
+        if ($limitResult !== null && $position >= $limitResult) {
+            $limit = $limitResult - $offset;
+            $loadLimit = $limit;
+        } else {
+            $loadLimit = $limit + 1;
+        }
+
+        if ($limit < 0) {
+            return array();
+        }
+
+        $data = $container->getData(array($excludeUuid), $loadLimit, $offset);
+
+        $this->hasNextPage = false;
+        if (sizeof($data) > $limit) {
+            $this->hasNextPage = true;
+            $data = array_splice($data, 0, $limit);
         }
 
         return $data;
+    }
+
+    /**
+     * Returns not paged content
+     */
+    private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)
+    {
+        return $container->getData(array($excludeUuid));
     }
 }
