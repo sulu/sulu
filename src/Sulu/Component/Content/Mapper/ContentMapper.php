@@ -1504,27 +1504,38 @@ class ContentMapper implements ContentMapperInterface
     private function loadAllUrls(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
     {
         $result = array();
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
         if ($page->hasTag('sulu.rlp')) {
-            $property = clone($page->getPropertyByTagName('sulu.rlp'));
-
-            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-
-            foreach ($webspace->getAllLocalizations() as $localization) {
-                // prepare translation vars
-                $locale = $localization->getLocalization();
-                $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
-
-                // set default value
-                $property->setValue(null);
-                $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
-
-                $result[$locale] = $property->getValue();
-            }
+            $result = $this->getAllUrls($page, $node, $webspaceKey, $segmentKey);
         }
 
         $page->setUrls($result);
+    }
+
+    /**
+     * Returns urls for given page for all locales in webspace
+     */
+    private function getAllUrls(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    {
+        $result = array();
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $property = clone($page->getPropertyByTagName('sulu.rlp'));
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            // prepare translation vars
+            $locale = $localization->getLocalization();
+            $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
+
+            // set default value
+            $property->setValue(null);
+            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+            $result[$locale] = $property->getValue();
+        }
+
+        return $result;
     }
 
     /**
@@ -2031,6 +2042,7 @@ class ContentMapper implements ContentMapperInterface
                         'creator' => $creator,
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
+                        'urls' => $this->getAllUrls($structure, $node, $webspaceKey, null),
                         'locale' => $locale,
                         'webspaceKey' => $key,
                         'template' => $templateKey,
