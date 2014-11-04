@@ -2,7 +2,7 @@
 
 DB=mysql
 OCWD=`pwd`
-BUNDLE=$1
+BUNDLE=""
 
 function header {
     echo ""
@@ -25,6 +25,46 @@ function error {
     echo ""
 }
 
+function init_database {
+    comment "Initializing database"
+
+    ./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
+}
+
+function show_help {
+    echo "Sulu Test Runner"
+    echo ""
+    echo "Usage:"
+    echo ""
+    echo "  ./bin/runtests.sh -i -a # initialize and run all tests"
+    echo "  ./bin/runtests.sh -t LocationBundle # run only LocationBundle tests"
+    echo ""
+    echo "Options:"
+    echo ""
+    echo "  i) Execute the initializaction script before running the tests"
+    echo "  t) Specify a target bundle"
+    echo "  a) Run all tests"
+    exit 0
+}
+
+
+while getopts ":ait:" OPT; do
+    case $OPT in
+        i)
+            init_database
+            ;;
+        t)
+            BUNDLE=$OPTARG
+            ;;
+        a)
+            ;;
+    esac
+done
+
+if [[ -z $1 ]]; then
+    show_help
+fi
+
 cat <<EOT
    _____       _        _____ __  __ ______ 
   / ____|     | |      / ____|  \/  |  ____|
@@ -36,10 +76,6 @@ cat <<EOT
 EOT
 
 header "Sulu CMF Test Suite"
-
-comment "Initializing database"
-
-./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
 
 if [ -e /tmp/failed.tests ]; then
     rm /tmp/failed.tests
