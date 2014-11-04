@@ -465,7 +465,7 @@ class ContentMapper implements ContentMapperInterface
                     $propertyTranslator->getName('published')
                 );
             }
-        } else {
+        } elseif (isset($state)) {
             $this->changeState(
                 $node,
                 $state,
