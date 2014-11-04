@@ -119,4 +119,4 @@ class RdfaCrawler
 
         return false;
     }
-} 
+}

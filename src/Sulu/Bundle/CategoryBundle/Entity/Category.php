@@ -2,8 +2,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Category
  */
@@ -83,7 +81,7 @@ class Category
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set lft
      *
@@ -93,14 +91,14 @@ class Category
     public function setLft($lft)
     {
         $this->lft = $lft;
-    
+
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer 
+     * @return integer
      */
     public function getLft()
     {
@@ -116,14 +114,14 @@ class Category
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-    
+
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgt()
     {
@@ -139,14 +137,14 @@ class Category
     public function setDepth($depth)
     {
         $this->depth = $depth;
-    
+
         return $this;
     }
 
     /**
      * Get depth
      *
-     * @return integer 
+     * @return integer
      */
     public function getDepth()
     {
@@ -162,14 +160,14 @@ class Category
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -185,7 +183,7 @@ class Category
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
@@ -215,7 +213,7 @@ class Category
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -225,7 +223,7 @@ class Category
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -241,7 +239,7 @@ class Category
     public function addMeta(\Sulu\Bundle\CategoryBundle\Entity\CategoryMeta $meta)
     {
         $this->meta[] = $meta;
-    
+
         return $this;
     }
 
@@ -258,7 +256,7 @@ class Category
     /**
      * Get meta
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMeta()
     {
@@ -274,7 +272,7 @@ class Category
     public function addTranslation(\Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation $translations)
     {
         $this->translations[] = $translations;
-    
+
         return $this;
     }
 
@@ -291,7 +289,7 @@ class Category
     /**
      * Get translations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {
@@ -307,7 +305,7 @@ class Category
     public function addChildren(\Sulu\Bundle\CategoryBundle\Entity\Category $children)
     {
         $this->children[] = $children;
-    
+
         return $this;
     }
 
@@ -324,7 +322,7 @@ class Category
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {
@@ -340,14 +338,14 @@ class Category
     public function setParent(\Sulu\Bundle\CategoryBundle\Entity\Category $parent = null)
     {
         $this->parent = $parent;
-    
+
         return $this;
     }
 
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category 
+     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */
     public function getParent()
     {
@@ -363,7 +361,7 @@ class Category
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
@@ -386,7 +384,7 @@ class Category
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 

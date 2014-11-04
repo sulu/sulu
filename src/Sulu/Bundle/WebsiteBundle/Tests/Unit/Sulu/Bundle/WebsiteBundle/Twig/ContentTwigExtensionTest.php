@@ -28,7 +28,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class TestStructure extends Structure
 {
-    function __construct($uuid, $title, $userId)
+    public function __construct($uuid, $title, $userId)
     {
         parent::__construct('test', '', '');
 
@@ -129,7 +129,7 @@ class ContentTwigExtensionTest extends ProphecyTestCase
 
         $this->node->getIdentifier()->willReturn('123-123-123');
         $this->node->getParent()->willReturn($this->parentNode->reveal());
-        $this->node ->getDepth()->willReturn(4);
+        $this->node->getDepth()->willReturn(4);
 
         $this->parentNode->getIdentifier()->willReturn('321-321-321');
         $this->parentNode->getDepth()->willReturn(3);

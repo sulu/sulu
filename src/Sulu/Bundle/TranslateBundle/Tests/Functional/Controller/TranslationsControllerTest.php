@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Code;
 use Sulu\Bundle\TranslateBundle\Entity\Package;

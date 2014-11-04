@@ -29,7 +29,7 @@ abstract class SimpleContentType implements ContentTypeInterface
      */
     private $defaultValue;
 
-    function __construct($name, $defaultValue = null)
+    public function __construct($name, $defaultValue = null)
     {
         $this->name = $name;
         $this->defaultValue = $defaultValue;

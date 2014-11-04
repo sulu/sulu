@@ -111,4 +111,4 @@ class SeoController extends RestController implements ClassResourceInterface
             $this->view($result)
         );
     }
-} 
+}

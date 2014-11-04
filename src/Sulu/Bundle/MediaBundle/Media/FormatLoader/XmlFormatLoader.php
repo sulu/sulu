@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
-use DOMAttr;
 use DOMElement;
 use Symfony\Component\Config\Util\XmlUtils;
 use Symfony\Component\Config\Loader\FileLoader;
@@ -89,6 +88,7 @@ class XmlFormatLoader extends FileLoader
                 );
             }
         }
+
         return $formats;
     }
 

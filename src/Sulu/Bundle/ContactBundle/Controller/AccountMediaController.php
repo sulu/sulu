@@ -45,4 +45,4 @@ class AccountMediaController extends AbstractMediaController
     {
         return $this->addMediaToEntity(self::$entityName, $id, $request->get('mediaId', ''));
     }
-} 
+}

@@ -67,7 +67,6 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $queryBuilder;
 
-
     public function __construct(EntityManager $em, $entityName)
     {
         $this->em = $em;
@@ -80,7 +79,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     public function count()
     {
         // TODO: remove uneccessary joins from count!
-        
+
         $entityId = $this->entityName . '.id';
         $this->queryBuilder = $this->createQueryBuilder()
             ->select('count(' . $entityId . ')');

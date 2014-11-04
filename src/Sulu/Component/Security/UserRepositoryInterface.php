@@ -33,4 +33,4 @@ interface UserRepositoryInterface extends UserProviderInterface
      * @return UserInterface
      */
     public function findUserById($id);
-} 
+}

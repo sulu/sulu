@@ -62,10 +62,10 @@ class AdminPoolTest extends \PHPUnit_Framework_TestCase
         $this->command = $this->getMock('Command');
         $this->admin1->expects($this->any())
             ->method('getCommands')
-            ->will($this->returnValue(array(new $this->command)));
+            ->will($this->returnValue(array(new $this->command())));
         $this->admin2->expects($this->any())
             ->method('getCommands')
-            ->will($this->returnValue(array(new $this->command)));
+            ->will($this->returnValue(array(new $this->command())));
         $this->admin1->expects($this->any())
             ->method('getSecurityContexts')
             ->will(

@@ -17,4 +17,4 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 interface DoctrineListBuilderFactoryInterface
 {
     public function create($entityName);
-} 
+}

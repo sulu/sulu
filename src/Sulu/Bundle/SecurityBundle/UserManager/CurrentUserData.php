@@ -3,7 +3,6 @@
 namespace Sulu\Bundle\SecurityBundle\UserManager;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AdminBundle\UserManager\CurrentUserDataInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
@@ -21,7 +20,6 @@ class CurrentUserData implements CurrentUserDataInterface
      * @var \Symfony\Component\Routing\RouterInterface
      */
     protected $router;
-
 
     /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
@@ -46,7 +44,7 @@ class CurrentUserData implements CurrentUserDataInterface
     public function isLoggedIn()
     {
 
-        if( $this->getUser() && $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+        if ( $this->getUser() && $this->security->isGranted('IS_AUTHENTICATED_REMEMBERED') ) {
             return true;
         } else {
             return false;
@@ -111,9 +109,10 @@ class CurrentUserData implements CurrentUserDataInterface
     public function getUserSettings()
     {
         $settingsArray = array();
-        foreach($this->getUser()->getUserSettings()->toArray() as $setting) {
+        foreach ($this->getUser()->getUserSettings()->toArray() as $setting) {
             $settingsArray[$setting->getKey()] = json_decode($setting->getValue());
         };
+
         return $settingsArray;
     }
 
@@ -128,7 +127,6 @@ class CurrentUserData implements CurrentUserDataInterface
         $user = $this->getUser();
         // encode before persist
         $data = json_encode($value);
-
 
         // get setting
         /** @var UserSetting $setting */
@@ -147,7 +145,6 @@ class CurrentUserData implements CurrentUserDataInterface
         $setting->setValue($data);
         $em->flush($setting);
     }
-
 
     /**
      * Get a user from the Security Context
@@ -175,7 +172,8 @@ class CurrentUserData implements CurrentUserDataInterface
         return $user;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return array(
             'id' => $this->getId(),
             'username' => $this->getUserName(),

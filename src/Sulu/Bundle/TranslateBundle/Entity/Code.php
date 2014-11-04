@@ -67,7 +67,6 @@ class Code extends ApiEntity
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-
     /**
      * Get id
      *

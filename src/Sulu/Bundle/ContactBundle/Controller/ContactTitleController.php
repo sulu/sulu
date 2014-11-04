@@ -12,18 +12,13 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
 use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Route;
-use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -77,6 +72,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
         );
 
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -217,6 +213,7 @@ class ContactTitleController extends RestController implements ClassResourceInte
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
 

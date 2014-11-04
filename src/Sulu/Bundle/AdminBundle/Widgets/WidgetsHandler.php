@@ -43,7 +43,7 @@ class WidgetsHandler implements WidgetsHandlerInterface
      */
     protected $widgetGroups;
 
-    function __construct(EngineInterface $templateEngine, $widgetGroups)
+    public function __construct(EngineInterface $templateEngine, $widgetGroups)
     {
         $this->templateEngine = $templateEngine;
         $this->widgetGroups = $widgetGroups;

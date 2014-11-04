@@ -41,6 +41,7 @@ class DefaultControllerTest extends \PHPUnit_Framework_TestCase
             )
         );
         $request->expects($this->any())->method('getUri')->will($this->returnValue($uri));
+
         return $request;
     }
 

@@ -37,4 +37,4 @@ interface TagRepositoryInterface
      * @return array
      */
     public function findAllTags();
-} 
+}

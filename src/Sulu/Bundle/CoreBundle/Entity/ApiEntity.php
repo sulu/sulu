@@ -2,8 +2,6 @@
 namespace Sulu\Bundle\CoreBundle\Entity;
 
 use Doctrine\Common\Inflector\Inflector;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Accessor;
 

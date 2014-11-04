@@ -3,7 +3,6 @@
 namespace Sulu\Component\HttpKernel;
 
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * Base class for all Sulu kernels.

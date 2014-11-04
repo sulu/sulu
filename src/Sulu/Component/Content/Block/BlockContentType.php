@@ -15,7 +15,6 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
-use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 
@@ -40,7 +39,7 @@ class BlockContentType extends ComplexContentType
      */
     private $languageNamespace;
 
-    function __construct(ContentTypeManagerInterface $contentTypeManager, $template, $languageNamespace)
+    public function __construct(ContentTypeManagerInterface $contentTypeManager, $template, $languageNamespace)
     {
         $this->contentTypeManager = $contentTypeManager;
         $this->template = $template;
@@ -311,7 +310,7 @@ class BlockContentType extends ComplexContentType
 
     /**
      * Returns prepared data from property
-     * use callback to prepare data foreach property function($contentType, $property) 
+     * use callback to prepare data foreach property function($contentType, $property)
      * @param PropertyInterface $property
      * @param callable $dataCallback
      * @param bool $returnType

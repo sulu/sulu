@@ -26,7 +26,6 @@ class GeolocatorControllerTest extends SuluTestCase
         $rawResponse = file_get_contents(__DIR__ . '/responses/' . md5($query) . '.json');
         $this->mockPlugin->addResponse(new Response(200, null, $rawResponse));
 
-
         $router = $this->client->getContainer()->get('router');
         $this->client->request('get', $router->generate('sulu_location_geolocator_query', array(
             'providerName' => 'nominatim',

@@ -4,7 +4,6 @@ namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Guzzle\Http\ClientInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 
@@ -59,7 +58,6 @@ class GoogleGeolocator implements GeolocatorInterface
         $googleResponse = $request->getResponse()->json();
         $response = new GeolocatorResponse();
 
-
         if ($googleResponse['status'] != 'OK') {
             return $response;
         }
@@ -90,7 +88,7 @@ class GoogleGeolocator implements GeolocatorInterface
                 'postal_code' => 'setCode',
                 'locality' => 'setTown',
                 'country' => 'setCountry'
-            ) as $field => $method) 
+            ) as $field => $method)
             {
                 if (isset($map[$field])) {
                     $parts = array();

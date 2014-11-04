@@ -13,14 +13,12 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-use Hateoas\Representation\CollectionRepresentation;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -78,6 +76,7 @@ class CollectionController extends RestController implements ClassResourceInterf
                 $id,
                 function ($id) use ($locale, $collectionManager) {
                     /** @var CollectionEntity $collectionEntity */
+
                     return $collectionManager->getById($id, $locale);
                 }
             );
@@ -132,6 +131,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         } catch (MediaException $me) {
             $view = $this->view($me->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
 

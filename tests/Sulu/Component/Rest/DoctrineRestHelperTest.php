@@ -42,6 +42,6 @@ class DoctrineRestHelperTest extends \PHPUnit_Framework_TestCase
         $entities->expects($this->once())->method('getIterator')->willReturn(new \ArrayIterator(array(null, null)));
         $entities->expects($this->exactly(2))->method('add');
 
-        $this->restHelper->processSubEntities($entities, array(), function() {});
+        $this->restHelper->processSubEntities($entities, array(), function () {});
     }
 }

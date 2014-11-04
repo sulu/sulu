@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\CoreBundle\Cache;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Structure;

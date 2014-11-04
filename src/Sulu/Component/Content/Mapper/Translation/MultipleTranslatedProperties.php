@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Mapper\Translation;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
-use PHPCR\NodeInterface;
 use Sulu\Component\Content\Structure;
 
 /**
@@ -42,7 +41,7 @@ class MultipleTranslatedProperties
      */
     private $structureType = Structure::TYPE_PAGE;
 
-    function __construct(
+    public function __construct(
         $names,
         $languageNamespace,
         $namespace = ''

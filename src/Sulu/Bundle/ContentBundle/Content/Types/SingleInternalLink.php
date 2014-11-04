@@ -14,7 +14,6 @@ use PHPCR\NodeInterface;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
-use Sulu\Component\Rest\Exception\InvalidArgumentException;
 
 /**
  * ContentType for SingleInternalLink
@@ -23,7 +22,7 @@ class SingleInternalLink extends SimpleContentType
 {
     private $template;
 
-    function __construct($template)
+    public function __construct($template)
     {
         parent::__construct('SingleInternalLink', '');
 

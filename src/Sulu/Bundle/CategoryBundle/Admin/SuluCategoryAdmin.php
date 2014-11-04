@@ -44,7 +44,8 @@ class SuluCategoryAdmin extends Admin
     /**
      * {@inheritdoc}
      */
-    public function getJsBundleName() {
+    public function getJsBundleName()
+    {
         return 'sulucategory';
     }
 

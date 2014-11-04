@@ -14,7 +14,6 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
@@ -42,7 +41,7 @@ class ContentTwigExtension extends \Twig_Extension
      */
     private $sessionManager;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,

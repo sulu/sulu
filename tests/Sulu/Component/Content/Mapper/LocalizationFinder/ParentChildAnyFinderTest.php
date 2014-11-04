@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-use Sulu\Component\Content\Mapper\LocalizationFinder\DelegatingFinder;
 use Prophecy\PhpUnit\ProphecyTestCase;
 
 class ParentChildAnyFinderTest extends ProphecyTestCase

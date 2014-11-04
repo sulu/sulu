@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content;
 
-use PHPCR\ItemNotFoundException;
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -155,6 +153,7 @@ class InternalLinksContainer implements ArrayableInterface
             case 'data':
                 return $this->getData();
         }
+
         return null;
     }
 

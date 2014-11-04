@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Widgets;
 
-use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\AdminBundle\Widgets\WidgetInterface;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -31,7 +30,7 @@ class AccountInfo implements WidgetInterface
     protected $widgetName = 'AccountInfo';
     protected $accountEntityName = 'SuluContactBundle:Account';
 
-    function __construct(EntityManager $em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
@@ -121,10 +120,10 @@ class AccountInfo implements WidgetInterface
         $data['email'] = $account->getMainEmail();
         $data['url'] = $account->getMainUrl();
 
-        if($account->getTermsOfPayment()){
+        if ($account->getTermsOfPayment()) {
             $data['termsOfPayment'] = $account->getTermsOfPayment()->getTerms();
         }
-        if($account->getTermsOfDelivery()) {
+        if ($account->getTermsOfDelivery()) {
             $data['termsOfDelivery'] = $account->getTermsOfDelivery()->getTerms();
         }
 

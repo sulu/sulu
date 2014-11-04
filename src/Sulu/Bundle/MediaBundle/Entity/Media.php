@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -66,7 +65,7 @@ class Media
     {
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set created
      *
@@ -76,14 +75,14 @@ class Media
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -99,14 +98,14 @@ class Media
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -116,7 +115,7 @@ class Media
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -132,7 +131,7 @@ class Media
     public function addFile(\Sulu\Bundle\MediaBundle\Entity\File $files)
     {
         $this->files[] = $files;
-    
+
         return $this;
     }
 
@@ -149,7 +148,7 @@ class Media
     /**
      * Get files
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFiles()
     {
@@ -165,14 +164,14 @@ class Media
     public function setCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collection)
     {
         $this->collection = $collection;
-    
+
         return $this;
     }
 
     /**
      * Get collection
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection 
+     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
      */
     public function getCollection()
     {
@@ -188,14 +187,14 @@ class Media
     public function setType(\Sulu\Bundle\MediaBundle\Entity\MediaType $type)
     {
         $this->type = $type;
-    
+
         return $this;
     }
 
     /**
      * Get type
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\MediaType 
+     * @return \Sulu\Bundle\MediaBundle\Entity\MediaType
      */
     public function getType()
     {
@@ -211,14 +210,14 @@ class Media
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -234,14 +233,14 @@ class Media
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {

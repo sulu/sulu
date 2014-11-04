@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SearchBundle\Command;
 
 use Jackalope\Query\Row;
 use Jackalope\Session;
-use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Bundle\SearchBundle\LocalizedSearchManager\LocalizedSearchManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;

@@ -42,4 +42,4 @@ class TagNotFoundException extends Exception
     {
         return $this->id;
     }
-} 
+}

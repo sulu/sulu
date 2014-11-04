@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JsonSerializable;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
@@ -38,7 +37,7 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
     {
         $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -48,7 +47,7 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
@@ -81,7 +80,7 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
     public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
     {
         $this->activities[] = $activities;
-    
+
         return $this;
     }
 
@@ -98,7 +97,7 @@ class ActivityPriority extends ApiEntity implements JsonSerializable
     /**
      * Get activities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getActivities()
     {

@@ -23,7 +23,7 @@ class SuluAdminBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new AddAdminPass);
+        $container->addCompilerPass(new AddAdminPass());
         $container->addCompilerPass(new AddJsConfigPass());
         $container->addCompilerPass(new WidgetsPass());
         $container->addCompilerPass(new SuluVersionPass());

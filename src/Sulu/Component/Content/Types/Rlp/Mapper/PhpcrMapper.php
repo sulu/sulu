@@ -33,7 +33,7 @@ class PhpcrMapper extends RlpMapper
     /**
      * @param SessionManagerInterface $sessionManager
      */
-    function __construct(SessionManagerInterface $sessionManager)
+    public function __construct(SessionManagerInterface $sessionManager)
     {
         $this->sessionManager = $sessionManager;
     }

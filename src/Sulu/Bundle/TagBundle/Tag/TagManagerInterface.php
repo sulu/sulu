@@ -99,4 +99,4 @@ interface TagManagerInterface
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);
-} 
+}

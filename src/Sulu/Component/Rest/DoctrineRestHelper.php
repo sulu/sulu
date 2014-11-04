@@ -12,8 +12,6 @@ namespace Sulu\Component\Rest;
 
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
-use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
-use Traversable;
 
 /**
  * Defines some common REST functionalities
@@ -47,7 +45,7 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
                 $entities->add($value);
             }
         }
-        
+
         return $success;
     }
-} 
+}

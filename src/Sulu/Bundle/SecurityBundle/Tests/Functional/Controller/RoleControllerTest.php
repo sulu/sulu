@@ -11,14 +11,13 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 
-class RolesControllerTest extends SuluTestCase
+class RoleControllerTest extends SuluTestCase
 {
     /**
      * @var SecurityType
@@ -498,14 +497,12 @@ class RolesControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(2, count($response->_embedded->roles));
 
-
         $client->request(
             'DELETE',
             '/api/roles/' . $this->role1->getId()
         );
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
-
 
         $client->request(
             'GET',
@@ -532,7 +529,8 @@ class RolesControllerTest extends SuluTestCase
         $this->assertContains('11230', $response->message);
     }
 
-    public function testGetAllRoles(){
+    public function testGetAllRoles()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/roles');

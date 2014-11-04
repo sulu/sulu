@@ -163,12 +163,5 @@ class SecondStructureCache extends Page
 
         $this->addChild($section1);
 
-
     }
 }
-
-
-
-
-
-

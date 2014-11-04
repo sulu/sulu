@@ -14,7 +14,6 @@ use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
 /**
  * Class NavigationController
  * @package Sulu\Bundle\CategoryBundle\Controller

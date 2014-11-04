@@ -20,6 +20,6 @@ class SuluContactBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new AddContentNavigationPass);
+        $container->addCompilerPass(new AddContentNavigationPass());
     }
 }

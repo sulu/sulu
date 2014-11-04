@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use PHPCR\NodeInterface;
 
 /**

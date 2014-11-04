@@ -17,8 +17,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 

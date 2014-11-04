@@ -27,7 +27,7 @@ class UserManager implements UserManagerInterface
      */
     private $currentUserData;
 
-    function __construct(Registry $doctrine, CurrentUserDataInterface $currentUserData = null)
+    public function __construct(Registry $doctrine, CurrentUserDataInterface $currentUserData = null)
     {
         $this->doctrine = $doctrine;
         $this->currentUserData = $currentUserData;

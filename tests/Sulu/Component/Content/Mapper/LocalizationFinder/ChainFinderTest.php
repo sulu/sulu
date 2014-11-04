@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-use Sulu\Component\Content\Mapper\LocalizationFinder\ChainFinder;
 use Prophecy\PhpUnit\ProphecyTestCase;
 
 /**

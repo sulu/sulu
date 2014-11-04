@@ -63,4 +63,4 @@ interface BlockPropertyInterface extends PropertyInterface
      * @return string
      */
     public function getDefaultTypeName();
-} 
+}
