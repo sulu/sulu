@@ -118,7 +118,7 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro propertyTag(tag) %}
     new PropertyTag(
-        '{{ tag.name }}'
+        '{{ tag.name }}',
         {{ tag.priority is defined and tag.priority ? tag.priority : '1' }},
         array(
             {% for attrName, attrValue in tag.attributes %}
