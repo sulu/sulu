@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
@@ -104,7 +103,6 @@ class UserControllerTest extends SuluTestCase
         $user1->setEnabled(false);
         $this->em->persist($user1);
         $this->user2 = $user1;
-
 
         $this->em->flush();
 
@@ -248,7 +246,6 @@ class UserControllerTest extends SuluTestCase
                 )
             )
         );
-
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -456,7 +453,6 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(1001, $response->code);
     }
 
-
     public function testPutNonUniqueName()
     {
         $client = $this->createAuthenticatedClient();
@@ -497,7 +493,6 @@ class UserControllerTest extends SuluTestCase
     public function testPatch()
     {
         $client = $this->createAuthenticatedClient();
-
 
         $client->request(
             'PATCH',
@@ -743,7 +738,6 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(1, sizeof($response->userRoles));
     }
 
-
     public function testPostWithoutPassword()
     {
         $client = $this->createAuthenticatedClient();
@@ -773,7 +767,6 @@ class UserControllerTest extends SuluTestCase
                 )
             )
         );
-
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -811,7 +804,6 @@ class UserControllerTest extends SuluTestCase
                 )
             )
         );
-
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -904,7 +896,8 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userRoles[1]->locales[0]);
     }
 
-    public function testEnableUser() {
+    public function testEnableUser()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -917,8 +910,8 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->enabled);
     }
 
-    public function testUserDataHandler() {
-
+    public function testUserDataHandler()
+    {
 //        $this->createClient();
 //        self::$kernel->getContainer()->get('sulu_admin.user_data_service');
 

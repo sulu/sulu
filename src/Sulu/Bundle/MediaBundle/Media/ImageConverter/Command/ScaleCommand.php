@@ -36,4 +36,4 @@ class ScaleCommand implements CommandInterface
 
         $image = $image->thumbnail(new Box($newWidth, $newHeight), $mode);
     }
-} 
+}

@@ -21,7 +21,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\FileResource;
-use Sulu\Component\Content\StructureInterface;
 
 /**
  * generates subclasses of structure to match template definitions.
@@ -62,7 +61,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      * @param array $options
      * @internal param string $defaultPath array with paths to search for templates
      */
-    function __construct(
+    public function __construct(
         LoaderInterface $loader,
         PhpTemplateDumper $dumper,
         LoggerInterface $logger,

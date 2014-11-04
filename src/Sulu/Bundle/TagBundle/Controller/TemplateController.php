@@ -22,4 +22,4 @@ class TemplateController extends Controller
     {
         return $this->render('SuluTagBundle:Template:tag.list.html.twig');
     }
-} 
+}

@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
@@ -27,17 +26,6 @@ use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Sulu\Bundle\ContactBundle\Entity\Activity;
-use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
-use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
-use Sulu\Bundle\ContactBundle\Entity\ActivityType;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;

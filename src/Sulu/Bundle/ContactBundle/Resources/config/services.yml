@@ -72,14 +72,14 @@ services:
              - {name: sulu.widget, alias: sulu-contact-main-account}
          arguments:
              - @doctrine.orm.entity_manager
- 
+
     sulu_contact.contact.widgets.account_info:
          class: %sulu_contact.contact.widgets.account_info.class%
          tags:
              - {name: sulu.widget, alias: sulu-contact-account-info}
          arguments:
              - @doctrine.orm.entity_manager
- 
+
     sulu_contact.contact.widgets.contact_info:
          class: %sulu_contact.contact.widgets.contact_info.class%
          tags:
@@ -93,12 +93,12 @@ services:
              - {name: sulu.widget, alias: sulu-contact-main-contact}
          arguments:
              - @doctrine.orm.entity_manager
- 
+
     sulu_contact.contact.widgets.table:
          class: %sulu_contact.contact.widgets.table.class%
          tags:
              - {name: sulu.widget, alias: sulu-contact-table}
- 
+
     sulu_contact.contact.widgets.toolbar:
          class: %sulu_contact.contact.widgets.toolbar.class%
          tags:

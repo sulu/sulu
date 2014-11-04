@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -110,7 +109,7 @@ class FileVersion
         $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -120,14 +119,14 @@ class FileVersion
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -143,14 +142,14 @@ class FileVersion
     public function setVersion($version)
     {
         $this->version = $version;
-    
+
         return $this;
     }
 
     /**
      * Get version
      *
-     * @return integer 
+     * @return integer
      */
     public function getVersion()
     {
@@ -166,14 +165,14 @@ class FileVersion
     public function setSize($size)
     {
         $this->size = $size;
-    
+
         return $this;
     }
 
     /**
      * Get size
      *
-     * @return integer 
+     * @return integer
      */
     public function getSize()
     {
@@ -212,14 +211,14 @@ class FileVersion
     public function setStorageOptions($storageOptions)
     {
         $this->storageOptions = $storageOptions;
-    
+
         return $this;
     }
 
     /**
      * Get storageOptions
      *
-     * @return string 
+     * @return string
      */
     public function getStorageOptions()
     {
@@ -258,14 +257,14 @@ class FileVersion
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -281,14 +280,14 @@ class FileVersion
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -298,7 +297,7 @@ class FileVersion
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -314,7 +313,7 @@ class FileVersion
     public function addContentLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage $contentLanguages)
     {
         $this->contentLanguages[] = $contentLanguages;
-    
+
         return $this;
     }
 
@@ -331,7 +330,7 @@ class FileVersion
     /**
      * Get contentLanguages
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContentLanguages()
     {
@@ -347,7 +346,7 @@ class FileVersion
     public function addPublishLanguage(\Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage $publishLanguages)
     {
         $this->publishLanguages[] = $publishLanguages;
-    
+
         return $this;
     }
 
@@ -364,7 +363,7 @@ class FileVersion
     /**
      * Get publishLanguages
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPublishLanguages()
     {
@@ -380,7 +379,7 @@ class FileVersion
     public function addMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $meta)
     {
         $this->meta[] = $meta;
-    
+
         return $this;
     }
 
@@ -397,7 +396,7 @@ class FileVersion
     /**
      * Get meta
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMeta()
     {
@@ -413,14 +412,14 @@ class FileVersion
     public function setFile(\Sulu\Bundle\MediaBundle\Entity\File $file = null)
     {
         $this->file = $file;
-    
+
         return $this;
     }
 
     /**
      * Get file
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\File 
+     * @return \Sulu\Bundle\MediaBundle\Entity\File
      */
     public function getFile()
     {
@@ -436,7 +435,7 @@ class FileVersion
     public function addTag(\Sulu\Bundle\TagBundle\Entity\Tag $tags)
     {
         $this->tags[] = $tags;
-    
+
         return $this;
     }
 
@@ -461,7 +460,7 @@ class FileVersion
     /**
      * Get tags
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTags()
     {
@@ -477,14 +476,14 @@ class FileVersion
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -500,14 +499,14 @@ class FileVersion
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface 
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {
@@ -525,24 +524,21 @@ class FileVersion
             /**
              * @var FileVersionMeta $meta
              */
-            foreach ($this->meta as $meta)
-            {
+            foreach ($this->meta as $meta) {
                 $meta->setId(null);
             }
 
             /**
              * @var FileVersionContentLanguage $meta
              */
-            foreach ($this->contentLanguages as $contentLanguage)
-            {
+            foreach ($this->contentLanguages as $contentLanguage) {
                 $contentLanguage->setId(null);
             }
 
             /**
              * @var FileVersionPublishLanguage $meta
              */
-            foreach ($this->publishLanguages as $publishLanguage)
-            {
+            foreach ($this->publishLanguages as $publishLanguage) {
                 $publishLanguage->setId(null);
             }
         }

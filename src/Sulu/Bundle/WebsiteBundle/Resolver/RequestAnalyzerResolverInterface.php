@@ -31,4 +31,4 @@ interface RequestAnalyzerResolverInterface
      * @return array
      */
     public function resolveForPreview($webspaceKey, $locale);
-} 
+}

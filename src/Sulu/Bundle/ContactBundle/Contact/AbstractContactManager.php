@@ -9,9 +9,6 @@
  */
 
 namespace Sulu\Bundle\ContactBundle\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Position;
-use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -29,7 +26,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @param ObjectManager $em
      */
-    public function __construct(ObjectManager $em) {
+    public function __construct(ObjectManager $em)
+    {
         $this->em = $em;
     }
 
@@ -45,8 +43,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
                 function ($index, $entry) {
                     if ($entry->getMain() === true) {
                         $entry->setMain(false);
+
                         return false;
                     }
+
                     return true;
                 }
             );
@@ -75,9 +75,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
         if ($arrayCollection && !$arrayCollection->isEmpty()) {
             return $arrayCollection->exists(function ($index, $entity) {
                 $mainEntity = $entity;
+
                 return $entity->getMain() === true;
             });
         }
+
         return false;
     }
 

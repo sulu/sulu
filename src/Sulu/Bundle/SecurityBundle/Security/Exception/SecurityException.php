@@ -26,4 +26,4 @@ class SecurityException extends Exception
             'message' => $this->message
         );
     }
-} 
+}

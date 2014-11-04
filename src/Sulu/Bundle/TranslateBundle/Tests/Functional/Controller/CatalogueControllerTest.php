@@ -12,8 +12,6 @@ namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CatalogueControllerTest extends SuluTestCase
@@ -94,14 +92,13 @@ class CatalogueControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/catalogues/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-
         $client->request('GET', '/api/catalogues');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
 
-    public function testListCatalogues(){
-
+    public function testListCatalogues()
+    {
         $client = $this->createAuthenticatedClient();
 
         $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=' . $this->package->getId());
@@ -113,8 +110,8 @@ class CatalogueControllerTest extends SuluTestCase
 
     }
 
-    public function testListCataloguesNotExisting(){
-
+    public function testListCataloguesNotExisting()
+    {
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/catalogues?flat=true&fields=id,locale&packageId=4711');
 

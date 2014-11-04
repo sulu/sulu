@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace\EventListener;
 
-
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;

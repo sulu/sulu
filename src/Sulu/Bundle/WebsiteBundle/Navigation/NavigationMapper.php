@@ -16,7 +16,6 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Localization;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -49,7 +48,7 @@ class NavigationMapper implements NavigationMapperInterface
      */
     private $stopwatch;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $queryBuilder,

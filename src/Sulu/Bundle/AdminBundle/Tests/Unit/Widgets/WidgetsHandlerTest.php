@@ -105,6 +105,7 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                     function ($t, $p) use (&$template, &$param) {
                         $param = $p;
                         $template = $t;
+
                         return true;
                     }
                 )
@@ -177,6 +178,7 @@ class WidgetsHandlerTest extends \PHPUnit_Framework_TestCase
                     function ($t, $p) use (&$template, &$param) {
                         $param = $p;
                         $template = $t;
+
                         return true;
                     }
                 )

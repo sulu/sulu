@@ -25,4 +25,4 @@ interface ContentQueryBuilderInterface
      * @param array $options
      */
     public function init(array $options);
-} 
+}

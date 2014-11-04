@@ -8,7 +8,6 @@
  * with this source code in the file LICENSE.
  */
 
-
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 $file = __DIR__ . '/../vendor/autoload.php';

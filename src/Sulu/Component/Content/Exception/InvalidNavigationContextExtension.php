@@ -10,9 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
-
 class InvalidNavigationContextExtension extends \Exception
 {
     /**
@@ -29,7 +26,7 @@ class InvalidNavigationContextExtension extends \Exception
      * @param string $selectedNavContexts
      * @param string $navContexts
      */
-    function __construct($selectedNavContexts, $navContexts)
+    public function __construct($selectedNavContexts, $navContexts)
     {
         parent::__construct(
             sprintf(

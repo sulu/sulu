@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Mapper;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
@@ -3106,7 +3105,7 @@ class TestExtension extends StructureExtension
         'b'
     );
 
-    function __construct($name, $additionalPrefix = null)
+    public function __construct($name, $additionalPrefix = null)
     {
         $this->name = $name;
         $this->additionalPrefix = $additionalPrefix;

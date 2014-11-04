@@ -98,4 +98,4 @@ interface CategoryManagerInterface
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);
-} 
+}

@@ -27,7 +27,7 @@ class MandatoryPropertyException extends \Exception
      */
     private $templateKey;
 
-    function __construct($templateKey, PropertyInterface $property)
+    public function __construct($templateKey, PropertyInterface $property)
     {
         parent::__construct(
             sprintf('Data for mandatory property %s in template %s not found', $property->getName(), $templateKey)

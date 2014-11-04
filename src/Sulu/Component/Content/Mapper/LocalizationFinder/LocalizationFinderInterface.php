@@ -35,4 +35,4 @@ interface LocalizationFinderInterface
      * @return boolean
      */
     public function supports(NodeInterface $contentNode, $localizationCode, $webspaceKey = null);
-} 
+}

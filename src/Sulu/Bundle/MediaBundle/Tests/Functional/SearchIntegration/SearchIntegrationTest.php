@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\MediaBundle\Tests\Fixtures\DefaultStructureCache;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;

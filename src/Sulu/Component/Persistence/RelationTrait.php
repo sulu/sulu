@@ -40,11 +40,11 @@ trait RelationTrait
     )
     {
         // compare id with with $get callback
-        $compareFunction = function($entity, $data) use ($get) {
+        $compareFunction = function ($entity, $data) use ($get) {
             return isset($data['id']) && $data['id'] == $get($entity);
         };
         // define a matching function
-        $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compareFunction) {
+        $matchFunction = function ($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compareFunction) {
             $this->findMatchByCallback($entity, $requestEntities, $compareFunction, $matchedEntry, $matchedKey);
         };
 
@@ -72,7 +72,7 @@ trait RelationTrait
     )
     {
         // define a matching function
-        $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
+        $matchFunction = function ($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
             $this->findMatchByCallback($entity, $requestEntities, $compare, $matchedEntry, $matchedKey);
         };
 
@@ -164,4 +164,4 @@ trait RelationTrait
 
         return $success;
     }
-} 
+}

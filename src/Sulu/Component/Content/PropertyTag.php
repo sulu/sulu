@@ -37,7 +37,7 @@ class PropertyTag
      * @param string $name
      * @param int $priority
      */
-    function __construct($name, $priority, $attributes = array())
+    public function __construct($name, $priority, $attributes = array())
     {
         $this->name = $name;
         $this->priority = $priority;

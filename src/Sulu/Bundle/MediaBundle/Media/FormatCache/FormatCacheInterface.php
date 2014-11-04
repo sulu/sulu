@@ -54,4 +54,4 @@ interface FormatCacheInterface
      * @return array ($id, $format)
      */
     public function analyzedMediaUrl($url);
-} 
+}

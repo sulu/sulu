@@ -15,7 +15,6 @@ use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
@@ -105,7 +104,7 @@ class PreviewMessageComponent implements MessageComponentInterface
 
         if ($type === 'form') {
             $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
-        } else if (!$this->preview->started($user, $contentUuid, $webspaceKey, $locale)) {
+        } elseif (!$this->preview->started($user, $contentUuid, $webspaceKey, $locale)) {
             $this->preview->start($user, $contentUuid, $webspaceKey, $locale);
         }
 

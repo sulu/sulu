@@ -30,7 +30,6 @@ class SuluTranslateContentNavigation extends ContentNavigation
 
         $this->addNavigationItem($details);
 
-
         $settings = new ContentNavigationItem('Settings');
         $settings->setAction('settings');
         $settings->setGroups(array('package'));

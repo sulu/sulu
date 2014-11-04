@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestController;
@@ -47,6 +46,7 @@ class TranslationsController extends RestController implements ClassResourceInte
     public function getFieldsAction()
     {
         $fieldDescriptors = array_values($this->getFieldDescriptors());
+
         return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
@@ -165,12 +165,12 @@ class TranslationsController extends RestController implements ClassResourceInte
                     } else {
                         $defaultValue = $code['translations'][0]['value'];
                     }
-                } else if (is_array($code['translations']) && sizeof($code['translations']) == 2) {
+                } elseif (is_array($code['translations']) && sizeof($code['translations']) == 2) {
                     if ($code['translations'][0]['idCatalogues'] == $slug) {
                         $value = $code['translations'][0]['value'];
                         $defaultValue = $code['translations'][1]['value'];
 
-                    } else if ($code['translations'][1]['idCatalogues'] == $slug) {
+                    } elseif ($code['translations'][1]['idCatalogues'] == $slug) {
                         $value = $code['translations'][1]['value'];
                         $defaultValue = $code['translations'][0]['value'];
                     }
@@ -199,6 +199,7 @@ class TranslationsController extends RestController implements ClassResourceInte
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
 

@@ -10,13 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\PostDeserialize;
-use JMS\Serializer\Annotation\PostSerialize;
 use JMS\Serializer\Annotation\Accessor;
 
 /**
@@ -162,7 +159,6 @@ class Contact extends ApiEntity
      * @var string
      */
     private $gender;
-
 
     /**
      * @var string
@@ -338,6 +334,7 @@ class Contact extends ApiEntity
             $mainAccountContact->setPosition($position);
             $this->position = $position;
         }
+
         return $this;
     }
 
@@ -361,6 +358,7 @@ class Contact extends ApiEntity
         if ($mainAccountContact) {
             return $mainAccountContact->getPosition();
         }
+
         return null;
     }
 
@@ -877,6 +875,7 @@ class Contact extends ApiEntity
                 $tags[] = $tag->getName();
             }
         }
+
         return $tags;
     }
 
@@ -968,6 +967,7 @@ class Contact extends ApiEntity
         if (!is_null($mainAccountContact)) {
             return $mainAccountContact->getAccount();
         }
+
         return null;
     }
 
@@ -986,6 +986,7 @@ class Contact extends ApiEntity
                 }
             }
         }
+
         return null;
     }
 
@@ -1005,6 +1006,7 @@ class Contact extends ApiEntity
                 $addresses[] = $address;
             }
         }
+
         return $addresses;
     }
 
@@ -1017,14 +1019,14 @@ class Contact extends ApiEntity
     public function setMainEmail($mainEmail)
     {
         $this->mainEmail = $mainEmail;
-    
+
         return $this;
     }
 
     /**
      * Get mainEmail
      *
-     * @return string 
+     * @return string
      */
     public function getMainEmail()
     {
@@ -1040,14 +1042,14 @@ class Contact extends ApiEntity
     public function setMainPhone($mainPhone)
     {
         $this->mainPhone = $mainPhone;
-    
+
         return $this;
     }
 
     /**
      * Get mainPhone
      *
-     * @return string 
+     * @return string
      */
     public function getMainPhone()
     {
@@ -1063,14 +1065,14 @@ class Contact extends ApiEntity
     public function setMainFax($mainFax)
     {
         $this->mainFax = $mainFax;
-    
+
         return $this;
     }
 
     /**
      * Get mainFax
      *
-     * @return string 
+     * @return string
      */
     public function getMainFax()
     {
@@ -1086,14 +1088,14 @@ class Contact extends ApiEntity
     public function setMainUrl($mainUrl)
     {
         $this->mainUrl = $mainUrl;
-    
+
         return $this;
     }
 
     /**
      * Get mainUrl
      *
-     * @return string 
+     * @return string
      */
     public function getMainUrl()
     {
@@ -1109,7 +1111,7 @@ class Contact extends ApiEntity
     public function addContactAddresse(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
     {
         $this->contactAddresses[] = $contactAddresses;
-    
+
         return $this;
     }
 
@@ -1126,7 +1128,7 @@ class Contact extends ApiEntity
     /**
      * Get contactAddresses
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContactAddresses()
     {
@@ -1142,7 +1144,7 @@ class Contact extends ApiEntity
     public function addAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
     {
         $this->assignedActivities[] = $assignedActivities;
-    
+
         return $this;
     }
 
@@ -1159,7 +1161,7 @@ class Contact extends ApiEntity
     /**
      * Get assignedActivities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAssignedActivities()
     {
@@ -1183,6 +1185,7 @@ class Contact extends ApiEntity
                 }
             }
         }
+
         return null;
     }
 
@@ -1205,6 +1208,7 @@ class Contact extends ApiEntity
     public function addCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
     {
         $this->categories[] = $categories;
+
         return $this;
     }
 
@@ -1221,7 +1225,7 @@ class Contact extends ApiEntity
     /**
      * Get medias
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getMedias()
     {
@@ -1241,7 +1245,7 @@ class Contact extends ApiEntity
     /**
      * Get categories
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCategories()
     {

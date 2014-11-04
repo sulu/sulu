@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -105,6 +104,7 @@ class ListRestHelper implements ListRestHelperInterface
     public function getFields()
     {
         $fields = $this->getRequest()->get('fields');
+
         return ($fields != null) ? explode(',', $fields) : null;
     }
 

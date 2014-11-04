@@ -26,7 +26,8 @@ class ActivityRepository extends EntityRepository
      * @param $id
      * @return array|null
      */
-    public function findActivitiesById($id){
+    public function findActivitiesById($id)
+    {
         try {
             $qb = $this->createQueryBuilder('activity')
                 ->leftJoin('activity.activityStatus', 'status')
@@ -58,7 +59,8 @@ class ActivityRepository extends EntityRepository
      * Returns all activities including their contact, account and assigned contact
      * @return array|null
      */
-    public function findAllActivities(){
+    public function findAllActivities()
+    {
         try {
             $qb = $this->createQueryBuilder('activity')
                 ->leftJoin('activity.activityStatus', 'status')

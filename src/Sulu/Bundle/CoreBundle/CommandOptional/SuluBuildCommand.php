@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\CoreBundle\CommandOptional;
 
 use Massive\Bundle\BuildBundle\Command\BuildCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 /**

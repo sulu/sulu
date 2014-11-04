@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * FileVersionContentLanguage
  */
@@ -41,14 +39,14 @@ class FileVersionContentLanguage
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -74,6 +72,7 @@ class FileVersionContentLanguage
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -86,14 +85,14 @@ class FileVersionContentLanguage
     public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null)
     {
         $this->fileVersion = $fileVersion;
-    
+
         return $this;
     }
 
     /**
      * Get fileVersion
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion 
+     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion
      */
     public function getFileVersion()
     {

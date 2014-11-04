@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content;
 
-use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 

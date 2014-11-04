@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager;
 use Guzzle\Http\Client;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\NominatimGeolocator;
 use Guzzle\Plugin\Mock\MockPlugin;
@@ -65,4 +64,3 @@ class NominatimGeolocatorTest extends \PHPUnit_Framework_TestCase
         }
     }
 }
-

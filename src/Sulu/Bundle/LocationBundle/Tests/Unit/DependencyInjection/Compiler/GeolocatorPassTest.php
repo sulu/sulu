@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Sulu\Bundle\LocationBundle\DependencyInjection\Compiler\GeolocatorPass;
 use Symfony\Component\DependencyInjection\Definition;
 
-class MyCompilerPassTest extends AbstractCompilerPassTestCase
+class GeolocatorPassTest extends AbstractCompilerPassTestCase
 {
     protected function registerCompilerPass(ContainerBuilder $container)
     {

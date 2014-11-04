@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * CollectionMeta
  */
@@ -51,14 +49,14 @@ class CollectionMeta
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -74,14 +72,14 @@ class CollectionMeta
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -97,14 +95,14 @@ class CollectionMeta
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -114,7 +112,7 @@ class CollectionMeta
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -130,14 +128,14 @@ class CollectionMeta
     public function setCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collection)
     {
         $this->collection = $collection;
-    
+
         return $this;
     }
 
     /**
      * Get collection
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection 
+     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
      */
     public function getCollection()
     {

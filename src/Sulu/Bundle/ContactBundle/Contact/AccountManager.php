@@ -33,7 +33,7 @@ class AccountManager extends AbstractContactManager
     protected $addressEntity = 'SuluContactBundle:Address';
     protected $tagManager;
 
-    function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
     {
         parent::__construct($em);
         $this->tagManager = $tagManager;
@@ -153,6 +153,7 @@ class AccountManager extends AbstractContactManager
             throw new EntityNotFoundException($this->accountEntity, $id);
         }
         $acc = new Account($account, $locale, $this->tagManager);
+
         return $acc;
     }
 
@@ -163,13 +164,15 @@ class AccountManager extends AbstractContactManager
      * @param $locale
      * @return array
      */
-    public function findContactByAccountId($id, $locale){
+    public function findContactByAccountId($id, $locale)
+    {
         $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false);
         $contacts = [];
         if ($contactsEntities) {
             foreach ($contactsEntities as $contact) {
                 $contacts[] = new Contact($contact, $locale, $this->tagManager);
             }
+
             return $contacts;
         } else {
             return null;
@@ -181,7 +184,8 @@ class AccountManager extends AbstractContactManager
      * @param $locale
      * @return null
      */
-    public function findAll($locale){
+    public function findAll($locale)
+    {
         $accountEntities = $this->em->getRepository($this->accountEntity)->findAll();
         $accounts = [];
         if ($accountEntities) {

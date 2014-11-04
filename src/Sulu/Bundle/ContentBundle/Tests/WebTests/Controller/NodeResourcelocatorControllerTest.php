@@ -2,13 +2,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use PHPCR\SessionInterface;
-use PHPCR\Util\NodeHelper;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
-use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -167,14 +161,14 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
             $newsData
         );
-        $newsData = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $newsData = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->client->request(
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $result = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(1, sizeof($result['_embedded']['resourcelocators']));
         $this->assertEquals(1, $result['total']);
@@ -191,14 +185,14 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
             $newsData
         );
-        $newsData = (array)json_decode($this->client->getResponse()->getContent());
+        $newsData = (array) json_decode($this->client->getResponse()->getContent());
 
         $this->client->request(
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $history = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $history = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $url = $history['_embedded']['resourcelocators'][0]['_links']['delete'];
 
@@ -211,7 +205,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $result = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $result = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(0, sizeof($result['_embedded']['resourcelocators']));
         $this->assertEquals(0, $result['total']);
@@ -227,15 +221,15 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en&template=default',
             $newsData
         );
-        $newsData = (array)json_decode($this->client->getResponse()->getContent());
+        $newsData = (array) json_decode($this->client->getResponse()->getContent());
 
         $this->client->request(
             'GET',
             '/api/nodes/' . $newsData['id'] . '/resourcelocators?webspace=sulu_io&language=en'
         );
-        $node = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $node = (array) json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $history = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $history = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $url = $history['_embedded']['resourcelocators'][0]['_links']['restore'];
         $url = substr($url, 6);
@@ -247,7 +241,7 @@ class NodeResourcelocatorControllerTest extends SuluTestCase
             '/api/nodes/' . $newsData['id'] . '?webspace=sulu_io&language=en'
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $node = (array)json_decode($this->client->getResponse()->getContent(), true);
+        $node = (array) json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals('/news', $node['url']);
     }

@@ -485,4 +485,4 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         return $this->formatCache->purge($idMedia, $fileName, $options);
     }
-} 
+}

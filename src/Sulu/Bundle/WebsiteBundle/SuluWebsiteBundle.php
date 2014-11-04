@@ -16,7 +16,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluWebsiteBundle extends Bundle
 {
-    public function build(ContainerBuilder $container) {
+    public function build(ContainerBuilder $container)
+    {
         parent::build($container);
 
         $container->addCompilerPass(new RouteProviderCompilerPass());

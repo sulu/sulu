@@ -509,7 +509,7 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private $languageNamespace;
 
-    function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
+    public function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
     {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;

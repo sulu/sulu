@@ -147,6 +147,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
             true,
             $structure->getUuid()
         );
+
         return $structure;
     }
 

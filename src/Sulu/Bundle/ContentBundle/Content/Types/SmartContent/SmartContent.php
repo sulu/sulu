@@ -71,7 +71,7 @@ class SmartContent extends ComplexContentType
      */
     private $page;
 
-    function __construct(
+    public function __construct(
         ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
         TagManagerInterface $tagManager,

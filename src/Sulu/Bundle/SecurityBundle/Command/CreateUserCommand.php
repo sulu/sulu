@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Command;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectManagerAware;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -251,8 +250,10 @@ class CreateUserCommand extends ContainerAwareCommand
             $role->setCreated($now);
             $role->setChanged($now);
             $em->persist($role);
+
             return $role;
         }
+
         return $role;
     }
 }

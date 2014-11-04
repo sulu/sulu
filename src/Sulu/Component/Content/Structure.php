@@ -13,8 +13,6 @@ namespace Sulu\Component\Content;
 use DateTime;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
-use Sulu\Component\Util\ArrayableInterface;
-use Sulu\Component\Content\StructureTag;
 
 /**
  * The Structure class represenets content structure and is the super type

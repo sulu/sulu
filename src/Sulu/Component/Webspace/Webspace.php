@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace;
 
-use Sulu\Component\Webspace\Util\WebspaceSerializerHelper;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -139,6 +138,7 @@ class Webspace implements ArrayableInterface
             $localizations[] = $child;
             $localizations = array_merge($localizations, $child->getAllLocalizations());
         }
+
         return $localizations;
     }
 
@@ -336,7 +336,7 @@ class Webspace implements ArrayableInterface
         $res['key'] = $this->getKey();
         $res['name'] = $this->getName();
         $res['localizations'] = array();
-        
+
         foreach ($this->getLocalizations() as $localization) {
             $res['localizations'][] = $localization->toArray();
         }
@@ -354,7 +354,6 @@ class Webspace implements ArrayableInterface
                 $res['segments'][] = $segment->toArray();
             }
         }
-
 
         $res['theme'] = $this->getTheme()->toArray();
 

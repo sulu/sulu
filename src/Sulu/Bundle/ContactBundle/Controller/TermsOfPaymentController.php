@@ -12,9 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\Annotations\Put;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
@@ -72,6 +70,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
         $list = new CollectionRepresentation($termsOfPayment, self::$entityKey);
 
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -210,6 +209,7 @@ class TermsOfPaymentController extends RestController implements ClassResourceIn
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
 

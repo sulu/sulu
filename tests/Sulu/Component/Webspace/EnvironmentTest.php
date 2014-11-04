@@ -28,7 +28,6 @@ class EnvironmentTest extends ProphecyTestCase
         $this->environment->addUrl($this->url->reveal());
         $this->environment->setType($expected['type']);
 
-
         $this->assertEquals($expected, $this->environment->toArray());
     }
 }

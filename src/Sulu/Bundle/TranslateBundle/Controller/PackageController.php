@@ -14,7 +14,6 @@ use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -55,13 +54,13 @@ class PackageController extends RestController implements ClassResourceInterface
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'translate.package.';
 
-
     /**
      * returns all fields that can be used by list
      * @Get("packages/fields")
      * @return mixed
      */
-    public function getFieldsAction() {
+    public function getFieldsAction()
+    {
         return $this->handleView($this->view(array_values($this->getFieldDescriptors())));
     }
 
@@ -69,7 +68,8 @@ class PackageController extends RestController implements ClassResourceInterface
      * persists a setting
      * @Put("packages/fields")
      */
-    public function putFieldsAction() {
+    public function putFieldsAction()
+    {
         return $this->responsePersistSettings();
     }
 
@@ -107,6 +107,7 @@ class PackageController extends RestController implements ClassResourceInterface
             );
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 

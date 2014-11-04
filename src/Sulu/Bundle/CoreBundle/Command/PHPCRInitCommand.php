@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
-use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\NodeHelper;
 use PHPCR\WorkspaceInterface;
@@ -18,7 +17,6 @@ use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

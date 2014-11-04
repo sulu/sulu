@@ -8,8 +8,8 @@ use JMS\Serializer\Annotation\Exclude;
  * @package Sulu\Bundle\CoreBundle\Entity
  * @deprecated
  */
-class ApiEntityWrapper {
-
+class ApiEntityWrapper
+{
     /**
      * the entity which is wrapped by this class
      * @var object
@@ -23,7 +23,8 @@ class ApiEntityWrapper {
      */
     protected $locale;
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
-} 
+}

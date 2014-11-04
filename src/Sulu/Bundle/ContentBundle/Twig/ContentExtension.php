@@ -25,7 +25,7 @@ class ContentExtension extends \Twig_Extension
      */
     private $contentTypeManager;
 
-    function __construct($contentTypeManager)
+    public function __construct($contentTypeManager)
     {
         $this->contentTypeManager = $contentTypeManager;
     }
@@ -94,7 +94,7 @@ class ContentExtension extends \Twig_Extension
      * @param $property PropertyInterface
      * @return bool
      */
-    public function isMultipleTest( $property)
+    public function isMultipleTest($property)
     {
         return $property->getMinOccurs() > 1;
     }

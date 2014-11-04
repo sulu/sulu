@@ -2,8 +2,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * CategoryTranslation
  */
@@ -29,7 +27,6 @@ class CategoryTranslation
      */
     private $category;
 
-
     /**
      * Set translation
      *
@@ -39,14 +36,14 @@ class CategoryTranslation
     public function setTranslation($translation)
     {
         $this->translation = $translation;
-    
+
         return $this;
     }
 
     /**
      * Get translation
      *
-     * @return string 
+     * @return string
      */
     public function getTranslation()
     {
@@ -62,14 +59,14 @@ class CategoryTranslation
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -79,7 +76,7 @@ class CategoryTranslation
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -95,14 +92,14 @@ class CategoryTranslation
     public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
     {
         $this->category = $category;
-    
+
         return $this;
     }
 
     /**
      * Get category
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category 
+     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */
     public function getCategory()
     {

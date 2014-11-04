@@ -103,7 +103,7 @@ EOT
                 array(
                     'webspaces' => array(),
                     'snippets' => array(),
-                ), 
+                ),
                 Yaml::parse(file_get_contents($fixturePath . '/' . $file))
             );
 
