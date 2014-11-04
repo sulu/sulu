@@ -1503,26 +1503,25 @@ class ContentMapper implements ContentMapperInterface
      */
     private function loadAllUrls(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
     {
-        if (!$page->hasTag('sulu.rlp')) {
-            $page->setUrls(array());
-        }
-
-        $property = clone($page->getPropertyByTagName('sulu.rlp'));
-
-        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $result = array();
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
-        $result = array();
-        foreach ($webspace->getAllLocalizations() as $localization) {
-            // prepare translation vars
-            $locale = $localization->getLocalization();
-            $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
+        if ($page->hasTag('sulu.rlp')) {
+            $property = clone($page->getPropertyByTagName('sulu.rlp'));
 
-            // set default value
-            $property->setValue(null);
-            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+            $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
-            $result[$locale] = $property->getValue();
+            foreach ($webspace->getAllLocalizations() as $localization) {
+                // prepare translation vars
+                $locale = $localization->getLocalization();
+                $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
+
+                // set default value
+                $property->setValue(null);
+                $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+                $result[$locale] = $property->getValue();
+            }
         }
 
         $page->setUrls($result);

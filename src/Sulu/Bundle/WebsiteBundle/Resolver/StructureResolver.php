@@ -51,6 +51,7 @@ class StructureResolver implements StructureResolverInterface
 
         if ($structure instanceof Page) {
             $data['extension'] = $structure->getExt();
+            $data['urls'] = $structure->getUrls();
 
             foreach ($data['extension'] as $name => $value) {
                 $extension = $this->structureManager->getExtension($structure->getKey(), $name);
