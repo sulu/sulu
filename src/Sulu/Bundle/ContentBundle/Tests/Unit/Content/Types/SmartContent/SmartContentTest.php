@@ -383,6 +383,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
 
+        $smartContentContainer->expects($this->once())->method('setPage')->with(1);
+        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue(1));
+
+        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with(true);
+        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue(true));
+
         $viewData = $this->smartContent->getViewData($property);
 
         $this->assertEquals(array_merge($config, array('page' => 1, 'hasNextPage' => true)), $viewData);
@@ -461,6 +467,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
+        $smartContentContainer->expects($this->once())->method('setPage')->with(1);
+        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue(1));
+
+        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with(true);
+        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue(true));
+
         $contentData = $this->smartContent->getContentData($property);
 
         $this->assertEquals(array(1, 2, 3, 4, 5), $contentData);
@@ -470,22 +482,22 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             // first page page-size 3 (one page more to check available pages)
-            array(1, 3, 0, 8, '123-123-123', array(1, 2, 3, 4), array(1, 2, 3), 4),
+            array(1, 3, 0, 8, '123-123-123', array(1, 2, 3, 4), array(1, 2, 3), 4, true),
             // second page page-size 3 (one page more to check available pages)
-            array(2, 3, 3, 8, '123-123-123', array(4, 5, 6, 7), array(4, 5, 6), 4),
+            array(2, 3, 3, 8, '123-123-123', array(4, 5, 6, 7), array(4, 5, 6), 4, true),
             // third page page-size 3 (only two pages because of the limit-result)
-            array(3, 3, 6, 8, '123-123-123', array(7, 8), array(7, 8), 2),
+            array(3, 3, 6, 8, '123-123-123', array(7, 8), array(7, 8), 2, false),
             // fourth page page-size 3 (empty result)
-            array(4, 3, 6, 8, '123-123-123', array(), array(), null),
+            array(4, 3, 6, 8, '123-123-123', array(), array(), null, false),
             // test empty string (should be ignored)
-            array(3, 3, 6, '', '123-123-123', array(7, 8), array(7, 8), 4),
+            array(3, 3, 6, '', '123-123-123', array(7, 8), array(7, 8), 4, false),
         );
     }
 
     /**
      * @dataProvider pageProvider
      */
-    public function testGetContentDataPagedLimit($page, $pageSize, $offset, $limitResult, $uuid, $data, $expectedData, $limit)
+    public function testGetContentDataPagedLimit($page, $pageSize, $offset, $limitResult, $uuid, $data, $expectedData, $limit, $hasNextPage)
     {
         $property = $this->getMockForAbstractClass(
             'Sulu\Component\Content\PropertyInterface',
@@ -523,6 +535,12 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($structure));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
+
+        $smartContentContainer->expects($this->once())->method('setPage')->with($page);
+        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue($page));
+
+        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with($hasNextPage);
+        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue($hasNextPage));
 
         $contentData = $this->smartContent->getContentData($property);
         $this->assertEquals($expectedData, $contentData);
