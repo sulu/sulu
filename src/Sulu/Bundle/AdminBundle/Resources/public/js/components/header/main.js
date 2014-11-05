@@ -357,7 +357,7 @@ define([], function () {
                     {
                         id: 'delete',
                         icon: 'trash-o',
-                        title: '',
+                        title: 'delete',
                         position: 20,
                         disabled: true,
                         callback: function() {
