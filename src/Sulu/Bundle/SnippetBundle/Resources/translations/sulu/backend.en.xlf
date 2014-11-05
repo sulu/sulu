@@ -26,6 +26,26 @@
                 <source>snippet-content.add</source>
                 <target>Choose snippet</target>
             </trans-unit>
+            <trans-unit id="9" resname="snippet.delete-referenced-by-following">
+                <source>snippet.delete-referenced-by-following</source>
+                <target>This snippet is referenced by the following pages:</target>
+            </trans-unit>
+            <trans-unit id="10" resname="snippet.delete-confirm-text">
+                <source>snippet.delete-confirm-text</source>
+                <target>Are you sure you want to remove it?</target>
+            </trans-unit>
+            <trans-unit id="11" resname="snippet.delete-confirm-title">
+                <source>snippet.delete-confirm-title</source>
+                <target>Confirm delete</target>
+            </trans-unit>
+            <trans-unit id="12" resname="snippet.delete-do-it">
+                <source>snippet.delete-do-it</source>
+                <target>Yes, I am sure</target>
+            </trans-unit>
+            <trans-unit id="13" resname="snippet.delete-no-snippets-selected">
+                <source>snippet.delete-no-snippets-selected</source>
+                <target>There are no snippets selected</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

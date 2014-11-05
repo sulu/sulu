@@ -197,7 +197,19 @@ class SnippetController
     public function deleteSnippetAction(Request $request, $uuid)
     {
         $webspaceKey = $request->query->get('webspace', null);
-        $this->contentMapper->delete($uuid, $webspaceKey);
+
+        $references = $this->snippetRepository->getReferences($uuid);
+
+        if (count($references) > 0) {
+            $force = $request->headers->get('SuluForceRemove', false);
+            if ($force) {
+                $this->contentMapper->delete($uuid, $webspaceKey, true);
+            } else {
+                return $this->getReferentialIntegrityResponse($webspaceKey, $references);
+            }
+        } else {
+            $this->contentMapper->delete($uuid, $webspaceKey);
+        }
 
         return new JsonResponse();
     }
@@ -388,5 +400,35 @@ class SnippetController
                 ),
             )
         );
+    }
+
+    /**
+     * Return a response for the case where there is an referential integrity violation.
+     *
+     * It will return a 409 (Conflict) response with an array of structures which reference
+     * the node and an array of "other" nodes (i.e. non-structures) which reference the node.
+     *
+     * @param string $webspace
+     * @param NodeInterface[] $references
+     *
+     * @return Response
+     */
+    private function getReferentialIntegrityResponse($webspace, $references)
+    {
+        $data = array(
+            'structures' => array(),
+            'other' => array(),
+        );
+
+        foreach ($references as $reference) {
+            if ($reference->getParent()->isNodeType('sulu:page')) {
+                $content = $this->contentMapper->load($reference->getParent()->getIdentifier(), $webspace, $this->languageCode, true);
+                $data['structures'][] = $content->toArray();
+            } else {
+                $data['other'] = $reference->getPath();
+            }
+        }
+
+        return new JsonResponse($data, 409);
     }
 }
