@@ -545,4 +545,56 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $contentData = $this->smartContent->getContentData($property);
         $this->assertEquals($expectedData, $contentData);
     }
+
+    /**
+     * @dataProvider pageProvider
+     */
+    public function testGetViewDataPagedLimit($page, $pageSize, $offset, $limitResult, $uuid, $data, $expectedData, $limit, $hasNextPage)
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue', 'getParams')
+        );
+        $structure = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\StructureInterface'
+        );
+
+        $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
+
+        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $config = array('limitResult' => $limitResult);
+        $smartContentContainer->expects($this->exactly(2))->method('getConfig')->will($this->returnValue($config));
+
+        if ($limit) {
+            $smartContentContainer->expects($this->once())
+                ->method('getData')
+                ->with($this->equalTo(array($uuid)), $this->equalTo($limit), $this->equalTo($offset))
+                ->will($this->returnValue($data));
+        }
+        $property->expects($this->exactly(2))->method('getValue')
+            ->will($this->returnValue($smartContentContainer));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('max_per_page' => $pageSize)));
+        $property->expects($this->exactly(1))->method('getStructure')
+            ->will($this->returnValue($structure));
+
+        $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
+
+        $smartContentContainer->expects($this->once())->method('setPage')->with($page);
+        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue($page));
+
+        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with($hasNextPage);
+        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue($hasNextPage));
+
+        $viewData = $this->smartContent->getViewData($property);
+        $this->assertEquals(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)), $viewData);
+    }
 }
