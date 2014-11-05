@@ -110,6 +110,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         if (!$collection) {
             throw new CollectionNotFoundException($id);
         }
+
         return $this->addPreviews(new Collection($collection, $locale));
     }
 
@@ -121,9 +122,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset);
         $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count($collectionEntities);
         $collections = [];
-        foreach($collectionEntities as $entity) {
+        foreach ($collectionEntities as $entity) {
             $collections[] =  $this->addPreviews(new Collection($entity, $locale));
         }
+
         return $collections;
     }
 
@@ -381,6 +383,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         if (!$type) {
             throw new CollectionTypeNotFoundException('Collection Type with the ID ' . $typeId . ' not found');
         }
+
         return $type;
     }
 
@@ -485,4 +488,4 @@ class DefaultCollectionManager implements CollectionManagerInterface
 
         return array();
     }
-} 
+}

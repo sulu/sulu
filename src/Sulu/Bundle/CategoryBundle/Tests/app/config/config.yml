@@ -44,7 +44,7 @@ sulu_core:
 
 sulu_admin:
     name: SULU 2.0
-            
+
 parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working
     # schmittjoh/JMSSerializerBundle#270 (comment)

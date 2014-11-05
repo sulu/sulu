@@ -28,7 +28,7 @@ class ContactManager extends AbstractContactManager
     protected $contactEntity = 'SuluContactBundle:Contact';
     protected $tagManager;
 
-    function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
     {
         parent::__construct($em);
         $this->tagManager = $tagManager;
@@ -122,9 +122,10 @@ class ContactManager extends AbstractContactManager
     public function getById($id, $locale)
     {
         $contact = $this->em->getRepository($this->contactEntity)->find($id);
-        if(!$contact){
+        if (!$contact) {
             return null;
         }
+
         return new Contact($contact, $locale, $this->tagManager);
     }
 

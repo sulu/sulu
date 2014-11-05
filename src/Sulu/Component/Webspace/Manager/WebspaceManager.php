@@ -11,15 +11,12 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\Portal;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * This class is responsible for loading, reading and caching the portal configuration files

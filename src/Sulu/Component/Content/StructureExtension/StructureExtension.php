@@ -113,4 +113,4 @@ abstract class StructureExtension implements StructureExtensionInterface
     {
         return $value;
     }
-} 
+}

@@ -231,7 +231,6 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
     public function testGetBlockStructure()
     {
         /** @var StructureInterface $structure */
@@ -593,7 +592,7 @@ class TestExtension extends StructureExtension
         'b'
     );
 
-    function __construct($name, $additionalPrefix = null)
+    public function __construct($name, $additionalPrefix = null)
     {
         $this->name = $name;
         $this->additionalPrefix = $additionalPrefix;
@@ -620,4 +619,3 @@ class TestExtension extends StructureExtension
         );
     }
 }
-

@@ -34,7 +34,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
      */
     private $template;
 
-    function __construct(RlpStrategyInterface $strategy, $template)
+    public function __construct(RlpStrategyInterface $strategy, $template)
     {
         $this->strategy = $strategy;
         $this->template = $template;
@@ -50,7 +50,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $languageCode,
         $segmentKey = null
     ) {
-        if($node->hasProperty($property->getName())) {
+        if ($node->hasProperty($property->getName())) {
             $value = $node->getPropertyValue($property->getName());
 
             $property->setValue($value);

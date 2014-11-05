@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -22,7 +21,6 @@ class TermsOfPayment
      */
     private $id;
 
-
     /**
      * Set terms
      *
@@ -32,14 +30,14 @@ class TermsOfPayment
     public function setTerms($terms)
     {
         $this->terms = $terms;
-    
+
         return $this;
     }
 
     /**
      * Get terms
      *
-     * @return string 
+     * @return string
      */
     public function getTerms()
     {
@@ -49,7 +47,7 @@ class TermsOfPayment
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

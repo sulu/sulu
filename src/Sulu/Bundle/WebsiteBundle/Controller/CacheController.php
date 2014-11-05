@@ -37,4 +37,4 @@ class CacheController extends Controller
 
         return new JsonResponse(array(), 200);
     }
-} 
+}

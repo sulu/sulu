@@ -78,8 +78,10 @@ class Category extends ApiEntityWrapper
                     );
                 }
             }
+
             return $arrReturn;
         }
+
         return null;
     }
 
@@ -96,6 +98,7 @@ class Category extends ApiEntityWrapper
         if ($creator) {
             return $this->getUserFullName($creator);
         }
+
         return $strReturn;
     }
 
@@ -112,6 +115,7 @@ class Category extends ApiEntityWrapper
         if ($changer) {
             return $this->getUserFullName($changer);
         }
+
         return $strReturn;
     }
 
@@ -154,6 +158,7 @@ class Category extends ApiEntityWrapper
                 $children[] = new Category($child, $this->locale);
             }
         }
+
         return $children;
     }
 
@@ -166,6 +171,7 @@ class Category extends ApiEntityWrapper
     public function setName($name)
     {
         $this->getTranslation()->setTranslation($name);
+
         return $this;
     }
 
@@ -196,6 +202,7 @@ class Category extends ApiEntityWrapper
                 $metaEntity->setLocale($singleMeta['locale']);
             }
         }
+
         return $this;
     }
 
@@ -208,6 +215,7 @@ class Category extends ApiEntityWrapper
     public function setParent($parent)
     {
         $this->entity->setParent($parent);
+
         return $this;
     }
 
@@ -220,6 +228,7 @@ class Category extends ApiEntityWrapper
     public function setKey($key)
     {
         $this->entity->setKey($key);
+
         return $this;
     }
 
@@ -234,6 +243,7 @@ class Category extends ApiEntityWrapper
         if ($user && method_exists($user, 'getContact')) {
             $strReturn = $user->getContact()->getFirstName() . ' ' . $user->getContact()->getLastName();
         }
+
         return $strReturn;
     }
 
@@ -252,6 +262,7 @@ class Category extends ApiEntityWrapper
                 break;
             }
         }
+
         return $return;
     }
 
@@ -290,6 +301,7 @@ class Category extends ApiEntityWrapper
         $translation->setCategory($this->entity);
 
         $this->entity->addTranslation($translation);
+
         return $translation;
     }
 }

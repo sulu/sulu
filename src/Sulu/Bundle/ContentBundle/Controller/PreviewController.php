@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use DOMDocument;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;

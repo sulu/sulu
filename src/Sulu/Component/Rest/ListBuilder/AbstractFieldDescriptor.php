@@ -182,4 +182,4 @@ abstract class AbstractFieldDescriptor
     {
         return $this->minWidth;
     }
-} 
+}

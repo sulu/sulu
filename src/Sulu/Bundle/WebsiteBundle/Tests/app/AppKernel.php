@@ -5,7 +5,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
-    static $suluContext = 'admin';
+    public static $suluContext = 'admin';
 
     public function registerBundles()
     {

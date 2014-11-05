@@ -10,13 +10,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
-use InvalidArgumentException;
-use PHPCR\SessionInterface;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
-use Sulu\Component\Content\PropertyInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure;
@@ -137,7 +131,6 @@ class ContentOnPageTest extends BaseFunctionalTestCase
 
             $this->assertEquals($value, $page->getPropertyValue($key), 'Checking property "' . $key . '"');
         }
-
 
         $hotels = $page->getPropertyValue('hotels');
         $this->assertCount(count($data['hotels']['ids']), $hotels);

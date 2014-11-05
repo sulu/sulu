@@ -32,7 +32,7 @@ class MediaSelectionContentType extends ComplexContentType
      */
     private $template;
 
-    function __construct($mediaManager, $template)
+    public function __construct($mediaManager, $template)
     {
         $this->mediaManager = $mediaManager;
         $this->template = $template;

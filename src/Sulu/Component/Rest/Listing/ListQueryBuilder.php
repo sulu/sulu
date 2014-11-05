@@ -125,7 +125,7 @@ class ListQueryBuilder
      * @param array $searchNumberFields
      * @param array $joinConditions - specify a custom join condition
      */
-    function __construct(
+    public function __construct(
         $associationNames,
         $fieldNames,
         $entityName,

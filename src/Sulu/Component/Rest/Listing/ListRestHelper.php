@@ -139,6 +139,7 @@ class ListRestHelper
         if (is_null($totalNumber)) {
             $totalNumber = $this->$totalNumberOfElements;
         }
+
         return $this->getLimit() ? (ceil($totalNumber / $this->getLimit())) : 1;
     }
 
@@ -160,6 +161,7 @@ class ListRestHelper
     public function getFields()
     {
         $fields = $this->getRequest()->get('fields');
+
         return ($fields != null) ? explode(',', $fields) : null;
     }
 
@@ -192,6 +194,7 @@ class ListRestHelper
     public function getTotalNumberOfElements($entityName, $where, $joinConditions = array())
     {
         $this->totalNumberOfElements = $this->getRepository($entityName)->getCount($where, $joinConditions);
+
         return $this->totalNumberOfElements;
     }
 

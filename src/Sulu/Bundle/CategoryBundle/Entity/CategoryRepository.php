@@ -35,6 +35,7 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
             $queryBuilder = $this->getCategoryQuery()->where('category.id = :categoryId');
             $query = $queryBuilder->getQuery();
             $query->setParameter('categoryId', $id);
+
             return $query->getSingleResult();
         } catch (NoResultException $ex) {
             return null;
@@ -75,6 +76,7 @@ class CategoryRepository extends EntityRepository implements CategoryRepositoryI
             if ($depth !== null) {
                 $query->setParameter('depth', $depth);
             }
+
             return $query->getResult();
         } catch (NoResultException $ex) {
             return null;

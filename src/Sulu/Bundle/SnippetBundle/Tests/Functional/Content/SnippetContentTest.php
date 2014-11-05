@@ -19,7 +19,7 @@ use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 
-class SnippetContentTypeTest extends BaseFunctionalTestCase
+class SnippetContentTest extends BaseFunctionalTestCase
 {
     /**
      * @var ContentMapperInterface

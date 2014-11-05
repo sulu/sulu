@@ -184,7 +184,8 @@ class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testConvertEmptyArray() {
+    public function testConvertEmptyArray()
+    {
         $converter = new ListToTreeConverter();
         $result = $converter->convert(array());
         $this->assertEmpty($result);

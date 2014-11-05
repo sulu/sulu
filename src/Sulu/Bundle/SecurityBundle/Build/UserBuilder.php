@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Build;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 /**
@@ -53,6 +51,7 @@ class UserBuilder extends SuluBuilder
             $doctrine->flush();
         } elseif ($existing) {
             $this->output->writeln('Found existing user ' . $user . ', skipping');
+
             return;
         }
 
@@ -68,4 +67,3 @@ class UserBuilder extends SuluBuilder
         $this->output->writeln(sprintf('Created user "<comment>%s</comment>" with password "<comment>%s</comment>"', $user, $password));
     }
 }
-

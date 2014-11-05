@@ -53,7 +53,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     /**
      * Constructor
      */
-    function __construct(
+    public function __construct(
         RlpStrategyInterface $strategy,
         StructureManagerInterface $structureManager,
         ResourceLocatorInterface $resourceLocator,

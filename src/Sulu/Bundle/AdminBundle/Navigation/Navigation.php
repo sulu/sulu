@@ -17,7 +17,7 @@ class Navigation
      */
     protected $root;
 
-    function __construct(NavigationItem $root = null)
+    public function __construct(NavigationItem $root = null)
     {
         if ($root == null) {
             $root = new NavigationItem('');

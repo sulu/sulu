@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TagControllerTest extends SuluTestCase
@@ -85,7 +83,6 @@ class TagControllerTest extends SuluTestCase
             )
         );
 
-
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(2, $response->total);
@@ -107,7 +104,6 @@ class TagControllerTest extends SuluTestCase
                 'PHP_AUTH_PW' => 'test'
             )
         );
-
 
         $response = json_decode($client->getResponse()->getContent());
 
@@ -494,7 +490,6 @@ class TagControllerTest extends SuluTestCase
             'GET',
             '/api/tags?flat=true'
         );
-
 
         $response = json_decode($client->getResponse()->getContent());
 

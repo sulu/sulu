@@ -9,7 +9,6 @@
  */
 namespace Sulu\Component\Content;
 
-
 /**
  * Item for breadcrumb
  * @package Sulu\Component\Content

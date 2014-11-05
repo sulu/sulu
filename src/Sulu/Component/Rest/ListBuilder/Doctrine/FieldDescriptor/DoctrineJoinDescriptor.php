@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor;
 
-use Doctrine\ORM\Query\Expr;
-
 /**
  * This class describes a doctrine join
  * @package Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor
@@ -54,7 +52,7 @@ class DoctrineJoinDescriptor
      */
     private $joinMethod;
 
-    function __construct(
+    public function __construct(
         $entityName,
         $join,
         $joinCondition = null,
@@ -108,4 +106,4 @@ class DoctrineJoinDescriptor
     {
         return $this->joinMethod;
     }
-} 
+}

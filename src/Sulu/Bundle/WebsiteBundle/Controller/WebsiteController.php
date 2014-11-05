@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
-use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentPageNotFoundException;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -132,4 +131,4 @@ abstract class WebsiteController extends Controller
 
         return $template->renderBlock($block, $attributes);
     }
-} 
+}

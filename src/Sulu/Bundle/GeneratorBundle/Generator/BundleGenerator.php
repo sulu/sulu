@@ -84,7 +84,7 @@ abstract class BundleGenerator extends Generator
 //        }
     }
 
-    public abstract function generateBundle($dir, $bundle, $basename, $structure, $parameters);
+    abstract public function generateBundle($dir, $bundle, $basename, $structure, $parameters);
 
     protected function getFileSystem()
     {

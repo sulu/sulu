@@ -201,6 +201,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 $curNode = $curNode->addNode($pathParts[$i]);
             }
         }
+
         return $curNode;
     }
 

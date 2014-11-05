@@ -34,6 +34,7 @@ trait RequestParametersTrait
         if ($force && $value === null) {
             throw new MissingParameterException(get_class($this), $name);
         }
+
         return $value;
     }
 
@@ -62,4 +63,4 @@ trait RequestParametersTrait
 
         return $value;
     }
-} 
+}

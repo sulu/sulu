@@ -24,4 +24,4 @@ interface StructureResolverInterface
      * @return array
      */
     public function resolve(StructureInterface $structure);
-} 
+}

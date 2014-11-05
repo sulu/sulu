@@ -11,8 +11,6 @@
 namespace Sulu\Bundle\MediaBundle\Api;
 
 use DateTime;
-use Doctrine\ORM\EntityNotFoundException;
-use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage;
@@ -24,7 +22,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
@@ -103,6 +100,7 @@ class Media extends ApiWrapper
     public function setCollection($collection)
     {
         $this->entity->setCollection($collection);
+
         return $this;
     }
 
@@ -117,6 +115,7 @@ class Media extends ApiWrapper
         if ($collection) {
             return $collection->getId();
         }
+
         return null;
     }
 
@@ -127,6 +126,7 @@ class Media extends ApiWrapper
     public function setSize($size)
     {
         $this->getFileVersion()->setSize($size);
+
         return $this;
     }
 
@@ -147,6 +147,7 @@ class Media extends ApiWrapper
     public function setMimeType($mimeType)
     {
         $this->getFileVersion()->setMimeType($mimeType);
+
         return $this;
     }
 
@@ -227,6 +228,7 @@ class Media extends ApiWrapper
     public function setVersion($version)
     {
         $this->version = $version;
+
         return $this;
     }
 
@@ -256,6 +258,7 @@ class Media extends ApiWrapper
             }
             break; // currently only one file per media exists
         }
+
         return $versions;
     }
 
@@ -266,6 +269,7 @@ class Media extends ApiWrapper
     public function setName($name)
     {
         $this->getFileVersion()->setName($name);
+
         return $this;
     }
 
@@ -296,6 +300,7 @@ class Media extends ApiWrapper
     public function setType($type)
     {
         $this->entity->setType($type);
+
         return $this;
     }
 
@@ -316,6 +321,7 @@ class Media extends ApiWrapper
     public function setStorageOptions($storageOptions)
     {
         $this->getFileVersion()->setStorageOptions($storageOptions);
+
         return $this;
     }
 
@@ -331,10 +337,11 @@ class Media extends ApiWrapper
             $publishLanguage = new FileVersionPublishLanguage();
             $publishLanguage->setFileVersion($fileVersion);
             $publishLanguage->setLocale($locale);
-            if(!$fileVersion->getPublishLanguages()->contains($publishLanguage)) {
+            if (!$fileVersion->getPublishLanguages()->contains($publishLanguage)) {
                 $fileVersion->addPublishLanguage($publishLanguage);
             }
         }
+
         return $this;
     }
 
@@ -370,6 +377,7 @@ class Media extends ApiWrapper
                 $fileVersion->addContentLanguage($contentLanguage);
             }
         }
+
         return $this;
     }
 
@@ -422,10 +430,11 @@ class Media extends ApiWrapper
     public function getTags()
     {
         $tags = array();
-        foreach($this->getFileVersion()->getTags() as $tag) {
+        foreach ($this->getFileVersion()->getTags() as $tag) {
             /** @var Tag $tag */
             array_push($tags, $tag->getName());
         }
+
         return $tags;
     }
 
@@ -505,6 +514,7 @@ class Media extends ApiWrapper
     public function setChanger($changer)
     {
         $this->entity->setChanger($changer);
+
         return $this;
     }
 
@@ -519,6 +529,7 @@ class Media extends ApiWrapper
         if ($user) {
             return $user->getFullName();
         }
+
         return null;
     }
 
@@ -553,6 +564,7 @@ class Media extends ApiWrapper
     public function setCreator($creator)
     {
         $this->entity->setChanger($creator);
+
         return $this;
     }
 
@@ -567,6 +579,7 @@ class Media extends ApiWrapper
         if ($user) {
             return $user->getFullName();
         }
+
         return null;
     }
 
@@ -577,6 +590,7 @@ class Media extends ApiWrapper
     public function setProperties($properties)
     {
         $this->properties = $properties;
+
         return $this;
     }
 
@@ -604,6 +618,7 @@ class Media extends ApiWrapper
                 $downloadCounter += intval($fileVersion->getDownloadCounter());
             }
         }
+
         return $downloadCounter;
     }
 
@@ -657,6 +672,7 @@ class Media extends ApiWrapper
             foreach ($file->getFileVersions() as $fileVersion) {
                 if ($fileVersion->getVersion() == $version) {
                     $this->fileVersion = $fileVersion;
+
                     return $fileVersion;
                 }
             }
@@ -675,11 +691,12 @@ class Media extends ApiWrapper
         $metaCollection = $this->getFileVersion()->getMeta();
 
         // get meta only with this locale
-        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
+        $metaCollectionFiltered = $metaCollection->filter(function ($meta) use ($locale) {
             /** @var FileVersionMeta $meta */
             if ($meta->getLocale() == $locale) {
                 return true;
             }
+
             return false;
         });
 

@@ -15,7 +15,6 @@ use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 

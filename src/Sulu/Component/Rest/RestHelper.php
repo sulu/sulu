@@ -14,7 +14,6 @@ use Sulu\Component\Persistence\RelationTrait;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
-use Traversable;
 
 /**
  * Defines some common REST functionalities

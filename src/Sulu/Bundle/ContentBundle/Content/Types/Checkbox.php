@@ -25,7 +25,7 @@ class Checkbox extends SimpleContentType
      */
     private $template;
 
-    function __construct($template)
+    public function __construct($template)
     {
         parent::__construct('Checkbox', false);
 

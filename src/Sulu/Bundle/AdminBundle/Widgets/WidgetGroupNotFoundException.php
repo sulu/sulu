@@ -12,7 +12,7 @@ namespace Sulu\Bundle\AdminBundle\Widgets;
 
 class WidgetGroupNotFoundException extends WidgetException
 {
-    function __construct($message, $group)
+    public function __construct($message, $group)
     {
         parent::__construct($message, $group);
     }

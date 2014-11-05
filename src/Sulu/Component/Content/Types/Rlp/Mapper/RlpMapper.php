@@ -25,7 +25,7 @@ abstract class RlpMapper implements RlpMapperInterface
     /**
      * @param string $name name of mapper
      */
-    function __construct($name)
+    public function __construct($name)
     {
         $this->name = $name;
     }

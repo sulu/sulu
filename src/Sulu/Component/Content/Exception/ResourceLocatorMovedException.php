@@ -26,7 +26,7 @@ class ResourceLocatorMovedException extends Exception
      */
     private $newResourceLocatorUuid;
 
-    function __construct($newResourceLocator, $newResourceLocatorUuid)
+    public function __construct($newResourceLocator, $newResourceLocatorUuid)
     {
         $this->newResourceLocator = $newResourceLocator;
         $this->newResourceLocatorUuid = $newResourceLocatorUuid;

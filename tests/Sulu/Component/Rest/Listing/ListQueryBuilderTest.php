@@ -10,8 +10,6 @@
 
 namespace Sulu\Component\Rest\Listing;
 
-use Sulu\Component\Rest\Listing\ListQueryBuilder;
-
 class ListQueryBuilderTest extends \PHPUnit_Framework_TestCase
 {
     public function testFind()

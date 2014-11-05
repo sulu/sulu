@@ -10,13 +10,12 @@
 
 namespace Sulu\Component\PHPCR\NodeTypes\Path;
 
-
 use PHPCR\NodeType\PropertyDefinitionInterface;
 use PHPCR\PropertyType;
 use PHPCR\Version\OnParentVersionAction;
 
-class HistoryPropertyDefinition implements PropertyDefinitionInterface{
-
+class HistoryPropertyDefinition implements PropertyDefinitionInterface
+{
     /**
      * Gets the node type that contains the declaration of this ItemDefinition.
      *

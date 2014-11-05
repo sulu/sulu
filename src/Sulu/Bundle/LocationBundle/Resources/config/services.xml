@@ -27,4 +27,3 @@
         <service id="sulu_location.map_manager" class="%sulu_location.map_manager.class%" />
     </services>
 </container>
-

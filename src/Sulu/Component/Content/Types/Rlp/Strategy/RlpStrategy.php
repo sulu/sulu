@@ -104,7 +104,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
      * @param $parentPath
      * @return string
      */
-    protected abstract function generatePath($title, $parentPath = null);
+    abstract protected function generatePath($title, $parentPath = null);
 
     /**
      * {@inheritdoc}
@@ -225,4 +225,3 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $this->mapper->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
     }
 }
-

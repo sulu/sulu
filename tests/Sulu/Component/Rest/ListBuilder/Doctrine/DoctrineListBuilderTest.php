@@ -11,7 +11,6 @@
 namespace Sulu\Component\Rest\ListBuilder\Doctrine;
 
 use PHPUnit_Framework_Assert;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 

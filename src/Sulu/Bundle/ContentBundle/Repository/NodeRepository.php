@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Doctrine\ODM\PHPCR\PHPCRException;
-use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
@@ -72,7 +71,7 @@ class NodeRepository implements NodeRepositoryInterface
      */
     private $queryExecutor;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $mapper,
         SessionManagerInterface $sessionManager,
         UserManagerInterface $userManager,

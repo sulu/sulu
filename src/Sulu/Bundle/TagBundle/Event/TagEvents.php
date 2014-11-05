@@ -24,4 +24,4 @@ final class TagEvents
      * The event listener receives a TagMergeEvent instance.
      */
     const TAG_MERGE = 'sulu.tag.merge';
-} 
+}

@@ -35,4 +35,4 @@ interface WidgetInterface
      * @return array
      */
     public function getData($options);
-} 
+}

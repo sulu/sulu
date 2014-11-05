@@ -11,23 +11,11 @@
 namespace Sulu\Bundle\ContactBundle\Api;
 
 use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
-use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
-use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
-use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;
-use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
-use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
-use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
-use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
-use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Component\Security\UserInterface;
-use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;

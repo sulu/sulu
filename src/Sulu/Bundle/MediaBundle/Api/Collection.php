@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Api;
 use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\Expose;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -123,6 +122,7 @@ class Collection extends ApiWrapper
     public function setParent($parent)
     {
         $this->entity->setParent($parent);
+
         return $this;
     }
 
@@ -146,6 +146,7 @@ class Collection extends ApiWrapper
             $style = json_encode($style);
         }
         $this->entity->setStyle($style);
+
         return $this;
     }
 
@@ -166,6 +167,7 @@ class Collection extends ApiWrapper
     public function setProperties($properties)
     {
         $this->properties = $properties;
+
         return $this;
     }
 
@@ -203,6 +205,7 @@ class Collection extends ApiWrapper
     public function setPreviews($previews)
     {
         $this->previews = $previews;
+
         return $this;
     }
 
@@ -249,6 +252,7 @@ class Collection extends ApiWrapper
     public function setType($type)
     {
         $this->entity->setType($type);
+
         return $this;
     }
 
@@ -293,6 +297,7 @@ class Collection extends ApiWrapper
     public function setChanger($changer)
     {
         $this->entity->setChanger($changer);
+
         return $this;
     }
 
@@ -307,6 +312,7 @@ class Collection extends ApiWrapper
         if ($user) {
             return $user->getFullName();
         }
+
         return null;
     }
 
@@ -341,6 +347,7 @@ class Collection extends ApiWrapper
     public function setCreator($creator)
     {
         $this->entity->setChanger($creator);
+
         return $this;
     }
 
@@ -355,6 +362,7 @@ class Collection extends ApiWrapper
         if ($user) {
             return $user->getFullName();
         }
+
         return null;
     }
 
@@ -368,11 +376,12 @@ class Collection extends ApiWrapper
         $metaCollection = $this->entity->getMeta();
 
         // get meta only with this locale
-        $metaCollectionFiltered = $metaCollection->filter(function($meta) use ($locale) {
+        $metaCollectionFiltered = $metaCollection->filter(function ($meta) use ($locale) {
             /** @var CollectionMeta $meta */
             if ($meta->getLocale() == $locale) {
                 return true;
             }
+
             return false;
         });
 
@@ -397,4 +406,4 @@ class Collection extends ApiWrapper
 
         return null;
     }
-} 
+}

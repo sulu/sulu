@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * handles navigation for this bundle

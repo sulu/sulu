@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * ContactLocale
  */
@@ -31,7 +29,6 @@ class ContactLocale
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     private $contact;
-
 
     /**
      * Set locale
