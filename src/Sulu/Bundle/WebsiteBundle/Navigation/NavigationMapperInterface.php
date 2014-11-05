@@ -64,4 +64,4 @@ interface NavigationMapperInterface
      * @return NavigationItem[]
      */
     public function getBreadcrumb($uuid, $webspace, $language);
-} 
+}

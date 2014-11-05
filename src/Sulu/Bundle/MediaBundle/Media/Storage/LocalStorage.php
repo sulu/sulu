@@ -98,6 +98,7 @@ class LocalStorage implements StorageInterface
         if ($segment && $fileName) {
             return $this->uploadPath . '/' . $segment . '/' . $fileName;
         }
+
         return false;
     }
 
@@ -113,6 +114,7 @@ class LocalStorage implements StorageInterface
 
         if ($segment && $fileName) {
             @unlink($this->uploadPath . '/' . $segment . '/' . $fileName);
+
             return true;
         } else {
             return false;
@@ -144,6 +146,7 @@ class LocalStorage implements StorageInterface
         }
 
         $counter++;
+
         return $this->getUniqueFileName($folder, $fileName, $counter);
     }
 

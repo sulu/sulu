@@ -11,9 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager;
 
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CommandInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager
@@ -41,4 +39,4 @@ class DefaultCommandManager extends ContainerAware implements ManagerInterface
     {
         return $this->container->get($this->prefix . $imageCommandName);
     }
-} 
+}

@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\TranslateBundle\Translate\TranslateCollectionRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
@@ -46,6 +44,7 @@ class CatalogueController extends RestController
     public function getFieldsAction(Request $request)
     {
         $fieldDescriptors = array_values($this->getFieldDescriptors($request->getLocale()));
+
         return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
@@ -112,6 +111,7 @@ class CatalogueController extends RestController
             );
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 

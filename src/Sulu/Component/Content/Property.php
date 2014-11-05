@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content;
 
 use Sulu\Component\Util\ArrayableInterface;
-use Sulu\Component\Content\PropertyTag;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
@@ -91,7 +90,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * Constructor
      */
-    function __construct(
+    public function __construct(
         $name,
         $metaData,
         $contentTypeName,
@@ -374,7 +373,7 @@ class Property implements PropertyInterface, \JsonSerializable
         return $result;
     }
 
-    function __clone()
+    public function __clone()
     {
         $clone = new Property(
             $this->getName(),

@@ -89,7 +89,7 @@ class SnippetContent extends ComplexContentType
         PropertyInterface $property,
         $webspaceKey,
         $languageCode
-    ) 
+    )
     {
         $refs = isset($data['ids']) ? $data['ids'] : array();
         $snippets = array();
@@ -142,7 +142,6 @@ class SnippetContent extends ComplexContentType
         $values = array_merge(array(
             'ids' => array(),
         ), $values);
-
 
         foreach ((array) $values['ids'] as $value) {
             if ($value instanceof Snippet) {

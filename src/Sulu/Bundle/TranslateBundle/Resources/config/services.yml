@@ -20,6 +20,6 @@ services:
     sulu_translate.admin.content_navigation:
         class: %sulu_translate.admin.content_navigation.class%
 
-    sulu.translate.build.builder.translation: 
+    sulu.translate.build.builder.translation:
         class: %sulu.translate.build.builder.translation.class%
         tags: [ { name: massive_build.builder } ]

@@ -66,7 +66,6 @@ class TestUserRepository extends EntityRepository implements UserRepositoryInter
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
 
-
         try {
             return $query->getSingleResult();
         } catch (NoResultException $nre) {

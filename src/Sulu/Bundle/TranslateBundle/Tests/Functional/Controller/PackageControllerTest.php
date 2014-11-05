@@ -12,8 +12,6 @@ namespace Sulu\Bundle\TranslateBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TranslateBundle\Entity\Catalogue;
 use Sulu\Bundle\TranslateBundle\Entity\Package;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class PackageControllerTest extends SuluTestCase

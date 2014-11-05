@@ -17,7 +17,6 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationE
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
-use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Navigation;
@@ -137,6 +136,7 @@ class XmlFileLoader extends FileLoader
             ) {
                 $localization->setDefault(true);
                 $portal->setDefaultLocalization($localization);
+
                 return true;
             }
         }

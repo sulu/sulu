@@ -10,9 +10,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
-use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-
 /**
  * This class contains the content navigation represented as tabs in the forms from the admin
  * @package Sulu\Bundle\AdminBundle\Admin
@@ -50,7 +47,6 @@ abstract class ContentNavigation
     {
         $this->navigationItems[] = $navigationItem;
     }
-
 
     public function addNavigation(ContentNavigationInterface $navigation)
     {

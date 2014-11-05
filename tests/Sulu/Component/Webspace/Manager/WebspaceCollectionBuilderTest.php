@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace;
 
-
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Loader\XmlFileLoader;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;

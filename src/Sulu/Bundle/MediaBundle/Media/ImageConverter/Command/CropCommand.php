@@ -31,4 +31,4 @@ class CropCommand implements CommandInterface
 
         $image->crop($point, $box);
     }
-} 
+}

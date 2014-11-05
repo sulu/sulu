@@ -174,14 +174,14 @@ class Catalogue extends ApiEntity
     public function setIsDefault($isDefault)
     {
         $this->isDefault = $isDefault;
-    
+
         return $this;
     }
 
     /**
      * Get isDefault
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsDefault()
     {

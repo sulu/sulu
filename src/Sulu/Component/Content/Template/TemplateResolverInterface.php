@@ -23,4 +23,4 @@ interface TemplateResolverInterface
      * @return string
      */
     public function resolve($nodeType, $templateKey);
-} 
+}

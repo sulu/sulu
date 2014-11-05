@@ -11,12 +11,10 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
 use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
 
 /**
  * CompilerPass, which adds the request analyzer as a service if required

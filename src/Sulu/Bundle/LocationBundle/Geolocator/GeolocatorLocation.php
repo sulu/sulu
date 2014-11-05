@@ -59,87 +59,87 @@ class GeolocatorLocation
      */
     protected $latitude;
 
-    public function getDisplayTitle() 
+    public function getDisplayTitle()
     {
         return $this->displayTitle;
     }
-    
+
     public function setDisplayTitle($displaytitle)
     {
         $this->displayTitle = $displaytitle;
     }
 
-    public function getStreet() 
+    public function getStreet()
     {
         return $this->street;
     }
-    
+
     public function setStreet($street)
     {
         $this->street = $street;
     }
 
-    public function getNumber() 
+    public function getNumber()
     {
         return $this->number;
     }
-    
+
     public function setNumber($number)
     {
         $this->number = $number;
     }
 
-    public function getCode() 
+    public function getCode()
     {
         return $this->code;
     }
-    
+
     public function setCode($code)
     {
         $this->code = $code;
     }
 
-    public function getTown() 
+    public function getTown()
     {
         return $this->town;
     }
-    
+
     public function setTown($town)
     {
         $this->town = $town;
     }
-    
-    public function getCountry() 
+
+    public function getCountry()
     {
         return $this->country;
     }
-    
+
     public function setCountry($country)
     {
         $this->country = $country;
     }
 
-    public function getLongitude() 
+    public function getLongitude()
     {
         return $this->longitude;
     }
-    
+
     public function setLongitude($longitude)
     {
         $this->longitude = $longitude;
     }
 
-    public function getLatitude() 
+    public function getLatitude()
     {
         return $this->latitude;
     }
-    
+
     public function setLatitude($latitude)
     {
         $this->latitude = $latitude;
     }
 
-    public function getId() 
+    public function getId()
     {
         return $this->id;
     }
@@ -157,7 +157,7 @@ class GeolocatorLocation
     {
         $this->displayName = $displayName;
     }
-    
+
     public function setId($id)
     {
         $this->id = $id;

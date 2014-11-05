@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
-use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorManager;
 use Guzzle\Http\Client;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 use Guzzle\Plugin\Mock\MockPlugin;
@@ -97,4 +96,3 @@ class GoogleGeolocatorTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('key=foobar', $log['message']);
     }
 }
-

@@ -24,4 +24,4 @@ interface ManagerInterface
      * @return CommandInterface
      */
     public function get($name);
-} 
+}

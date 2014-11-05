@@ -11,13 +11,11 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Component\Webspace\Environment;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Resource\FileResource;
 use Traversable;
-use Sulu\Component\Webspace\Util\SerializerHelper;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation
@@ -142,7 +140,7 @@ class WebspaceCollection implements \IteratorAggregate
         $portalInformations = array();
         foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
             $portalInformations[$environment] = array();
-            
+
             foreach ($environmentPortalInformations as $environmentPortalInformation) {
                 $portalInformations[$environment][$environmentPortalInformation->getUrl()] = $environmentPortalInformation->toArray();
             }

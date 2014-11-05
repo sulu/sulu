@@ -2,8 +2,6 @@
 
 namespace Sulu\Bundle\TranslateBundle\Build;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Bundle\CoreBundle\Build\SuluBuilder;
 
 class TranslationBuilder extends SuluBuilder
@@ -26,4 +24,3 @@ class TranslationBuilder extends SuluBuilder
         }
     }
 }
-

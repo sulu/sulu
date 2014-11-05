@@ -47,7 +47,7 @@ class StructureMetadataLoadEvent extends Event
      *
      * @return StructureInterface
      */
-    public function getStructure() 
+    public function getStructure()
     {
         return $this->structure;
     }
@@ -57,7 +57,7 @@ class StructureMetadataLoadEvent extends Event
      *
      * @return IndexMetadata
      */
-    public function getIndexMetadata() 
+    public function getIndexMetadata()
     {
         return $this->indexMetadata;
     }

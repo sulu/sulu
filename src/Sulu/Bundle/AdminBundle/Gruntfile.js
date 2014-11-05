@@ -183,6 +183,7 @@ module.exports = function(grunt) {
         compass: {
             dev: {
                 options: {
+                    sourcemap: false,
                     sassDir: 'Resources/public/scss/',
                     specify: ['Resources/public/scss/main.scss'],
                     cssDir: 'Resources/public/css/',

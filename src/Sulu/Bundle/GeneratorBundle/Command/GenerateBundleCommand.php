@@ -16,7 +16,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Sulu\Bundle\GeneratorBundle\Generator\BundleGenerator;
 use Sulu\Bundle\GeneratorBundle\Manipulator\KernelManipulator;
 use Sulu\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 use Sulu\Bundle\GeneratorBundle\Command\Helper\DialogHelper;

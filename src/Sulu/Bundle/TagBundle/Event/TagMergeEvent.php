@@ -58,4 +58,4 @@ class TagMergeEvent extends Event
     {
         return $this->destTag;
     }
-} 
+}

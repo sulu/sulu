@@ -5,7 +5,6 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\StructureInterface;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Content\StructureManagerInterface;
 

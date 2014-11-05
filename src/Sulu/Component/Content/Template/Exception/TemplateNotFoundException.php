@@ -27,7 +27,7 @@ class TemplateNotFoundException extends Exception
      */
     private $path;
 
-    function __construct($path, $templateKey, $originalException = null)
+    public function __construct($path, $templateKey, $originalException = null)
     {
         parent::__construct(sprintf('a valid template with key "%s" and file "%s" cannot be found', $templateKey, $path), null, $originalException);
 

@@ -25,4 +25,4 @@ interface CommandInterface
      * @return mixed
      */
     public function execute(&$image, $parameters);
-} 
+}

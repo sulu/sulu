@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
@@ -563,6 +562,7 @@ class Address
         ) {
             return true;
         }
+
         return false;
     }
 

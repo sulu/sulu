@@ -34,7 +34,7 @@ class SitemapGenerator implements SitemapGeneratorInterface
      */
     private $contentQueryBuilder;
 
-    function __construct(
+    public function __construct(
         ContentQueryExecutorInterface $contentQuery,
         WebspaceManagerInterface $webspaceManager,
         ContentQueryBuilderInterface $contentQueryBuilder

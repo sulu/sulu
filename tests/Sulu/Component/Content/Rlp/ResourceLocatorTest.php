@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Rlp;
 use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
@@ -139,7 +138,7 @@ class ResourceLocatorTest extends SuluTestCase
 
         $property->setValue('/test-2');
         $this->resourceLocator->write($node, $property, 1, 'sulu_io', 'en');
-        
+
         $this->assertEquals('/test-2', $node->getPropertyValue('url'));
         $this->assertTrue($this->session->getRootNode()->hasNode('cmf/sulu_io/routes/en/test-2'));
     }

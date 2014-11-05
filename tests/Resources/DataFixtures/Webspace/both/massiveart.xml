@@ -24,7 +24,7 @@
             <template>overview</template>
         </excluded>
     </theme>
-    
+
     <navigation>
         <contexts>
             <context key="main">

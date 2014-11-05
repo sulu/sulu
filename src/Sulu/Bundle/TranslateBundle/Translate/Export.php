@@ -105,7 +105,8 @@ class Export
      * Returns the name of the file to export
      * @return string
      */
-    public function getFilename() {
+    public function getFilename()
+    {
         return $this->filename;
     }
 

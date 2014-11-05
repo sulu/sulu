@@ -27,7 +27,7 @@ class NavigationContext
      */
     private $key;
 
-    function __construct($key, $metadata)
+    public function __construct($key, $metadata)
     {
         $this->key = $key;
         $this->metadata = new Metadata($metadata);
@@ -57,4 +57,4 @@ class NavigationContext
     {
         return $this->metadata->getData();
     }
-} 
+}

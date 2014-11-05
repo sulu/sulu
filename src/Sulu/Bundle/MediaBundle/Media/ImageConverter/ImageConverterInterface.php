@@ -32,4 +32,4 @@ interface ImageConverterInterface
      * @return array
      */
     public function getFormats();
-} 
+}

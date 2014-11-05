@@ -10,10 +10,5 @@ before_script:
   - php bin/jackrabbit.php
   - 
 script: 
-    - time ./bin/runtests.sh
+    - time ./bin/runtests.sh -i -a
     - phpunit
-
-
-matrix:
-  allow_failures:
-    - php: hhvm

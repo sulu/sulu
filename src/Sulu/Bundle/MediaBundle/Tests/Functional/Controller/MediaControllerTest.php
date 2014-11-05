@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -21,8 +20,6 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\TagBundle\Entity\Tag;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -47,7 +44,6 @@ class MediaControllerTest extends SuluTestCase
         $this->setUpMedia();
     }
 
-
     protected function cleanImage()
     {
         if (self::$kernel->getContainer()) { //
@@ -59,12 +55,12 @@ class MediaControllerTest extends SuluTestCase
         }
     }
 
-    function recursiveRemoveDirectory($directory, $counter = 0)
+    public function recursiveRemoveDirectory($directory, $counter = 0)
     {
-        foreach(glob($directory . '/*') as $file) {
+        foreach (glob($directory . '/*') as $file) {
             if (is_dir($file)) {
                 $this->recursiveRemoveDirectory($file, $counter + 1);
-            } elseif(file_exists($file)) {
+            } elseif (file_exists($file)) {
                 unlink($file);
             }
         }

@@ -20,7 +20,7 @@ class ParentNotFoundException extends \Exception
      */
     private $uuid;
 
-    function __construct($uuid)
+    public function __construct($uuid)
     {
         parent::__construct(sprintf('Parent for "%s" not found (perhaps it is the startpage?)', $uuid));
         $this->uuid = $uuid;

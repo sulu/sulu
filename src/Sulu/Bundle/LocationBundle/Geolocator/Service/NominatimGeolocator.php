@@ -4,7 +4,6 @@ namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Guzzle\Http\ClientInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 
@@ -58,7 +57,7 @@ class NominatimGeolocator implements GeolocatorInterface
                 'setCode' => 'postcode',
                 'setTown' => 'city',
                 'setCountry' => 'country_code'
-            ) as $method => $key) 
+            ) as $method => $key)
             {
                 if (isset($result['address'][$key])) {
                     $location->$method($result['address'][$key]);

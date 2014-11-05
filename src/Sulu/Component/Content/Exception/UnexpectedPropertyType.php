@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\PropertyInterface;
 
@@ -26,7 +25,7 @@ class UnexpectedPropertyType extends \Exception
      */
     private $contentType;
 
-    function __construct(PropertyInterface $property, ContentTypeInterface $contentType)
+    public function __construct(PropertyInterface $property, ContentTypeInterface $contentType)
     {
         parent::__construct(sprintf('Property "%s" is unexcepted in content type "%s"', $property->getName(), get_class($contentType)));
         $this->property = $property;
@@ -48,6 +47,5 @@ class UnexpectedPropertyType extends \Exception
     {
         return $this->contentType;
     }
-
 
 }

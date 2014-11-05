@@ -362,6 +362,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
+
         return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
@@ -376,6 +377,7 @@ class DefaultMediaManager implements MediaManagerInterface
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
+
         return $media;
     }
 
@@ -695,6 +697,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$collection) {
             throw new CollectionNotFoundException($collectionId);
         }
+
         return $collection;
     }
 
@@ -710,6 +713,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$type) {
             throw new MediaTypeNotFoundException('Collection Type with the ID ' . $typeId . ' not found');
         }
+
         return $type;
     }
 

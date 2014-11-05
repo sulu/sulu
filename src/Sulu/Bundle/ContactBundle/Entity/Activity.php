@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 
@@ -97,14 +96,14 @@ class Activity extends ApiEntity
     public function setSubject($subject)
     {
         $this->subject = $subject;
-    
+
         return $this;
     }
 
     /**
      * Get subject
      *
-     * @return string 
+     * @return string
      */
     public function getSubject()
     {
@@ -120,14 +119,14 @@ class Activity extends ApiEntity
     public function setNote($note)
     {
         $this->note = $note;
-    
+
         return $this;
     }
 
     /**
      * Get note
      *
-     * @return string 
+     * @return string
      */
     public function getNote()
     {
@@ -143,14 +142,14 @@ class Activity extends ApiEntity
     public function setDueDate($dueDate)
     {
         $this->dueDate = $dueDate;
-    
+
         return $this;
     }
 
     /**
      * Get dueDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDueDate()
     {
@@ -166,14 +165,14 @@ class Activity extends ApiEntity
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
-    
+
         return $this;
     }
 
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -189,14 +188,14 @@ class Activity extends ApiEntity
     public function setCreated($created)
     {
         $this->created = $created;
-    
+
         return $this;
     }
 
     /**
      * Get created
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -212,14 +211,14 @@ class Activity extends ApiEntity
     public function setChanged($changed)
     {
         $this->changed = $changed;
-    
+
         return $this;
     }
 
     /**
      * Get changed
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -229,7 +228,7 @@ class Activity extends ApiEntity
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -245,14 +244,14 @@ class Activity extends ApiEntity
     public function setActivityStatus(\Sulu\Bundle\ContactBundle\Entity\ActivityStatus $activityStatus = null)
     {
         $this->activityStatus = $activityStatus;
-    
+
         return $this;
     }
 
     /**
      * Get activityStatus
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityStatus 
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityStatus
      */
     public function getActivityStatus()
     {
@@ -268,14 +267,14 @@ class Activity extends ApiEntity
     public function setActivityPriority(\Sulu\Bundle\ContactBundle\Entity\ActivityPriority $activityPriority = null)
     {
         $this->activityPriority = $activityPriority;
-    
+
         return $this;
     }
 
     /**
      * Get activityPriority
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityPriority 
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityPriority
      */
     public function getActivityPriority()
     {
@@ -291,14 +290,14 @@ class Activity extends ApiEntity
     public function setActivityType(\Sulu\Bundle\ContactBundle\Entity\ActivityType $activityType = null)
     {
         $this->activityType = $activityType;
-    
+
         return $this;
     }
 
     /**
      * Get activityType
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityType 
+     * @return \Sulu\Bundle\ContactBundle\Entity\ActivityType
      */
     public function getActivityType()
     {
@@ -314,14 +313,14 @@ class Activity extends ApiEntity
     public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact = null)
     {
         $this->contact = $contact;
-    
+
         return $this;
     }
 
     /**
      * Get contact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getContact()
     {
@@ -337,14 +336,14 @@ class Activity extends ApiEntity
     public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account = null)
     {
         $this->account = $account;
-    
+
         return $this;
     }
 
     /**
      * Get account
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Account
      */
     public function getAccount()
     {
@@ -360,7 +359,7 @@ class Activity extends ApiEntity
     public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
     {
         $this->changer = $changer;
-    
+
         return $this;
     }
 
@@ -383,7 +382,7 @@ class Activity extends ApiEntity
     public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
-    
+
         return $this;
     }
 
@@ -406,14 +405,14 @@ class Activity extends ApiEntity
     public function setAssignedContact(\Sulu\Bundle\ContactBundle\Entity\Contact $assignedContact)
     {
         $this->assignedContact = $assignedContact;
-    
+
         return $this;
     }
 
     /**
      * Get assignedContact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact 
+     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     public function getAssignedContact()
     {

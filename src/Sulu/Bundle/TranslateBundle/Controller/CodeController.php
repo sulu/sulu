@@ -55,6 +55,7 @@ class CodeController extends RestController implements ClassResourceInterface
     public function getFieldsAction(Request $request)
     {
         $fieldDescriptors = array_values($this->getFieldDescriptors($request->getLocale()));
+
         return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
@@ -101,6 +102,7 @@ class CodeController extends RestController implements ClassResourceInterface
             );
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -151,6 +153,7 @@ class CodeController extends RestController implements ClassResourceInterface
         );
 
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -396,7 +399,6 @@ class CodeController extends RestController implements ClassResourceInterface
                     )
             )
         );
-
 
         return $this->fieldDescriptors;
     }

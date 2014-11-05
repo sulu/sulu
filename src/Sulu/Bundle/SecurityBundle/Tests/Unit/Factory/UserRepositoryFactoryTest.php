@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Factory;
 
 use Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactory;
-use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Webspace;
 

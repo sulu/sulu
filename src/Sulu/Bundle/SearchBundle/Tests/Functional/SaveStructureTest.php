@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondStructureCache;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\PropertyTag;
@@ -111,12 +110,12 @@ class SaveStructureTest extends BaseTestCase
         $searchManager->index($structure);
 
         $res = $searchManager->createSearch('Giraffe')->locale('de')->index('content')->execute();
-        $this->assertCount(1, $res); 
+        $this->assertCount(1, $res);
 
         $structure->getProperty('title')->setValue('Pen and Paper');
         $searchManager->index($structure);
 
         // $res = $searchManager->createSearch('Pen')->locale('de')->index('content')->execute();
-        // $this->assertCount(1, $res); 
+        // $this->assertCount(1, $res);
     }
 }

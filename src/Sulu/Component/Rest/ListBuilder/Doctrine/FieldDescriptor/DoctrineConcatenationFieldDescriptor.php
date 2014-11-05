@@ -50,7 +50,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
      * Returns the select statement for this field without the alias
      * @return string
      */
-    function getSelect()
+    public function getSelect()
     {
         $concat = null;
 
@@ -69,7 +69,7 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
      * Returns all the joins required for this field
      * @return DoctrineJoinDescriptor[]
      */
-    function getJoins()
+    public function getJoins()
     {
         $joins = array();
 

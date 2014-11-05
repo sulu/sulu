@@ -35,7 +35,7 @@ class BlockPropertyType
      */
     private $childProperties = array();
 
-    function __construct($name, $metadata)
+    public function __construct($name, $metadata)
     {
         $this->name = $name;
         $this->metadata = new Metadata($metadata);
@@ -99,13 +99,14 @@ class BlockPropertyType
         return $this->metadata;
     }
 
-    function __clone()
+    public function __clone()
     {
         $result = new BlockPropertyType($this->getName(), $this->getMetadata());
         $result->childProperties = array();
         foreach ($this->getChildProperties() as $childProperties) {
             $result->addChild(clone($childProperties));
         }
+
         return $result;
     }
-} 
+}

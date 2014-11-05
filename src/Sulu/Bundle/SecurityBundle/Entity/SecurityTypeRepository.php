@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 
 /**

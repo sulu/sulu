@@ -10,19 +10,10 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
-use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
-use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
-use Sulu\Component\Rest\RestHelperInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes accounts available through a REST API

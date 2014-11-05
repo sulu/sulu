@@ -160,7 +160,6 @@ abstract class Page extends Structure
         return $this->nodeState;
     }
 
-
     /**
      * returns true if this node is shown in navigation
      * @return string[]

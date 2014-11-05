@@ -238,7 +238,7 @@ class ContactRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-        if($arrayResult) {
+        if ($arrayResult) {
             return $query->getArrayResult();
         } else {
             return $query->getResult();
@@ -334,6 +334,7 @@ class ContactRepository extends EntityRepository
         } catch (NoResultException $nre) {
             return null;
         }
+
         return $result;
     }
 }

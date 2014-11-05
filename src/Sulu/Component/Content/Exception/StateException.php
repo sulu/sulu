@@ -10,8 +10,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-
 class StateException extends \Exception
 {
 
-} 
+}

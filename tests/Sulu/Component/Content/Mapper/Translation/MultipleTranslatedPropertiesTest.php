@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Structure;
 
 class MultipleTranslatedPropertiesTest extends \PHPUnit_Framework_TestCase

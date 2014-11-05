@@ -55,4 +55,4 @@ class LanguageController extends Controller implements ClassResourceInterface
 
         return new JsonResponse($data);
     }
-} 
+}

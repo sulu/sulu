@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 
@@ -266,7 +264,7 @@ class AccountCategoryControllerTest extends SuluTestCase
 
         $this->assertEquals(3, count($response2->_embedded->accountCategories));
 
-        if($response2->_embedded->accountCategories[0]->category == 'Changed Hauptsitz') {
+        if ($response2->_embedded->accountCategories[0]->category == 'Changed Hauptsitz') {
             $this->assertEquals('Changed Hauptsitz', $response2->_embedded->accountCategories[0]->category);
             $this->assertNotNull($response2->_embedded->accountCategories[0]->id);
 
@@ -342,7 +340,7 @@ class AccountCategoryControllerTest extends SuluTestCase
         $response2 = json_decode($client2->getResponse()->getContent());
         $this->assertEquals(200, $client2->getResponse()->getStatusCode());
 
-        if($response2->_embedded->accountCategories[0]->id == 1){
+        if ($response2->_embedded->accountCategories[0]->id == 1) {
             $this->assertEquals('Hauptsitz', $response2->_embedded->accountCategories[0]->category);
             $this->assertNotNull($response2->_embedded->accountCategories[0]->id);
 
