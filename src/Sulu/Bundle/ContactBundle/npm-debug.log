@@ -1,0 +1,151 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'grunt-contrib-watch' ]
+2 info using npm@2.1.6
+3 info using node@v0.10.33
+4 verbose node symlink /usr/local/bin/node
+5 warn package.json sulucontact@0.3.0 No repository field.
+6 silly cache add args [ 'grunt-contrib-watch', null ]
+7 verbose cache add spec grunt-contrib-watch
+8 silly cache add parsed spec { raw: 'grunt-contrib-watch',
+8 silly cache add   scope: null,
+8 silly cache add   name: 'grunt-contrib-watch',
+8 silly cache add   rawSpec: '',
+8 silly cache add   spec: '*',
+8 silly cache add   type: 'range' }
+9 verbose addNamed grunt-contrib-watch@*
+10 silly addNamed semver.valid null
+11 silly addNamed semver.validRange *
+12 silly addNameRange { name: 'grunt-contrib-watch', range: '*', hasData: false }
+13 verbose mapToRegistry name grunt-contrib-watch
+14 verbose mapToRegistry uri https://registry.npmjs.org/grunt-contrib-watch
+15 verbose addNameRange registry:https://registry.npmjs.org/grunt-contrib-watch not in flight; fetching
+16 verbose request on initialization, where is /grunt-contrib-watch
+17 verbose request after pass 1, where is /grunt-contrib-watch
+18 verbose request url raw /grunt-contrib-watch
+19 verbose request resolving registry [ 'https://registry.npmjs.org/', './grunt-contrib-watch' ]
+20 verbose request after pass 2, where is https://registry.npmjs.org/grunt-contrib-watch
+21 verbose request no auth needed
+22 info attempt registry request try #1 at 16:14:41
+23 verbose request id d07c695ba76e9ae2
+24 verbose etag "EQTL4G58NDKD0ORSVQE5FZD11"
+25 http request GET https://registry.npmjs.org/grunt-contrib-watch
+26 http 304 https://registry.npmjs.org/grunt-contrib-watch
+27 silly registry.get cb [ 304,
+27 silly registry.get   { date: 'Thu, 06 Nov 2014 15:14:41 GMT',
+27 silly registry.get     server: 'Apache',
+27 silly registry.get     via: '1.1 varnish',
+27 silly registry.get     'last-modified': 'Thu, 06 Nov 2014 15:14:41 GMT',
+27 silly registry.get     'cache-control': 'max-age=60',
+27 silly registry.get     etag: '"EQTL4G58NDKD0ORSVQE5FZD11"',
+27 silly registry.get     age: '16',
+27 silly registry.get     'x-served-by': 'cache-ams4133-AMS',
+27 silly registry.get     'x-cache': 'HIT',
+27 silly registry.get     'x-cache-hits': '1',
+27 silly registry.get     'x-timer': 'S1415286881.730415,VS0,VE0',
+27 silly registry.get     vary: 'Accept',
+27 silly registry.get     'content-length': '0',
+27 silly registry.get     'keep-alive': 'timeout=10, max=50',
+27 silly registry.get     connection: 'Keep-Alive' } ]
+28 verbose etag https://registry.npmjs.org/grunt-contrib-watch from cache
+29 silly addNameRange number 2 { name: 'grunt-contrib-watch', range: '*', hasData: true }
+30 silly addNameRange versions [ 'grunt-contrib-watch',
+30 silly addNameRange   [ '0.1.0',
+30 silly addNameRange     '0.1.1',
+30 silly addNameRange     '0.1.2',
+30 silly addNameRange     '0.1.3',
+30 silly addNameRange     '0.1.4',
+30 silly addNameRange     '0.2.0',
+30 silly addNameRange     '0.3.0',
+30 silly addNameRange     '0.3.1',
+30 silly addNameRange     '0.4.0',
+30 silly addNameRange     '0.4.1',
+30 silly addNameRange     '0.4.2',
+30 silly addNameRange     '0.4.3',
+30 silly addNameRange     '0.4.4',
+30 silly addNameRange     '0.5.0',
+30 silly addNameRange     '0.5.1',
+30 silly addNameRange     '0.5.2',
+30 silly addNameRange     '0.5.3',
+30 silly addNameRange     '0.6.0',
+30 silly addNameRange     '0.6.1',
+30 silly addNameRange     '0.2.0-a',
+30 silly addNameRange     '0.2.0-rc5',
+30 silly addNameRange     '0.2.0-rc7' ] ]
+31 verbose addNamed grunt-contrib-watch@0.6.1
+32 silly addNamed semver.valid 0.6.1
+33 silly addNamed semver.validRange 0.6.1
+34 verbose addRemoteTarball https://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz not in flight; adding
+35 verbose addRemoteTarball [ 'https://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz',
+35 verbose addRemoteTarball   '64fdcba25a635f5b4da1b6ce6f90da0aeb6e3f15' ]
+36 info retry fetch attempt 1 at 16:14:41
+37 info attempt registry request try #1 at 16:14:41
+38 http fetch GET https://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz
+39 http fetch 200 https://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz
+40 silly fetchAndShaCheck shasum 64fdcba25a635f5b4da1b6ce6f90da0aeb6e3f15
+41 verbose addTmpTarball /var/folders/08/88sgy72156zg735mmc9j21940000gp/T/npm-38349-e5c59d50/registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz not in flight; adding
+42 verbose addTmpTarball already have metadata; skipping unpack for grunt-contrib-watch@0.6.1
+43 silly cache afterAdd grunt-contrib-watch@0.6.1
+44 verbose afterAdd /Users/shahparshabani/.npm/grunt-contrib-watch/0.6.1/package/package.json not in flight; writing
+45 verbose afterAdd /Users/shahparshabani/.npm/grunt-contrib-watch/0.6.1/package/package.json written
+46 silly install resolved [ { name: 'grunt-contrib-watch',
+46 silly install resolved     description: 'Run predefined tasks whenever watched file patterns are added, changed or deleted.',
+46 silly install resolved     version: '0.6.1',
+46 silly install resolved     homepage: 'https://github.com/gruntjs/grunt-contrib-watch',
+46 silly install resolved     author: { name: 'Grunt Team', url: 'http://gruntjs.com/' },
+46 silly install resolved     repository:
+46 silly install resolved      { type: 'git',
+46 silly install resolved        url: 'git://github.com/gruntjs/grunt-contrib-watch.git' },
+46 silly install resolved     bugs: { url: 'https://github.com/gruntjs/grunt-contrib-watch/issues' },
+46 silly install resolved     licenses: [ [Object] ],
+46 silly install resolved     engines: { node: '>= 0.8.0' },
+46 silly install resolved     scripts: { test: 'grunt nodeunit -v' },
+46 silly install resolved     dependencies:
+46 silly install resolved      { gaze: '~0.5.1',
+46 silly install resolved        'tiny-lr-fork': '0.0.5',
+46 silly install resolved        lodash: '~2.4.1',
+46 silly install resolved        async: '~0.2.9' },
+46 silly install resolved     devDependencies:
+46 silly install resolved      { grunt: '~0.4.0',
+46 silly install resolved        'grunt-contrib-jshint': '~0.8.0',
+46 silly install resolved        'grunt-contrib-nodeunit': '~0.3.3',
+46 silly install resolved        'grunt-contrib-internal': '~0.4.7',
+46 silly install resolved        'underscore.string': '~2.3.3' },
+46 silly install resolved     peerDependencies: { grunt: '~0.4.0' },
+46 silly install resolved     keywords: [ 'gruntplugin', 'watch' ],
+46 silly install resolved     files: [ 'tasks', 'LICENSE-MIT' ],
+46 silly install resolved     _id: 'grunt-contrib-watch@0.6.1',
+46 silly install resolved     dist:
+46 silly install resolved      { shasum: '64fdcba25a635f5b4da1b6ce6f90da0aeb6e3f15',
+46 silly install resolved        tarball: 'http://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz' },
+46 silly install resolved     _from: 'grunt-contrib-watch@*',
+46 silly install resolved     _npmVersion: '1.4.4',
+46 silly install resolved     _npmUser: { name: 'shama', email: 'kyle@dontkry.com' },
+46 silly install resolved     maintainers: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
+46 silly install resolved     directories: {},
+46 silly install resolved     _shasum: '64fdcba25a635f5b4da1b6ce6f90da0aeb6e3f15',
+46 silly install resolved     _resolved: 'https://registry.npmjs.org/grunt-contrib-watch/-/grunt-contrib-watch-0.6.1.tgz' } ]
+47 info install grunt-contrib-watch@0.6.1 into /Users/shahparshabani/Development/sulu-complete/vendor/sulu/sulu/src/Sulu/Bundle/ContactBundle
+48 info installOne grunt-contrib-watch@0.6.1
+49 verbose installOne of grunt-contrib-watch to /Users/shahparshabani/Development/sulu-complete/vendor/sulu/sulu/src/Sulu/Bundle/ContactBundle not in flight; installing
+50 warn locking Error: EACCES, open '/Users/shahparshabani/.npm/_locks/grunt-contrib-watch-db50e9d892d1b918.lock'
+50 warn locking  /Users/shahparshabani/.npm/_locks/grunt-contrib-watch-db50e9d892d1b918.lock failed { [Error: EACCES, open '/Users/shahparshabani/.npm/_locks/grunt-contrib-watch-db50e9d892d1b918.lock']
+50 warn locking   errno: 3,
+50 warn locking   code: 'EACCES',
+50 warn locking   path: '/Users/shahparshabani/.npm/_locks/grunt-contrib-watch-db50e9d892d1b918.lock' }
+51 verbose stack Error: Attempt to unlock /Users/shahparshabani/Development/sulu-complete/vendor/sulu/sulu/src/Sulu/Bundle/ContactBundle/node_modules/grunt-contrib-watch, which hasn't been locked
+51 verbose stack     at unlock (/usr/local/lib/node_modules/npm/lib/utils/locker.js:66:11)
+51 verbose stack     at cb (/usr/local/lib/node_modules/npm/lib/install.js:929:5)
+51 verbose stack     at /usr/local/lib/node_modules/npm/lib/install.js:933:20
+51 verbose stack     at /usr/local/lib/node_modules/npm/lib/utils/locker.js:40:9
+51 verbose stack     at cb (/usr/local/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
+51 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
+51 verbose stack     at Object.oncomplete (fs.js:107:15)
+52 verbose cwd /Users/shahparshabani/Development/sulu-complete/vendor/sulu/sulu/src/Sulu/Bundle/ContactBundle
+53 error Darwin 13.4.0
+54 error argv "node" "/usr/local/bin/npm" "install" "grunt-contrib-watch"
+55 error node v0.10.33
+56 error npm  v2.1.6
+57 error Attempt to unlock /Users/shahparshabani/Development/sulu-complete/vendor/sulu/sulu/src/Sulu/Bundle/ContactBundle/node_modules/grunt-contrib-watch, which hasn't been locked
+58 error If you need help, you may report this error at:
+58 error     <http://github.com/npm/npm/issues>
+59 verbose exit [ 1, true ]

@@ -174,6 +174,9 @@ define(['app-config'], function(AppConfig) {
 
             items.push(options);
             this.sandbox.emit('sulu.header.set-toolbar', {data: items});
+
+
+
         };
 
     return {
