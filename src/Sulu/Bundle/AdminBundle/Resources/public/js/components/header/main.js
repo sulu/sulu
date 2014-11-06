@@ -353,7 +353,16 @@ define([], function () {
                             this.sandbox.emit('sulu.header.toolbar.save');
                         }.bind(this)
                     },
+                    //todoSH
                     {
+                        id: 'delete',
+                        icon: 'trash-o',
+                        position: 20,
+                        callback: function() {
+                            this.sandbox.emit('sulu.header.toolbar.delete');
+                        }.bind(this)
+                    },//end
+                    /*{
                         icon: 'gear',
                         iconSize: 'large',
                         group: 'left',
@@ -367,7 +376,7 @@ define([], function () {
                                 }.bind(this)
                             }
                         ]
-                    }
+                    }*/
                 ];
             },
 
