@@ -21,7 +21,7 @@ define([], function() {
             addressesSelector: '#addresses'
         },
 
-         setHeaderToolbar = function() {
+        setHeaderToolbar = function() {
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
             });
