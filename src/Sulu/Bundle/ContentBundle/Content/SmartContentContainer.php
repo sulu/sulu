@@ -77,6 +77,18 @@ class SmartContentContainer implements ArrayableInterface
     private $data = null;
 
     /**
+     * contains current page
+     * @var int
+     */
+    private $page;
+
+    /**
+     * indicates data has next page
+     * @var boolean
+     */
+    private $hasNextPage;
+
+    /**
      * true environment is preview
      * @var bool
      */
@@ -187,6 +199,42 @@ class SmartContentContainer implements ArrayableInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Returns current page
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * Set current page
+     * @param int $page
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * Return indicator of next page
+     * @return boolean
+     */
+    public function getHasNextPage()
+    {
+        return $this->hasNextPage;
+    }
+
+    /**
+     * Set next page indicator
+     * @param boolean $hasNextPage
+     */
+    public function setHasNextPage($hasNextPage)
+    {
+        $this->hasNextPage = $hasNextPage;
     }
 
     /**
