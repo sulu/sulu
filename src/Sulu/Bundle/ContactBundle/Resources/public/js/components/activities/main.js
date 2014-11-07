@@ -36,26 +36,12 @@ define(
                         position: 10,
                         callback: this.addOrEditActivity.bind(this)
                     },
-                    //todoSH
                     {
                         id: 'delete',
                         icon: 'trash-o',
                         callback: this.removeActivities.bind(this),
                         disabled: true
-                    },
-                    //end
-                   /* {
-                        id: 'settings',
-                        icon: 'gear',
-                        items: [
-                            {
-                                id: 'delete',
-                                title: this.sandbox.translate('contact.activities.remove'),
-                                callback: this.removeActivities.bind(this),
-                                disabled: true
-                            }
-                        ]
-                    }*/
+                    }
                 ];
             };
 
