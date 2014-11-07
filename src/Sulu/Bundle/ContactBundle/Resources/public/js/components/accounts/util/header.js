@@ -133,7 +133,7 @@ define(['app-config'], function(AppConfig) {
         /**
          * Sets header toolbar with conversion options according to configuration
          */
-            setHeaderToolbar = function(accountType, accountTypes) {
+        setHeaderToolbar = function(accountType, accountTypes) {
 
             var items = [],
                 options = {
@@ -174,9 +174,6 @@ define(['app-config'], function(AppConfig) {
 
             items.push(options);
             this.sandbox.emit('sulu.header.set-toolbar', {data: items});
-
-
-
         };
 
     return {
