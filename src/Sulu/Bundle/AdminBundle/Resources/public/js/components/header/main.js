@@ -353,7 +353,6 @@ define([], function () {
                             this.sandbox.emit('sulu.header.toolbar.save');
                         }.bind(this)
                     },
-                    //todoSH
                     {
                         id: 'delete',
                         icon: 'trash-o',
@@ -361,22 +360,7 @@ define([], function () {
                         callback: function() {
                             this.sandbox.emit('sulu.header.toolbar.delete');
                         }.bind(this)
-                    },//end
-                    /*{
-                        icon: 'gear',
-                        iconSize: 'large',
-                        group: 'left',
-                        id: 'options-button',
-                        position: 30,
-                        items: [
-                            {
-                                title: this.sandbox.translate('toolbar.delete'),
-                                callback: function () {
-                                    this.sandbox.emit('sulu.header.toolbar.delete');
-                                }.bind(this)
-                            }
-                        ]
-                    }*/
+                    },
                 ];
             },
 
