@@ -10,14 +10,14 @@
 
 namespace Sulu\Component\Content;
 
-use Sulu\Component\Content\Exception\PropertyValueServiceNotLoadedException;
+use Sulu\Component\Content\Exception\ContentTypeValuesServiceNotLoadedException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Class PropertyValues
+ * Class ContentTypeValues
  * @package Sulu\Component\Content
  */
-class PropertyValues implements PropertyValuesInterface
+class ContentTypeValues implements ContentTypeValuesInterface
 {
     /**
      * @var $values
@@ -63,7 +63,7 @@ class PropertyValues implements PropertyValuesInterface
 
         if ($this->getType() == self::TYPE_SERVICE) {
             if (!$container) {
-                throw new PropertyValueServiceNotLoadedException('App Container not given to load service "' . $this->serviceName . '"');
+                throw new ContentTypeValuesServiceNotLoadedException('App Container not given to load service "' . $this->serviceName . '"');
             }
             $propertyValues = $this->getServiceValues($container);
         } else {
@@ -88,7 +88,7 @@ class PropertyValues implements PropertyValuesInterface
                 foreach ($attributeValue as $values) {
                     if ($values['values']) {
                         // create PropertyValues
-                        $child = new PropertyValues(
+                        $child = new ContentTypeValues(
                             $values['values'],
                             isset($values['type']) ? $values['type'] : self::TYPE_STATIC,
                             isset($values['id']) ? $values['id'] : null
@@ -111,16 +111,15 @@ class PropertyValues implements PropertyValuesInterface
     /**
      * @param ContainerAware $container
      * @return array
-     * @throws PropertyValueServiceNotLoadedException
+     * @throws ContentTypeValuesServiceNotLoadedException
      */
     private function getServiceValues(ContainerAware $container)
     {
         $service = $container->get($this->serviceName);
-        if (!($service instanceof PropertyValuesServiceInterface)) {
-            throw new PropertyValueServiceNotLoadedException('Service not loaded correctly "' . $this->serviceName . '"');
+        if (!($service instanceof ContentTypeValuesServiceInterface)) {
+            throw new ContentTypeValuesServiceNotLoadedException('Service not loaded correctly "' . $this->serviceName . '"');
         }
         $propertyValues = array();
-        /** @var PropertyValuesInterface $value */
         foreach ($service->getValues($this->values) as $key => $value) {
             $propertyValues[] = $this->createPropertyValue($container, $value);
         }

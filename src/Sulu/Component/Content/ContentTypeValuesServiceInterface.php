@@ -11,10 +11,10 @@
 namespace Sulu\Component\Content;
 
 /**
- * Interface PropertyValuesService
+ * Interface ContentTypeValuesServiceInterface
  * @package Sulu\Component\Content
  */
-interface PropertyValuesServiceInterface
+interface ContentTypeValuesServiceInterface
 {
     /**
      * returns the values for property

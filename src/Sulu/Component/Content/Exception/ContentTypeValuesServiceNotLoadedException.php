@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-class PropertyValueServiceNotLoadedException extends \Exception
+class ContentTypeValuesServiceNotLoadedException extends \Exception
 {
 
 }

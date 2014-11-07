@@ -83,10 +83,16 @@ class Property implements PropertyInterface, \JsonSerializable
     private $value;
 
     /**
-     * property defined values
-     * @var PropertyValuesInterface[]
+     * content type values
+     * @var ContentTypeValuesInterface[]
      */
-    private $values;
+    private $contentTypeValues = array();
+
+    /**
+     * property values
+     * @var PropertyValueInterface[]
+     */
+    private $values = array();
 
     /**
      * @var StructureInterface
@@ -107,6 +113,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $params = array(),
         $tags = array(),
         $col = null,
+        $contentTypeValues = array(),
         $values = array()
     )
     {
@@ -120,6 +127,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags = $tags;
         $this->col = $col;
+        $this->contentTypeValues = $contentTypeValues;
         $this->values = $values;
     }
 
@@ -327,11 +335,31 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * @return PropertyValuesInterface[]
+     * @return ContentTypeValuesInterface[]
+     */
+    public function getContentTypeValues()
+    {
+        return $this->contentTypeValues;
+    }
+
+    /**
+     * returns the property values
+     * @return PropertyValueInterface[]
      */
     public function getValues()
     {
         return $this->values;
+    }
+
+    /**
+     * set the property values
+     * @param PropertyValueInterface[] $values
+     * @return $this
+     */
+    public function setValues($values)
+    {
+        $this->values = $values;
+        return $this;
     }
 
     /**

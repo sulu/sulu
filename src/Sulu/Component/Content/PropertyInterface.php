@@ -137,9 +137,21 @@ interface PropertyInterface extends ArrayableInterface
 
     /**
      * returns the property values
-     * @return PropertyValuesInterface[]
+     * @return ContentTypeValuesInterface[]
+     */
+    public function getContentTypeValues();
+
+    /**
+     * returns the property values
+     * @return PropertyValueInterface[]
      */
     public function getValues();
+
+    /**
+     * set the property values
+     * @param PropertyValueInterface[] $values
+     */
+    public function setValues($values);
 
     /**
      * returns structure

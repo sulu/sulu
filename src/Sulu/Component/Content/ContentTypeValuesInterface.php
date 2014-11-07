@@ -12,10 +12,10 @@ namespace Sulu\Component\Content;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
- * Interface PropertyValuesInterface
+ * Interface ContentTypeValuesInterface
  * @package Sulu\Component\Content
  */
-interface PropertyValuesInterface
+interface ContentTypeValuesInterface
 {
     const TYPE_SERVICE = 'service';
     const TYPE_STATIC = 'static';
