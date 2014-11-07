@@ -41,6 +41,11 @@ interface PropertyValueInterface
     public function setAttribute($name, $value);
 
     /**
+     * @return mixed
+     */
+    public function getAttributes();
+
+    /**
      * @return PropertyValueInterface[]
      */
     public function getChildren();

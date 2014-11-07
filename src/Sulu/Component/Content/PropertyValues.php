@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content;
 
+use Sulu\Component\Content\Exception\PropertyValueServiceNotLoadedException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
@@ -36,7 +37,7 @@ class PropertyValues implements PropertyValuesInterface
 
     public function __construct(
         $values = array(),
-        $type = 'static',
+        $type = self::TYPE_STATIC,
         $serviceName = null
     )
     {
@@ -58,35 +59,72 @@ class PropertyValues implements PropertyValuesInterface
      */
     public function getValues(ContainerAware $container = null)
     {
+        $propertyValues = array();
+
         if ($this->getType() == self::TYPE_SERVICE) {
-            return $this->getServiceValues($container, $this->serviceName, $this->values);
+            if (!$container) {
+                throw new PropertyValueServiceNotLoadedException('App Container not given to load service "' . $this->serviceName . '"');
+            }
+            $propertyValues = $this->getServiceValues($container);
+        } else {
+            foreach ($this->values as $value) {
+                $propertyValues[] = $this->createPropertyValue($container, $value);
+            }
         }
 
-        return $this->values;
+        return $propertyValues;
     }
 
     /**
      * @param ContainerAware $container
-     * @param $serviceName
-     * @param $values
-     * @return array
-     * @throws \Exception
+     * @param $value
+     * @return PropertyValue
      */
-    private function getServiceValues(ContainerAware $container, $serviceName, $values = array())
-    {
-        if (!$container) {
-            throw new \Exception('App Container not given to load service "' . $serviceName . '"');
+    private function createPropertyValue(ContainerAware $container = null, $value) {
+        $propertyValue = new PropertyValue();
+        foreach ($value as $attributeKey => $attributeValue) {
+            if ($attributeKey == 'children') {
+                // get children values
+                foreach ($attributeValue as $values) {
+                    if ($values['values']) {
+                        // create PropertyValues
+                        $child = new PropertyValues(
+                            $values['values'],
+                            isset($values['type']) ? $values['type'] : self::TYPE_STATIC,
+                            isset($values['id']) ? $values['id'] : null
+                        );
+                        // get Values
+                        $childValues = $child->getValues($container);
+                        foreach ($childValues as $childValue) {
+                            $propertyValue->addChildren($childValue);
+                        }
+                    }
+                }
+            } else {
+                $propertyValue->setAttribute($attributeKey, $attributeValue);
+            }
         }
+
+        return $propertyValue;
+    }
+
+    /**
+     * @param ContainerAware $container
+     * @return array
+     * @throws PropertyValueServiceNotLoadedException
+     */
+    private function getServiceValues(ContainerAware $container)
+    {
         $service = $container->get($this->serviceName);
         if (!($service instanceof PropertyValuesServiceInterface)) {
-            throw new \Exception('App Container not given to load service "' . $serviceName . '"');
+            throw new PropertyValueServiceNotLoadedException('Service not loaded correctly "' . $this->serviceName . '"');
         }
-        $params = array();
+        $propertyValues = array();
         /** @var PropertyValuesInterface $value */
-        foreach ($values as $key => $value) {
-            $params[$key] = $value->getValues($container);
+        foreach ($service->getValues($this->values) as $key => $value) {
+            $propertyValues[] = $this->createPropertyValue($container, $value);
         }
-        return $service->getValues($params);
+        return $propertyValues;
     }
 
 } 

@@ -84,7 +84,7 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * property defined values
-     * @var array
+     * @var PropertyValuesInterface[]
      */
     private $values;
 
@@ -118,7 +118,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->name = $name;
         $this->metadata = new Metadata($metaData);
         $this->params = $params;
-        $this->tags =$tags;
+        $this->tags = $tags;
         $this->col = $col;
         $this->values = $values;
     }
@@ -208,6 +208,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * add a property tag
      * @param PropertyTag $tag
+     * @return PropertyTag
      */
     public function addTag(PropertyTag $tag)
     {
@@ -216,6 +217,7 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * return true if a tag with the given name exists
+     * @param string $tagName
      * @return boolean
      */
     public function hasTag($tagName)
@@ -325,11 +327,11 @@ class Property implements PropertyInterface, \JsonSerializable
     }
 
     /**
-     * @return PropertyValueInterface[]
+     * @return PropertyValuesInterface[]
      */
     public function getValues()
     {
-        return array(); // TODO
+        return $this->values;
     }
 
     /**

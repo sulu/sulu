@@ -125,7 +125,7 @@ class TranslatedProperty implements PropertyInterface
 
     /**
      * parameter of property
-     * @return array
+     * @return $this
      */
     public function getParams()
     {

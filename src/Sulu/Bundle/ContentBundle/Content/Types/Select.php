@@ -14,6 +14,7 @@ use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyValueInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -60,7 +61,7 @@ class Select extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = $node->getPropertyValueWithDefault($property->getName(), array());
+        $data = $node->getPropertyValueWithDefault($property->getName(), null);
         $this->setData($data, $property, $webspaceKey, $languageCode);
     }
 
@@ -90,17 +91,61 @@ class Select extends ComplexContentType
      */
     private function setData($data, PropertyInterface $property, $webspaceKey, $languageCode)
     {
-        $property->setValue($this->getDataWithTitles($data, $languageCode));
+        $property->setValue($this->getDataPropertyValues($data, $languageCode, $property));
     }
 
     /**
      * @param array $data
      * @param string $languageCode
+     * @param PropertyInterface $property
      * @return array
      */
-    private function getDataWithTitles($data, $languageCode)
+    private function getDataPropertyValues($data, $languageCode, PropertyInterface $property)
     {
-        return $data;
+        $params = $property->getParams();
+        $valueParam = $params['value'];
+        $valueName = $params['valueName'];
+
+        $propertyValues = array();
+        foreach ($data as $value) {
+            $propertyValue = array();
+            $actualPropertyValue = $this->getSelectedPropertyValue($property->getValues(), $valueParam, $value);
+            $propertyValue[$valueName] = null;
+            if ($actualPropertyValue) {
+                $propertyValue = array_merge(
+                    $actualPropertyValue->getAttributes(),
+                    $actualPropertyValue->getMeta()->getLanguageMeta($languageCode)
+                );
+            }
+            $propertyValue[$valueParam] = $value;
+            $propertyValues[] = $propertyValue;
+        }
+
+        return $propertyValues;
+    }
+
+    /**
+     * @param PropertyValueInterface[] $values
+     * @param $valueParam
+     * @param $search
+     * @return PropertyValueInterface
+     */
+    private function getSelectedPropertyValue($values, $valueParam, $search)
+    {
+        if (!empty($values)) {
+            foreach ($values as $value) {
+                if ($value->getAttribute($valueParam) == $search) {
+                    return $value;
+                } else {
+                    $value = $this->getSelectedPropertyValue($value->getChildren(), $valueParam, $search);
+                    if ($value) {
+                        return $value;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -110,8 +155,9 @@ class Select extends ComplexContentType
     {
         return array(
             'multiple' => false,
-            'preSelected' => array(),
-            'valueName' => 'name',
+            'preSelectedElements' => array(),
+            'valueName' => 'title',
+            'value' => 'id',
             'defaultLabel' => null,
             'icon' => null,
             'style' => null,
@@ -143,28 +189,21 @@ class Select extends ComplexContentType
     ) {
         $value = $property->getValue();
 
-        if ($value instanceof ArrayableInterface) {
-            $value = $value->toArray();
-        }
-
-        // if whole container is pushed
-        if (isset($value['data'])) {
-            unset($value['data']);
-        }
-
-        if (isset($value['ids'])) {
-            // remove not existing ids
-            $session = $node->getSession();
-            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
-            $ids = array();
-            foreach ($selectedNodes as $selectedNode) {
-                $ids[] = $selectedNode->getIdentifier();
+        $params = $this->getParams($property->getParams());
+        if ($params['multiple']) {
+            $saveValue = array();
+            if (isset($value['id'])) {
+                $saveValue[] = $value['id'];
             }
-            $value['ids'] = $ids;
+        } else {
+            $saveValue = null;
+            if (isset($value['id'])) {
+                $saveValue = $value['id'];
+            }
         }
 
-        // set value to node
-        $node->setProperty($property->getName(), json_encode($value));
+        $node->getProperty($property->getName())->remove(); // content type changes
+        $node->setProperty($property->getName(), $saveValue);
     }
 
     /**

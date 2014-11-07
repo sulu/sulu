@@ -137,7 +137,7 @@ interface PropertyInterface extends ArrayableInterface
 
     /**
      * returns the property values
-     * @return array
+     * @return PropertyValuesInterface[]
      */
     public function getValues();
 

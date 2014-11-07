@@ -45,6 +45,26 @@ class Metadata
     }
 
     /**
+     * return the meta from a specific language title not exists it will be null
+     * @param $languageCode
+     * @return array
+     */
+    public function getLanguageMeta($languageCode)
+    {
+        $meta = array();
+
+        foreach ($this->data as $key => $languages) {
+            $value = null;
+            if (isset($languages[$languageCode])) {
+                $value = $languages[$languageCode];
+            }
+            $meta[$key] = $value;
+        }
+
+        return $meta;
+    }
+
+    /**
      * @return array
      */
     public function getData()

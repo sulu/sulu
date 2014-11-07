@@ -367,7 +367,7 @@ class TemplateReader implements LoaderInterface
         foreach ($xpath->query($path, $context) as $node) {
             $id = $node->getAttribute('id');
             $type = $node->getAttribute('type');
-            $type = $type == '' ? 'statics' : $type;
+            $type = $type == '' ? 'static' : $type;
             $result[] = array(
                 'type' => $type,
                 'id' => $id,
