@@ -1,5 +1,6 @@
 <?php
 
+use Symfony\Cmf\Component\Testing\HttpKernel\TestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
@@ -11,7 +12,9 @@ class AppKernel extends SuluTestKernel
         return array_merge(
             parent::registerBundles(),
             array(
-                new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
+                new \Massive\Bundle\SearchBundle\MassiveSearchBundle(),
+                new \Sulu\Bundle\SearchBundle\SuluSearchBundle(),
+                new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle(),
             )
         );
     }
