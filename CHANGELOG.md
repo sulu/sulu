@@ -11,10 +11,11 @@ CHANGELOG for Sulu
     * FEATURE #536 [MediaBundle] Added Configurable display options for media-selection
     * ENHANCEMENT #523 [ContentBundle] Prefix ContentBundle template path
     * FEATURE #511 [SnippetBundle] Ask confirmation when deleting Snippets which are referenced by content
+    * BUG #518 [content] Ordering of page changed when node is renamed
 
 * 0.10.2 (2014-11-07)
 
-  	* HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
+    * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
 
 * 0.10.1 (2014-11-04)
 

@@ -14,6 +14,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\PropertyType;
+use PHPCR\Util\PathHelper;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -63,7 +64,6 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setState(StructureInterface::STATE_PUBLISHED);
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
-        $this->snippet1OriginalPath = $this->session->getNodeByIdentifier($this->snippet1->getUuid())->getPath();
 
         $req = ContentMapperRequest::create()
             ->setType(Structure::TYPE_SNIPPET)
@@ -76,6 +76,32 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setState(StructureInterface::STATE_PUBLISHED);
 
         $this->snippet2 = $this->contentMapper->saveRequest($req);
+
+        $this->snippet1Node = $this->session->getNodeByIdentifier($this->snippet1->getUuid());
+        $this->snippet1OriginalPath = $this->snippet1Node->getPath();
+
+        $req = ContentMapperRequest::create()
+            ->setUuid($this->snippet1->getUuid())
+            ->setType(Structure::TYPE_SNIPPET)
+            ->setTemplateKey('animal')
+            ->setLocale('en')
+            ->setUserId(1)
+            ->setData(array(
+                'title' => 'English ElePHPant',
+            ))
+            ->setState(StructureInterface::STATE_PUBLISHED);
+        $this->contentMapper->saveRequest($req);
+
+        $req = ContentMapperRequest::create()
+            ->setType(Structure::TYPE_SNIPPET)
+            ->setTemplateKey('animal')
+            ->setLocale('en')
+            ->setUserId(1)
+            ->setData(array(
+                'title' => 'Some other animal',
+            ))
+            ->setState(StructureInterface::STATE_PUBLISHED);
+        $this->contentMapper->saveRequest($req);
     }
 
     public function testChangeSnippetTemplate()
@@ -105,19 +131,23 @@ class ContentMapperSnippetTest extends SuluTestCase
 
     public function testRenameSnippet()
     {
+        $originalPosition = $this->getNodePosition($this->snippet1Node);
+
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
-            ->setLocale('de')
+            ->setLocale('en')
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant FOOBAR',
             ));
         $this->contentMapper->saveRequest($req);
-        $node = $this->session->getNode('/cmf/snippets/animal/elephpant');
+        $node = $this->session->getNode('/cmf/snippets/animal/elephpant-foobar');
         $node->getPropertyValue('template');
+
+        $this->assertEquals($originalPosition, $this->getNodePosition($node));
     }
 
     public function testRemoveSnippet()
@@ -253,5 +283,38 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setData(array('title' => 'Foo'));
 
         $this->contentMapper->saveRequest($req);
+    }
+
+    /**
+     * Return the position of the node within the set of its siblings
+     *
+     * @return integer
+     */
+    private function getNodePosition($node)
+    {
+        $path = $node->getPath();
+        $position = null;
+        $parent = $this->session->getNode(PathHelper::getParentPath($path));
+        $nodes = $parent->getNodes();
+
+        $index = 0;
+        foreach ($nodes as $node) {
+            if ($node->getPath() === $path) {
+                $position = $index;
+                break;
+            }
+            $index++;
+        }
+
+        if (null === $position) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Could not find node "%s" as a child of its parent',
+                    $path
+                )
+            );
+        }
+
+        return $position;
     }
 }
