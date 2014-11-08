@@ -181,16 +181,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     {
         try {
             $sql = 'SELECT id FROM (
-                        select me_media.id,
+                        SELECT me_media.id,
                         me_file_versions.name,
                         me_file_versions.created,
                         me_file_versions.version,
                         me_file_versions.idFiles
                         FROM me_media
-                        INNER JOIN me_files on me_files.idMedia = me_media.id
-                        INNER JOIN me_file_versions on me_files.id = me_file_versions.idFiles
+                        INNER JOIN me_files ON me_files.idMedia = me_media.id
+                        INNER JOIN me_file_versions ON me_files.id = me_file_versions.idFiles
                         AND me_file_versions.version = me_files.version
-                        WHERE me_media.idCollections = ' . $collectionId . '
+                        WHERE me_media.idCollections = :collectionId
                         ORDER BY created DESC
                     ) AS media WHERE name = \'' . $filename . '\' GROUP BY name';
 
@@ -201,6 +201,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 $sql,
                 $rsm
             );
+            $query->setParameter('collectionId', $collectionId);
+
             // TODO: Extend ResultSetMapping and remove findMediaById
             $partialMedia = $query->getSingleResult();
             return $this->findMediaById($partialMedia->getId());
@@ -218,14 +220,13 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                     me_file_versions.version,
                     me_file_versions.idFiles
                     FROM me_media
-                    INNER JOIN me_files on me_files.idMedia = me_media.id
-                    INNER JOIN me_file_versions on me_files.id = me_file_versions.idFiles
+                    INNER JOIN me_files ON me_files.idMedia = me_media.id
+                    INNER JOIN me_file_versions ON me_files.id = me_file_versions.idFiles
                     AND me_file_versions.version = me_files.version
-                    WHERE me_media.idCollections = ' . $collectionId . '
+                    WHERE me_media.idCollections = :collectionId
                     ORDER BY created DESC
                 ) AS media GROUP BY name';
 
-        $mediaQuery = $sql . ' LIMIT ' . $limit . ' OFFSET ' . $offset;
         $countQuery = 'SELECT count(id) FROM (' . $sql . ') as count';
         $rsm = new ResultSetMapping;
         $rsm->addScalarResult('count(id)', 'count');
@@ -233,8 +234,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $countQuery,
             $rsm
         );
+        $query->setParameter('collectionId', $collectionId);
         $count = $query->getSingleResult();
 
+        $mediaQuery = $sql . ' LIMIT :limit OFFSET :offset';
         $rsm = new ResultSetMapping;
         $rsm->addEntityResult('Sulu\Bundle\MediaBundle\Entity\Media', 'm');
         $rsm->addFieldResult('m', 'id', 'id');
@@ -242,6 +245,9 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $mediaQuery,
             $rsm
         );
+        $query->setParameter('collectionId', (int)$collectionId);
+        $query->setParameter('limit', (int)$limit);
+        $query->setParameter('offset', (int)$offset);
         return ['media'=>$query->getResult(), 'count'=>$count['count']];
     }
 }
