@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * MediaRepository
@@ -179,23 +180,68 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
     {
         try {
-            $qb = $this->createQueryBuilder('media')
-                ->join('media.files', 'file')
-                ->join('file.fileVersions', 'fileVersion')
-                ->join('media.collection', 'collection')
-                ->orderBy('fileVersion.changed', 'DESC')
-                ->setMaxResults(1)
-                ->where('media.collection = :collectionId')
-                ->andWhere('fileVersion.name = :filename');
+            $sql = 'SELECT id FROM (
+                        select me_media.id,
+                        me_file_versions.name,
+                        me_file_versions.created,
+                        me_file_versions.version,
+                        me_file_versions.idFiles
+                        FROM me_media
+                        INNER JOIN me_files on me_files.idMedia = me_media.id
+                        INNER JOIN me_file_versions on me_files.id = me_file_versions.idFiles
+                        AND me_file_versions.version = me_files.version
+                        WHERE me_media.idCollections = ' . $collectionId . '
+                        ORDER BY created DESC
+                    ) AS media WHERE name = \'' . $filename . '\' GROUP BY name';
 
-            $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-            $query->setParameter('collectionId', $collectionId);
-            $query->setParameter('filename', $filename);
-
-            return $query->getSingleResult();
+            $rsm = new ResultSetMapping;
+            $rsm->addEntityResult('Sulu\Bundle\MediaBundle\Entity\Media', 'm');
+            $rsm->addFieldResult('m', 'id', 'id');
+            $query = $this->getEntityManager()->createNativeQuery(
+                $sql,
+                $rsm
+            );
+            // TODO: Extend ResultSetMapping and remove findMediaById
+            $partialMedia = $query->getSingleResult();
+            return $this->findMediaById($partialMedia->getId());
         } catch (NoResultException $ex) {
             return null;
         }
+    }
+
+    public function findSupplierMedia($collectionId, $limit, $offset)
+    {
+        $sql = 'SELECT id, name FROM (
+                    select me_media.id,
+                    me_file_versions.name,
+                    me_file_versions.created,
+                    me_file_versions.version,
+                    me_file_versions.idFiles
+                    FROM me_media
+                    INNER JOIN me_files on me_files.idMedia = me_media.id
+                    INNER JOIN me_file_versions on me_files.id = me_file_versions.idFiles
+                    AND me_file_versions.version = me_files.version
+                    WHERE me_media.idCollections = ' . $collectionId . '
+                    ORDER BY created DESC
+                ) AS media GROUP BY name';
+
+        $mediaQuery = $sql . ' LIMIT ' . $limit . ' OFFSET ' . $offset;
+        $countQuery = 'SELECT count(id) FROM (' . $sql . ') as count';
+        $rsm = new ResultSetMapping;
+        $rsm->addScalarResult('count(id)', 'count');
+        $query = $this->getEntityManager()->createNativeQuery(
+            $countQuery,
+            $rsm
+        );
+        $count = $query->getSingleResult();
+
+        $rsm = new ResultSetMapping;
+        $rsm->addEntityResult('Sulu\Bundle\MediaBundle\Entity\Media', 'm');
+        $rsm->addFieldResult('m', 'id', 'id');
+        $query = $this->getEntityManager()->createNativeQuery(
+            $mediaQuery,
+            $rsm
+        );
+        return ['media'=>$query->getResult(), 'count'=>$count['count']];
     }
 }
