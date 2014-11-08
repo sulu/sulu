@@ -20,57 +20,57 @@ class Category implements CategoryInterface
     /**
      * @var integer|string
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $key;
+    protected $key;
 
     /**
      * @var Collection
      */
-    private $meta;
+    protected $meta;
 
     /**
      * @var Collection
      */
-    private $translations;
+    protected $translations;
 
     /**
      * @var Collection
      */
-    private $children;
+    protected $children;
 
     /**
      * @var CategoryInterface
      */
-    private $parent;
+    protected $parent;
 
     /**
      * @var integer
      */
-    private $depth;
+    protected $depth;
 
     /**
      * @var \DateTime
      */
-    private $created;
+    protected $created;
 
     /**
      * @var \DateTime
      */
-    private $changed;
+    protected $changed;
 
     /**
      * @var UserInterface
      */
-    private $creator;
+    protected $creator;
 
     /**
      * @var UserInterface
      */
-    private $changer;
+    protected $changer;
 
     /**
      * Constructor

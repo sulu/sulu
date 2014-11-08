@@ -10,10 +10,13 @@
 
 namespace Sulu\Component\Category\Exception;
 
-class CategoryKeyAlreadyExistsException extends CategoryException
+class CategoryException extends \Exception
 {
-    public function __construct()
+    public function toArray()
     {
-        parent::__construct('The given category key already exits!', CategoryExceptions::CODE_KEY_ALREADY_EXITS);
+        return array(
+            'code' => $this->code,
+            'message' => $this->message
+        );
     }
 }
