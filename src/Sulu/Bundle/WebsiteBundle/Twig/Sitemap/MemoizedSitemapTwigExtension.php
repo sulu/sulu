@@ -25,7 +25,7 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     /**
      * @var MemoizeInterface
      */
-    private $memoize;
+    private $memoizeCache;
 
     /**
      * @var int
@@ -35,10 +35,10 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
     /**
      * Constructor
      */
-    function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoize, $lifeTime)
+    function __construct(SitemapTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
-        $this->memoize = $memoize;
+        $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
     }
 
@@ -63,7 +63,7 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
      */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
-        return $this->memoize->memoize(array($this->extension, 'sitemapUrlFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'sitemapUrlFunction'), $this->lifeTime);
     }
 
     /**
@@ -71,6 +71,6 @@ class MemoizedSitemapTwigExtension extends \Twig_Extension implements SitemapTwi
      */
     public function sitemapFunction($locale = null, $webspaceKey = null)
     {
-        return $this->memoize->memoize(array($this->extension, 'sitemapFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'sitemapFunction'), $this->lifeTime);
     }
 }

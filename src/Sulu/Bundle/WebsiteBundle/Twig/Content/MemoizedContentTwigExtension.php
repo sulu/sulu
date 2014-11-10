@@ -25,7 +25,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     /**
      * @var MemoizeInterface
      */
-    private $memoize;
+    private $memoizeCache;
 
     /**
      * @var int
@@ -35,10 +35,10 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     /**
      * Constructor
      */
-    function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoize, $lifeTime)
+    function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
-        $this->memoize = $memoize;
+        $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
     }
 
@@ -47,7 +47,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
      */
     public function loadParent($uuid)
     {
-        return $this->memoize->memoize(array($this->extension, 'loadParent'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'loadParent'), $this->lifeTime);
     }
 
     /**
@@ -55,7 +55,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
      */
     public function load($uuid)
     {
-        return $this->memoize->memoize(array($this->extension, 'load'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'load'), $this->lifeTime);
    }
 
     /**

@@ -25,7 +25,7 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     /**
      * @var MemoizeInterface
      */
-    private $memoize;
+    private $memoizeCache;
 
     /**
      * @var int
@@ -35,10 +35,10 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
     /**
      * Constructor
      */
-    function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoize, $lifeTime)
+    function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
-        $this->memoize = $memoize;
+        $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
     }
 
@@ -63,6 +63,6 @@ class MemoizedSnippetTwigExtension extends \Twig_Extension implements SnippetTwi
      */
     public function loadSnippet($uuid, $locale = null)
     {
-        return $this->memoize->memoize(array($this->extension, 'loadSnippet'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'loadSnippet'), $this->lifeTime);
     }
 }

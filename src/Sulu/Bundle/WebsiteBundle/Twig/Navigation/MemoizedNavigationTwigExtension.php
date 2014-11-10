@@ -25,7 +25,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     /**
      * @var MemoizeInterface
      */
-    private $memoize;
+    private $memoizeCache;
 
     /**
      * @var int
@@ -35,10 +35,10 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     /**
      * Constructor
      */
-    function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoize, $lifeTime)
+    function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
     {
         $this->extension = $extension;
-        $this->memoize = $memoize;
+        $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;
     }
 
@@ -47,7 +47,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        return $this->memoize->memoize(array($this->extension, 'flatRootNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'flatRootNavigationFunction'), $this->lifeTime);
     }
 
     /**
@@ -55,7 +55,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        return $this->memoize->memoize(array($this->extension, 'treeRootNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'treeRootNavigationFunction'), $this->lifeTime);
     }
 
     /**
@@ -63,7 +63,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
-        return $this->memoize->memoize(array($this->extension, 'treeNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'treeNavigationFunction'), $this->lifeTime);
     }
 
     /**
@@ -71,7 +71,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
-        return $this->memoize->memoize(array($this->extension, 'flatNavigationFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'flatNavigationFunction'), $this->lifeTime);
     }
 
     /**
@@ -79,7 +79,7 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
      */
     public function breadcrumbFunction($uuid)
     {
-        return $this->memoize->memoize(array($this->extension, 'breadcrumbFunction'), $this->lifeTime);
+        return $this->memoizeCache->memoize(array($this->extension, 'breadcrumbFunction'), $this->lifeTime);
     }
 
     /**
