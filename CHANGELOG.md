@@ -1,9 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
-* [UNRELEASED]
+* 0.10.2
 
-    * ...
+    * HOTFIX #509 [SuluContentBundle] Fixed cached data bug in smart-content
 
 * 0.10.1 (2014-11-04)
 
