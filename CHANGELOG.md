@@ -5,12 +5,11 @@ CHANGELOG for Sulu
 
     * ENHANCEMENT #361 Read urls for pages in all languages
     * ENHANCEMENT #528 Added memoize service to cache data and use it in twig extension
-    * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
     * ENHANCEMENT #523 [ContentBundle] Prefix contentbundle template path
 
 * 0.10.2 (2014-11-07)
 
-  	* HOTFIX #509 [SuluContentBundle] Fixed cached data bug in smart-content
+  	* HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
 
 * 0.10.1 (2014-11-04)
 * 0.10.0 (2014-11-03)
