@@ -37,6 +37,12 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('cache_lifetime')->defaultValue(600)->end()
                         ->end()
                     ->end()
+                    ->arrayNode('content')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('cache_lifetime')->defaultValue(1)->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end();
 
