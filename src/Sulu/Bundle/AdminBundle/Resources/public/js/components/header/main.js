@@ -346,7 +346,7 @@ define([], function () {
                         icon: 'floppy-o',
                         iconSize: 'large',
                         class: 'highlight',
-                        position: 1,
+                        position: 10,
                         group: 'left',
                         disabled: true,
                         callback: function () {
@@ -361,6 +361,11 @@ define([], function () {
                             this.sandbox.emit('sulu.header.toolbar.delete');
                         }.bind(this)
                     },
+                    {
+                        id: 'settings',
+                        icon: 'magic',
+                        position: 30
+                    }
                 ];
             },
 
