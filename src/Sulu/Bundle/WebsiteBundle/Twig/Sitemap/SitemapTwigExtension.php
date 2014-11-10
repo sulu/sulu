@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Twig;
+namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -16,7 +16,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Provides twig functions for sitemap
- * @package Sulu\Bundle\WebsiteBundle\Twig
  */
 class SitemapTwigExtension extends \Twig_Extension
 {
