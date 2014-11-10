@@ -33,6 +33,7 @@ use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -519,7 +520,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * Prepares data
      *
      * @param UploadedFile $uploadedFile
-     * @param List $data
+     * @param Array $data
      * @param User $user
      */
     private function buildData($uploadedFile, $data, $user)
@@ -598,13 +599,10 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param File|null $uploadedFile
      * @return object
      */
-    protected function getMediaType(\Symfony\Component\HttpFoundation\File\File $uploadedFile)
+    protected function getMediaType(SymfonyFile $file)
     {
-        $mimeType = $uploadedFile->getMimeType();
-        $id = null;
-
         foreach ($this->mediaTypes as $mediaType) {
-            if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
+            if (in_array($file->getMimeType(), $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $name = $mediaType['type'];
             }
         }
