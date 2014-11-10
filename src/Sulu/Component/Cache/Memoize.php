@@ -23,11 +23,17 @@ class Memoize implements MemoizeInterface
     protected $cache;
 
     /**
+     * @var int
+     */
+    protected $defaultLifeTime;
+
+    /**
      * Constructor
      */
-    function __construct(Cache $cache)
+    function __construct(Cache $cache, $defaultLifeTime)
     {
         $this->cache = $cache;
+        $this->defaultLifeTime = $defaultLifeTime;
     }
 
     /**
@@ -59,6 +65,12 @@ class Memoize implements MemoizeInterface
      */
     public function memoizeById($id, $parameter, $compute, $lifeTime = null)
     {
+        // determine lifetime
+        if ($lifeTime === null) {
+            $lifeTime = $this->defaultLifeTime;
+        }
+
+        // determine cache key
         $id = md5(sprintf('%s(%s)', $id, serialize($parameter)));
 
         // memoize pattern: save result for arguments once and

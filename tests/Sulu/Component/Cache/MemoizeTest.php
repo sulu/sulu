@@ -26,13 +26,18 @@ class MemoizeTest extends ProphecyTestCase
      */
     private $cache;
 
+    /**
+     * @var int
+     */
+    private $defaultLifeTime = 600;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->cache = $this->prophesize('Doctrine\Common\Cache\Cache');
 
-        $this->mem = new Memoize($this->cache->reveal());
+        $this->mem = new Memoize($this->cache->reveal(), $this->defaultLifeTime);
     }
 
     public function testMemoizeFirstCall()
@@ -52,10 +57,43 @@ class MemoizeTest extends ProphecyTestCase
         $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
         $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
 
-        $this->cache->save($id12, 3, null)->willReturn(null);
+        $this->cache->save($id12, 3, $this->defaultLifeTime)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
 
-        $this->cache->save($id23, 5, null)->willReturn(null);
+        $this->cache->save($id23, 5, $this->defaultLifeTime)->willReturn(null);
+        $this->cache->contains($id23)->willReturn(false);
+
+        $v1 = $closure(1, 2);
+        $v2 = $closure(2, 3);
+
+        $this->assertEquals(3, $v1);
+        $this->assertEquals(5, $v2);
+
+        $this->assertEquals(2, $called);
+    }
+
+    public function testMemoizeFirstCallWithLifeTime()
+    {
+        $mem = $this->mem;
+        $called = 0;
+        $closure = function ($a, $b) use ($mem, &$called) {
+            return $mem->memoize(
+                function ($a, $b) use (&$called) {
+                    $called++;
+
+                    return $a + $b;
+                },
+                100
+            );
+        };
+
+        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
+        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
+
+        $this->cache->save($id12, 3, 100)->willReturn(null);
+        $this->cache->contains($id12)->willReturn(false);
+
+        $this->cache->save($id23, 5, 100)->willReturn(null);
         $this->cache->contains($id23)->willReturn(false);
 
         $v1 = $closure(1, 2);
@@ -118,10 +156,45 @@ class MemoizeTest extends ProphecyTestCase
         $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
         $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
 
-        $this->cache->save($id12, 3, null)->willReturn(null);
+        $this->cache->save($id12, 3, $this->defaultLifeTime)->willReturn(null);
         $this->cache->contains($id12)->willReturn(false);
 
-        $this->cache->save($id23, 5, null)->willReturn(null);
+        $this->cache->save($id23, 5, $this->defaultLifeTime)->willReturn(null);
+        $this->cache->contains($id23)->willReturn(false);
+
+        $v1 = $closure(1, 2);
+        $v2 = $closure(2, 3);
+
+        $this->assertEquals(3, $v1);
+        $this->assertEquals(5, $v2);
+
+        $this->assertEquals(2, $called);
+    }
+
+    public function testMemoizeByIdFirstCallWithLifeTime()
+    {
+        $mem = $this->mem;
+        $called = 0;
+        $closure = function ($a, $b) use ($mem, &$called) {
+            return $mem->memoizeById(
+                'mem',
+                array($a, $b),
+                function ($a, $b) use (&$called) {
+                    $called++;
+
+                    return $a + $b;
+                },
+                100
+            );
+        };
+
+        $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
+        $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
+
+        $this->cache->save($id12, 3, 100)->willReturn(null);
+        $this->cache->contains($id12)->willReturn(false);
+
+        $this->cache->save($id23, 5, 100)->willReturn(null);
         $this->cache->contains($id23)->willReturn(false);
 
         $v1 = $closure(1, 2);
