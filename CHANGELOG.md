@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * ENHANCEMENT #526 [WebsiteBundle] Added Template var to resolver (Twig-Template)
     * ENHANCEMENT #361 [WebsiteBundle] Read urls for pages in all languages
     * ENHANCEMENT #528 [WebsiteBundle] Added memoize service to cache data and use it in twig extension
     * ENHANCEMENT #523 [ContentBundle] Prefix ContentBundle template path

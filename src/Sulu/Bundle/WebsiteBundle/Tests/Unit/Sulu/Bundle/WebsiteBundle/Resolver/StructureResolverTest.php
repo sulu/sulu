@@ -85,6 +85,7 @@ class StructureResolverTest extends ProphecyTestCase
             'changer' => 1,
             'created' => 'date',
             'changed' => 'date',
+            'template' => 'test',
             'urls' => array('en' => '/description', 'de' => '/beschreibung', 'es' => null)
         );
 
