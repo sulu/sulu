@@ -596,13 +596,14 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param File|null $uploadedFile
+     * @param SymfonyFile|null $uploadedFile
      * @return object
      */
     protected function getMediaType(SymfonyFile $file)
     {
+        $mimeType = $file->getMimeType();
         foreach ($this->mediaTypes as $mediaType) {
-            if (in_array($file->getMimeType(), $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
+            if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $name = $mediaType['type'];
             }
         }
