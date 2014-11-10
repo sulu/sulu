@@ -620,7 +620,7 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey
             );
 
-            $this->loadAllUrls($structure, $node, $webspaceKey, null);
+            $this->loadLocalizedUrlsForPage($structure, $node, $webspaceKey, null);
         }
 
         // throw an content.node.save event
@@ -1354,7 +1354,7 @@ class ContentMapper implements ContentMapperInterface
                 $loadGhostContent
             );
 
-            $this->loadAllUrls($structure, $contentNode, $webspaceKey, null);
+            $this->loadLocalizedUrlsForPage($structure, $contentNode, $webspaceKey, null);
         }
 
         // throw an content.node.load event (disabled for now)
@@ -1497,24 +1497,33 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * Loads urls for given page for all locales in webspace
+     * @param Page $page
+     * @param NodeInterface $node
+     * @param string $webspaceKey
+     * @param string $segmentKey
      */
-    private function loadAllUrls(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    private function loadLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
     {
-        $result = array();
+        $localizedUrls = array();
 
         if ($page->hasTag('sulu.rlp')) {
-            $result = $this->getAllUrls($page, $node, $webspaceKey, $segmentKey);
+            $localizedUrls = $this->getLocalizedUrlsForPage($page, $node, $webspaceKey, $segmentKey);
         }
 
-        $page->setUrls($result);
+        $page->setUrls($localizedUrls);
     }
 
     /**
      * Returns urls for given page for all locales in webspace
+     * @param Page $page
+     * @param NodeInterface $node
+     * @param string $webspaceKey
+     * @param string $segmentKey
+     * @return array
      */
-    private function getAllUrls(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    private function getLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
     {
-        $result = array();
+        $localizedUrls = array();
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $property = clone($page->getPropertyByTagName('sulu.rlp'));
 
@@ -1529,10 +1538,10 @@ class ContentMapper implements ContentMapperInterface
             $property->setValue(null);
             $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
 
-            $result[$locale] = $property->getValue();
+            $localizedUrls[$locale] = $property->getValue();
         }
 
-        return $result;
+        return $localizedUrls;
     }
 
     /**
@@ -2039,7 +2048,7 @@ class ContentMapper implements ContentMapperInterface
                         'creator' => $creator,
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
-                        'urls' => $this->getAllUrls($structure, $node, $webspaceKey, null),
+                        'urls' => $this->getLocalizedUrlsForPage($structure, $node, $webspaceKey, null),
                         'locale' => $locale,
                         'webspaceKey' => $key,
                         'template' => $templateKey,
