@@ -57,7 +57,7 @@ interface ResourceLocatorInterface extends ContentTypeInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param string $segmentKey
-     * @return mixed
+     * @return ResourceLocatorInformation[]
      */
     public function loadHistoryByUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
