@@ -7,6 +7,7 @@
         <parameter key="sulu_core.cache.memoize.cache.class">Doctrine\Common\Cache\ArrayCache</parameter>
         <parameter key="sulu_core.cache.memoize.class">Sulu\Component\Cache\Memoize</parameter>
     </parameters>
+
     <services>
         <service id="sulu_core.cache.memoize.cache" class="%sulu_core.cache.memoize.cache.class%"/>
 

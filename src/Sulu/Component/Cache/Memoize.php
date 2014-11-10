@@ -63,7 +63,7 @@ class Memoize implements MemoizeInterface
     /**
      * {@inheritdoc}
      */
-    public function memoizeById($id, $parameter, $compute, $lifeTime = null)
+    public function memoizeById($id, $arguments, $compute, $lifeTime = null)
     {
         // determine lifetime
         if ($lifeTime === null) {
@@ -71,14 +71,14 @@ class Memoize implements MemoizeInterface
         }
 
         // determine cache key
-        $id = md5(sprintf('%s(%s)', $id, serialize($parameter)));
+        $id = md5(sprintf('%s(%s)', $id, serialize($arguments)));
 
         // memoize pattern: save result for arguments once and
         // return the value from cache if it is called more than once
         if ($this->cache->contains($id)) {
             return $this->cache->fetch($id);
         } else {
-            $value = call_user_func_array($compute, $parameter);
+            $value = call_user_func_array($compute, $arguments);
             $this->cache->save($id, $value, $lifeTime);
 
             return $value;

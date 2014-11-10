@@ -95,7 +95,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initHttpCache($config['http_cache'], $container, $loader);
         }
 
-        // Http Cache
+        // Cache
         if (isset($config['cache'])) {
             $this->initCache($config['cache'], $container, $loader);
         }
