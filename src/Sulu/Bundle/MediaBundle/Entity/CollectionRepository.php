@@ -118,7 +118,7 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
                 ->addSelect('media');
 
             if($sortBy !== null){
-                $qb->addOrderBy($sortBy, $sortOrder);
+                $qb->addOrderBy('collectionMeta.' . $sortBy, $sortOrder);
             }
             if ($parent !== null) {
                 $qb->where('parent.id = :parent');
