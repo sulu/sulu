@@ -27,6 +27,11 @@ class Memoize
         $this->cache = $cache;
     }
 
+    /**
+     * Returns (cached) value
+     * @param callable $value
+     * @return mixed
+     */
     public function get($value)
     {
         $callers = debug_backtrace();
