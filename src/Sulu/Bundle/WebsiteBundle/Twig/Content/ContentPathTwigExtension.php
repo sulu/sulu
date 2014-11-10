@@ -66,19 +66,19 @@ class ContentPathTwigExtension extends \Twig_Extension
      * generates real url for given content
      * @param string $url
      * @param string $webspaceKey
+     * @param string $locale
      * @return string
      */
-    public function contentPathFunction($url, $webspaceKey = null)
+    public function contentPathFunction($url, $webspaceKey = null, $locale = null)
     {
         if (
             $webspaceKey !== null &&
-            $this->requestAnalyzer &&
-            $this->requestAnalyzer->getCurrentWebspace()->getKey() !== $webspaceKey
+            $this->requestAnalyzer
         ) {
             $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
                 $url,
                 $this->environment,
-                $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 $webspaceKey
             );
 

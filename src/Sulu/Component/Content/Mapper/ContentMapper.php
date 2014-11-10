@@ -35,6 +35,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -618,6 +619,8 @@ class ContentMapper implements ContentMapperInterface
                 $languageCode,
                 $webspaceKey
             );
+
+            $this->loadLocalizedUrlsForPage($structure, $node, $webspaceKey, null);
         }
 
         // throw an content.node.save event
@@ -1350,6 +1353,8 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $loadGhostContent
             );
+
+            $this->loadLocalizedUrlsForPage($structure, $contentNode, $webspaceKey, null);
         }
 
         // throw an content.node.load event (disabled for now)
@@ -1488,6 +1493,56 @@ class ContentMapper implements ContentMapperInterface
         ksort($result);
 
         return $result;
+    }
+
+    /**
+     * Loads urls for given page for all locales in webspace
+     * @param Page $page
+     * @param NodeInterface $node
+     * @param string $webspaceKey
+     * @param string $segmentKey
+     */
+    private function loadLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    {
+        $localizedUrls = array();
+
+        if ($page->hasTag('sulu.rlp')) {
+            $localizedUrls = $this->getLocalizedUrlsForPage($page, $node, $webspaceKey, $segmentKey);
+        }
+
+        $page->setUrls($localizedUrls);
+    }
+
+    /**
+     * Returns urls for given page for all locales in webspace
+     * @param Page $page
+     * @param NodeInterface $node
+     * @param string $webspaceKey
+     * @param string $segmentKey
+     * @return array
+     */
+    private function getLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    {
+        $localizedUrls = array();
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $property = $page->getPropertyByTagName('sulu.rlp');
+        $property = clone $property;
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            // prepare translation vars
+            $locale = $localization->getLocalization();
+            $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
+
+            // set default value
+            $property->setValue(null);
+            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+            $localizedUrls[$locale] = $property->getValue();
+        }
+
+        return $localizedUrls;
     }
 
     /**
@@ -1994,6 +2049,7 @@ class ContentMapper implements ContentMapperInterface
                         'creator' => $creator,
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
+                        'urls' => $this->getLocalizedUrlsForPage($structure, $node, $webspaceKey, null),
                         'locale' => $locale,
                         'webspaceKey' => $key,
                         'template' => $templateKey,

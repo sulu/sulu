@@ -33,6 +33,7 @@ use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -83,7 +84,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * @var StorageInterface
      */
-    private $storage;
+    protected $storage;
 
     /**
      * @var UserRepositoryInterface
@@ -396,7 +397,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (isset($data['id'])) {
             $media = $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
         } else {
-            $media = $this->createMedia($uploadedFile, $data, $this->getUser($userId));
+            $media = $this->buildData($uploadedFile, $data, $this->getUser($userId));
         }
 
         return $this->addFormatsAndUrl($media);
@@ -516,14 +517,13 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * Create a new media
+     * Prepares data
+     *
      * @param UploadedFile $uploadedFile
-     * @param $data
-     * @param UserInterface $user
-     * @return MediaEntity
-     * @throws InvalidFileException
+     * @param Array $data
+     * @param User $user
      */
-    private function createMedia($uploadedFile, $data, $user)
+    private function buildData($uploadedFile, $data, $user)
     {
         if (!($uploadedFile instanceof UploadedFile)) {
             throw new InvalidFileException('given uploadfile is not of instance UploadFile');
@@ -542,7 +542,19 @@ class DefaultMediaManager implements MediaManagerInterface
         $data['type'] = array(
             'id' => $this->getMediaType($uploadedFile)
         );
+        return $this->createMedia($data, $user);
+    }
 
+    /**
+     * Create a new media
+     * @param UploadedFile $uploadedFile
+     * @param $data
+     * @param UserInterface $user
+     * @return MediaEntity
+     * @throws InvalidFileException
+     */
+    protected function createMedia($data, $user)
+    {
         $mediaEntity = new MediaEntity();
         $mediaEntity->setCreator($user);
         $mediaEntity->setChanger($user);
@@ -584,14 +596,12 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param UploadedFile|null $uploadedFile
+     * @param SymfonyFile|null $uploadedFile
      * @return object
      */
-    protected function getMediaType(UploadedFile $uploadedFile)
+    protected function getMediaType(SymfonyFile $file)
     {
-        $mimeType = $uploadedFile->getMimeType();
-        $id = null;
-
+        $mimeType = $file->getMimeType();
         foreach ($this->mediaTypes as $mediaType) {
             if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $name = $mediaType['type'];
