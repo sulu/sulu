@@ -7,6 +7,7 @@
         <parameter key="sulu_snippet.repository.class">Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository</parameter>
         <parameter key="sulu_snippet.controller.snippet.class">Sulu\Bundle\SnippetBundle\Controller\SnippetController</parameter>
         <parameter key="sulu_snippet.twig.snippet.class">Sulu\Bundle\SnippetBundle\Twig\SnippetTwigExtension</parameter>
+        <parameter key="sulu_snippet.twig.snippet.memoized.class">Sulu\Bundle\SnippetBundle\Twig\MemoizedSnippetTwigExtension</parameter>
     </parameters>
 
     <services>
@@ -28,6 +29,11 @@
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.resolver.structure"/>
+        </service>
+        <service id="sulu_snippet.twig.snippet.memoized" class="%sulu_snippet.twig.snippet.memoized.class%">
+            <argument type="service" id="sulu_snippet.twig.snippet"/>
+            <argument type="service" id="sulu_core.cache.memoize"/>
+            <argument type="string">%sulu_snippet.twig.snippet.cache_lifetime%</argument>
 
             <tag name="twig.extension"/>
         </service>
