@@ -35,10 +35,11 @@ class MemoizedNavigationTwigExtension extends \Twig_Extension implements Navigat
     /**
      * Constructor
      */
-    function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoize, $navigationLifeTime)
+    function __construct(NavigationTwigExtensionInterface $extension, MemoizeInterface $memoize, $lifeTime)
     {
         $this->extension = $extension;
         $this->memoize = $memoize;
+        $this->lifeTime = $lifeTime;
     }
 
     /**
