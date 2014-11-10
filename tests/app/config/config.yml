@@ -44,9 +44,6 @@ sulu_core:
                      path: %kernel.root_dir%/Resources/snippets
                      internal: false
                      type: snippet
-                 bundle:
-                     path: %kernel.root_dir%/../../Content/templates
-                     internal: true
     webspace:
         request_analyzer:
             enabled: true

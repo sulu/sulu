@@ -10,6 +10,8 @@ CHANGELOG for Sulu
 		* Added hreflang tag to the `sitemap.xml` file
 		* Updated Example:
 			* Default Theme uses the urls var to generate alternative url tag and langauge-chooser
+    * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
+    * ENHANCEMENT #523 [ContentBundle] Prefix contentbundle template path
 
 * 0.10.2 (2014-11-07)
 
