@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * 0.10.2
 
     * HOTFIX #509 [SuluContentBundle] Fixed cached data bug in smart-content
+    * FEATURE #526 [SuluWebsiteBundle] Adde Template var to resolver (Twig-Template)
 
 * 0.10.1 (2014-11-04)
 
