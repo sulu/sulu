@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                         expand: true, 
                         cwd: 'Resources/public', 
                         src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../web/bundles/sululocation/'
+                        dest: '../../../../../../../web/bundles/sululocation/'
                     }
                 ]
             },
@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                         expand: true, 
                         cwd: 'Resources/public_dev', 
                         src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../web/bundles/sululocation/'
+                        dest: '../../../../../../../web/bundles/sululocation/'
                     }
                 ]
             },
@@ -73,7 +73,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         dot: true,
-                        src: ['../../../../../../web/bundles/sululocation/']
+                        src: ['../../../../../../../web/bundles/sululocation/']
                     }
                 ]
             }
