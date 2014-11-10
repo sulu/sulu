@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* [UNRELEASED]
+
+	* BUGFIX #529 [SuluMediaBundle] Added sorted Collections in overlay
+
 * 0.10.2
 
     * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
