@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 /**
  * Provides twig functions for sitemap
  */
-class SitemapTwigExtension extends \Twig_Extension
+class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -63,7 +63,7 @@ class SitemapTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns prefixed resourcelocator with the url and locale
+     * {@inheritdoc}
      */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
@@ -91,7 +91,7 @@ class SitemapTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns full sitemap of webspace and language from the content
+     * {@inheritdoc}
      */
     public function sitemapFunction($locale = null, $webspaceKey = null)
     {

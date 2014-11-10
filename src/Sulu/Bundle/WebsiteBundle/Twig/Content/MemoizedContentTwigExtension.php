@@ -65,4 +65,12 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     {
         return $this->extension->getName();
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions()
+    {
+        return $this->extension->getFunctions();
+    }
 }

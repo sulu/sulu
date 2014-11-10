@@ -11,6 +11,7 @@
         <parameter key="sulu_website.twig.navigation.class">Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension</parameter>
         <parameter key="sulu_website.twig.navigation.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Navigation\MemoizedNavigationTwigExtension</parameter>
         <parameter key="sulu_website.twig.sitemap.class">Sulu\Bundle\WebsiteBundle\Twig\Sitemap\SitemapTwigExtension</parameter>
+        <parameter key="sulu_website.twig.sitemap.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Sitemap\MemoizedSitemapTwigExtension</parameter>
         <parameter key="sulu_website.twig.content.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension</parameter>
         <parameter key="sulu_website.twig.content.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtension</parameter>
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
@@ -83,6 +84,11 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+        </service>
+        <service id="sulu_website.twig.sitemap.memoized" class="%sulu_website.twig.sitemap.memoized.class%">
+            <argument type="service" id="sulu_website.twig.sitemap"/>
+            <argument type="service" id="sulu_core.cache.memoize"/>
+            <argument type="string">%sulu_website.sitemap.cache.lifetime%</argument>
 
             <tag name="twig.extension"/>
         </service>
