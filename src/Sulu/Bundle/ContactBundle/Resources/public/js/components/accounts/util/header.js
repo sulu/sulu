@@ -158,7 +158,7 @@ define(['app-config'], function(AppConfig) {
                 }.bind(this)
             });
 
-             // delete button
+            // delete button
             items.push({
                 id: 'delete',
                 icon: 'trash-o',
