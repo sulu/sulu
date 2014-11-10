@@ -30,8 +30,8 @@ define(
                 return [
                     {
                         id: 'add',
-                        icon: 'plus-circle',
-                        class: 'highlight-white',
+                        icon: 'floppy-o',
+                        class: 'highlight',
                         title: 'add',
                         position: 10,
                         callback: this.addOrEditActivity.bind(this)
@@ -39,7 +39,14 @@ define(
                     {
                         id: 'delete',
                         icon: 'trash-o',
+                        position: 20,
                         callback: this.removeActivities.bind(this),
+                        disabled: true
+                    },
+                    {
+                        id: 'settings',
+                        icon: 'magic',
+                        position: 30,
                         disabled: true
                     }
                 ];
