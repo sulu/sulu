@@ -12,8 +12,9 @@ namespace Sulu\Component\Cache;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use Prophecy\PhpUnit\ProphecyTestCase;
 
-class MemoizeTest extends \PHPUnit_Framework_TestCase
+class MemoizeTest extends ProphecyTestCase
 {
     /**
      * @var MemoizeInterface
@@ -27,17 +28,20 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->cache = new ArrayCache();
-        $this->mem = new Memoize($this->cache);
+        parent::setUp();
+
+        $this->cache = $this->prophesize('Doctrine\Common\Cache\Cache');
+
+        $this->mem = new Memoize($this->cache->reveal());
     }
 
-    public function testMemoize()
+    public function testMemoizeFirstCall()
     {
         $mem = $this->mem;
         $called = 0;
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoize(
-                function () use ($a, $b, &$called) {
+                function ($a, $b) use (&$called) {
                     $called++;
 
                     return $a + $b;
@@ -45,40 +49,98 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
+        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
+        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
+
+        $this->cache->save($id12, 3, null)->willReturn(null);
+        $this->cache->contains($id12)->willReturn(false);
+
+        $this->cache->save($id23, 5, null)->willReturn(null);
+        $this->cache->contains($id23)->willReturn(false);
+
         $v1 = $closure(1, 2);
-        $id12 = sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2)));
-        $this->assertTrue($this->cache->contains(md5($id12)));
-        $this->assertEquals(3, $this->cache->fetch(md5($id12)));
-        $v2 = $closure(1, 2);
+        $v2 = $closure(2, 3);
 
         $this->assertEquals(3, $v1);
-        $this->assertEquals(3, $v2);
-
-        $this->assertEquals(1, $called);
-
-        $v1 = $closure(2, 3);
-        $id23 = sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3)));
-        $this->assertTrue($this->cache->contains(md5($id12)));
-        $this->assertTrue($this->cache->contains(md5($id23)));
-        $this->assertEquals(3, $this->cache->fetch(md5($id12)));
-        $this->assertEquals(5, $this->cache->fetch(md5($id23)));
-        $v2 = $closure(2, 3);
-        $v3 = $closure(1, 2);
-
-        $this->assertEquals(5, $v1);
         $this->assertEquals(5, $v2);
-        $this->assertEquals(3, $v3);
 
         $this->assertEquals(2, $called);
     }
 
-    public function testMemoizeById()
+    public function testMemoizeSecondCall()
+    {
+        $mem = $this->mem;
+        $called = 0;
+        $closure = function ($a, $b) use ($mem, &$called) {
+            return $mem->memoize(
+                function ($a, $b) use (&$called) {
+                    $called++;
+
+                    return $a + $b;
+                }
+            );
+        };
+
+        $id12 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(1, 2))));
+        $id23 = md5(sprintf('%s::%s(%s)', __CLASS__, 'Sulu\Component\Cache\{closure}', serialize(array(2, 3))));
+
+        $this->cache->fetch($id12)->wilLReturn(3);
+        $this->cache->contains($id12)->willReturn(true);
+
+        $this->cache->fetch($id23)->wilLReturn(5);
+        $this->cache->contains($id23)->willReturn(true);
+
+        $v1 = $closure(1, 2);
+        $v2 = $closure(2, 3);
+
+        $this->assertEquals(3, $v1);
+        $this->assertEquals(5, $v2);
+
+        $this->assertEquals(0, $called);
+    }
+
+    public function testMemoizeByIdFirstCall()
     {
         $mem = $this->mem;
         $called = 0;
         $closure = function ($a, $b) use ($mem, &$called) {
             return $mem->memoizeById(
-                "mem({$a}, {$b})",
+                'mem',
+                array($a, $b),
+                function ($a, $b) use (&$called) {
+                    $called++;
+
+                    return $a + $b;
+                }
+            );
+        };
+
+        $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
+        $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
+
+        $this->cache->save($id12, 3, null)->willReturn(null);
+        $this->cache->contains($id12)->willReturn(false);
+
+        $this->cache->save($id23, 5, null)->willReturn(null);
+        $this->cache->contains($id23)->willReturn(false);
+
+        $v1 = $closure(1, 2);
+        $v2 = $closure(2, 3);
+
+        $this->assertEquals(3, $v1);
+        $this->assertEquals(5, $v2);
+
+        $this->assertEquals(2, $called);
+    }
+
+    public function testMemoizeByIdSecondCall()
+    {
+        $mem = $this->mem;
+        $called = 0;
+        $closure = function ($a, $b) use ($mem, &$called) {
+            return $mem->memoizeById(
+                'mem',
+                array($a, $b),
                 function () use ($a, $b, &$called) {
                     $called++;
 
@@ -87,30 +149,21 @@ class MemoizeTest extends \PHPUnit_Framework_TestCase
             );
         };
 
+        $id12 = md5(sprintf('mem(%s)', serialize(array(1, 2))));
+        $id23 = md5(sprintf('mem(%s)', serialize(array(2, 3))));
+
+        $this->cache->fetch($id12)->wilLReturn(3);
+        $this->cache->contains($id12)->willReturn(true);
+
+        $this->cache->fetch($id23)->wilLReturn(5);
+        $this->cache->contains($id23)->willReturn(true);
+
         $v1 = $closure(1, 2);
-        $id12 = 'mem(1, 2)';
-        $this->assertTrue($this->cache->contains(md5($id12)));
-        $this->assertEquals(3, $this->cache->fetch(md5($id12)));
-        $v2 = $closure(1, 2);
+        $v2 = $closure(2, 3);
 
         $this->assertEquals(3, $v1);
-        $this->assertEquals(3, $v2);
-
-        $this->assertEquals(1, $called);
-
-        $v1 = $closure(2, 3);
-        $id23 = 'mem(2, 3)';
-        $this->assertTrue($this->cache->contains(md5($id12)));
-        $this->assertTrue($this->cache->contains(md5($id23)));
-        $this->assertEquals(3, $this->cache->fetch(md5($id12)));
-        $this->assertEquals(5, $this->cache->fetch(md5($id23)));
-        $v2 = $closure(2, 3);
-        $v3 = $closure(1, 2);
-
-        $this->assertEquals(5, $v1);
         $this->assertEquals(5, $v2);
-        $this->assertEquals(3, $v3);
 
-        $this->assertEquals(2, $called);
+        $this->assertEquals(0, $called);
     }
 }

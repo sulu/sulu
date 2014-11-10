@@ -49,24 +49,24 @@ class Memoize implements MemoizeInterface
         }
 
         // build cache key
-        $id = sprintf('%s::%s(%s)', $callers[1]['class'], $callers[1]['function'], serialize($callers[1]['args']));
+        $id = sprintf('%s::%s', $callers[1]['class'], $callers[1]['function']);
 
-        return $this->memoizeById($id, $compute, $lifeTime);
+        return $this->memoizeById($id, $callers[1]['args'], $compute, $lifeTime);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function memoizeById($id, $compute, $lifeTime = null)
+    public function memoizeById($id, $parameter, $compute, $lifeTime = null)
     {
-        $id = md5($id);
+        $id = md5(sprintf('%s(%s)', $id, serialize($parameter)));
 
         // memoize pattern: save result for arguments once and
         // return the value from cache if it is called more than once
         if ($this->cache->contains($id)) {
             return $this->cache->fetch($id);
         } else {
-            $value = $compute();
+            $value = call_user_func_array($compute, $parameter);
             $this->cache->save($id, $value, $lifeTime);
 
             return $value;
