@@ -13,42 +13,43 @@ define(['app-config'], function(AppConfig) {
 
     var setHeaderToolbar = function() {
         var toolbarItems = [
-            {
-                id: 'save-button',
-                icon: 'floppy-o',
-                iconSize: 'large',
-                class: 'highlight',
-                position: 1,
-                group: 'left',
-                disabled: true,
-                callback: function () {
-                    this.sandbox.emit('sulu.header.toolbar.save');
-                }.bind(this)
-            }
-        ],
-        configDropdown = {
-            icon: 'gear',
-            iconSize: 'large',
-            group: 'left',
-            id: 'options-button',
-            position: 30,
-            items: [
                 {
-                    title: this.sandbox.translate('toolbar.delete'),
-                    callback: function () {
+                    id: 'save-button',
+                    icon: 'floppy-o',
+                    iconSize: 'large',
+                    class: 'highlight',
+                    position: 1,
+                    group: 'left',
+                    disabled: true,
+                    callback: function() {
+                        this.sandbox.emit('sulu.header.toolbar.save');
+                    }.bind(this)
+                },
+                {
+                    id: 'delete',
+                    icon: 'trash-o',
+                    position: 20,
+                    callback: function() {
                         this.sandbox.emit('sulu.header.toolbar.delete');
                     }.bind(this)
                 }
-            ]
-        },
-        configItems = {
-            confirm: {
-                title: this.sandbox.translate('security.user.activate'),
-                callback: function () {
-                    this.sandbox.emit('sulu.user.activate');
-                }.bind(this)
-            }
-        };
+            ],
+            configDropdown = {
+                icon: 'magic',
+                iconSize: 'large',
+                group: 'left',
+                id: 'options-button',
+                position: 30,
+                items: []
+            },
+            configItems = {
+                confirm: {
+                    title: this.sandbox.translate('security.user.activate'),
+                    callback: function() {
+                        this.sandbox.emit('sulu.user.activate');
+                    }.bind(this)
+                }
+            };
 
         if (!this.user.enabled) {
             configDropdown.items.push(configItems.confirm);
