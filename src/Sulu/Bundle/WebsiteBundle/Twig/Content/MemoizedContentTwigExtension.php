@@ -35,7 +35,7 @@ class MemoizedContentTwigExtension extends \Twig_Extension implements ContentTwi
     /**
      * Constructor
      */
-    function __construct($extension, $memoize, $lifeTime)
+    function __construct(ContentTwigExtensionInterface $extension, MemoizeInterface $memoize, $lifeTime)
     {
         $this->extension = $extension;
         $this->memoize = $memoize;
