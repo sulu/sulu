@@ -84,6 +84,7 @@ class StructureResolverTest extends ProphecyTestCase
             'changer' => 1,
             'created' => 'date',
             'changed' => 'date',
+            'template' => 'test'
         );
 
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));
