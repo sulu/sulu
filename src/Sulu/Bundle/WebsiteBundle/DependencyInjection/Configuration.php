@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode->children()
             ->arrayNode('twig')
+                ->addDefaultsIfNotSet()
                 ->children()
                     ->arrayNode('navigation')
                         ->addDefaultsIfNotSet()

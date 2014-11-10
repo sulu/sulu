@@ -12,6 +12,7 @@
 
         <service id="sulu_core.cache.memoize" class="%sulu_core.cache.memoize.class%">
             <argument type="service" id="sulu_core.cache.memoize.cache"/>
+            <argument type="string">%sulu_core.cache.memoize.default_lifetime%</argument>
         </service>
     </services>
 </container>
