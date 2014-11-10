@@ -1,9 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
-* [UNRELEASED]
+* 0.10.2
 
-    * ...
+    * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
+    * ENHANCEMENT #523 [ContentBundle] Prefix contentbundle template path
 
 * 0.10.1 (2014-11-04)
 
