@@ -15,6 +15,7 @@ use PHPCR\SessionInterface;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Property;
