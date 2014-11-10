@@ -1525,7 +1525,8 @@ class ContentMapper implements ContentMapperInterface
     {
         $localizedUrls = array();
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $property = clone($page->getPropertyByTagName('sulu.rlp'));
+        $property = $page->getPropertyByTagName('sulu.rlp');
+        $property = clone $property;
 
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
