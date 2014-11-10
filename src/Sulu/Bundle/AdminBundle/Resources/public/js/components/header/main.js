@@ -339,7 +339,7 @@ define([], function () {
          * @type {{default: function, languageChanger: function, defaultLanguageChanger: function}}
          */
         toolbarTemplates = {
-            default: function () {
+            default: function() {
                 return[
                     {
                         id: 'save-button',
@@ -349,7 +349,7 @@ define([], function () {
                         position: 10,
                         group: 'left',
                         disabled: true,
-                        callback: function () {
+                        callback: function() {
                             this.sandbox.emit('sulu.header.toolbar.save');
                         }.bind(this)
                     },
@@ -373,16 +373,16 @@ define([], function () {
                 return [];
             },
 
-            save: function () {
+            save: function() {
                 return [toolbarTemplates.default.call(this)[0]];
             },
 
-            languageChanger: function (url, callback) {
+            languageChanger: function(url, callback) {
                 var button;
 
                 // default callback for language dropdown
                 if (typeof callback !== 'function') {
-                    callback = function (item) {
+                    callback = function(item) {
                         this.sandbox.emit('sulu.header.toolbar.language-changed', item);
                     }.bind(this);
                 }

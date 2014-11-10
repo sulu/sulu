@@ -23,7 +23,8 @@ require.config({
         '__component__$list-toolbar@suluadmin': 'components/list-toolbar/main',
         '__component__$labels@suluadmin': 'components/labels/main',
         '__component__$grid-group@suluadmin': 'components/grid-group/main',
-        '__component__$sidebar@suluadmin': 'components/sidebar/main'
+        '__component__$sidebar@suluadmin': 'components/sidebar/main',
+        '__component__$bottom-toolbar@suluadmin': 'components/bottom-toolbar/main'
     },
     include: [
         'app-config',
@@ -39,7 +40,8 @@ require.config({
         '__component__$list-toolbar@suluadmin',
         '__component__$labels@suluadmin',
         '__component__$grid-group@suluadmin',
-        '__component__$sidebar@suluadmin'
+        '__component__$sidebar@suluadmin',
+        '__component__$bottom-toolbar@suluadmin'
     ],
     exclude: [
         'husky'
