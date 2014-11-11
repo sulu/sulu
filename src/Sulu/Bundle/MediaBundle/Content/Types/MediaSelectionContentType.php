@@ -44,7 +44,19 @@ class MediaSelectionContentType extends ComplexContentType
     public function getDefaultParams()
     {
         return array(
-            'types' => null
+            'types' => null,
+            'defaultDisplayOption' => 'top',
+            'displayOptions' => array(
+                'leftTop' => true,
+                'top' => true,
+                'rightTop' => true,
+                'left' => true,
+                'middle' => false,
+                'right' => true,
+                'leftBottom' => true,
+                'bottom' => true,
+                'rightBottom' => true
+            )
         );
     }
 

@@ -22,7 +22,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             instanceName: null,
             url: '',
             idsParameter: 'ids',
-            preselected: {ids: [], displayOption: 'top', config: {}},
+            preselected: {ids: [], displayOption: null, config: {}},
             idKey: 'id',
             titleKey: 'title',
             thumbnailKey: 'thumbnails',
@@ -30,6 +30,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             resultKey: 'media',
             positionSelectedClass: 'selected',
             hidePositionElement: false,
+            defaultDisplayOption: 'top',
             displayOptions: {
                 leftTop: true,
                 top: true,
@@ -60,7 +61,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
         dataDefaults = {
             ids: [],
-            displayOption: 'top',
+            displayOption: null,
             config: {}
         },
 
@@ -154,7 +155,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     '    <div class="middle middle ', (!options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
                     '    <div class="middle right ', (!options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
                     '    <div class="bottom left ', (!options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
-                    '    <div class="bottom middle ', (!options.displayOptions.middle ? 'inactive' : ''), '" data-position="bottom"></div>',
+                    '    <div class="bottom middle ', (!options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
                     '    <div class="bottom right ', (!options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
                     '</div>',
                     '       </div>',
@@ -263,6 +264,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'media-selection'));
                 setData.call(this, data);
             } else {
+                this.options.preselected.displayOption = this.options.defaultDisplayOption;
                 setData.call(this, this.options.preselected);
             }
 
