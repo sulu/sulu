@@ -12,6 +12,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #528 [WebsiteBundle] Added memoize service to cache data and use it in twig extension
     * FEATURE     #536 [MediaBundle]   Added Configurable display options for media-selection
     * ENHANCEMENT #523 [ContentBundle] Prefix ContentBundle template path
+    * BUGFIX      #518 [ContentBundle] Ordering of page changed when node is renamed
     * FEATURE     #511 [SnippetBundle] Ask confirmation when deleting Snippets which are referenced by content
 
 * 0.10.2 (2014-11-07)

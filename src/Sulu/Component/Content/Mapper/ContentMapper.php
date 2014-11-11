@@ -393,8 +393,22 @@ class ContentMapper implements ContentMapperInterface
                     $path = $this->cleaner->cleanUp($title, $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
 
+
                     if ($path) {
+                        // workaround for Jackalope bug referenced in: https://github.com/sulu-cmf/sulu/issues/518
+                        $nextNode = $this->nodeHelper->getNextNode($node);
+
+                        if ($nextNode) {
+                            $nextNodeName = $nextNode->getName();
+                            $nodeName = $node->getName();
+                        }
+
                         $node->rename($path);
+
+                        if ($nextNode) {
+                            $parentNode = $node->getParent();
+                            $parentNode->orderBefore($node->getName(), $nextNodeName);
+                        }
                     }
                     // FIXME refresh session here
                 }
@@ -1633,6 +1647,9 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * TODO: Refactor this. This should not effect the global state of the object, this
+     *       should be scoped for each save request.
+     *
      * TRUE dont rename pages on save
      * @param boolean $noRenamingFlag
      * @return $this
