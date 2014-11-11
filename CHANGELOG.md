@@ -3,7 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
-    * ENHANCEMENT #539 [AdminBundle] Added validation for iban
+    * ENHANCEMENT #539 [AdminBundle] Added validation for iban and vat numbers from the eu
     * BUGFIX #531 [ContentBundle] Fixed single internal link freeze
     * ENHANCEMENT #523 [ContentBundle] Prefix contentbundle template path
     * ENHANCEMENT #526 [WebsiteBundle] Added Template var to resolver (Twig-Template)
