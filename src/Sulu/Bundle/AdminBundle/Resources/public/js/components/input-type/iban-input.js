@@ -23,8 +23,9 @@ define([
             typeInterface = {
                 setValue: function(data) {
                     this.$el.data({
-                        value: data
+                        value: app.sandbox.iban.printFormat(data)
                     }).trigger('data-changed');
+
                 },
 
                 getValue: function() {
@@ -36,7 +37,8 @@ define([
                 },
 
                 validate: function() {
-                    return app.sandbox.iban.isValid(this.getValue());
+                    var regex = /^([a-zA-Z0-9 ])+$/;
+                    return app.sandbox.iban.isValid(this.getValue()) && regex.test(this.getValue());
                 }
             };
 

@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* 
+    * ENHANCEMENT #539 [AdminBundle] Added library to validate iban
+    
 * 0.10.2
 
     * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
