@@ -77,6 +77,7 @@ class SuluSecurityListenerTest extends ProphecyTestCase
     {
         $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
         $controller->getSecurityContext()->willReturn('sulu.media.collection');
+        $controller->getLocale(Argument::any())->willReturn(null);
 
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
 
@@ -105,6 +106,23 @@ class SuluSecurityListenerTest extends ProphecyTestCase
 
         $this->securityChecker->checkPermission(Argument::any(), $permission, Argument::any())
             ->shouldHaveBeenCalled();
+    }
+
+    public function testLocale()
+    {
+        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request->getMethod()->willReturn(null);
+
+        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
+        $controller->getSecurityContext()->willReturn(null);
+        $controller->getLocale(Argument::any())->willReturn('de');
+
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+
+        $this->securityChecker->checkPermission(Argument::any(), Argument::any(), 'de')->shouldHaveBeenCalled();
     }
 
     public static function provideMethodActionMapping()

@@ -70,9 +70,10 @@ class SuluSecurityListener
                 break;
         }
 
-        // TODO find locale for check
+        // find locale for check
+        $locale = $controller[0]->getLocale($event->getRequest());
 
         // check permission
-        $this->securityChecker->checkPermission($subject, $permission);
+        $this->securityChecker->checkPermission($subject, $permission, $locale);
     }
 } 
