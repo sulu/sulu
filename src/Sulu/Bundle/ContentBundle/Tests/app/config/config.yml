@@ -44,9 +44,7 @@ sulu_core:
                      path: %kernel.root_dir%/Resources/snippets
                      internal: false
                      type: snippet
-    webspace:
-        request_analyzer:
-            enabled: true
+    webspace: ~
 
 sulu_admin:
     name: SULU 2.0

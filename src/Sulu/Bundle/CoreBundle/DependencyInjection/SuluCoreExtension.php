@@ -123,10 +123,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
         $container->setParameter(
-            'sulu_core.webspace.request_analyzer.enabled',
-            $webspaceConfig['request_analyzer']['enabled']
-        );
-        $container->setParameter(
             'sulu_core.webspace.request_analyzer.priority',
             $webspaceConfig['request_analyzer']['priority']
         );
