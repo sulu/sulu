@@ -73,6 +73,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
             'request' => array(
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
+                'defaultLocale' => $locale,
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
