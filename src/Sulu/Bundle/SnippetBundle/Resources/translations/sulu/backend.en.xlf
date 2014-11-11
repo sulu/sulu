@@ -46,6 +46,10 @@
                 <source>snippet.delete-no-snippets-selected</source>
                 <target>There are no snippets selected</target>
             </trans-unit>
+            <trans-unit id="14" resname="snippet-content.nosnippets-selected">
+                <source>snippet.delete-no-snippets-selected</source>
+                <target>No snippets selected</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
