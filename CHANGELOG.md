@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* [UNRELEASED]
+* dev-develop
 
     * BUGFIX #531 [ContentBundle] Fixed single internal link freeze
     * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
