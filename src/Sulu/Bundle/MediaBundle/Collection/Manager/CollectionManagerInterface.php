@@ -35,11 +35,10 @@ interface CollectionManagerInterface
      * @param array $filter for parent or depth
      * @param int $limit limit the output
      * @param int $offset offset the output
-     * @param string $sortBy sort column
-     * @param string $sortOrder sort direction
+     * @param array $sortBy sort by e.g. array('title' => 'ASC')
      * @return Paginator
      */
-    public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = null, $sortOrder = 'ASC');
+    public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array());
 
     /**
      * Returns a collection count

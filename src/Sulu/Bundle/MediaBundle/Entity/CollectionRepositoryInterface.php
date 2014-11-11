@@ -28,9 +28,8 @@ interface CollectionRepositoryInterface
      * @param array $filter
      * @param int $limit
      * @param int $offset
-     * @param string $sortBy
-     * @param string $sortOrder
+     * @param array $sortBy sort by e.g. array('title' => 'ASC')
      * @return Collection[]
      */
-    public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = null, $sortOrder = 'ASC');
+    public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = array());
 }

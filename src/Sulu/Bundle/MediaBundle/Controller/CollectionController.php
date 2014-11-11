@@ -109,11 +109,17 @@ class CollectionController extends RestController implements ClassResourceInterf
             $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();
 
-            $collections = $collectionManager->get($this->getLocale($request->get('locale')), array(
-                'parent' => $parent,
-                'depth' => $depth,
-                'search' => $search,
-            ), $limit, $offset, $sortBy, $sortOrder);
+            $collections = $collectionManager->get(
+                $this->getLocale($request->get('locale')),
+                array(
+                    'parent' => $parent,
+                    'depth' => $depth,
+                    'search' => $search,
+                ),
+                $limit,
+                $offset,
+                $sortBy !== null ? array($sortBy => $sortOrder) : array()
+            );
 
             $all = $collectionManager->getCount();
 
