@@ -339,7 +339,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         bindCustomEvents = function() {
             this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function() {
                 startOverlayLoader.call(this);
-                this.collections.fetch({
+                this.collections.fetchSorted('title', {
                     success: function(collections) {
                         this.collectionArray = collections.toJSON();
                         stopOverlayLoader.call(this);

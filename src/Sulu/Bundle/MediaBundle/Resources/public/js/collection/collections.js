@@ -21,6 +21,12 @@ define([
             return '/admin/api/collections?limit=99999&depth=0';
         },
 
+        fetchSorted: function(sortBy, options) {
+            options = _.defaults((options || {}), {url: this.url() + '&sortBy=' + sortBy});
+
+            return this.fetch.call(this, options);
+        },
+
         parse: function(resp) {
             return resp._embedded.collections;
         }
