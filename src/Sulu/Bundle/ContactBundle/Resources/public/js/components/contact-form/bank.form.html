@@ -15,7 +15,21 @@
                 <div class="grid-col-6">
                     <div class="form-group-vertical">
                         <label for="iban" class="required"><%=translate('public.iban')%></label>
-                        <input id="iban" type="text" class="form-element" data-mapper-property="iban" data-validation-required="true" value=""/>
+                        <!--<input-->
+                                <!--id="iban"-->
+                                <!--type="text"-->
+                                <!--class="form-element"-->
+                                <!--data-mapper-property="iban"-->
+                                <!--data-validation-required="true"-->
+                                <!--value=""/>-->
+                        <div id="iban"
+                             data-aura-component="input@husky"
+                             data-aura-front-icon="bank"
+                             data-aura-instance-name="iban-input"
+                             data-form="true"
+                             data-type="iban-input"
+                             data-validation-required="true"
+                             data-mapper-property="iban"></div>
                     </div>
                 </div>
                 <div class="grid-col-6">
