@@ -40,10 +40,16 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)
     {
+        // determine default locale (if one exists)
+        $defaultLocale = $requestAnalyzer->getCurrentPortal()->getDefaultLocalization();
+        if ($defaultLocale !== null) {
+            $defaultLocale = $defaultLocale->getLocalization();
+        }
+
         return array(
             'request' => array(
                 'webspaceKey' => $requestAnalyzer->getCurrentWebspace()->getKey(),
-                'defaultLocale' => $requestAnalyzer->getCurrentPortal()->getDefaultLocalization()->getLocalization(),
+                'defaultLocale' => $defaultLocale,
                 'locale' => $requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 'portalUrl' => $requestAnalyzer->getCurrentPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getCurrentResourceLocatorPrefix(),
