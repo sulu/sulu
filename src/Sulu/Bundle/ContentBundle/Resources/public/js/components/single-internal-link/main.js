@@ -133,7 +133,7 @@ define([], function() {
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.edit', function(item) {
                 setData.call(this, item.id);
                 loadSelectedNode.call(this);
-                this.sandbox.emit(DATA_CHANGED.call(this, this.data, this.$el));
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
 
                 this.sandbox.emit('husky.overlay.single-internal-link.' + this.options.instanceName + '.close');
             }.bind(this));
