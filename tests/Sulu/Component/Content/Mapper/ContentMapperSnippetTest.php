@@ -33,6 +33,11 @@ class ContentMapperSnippetTest extends SuluTestCase
     private $snippet1;
 
     /**
+     * @var Snippet
+     */
+    private $snippet2;
+
+    /**
      * @var string
      */
     private $snippet1OriginalPath;
@@ -59,6 +64,18 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
         $this->snippet1OriginalPath = $this->session->getNodeByIdentifier($this->snippet1->getUuid())->getPath();
+
+        $req = ContentMapperRequest::create()
+            ->setType(Structure::TYPE_SNIPPET)
+            ->setTemplateKey('animal')
+            ->setLocale('de')
+            ->setUserId(1)
+            ->setData(array(
+                'title' => 'Penguin',
+            ))
+            ->setState(StructureInterface::STATE_PUBLISHED);
+
+        $this->snippet2 = $this->contentMapper->saveRequest($req);
     }
 
     public function testChangeSnippetTemplate()
@@ -146,6 +163,61 @@ class ContentMapperSnippetTest extends SuluTestCase
             $this->assertTrue(false, 'Snippet was found FAIL');
         } catch (\PHPCR\PathNotFoundException $e) {
             $this->assertTrue(true);
+        }
+    }
+
+    public function provideRemoveSnippetWithReferencesDereference()
+    {
+        return array(
+            array(true),
+            array(false)
+        );
+    }
+
+    /**
+     * @dataProvider provideRemoveSnippetWithReferencesDereference
+     */
+    public function testRemoveSnippetWithReferencesDereference($multiple = false)
+    {
+        $referrerType = 'sulu:page';
+
+        $node = $this->session->getNode('/cmf')->addNode('test');
+        $node->addMixin($referrerType);
+
+        if ($multiple) {
+            $node->setProperty('sulu:content', array(
+                $this->snippet1->getUuid(),
+                $this->snippet2->getUuid()
+            ), PropertyType::REFERENCE);
+        } else {
+            $node->setProperty('sulu:content', $this->snippet1->getUuid(), PropertyType::REFERENCE);
+        }
+
+        $this->session->save();
+
+        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io', true);
+
+        try {
+            $this->session->getNode($this->snippet1OriginalPath);
+            $this->assertTrue(false, 'Snippet was found FAIL');
+        } catch (\PHPCR\PathNotFoundException $e) {
+            $this->assertTrue(true, 'Snippet was removed');
+        }
+
+        $referencingNode = $this->session->getNode('/cmf/test');
+
+        if ($multiple) {
+            $contents = $referencingNode->getPropertyValue('sulu:content');
+            $this->assertCount(1, $contents);
+            $content = reset($contents);
+            $this->assertEquals($this->snippet2->getUuid(), $content->getIdentifier());
+        } else {
+            try {
+                $referencingNode->getPropertyValue('sulu:content');
+                $this->assertTrue(false, 'Referencing property still exists. FAIL');
+            } catch (\PHPCR\PathNotFoundException $e) {
+                // nothing
+            }
         }
     }
 

@@ -15,6 +15,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure\Snippet;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Sulu\Component\Content\StructureInterface;
 
 class SnippetApiTest extends SuluTestCase
 {
@@ -40,15 +41,10 @@ class SnippetApiTest extends SuluTestCase
     public function setUp()
     {
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->initPhpcr();
         $this->loadFixtures();
-        $this->client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $this->client = $this->createAuthenticatedClient();
     }
 
     public function testGet()
@@ -87,7 +83,7 @@ class SnippetApiTest extends SuluTestCase
         $this->client->request('GET', sprintf(
             '/snippets?ids=%s,%s,%s%s',
             $this->hotel1->getUuid(),
-            '842e61c0-09ab-42a9-5555-222222222222',
+            '99999999-754c-4da0-bbc7-bf909b05c352',
             $this->hotel2->getUuid(),
             '&language=de'
         ));
@@ -222,6 +218,32 @@ class SnippetApiTest extends SuluTestCase
         $this->assertEquals($data['template'], $res['template']);
         $this->assertEquals($data['title'], $res['title']);
         $this->assertEquals($params['language'], reset($res['concreteLanguages']));
+    }
+
+    public function testDeleteReferenced()
+    {
+        $request = ContentMapperRequest::create()
+            ->setType('page')
+            ->setWebspaceKey('sulu_io')
+            ->setTemplateKey('hotel_page')
+            ->setLocale('de')
+            ->setUserId(1)
+            ->setData(array(
+                'title' => 'Hotels page',
+                'url' => '/hotels',
+                'hotels' => array(
+                    'ids' => array(
+                        $this->hotel1->getUuid(),
+                        $this->hotel2->getUuid(),
+                    ),
+                ),
+            ));
+
+        $this->contentMapper->saveRequest($request);
+        $this->client->request('DELETE', '/snippets/' . $this->hotel1->getUuid() . '?_format=text');
+        $response = $this->client->getResponse();
+
+        $this->assertEquals(409, $response->getStatusCode());
     }
 
     private function loadFixtures()

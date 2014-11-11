@@ -52,7 +52,7 @@ class SuluNodeHelper
     {
         $languages = array();
         foreach ($node->getProperties() as $property) {
-            preg_match('/^' . $this->languageNamespace . ':(.*?)-title/', $property->getName(), $matches);
+            preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-title/', $property->getName(), $matches);
 
             if ($matches) {
                 $languages[$matches[1]] = $matches[1];
