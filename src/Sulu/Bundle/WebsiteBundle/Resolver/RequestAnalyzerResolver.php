@@ -41,10 +41,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)
     {
         // determine default locale (if one exists)
-        $defaultLocale = $requestAnalyzer->getCurrentPortal()->getDefaultLocalization();
-        if ($defaultLocale !== null) {
-            $defaultLocale = $defaultLocale->getLocalization();
-        }
+        $defaultLocalization = $requestAnalyzer->getCurrentPortal()->getDefaultLocalization();
+        $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
 
         return array(
             'request' => array(
