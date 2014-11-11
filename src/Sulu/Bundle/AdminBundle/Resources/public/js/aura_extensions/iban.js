@@ -9,8 +9,7 @@
             name: 'iban',
 
             initialize: function(app) {
-                var core = app.core,
-                    sandbox = app.sandbox;
+                var sandbox = app.sandbox;
 
                 sandbox.iban = {};
 
