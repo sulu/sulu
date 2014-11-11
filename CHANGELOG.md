@@ -3,7 +3,7 @@ CHANGELOG for Sulu
 
 * [UNRELEASED]
 
-	* BUGFIX #531 [ContentBundle] Fixed single internal link freeze
+    * BUGFIX #531 [ContentBundle] Fixed single internal link freeze
     * HOTFIX #509 [ContentBundle] Fixed cached data bug in smart-content
     * ENHANCEMENT #523 [ContentBundle] Prefix contentbundle template path
     * ENHANCEMENT #526 [WebsiteBundle] Added Template var to resolver (Twig-Template)
