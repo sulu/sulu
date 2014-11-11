@@ -99,6 +99,14 @@ define([], function() {
 
             this.sandbox.start([
                 {
+                    name: 'input@husky',
+                    options: {
+                        el: '#vat',
+                        instanceName:'vat-input',
+                        value: !!formData.uid ? formData.uid : ''
+                    }
+                },
+                {
                     name: 'select@husky',
                     options: {
                         el: '#termsOfPayment',
@@ -110,7 +118,7 @@ define([], function() {
                         direction: 'bottom',
                         editable: true,
                         resultKey: 'termsOfPayments',
-                        preSelectedElements: [],
+                        preSelectedElements: this.preselectedTermsOfPaymentId,
                         url: constants.cgetTermsOfPaymentURL
                     }
                 },
