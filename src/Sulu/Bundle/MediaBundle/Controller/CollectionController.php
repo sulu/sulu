@@ -105,13 +105,21 @@ class CollectionController extends RestController implements ClassResourceInterf
             $limit = $request->get('limit', $listRestHelper->getLimit());
             $offset = ($request->get('page', 1) - 1) * $limit;
             $search = $request->get('search');
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();
 
-            $collections = $collectionManager->get($this->getLocale($request->get('locale')), array(
-                'parent' => $parent,
-                'depth' => $depth,
-                'search' => $search,
-            ), $limit, $offset);
+            $collections = $collectionManager->get(
+                $this->getLocale($request->get('locale')),
+                array(
+                    'parent' => $parent,
+                    'depth' => $depth,
+                    'search' => $search,
+                ),
+                $limit,
+                $offset,
+                $sortBy !== null ? array($sortBy => $sortOrder) : array()
+            );
 
             $all = $collectionManager->getCount();
 
