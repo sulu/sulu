@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * Provides Twig functions to handle snippets
  */
-class SnippetTwigExtension extends \Twig_Extension
+class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensionInterface
 {
     /**
      * @var ContentMapperInterface
@@ -58,12 +58,7 @@ class SnippetTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns snippet
-     *
-     * @param string $uuid
-     * @param string $locale
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function loadSnippet($uuid, $locale = null)
     {

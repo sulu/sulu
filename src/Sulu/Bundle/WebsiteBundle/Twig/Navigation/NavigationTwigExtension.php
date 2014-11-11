@@ -8,18 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Twig;
+namespace Sulu\Bundle\WebsiteBundle\Twig\Navigation;
 
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
+use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * provides the navigation function
- * @package Sulu\Bundle\WebsiteBundle\Twig
+ * Provides the navigation functions
  */
-class NavigationTwigExtension extends \Twig_Extension
+class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigExtensionInterface
 {
     /**
      * @var ContentMapperInterface
@@ -62,11 +62,7 @@ class NavigationTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns a flat navigation of first layer
-     * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
@@ -77,11 +73,7 @@ class NavigationTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns a tree navigation of first layer
-     * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
-     * @return NavigationItem[]
+     * {@inheritdoc}
      */
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
@@ -92,13 +84,7 @@ class NavigationTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns a flat navigation of children from given parent (uuid)
-     * @param string $uuid
-     * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
-     * @param int $level
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * {@inheritdoc}
      */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
@@ -124,13 +110,7 @@ class NavigationTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns a tree navigation of children from given parent (uuid)
-     * @param string $uuid
-     * @param string $context
-     * @param int $depth
-     * @param bool $loadExcerpt
-     * @param int $level
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * {@inheritdoc}
      */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
@@ -156,9 +136,7 @@ class NavigationTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns breadcrumb for given node
-     * @param $uuid
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * {@inheritdoc}
      */
     public function breadcrumbFunction($uuid)
     {
