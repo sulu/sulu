@@ -24,6 +24,8 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->property3 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property4 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property5 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
+        $this->property6 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
+        $this->property7 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
 
         $this->property1->expects($this->any())
             ->method('getName')
@@ -40,6 +42,12 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->property5->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('i18n:de-bbbaaaa'));
+        $this->property6->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('i18n:de-seo-title'));
+        $this->property7->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('i18n:de-de-title'));
 
         $this->node->expects($this->any())
             ->method('getProperties')
@@ -48,6 +56,9 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
                 $this->property2,
                 $this->property3,
                 $this->property4,
+                $this->property5,
+                $this->property6,
+                $this->property7,
             )));
 
         $this->helper = new SuluNodeHelper(
