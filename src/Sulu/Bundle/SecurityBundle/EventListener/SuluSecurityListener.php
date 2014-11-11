@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -39,13 +40,13 @@ class SuluSecurityListener
     {
         $controller = $event->getController();
 
-        if (!is_subclass_of($controller[0], 'Sulu\Component\Rest\RestController')) {
+        if (!$controller[0] instanceof SecuredControllerInterface) {
             // TODO check for some kind of security controller interface instead
             return;
         }
 
         // get subject
-        $subject = '';
+        $subject = $controller[0]->getSecurityContext();
 
         // find appropriate permission type for request
         $permission = '';

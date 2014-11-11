@@ -49,7 +49,7 @@ class SuluSecurityListenerTest extends ProphecyTestCase
 
     public function testRestController()
     {
-        $controller = $this->prophesize('Sulu\Component\Rest\RestController');
+        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
 
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
         $request->getMethod()->willReturn('GET');
@@ -68,9 +68,24 @@ class SuluSecurityListenerTest extends ProphecyTestCase
 
         $controller = $this->prophesize('Symfony\Bundle\FrameworkBundle\Controller\Controller');
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller));
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+    }
+
+    public function testSubject()
+    {
+        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
+        $controller->getSecurityContext()->willReturn('sulu.media.collection');
+
+        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+
+        $this->filterControllerEvent->getRequest()->willReturn($request);
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+
+        $this->securityChecker->checkPermission('sulu.media.collection', Argument::cetera());
     }
 
     /**
@@ -81,14 +96,14 @@ class SuluSecurityListenerTest extends ProphecyTestCase
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
         $request->getMethod()->willReturn($method);
 
-        $controller = $this->prophesize('Sulu\Component\Rest\RestController');
+        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
-        $this->filterControllerEvent->getController()->willReturn(array($controller, $action));
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), $action));
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
-        $this->securityChecker->checkPermission(Argument::any(), Argument::exact($permission), Argument::any())
+        $this->securityChecker->checkPermission(Argument::any(), $permission, Argument::any())
             ->shouldHaveBeenCalled();
     }
 
