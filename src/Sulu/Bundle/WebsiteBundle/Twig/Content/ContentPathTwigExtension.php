@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Twig;
+namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -16,7 +16,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * provides the content_path function to generate real urls for frontend
- * @package Sulu\Bundle\WebsiteBundle\Twig
  */
 class ContentPathTwigExtension extends \Twig_Extension
 {
@@ -67,19 +66,19 @@ class ContentPathTwigExtension extends \Twig_Extension
      * generates real url for given content
      * @param string $url
      * @param string $webspaceKey
+     * @param string $locale
      * @return string
      */
-    public function contentPathFunction($url, $webspaceKey = null)
+    public function contentPathFunction($url, $webspaceKey = null, $locale = null)
     {
         if (
             $webspaceKey !== null &&
-            $this->requestAnalyzer &&
-            $this->requestAnalyzer->getCurrentWebspace()->getKey() !== $webspaceKey
+            $this->requestAnalyzer
         ) {
             $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
                 $url,
                 $this->environment,
-                $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 $webspaceKey
             );
 

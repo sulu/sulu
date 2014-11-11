@@ -13,7 +13,7 @@
  * @class MediaSelection
  * @constructor
  */
-define(['sulumedia/collection/collections', 'sulumedia/model/collection'], function (Collections, Collection) {
+define(['sulumedia/collection/collections', 'sulumedia/model/collection'], function(Collections, Collection) {
 
     'use strict';
 
@@ -22,7 +22,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             instanceName: null,
             url: '',
             idsParameter: 'ids',
-            preselected: {ids: [], displayOption: 'top', config: {}},
+            preselected: {ids: [], displayOption: null, config: {}},
             idKey: 'id',
             titleKey: 'title',
             thumbnailKey: 'thumbnails',
@@ -30,6 +30,18 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             resultKey: 'media',
             positionSelectedClass: 'selected',
             hidePositionElement: false,
+            defaultDisplayOption: 'top',
+            displayOptions: {
+                leftTop: true,
+                top: true,
+                rightTop: true,
+                left: true,
+                middle: true,
+                right: true,
+                leftBottom: true,
+                bottom: true,
+                rightBottom: true
+            },
 
             translations: {
                 noMediaSelected: 'media-selection.nomedia-selected',
@@ -49,7 +61,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
         dataDefaults = {
             ids: [],
-            displayOption: 'top',
+            displayOption: null,
             config: {}
         },
 
@@ -61,13 +73,13 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'sulu.media-selection.',
+        eventNamespace = 'sulu.media-selection.',
 
         /**
          * raised when all overlay components returned their value
          * @event sulu.media-selection.input-retrieved
          */
-            INPUT_RETRIEVED = function () {
+        INPUT_RETRIEVED = function() {
             return createEventName.call(this, 'input-retrieved');
         },
 
@@ -75,7 +87,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * raised when the overlay data has been changed
          * @event sulu.media-selection.data-changed
          */
-            DATA_CHANGED = function () {
+        DATA_CHANGED = function() {
             return createEventName.call(this, 'data-changed');
         },
 
@@ -91,7 +103,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * raised before data is requested with AJAX
          * @event sulu.media-selection.data-request
          */
-            DATA_REQUEST = function () {
+        DATA_REQUEST = function() {
             return createEventName.call(this, 'data-request');
         },
 
@@ -99,7 +111,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * raised when data has returned from the ajax request
          * @event sulu.media-selection.data-retrieved
          */
-            DATA_RETRIEVED = function () {
+        DATA_RETRIEVED = function() {
             return createEventName.call(this, 'data-retrieved');
         },
 
@@ -108,7 +120,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * @event sulu.media-selection.record-selected
          * @param id {Number|String} id of the record
          */
-        RECORD_SELECTED = function(){
+        RECORD_SELECTED = function() {
             return createEventName.call(this, 'record-selected');
         },
 
@@ -117,14 +129,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * @event sulu.media-selection.record-deselected
          * @param id {Number|String} id of the record
          */
-        RECORD_DESELECTED = function(){
+        RECORD_DESELECTED = function() {
             return createEventName.call(this, 'record-deselected');
         },
 
         /**
          * returns normalized event names
          */
-            createEventName = function (postFix) {
+        createEventName = function(postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
@@ -134,17 +146,17 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     '<div class="white-box form-element" id="', options.ids.container, '">',
                     '   <div class="header">',
                     '       <span class="fa-plus-circle icon left action" id="', options.ids.addButton, '"></span>',
-                    '       <div class="position ',positionClass,'">',
-                    '<div class="husky-position" id="', options.ids.displayOption ,'">',
-                    '    <div class="top left" data-position="leftTop"></div>',
-                    '    <div class="top middle" data-position="top"></div>',
-                    '    <div class="top right" data-position="rightTop"></div>',
-                    '    <div class="middle left" data-position="left"></div>',
-                    '    <div class="middle middle inactive"></div>',
-                    '    <div class="middle right" data-position="right"></div>',
-                    '    <div class="bottom left" data-position="leftBottom"></div>',
-                    '    <div class="bottom middle" data-position="bottom"></div>',
-                    '    <div class="bottom right" data-position="rightBottom"></div>',
+                    '       <div class="position ', positionClass, '">',
+                    '<div class="husky-position" id="', options.ids.displayOption , '">',
+                    '    <div class="top left ', (!options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
+                    '    <div class="top middle ', (!options.displayOptions.top ? 'inactive' : ''), '" data-position="top"></div>',
+                    '    <div class="top right ', (!options.displayOptions.rightTop ? 'inactive' : ''), '" data-position="rightTop"></div>',
+                    '    <div class="middle left ', (!options.displayOptions.left ? 'inactive' : ''), '" data-position="left"></div>',
+                    '    <div class="middle middle ', (!options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
+                    '    <div class="middle right ', (!options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
+                    '    <div class="bottom left ', (!options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
+                    '    <div class="bottom middle ', (!options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
+                    '    <div class="bottom right ', (!options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
                     '</div>',
                     '       </div>',
                     '       <span class="fa-cog icon right border" id="', options.ids.configButton, '" style="display:none"></span>',
@@ -154,7 +166,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 ].join('');
             },
 
-            noContent: function (noContentString) {
+            noContent: function(noContentString) {
                 return [
                     '<div class="no-content">',
                     '   <span class="fa-coffee icon"></span>',
@@ -163,7 +175,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 ].join('');
             },
 
-            addTab: function (options, header) {
+            addTab: function(options, header) {
                 return [
                     '<div id="', options.ids.chooseTab, '">',
                     '   <div class="heading">',
@@ -175,7 +187,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 ].join('');
             },
 
-            uploadTab: function (options, collection) {
+            uploadTab: function(options, collection) {
                 return [
                     '<div id="', options.ids.uploadTab , '">',
                     '   <div class="grid-row">',
@@ -189,7 +201,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 ].join('')
             },
 
-            contentItem: function (id, num, value, imageUrl) {
+            contentItem: function(id, num, value, imageUrl) {
                 return [
                     '<li data-id="', id, '">',
                     '   <span class="num">', num, '</span>',
@@ -204,14 +216,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * returns id for given type
          */
-        getId = function (type) {
+        getId = function(type) {
             return '#' + this.options.ids[type];
         },
 
         /**
          * render component
          */
-        render = function () {
+        render = function() {
             // init collection
             this.collections = new Collections();
             this.newCollection = new Collection();
@@ -234,7 +246,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 dropzone: 'media-selection-' + this.options.instanceName + '-dropzone'
             };
 
-            if(!!this.options.hidePositionElement){
+            if (!!this.options.hidePositionElement) {
                 this.sandbox.dom.html(this.$el, templates.skeleton(this.options, 'hidden'));
             } else {
                 this.sandbox.dom.html(this.$el, templates.skeleton(this.options, ''));
@@ -252,6 +264,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'media-selection'));
                 setData.call(this, data);
             } else {
+                this.options.preselected.displayOption = this.options.defaultDisplayOption;
                 setData.call(this, this.options.preselected);
             }
 
@@ -289,7 +302,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Renders the content at the beginning
          * (with no items and before any request)
          */
-        renderStartContent = function () {
+        renderStartContent = function() {
             var noMedia = this.sandbox.translate(this.options.translations.noMediaSelected);
             this.sandbox.dom.html(this.$content, templates.noContent(noMedia));
         },
@@ -297,7 +310,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * Starts the grid-group loader
          */
-        startOverlayLoader = function () {
+        startOverlayLoader = function() {
             var $element = this.$find(getId.call(this, 'loader'));
             if (!!$element.length) {
                 this.sandbox.start([
@@ -316,18 +329,18 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * Stops the grid-group loader
          */
-        stopOverlayLoader = function () {
+        stopOverlayLoader = function() {
             this.sandbox.stop(getId.call(this, 'loader'));
         },
 
         /**
          * custom event handling
          */
-        bindCustomEvents = function () {
-            this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function () {
+        bindCustomEvents = function() {
+            this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function() {
                 startOverlayLoader.call(this);
                 this.collections.fetch({
-                    success: function (collections) {
+                    success: function(collections) {
                         this.collectionArray = collections.toJSON();
                         stopOverlayLoader.call(this);
                         startGridGroup.call(this);
@@ -337,7 +350,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 });
             }.bind(this));
 
-            this.sandbox.on('husky.overlay.media-selection.'+ this.options.instanceName +'.add.opened', function () {
+            this.sandbox.on('husky.overlay.media-selection.' + this.options.instanceName + '.add.opened', function() {
                 if (this.gridGroupDeprecated === true) {
                     reloadGridGroup.call(this);
                     this.gridGroupDeprecated = false;
@@ -345,23 +358,23 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
 
             // data from overlay retrieved
-            this.sandbox.on(INPUT_RETRIEVED.call(this), function () {
+            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
                 setURI.call(this);
                 loadContent.call(this);
             }.bind(this));
 
             // data from ajax request retrieved
-            this.sandbox.on(DATA_RETRIEVED.call(this), function () {
+            this.sandbox.on(DATA_RETRIEVED.call(this), function() {
                 renderContent.call(this);
             }.bind(this));
 
             // set position of overlay if height of grid-group changes
-            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.height-changed', function () {
+            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.height-changed', function() {
                 this.sandbox.emit('husky.overlay.media-selection.' + this.options.instanceName + '.add' + '.set-position');
             }.bind(this));
 
             // set position of overlay if grid-group has initialized
-            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.initialized', function () {
+            this.sandbox.on('sulu.grid-group.' + this.options.instanceName + '.initialized', function() {
                 this.sandbox.emit('husky.overlay.media-selection.' + this.options.instanceName + '.add' + '.set-position');
             }.bind(this));
 
@@ -384,18 +397,18 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Changes the dropzone url and inserts a given collection id
          * @param collectionId
          */
-        changeUploadCollection = function (collectionId) {
+        changeUploadCollection = function(collectionId) {
             this.uploadCollection = collectionId;
             this.sandbox.emit(
-                'husky.dropzone.media-selection-'+ this.options.instanceName +'.change-url',
-                '/admin/api/media?collection=' + collectionId);
+                    'husky.dropzone.media-selection-' + this.options.instanceName + '.change-url',
+                    '/admin/api/media?collection=' + collectionId);
         },
 
         /**
          * Refreshes the data in the grid-group
          */
         reloadGridGroup = function() {
-            this.sandbox.emit('sulu.grid-group.'+ this.options.instanceName +'.reload', {
+            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.reload', {
                 data: this.collectionArray,
                 preselected: this.data.ids
             });
@@ -404,7 +417,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * Starts the grid group
          */
-        startGridGroup = function () {
+        startGridGroup = function() {
             // TODO remove high limit and implement automatic reload pagination
             var gridUrl = '/admin/api/media?limit=99999&' +
                 (this.options.types != '' ? 'types=' + this.options.types + '&' : '');
@@ -452,7 +465,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * Starts the select for choosing the collection to upload
          */
-        startSelect = function () {
+        startSelect = function() {
             var data = this.sandbox.util.extend([], true, this.collectionArray),
                 preselected = this.sandbox.sulu.getUserSetting(constants.lastVisitedCollectionKey) || 'new';
             data.unshift({
@@ -477,7 +490,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * Starts the dropzone for uploading a new media
          */
-        startDropzone = function () {
+        startDropzone = function() {
             this.sandbox.start([
                 {
                     name: 'dropzone@husky',
@@ -499,7 +512,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Handles the upload a new media. Just uploads it or creates a new collection first
          * @returns {Object} returns a promise
          */
-        uploadNewFile = function () {
+        uploadNewFile = function() {
             var def = this.sandbox.data.deferred();
 
             if (this.uploadCollection === 'new') {
@@ -509,14 +522,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         title: getNewCollectionTitle.call(this)
                     });
                     this.newCollection.save(null, {
-                        success: function (collection) {
+                        success: function(collection) {
                             collection = collection.toJSON();
                             this.newCollectionId = collection.id;
                             changeUploadCollection.call(this, collection.id);
                             this.collectionArray.push(collection);
                             def.resolve();
                         }.bind(this),
-                        error: function () {
+                        error: function() {
                             this.sandbox.logger.log('Error while saving collection');
                         }.bind(this)
                     });
@@ -568,9 +581,9 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * handle dom events
          */
-        bindDomEvents = function () {
+        bindDomEvents = function() {
             // chgange display options on click on a positon square
-            this.sandbox.dom.on(getId.call(this, 'displayOption') + ' > div', 'click', changeDisplayOptions.bind(this));
+            this.sandbox.dom.on(getId.call(this, 'displayOption') + ' > div:not(.inactive)', 'click', changeDisplayOptions.bind(this));
 
             // click on remove icons
             this.sandbox.dom.on(getId.call(this, 'content'), 'click', removeHandler.bind(this), 'li .remove');
@@ -592,7 +605,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Handles the click event on the remove icon
          * @param event
          */
-        removeHandler = function (event) {
+        removeHandler = function(event) {
             var $item = this.sandbox.dom.parents(event.currentTarget, 'li'),
                 dataId = this.sandbox.dom.data($item, 'id');
             this.sandbox.dom.remove($item);
@@ -615,7 +628,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * @param id {Number|String} the id of the item to delete
          * @returns {boolean} returns true if deleted successfully
          */
-         removeItemWithId = function (id) {
+        removeItemWithId = function(id) {
             for (var i = -1, length = this.items.length; ++i < length;) {
                 if (this.items[i].id === id) {
                     this.items.splice(i, 1);
@@ -628,7 +641,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * renders the content decides whether the footer is rendered or not
          */
-        renderContent = function () {
+        renderContent = function() {
             if (this.viewAll === true) {
                 this.itemsVisible = this.items.length;
             } else {
@@ -658,27 +671,27 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * renders the footer and calls a method to bind the events for itself
          */
-        renderFooter = function () {
+        renderFooter = function() {
             if (this.$footer === null || this.$footer === undefined) {
                 this.$footer = this.sandbox.dom.createElement('<div class="footer"/>');
             }
 
             this.sandbox.dom.html(this.$footer, [
                 '<span>',
-                '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.options.translations.of) , ' ',
-                '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.options.translations.visible),
+                    '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.options.translations.of) , ' ',
+                    '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.options.translations.visible),
                 '</span>'
             ].join(''));
 
             if (this.itemsVisible < this.items.length) {
                 this.sandbox.dom.append(
                     this.sandbox.dom.find('span', this.$footer),
-                    '<strong class="view-all pointer"> ('+ this.sandbox.translate(this.options.translations.viewall) +')</strong>'
+                        '<strong class="view-all pointer"> (' + this.sandbox.translate(this.options.translations.viewall) + ')</strong>'
                 );
             } else if (this.itemsVisible > this.options.visibleItems) {
                 this.sandbox.dom.append(
                     this.sandbox.dom.find('span', this.$footer),
-                    '<strong class="view-less pointer"> ('+ this.sandbox.translate(this.options.translations.viewless) +')</strong>'
+                        '<strong class="view-less pointer"> (' + this.sandbox.translate(this.options.translations.viewless) + ')</strong>'
                 );
             }
 
@@ -688,7 +701,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * starts the overlay component
          */
-        startAddOverlay = function () {
+        startAddOverlay = function() {
             var chooseTabData = templates.addTab(this.options, this.sandbox.translate(this.options.translations.collections)),
                 uploadTabData = templates.uploadTab(this.options, this.sandbox.translate(this.options.translations.collection));
 
@@ -732,15 +745,15 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * extract data from overlay
          */
-        getAddOverlayData = function () {
+        getAddOverlayData = function() {
             var idsDef = this.sandbox.data.deferred();
 
-            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.get-selected-ids', function (ids) {
+            this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.get-selected-ids', function(ids) {
                 setData.call(this, {ids: ids});
                 idsDef.resolve();
             }.bind(this));
 
-            idsDef.then(function () {
+            idsDef.then(function() {
                 this.sandbox.emit(INPUT_RETRIEVED.call(this));
             }.bind(this));
         },
@@ -748,7 +761,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * starts the loader component
          */
-         startLoader = function () {
+        startLoader = function() {
             detachFooter.call(this);
 
             var $loaderContainer = this.sandbox.dom.createElement('<div class="loader"/>');
@@ -769,7 +782,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * removes the footer
          */
-        detachFooter = function () {
+        detachFooter = function() {
             if (this.$footer !== null) {
                 this.sandbox.dom.remove(this.$footer);
             }
@@ -778,7 +791,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * load content from generated uri
          */
-        loadContent = function () {
+        loadContent = function() {
             //only request if URI has changed
             if (this.URI.hasChanged === true) {
                 this.sandbox.emit(DATA_REQUEST.call(this));
@@ -810,7 +823,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * set data of media-selection
          */
-         setData = function (data) {
+        setData = function(data) {
             for (var propertyName in data) {
                 if (data.hasOwnProperty(propertyName)) {
                     this.data[propertyName] = data[propertyName];
@@ -822,7 +835,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * generates the URI for the request
          */
-        setURI = function () {
+        setURI = function() {
             var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&',
                 newURI = [
                     this.options.url,
@@ -844,7 +857,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Changes the display option
          * @param event {Object} the click event
          */
-        changeDisplayOptions = function (event) {
+        changeDisplayOptions = function(event) {
             // deselect the current positon element
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.' + this.options.positionSelectedClass, getId.call(this, 'displayOption')),
@@ -861,7 +874,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * set display option to element
          */
-        setDisplayOption = function () {
+        setDisplayOption = function() {
             var $element = this.$find(getId.call(this, 'displayOption')),
                 $position = this.sandbox.dom.find('[data-position="' + this.data.displayOption + '"]', $element);
             if (!!$position.length) {
@@ -872,7 +885,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
     return {
         historyClosed: true,
 
-        initialize: function () {
+        initialize: function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
             this.data = {};

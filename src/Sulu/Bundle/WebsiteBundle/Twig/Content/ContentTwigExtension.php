@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Twig;
+namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
@@ -17,9 +17,9 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 /**
- * Provide Interface to load content
+ * Provides Interface to load content
  */
-class ContentTwigExtension extends \Twig_Extension
+class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensionInterface
 {
     /**
      * @var ContentMapperInterface
@@ -41,6 +41,9 @@ class ContentTwigExtension extends \Twig_Extension
      */
     private $sessionManager;
 
+    /**
+     * Constructor
+     */
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
@@ -65,9 +68,7 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns resolved content for uuid
-     * @param string $uuid
-     * @return array
+     * {@inheritdoc}
      */
     public function load($uuid)
     {
@@ -81,10 +82,7 @@ class ContentTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns resolved content for parent of given uuid
-     * @param string $uuid
-     * @throws Exception\ParentNotFoundException
-     * @return array
+     * {@inheritdoc}
      */
     public function loadParent($uuid)
     {

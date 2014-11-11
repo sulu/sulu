@@ -91,7 +91,7 @@ interface RlpStrategyInterface
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
-     * @return mixed
+     * @return ResourceLocatorInformation[]
      */
     public function loadHistoryByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 

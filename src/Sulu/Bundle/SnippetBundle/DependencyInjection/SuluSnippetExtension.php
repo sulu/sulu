@@ -29,6 +29,10 @@ class SuluSnippetExtension extends Extension
             'sulu_snippet.content-type.template',
             $config['types']['snippet']['template']
         );
+        $container->setParameter(
+            'sulu_snippet.twig.snippet.cache_lifetime',
+            $config['twig']['snippet']['cache_lifetime']
+        );
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('content.xml');
