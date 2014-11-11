@@ -1,7 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* 
+* DEV
+
     * ENHANCEMENT #539 [AdminBundle] Added library to validate iban
     
 * 0.10.2
