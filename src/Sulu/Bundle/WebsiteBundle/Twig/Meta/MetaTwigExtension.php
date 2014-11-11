@@ -51,13 +51,14 @@ class MetaTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('meta_alternate', array($this, 'getAlternateLinks'))
+            new \Twig_SimpleFunction('meta_alternate', array($this, 'getAlternateLinks')),
+            new \Twig_SimpleFunction('meta_seo', array($this, 'getSeoMetaTags'))
         );
     }
 
     /**
      * Returns alternate link HTML tags with href-lang attributes
-     * @param $urls
+     * @param array $urls
      * @return string
      */
     public function getAlternateLinks($urls)
@@ -87,6 +88,52 @@ class MetaTwigExtension extends \Twig_Extension
     }
 
     /**
+     * Returns seo meta tags with fallbacks
+     * @param array $extension
+     * @param array $content
+     * @return string
+     */
+    public function getSeoMetaTags($extension, $content)
+    {
+        $seo = array();
+        if (array_key_exists('seo', $extension)) {
+            $seo = $extension['seo'];
+        }
+        $excerpt = array();
+        if (array_key_exists('excerpt', $extension)) {
+            $excerpt = $extension['excerpt'];
+        }
+
+        // fallback for seo title
+        if (!array_key_exists('title', $seo) || $seo['title'] === '') {
+            $seo['title'] = $content['title'];
+        }
+
+        // fallback for seo description
+        if (
+            (!array_key_exists('description', $seo) || $seo['description'] === '') &&
+            array_key_exists('description', $excerpt) && $excerpt['description'] !== ''
+        ) {
+            $seo['description'] = strip_tags($excerpt['description']);
+        }
+        $seo['description'] = substr($seo['description'], 0, 155);
+
+        // generate robots content
+        $robots = array();
+        $robots[] = (array_key_exists('noIndex', $seo) && $seo['noIndex'] === true) ? 'noIndex' : 'index';
+        $robots[] = (array_key_exists('noFollow', $seo) && $seo['noFollow'] === true) ? 'noFollow' : 'follow';
+
+        // build meta tags
+        $result = array();
+        $result[] = $this->getMeta('title', $seo['title']);
+        $result[] = $this->getMeta('description', $seo['description']);
+        $result[] = $this->getMeta('keywords', $seo['keywords']);
+        $result[] = $this->getMeta('robots', strtoupper(implode(', ', $robots)));
+
+        return implode(PHP_EOL, $result);
+    }
+
+    /**
      * Returns link-alternate html tag
      *  - e.g. <link rel="alternate" href="http://sulu.lo/de/test-url" hreflang="de" />
      * @param string $url
@@ -100,5 +147,17 @@ class MetaTwigExtension extends \Twig_Extension
         $url = $this->contentPath->getContentPath($url, $webspaceKey, $locale);
 
         return sprintf('<link rel="alternate" href="%s" hreflang="%s" />', $url, !$default ? $locale : 'x-default');
+    }
+
+    /**
+     * Returns meta html tag
+     *  - e.g. <meta name="description" content="That's a good example">
+     * @param string $name
+     * @param string $content
+     * @return string
+     */
+    private function getMeta($name, $content)
+    {
+        return sprintf('<meta name="%s" content="%s">', $name, $content);
     }
 }
