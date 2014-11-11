@@ -17,7 +17,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 /**
  * provides the content_path function to generate real urls for frontend
  */
-class ContentPathTwigExtension extends \Twig_Extension
+class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInterface
 {
     /**
      * @var RequestAnalyzerInterface
@@ -57,19 +57,15 @@ class ContentPathTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('content_path', array($this, 'contentPathFunction')),
-            new \Twig_SimpleFunction('content_root_path', array($this, 'contentRootPathFunction'))
+            new \Twig_SimpleFunction('content_path', array($this, 'getContentPath')),
+            new \Twig_SimpleFunction('content_root_path', array($this, 'getContentRootPath'))
         );
     }
 
     /**
-     * generates real url for given content
-     * @param string $url
-     * @param string $webspaceKey
-     * @param string $locale
-     * @return string
+     * {@inheritdoc}
      */
-    public function contentPathFunction($url, $webspaceKey = null, $locale = null)
+    public function getContentPath($url, $webspaceKey = null, $locale = null)
     {
         if (
             $webspaceKey !== null &&
@@ -93,11 +89,9 @@ class ContentPathTwigExtension extends \Twig_Extension
     }
 
     /**
-     * generates real root url
-     * @param boolean $full if TRUE the full url will be returned, if FALSE only the current prefix is returned
-     * @return string
+     * {@inheritdoc}
      */
-    public function contentRootPathFunction($full = false)
+    public function getContentRootPath($full = false)
     {
         if ($this->requestAnalyzer !== null) {
             if ($full) {
