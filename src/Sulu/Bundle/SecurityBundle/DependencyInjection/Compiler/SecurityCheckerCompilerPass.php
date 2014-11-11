@@ -29,6 +29,26 @@ class SecurityCheckerCompilerPass implements CompilerPassInterface
                     )
                 )
             );
+
+            $securityListener = new Definition(
+                'Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener',
+                array(
+                    new Reference('sulu_security.security_checker'),
+                )
+            );
+
+            $securityListener->addTag(
+                'kernel.event_listener',
+                array(
+                    'event' => 'kernel.controller',
+                    'method' => 'onKernelController',
+                )
+            );
+
+            $container->setDefinition(
+                'sulu_security.event_listener.security',
+                $securityListener
+            );
         }
     }
 } 
