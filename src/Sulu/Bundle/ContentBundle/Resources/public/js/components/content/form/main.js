@@ -376,9 +376,14 @@ define(['sulucontent/components/content/preview/main'], function(Preview) {
 
             // check if each part has a value
             this.getDomElementsForTagName('sulu.rlp.part', function(property) {
-                var value = property.$el.data('element').getValue();
+                var value = property.$el.data('element').getValue(),
+                    sequence;
+
                 if (value !== '') {
-                    parts[this.preview.getSequence(property.$el, this.sandbox)] = value;
+                    sequence = this.preview.getSequence(property.$el, this.sandbox);
+                    if(!!sequence) {
+                        parts[sequence] = value;
+                    }
                 } else {
                     complete = false;
                 }

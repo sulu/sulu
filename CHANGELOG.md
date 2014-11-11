@@ -3,10 +3,12 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * BUGFIX #531 [ContentBundle] Fixed single internal link freeze
+    * ENHANCEMENT #523 [ContentBundle] Prefix contentbundle template path
     * ENHANCEMENT #526 [WebsiteBundle] Added Template var to resolver (Twig-Template)
     * ENHANCEMENT #361 [WebsiteBundle] Read urls for pages in all languages
     * ENHANCEMENT #528 [WebsiteBundle] Added memoize service to cache data and use it in twig extension
-    * ENHANCEMENT #523 [ContentBundle] Prefix ContentBundle template path
+    * FEATURE #536 [MediaBundle] Added Configurable display options for media-selection
 
 * 0.10.2 (2014-11-07)
 

@@ -259,9 +259,12 @@ define(['app-config'], function(AppConfig) {
             updateEvent = function(e) {
                 if (!!this.data.id && !!this.initiated) {
                     var $element = $(e.currentTarget),
-                        element = this.sandbox.dom.data($element, 'element');
+                        element = this.sandbox.dom.data($element, 'element'),
+                        sequence = this.getSequence($element);
 
-                    update.call(this, this.getSequence($element), element.getValue());
+                    if (!!sequence) {
+                        update.call(this, sequence, element.getValue());
+                    }
                 }
             },
 
@@ -341,6 +344,10 @@ define(['app-config'], function(AppConfig) {
                     parentProperty;
 
                 while (!$element.data('element')) {
+                    if ($element.length === 0) {
+                        return false;
+                    }
+                    
                     $element = $element.parent();
                 }
 
