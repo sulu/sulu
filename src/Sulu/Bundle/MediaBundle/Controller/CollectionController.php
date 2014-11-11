@@ -24,13 +24,14 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes collections available through a REST API
  * @package Sulu\Bundle\MediaBundle\Controller
  */
-class CollectionController extends RestController implements ClassResourceInterface
+class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**
      * @var string
@@ -70,7 +71,7 @@ class CollectionController extends RestController implements ClassResourceInterf
     public function getAction($id, Request $request)
     {
         try {
-            $locale = $this->getLocale($request->get('locale'));
+            $locale = $this->getLocale($request);
             $collectionManager = $this->getCollectionManager();
             $view = $this->responseGetById(
                 $id,
@@ -110,7 +111,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collectionManager = $this->getCollectionManager();
 
             $collections = $collectionManager->get(
-                $this->getLocale($request->get('locale')),
+                $this->getLocale($request),
                 array(
                     'parent' => $parent,
                     'depth' => $depth,
@@ -198,7 +199,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             'style' => $request->get('style'),
             'type' => $request->get('type', $this->container->getParameter('sulu_media.collection.type.default')),
             'parent' => $request->get('parent'),
-            'locale' => $request->get('locale', $this->getLocale($request->get('locale'))),
+            'locale' => $request->get('locale', $this->getLocale($request)),
             'title' => $request->get('title'),
             'description' => $request->get('description'),
             'changer' => $request->get('changer'),
@@ -232,23 +233,19 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
-     * @param $requestLocale
-     * @return mixed
-     */
-    protected function getLocale($requestLocale)
-    {
-        if ($requestLocale) {
-            return $requestLocale;
-        }
-
-        return $this->getUser()->getLocale();
-    }
-
-    /**
      * @return CollectionManagerInterface
      */
     protected function getCollectionManager()
     {
         return $this->get('sulu_media.collection_manager');
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.media.collections';
     }
 }
