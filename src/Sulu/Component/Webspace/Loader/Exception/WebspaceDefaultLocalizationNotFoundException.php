@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace\Loader\Exception;
 
-use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
 class WebspaceDefaultLocalizationNotFoundException extends WebspaceException

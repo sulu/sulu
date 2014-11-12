@@ -19,4 +19,4 @@ interface UserRepositoryFactoryInterface
      * @return UserRepositoryInterface
      */
     public function getRepository();
-} 
+}

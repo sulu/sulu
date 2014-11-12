@@ -25,6 +25,7 @@ class SaltGenerator
     public function getRandomSalt()
     {
         $generator = new SecureRandom();
+
         return base64_encode($generator->nextBytes(32));
     }
 }

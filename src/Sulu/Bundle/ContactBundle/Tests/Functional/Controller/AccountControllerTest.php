@@ -11,17 +11,13 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use DateTime;
-use Doctrine\ORM\Tools\SchemaTool;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
-use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -32,17 +28,8 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\Collection;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\File;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Bundle\ContactBundle\Entity\Activity;
-use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
-use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
-use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 
 class AccountControllerTest extends SuluTestCase
 {
@@ -247,7 +234,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->code);
         $this->assertTrue(isset($response->message));
     }
-
 
     public function testGetEmptyAccountContacts()
     {
@@ -1085,7 +1071,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        if($response->addresses[0]->street === 'Bahnhofstraße') {
+        if ($response->addresses[0]->street === 'Bahnhofstraße') {
             $this->assertEquals(2, sizeof($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
@@ -1180,7 +1166,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        if($response->addresses[0]->street === 'Bahnhofstraße') {
+        if ($response->addresses[0]->street === 'Bahnhofstraße') {
             $this->assertEquals(2, sizeof($response->addresses));
             $this->assertEquals('Bahnhofstraße', $response->addresses[0]->street);
             $this->assertEquals('2', $response->addresses[0]->number);
@@ -1190,7 +1176,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Musterland', $response->addresses[0]->country->name);
             $this->assertEquals('ML', $response->addresses[0]->country->code);
             $this->assertEquals('Private', $response->addresses[0]->addressType->name);
-    
+
             $this->assertEquals(true,$response->addresses[0]->billingAddress);
             $this->assertEquals(true,$response->addresses[0]->primaryAddress);
             $this->assertEquals(false,$response->addresses[0]->deliveryAddress);
@@ -1198,7 +1184,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('6850',$response->addresses[0]->postboxPostcode);
             $this->assertEquals('note', $response->addresses[0]->note);
             $this->assertEquals('4711',$response->addresses[0]->postboxNumber);
-    
+
             $this->assertEquals('Rathausgasse', $response->addresses[1]->street);
             $this->assertEquals('3', $response->addresses[1]->number);
             $this->assertEquals('2222', $response->addresses[1]->zip);
@@ -1218,7 +1204,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('Musterland', $response->addresses[1]->country->name);
             $this->assertEquals('ML', $response->addresses[1]->country->code);
             $this->assertEquals('Private', $response->addresses[1]->addressType->name);
-    
+
             $this->assertEquals(true,$response->addresses[1]->billingAddress);
             $this->assertEquals(true,$response->addresses[1]->primaryAddress);
             $this->assertEquals(false,$response->addresses[1]->deliveryAddress);
@@ -1226,7 +1212,7 @@ class AccountControllerTest extends SuluTestCase
             $this->assertEquals('6850',$response->addresses[1]->postboxPostcode);
             $this->assertEquals('4711',$response->addresses[1]->postboxNumber);
             $this->assertEquals('note', $response->addresses[1]->note);
-    
+
             $this->assertEquals('Rathausgasse', $response->addresses[0]->street);
             $this->assertEquals('3', $response->addresses[0]->number);
             $this->assertEquals('2222', $response->addresses[0]->zip);
@@ -1379,7 +1365,6 @@ class AccountControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(0, $response->total);
 
-
     }
 
     public function testDeleteByIdNotExisting()
@@ -1389,12 +1374,10 @@ class AccountControllerTest extends SuluTestCase
         $client->request('DELETE', '/api/accounts/4711');
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
 
-
         $client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
     }
-
 
     /*
      * test if deleteinfo returns correct data
@@ -1463,7 +1446,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->numChildren);
 
     }
-
 
     /*
      * test if deleteinfo returns correct data
@@ -1912,14 +1894,13 @@ class AccountControllerTest extends SuluTestCase
         $client->request('GET', '/api/accounts/' . $response->id);
         $response = json_decode($client->getResponse()->getContent());
 
-        if($response->addresses[0]->number == 1){
+        if ($response->addresses[0]->number == 1) {
             $this->assertEquals(false,$response->addresses[0]->primaryAddress);
             $this->assertEquals(true,$response->addresses[1]->primaryAddress);
         } else {
             $this->assertEquals(false,$response->addresses[1]->primaryAddress);
             $this->assertEquals(true,$response->addresses[0]->primaryAddress);
         }
-
 
     }
 
@@ -2064,6 +2045,7 @@ class AccountControllerTest extends SuluTestCase
             if ($a->primaryAddress === true && $b->primaryAddress === false) {
                 return true;
             }
+
         return false;
         };
     }

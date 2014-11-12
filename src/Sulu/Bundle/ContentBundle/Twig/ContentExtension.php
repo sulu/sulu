@@ -25,7 +25,7 @@ class ContentExtension extends \Twig_Extension
      */
     private $contentTypeManager;
 
-    function __construct($contentTypeManager)
+    public function __construct($contentTypeManager)
     {
         $this->contentTypeManager = $contentTypeManager;
     }
@@ -55,7 +55,32 @@ class ContentExtension extends \Twig_Extension
             $typeParams = $type->getDefaultParams();
         }
 
-        return array_merge($typeParams, $property->getParams());
+        return $this->mergeRecursive($typeParams, $property->getParams());
+    }
+
+    /**
+     * Better array merge recursive function
+     *  - does not combine to scalar values to a array
+     * @see http://php.net/manual/de/function.array-merge-recursive.php#106985
+     * @return array
+     */
+    private function mergeRecursive() {
+
+        $arrays = func_get_args();
+        $base = array_shift($arrays);
+
+        foreach ($arrays as $array) {
+            reset($base);
+            while (list($key, $value) = @each($array)) {
+                if (is_array($value) && @is_array($base[$key])) {
+                    $base[$key] = $this->mergeRecursive($base[$key], $value);
+                } else {
+                    $base[$key] = $value;
+                }
+            }
+        }
+
+        return $base;
     }
 
     /**
@@ -94,7 +119,7 @@ class ContentExtension extends \Twig_Extension
      * @param $property PropertyInterface
      * @return bool
      */
-    public function isMultipleTest( $property)
+    public function isMultipleTest($property)
     {
         return $property->getMinOccurs() > 1;
     }

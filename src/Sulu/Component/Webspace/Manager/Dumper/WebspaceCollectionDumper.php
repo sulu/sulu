@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace\Manager\Dumper;
 
-
 class WebspaceCollectionDumper
 {
     protected function render($template, $parameters)

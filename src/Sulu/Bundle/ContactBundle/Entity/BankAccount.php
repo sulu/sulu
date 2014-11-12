@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 
 /**
@@ -58,14 +57,14 @@ class BankAccount
     public function setBic($bic)
     {
         $this->bic = $bic;
-    
+
         return $this;
     }
 
     /**
      * Get bic
      *
-     * @return string 
+     * @return string
      */
     public function getBic()
     {
@@ -81,14 +80,14 @@ class BankAccount
     public function setIban($iban)
     {
         $this->iban = $iban;
-    
+
         return $this;
     }
 
     /**
      * Get iban
      *
-     * @return string 
+     * @return string
      */
     public function getIban()
     {
@@ -104,14 +103,14 @@ class BankAccount
     public function setPublic($public)
     {
         $this->public = $public;
-    
+
         return $this;
     }
 
     /**
      * Get public
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPublic()
     {
@@ -121,7 +120,7 @@ class BankAccount
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -137,7 +136,7 @@ class BankAccount
     public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
     {
         $this->accounts[] = $accounts;
-    
+
         return $this;
     }
 
@@ -154,7 +153,7 @@ class BankAccount
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAccounts()
     {
@@ -170,14 +169,14 @@ class BankAccount
     public function setBankName($bankName)
     {
         $this->bankName = $bankName;
-    
+
         return $this;
     }
 
     /**
      * Get bankName
      *
-     * @return string 
+     * @return string
      */
     public function getBankName()
     {

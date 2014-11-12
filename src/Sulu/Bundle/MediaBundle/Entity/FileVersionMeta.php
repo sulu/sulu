@@ -2,8 +2,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * FileVersionMeta
  */
@@ -44,14 +42,14 @@ class FileVersionMeta
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
      * Get title
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -67,14 +65,14 @@ class FileVersionMeta
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -90,14 +88,14 @@ class FileVersionMeta
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -107,7 +105,7 @@ class FileVersionMeta
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -123,6 +121,7 @@ class FileVersionMeta
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -135,14 +134,14 @@ class FileVersionMeta
     public function setFileVersion(\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion)
     {
         $this->fileVersion = $fileVersion;
-    
+
         return $this;
     }
 
     /**
      * Get fileVersion
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion 
+     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersion
      */
     public function getFileVersion()
     {

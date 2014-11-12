@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         copy: {
             public: {
                 files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../web/bundles/sulucontact/'}
+                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../../web/bundles/sulucontact/'}
                 ]
             },
             templates: {
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
                 files: [
                     {
                         dot: true,
-                        src: ['../../../../../../web/bundles/sulucontact/']
+                        src: ['../../../../../../../web/bundles/sulucontact/']
                     }
                 ]
             }

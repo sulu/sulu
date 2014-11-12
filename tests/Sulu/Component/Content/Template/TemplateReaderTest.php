@@ -791,7 +791,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'mandatory' => true,
                             'multilingual' => true,
                             'tags' => array(
-                                '0' => Array
+                                '0' => array
                                 (
                                     'name' => 'sulu.rlp.part',
                                     'priority' => 1,
@@ -812,7 +812,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                             'mandatory' => null,
                             'multilingual' => true,
                             'tags' => array(
-                                '0' => Array
+                                '0' => array
                                 (
                                     'name' => 'sulu.node.title',
                                     'priority' => 5,
@@ -845,7 +845,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                                 )
                             ),
                             'types' => array(
-                                'test' => Array
+                                'test' => array
                                 (
                                     'name' => 'test',
                                     'meta' => array(),
@@ -922,7 +922,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, sizeof($x));
     }
 
-    function testReservedName()
+    public function testReservedName()
     {
         $this->setExpectedException(
             '\Sulu\Component\Content\Template\Exception\ReservedPropertyNameException'
@@ -932,7 +932,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template_reserved.xml');
     }
 
-    function testNestingParams()
+    public function testNestingParams()
     {
         $template = array(
             'key' => 'template_nesting_params',

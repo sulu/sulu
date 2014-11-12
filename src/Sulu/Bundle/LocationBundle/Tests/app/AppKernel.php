@@ -5,7 +5,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    static $suluContext = 'admin';
+    public static $suluContext = 'admin';
 
     public function registerBundles()
     {

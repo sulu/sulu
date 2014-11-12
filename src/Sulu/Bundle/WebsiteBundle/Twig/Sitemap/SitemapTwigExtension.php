@@ -8,19 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Twig;
+namespace Sulu\Bundle\WebsiteBundle\Twig\Sitemap;
 
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * Provides twig functions for sitemap
- * @package Sulu\Bundle\WebsiteBundle\Twig
  */
-class SitemapTwigExtension extends \Twig_Extension
+class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensionInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -42,7 +39,7 @@ class SitemapTwigExtension extends \Twig_Extension
      */
     private $environment;
 
-    function __construct(
+    public function __construct(
         SitemapGeneratorInterface $sitemapGenerator,
         WebspaceManagerInterface $webspaceManager,
         $environment,
@@ -66,7 +63,7 @@ class SitemapTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns prefixed resourcelocator with the url and locale
+     * {@inheritdoc}
      */
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
@@ -94,7 +91,7 @@ class SitemapTwigExtension extends \Twig_Extension
     }
 
     /**
-     * Returns full sitemap of webspace and language from the content
+     * {@inheritdoc}
      */
     public function sitemapFunction($locale = null, $webspaceKey = null)
     {

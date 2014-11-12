@@ -100,4 +100,4 @@ class PathCleanup implements PathCleanupInterface
     {
         return $path === '/' || preg_match($this->pattern, $path) === 1;
     }
-} 
+}

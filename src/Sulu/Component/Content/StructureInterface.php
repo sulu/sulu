@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content;
 
 use DateTime;
-use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -55,6 +54,12 @@ interface StructureInterface extends \JsonSerializable
      * @param $uuid
      */
     public function setUuid($uuid);
+
+    /**
+     * gets user id of creator
+     * @return int
+     */
+    public function getCreator();
 
     /**
      * sets user id of creator

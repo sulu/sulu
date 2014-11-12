@@ -8,20 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Twig;
+namespace Sulu\Bundle\WebsiteBundle\Twig\Content;
 
-use Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * provides the content_path function to generate real urls for frontend
- * @package Sulu\Bundle\WebsiteBundle\Twig
  */
-class ContentPathTwigExtension extends \Twig_Extension
+class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInterface
 {
     /**
      * @var RequestAnalyzerInterface
@@ -43,7 +39,7 @@ class ContentPathTwigExtension extends \Twig_Extension
      */
     private $environment;
 
-    function __construct(
+    public function __construct(
         ContentMapperInterface $contentMapper,
         WebspaceManagerInterface $webspaceManager,
         $environment,
@@ -61,28 +57,24 @@ class ContentPathTwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('content_path', array($this, 'contentPathFunction')),
-            new \Twig_SimpleFunction('content_root_path', array($this, 'contentRootPathFunction'))
+            new \Twig_SimpleFunction('content_path', array($this, 'getContentPath')),
+            new \Twig_SimpleFunction('content_root_path', array($this, 'getContentRootPath'))
         );
     }
 
     /**
-     * generates real url for given content
-     * @param string $url
-     * @param string $webspaceKey
-     * @return string
+     * {@inheritdoc}
      */
-    public function contentPathFunction($url, $webspaceKey = null)
+    public function getContentPath($url, $webspaceKey = null, $locale = null)
     {
         if (
             $webspaceKey !== null &&
-            $this->requestAnalyzer &&
-            $this->requestAnalyzer->getCurrentWebspace()->getKey() !== $webspaceKey
+            $this->requestAnalyzer
         ) {
             $portalUrls = $this->webspaceManager->findUrlsByResourceLocator(
                 $url,
                 $this->environment,
-                $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
+                $locale ? : $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 $webspaceKey
             );
 
@@ -97,11 +89,9 @@ class ContentPathTwigExtension extends \Twig_Extension
     }
 
     /**
-     * generates real root url
-     * @param boolean $full if TRUE the full url will be returned, if FALSE only the current prefix is returned
-     * @return string
+     * {@inheritdoc}
      */
-    public function contentRootPathFunction($full = false)
+    public function getContentRootPath($full = false)
     {
         if ($this->requestAnalyzer !== null) {
             if ($full) {

@@ -46,4 +46,3 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
         $this->listener->onKernelRequest($this->event);
     }
 }
-

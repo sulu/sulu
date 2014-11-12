@@ -26,7 +26,7 @@ class WidgetsPass implements CompilerPassInterface
      */
     private $widgetTag;
 
-    function __construct()
+    public function __construct()
     {
         $this->widgetTag = 'sulu.widget';
     }
@@ -52,7 +52,7 @@ class WidgetsPass implements CompilerPassInterface
 
         // add each widget for each tag
         foreach ($taggedServices as $id => $tagAttributes) {
-            foreach($tagAttributes as $tagAttribute) {
+            foreach ($tagAttributes as $tagAttribute) {
                 if (array_key_exists('alias', $tagAttribute)) {
                     $widgetsHandler->addMethodCall(
                         'addWidget',

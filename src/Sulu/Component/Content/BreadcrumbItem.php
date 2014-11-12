@@ -34,7 +34,7 @@ class BreadcrumbItem implements BreadcrumbItemInterface
      */
     private $uuid;
 
-    function __construct($depth, $uuid, $title)
+    public function __construct($depth, $uuid, $title)
     {
         $this->depth = $depth;
         $this->title = $title;

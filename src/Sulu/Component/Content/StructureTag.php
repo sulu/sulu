@@ -43,7 +43,7 @@ class StructureTag
      * Returns the name of the structure tag
      * @return string
      */
-    public function getName() 
+    public function getName()
     {
         return $this->name;
     }
@@ -52,7 +52,7 @@ class StructureTag
      * Returns the attributes for the specific tags
      * @return array
      */
-    public function getAttributes() 
+    public function getAttributes()
     {
         return $this->attributes;
     }

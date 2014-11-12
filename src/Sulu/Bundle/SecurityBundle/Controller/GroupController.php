@@ -42,7 +42,8 @@ class GroupController extends RestController implements ClassResourceInterface
     const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     // TODO: move the field descriptors to a manager
-    public function __construct() {
+    public function __construct()
+    {
         $this->fieldDescriptors = array();
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', static::$entityName);
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor('name', 'name', static::$entityName);
@@ -84,6 +85,7 @@ class GroupController extends RestController implements ClassResourceInterface
             );
         }
         $view = $this->view($list, 200);
+
         return $this->handleView($view);
     }
 
@@ -201,8 +203,9 @@ class GroupController extends RestController implements ClassResourceInterface
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-        $get = function($entity) {
+        $get = function ($entity) {
             /** @var Role $entity */
+
             return $entity->getId();
         };
 
@@ -303,4 +306,4 @@ class GroupController extends RestController implements ClassResourceInterface
             $group->setParent($parent);
         }
     }
-} 
+}

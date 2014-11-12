@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;

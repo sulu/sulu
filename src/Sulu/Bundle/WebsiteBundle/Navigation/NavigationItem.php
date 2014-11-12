@@ -48,7 +48,7 @@ class NavigationItem
      */
     private $excerpt;
 
-    function __construct($title, $url, $excerpt, $children = array(), $uuid = null, $nodeType = Structure::STATE_TEST)
+    public function __construct($title, $url, $excerpt, $children = array(), $uuid = null, $nodeType = Structure::STATE_TEST)
     {
         $this->title = $title;
         $this->url = $url;

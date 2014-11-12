@@ -10,10 +10,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use Hateoas\Representation\CollectionRepresentation;
-use Hateoas\Representation\PaginatedRepresentation;
-use JMS\Serializer\Annotation\Expose;
-use JMS\Serializer\Annotation\XmlAttribute;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;

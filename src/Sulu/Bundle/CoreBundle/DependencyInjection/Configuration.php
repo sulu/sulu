@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
-use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -37,6 +36,7 @@ class Configuration implements ConfigurationInterface
         $this->getHttpCacheConfiguration($children);
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
+        $this->getCacheConfiguration($children);
         $children->end();
 
         return $treeBuilder;
@@ -256,6 +256,21 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+    }
+
+    private function getCacheConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('cache')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('memoize')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('default_lifetime')->defaultValue(1)->end()
                     ->end()
                 ->end()
             ->end()

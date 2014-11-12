@@ -12,7 +12,6 @@ namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase as SymfonyCmfBaseTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
 use Sulu\Component\Content\StructureInterface;
@@ -24,16 +23,22 @@ class BaseTestCase extends SuluTestCase
 
     public function setUp()
     {
+        $this->initPhpcr();
         $fs = new Filesystem;
-        $fs->remove(__DIR__ . '/../Resources/app/data');
+
+        try {
+            $fs->remove(__DIR__ . '/../Resources/app/data');
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+        }
+
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->purgeNode('/cmf/sulu_io/routes/de');
-        $this->purgeNode('/cmf/sulu_io/contents');
     }
 
     public function getSearchManager()
     {
         $searchManager = $this->getContainer()->get('massive_search.search_manager');
+
         return $searchManager;
     }
 
@@ -64,18 +69,4 @@ class BaseTestCase extends SuluTestCase
         $mapper = $this->getContainer()->get('sulu.content.mapper');
         $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
-
-    protected function purgeNode($path)
-    {
-        $node = $this->session->getNode($path);
-        foreach ($node->getNodes() as $child) {
-            foreach ($child->getReferences() as $referrer) {
-                $referrer->getParent()->remove();
-            }
-            $child->remove();
-        }
-
-        $this->session->save();
-    }
 }
-

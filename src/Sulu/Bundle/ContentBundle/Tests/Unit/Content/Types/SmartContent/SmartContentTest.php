@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;

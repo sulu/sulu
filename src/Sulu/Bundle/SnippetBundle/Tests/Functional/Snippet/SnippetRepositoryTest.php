@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
+use PHPCR\PropertyType;
 
 class SnippetRepositoryTest extends BaseFunctionalTestCase
 {
@@ -33,6 +34,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $this->loadFixtures();
 
         $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
+        $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
     }
 
     public function provideGetSnippets()
@@ -123,5 +125,11 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $this->assertEquals('B car', $second->getProperty('title')->getValue());
         $third = next($snippets);
         $this->assertEquals('C car', $third->getProperty('title')->getValue());
+    }
+
+    public function testGetReferences()
+    {
+        $res = $this->snippetRepository->getReferences($this->hotel1->getUuid());
+        $this->assertCount(1, $res);
     }
 }

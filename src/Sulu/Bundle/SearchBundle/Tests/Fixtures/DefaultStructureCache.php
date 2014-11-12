@@ -164,12 +164,5 @@ class DefaultStructureCache extends Page
 
         $this->addChild($section1);
 
-
     }
 }
-
-
-
-
-
-

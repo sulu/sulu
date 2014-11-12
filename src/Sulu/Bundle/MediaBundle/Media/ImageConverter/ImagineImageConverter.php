@@ -10,11 +10,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Palette\CMYK;
 use Imagine\Image\Palette\RGB;
-use Imagine\Image\Profile;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
@@ -57,6 +55,7 @@ class ImagineImageConverter implements ImageConverterInterface
         if (!class_exists('Imagick')) {
             return new GdImagine();
         }
+
         return new ImagickImagine();
     }
 
@@ -152,4 +151,4 @@ class ImagineImageConverter implements ImageConverterInterface
             $this->commandManager->get($command)->execute($this->image, $parameters);
         }
     }
-} 
+}

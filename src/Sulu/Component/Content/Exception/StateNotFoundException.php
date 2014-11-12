@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-
 class StateNotFoundException extends StateException
 {
     /**
@@ -18,7 +17,7 @@ class StateNotFoundException extends StateException
      */
     private $state;
 
-    function __construct($state, $message = null, $code = null, $previous = null)
+    public function __construct($state, $message = null, $code = null, $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->state = $state;

@@ -28,4 +28,4 @@ interface SitemapGeneratorInterface
      * @return array
      */
     public function generate($webspaceKey, $locale, $flat = false);
-} 
+}

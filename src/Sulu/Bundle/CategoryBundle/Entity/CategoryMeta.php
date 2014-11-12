@@ -2,8 +2,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * CategoryMeta
  */
@@ -34,7 +32,6 @@ class CategoryMeta
      */
     private $category;
 
-
     /**
      * Set key
      *
@@ -44,14 +41,14 @@ class CategoryMeta
     public function setKey($key)
     {
         $this->key = $key;
-    
+
         return $this;
     }
 
     /**
      * Get key
      *
-     * @return string 
+     * @return string
      */
     public function getKey()
     {
@@ -67,14 +64,14 @@ class CategoryMeta
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
@@ -90,14 +87,14 @@ class CategoryMeta
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    
+
         return $this;
     }
 
     /**
      * Get locale
      *
-     * @return string 
+     * @return string
      */
     public function getLocale()
     {
@@ -107,7 +104,7 @@ class CategoryMeta
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -123,14 +120,14 @@ class CategoryMeta
     public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
     {
         $this->category = $category;
-    
+
         return $this;
     }
 
     /**
      * Get category
      *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category 
+     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
      */
     public function getCategory()
     {

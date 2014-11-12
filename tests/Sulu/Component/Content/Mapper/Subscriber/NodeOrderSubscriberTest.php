@@ -42,7 +42,7 @@ class NodeOrderSubscriberTest extends ProphecyTestCase
     {
         $this->node->getParent()->willReturn($this->parent->reveal());
         $this->parent->getNodes()->willReturn(array(
-            $this->sibling1, 
+            $this->sibling1,
             $this->sibling2,
             $this->node,
             $this->sibling3
@@ -57,7 +57,7 @@ class NodeOrderSubscriberTest extends ProphecyTestCase
     {
         $this->node->getParent()->willReturn($this->parent->reveal());
         $this->parent->getNodes()->willReturn(array(
-            $this->sibling1, 
+            $this->sibling1,
             $this->sibling2,
         ));
 

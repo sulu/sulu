@@ -10,11 +10,9 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Accessor;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-
 
 /**
  * Account
@@ -631,7 +629,6 @@ class Account extends ApiEntity
         return $this->children;
     }
 
-
     /**
      * Set type
      *
@@ -654,8 +651,6 @@ class Account extends ApiEntity
     {
         return $this->type;
     }
-
-
 
     /**
      * Add faxes
@@ -787,7 +782,6 @@ class Account extends ApiEntity
      */
     private $accountCategory;
 
-
     /**
      * Set accountCategory
      *
@@ -910,6 +904,7 @@ class Account extends ApiEntity
                 $tags[] = $tag->getName();
             }
         }
+
         return $tags;
     }
 
@@ -1171,6 +1166,7 @@ class Account extends ApiEntity
     public function setMainFax($mainFax)
     {
         $this->mainFax = $mainFax;
+
         return $this;
     }
 
@@ -1276,6 +1272,7 @@ class Account extends ApiEntity
                 $addresses[] = $address;
             }
         }
+
         return $addresses;
     }
 
@@ -1296,6 +1293,7 @@ class Account extends ApiEntity
                 }
             }
         }
+
         return null;
     }
 
@@ -1315,6 +1313,7 @@ class Account extends ApiEntity
                 $contacts[] = $accountContact->getContact();
             }
         }
+
         return $contacts;
     }
 

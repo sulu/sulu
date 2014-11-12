@@ -35,4 +35,4 @@ interface ContentQueryExecutorInterface
         $limit = null,
         $offset = null
     );
-} 
+}

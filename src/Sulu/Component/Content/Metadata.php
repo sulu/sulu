@@ -24,7 +24,7 @@ class Metadata
     /**
      * @param array $metadata
      */
-    function __construct($metadata)
+    public function __construct($metadata)
     {
         $this->data = $metadata;
     }

@@ -34,4 +34,4 @@ class ResizeCommand implements CommandInterface
         }
         $image->resize(new Box($newWidth, $newHeight));
     }
-} 
+}

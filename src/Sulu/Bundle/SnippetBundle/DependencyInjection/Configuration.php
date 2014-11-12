@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('sulu_snippet')
+        $treeBuilder->root('sulu_snippet')
             ->children()
                 ->arrayNode('types')
                     ->addDefaultsIfNotSet()
@@ -36,9 +36,21 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('twig')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('snippet')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('cache_lifetime')
+                                    ->defaultValue(1)
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
     }
 }
-

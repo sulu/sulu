@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 /**
@@ -154,7 +153,7 @@ class Url
     public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
     {
         $this->contacts[] = $contacts;
-    
+
         return $this;
     }
 
@@ -171,7 +170,7 @@ class Url
     /**
      * Get contacts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Webspace\Analyzer;
 
-
 use PHPUnit_Framework_MockObject_MockObject;
 use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Portal;
@@ -286,7 +285,7 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
         $request->request = new ParameterBag(array('post' => 1));
         $request->query = new ParameterBag(array('get' => 1));
-        
+
         $this->requestAnalyzer->analyze($request);
     }
 }

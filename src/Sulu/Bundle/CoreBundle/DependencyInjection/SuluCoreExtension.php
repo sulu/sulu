@@ -95,6 +95,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initHttpCache($config['http_cache'], $container, $loader);
         }
 
+        // Cache
+        if (isset($config['cache'])) {
+            $this->initCache($config['cache'], $container, $loader);
+        }
+
         // Default Fields
         if (isset($config['fields_defaults'])) {
             $this->initFields($config['fields_defaults'], $container);
@@ -201,7 +206,18 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $contentConfig['structure']['paths']
         );
 
-
         $loader->load('content.xml');
+    }
+
+    /**
+     * @param $cache
+     * @param $container
+     * @param $loader
+     */
+    private function initCache($cache, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
+
+        $loader->load('cache.xml');
     }
 }

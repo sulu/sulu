@@ -166,6 +166,7 @@
 
         <!-- sulu node helper -->
         <service id="sulu.util.node_helper" class="%sulu.util.node_helper.class%">
+            <argument type="service" id="doctrine_phpcr.default_session"/>
             <argument>%sulu.content.language.namespace%</argument>
             <argument type="collection">
                 <argument key="base">%sulu.content.node_names.base%</argument>

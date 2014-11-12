@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\ContentBundle\Content;
 
 use JMS\Serializer\Serializer;
-use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -248,6 +247,7 @@ class SmartContentContainer implements ArrayableInterface
             case 'config':
                 return $this->getConfig();
         }
+
         return null;
     }
 

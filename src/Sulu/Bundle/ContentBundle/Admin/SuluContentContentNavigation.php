@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
-use Sulu\Component\Content\Structure;
 
 class SuluContentContentNavigation extends ContentNavigation
 {

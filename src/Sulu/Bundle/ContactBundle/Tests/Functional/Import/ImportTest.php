@@ -16,24 +16,13 @@ use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
-use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\ContactBundle\Entity\Country;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\PhoneType;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Import\Import;
-use Sulu\Bundle\TestBundle\Testing\DatabaseTestCase;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery;
-use Sulu\Bundle\ContactBundle\Entity\Activity;
-use Sulu\Bundle\ContactBundle\Entity\ActivityPriority;
-use Sulu\Bundle\ContactBundle\Entity\ActivityStatus;
-use Sulu\Bundle\ContactBundle\Entity\ActivityType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class ImportTest extends SuluTestCase

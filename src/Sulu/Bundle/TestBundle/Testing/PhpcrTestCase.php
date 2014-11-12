@@ -38,7 +38,6 @@ use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -187,12 +186,16 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
-            $nodeHelper = new SuluNodeHelper('i18n', array(
-                'base' => 'cmf',
-                'content' => 'contents',
-                'route' => 'routes',
-                'snippet' => 'snippets',
-            ));
+            $nodeHelper = new SuluNodeHelper(
+                $this->sessionManager->getSession(),
+                'i18n', 
+                array(
+                    'base' => 'cmf',
+                    'content' => 'contents',
+                    'route' => 'routes',
+                    'snippet' => 'snippets',
+                )
+            );
             $cleaner = new PathCleanup();
             $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner);
 
@@ -492,4 +495,4 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->save();
         }
     }
-} 
+}

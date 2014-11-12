@@ -13,7 +13,8 @@ use Doctrine\ORM\Query;
  */
 class AddressRepository extends EntityRepository
 {
-    public function findById($id) {
+    public function findById($id)
+    {
         try {
             $qb = $this->createQueryBuilder('address')
                 ->leftJoin('address.accountAddresses', 'accountAddresses')
@@ -36,7 +37,8 @@ class AddressRepository extends EntityRepository
         }
     }
 
-    public function findByAccountId($id) {
+    public function findByAccountId($id)
+    {
         try {
             $qb = $this->createQueryBuilder('address')
                 ->leftJoin('address.accountAddresses', 'accountAddresses')

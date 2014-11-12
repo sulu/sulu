@@ -14,6 +14,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
 /**
@@ -53,7 +54,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     /**
      * Constructor
      */
-    function __construct(
+    public function __construct(
         RlpStrategyInterface $strategy,
         StructureManagerInterface $structureManager,
         ResourceLocatorInterface $resourceLocator,
@@ -101,6 +102,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
         $urls = $this->resourceLocator->loadHistoryByUuid($uuid, $webspaceKey, $languageCode);
 
         $result = array();
+        /** @var ResourceLocatorInformation $url */
         foreach ($urls as $url) {
             $defaultParameter = '&language=' . $languageCode . '&webspace=' . $webspaceKey;
             $deleteParameter = '?path=' . $url->getResourceLocator() . $defaultParameter;

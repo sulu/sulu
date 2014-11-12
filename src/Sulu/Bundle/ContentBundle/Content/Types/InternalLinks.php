@@ -13,9 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
@@ -46,7 +44,7 @@ class InternalLinks extends ComplexContentType
      */
     private $template;
 
-    function __construct(
+    public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $contentQueryBuilder,
         LoggerInterface $logger,

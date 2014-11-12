@@ -10,8 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * SecurityType
  */
@@ -39,7 +37,7 @@ class SecurityType
     {
         $this->roles = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Set name
      *
@@ -49,14 +47,14 @@ class SecurityType
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -66,7 +64,7 @@ class SecurityType
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -92,7 +90,7 @@ class SecurityType
     public function addRole(\Sulu\Bundle\SecurityBundle\Entity\Role $roles)
     {
         $this->roles[] = $roles;
-    
+
         return $this;
     }
 
@@ -109,7 +107,7 @@ class SecurityType
     /**
      * Get roles
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getRoles()
     {

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-
 class StateTransitionException extends StateException
 {
     /**
@@ -22,7 +21,7 @@ class StateTransitionException extends StateException
      */
     private $to;
 
-    function __construct($from, $to, $message = null, $code = null, $previous = null)
+    public function __construct($from, $to, $message = null, $code = null, $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->from = $from;

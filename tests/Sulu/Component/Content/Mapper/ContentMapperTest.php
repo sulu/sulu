@@ -13,7 +13,6 @@ namespace Sulu\Component\Content\Mapper;
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\Util\NodeHelper;
 use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
@@ -3097,6 +3096,68 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/my-your-nice-test', $result->getPropertyValue('url'));
         $this->assertEquals('My / Your nice test', $result->getPropertyValue('title'));
     }
+
+    public function testGetResourceLocators()
+    {
+        $data = array(
+            array('title' => 'Beschreibung', 'url' => '/beschreibung'),
+            array('title' => 'Description', 'url' => '/description'),
+        );
+
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $urls = $data[0]->getUrls();
+
+        $this->assertNull($urls['en']);
+        $this->assertNull($urls['en_us']);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertNull($urls['de_at']);
+        $this->assertNull($urls['es']);
+
+        $data[0] = $this->mapper->load($data[0]->getUuid(), 'default', 'de');
+        $urls = $data[0]->getUrls();
+
+        $this->assertNull($urls['en']);
+        $this->assertNull($urls['en_us']);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertNull($urls['de_at']);
+        $this->assertNull($urls['es']);
+
+        $data[0] = $this->mapper->load($data[0]->getUuid(), 'default', 'en', true);
+        $urls = $data[0]->getUrls();
+
+        $this->assertNull($urls['en']);
+        $this->assertNull($urls['en_us']);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertNull($urls['de_at']);
+        $this->assertNull($urls['es']);
+
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1, true, $data[0]->getUuid());
+        $urls = $data[1]->getUrls();
+
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertNull($urls['en_us']);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertNull($urls['de_at']);
+        $this->assertNull($urls['es']);
+
+        $data[1] = $this->mapper->load($data[1]->getUuid(), 'default', 'en');
+        $urls = $data[1]->getUrls();
+
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertNull($urls['en_us']);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertNull($urls['de_at']);
+        $this->assertNull($urls['es']);
+
+        $data[1] = $this->mapper->load($data[1]->getUuid(), 'default', 'de', true);
+        $urls = $data[1]->getUrls();
+
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertNull($urls['en_us']);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertNull($urls['de_at']);
+        $this->assertNull($urls['es']);
+    }
 }
 
 class TestExtension extends StructureExtension
@@ -3106,7 +3167,7 @@ class TestExtension extends StructureExtension
         'b'
     );
 
-    function __construct($name, $additionalPrefix = null)
+    public function __construct($name, $additionalPrefix = null)
     {
         $this->name = $name;
         $this->additionalPrefix = $additionalPrefix;

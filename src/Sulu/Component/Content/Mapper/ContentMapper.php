@@ -17,7 +17,6 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
-use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\BreadcrumbItem;
@@ -36,6 +35,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
@@ -46,7 +46,6 @@ use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Util\ArrayableInterface;
 use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -54,7 +53,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 use Sulu\Component\Util\SuluNodeHelper;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use PHPCR\PropertyType;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -394,8 +393,22 @@ class ContentMapper implements ContentMapperInterface
                     $path = $this->cleaner->cleanUp($title, $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
 
+
                     if ($path) {
+                        // workaround for Jackalope bug referenced in: https://github.com/sulu-cmf/sulu/issues/518
+                        $nextNode = $this->nodeHelper->getNextNode($node);
+
+                        if ($nextNode) {
+                            $nextNodeName = $nextNode->getName();
+                            $nodeName = $node->getName();
+                        }
+
                         $node->rename($path);
+
+                        if ($nextNode) {
+                            $parentNode = $node->getParent();
+                            $parentNode->orderBefore($node->getName(), $nextNodeName);
+                        }
                     }
                     // FIXME refresh session here
                 }
@@ -621,6 +634,8 @@ class ContentMapper implements ContentMapperInterface
                 $languageCode,
                 $webspaceKey
             );
+
+            $this->loadLocalizedUrlsForPage($structure, $node, $webspaceKey, null);
         }
 
         // throw an content.node.save event
@@ -1221,6 +1236,11 @@ class ContentMapper implements ContentMapperInterface
             $availableLocalization = $localization;
         }
 
+        // if there was no webspace then determine the webspace from the content node path
+        if (null === $webspaceKey) {
+            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($contentNode->getPath());
+        }
+
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.loadByNode.available-localization');
             $this->stopwatch->start('contentManager.loadByNode.mapping');
@@ -1353,6 +1373,8 @@ class ContentMapper implements ContentMapperInterface
                 $webspaceKey,
                 $loadGhostContent
             );
+
+            $this->loadLocalizedUrlsForPage($structure, $contentNode, $webspaceKey, null);
         }
 
         // throw an content.node.load event (disabled for now)
@@ -1494,14 +1516,64 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * Loads urls for given page for all locales in webspace
+     * @param Page $page
+     * @param NodeInterface $node
+     * @param string $webspaceKey
+     * @param string $segmentKey
+     */
+    private function loadLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    {
+        $localizedUrls = array();
+
+        if ($page->hasTag('sulu.rlp')) {
+            $localizedUrls = $this->getLocalizedUrlsForPage($page, $node, $webspaceKey, $segmentKey);
+        }
+
+        $page->setUrls($localizedUrls);
+    }
+
+    /**
+     * Returns urls for given page for all locales in webspace
+     * @param Page $page
+     * @param NodeInterface $node
+     * @param string $webspaceKey
+     * @param string $segmentKey
+     * @return array
+     */
+    private function getLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
+    {
+        $localizedUrls = array();
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $property = $page->getPropertyByTagName('sulu.rlp');
+        $property = clone $property;
+
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            // prepare translation vars
+            $locale = $localization->getLocalization();
+            $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
+
+            // set default value
+            $property->setValue(null);
+            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+            $localizedUrls[$locale] = $property->getValue();
+        }
+
+        return $localizedUrls;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function delete($uuid, $webspaceKey)
+    public function delete($uuid, $webspaceKey, $dereference = false)
     {
         $session = $this->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        $this->deleteRecursively($node);
+        $this->deleteRecursively($node, $dereference);
         $session->save();
     }
 
@@ -1575,6 +1647,9 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * TODO: Refactor this. This should not effect the global state of the object, this
+     *       should be scoped for each save request.
+     *
      * TRUE dont rename pages on save
      * @param boolean $noRenamingFlag
      * @return $this
@@ -1740,14 +1815,33 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * remove node with references (path, history path ...)
+     * Remove node with references (path, history path ...)
+     *
      * @param NodeInterface $node
+     * @param boolean $dereference Remove REFERENCE properties (or property
+     *   values in the case of multi-value) from referencing nodes
      */
-    private function deleteRecursively(NodeInterface $node)
+    private function deleteRecursively(NodeInterface $node, $dereference = false)
     {
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $child = $ref->getParent();
+
+                if ($dereference) {
+                    if ($ref->isMultiple()) {
+                        $values = $ref->getValue();
+                        foreach ($values as $i => $referringNode) {
+                            if ($node->getIdentifier() === $referringNode->getIdentifier()) {
+                                unset($values[$i]);
+                            }
+                        }
+
+                        $ref->getParent()->setProperty($ref->getName(), $values, PropertyType::REFERENCE);
+                    } else {
+                        $ref->remove();
+                    }
+                }
+
             } else {
                 $child = $ref;
             }
@@ -1968,7 +2062,7 @@ class ContentMapper implements ContentMapperInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
-                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale);
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $originLocale);
             }
 
             // get url returns false if route is not this language
@@ -1997,6 +2091,7 @@ class ContentMapper implements ContentMapperInterface
                         'creator' => $creator,
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
+                        'urls' => $this->getLocalizedUrlsForPage($structure, $node, $webspaceKey, null),
                         'locale' => $locale,
                         'webspaceKey' => $key,
                         'template' => $templateKey,

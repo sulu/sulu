@@ -29,4 +29,4 @@ interface PathCleanupInterface
      * @return bool
      */
     public function validate($path);
-} 
+}

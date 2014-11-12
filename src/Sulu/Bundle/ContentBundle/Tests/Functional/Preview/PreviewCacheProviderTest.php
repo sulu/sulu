@@ -26,7 +26,7 @@ use Sulu\Component\Webspace\Webspace;
  * @group functional
  * @group preview
  */
-class PhpcrCacheProviderTest extends PhpcrTestCase
+class PreviewCacheProviderTest extends PhpcrTestCase
 {
     /**
      * @var PhpcrCacheProvider
@@ -159,6 +159,7 @@ class PhpcrCacheProviderTest extends PhpcrTestCase
 
         $data[0] =  $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
         $data[1] =  $this->mapper->save($data[1], 'overview', 'default', 'en', 1);
+
         return $data;
     }
 

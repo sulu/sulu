@@ -10,12 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
-use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

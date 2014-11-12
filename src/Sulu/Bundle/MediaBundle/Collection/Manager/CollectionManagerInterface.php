@@ -35,9 +35,10 @@ interface CollectionManagerInterface
      * @param array $filter for parent or depth
      * @param int $limit limit the output
      * @param int $offset offset the output
+     * @param array $sortBy sort by e.g. array('title' => 'ASC')
      * @return Paginator
      */
-    public function get($locale, $filter = array(), $limit = null, $offset = null);
+    public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array());
 
     /**
      * Returns a collection count
@@ -71,4 +72,4 @@ interface CollectionManagerInterface
      * @return DoctrineFieldDescriptor
      */
     public function getFieldDescriptor($key);
-} 
+}

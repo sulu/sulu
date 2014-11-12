@@ -33,6 +33,7 @@ use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -83,7 +84,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * @var StorageInterface
      */
-    private $storage;
+    protected $storage;
 
     /**
      * @var UserRepositoryInterface
@@ -128,7 +129,7 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * @var int
      */
-    private $count;
+    public $count;
 
     /**
      * @param MediaRepositoryInterface $mediaRepository
@@ -157,8 +158,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $maxFileSize,
         $blockedMimeTypes,
         $mediaTypes
-    )
-    {
+    ) {
         $this->mediaRepository = $mediaRepository;
         $this->collectionRepository = $collectionRepository;
         $this->em = $em;
@@ -212,14 +212,14 @@ class DefaultMediaManager implements MediaManagerInterface
             'public.name',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILE,
-                        self::ENTITY_NAME_MEDIA . '.file'
-                    ),
+                    self::ENTITY_NAME_FILE,
+                    self::ENTITY_NAME_MEDIA . '.file'
+                ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSION,
-                        self::ENTITY_NAME_FILE . '.fileVersion',
-                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                    )
+                    self::ENTITY_NAME_FILEVERSION,
+                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                )
             )
         );
         $fieldDescriptors['size'] = new DoctrineFieldDescriptor(
@@ -229,14 +229,14 @@ class DefaultMediaManager implements MediaManagerInterface
             'media.media.size',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILE,
-                        self::ENTITY_NAME_MEDIA . '.file'
-                    ),
+                    self::ENTITY_NAME_FILE,
+                    self::ENTITY_NAME_MEDIA . '.file'
+                ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSION,
-                        self::ENTITY_NAME_FILE . '.fileVersion',
-                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                    )
+                    self::ENTITY_NAME_FILEVERSION,
+                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                )
             ),
             false,
             true,
@@ -250,14 +250,14 @@ class DefaultMediaManager implements MediaManagerInterface
             'public.changed',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILE,
-                        self::ENTITY_NAME_MEDIA . '.file'
-                    ),
+                    self::ENTITY_NAME_FILE,
+                    self::ENTITY_NAME_MEDIA . '.file'
+                ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSION,
-                        self::ENTITY_NAME_FILE . '.fileVersion',
-                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                    )
+                    self::ENTITY_NAME_FILEVERSION,
+                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                )
             ),
             true,
             false,
@@ -271,14 +271,14 @@ class DefaultMediaManager implements MediaManagerInterface
             'public.created',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILE,
-                        self::ENTITY_NAME_MEDIA . '.file'
-                    ),
+                    self::ENTITY_NAME_FILE,
+                    self::ENTITY_NAME_MEDIA . '.file'
+                ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSION,
-                        self::ENTITY_NAME_FILE . '.fileVersion',
-                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                    )
+                    self::ENTITY_NAME_FILEVERSION,
+                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                )
             ),
             true,
             false,
@@ -292,18 +292,18 @@ class DefaultMediaManager implements MediaManagerInterface
             'public.title',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILE,
-                        self::ENTITY_NAME_MEDIA . '.file'
-                    ),
+                    self::ENTITY_NAME_FILE,
+                    self::ENTITY_NAME_MEDIA . '.file'
+                ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSION,
-                        self::ENTITY_NAME_FILE . '.fileVersion',
-                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                    ),
+                    self::ENTITY_NAME_FILEVERSION,
+                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                ),
                 self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSIONMETA,
-                        self::ENTITY_NAME_FILEVERSION . '.meta'
-                    )
+                    self::ENTITY_NAME_FILEVERSIONMETA,
+                    self::ENTITY_NAME_FILEVERSION . '.meta'
+                )
             ),
             false,
             true,
@@ -317,18 +317,18 @@ class DefaultMediaManager implements MediaManagerInterface
             'media.media.description',
             array(
                 self::ENTITY_NAME_FILE => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILE,
-                        self::ENTITY_NAME_MEDIA . '.file'
-                    ),
+                    self::ENTITY_NAME_FILE,
+                    self::ENTITY_NAME_MEDIA . '.file'
+                ),
                 self::ENTITY_NAME_FILEVERSION => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSION,
-                        self::ENTITY_NAME_FILE . '.fileVersion',
-                        self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
-                    ),
+                    self::ENTITY_NAME_FILEVERSION,
+                    self::ENTITY_NAME_FILE . '.fileVersion',
+                    self::ENTITY_NAME_FILEVERSION . '.version = ' . self::ENTITY_NAME_FILE . '.version'
+                ),
                 self::ENTITY_NAME_FILEVERSIONMETA => new DoctrineJoinDescriptor(
-                        self::ENTITY_NAME_FILEVERSIONMETA,
-                        self::ENTITY_NAME_FILEVERSION . '.meta'
-                    )
+                    self::ENTITY_NAME_FILEVERSIONMETA,
+                    self::ENTITY_NAME_FILEVERSION . '.meta'
+                )
             )
         );
 
@@ -362,6 +362,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$mediaEntity) {
             throw new MediaNotFoundException('Media with the ID ' . $id . ' was not found.');
         }
+
         return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
     }
 
@@ -376,6 +377,7 @@ class DefaultMediaManager implements MediaManagerInterface
         foreach ($mediaEntities as $mediaEntity) {
             $media[] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
         }
+
         return $media;
     }
 
@@ -395,7 +397,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (isset($data['id'])) {
             $media = $this->modifyMedia($uploadedFile, $data, $this->getUser($userId));
         } else {
-            $media = $this->createMedia($uploadedFile, $data, $this->getUser($userId));
+            $media = $this->buildData($uploadedFile, $data, $this->getUser($userId));
         }
 
         return $this->addFormatsAndUrl($media);
@@ -449,7 +451,7 @@ class DefaultMediaManager implements MediaManagerInterface
         }
 
         if (!$currentFileVersion) {
-            throw new FileVersionNotFoundException ($mediaEntity->getId(), $version);
+            throw new FileVersionNotFoundException($mediaEntity->getId(), $version);
         }
 
         if ($uploadedFile) {
@@ -484,7 +486,11 @@ class DefaultMediaManager implements MediaManagerInterface
             $file->addFileVersion($fileVersion);
 
             // delete old fileversion from cache
-            $this->formatManager->purge($mediaEntity->getId(), $currentFileVersion->getName(), $currentFileVersion->getStorageOptions());
+            $this->formatManager->purge(
+                $mediaEntity->getId(),
+                $currentFileVersion->getName(),
+                $currentFileVersion->getStorageOptions()
+            );
         } else {
             // not setable in update
             $data['name'] = null;
@@ -511,14 +517,13 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * Create a new media
+     * Prepares data
+     *
      * @param UploadedFile $uploadedFile
-     * @param $data
-     * @param UserInterface $user
-     * @return MediaEntity
-     * @throws InvalidFileException
+     * @param Array $data
+     * @param User $user
      */
-    private function createMedia($uploadedFile, $data, $user)
+    private function buildData($uploadedFile, $data, $user)
     {
         if (!($uploadedFile instanceof UploadedFile)) {
             throw new InvalidFileException('given uploadfile is not of instance UploadFile');
@@ -526,14 +531,30 @@ class DefaultMediaManager implements MediaManagerInterface
 
         $this->validator->validate($uploadedFile);
 
-        $data['storageOptions'] = $this->storage->save($uploadedFile->getPathname(), $uploadedFile->getClientOriginalName(), 1);
+        $data['storageOptions'] = $this->storage->save(
+            $uploadedFile->getPathname(),
+            $uploadedFile->getClientOriginalName(),
+            1
+        );
         $data['name'] = $uploadedFile->getClientOriginalName();
         $data['size'] = $uploadedFile->getSize();
         $data['mimeType'] = $uploadedFile->getMimeType();
         $data['type'] = array(
             'id' => $this->getMediaType($uploadedFile)
         );
+        return $this->createMedia($data, $user);
+    }
 
+    /**
+     * Create a new media
+     * @param UploadedFile $uploadedFile
+     * @param $data
+     * @param UserInterface $user
+     * @return MediaEntity
+     * @throws InvalidFileException
+     */
+    protected function createMedia($data, $user)
+    {
         $mediaEntity = new MediaEntity();
         $mediaEntity->setCreator($user);
         $mediaEntity->setChanger($user);
@@ -575,14 +596,12 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param UploadedFile|null $uploadedFile
+     * @param SymfonyFile|null $uploadedFile
      * @return object
      */
-    protected function getMediaType(UploadedFile $uploadedFile)
+    protected function getMediaType(SymfonyFile $file)
     {
-        $mimeType = $uploadedFile->getMimeType();
-        $id = null;
-
+        $mimeType = $file->getMimeType();
         foreach ($this->mediaTypes as $mediaType) {
             if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $name = $mediaType['type'];
@@ -695,6 +714,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$collection) {
             throw new CollectionNotFoundException($collectionId);
         }
+
         return $collection;
     }
 
@@ -710,6 +730,7 @@ class DefaultMediaManager implements MediaManagerInterface
         if (!$type) {
             throw new MediaTypeNotFoundException('Collection Type with the ID ' . $typeId . ' not found');
         }
+
         return $type;
     }
 
@@ -728,7 +749,11 @@ class DefaultMediaManager implements MediaManagerInterface
         foreach ($mediaEntity->getFiles() as $file) {
             /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
-                $this->formatManager->purge($mediaEntity->getId(), $fileVersion->getName(), $fileVersion->getStorageOptions());
+                $this->formatManager->purge(
+                    $mediaEntity->getId(),
+                    $fileVersion->getName(),
+                    $fileVersion->getStorageOptions()
+                );
             }
         }
 
@@ -757,7 +782,12 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function addFormatsAndUrl(Media $media)
     {
         $media->setFormats(
-            $this->formatManager->getFormats($media->getId(), $media->getName(), $media->getStorageOptions(), $media->getVersion())
+            $this->formatManager->getFormats(
+                $media->getId(),
+                $media->getName(),
+                $media->getStorageOptions(),
+                $media->getVersion()
+            )
         );
 
         $media->setUrl(
@@ -794,6 +824,7 @@ class DefaultMediaManager implements MediaManagerInterface
                 $id,
                 $fileName
             ),
-            $this->downloadPath) . '?v=' . $version;
+            $this->downloadPath
+        ) . '?v=' . $version;
     }
 }

@@ -73,12 +73,16 @@ abstract class Page extends Structure
     private $path;
 
     /**
+     * @var string[]
+     */
+    private $urls;
+
+    /**
      * @param $key string
      * @param $view string
      * @param $controller string
      * @param int $cacheLifeTime
      * @param array $metaData
-     * @return \Sulu\Component\Content\Structure
      */
     public function __construct($key, $view, $controller, $cacheLifeTime = 604800, $metaData = array())
     {
@@ -156,7 +160,6 @@ abstract class Page extends Structure
         return $this->nodeState;
     }
 
-
     /**
      * returns true if this node is shown in navigation
      * @return string[]
@@ -193,6 +196,22 @@ abstract class Page extends Structure
         }
 
         return null;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getUrls()
+    {
+        return $this->urls;
+    }
+
+    /**
+     * @param string[] $resourceLocators
+     */
+    public function setUrls($resourceLocators)
+    {
+        $this->urls = $resourceLocators;
     }
 
     /**

@@ -30,7 +30,7 @@ class ContactInfo implements WidgetInterface
     protected $widgetName = 'ContactInfo';
     protected $contactEntityName = 'SuluContactBundle:Contact';
 
-    function __construct(EntityManager $em)
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
@@ -78,6 +78,7 @@ class ContactInfo implements WidgetInterface
                     $id
                 );
             }
+
             return $this->parseContactForListSidebar($contact);
         } else {
             throw new WidgetParameterException(
@@ -141,6 +142,7 @@ class ContactInfo implements WidgetInterface
                     ->getCountry()->getName();
             }
         }
+
         return $data;
     }
 }

@@ -29,7 +29,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $environment;
 
-    function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->environment = $environment;
         $this->webspaceManager = $webspaceManager;
@@ -40,9 +40,14 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)
     {
+        // determine default locale (if one exists)
+        $defaultLocalization = $requestAnalyzer->getCurrentPortal()->getDefaultLocalization();
+        $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
+
         return array(
             'request' => array(
                 'webspaceKey' => $requestAnalyzer->getCurrentWebspace()->getKey(),
+                'defaultLocale' => $defaultLocale,
                 'locale' => $requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 'portalUrl' => $requestAnalyzer->getCurrentPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getCurrentResourceLocatorPrefix(),
@@ -66,6 +71,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
             'request' => array(
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
+                'defaultLocale' => $locale,
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
@@ -74,4 +80,4 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
             )
         );
     }
-} 
+}

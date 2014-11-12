@@ -10,14 +10,8 @@
 
 namespace Sulu\Component\Content\Query;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
-use PHPCR\NodeInterface;
-use PHPCR\Query\QueryResultInterface;
-use PHPCR\RepositoryException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -41,7 +35,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
      */
     private $stopwatch;
 
-    function __construct(
+    public function __construct(
         SessionManagerInterface $sessionManager,
         ContentMapperInterface $contentMapper,
         Stopwatch $stopwatch = null

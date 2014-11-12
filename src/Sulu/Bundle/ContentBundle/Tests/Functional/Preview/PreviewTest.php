@@ -150,7 +150,6 @@ class PreviewTest extends PhpcrTestCase
         $structureMock->setLanguageCode('en');
         $structureMock->setWebspaceKey('sulu_io');
 
-
         $method = new ReflectionMethod(
             get_class($structureMock), 'addChild'
         );
@@ -268,6 +267,7 @@ class PreviewTest extends PhpcrTestCase
         $content = $args[1]['content'];
 
         $result = $this->render($content->getPropertyValue('title'), $content->getPropertyValue('article'), $content->getPropertyValue('block'));
+
         return $result;
     }
 
