@@ -2062,7 +2062,7 @@ class ContentMapper implements ContentMapperInterface
             $structure = $this->structureManager->getStructure($templateKey);
 
             if (!isset($url)) {
-                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $locale);
+                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $originLocale);
             }
 
             // get url returns false if route is not this language
