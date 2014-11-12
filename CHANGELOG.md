@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+
+    * ...
+
 * 0.11.0 (2014-11-12)
 
     * BUGFIX      #540                 Real url in requested language (navigation, ...) for shadows
