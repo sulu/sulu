@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* [UNRELEASED]
+
+   * HOTFIX #543 [SearchBundle] Fixed re-index command
+
 * 0.11.0 (2014-11-12)
 
     * BUGFIX      #540                 Real url in requested language (navigation, ...) for shadows
