@@ -1,9 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* [UNRELEASED]
 
-    * ...
+   * HOTFIX #543 [SearchBundle] Fixed re-index command
 
 * 0.11.0 (2014-11-12)
 
