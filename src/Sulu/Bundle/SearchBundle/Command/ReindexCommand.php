@@ -18,6 +18,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -54,7 +55,7 @@ EOT
         $webspacePrefix = $container->getParameter('sulu.content.node_names.base');
         $tempName = $container->getParameter('sulu.content.node_names.temp');
 
-        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:content"';
+        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page"';
 
         $queryManager = $session->getWorkspace()->getQueryManager();
 
@@ -84,18 +85,25 @@ EOT
                 if ($tempName !== $matches[2] && $webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
                     $structure = $contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
 
-                    if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                    try {
+                        if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                            $output->writeln(
+                                '  [+] <comment>Indexing published page (locale: ' . $locale . ')</comment>: ' .
+                                $node->getPath()
+                            );
+                            $searchManager->index($structure, $locale);
+                        } else {
+                            $output->writeln(
+                                '  [-] <comment>De-indexing unpublished page (locale: ' . $locale . ')</comment>: ' .
+                                $node->getPath()
+                            );
+                            $searchManager->deindex($structure, $locale);
+                        }
+                    } catch (\Exception $exc) {
                         $output->writeln(
-                            '  [+] <comment>Indexing published structure (locale: ' . $locale . ')</comment>: ' .
-                            $node->getPath()
+                            '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
+                            ', locale: ' . $locale . '): ' . $exc->getMessage() . '</error>'
                         );
-                        $searchManager->index($structure, $locale);
-                    } else {
-                        $output->writeln(
-                            '  [-] <comment>De-indexing unpublished structure (locale: ' . $locale . ')</comment>: ' .
-                            $node->getPath()
-                        );
-                        $searchManager->deindex($structure, $locale);
                     }
                 }
             }
