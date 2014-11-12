@@ -53,6 +53,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 use Sulu\Component\Util\SuluNodeHelper;
+use PHPCR\PropertyType;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -392,8 +393,22 @@ class ContentMapper implements ContentMapperInterface
                     $path = $this->cleaner->cleanUp($title, $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
 
+
                     if ($path) {
+                        // workaround for Jackalope bug referenced in: https://github.com/sulu-cmf/sulu/issues/518
+                        $nextNode = $this->nodeHelper->getNextNode($node);
+
+                        if ($nextNode) {
+                            $nextNodeName = $nextNode->getName();
+                            $nodeName = $node->getName();
+                        }
+
                         $node->rename($path);
+
+                        if ($nextNode) {
+                            $parentNode = $node->getParent();
+                            $parentNode->orderBefore($node->getName(), $nextNodeName);
+                        }
                     }
                     // FIXME refresh session here
                 }
@@ -1221,6 +1236,11 @@ class ContentMapper implements ContentMapperInterface
             $availableLocalization = $localization;
         }
 
+        // if there was no webspace then determine the webspace from the content node path
+        if (null === $webspaceKey) {
+            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($contentNode->getPath());
+        }
+
         if ($this->stopwatch) {
             $this->stopwatch->stop('contentManager.loadByNode.available-localization');
             $this->stopwatch->start('contentManager.loadByNode.mapping');
@@ -1548,12 +1568,12 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($uuid, $webspaceKey)
+    public function delete($uuid, $webspaceKey, $dereference = false)
     {
         $session = $this->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        $this->deleteRecursively($node);
+        $this->deleteRecursively($node, $dereference);
         $session->save();
     }
 
@@ -1627,6 +1647,9 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * TODO: Refactor this. This should not effect the global state of the object, this
+     *       should be scoped for each save request.
+     *
      * TRUE dont rename pages on save
      * @param boolean $noRenamingFlag
      * @return $this
@@ -1792,14 +1815,33 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * remove node with references (path, history path ...)
+     * Remove node with references (path, history path ...)
+     *
      * @param NodeInterface $node
+     * @param boolean $dereference Remove REFERENCE properties (or property
+     *   values in the case of multi-value) from referencing nodes
      */
-    private function deleteRecursively(NodeInterface $node)
+    private function deleteRecursively(NodeInterface $node, $dereference = false)
     {
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
                 $child = $ref->getParent();
+
+                if ($dereference) {
+                    if ($ref->isMultiple()) {
+                        $values = $ref->getValue();
+                        foreach ($values as $i => $referringNode) {
+                            if ($node->getIdentifier() === $referringNode->getIdentifier()) {
+                                unset($values[$i]);
+                            }
+                        }
+
+                        $ref->getParent()->setProperty($ref->getName(), $values, PropertyType::REFERENCE);
+                    } else {
+                        $ref->remove();
+                    }
+                }
+
             } else {
                 $child = $ref;
             }

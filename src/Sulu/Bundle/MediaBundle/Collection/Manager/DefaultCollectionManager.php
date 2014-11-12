@@ -117,9 +117,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function get($locale, $filter = array(), $limit = null, $offset = null)
+    public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
-        $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset);
+        $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
         $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count($collectionEntities);
         $collections = [];
         foreach ($collectionEntities as $entity) {

@@ -18,12 +18,15 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        $this->session = $this->getMockBuilder('PHPCR\SessionInterface')->disableOriginalConstructor()->getMock();
         $this->node = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
         $this->property1 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property2 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property3 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property4 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property5 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
+        $this->property6 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
+        $this->property7 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
 
         $this->property1->expects($this->any())
             ->method('getName')
@@ -40,6 +43,12 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->property5->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('i18n:de-bbbaaaa'));
+        $this->property6->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('i18n:de-seo-title'));
+        $this->property7->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('i18n:de-de-title'));
 
         $this->node->expects($this->any())
             ->method('getProperties')
@@ -48,9 +57,13 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
                 $this->property2,
                 $this->property3,
                 $this->property4,
+                $this->property5,
+                $this->property6,
+                $this->property7,
             )));
 
         $this->helper = new SuluNodeHelper(
+            $this->session,
             'i18n',
             array(
                 'base' => 'cmf',
@@ -158,5 +171,30 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array('sulu:snippet')));
 
         $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
+    }
+
+    public function testSiblingNodes()
+    {
+        for ($i = 1; $i <= 3; $i++) {
+            ${'node' . $i} = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
+            ${'node' . $i}->expects($this->any())
+                ->method('getPath')
+                ->will($this->returnValue('/foobar/foobar-' . $i));
+        }
+
+        $node2->expects($this->any())
+            ->method('getParent')
+            ->will($this->returnValue($this->node));
+        $this->node->expects($this->any())
+            ->method('getNodes')
+            ->will($this->returnValue(array(
+                $node1, $node2, $node3
+            )));
+
+        $res = $this->helper->getNextNode($node2);
+        $this->assertSame($node3->getPath(), $res->getPath());
+
+        $res = $this->helper->getPreviousNode($node2);
+        $this->assertSame($node1->getPath(), $res->getPath());
     }
 }

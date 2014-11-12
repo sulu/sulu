@@ -113,4 +113,14 @@ abstract class SuluTestCase extends BaseTestCase
     {
         $this->db('ORM')->getOm()->getConnection()->close();
     }
+
+    protected static function createKernel(array $options = array())
+    {
+        // default environment is 'phpcr'
+        if (!isset($options['environment'])) {
+            $options['environment'] = 'dev';
+        }
+
+        return parent::createKernel($options);
+    }
 }

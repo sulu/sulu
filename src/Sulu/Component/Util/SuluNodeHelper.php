@@ -13,6 +13,7 @@ namespace Sulu\Component\Util;
 use PHPCR\NodeInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Structure;
+use PHPCR\SessionInterface;
 
 /**
  * Utility class for extracting Sulu-centric properties from nodes.
@@ -26,10 +27,21 @@ class SuluNodeHelper
     private $languageNamespace;
 
     /**
+     * @var string
+     */
+    private $paths;
+
+    /**
+     * @var PHPCR\SessionInterface
+     */
+    private $session;
+
+    /**
+     * @param SessionInterface $session
      * @param string $languageNamespace
      * @param array $paths Path segments from configuration
      */
-    public function __construct($languageNamespace, $paths)
+    public function __construct(SessionInterface $session, $languageNamespace, $paths)
     {
         $this->languageNamespace = $languageNamespace;
         $this->paths = array_merge(array(
@@ -39,6 +51,7 @@ class SuluNodeHelper
             'temp' => null,
             'snippet' => null
         ), $paths);
+        $this->session = $session;
     }
 
     /**
@@ -52,7 +65,7 @@ class SuluNodeHelper
     {
         $languages = array();
         foreach ($node->getProperties() as $property) {
-            preg_match('/^' . $this->languageNamespace . ':(.*?)-title/', $property->getName(), $matches);
+            preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-title/', $property->getName(), $matches);
 
             if ($matches) {
                 $languages[$matches[1]] = $matches[1];
@@ -160,6 +173,59 @@ class SuluNodeHelper
         }
 
         return $newPath;
+    }
+
+    /**
+     * Return the next node of the given node
+     *
+     * @see getSiblingNode
+     */
+    public function getNextNode(NodeInterface $node)
+    {
+        return $this->getSiblingNode($node);
+    }
+
+    /**
+     * Return the previous node of the given node
+     *
+     * @see getSiblingNode
+     */
+    public function getPreviousNode(NodeInterface $node)
+    {
+        return $this->getSiblingNode($node, true);
+    }
+
+    /**
+     * Return either the next or previous sibling of the given node
+     * according to the $previous flag.
+     *
+     * @param NodeInterface $node
+     * @param boolean $previous
+     *
+     * @return NodeInterface
+     *
+     * @throws RuntimeException
+     */
+    private function getSiblingNode(NodeInterface $node, $previous = false)
+    {
+        $parentNode = $node->getParent();
+        $children = $parentNode->getNodes();
+        $previousNode = null;
+
+        while ($child = current($children)) {
+            if ($child->getPath() === $node->getPath()) {
+                return $previous ? $previousNode : next($children);
+            }
+
+            $previousNode = $child;
+            next($children);
+        }
+
+        throw new \RuntimeException(sprintf(
+            'Could not find node with path "%s" as a child of "%s". This should not happen',
+            $node->getPath(),
+            $parentNode->getPath()
+        ));
     }
 
     /**

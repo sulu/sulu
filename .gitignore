@@ -6,6 +6,8 @@
 /tests/app/cache/*
 /tests/app/logs/*
 /src/Sulu/Bundle/*/vendor
+/src/Sulu/Bundle/*/Tests/app/cache
+/src/Sulu/Bundle/*/Tests/app/logs
 
 # .DS_Store
 .DS_Store
