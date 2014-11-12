@@ -63,6 +63,8 @@ class Select extends ComplexContentType
     ) {
         $data = $node->getPropertyValueWithDefault($property->getName(), null);
         $this->setData($data, $property, $webspaceKey, $languageCode);
+
+        $property->getValues();
     }
 
     /**

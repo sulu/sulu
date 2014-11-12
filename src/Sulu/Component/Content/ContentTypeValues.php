@@ -57,18 +57,18 @@ class ContentTypeValues implements ContentTypeValuesInterface
     /**
      * {@inheritDoc}
      */
-    public function getValues(ContainerAware $container = null)
+    public function loadValues(PropertyValueProviderManager $manager = null)
     {
         $propertyValues = array();
 
         if ($this->getType() == self::TYPE_SERVICE) {
-            if (!$container) {
+            if (!$manager) {
                 throw new ContentTypeValuesServiceNotLoadedException('App Container not given to load service "' . $this->serviceName . '"');
             }
-            $propertyValues = $this->getServiceValues($container);
+            $propertyValues = $this->getServiceValues($manager);
         } else {
             foreach ($this->values as $value) {
-                $propertyValues[] = $this->createPropertyValue($container, $value);
+                $propertyValues[] = $this->createPropertyValue($manager, $value);
             }
         }
 
@@ -80,7 +80,7 @@ class ContentTypeValues implements ContentTypeValuesInterface
      * @param $value
      * @return PropertyValue
      */
-    private function createPropertyValue(ContainerAware $container = null, $value) {
+    private function createPropertyValue(PropertyValueProviderManager $manager = null, $value) {
         $propertyValue = new PropertyValue();
         foreach ($value as $attributeKey => $attributeValue) {
             if ($attributeKey == 'children') {
@@ -94,7 +94,7 @@ class ContentTypeValues implements ContentTypeValuesInterface
                             isset($values['id']) ? $values['id'] : null
                         );
                         // get Values
-                        $childValues = $child->getValues($container);
+                        $childValues = $child->getValues($manager);
                         foreach ($childValues as $childValue) {
                             $propertyValue->addChildren($childValue);
                         }
@@ -113,9 +113,9 @@ class ContentTypeValues implements ContentTypeValuesInterface
      * @return array
      * @throws ContentTypeValuesServiceNotLoadedException
      */
-    private function getServiceValues(ContainerAware $container)
+    private function getServiceValues(PropertyValueProviderManager $manager)
     {
-        $service = $container->get($this->serviceName);
+        $service = $manager->get($this->serviceName);
         if (!($service instanceof ContentTypeValuesServiceInterface)) {
             throw new ContentTypeValuesServiceNotLoadedException('Service not loaded correctly "' . $this->serviceName . '"');
         }
