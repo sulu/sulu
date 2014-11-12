@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * BUGFIX      #540                 Real url in requested language (navigation, ...) for shadows
     * ENHANCEMENT #523 [ContentBundle] Prefix ContentBundle template path
     * BUGFIX      #531 [ContentBundle] Fixed single internal link freeze
     * BUGFIX      #529 [MediaBundle]   Display sorted Collections in overlay
