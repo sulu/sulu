@@ -10,7 +10,6 @@ CHANGELOG for Sulu
     * ENHANCEMENT #361 [WebsiteBundle] Read urls for pages in all languages
     * ENHANCEMENT #526 [WebsiteBundle] Added Template var to resolver (Twig-Template)
     * ENHANCEMENT #528 [WebsiteBundle] Added memoize service to cache data and use it in twig extension
-    * FEATURE     #536 [MediaBundle]   Added Configurable display options for media-selection
     * ENHANCEMENT #524 [ContentBundle] Prefix ContentBundle template path
     * BUGFIX      #518 [ContentBundle] Ordering of page changed when node is renamed
     * FEATURE     #511 [SnippetBundle] Ask confirmation when deleting Snippets which are referenced by content
