@@ -122,7 +122,7 @@ for BUNDLE in $BUNDLES; do
     cd -
     comment "Running tests"
 
-    phpunit --configuration phpunit.travis.xml.dist --stop-on-failure --stop-on-error $BUNDLE_DIR/Tests
+    phpunit --configuration phpunit.travis.xml.dist $BUNDLE_DIR/Tests
 
     if [ $? -ne 0 ]; then
         echo $BUNDLE_NAME >> /tmp/failed.tests
