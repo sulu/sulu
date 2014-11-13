@@ -118,10 +118,9 @@ class MediaSearchSubscriber implements EventSubscriberInterface
                 );
             }
 
-            $medias = array();
-            foreach ($data['ids'] as $mediaId) {
-                $medias[] = $this->mediaManager->getById($mediaId, $locale);
-            }
+            $medias = $this->mediaManager->get($locale, array(
+                'ids' => $data['ids']
+            ));
         }
 
         // no media, no thumbnail URL
