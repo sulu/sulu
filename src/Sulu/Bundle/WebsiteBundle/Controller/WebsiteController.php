@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use InvalidArgumentException;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HttpCache;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Localization;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,6 +98,10 @@ abstract class WebsiteController extends Controller
      */
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
+
+        /** @var RequestAnalyzerInterface $requestAnalyzer */
+        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
+
         if ($structure !== null) {
             $structureData = $this->get('sulu_website.resolver.structure')->resolve($structure);
         } else {
@@ -104,18 +109,18 @@ abstract class WebsiteController extends Controller
         }
 
         if (!$preview) {
-            $requestAnalyzerData = $this
-                ->get('sulu_website.resolver.request_analyzer')
-                ->resolve(
-                    $this->get('sulu_core.webspace.request_analyzer')
-                );
+            $requestAnalyzerData = $this->get('sulu_website.resolver.request_analyzer')
+                ->resolve($requestAnalyzer);
         } else {
-            $requestAnalyzerData = $this
-                ->get('sulu_website.resolver.request_analyzer')
+            $requestAnalyzerData = $this->get('sulu_website.resolver.request_analyzer')
                 ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
         }
 
-        $allLocalizations = $this->get('sulu_core.webspace.request_analyzer')->getCurrentPortal()->getLocalizations();
+        if (null !== ($portal = $requestAnalyzer->getCurrentPortal())) {
+            $allLocalizations = $portal->getLocalizations();
+        } else {
+            $allLocalizations = $requestAnalyzer->getCurrentWebspace()->getLocalizations();
+        }
 
         $urls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
         $localizations = array();
