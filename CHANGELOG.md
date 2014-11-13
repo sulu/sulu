@@ -3,9 +3,11 @@ CHANGELOG for Sulu
 
 * [UNRELEASED]
 
-   * HOTFIX #543 [SearchBundle]  Fixed re-index command
-   * HOTFIX #551 [SearchBundle]  Switched to test adapter for tests
-   * HOTFIX #549 [ContentBundle] Fixed Fixed page URL fetching for internal links used in snippets
+    * HOTFIX #543 [SearchBundle]  Fixed re-index command
+    * HOTFIX #551 [SearchBundle]  Switched to test adapter for tests
+    * HOTFIX #549 [ContentBundle] Fixed page URL fetching for internal links used in snippets
+    * HOTFIX #512 [MediaBundle]   Only show Media from specific selected Collection
+    * HOTFIX #550 [MediaBundle]   Deleted Media do not throw Exception when page is saved
 
 * 0.11.0 (2014-11-12)
 
