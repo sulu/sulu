@@ -36,11 +36,6 @@ class SnippetContent extends ComplexContentType
     protected $template;
 
     /**
-     * @var string
-     */
-    protected $defaultSnippetType;
-
-    /**
      * @var StructureResolverInterface
      */
     protected $structureResolver;
@@ -51,13 +46,11 @@ class SnippetContent extends ComplexContentType
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver,
-        $template,
-        $defaultSnippetType
+        $template
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
         $this->template = $template;
-        $this->defaultSnippetType = $defaultSnippetType;
     }
 
     /**
@@ -179,7 +172,6 @@ class SnippetContent extends ComplexContentType
     public function getDefaultParams()
     {
         return array(
-            'defaultSnippetType' => $this->defaultSnippetType
         );
     }
 

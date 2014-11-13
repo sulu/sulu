@@ -88,7 +88,8 @@ class SnippetController
     {
         $this->initEnv($request);
 
-        $type = $request->query->get('type', null);
+        // if the type parameter is falsy, assign NULL to $type
+        $type = $request->query->get('type', null) ? : null;
         $uuidsString = $request->get('ids');
 
         if ($uuidsString) {
