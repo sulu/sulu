@@ -4,6 +4,8 @@ CHANGELOG for Sulu
 * [UNRELEASED]
 
    * HOTFIX #543 [SearchBundle] Fixed re-index command
+   * BUGFIX #512 [MediaBundle]   Only show Media from specific selected Collection
+   * BUGFIX #550 [MediaBundle]   Deleted Media do not throw Exception when page is saved
 
 * 0.11.0 (2014-11-12)
 
