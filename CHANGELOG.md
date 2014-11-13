@@ -3,8 +3,9 @@ CHANGELOG for Sulu
 
 * [UNRELEASED]
 
-   * HOTFIX #543 [SearchBundle] Fixed re-index command
-   * HOTFIX #551 [SearchBundle] Switched to test adapter for tests
+   * HOTFIX #543 [SearchBundle]  Fixed re-index command
+   * HOTFIX #551 [SearchBundle]  Switched to test adapter for tests
+   * HOTFIX #549 [ContentBundle] Fixed Fixed page URL fetching for internal links used in snippets
 
 * 0.11.0 (2014-11-12)
 
