@@ -22,6 +22,7 @@ define(function() {
             slideDuration: 250, //ms
             instanceName: 'undefined',
             gridUrl: '',
+            urlParameter: {},
             preselected: [],
             resultKey: '',
             dataGridOptions: {
@@ -457,9 +458,10 @@ define(function() {
         /**
          * Starts the preview-datagrid for a group
          * @param id {Number|String} the groups identifier
+         * @param url {String} url to load data
          * @param $container {Object} the dom container to start the datagrid in
          */
-        startGroupDatagrid: function(id, $container) {
+        startGroupDatagrid: function(id, $container, url) {
             this.group[id].datagridName = this.options.instanceName + id;
             this.group[id].datagridLoaded = true;
 
@@ -475,7 +477,7 @@ define(function() {
                     name: 'datagrid@husky',
                     options: {
                         el: $element,
-                        url: this.options.gridUrl + id,
+                        url: url,
                         view: this.options.dataGridOptions.view,
                         pagination: this.options.dataGridOptions.pagination,
                         matchings: this.options.dataGridOptions.matchings,
@@ -650,9 +652,30 @@ define(function() {
             if (group.datagridLoaded === false) {
                 this.startGroupDatagrid(
                     group.id,
-                    this.sandbox.dom.find('.' + constants.slideClass, group.$el)
+                    this.sandbox.dom.find('.' + constants.slideClass, group.$el),
+                    this.getUrl(group)
                 );
             }
+        },
+
+        /**
+         * Returns generated url
+         * @param {object} group
+         */
+        getUrl: function(group) {
+            var url = this.options.gridUrl, property;
+
+            if (group.data._links.hasOwnProperty(url)) {
+                url = group.data._links[url].href;
+
+                for (property in this.options.urlParameter) {
+                    if (this.options.urlParameter.hasOwnProperty(property)) {
+                        url = url.replace('%7B' + property + '%7D', this.options.urlParameter[property]);
+                    }
+                }
+            }
+
+            return url;
         },
 
         /**
