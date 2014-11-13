@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 use InvalidArgumentException;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HttpCache;
+use Sulu\Component\Webspace\Localization;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -113,6 +114,24 @@ abstract class WebsiteController extends Controller
                 ->get('sulu_website.resolver.request_analyzer')
                 ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
         }
+
+        $allLocalizations = $this->get('sulu_core.webspace.request_analyzer')->getCurrentPortal()->getLocalizations();
+
+        $urls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
+        $localizations = array();
+
+        foreach ($allLocalizations as $localization) {
+            /** @var Localization $localization */
+            $locale = $localization->getLocalization();
+
+            if (array_key_exists($locale, $urls)) {
+                $localizations[$locale] = $urls[$locale];
+            } else {
+                $localizations[$locale] = '';
+            }
+        }
+
+        $structureData['urls'] = $localizations;
 
         return array_merge(
             $attributes,

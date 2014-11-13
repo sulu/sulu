@@ -208,7 +208,6 @@ class ContentMapper implements ContentMapperInterface
 
         // optional
         $this->stopwatch = $stopwatch;
-
     }
 
     /**
@@ -392,7 +391,6 @@ class ContentMapper implements ContentMapperInterface
                 if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
                     $path = $this->cleaner->cleanUp($title, $languageCode);
                     $path = $this->getUniquePath($path, $node->getParent());
-
 
                     if ($path) {
                         // workaround for Jackalope bug referenced in: https://github.com/sulu-cmf/sulu/issues/518
@@ -1544,6 +1542,11 @@ class ContentMapper implements ContentMapperInterface
     private function getLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
     {
         $localizedUrls = array();
+
+        if (null === $webspaceKey) {
+            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($node->getPath());
+        }
+
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $property = $page->getPropertyByTagName('sulu.rlp');
         $property = clone $property;
@@ -1559,7 +1562,9 @@ class ContentMapper implements ContentMapperInterface
             $property->setValue(null);
             $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
 
-            $localizedUrls[$locale] = $property->getValue();
+            if (null !== $property->getValue()) {
+                $localizedUrls[$locale] = $property->getValue();
+            }
         }
 
         return $localizedUrls;
@@ -1841,7 +1846,6 @@ class ContentMapper implements ContentMapperInterface
                         $ref->remove();
                     }
                 }
-
             } else {
                 $child = $ref;
             }
