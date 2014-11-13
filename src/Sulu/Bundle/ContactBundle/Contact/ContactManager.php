@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -141,6 +142,62 @@ class ContactManager extends AbstractContactManager
             return new Contact($contact, $locale, $this->tagManager);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * @param ContactEntity $contact
+     * @param $data
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
+    public function setMainAccount(ContactEntity $contact, $data)
+    {
+        // set account relation
+        $accountData = $data['account'];
+        if ($accountData &&
+            isset($accountData['id']) &&
+            $accountData['id'] != 'null'
+        ) {
+            $accountId = $accountData['id'];
+
+            /** @var Account $account */
+            $account = $this->em
+                ->getRepository(self::$accountEntityName)
+                ->findAccountById($accountId);
+
+            if (!$account) {
+                throw new EntityNotFoundException(self::$accountEntityName, $accountId);
+            }
+
+            // get position
+            $position = null;
+            if (isset($data['position'])) {
+                $position = $this->getPosition($data['position']);
+            }
+
+            // check if relation between account and contact already exists
+            $mainAccountContact = $this->getMainAccountContact($contact);
+            $accountContact = $this->getAccounContact($account, $contact);
+
+            // remove previous main accountContact
+            if ($mainAccountContact && $mainAccountContact !== $accountContact) {
+                $this->em->remove($mainAccountContact);
+            }
+
+            // if account-contact relation existed set params
+            if ($accountContact) {
+                $accountContact->setMain(true);
+                $accountContact->setPosition($position);
+            } else {
+                // else create new one
+                $this->createMainAccountContact($contact, $account, $position);
+            }
+
+        } else {
+            // if a main account exists - remove it
+            if ($accountContact = $this->getMainAccountContact($contact)) {
+                $this->em->remove($accountContact);
+            }
         }
     }
 }
