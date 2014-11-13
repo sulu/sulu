@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* [UNRELEASED]
+* 0.11.1
 
     * HOTFIX #543 [SearchBundle]  Fixed re-index command
     * HOTFIX #551 [SearchBundle]  Switched to test adapter for tests
