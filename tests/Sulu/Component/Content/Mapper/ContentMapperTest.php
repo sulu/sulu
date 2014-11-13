@@ -3107,56 +3107,56 @@ class ContentMapperTest extends PhpcrTestCase
         $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
         $urls = $data[0]->getUrls();
 
-        $this->assertEmpty($urls['en']);
-        $this->assertEmpty($urls['en_us']);
+        $this->assertArrayNotHasKey('en', $urls);
+        $this->assertArrayNotHasKey('en_us', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
-        $this->assertEmpty($urls['de_at']);
-        $this->assertEmpty($urls['es']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
 
         $data[0] = $this->mapper->load($data[0]->getUuid(), 'default', 'de');
         $urls = $data[0]->getUrls();
 
-        $this->assertEmpty($urls['en']);
-        $this->assertEmpty($urls['en_us']);
+        $this->assertArrayNotHasKey('en', $urls);
+        $this->assertArrayNotHasKey('en_us', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
-        $this->assertEmpty($urls['de_at']);
-        $this->assertEmpty($urls['es']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
 
         $data[0] = $this->mapper->load($data[0]->getUuid(), 'default', 'en', true);
         $urls = $data[0]->getUrls();
 
-        $this->assertEmptyl($urls['en']);
-        $this->assertEmpty($urls['en_us']);
+        $this->assertArrayNotHasKey('en', $urls);
+        $this->assertArrayNotHasKey('en_us', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
-        $this->assertEmpty($urls['de_at']);
-        $this->assertEmpty($urls['es']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
 
         $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1, true, $data[0]->getUuid());
         $urls = $data[1]->getUrls();
 
         $this->assertEquals('/description', $urls['en']);
-        $this->assertEmpty($urls['en_us']);
+        $this->assertArrayNotHasKey('en_us', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
-        $this->assertEmpty($urls['de_at']);
-        $this->assertEmpty($urls['es']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
 
         $data[1] = $this->mapper->load($data[1]->getUuid(), 'default', 'en');
         $urls = $data[1]->getUrls();
 
         $this->assertEquals('/description', $urls['en']);
-        $this->assertEmpty($urls['en_us']);
+        $this->assertArrayNotHasKey('en_us', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
-        $this->assertEmpty($urls['de_at']);
-        $this->assertEmpty($urls['es']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
 
         $data[1] = $this->mapper->load($data[1]->getUuid(), 'default', 'de', true);
         $urls = $data[1]->getUrls();
 
         $this->assertEquals('/description', $urls['en']);
-        $this->assertEmpty($urls['en_us']);
+        $this->assertArrayNotHasKey('en_us', $urls);
         $this->assertEquals('/beschreibung', $urls['de']);
-        $this->assertEmpty($urls['de_at']);
-        $this->assertEmpty($urls['es']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
     }
 }
 
