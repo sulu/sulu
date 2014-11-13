@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-    {% for site in sitemap if site.locale in locales %}
-        {% if site.nodeType == 1 %}
-            {% set siteLocale = site.locale %}
-            {% set url = sitemap_url(site.url, site.locale) %}
-            {% if url != false %}
-                <url>
-                    <loc>{{ url }}</loc>
-                    <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
-                    {% for locale, url in site.urls if locale in locales %}
-                        <xhtml:link rel="alternate" hreflang="{{ locale }}"
-                                    href="{{ content_path(url, site.webspaceKey, locale) }}"/>
-                    {% endfor %}
-                </url>
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+{% for site in sitemap if site.locale in locales %}
+{% if site.nodeType == 1 %}
+{% set siteLocale = site.locale %}
+{% set url = sitemap_url(site.url, site.locale) %}
+{% if url != false %}
+    <url>
+        <loc>{{ url }}</loc>
+        <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
+{% for locale, url in site.urls if locale in locales %}
+        <xhtml:link rel="alternate" hreflang="{{ locale }}" href="{{ content_path(url, site.webspaceKey, locale) }}"/>
+{% endfor %}
+    </url>
+{% endif %}
+{% endif %}
+{% endfor %}
 </urlset>
