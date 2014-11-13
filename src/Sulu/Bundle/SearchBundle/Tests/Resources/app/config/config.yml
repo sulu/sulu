@@ -48,6 +48,4 @@ sulu_core:
                     internal: false
 
 massive_search:
-    adapters:
-        zend_lucene:
-            hide_index_exception: true
+    adapter_id: massive_search.adapter.test
