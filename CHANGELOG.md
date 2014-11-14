@@ -3,12 +3,12 @@ CHANGELOG for Sulu
 
 * dev-develop
 
-    * HOTFIX #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes
-                                  eager validation of workspace existence.
-
+    * HOTFIX      #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
+                                       eager validation of workspace existence.
+    * ENHANCEMENT #523 [All]           Refactored and improved functional tests
+ 
 * 0.11.1 (2014-11-13)
 
-    * ENHANCEMENT #523 [All]           Refactored and improved functional tests
     * HOTFIX      #543 [SearchBundle]  Fixed re-index command
     * HOTFIX      #551 [SearchBundle]  Switched to test adapter for tests
     * HOTFIX      #549 [ContentBundle] Fixed page URL fetching for internal links used in snippets
