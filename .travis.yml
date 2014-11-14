@@ -20,5 +20,5 @@ script:
 
 matrix:
   allow_failures:
-    - env: SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
-    - env: SULU_ORM=postgres SULU_PHPCR=jackrabbit
+    - env: "SULU_ORM=mysql SULU_PHPCR=doctrine_dbal"
+    - env: "SULU_ORM=postgres SULU_PHPCR=jackrabbit"
