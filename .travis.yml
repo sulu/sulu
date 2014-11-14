@@ -18,6 +18,7 @@ script:
   - time ./bin/runtests.sh -i -a
   - phpunit
 
-allow_failure:
-  - env: SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
-  - env: SULU_ORM=postgres SULU_PHPCR=jackrabbit
+matrix:
+  allow_failures:
+    - env: SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
+    - env: SULU_ORM=postgres SULU_PHPCR=jackrabbit
