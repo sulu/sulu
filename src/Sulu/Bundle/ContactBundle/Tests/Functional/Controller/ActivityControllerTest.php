@@ -196,6 +196,13 @@ class ActivityControllerTest extends SuluTestCase
 
         $this->assertEquals(2, count($data));
 
+        // This is just a fix
+        if (array_key_exists('contact', $data[0])) {
+            // order has changed, switch data-sets
+            $tmp = $data[0];
+            $data[0] = $data[1];
+            $data[1] = $tmp;
+        }
         // check if fields are present
         $this->assertNotNull($data[0]['id']);
         $this->assertNotEmpty($data[0]['dueDate']);

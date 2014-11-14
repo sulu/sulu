@@ -215,7 +215,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function getPosition($id)
     {
         if ($id) {
-            return $this->getDoctrine()->getRepository(self::$positionEntityName)->find($id);
+            return $this->em->getRepository(self::$positionEntityName)->find($id);
         }
 
         return null;

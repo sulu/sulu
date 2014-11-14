@@ -153,12 +153,11 @@ class ContactManager extends AbstractContactManager
     public function setMainAccount(ContactEntity $contact, $data)
     {
         // set account relation
-        $accountData = $data['account'];
-        if ($accountData &&
-            isset($accountData['id']) &&
-            $accountData['id'] != 'null'
+        if (isset($data['account']) &&
+            isset($data['account']['id']) &&
+            $data['account']['id'] != 'null'
         ) {
-            $accountId = $accountData['id'];
+            $accountId = $data['account']['id'];
 
             /** @var Account $account */
             $account = $this->em
