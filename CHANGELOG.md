@@ -2,6 +2,12 @@ CHANGELOG for Sulu
 ==================
 
 * 0.11.1
+* dev-master
+
+    * HOTFIX #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes
+                                  eager validation of workspace existence.
+
+* 0.11.1 (2014-11-13)
 
     * HOTFIX #543 [SearchBundle]  Fixed re-index command
     * HOTFIX #551 [SearchBundle]  Switched to test adapter for tests
