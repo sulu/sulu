@@ -25,8 +25,7 @@
         </service>
 
         <service id="sulu.core.build.builder.node_order" class="%sulu.core.build.builder.node_order.class%">
-            <argument type="service" id="sulu.phpcr.session"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="service_container"/>
             <tag name="massive_build.builder" />
         </service>
 

@@ -16,6 +16,7 @@ use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builder for initializing PHPCR
@@ -23,24 +24,18 @@ use Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber;
 class NodeOrderBuilder implements BuilderInterface
 {
     /**
-     * @var SessionManagerInterface
-     */
-    protected $sessionManager;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    protected $webspaceManager;
-
-    /**
      * @var BuilderContext
      */
     protected $context;
 
-    public function __construct(SessionManagerInterface $sessionManager, WebspaceManagerInterface $webspaceManager)
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    public function __construct(ContainerInterface $container)
     {
-        $this->sessionManager = $sessionManager;
-        $this->webspaceManager = $webspaceManager;
+        $this->container = $container;
     }
 
     /**
@@ -72,10 +67,13 @@ class NodeOrderBuilder implements BuilderInterface
      */
     public function build()
     {
-        $webspaceCollection = $this->webspaceManager->getWebspaceCollection();
+        $sessionManager = $this->container->get('sulu.phpcr.session');
+        $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
+
+        $webspaceCollection = $webspaceManager->getWebspaceCollection();
 
         foreach ($webspaceCollection as $webspace) {
-            $contentNode = $this->sessionManager->getContentNode($webspace->getKey());
+            $contentNode = $sessionManager->getContentNode($webspace->getKey());
             $this->traverse($contentNode);
             $this->sessionManager->getSession()->save();
         }
