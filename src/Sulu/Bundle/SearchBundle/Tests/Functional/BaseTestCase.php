@@ -26,12 +26,7 @@ class BaseTestCase extends SuluTestCase
         $this->initPhpcr();
         $fs = new Filesystem;
 
-        try {
-            $fs->remove(__DIR__ . '/../Resources/app/data');
-        } catch (\Exception $e) {
-            error_log($e->getMessage());
-        }
-
+        $fs->remove(__DIR__ . '/../app/data');
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
     }
 

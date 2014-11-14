@@ -3,12 +3,22 @@ language: php
 php:
   - 5.5
 
+env:
+  - SULU_ORM=mysql SULU_PHPCR=jackrabbit
+  - SULU_ORM=mysql SULU_PHPCR=doctrine_dbal
+  - SULU_ORM=postgres SULU_PHPCR=jackrabbit
+
 before_script:
   - composer self-update
   - composer install
   - ./bin/jackrabbit.sh
   - php bin/jackrabbit.php
-  - 
+
 script: 
-    - time ./bin/runtests.sh -i -a
-    - phpunit
+  - time ./bin/runtests.sh -i -a
+  - phpunit
+
+matrix:
+  allow_failures:
+    - env: "SULU_ORM=mysql SULU_PHPCR=doctrine_dbal"
+    - env: "SULU_ORM=postgres SULU_PHPCR=jackrabbit"

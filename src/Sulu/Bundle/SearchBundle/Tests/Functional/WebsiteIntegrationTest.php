@@ -10,6 +10,10 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
+use Sulu\Component\HttpKernel\SuluKernel;
+use Symfony\Component\Filesystem\Filesystem;
+use Sulu\Bundle\TestBundle\Testing\SuluWebsiteTestCase;
+
 class WebsiteIntegrationTest extends BaseTestCase
 {
     protected $client;
@@ -19,7 +23,7 @@ class WebsiteIntegrationTest extends BaseTestCase
         parent::setUp();
 
         $this->indexStructure('Structure', '/structure');
-        $this->client = $this->createClient();
+        $this->client = $this->createWebsiteClient();
     }
 
     public function testIntegration()
@@ -27,6 +31,5 @@ class WebsiteIntegrationTest extends BaseTestCase
         $this->client->request('GET', '/de/search?query=Structure');
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-
     }
 }
