@@ -1158,4 +1158,44 @@ class NodeControllerTest extends SuluTestCase
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
     }
+
+    public function testCopyMultipleLocales()
+    {
+        $client = $this->createAuthenticatedClient();
+        $data = array(
+            'title' => 'test1',
+            'url' => '/test1',
+            'article' => 'Test'
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&src=en&dest=de,de_at'
+        );
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/nodes/' . $data['id'] . '?webspace=sulu_io&language=de'
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+
+        $client->request(
+            'GET',
+            '/api/nodes/' . $data['id'] . '?webspace=sulu_io&language=de_at'
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+    }
 }

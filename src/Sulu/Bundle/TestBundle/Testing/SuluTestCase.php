@@ -132,7 +132,9 @@ abstract class SuluTestCase extends BaseTestCase
         $webspace = $cmf->addNode('sulu_io');
         $nodes = $webspace->addNode('routes');
         $nodes->addNode('de');
+        $nodes->addNode('de_at');
         $nodes->addNode('en');
+        $nodes->addNode('en_us');
         $content = $webspace->addNode('contents');
         $content->setProperty('i18n:en-template', 'default');
         $content->setProperty('i18n:en-creator', 1);
