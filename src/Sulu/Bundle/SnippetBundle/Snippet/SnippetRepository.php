@@ -44,6 +44,22 @@ class SnippetRepository
     }
 
     /**
+     * Return the nodes which refer to the structure with the
+     * given UUID
+     *
+     * @param string UUID
+     *
+     * @return \PHPCR\NodeInterface[]
+     */
+    public function getReferences($uuid)
+    {
+        $session = $this->sessionManager->getSession();
+        $node = $session->getNodeByIdentifier($uuid);
+
+        return (array) $node->getReferences();
+    }
+
+    /**
      * Return snippets identified by the given UUIDs.
      *
      * UUIDs which fail to resolve to a snippet will be ignored.

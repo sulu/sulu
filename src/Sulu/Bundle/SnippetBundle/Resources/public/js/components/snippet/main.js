@@ -19,6 +19,14 @@ define([
     var BaseSnippet = function() {
     };
 
+    var translationKeys = {
+        deleteReferencedByFollowing: 'snippet.delete-referenced-by-following',
+        deleteConfirmText: 'snippet.delete-confirm-text',
+        deleteConfirmTitle: 'snippet.delete-confirm-title',
+        deleteDoIt: 'snippet.delete-do-it',
+        deleteNoSnippetsSelected: 'snippet.delete-no-snippets-selected'
+    };
+
     BaseSnippet.prototype = {
         bindModelEvents: function() {
             // delete current
@@ -74,14 +82,67 @@ define([
         del: function() {
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
+                    this.destroySnippet(this.model, function () {
+                        this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
+                    }.bind(this));
+
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.model.destroy({
-                        success: function() {
-                            this.sandbox.emit('sulu.router.navigate', 'snippet/snippets');
-                        }.bind(this)
-                    });
                 }
             }.bind(this));
+        },
+
+        destroySnippet: function (snippet, successCallback) {
+            snippet.destroy({
+                success: function() {
+                    successCallback();
+                }.bind(this),
+                error: function (model, response) {
+                    if (response.status == 409) {
+                        this.referentialIntegrityDialog(snippet, response.responseJSON, successCallback);
+                    }
+                }.bind(this)
+            });
+        },
+
+        referentialIntegrityDialog: function (snippet, data, successCallback) {
+            var message = [];
+            message.push(this.sandbox.translate(translationKeys.deleteReferencedByFollowing));
+            message.push('');
+
+            this.sandbox.util.foreach(data.structures, function (structure) {
+                message.push(' - ' + structure.title);
+            });
+
+            message.push('');
+            message.push(this.sandbox.translate(translationKeys.deleteConfirmText));
+
+            var $element = $('<div/>');
+            $('body').append($element);
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        el: $element,
+                        title: this.sandbox.translate(translationKeys.deleteConfirmTitle),
+                        message: message.join('<br/>'),
+                        okDefaultText: this.sandbox.translate(translationKeys.deleteDoIt),
+                        type: 'warning',
+                        closeCallback: function() {
+                        },
+                        okCallback: function(data) {
+                            snippet.destroy({
+                                headers: {
+                                    SuluForceRemove: true,
+                                },
+                                success: function() {
+                                    successCallback()
+                                }.bind(this)
+                            });
+                        }.bind(this)
+                    }
+                }
+            ]);
         },
 
         save: function(data) {
@@ -132,19 +193,24 @@ define([
 
         delSnippets: function(ids) {
             if (ids.length < 1) {
-                this.sandbox.emit('sulu.dialog.error.show', 'No snippets selected for Deletion');
+                this.sandbox.emit('sulu.dialog.error.show', this.sandbox.translate(translationKeys.deleteNoSnippetsSelected));
                 return;
             }
+
+            var deleteSnippetFromStack = function () {
+                var id = ids.shift();
+                if (id !== undefined) {
+                    var snippet = new Snippet({id: id});
+                    this.destroySnippet(snippet, function () {
+                        this.sandbox.emit('husky.datagrid.record.remove', id);
+                        deleteSnippetFromStack();
+                    }.bind(this));
+                }
+            }.bind(this);
+
             this.confirmDeleteDialog(function(wasConfirmed) {
                 if (wasConfirmed) {
-                    ids.forEach(function(id) {
-                        var snippet = new Snippet({id: id});
-                        snippet.destroy({
-                            success: function() {
-                                this.sandbox.emit('husky.datagrid.record.remove', id);
-                            }.bind(this)
-                        });
-                    }.bind(this));
+                    deleteSnippetFromStack();
                 }
             }.bind(this));
         },

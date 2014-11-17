@@ -26,7 +26,7 @@ class SaveStructureTest extends BaseTestCase
         $this->indexStructure('About Us', '/about-us');
 
         $searchManager = $this->getSearchManager();
-        $res = $searchManager->createSearch('About*')->locale('de')->index('content')->execute();
+        $res = $searchManager->createSearch('About')->locale('de')->index('content')->execute();
         $this->assertCount(1, $res);
         $hit = $res[0];
         $document = $hit->getDocument();

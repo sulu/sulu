@@ -122,6 +122,7 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                 'request' => array(
                     'webspaceKey' => 'sulu_io',
                     'locale' => 'de',
+                    'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '',
                     'resourceLocator' => '',

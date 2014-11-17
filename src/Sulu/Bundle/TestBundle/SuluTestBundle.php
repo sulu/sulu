@@ -14,4 +14,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluTestBundle extends Bundle
 {
+    public static function getConfigDir()
+    {
+        return __DIR__ . '/Resources/dist';
+    }
 }

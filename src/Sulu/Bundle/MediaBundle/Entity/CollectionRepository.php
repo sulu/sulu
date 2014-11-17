@@ -82,7 +82,7 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
     /**
      * {@inheritdoc}
      */
-    public function findCollections($filter = array(), $limit = null, $offset = null)
+    public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
         list ($parent, $depth, $search) = array(
             !empty($filter['parent']) ? $filter['parent'] : null,
@@ -117,6 +117,11 @@ class CollectionRepository extends EntityRepository implements CollectionReposit
                 */
                 ->addSelect('media');
 
+            if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
+                foreach ($sortBy as $column => $order) {
+                    $qb->addOrderBy('collectionMeta.' . $column, strtolower($order) === 'asc' ? 'ASC' : 'DESC');
+                }
+            }
             if ($parent !== null) {
                 $qb->where('parent.id = :parent');
             }
