@@ -41,7 +41,6 @@ class SuluSecurityListener
         $controller = $event->getController();
 
         if (!$controller[0] instanceof SecuredControllerInterface) {
-            // TODO check for some kind of security controller interface instead
             return;
         }
 

@@ -1032,6 +1032,14 @@
                 <source>phone.mobile</source>
                 <target>Mobil</target>
             </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d52" resname="public.forbidden.description">
+                <source>public.forbidden</source>
+                <target>Operation verboten</target>
+            </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d54" resname="public.forbidden">
+                <source>public.forbidden.description</source>
+                <target>Die verfügbaren Berechtigungen reichen für diese Operation nicht aus</target>
+            </trans-unit>
             <!-- POOL-ALPIN_SPEZIFISCH -->
             <trans-unit id="9051763af3ba0f52ef7a4d3c0298d50" resname="contact.contacts.hobbies">
                 <source>contact.contacts.hobbies</source>

@@ -44,6 +44,14 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return $this->getLanguage($request);
+    }
+
+    /**
      * returns webspace key from request
      * @param Request $request
      * @param bool $force
