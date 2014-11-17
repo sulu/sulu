@@ -29,7 +29,7 @@ interface LocalizationManagerInterface
     /**
      * Adds another LocalizationProvider to the manager
      * @param LocalizationProviderInterface $localizationProvider
-     * @return mixed
+     * @return void
      */
     public function addLocalizationProvider(LocalizationProviderInterface $localizationProvider);
 } 

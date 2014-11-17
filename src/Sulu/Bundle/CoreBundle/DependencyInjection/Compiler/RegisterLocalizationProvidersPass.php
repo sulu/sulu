@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class RegisterLocalizationProvidersPass implements CompilerPassInterface
 {
     const LOCALIZATION_PROVIDER_TAG = 'sulu.localization_provider';
+
     /**
      * {@inheritDoc}
      */
