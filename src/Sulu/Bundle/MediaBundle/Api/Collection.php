@@ -37,7 +37,7 @@ use Hateoas\Configuration\Annotation\Route;
  *      "filterByTypes",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999 , "types" = "{types}" }
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "types" = "{types}" }
  *      )
  * )
  */
