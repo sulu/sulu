@@ -792,6 +792,7 @@ abstract class Structure implements StructureInterface
                 'path' => $this->path,
                 'nodeType' => $this->nodeType,
                 'internal' => $this->internal,
+                'concreteLanguages' => $this->getConcreteLanguages(),
                 'hasSub' => $this->hasChildren,
                 'title' => $this->getProperty('title')->toArray()
             );
