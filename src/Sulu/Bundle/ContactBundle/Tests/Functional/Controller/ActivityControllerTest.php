@@ -196,7 +196,7 @@ class ActivityControllerTest extends SuluTestCase
 
         $this->assertEquals(2, count($data));
 
-        // This is just a fix
+        //FIXME: This prevents wrong order of data (which happens in some test-runs)
         if (array_key_exists('contact', $data[0])) {
             // order has changed, switch data-sets
             $tmp = $data[0];
