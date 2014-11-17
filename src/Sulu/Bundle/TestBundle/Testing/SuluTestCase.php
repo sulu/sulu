@@ -2,6 +2,8 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
+use InvalidArgumentException;
+use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -24,7 +26,7 @@ abstract class SuluTestCase extends BaseTestCase
      *
      * {@inheritDoc}
      *
-     * @throws InvalidArgumentEXception If the found kernel does
+     * @throws InvalidArgumentException If the found kernel does
      *   not extend SuluTestKernel
      */
     protected static function createKernel(array $options = array())
@@ -74,7 +76,7 @@ abstract class SuluTestCase extends BaseTestCase
     /**
      * Create an authenticated client
      *
-     * @return Symfony\Bundle\FrameworkBundle\Client
+     * @return \Symfony\Bundle\FrameworkBundle\Client
      */
     protected function createAuthenticatedClient()
     {
@@ -92,7 +94,7 @@ abstract class SuluTestCase extends BaseTestCase
     /**
      * Create client for tests on the "website" context
      *
-     * @return Symfony\Bundle\FrameworkBundle\Client
+     * @return \Symfony\Bundle\FrameworkBundle\Client
      */
     protected function createWebsiteClient()
     {

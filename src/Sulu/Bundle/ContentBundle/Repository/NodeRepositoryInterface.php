@@ -211,4 +211,13 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * @param string $uuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $srcLocale
+     * @param string $destLocale
+     */
+    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocale);
 }

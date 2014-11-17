@@ -657,4 +657,19 @@ class NodeRepository implements NodeRepositoryInterface
 
         return $this->prepareNode($structure, $webspaceKey, $languageCode);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocale)
+    {
+        try {
+            // call mapper function
+            $this->getMapper()->copyLanguage($uuid, $userId, $webspaceKey, $srcLocale, $destLocale);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+    }
 }
