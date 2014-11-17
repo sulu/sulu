@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content;
 
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 
 /**
  * type for structures, like ghost or shadow

@@ -11,15 +11,13 @@
 namespace Sulu\Component\Webspace\EventListener;
 
 use PHPUnit_Framework_MockObject_MockObject;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Localization;
-use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class RequestListenerTest extends \PHPUnit_Framework_TestCase

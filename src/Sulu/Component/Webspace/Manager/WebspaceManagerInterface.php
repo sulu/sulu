@@ -10,16 +10,16 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
 /**
  * Defines the methods for the WebspaceManager
  */
-interface WebspaceManagerInterface
+interface WebspaceManagerInterface extends LocalizationProviderInterface
 {
     /**
      * Returns the webspace with the given key
@@ -65,12 +65,6 @@ interface WebspaceManagerInterface
      * @return string[]
      */
     public function getUrls($environment);
-
-    /**
-     * Returns all the localizations available in the system
-     * @return Localization[]
-     */
-    public function getAllLocalizations();
 
     /**
      * Returns the portal informations managed by this WebspaceManger

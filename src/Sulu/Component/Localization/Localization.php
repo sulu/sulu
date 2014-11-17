@@ -8,9 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace;
+namespace Sulu\Component\Localization;
 
 use Sulu\Component\Util\ArrayableInterface;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Represents a localization of a webspace definition
@@ -119,7 +120,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Sets the children of the localization
-     * @param \Sulu\Component\Webspace\Localization[] $children
+     * @param Localization[] $children
      */
     public function setChildren($children)
     {
@@ -128,7 +129,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Returns the children of the localization
-     * @return \Sulu\Component\Webspace\Localization[]
+     * @return Localization[]
      */
     public function getChildren()
     {
@@ -139,6 +140,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Returns the localization code, which is a combination of the language and the country
      * @param string $delimiter between language and country
      * @return string
+     * @VirtualProperty
      */
     public function getLocalization($delimiter = '_')
     {
@@ -152,7 +154,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Sets the parent of this localization
-     * @param \Sulu\Component\Webspace\Localization $parent
+     * @param Localization $parent
      */
     public function setParent(Localization $parent)
     {
@@ -161,7 +163,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Returns the parent of this localization
-     * @return \Sulu\Component\Webspace\Localization
+     * @return Localization
      */
     public function getParent()
     {
@@ -188,7 +190,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * @param string $localization
-     * @internal param \Sulu\Component\Webspace\Localization $this
      * @return Localization|null
      */
     public function findLocalization($localization)
@@ -212,7 +213,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Returns a list of all localizations and sublocalizations
-     * @return \Sulu\Component\Webspace\Localization[]
+     * @return Localization[]
      */
     public function getAllLocalizations()
     {
