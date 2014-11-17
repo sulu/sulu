@@ -8,6 +8,7 @@
  */
 
 require.config({
+    waitSeconds: 0,
     paths: {
         suluadmin: '../../suluadmin/js',
 
