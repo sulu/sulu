@@ -31,6 +31,9 @@ class SuluTestExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
+
+        if (isset($config['enable_test_user_provider']) && $config['enable_test_user_provider']) {
+            $loader->load('test_user_provider.xml');
+        }
     }
 }
