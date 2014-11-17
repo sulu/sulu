@@ -21,6 +21,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -29,9 +30,8 @@ use FOS\RestBundle\Controller\Annotations\Post;
  * Makes media available through a REST API
  * @package Sulu\Bundle\MediaBundle\Controller
  */
-class MediaController extends RestController implements ClassResourceInterface
+class MediaController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-
     /**
      * @var string
      */
@@ -280,5 +280,13 @@ class MediaController extends RestController implements ClassResourceInterface
     protected function getMediaManager()
     {
         return $this->get('sulu_media.media_manager');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.media.files';
     }
 }
