@@ -661,11 +661,11 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocale)
+    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales)
     {
         try {
             // call mapper function
-            $this->getMapper()->copyLanguage($uuid, $userId, $webspaceKey, $srcLocale, $destLocale);
+            $this->getMapper()->copyLanguage($uuid, $userId, $webspaceKey, $srcLocale, $destLocales);
         } catch (PHPCRException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {

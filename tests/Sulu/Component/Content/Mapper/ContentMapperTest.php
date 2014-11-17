@@ -2218,6 +2218,23 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1', $result->url);
     }
 
+    public function testMultipleLanguagesCopy()
+    {
+        $data = $this->prepareSinglePageTestData();
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', array('en', 'de_at'));
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'de_at');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+    }
+
     private function checkTreeResult($result)
     {
         // layer 0

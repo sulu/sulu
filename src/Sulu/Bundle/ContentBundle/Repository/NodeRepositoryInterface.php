@@ -217,7 +217,7 @@ interface NodeRepositoryInterface
      * @param integer $userId
      * @param string $webspaceKey
      * @param string $srcLocale
-     * @param string $destLocale
+     * @param string[] $destLocales
      */
-    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocale);
+    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales);
 }

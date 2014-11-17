@@ -1613,13 +1613,19 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode)
+    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCodes)
     {
+        if (!is_array($destLanguageCodes)) {
+            $destLanguageCodes = array($destLanguageCodes);
+        }
+
         $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
 
         $data = $structure->toArray(true);
 
-        $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
+        foreach($destLanguageCodes as $destLanguageCode) {
+            $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
+        }
 
         return $structure;
     }
