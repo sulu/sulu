@@ -9,7 +9,7 @@ CHANGELOG for Sulu
                                        eager validation of workspace existence.
     * ENHANCEMENT #523 [All]           Refactored and improved functional tests
     * FEATURE     #553 [SnippetBundle] Possiblity to show all snippet types by not providing any
-                                       snippetType parameters in the ContentType
+    * BUGFIX      #533 [CoreBundle] Removed request_analyzer.enable option (it is now irrelevant)
 
 * 0.11.1 (2014-11-13)
 

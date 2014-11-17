@@ -33,8 +33,7 @@ sulu_core:
         workspace: test
         username: admin
         password: admin
-    webspace:
-        ~
+    webspace: ~
     content:
         structure:
             paths:
