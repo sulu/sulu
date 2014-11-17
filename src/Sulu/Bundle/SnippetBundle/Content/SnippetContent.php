@@ -183,8 +183,13 @@ class SnippetContent extends ComplexContentType
         $snippets = $property->getValue();
         $viewData = array();
 
+        /** @var Snippet $snippet */
         foreach ($snippets as $snippet) {
             $resolved = $this->structureResolver->resolve($snippet);
+
+            // add template to view
+            $resolved['view']['template'] = $snippet->getKey();
+
             $viewData[] = $resolved['view'];
         }
 
