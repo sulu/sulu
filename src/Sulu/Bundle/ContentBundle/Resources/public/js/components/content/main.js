@@ -63,11 +63,18 @@ define([
                     '<h2 class="divider">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
                     '<p class="info">', this.sandbox.translate('content.contents.settings.copy-locales.info'), '</p>',
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
-                ];
+                ], i = 0;
 
                 this.sandbox.util.foreach(this.sandbox.sulu.locales, function(locale) {
-                    template.push(templates.copyLocalesCheckbox(locale, item));
-                });
+                    if (i % 2 === 0) {
+                        template.push((i > 0 ? '</div>' : '') + '<div class="grid-row">');
+                    }
+                    template.push(templates.copyLocalesCheckbox.call(this, locale, item));
+                    if (i % 2 === 0) {
+                        template.push('<div>');
+                    }
+                    i++;
+                }.bind(this));
 
                 template.push('</div>');
                 template.push('</div>');
@@ -78,14 +85,14 @@ define([
             copyLocalesCheckbox: function(locale, item) {
 
                 return [
-                    '<div class="grid-row">',
+                    '<div class="grid-col-3">',
                     '<div class="custom-checkbox">',
                     '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element"/>',
                     '<span class="icon"></span>',
                     '</div>',
                     '<label for="copy-locales-to-', locale, '">',
                     locale,
-                    !this.sandbox.dom.$.inArray(locale, item.concreteLanguages) ? ' *' : '',
+                        this.sandbox.dom.$.inArray(locale, item.concreteLanguages) < 0 ? ' *' : '',
                     '</label>',
                     '</div>'
                 ].join('');
@@ -824,7 +831,7 @@ define([
                         slides: [
                             {
                                 title: this.sandbox.translate('content.contents.settings.copy-locales.title'),
-                                data: templates.copyLocales.call(this),
+                                data: templates.copyLocales.call(this, this.data),
                                 buttons: [
                                     {
                                         type: 'cancel',
