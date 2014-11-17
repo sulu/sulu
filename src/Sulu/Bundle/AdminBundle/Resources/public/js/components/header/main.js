@@ -339,34 +339,32 @@ define([], function () {
          * @type {{default: function, languageChanger: function, defaultLanguageChanger: function}}
          */
         toolbarTemplates = {
-            default: function () {
+            default: function() {
                 return[
                     {
                         id: 'save-button',
                         icon: 'floppy-o',
                         iconSize: 'large',
                         class: 'highlight',
-                        position: 1,
+                        position: 10,
                         group: 'left',
                         disabled: true,
-                        callback: function () {
+                        callback: function() {
                             this.sandbox.emit('sulu.header.toolbar.save');
                         }.bind(this)
                     },
                     {
-                        icon: 'gear',
-                        iconSize: 'large',
-                        group: 'left',
-                        id: 'options-button',
-                        position: 30,
-                        items: [
-                            {
-                                title: this.sandbox.translate('toolbar.delete'),
-                                callback: function () {
-                                    this.sandbox.emit('sulu.header.toolbar.delete');
-                                }.bind(this)
-                            }
-                        ]
+                        id: 'delete',
+                        icon: 'trash-o',
+                        position: 20,
+                        callback: function() {
+                            this.sandbox.emit('sulu.header.toolbar.delete');
+                        }.bind(this)
+                    },
+                    {
+                        id: 'settings',
+                        icon: 'magic',
+                        position: 30
                     }
                 ];
             },
@@ -375,16 +373,16 @@ define([], function () {
                 return [];
             },
 
-            save: function () {
+            save: function() {
                 return [toolbarTemplates.default.call(this)[0]];
             },
 
-            languageChanger: function (url, callback) {
+            languageChanger: function(url, callback) {
                 var button;
 
                 // default callback for language dropdown
                 if (typeof callback !== 'function') {
-                    callback = function (item) {
+                    callback = function(item) {
                         this.sandbox.emit('sulu.header.toolbar.language-changed', item);
                     }.bind(this);
                 }

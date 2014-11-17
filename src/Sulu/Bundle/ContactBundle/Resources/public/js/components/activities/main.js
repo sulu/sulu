@@ -30,23 +30,24 @@ define(
                 return [
                     {
                         id: 'add',
-                        icon: 'plus-circle',
-                        class: 'highlight-white',
+                        icon: 'floppy-o',
+                        class: 'highlight',
                         title: 'add',
                         position: 10,
                         callback: this.addOrEditActivity.bind(this)
                     },
                     {
+                        id: 'delete',
+                        icon: 'trash-o',
+                        position: 20,
+                        callback: this.removeActivities.bind(this),
+                        disabled: true
+                    },
+                    {
                         id: 'settings',
-                        icon: 'gear',
-                        items: [
-                            {
-                                id: 'delete',
-                                title: this.sandbox.translate('contact.activities.remove'),
-                                callback: this.removeActivities.bind(this),
-                                disabled: true
-                            }
-                        ]
+                        icon: 'magic',
+                        position: 30,
+                        disabled: true
                     }
                 ];
             };

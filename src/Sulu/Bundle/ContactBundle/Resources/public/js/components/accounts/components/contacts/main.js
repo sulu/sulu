@@ -244,17 +244,11 @@ define([
                         this.sandbox.emit('sulu.list-toolbar.add');
                     }.bind(this)
                 },
-                {
-                    id: 'settings',
-                    icon: 'gear',
-                    items: [
-                        {
-                            id: 'delete',
-                            title: this.sandbox.translate('contact.accounts.contact-remove'),
-                            callback: removeContact.bind(this),
-                            disabled: true
-                        }
-                    ]
+               {
+                    id: 'delete',
+                    icon: 'trash-o',
+                    callback: removeContact.bind(this),
+                    disabled: true
                 }
             ];
         },

@@ -133,16 +133,15 @@ define(['app-config'], function(AppConfig) {
         /**
          * Sets header toolbar with conversion options according to configuration
          */
-            setHeaderToolbar = function(accountType, accountTypes) {
+        setHeaderToolbar = function(accountType, accountTypes) {
 
             var items = [],
                 options = {
-                    icon: 'gear',
+                    icon: 'magic',
                     iconSize: 'large',
                     group: 'left',
                     id: 'options-button',
-                    position: 30,
-                    items: []
+                    position: 30
                 };
 
             // save button
@@ -159,18 +158,23 @@ define(['app-config'], function(AppConfig) {
                 }.bind(this)
             });
 
-            // only for saved accounts
-            if (!!this.account.id) {
-                options.items = getItemsForConvertOperation.call(this, accountType, accountTypes);
-            }
-
-            // delete select item
-            options.items.push({
-                title: this.sandbox.translate('toolbar.delete'),
+            // delete button
+            items.push({
+                id: 'delete',
+                icon: 'trash-o',
+                iconSize: 'large',
+                class: 'highlight',
+                position: 20,
+                group: 'left',
                 callback: function() {
                     this.sandbox.emit('sulu.header.toolbar.delete');
                 }.bind(this)
             });
+
+            // only for saved accounts
+            if (!!this.account.id) {
+                options.items = getItemsForConvertOperation.call(this, accountType, accountTypes);
+            }
 
             items.push(options);
             this.sandbox.emit('sulu.header.set-toolbar', {data: items});
