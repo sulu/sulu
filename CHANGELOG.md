@@ -3,14 +3,17 @@ CHANGELOG for Sulu
 
 * dev-develop
 
-    * BUGFIX      #568 [SnippetBundle] Added template to view for Snippets
-    * ENHANCEMENT #539 [AdminBundle]   Added validation for iban and vat numbers from the eu
-    * HOTFIX      #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
-                                       eager validation of workspace existence.
-    * ENHANCEMENT #523 [All]           Refactored and improved functional tests
-    * FEATURE     #553 [SnippetBundle] Possiblity to show all snippet types by not providing any
-    * BUGFIX      #533 [CoreBundle] Removed request_analyzer.enable option (it is now irrelevant)
+    * BUGFIX      #568 [SnippetBundle]  Added template to view for Snippets
+    * ENHANCEMENT #539 [AdminBundle]    Added validation for iban and vat numbers from the eu
+    * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
+                                        eager validation of workspace existence.
+    * ENHANCEMENT #523 [All]            Refactored and improved functional tests
+    * FEATURE     #553 [SnippetBundle]  Possiblity to show all snippet types by not providing any
+    * BUGFIX      #533 [CoreBundle]     Removed request_analyzer.enable option (it is now irrelevant)
 
+    * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to 
+    * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
+                                        Permission-Tab
 * 0.11.1 (2014-11-13)
 
     * HOTFIX      #543 [SearchBundle]  Fixed re-index command
