@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * ENHANCEMENT #539 [AdminBundle] Added validation for iban and vat numbers from the eu
     * HOTFIX      #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
                                        eager validation of workspace existence.
     * ENHANCEMENT #523 [All]           Refactored and improved functional tests
