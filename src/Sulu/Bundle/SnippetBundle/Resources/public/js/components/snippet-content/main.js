@@ -467,6 +467,8 @@ define([], function() {
                 this.options.snippetType
             ].join('');
 
+            console.log(this.options.snippetType);
+
             if (newURIGetAll !== this.URIGetAll.str) {
                 this.URIGetAll.str = newURIGetAll;
                 this.URIGetAll.hasChanged = true;
