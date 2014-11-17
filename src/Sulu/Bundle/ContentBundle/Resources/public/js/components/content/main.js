@@ -819,8 +819,17 @@ define([
         },
 
         startCopyLocales: function() {
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+                languages = [];
+
             this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.util.foreach(this.data.concreteLanguages, function(locale) {
+                languages.push({
+                    id: locale,
+                    name: locale + (locale === this.options.language ? ' (' + this.sandbox.translate('content.contents.settings.copy-locales.current-language') + ')' : '')
+                });
+            }.bind(this));
 
             this.sandbox.start([
                 {
@@ -847,7 +856,7 @@ define([
                                     }
                                 ],
                                 okCallback: function() {
-                                    var src = this.sandbox.dom.data('#copy-locales-select', 'selectionValues'),
+                                    var src = this.sandbox.dom.data('#copy-locales-select', 'selection'),
                                         $dest = this.sandbox.dom.find('.copy-locales-to-container input:checked'),
                                         dest = [];
 
@@ -855,7 +864,7 @@ define([
                                         dest.push(this.sandbox.dom.val($item));
                                     }.bind(this));
 
-                                    if (!src || src.length === 0) {
+                                    if (!src || src.length === 0 || dest.length === 0) {
                                         return false;
                                     }
 
@@ -874,7 +883,7 @@ define([
                         el: '#copy-locales-select',
                         instanceName: 'copy-locale-to',
                         preSelectedElements: [this.options.language],
-                        data: this.data.concreteLanguages
+                        data: languages
                     }
                 }
             ]);
