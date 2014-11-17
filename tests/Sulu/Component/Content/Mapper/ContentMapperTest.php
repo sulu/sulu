@@ -26,7 +26,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;

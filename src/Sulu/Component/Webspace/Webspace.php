@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -111,7 +112,7 @@ class Webspace implements ArrayableInterface
 
     /**
      * Returns the localizations of this webspace
-     * @param \Sulu\Component\Webspace\Localization[] $localizations
+     * @param Localization[] $localizations
      */
     public function setLocalizations($localizations)
     {
@@ -120,7 +121,7 @@ class Webspace implements ArrayableInterface
 
     /**
      * Returns the localizations of this webspace
-     * @return \Sulu\Component\Webspace\Localization[]
+     * @return Localization[]
      */
     public function getLocalizations()
     {
@@ -129,7 +130,7 @@ class Webspace implements ArrayableInterface
 
     /**
      * Returns a list of all localizations and sublocalizations
-     * @return \Sulu\Component\Webspace\Localization[]
+     * @return Localization[]
      */
     public function getAllLocalizations()
     {

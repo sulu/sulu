@@ -15,7 +15,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;

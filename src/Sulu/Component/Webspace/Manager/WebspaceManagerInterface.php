@@ -10,10 +10,9 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
 
 /**
