@@ -268,8 +268,11 @@ define([
             // move selected content
             this.sandbox.on('sulu.content.contents.move', this.move, this);
 
-            // move selected content
+            // copy selected content
             this.sandbox.on('sulu.content.contents.copy', this.copy, this);
+
+            // copy-locale selected content
+            this.sandbox.on('sulu.content.contents.copy-locale', this.copyLocale, this);
 
             // order selected content
             this.sandbox.on('sulu.content.contents.order', this.order, this);
@@ -315,6 +318,24 @@ define([
         copy: function(id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=copy&destination=', parentId
+            ].join('');
+
+            this.sandbox.util.save(url, 'POST', {})
+                .then(function(data) {
+                    if (!!successCallback && typeof successCallback === 'function') {
+                        successCallback(data);
+                    }
+                }.bind(this))
+                .fail(function(jqXHR, textStatus, error) {
+                    if (!!errorCallback && typeof errorCallback === 'function') {
+                        errorCallback(error);
+                    }
+                }.bind(this));
+        },
+
+        copyLocale: function(id, src, dest, successCallback, errorCallback) {
+            var url = [
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&src=' , src , '&dest=', dest.join(','), '&action=copy-locale'
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
