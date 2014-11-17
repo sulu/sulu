@@ -11,6 +11,7 @@
 namespace Sulu\Component\Localization;
 
 use Sulu\Component\Util\ArrayableInterface;
+use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Represents a localization of a webspace definition
@@ -139,6 +140,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Returns the localization code, which is a combination of the language and the country
      * @param string $delimiter between language and country
      * @return string
+     * @VirtualProperty
      */
     public function getLocalization($delimiter = '_')
     {
