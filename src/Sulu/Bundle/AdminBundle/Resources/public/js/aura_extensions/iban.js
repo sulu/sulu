@@ -25,11 +25,11 @@
                 /**
                  * Formats an iban string
                  * @param ibanString
-                 * @param seperator (optional)
+                 * @param separator (optional)
                  * @returns string
                  */
-                sandbox.iban.printFormat = function(ibanString, seperator) {
-                    return IBAN.printFormat(ibanString, seperator);
+                sandbox.iban.printFormat = function(ibanString, separator) {
+                    return IBAN.printFormat(ibanString, separator);
                 };
             }
         };
