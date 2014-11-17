@@ -15,6 +15,7 @@
             <argument type="service" id="file_locator"/>
         </service>
         <service id="sulu_core.webspace.webspace_manager" class="%sulu_core.webspace.webspace_manager.class%">
+            <tag name="sulu.localization_provider"/>
             <!-- TODO use delegating loader -->
             <argument type="service" id="sulu_core.webspace.loader.xml"/>
             <argument type="service" id="logger"/>
