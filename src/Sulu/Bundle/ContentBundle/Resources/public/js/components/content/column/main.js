@@ -304,15 +304,14 @@ define(function() {
                 instanceName = 'node';
             }
 
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
-            this.sandbox.dom.append(this.$el, $element);
-
-            var buttons = [
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+                buttons = [
                 {
                     type: 'cancel',
                     align: 'left'
                 }
             ];
+            this.sandbox.dom.append(this.$el, $element);
 
             if (!!okButton) {
                 buttons.push({

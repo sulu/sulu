@@ -52,7 +52,44 @@ define([
                 '   </div>',
                 '</div>'
             ].join(''),
-            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>'
+
+            previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>',
+
+            copyLocales: function(item) {
+                var template = [
+                    '<div class="copy-locales-overlay-content">',
+                    '<label>', this.sandbox.translate('content.contents.settings.copy-locales.copy-from'), '</label>',
+                    '<div id="copy-locales-select"/>',
+                    '<h2 class="divider">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
+                    '<p class="info">', this.sandbox.translate('content.contents.settings.copy-locales.info'), '</p>',
+                    '<div class="copy-locales-to-container m-bottom-20 grid">'
+                ];
+
+                this.sandbox.util.foreach(this.sandbox.sulu.locales, function(locale) {
+                    template.push(templates.copyLocalesCheckbox(locale, item));
+                });
+
+                template.push('</div>');
+                template.push('</div>');
+
+                return template.join('');
+            },
+
+            copyLocalesCheckbox: function(locale, item) {
+
+                return [
+                    '<div class="grid-row">',
+                    '<div class="custom-checkbox">',
+                    '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element"/>',
+                    '<span class="icon"></span>',
+                    '</div>',
+                    '<label for="copy-locales-to-', locale, '">',
+                    locale,
+                    !this.sandbox.dom.$.inArray(locale, item.concreteLanguages) ? ' *' : '',
+                    '</label>',
+                    '</div>'
+                ].join('');
+            }
         };
 
     return {
@@ -171,11 +208,6 @@ define([
             this.sandbox.on('sulu.dropdown.template.item-clicked', function() {
                 this.setHeaderBar(false);
             }.bind(this));
-
-            // content delete
-            this.sandbox.on('sulu.header.toolbar.delete', function() {
-                this.sandbox.emit('sulu.content.content.delete', this.data.id);
-            }, this);
 
             // content saved
             this.sandbox.on('sulu.content.contents.saved', function(id, data) {
@@ -775,6 +807,44 @@ define([
             }
         },
 
+        startCopyLocales: function() {
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
+            this.sandbox.dom.append(this.$el, $element);
+
+            this.sandbox.start([
+                {
+                    name: 'overlay@husky',
+                    options: {
+                        openOnStart: true,
+                        removeOnClose: true,
+                        el: $element,
+                        container: this.$el,
+                        instanceName: 'copy-locales',
+                        skin: 'wide',
+                        slides: [
+                            {
+                                title: this.sandbox.translate('content.contents.settings.copy-locales.title'),
+                                data: templates.copyLocales.call(this),
+                                buttons: [
+                                    {
+                                        type: 'cancel',
+                                        align: 'left'
+                                    },
+                                    {
+                                        type: 'ok',
+                                        align: 'right'
+                                    }
+                                ],
+                                okCallback: function() {
+                                    this.copyLocales();
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]);
+        },
+
         header: function() {
             // because it is called first
             this.headerInitialized = this.sandbox.data.deferred();
@@ -813,14 +883,66 @@ define([
                             },
 
                             toolbar: {
-                                parentTemplate: 'default',
-
                                 languageChanger: {
                                     url: '/admin/content/languages/' + this.options.webspace,
                                     preSelected: this.options.language
                                 },
 
                                 template: [
+                                    {
+                                        id: 'save-button',
+                                        icon: 'floppy-o',
+                                        iconSize: 'large',
+                                        class: 'highlight',
+                                        position: 1,
+                                        group: 'left',
+                                        disabled: true,
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.header.toolbar.save');
+                                        }.bind(this)
+                                    },
+                                    {
+                                        id: 'template',
+                                        icon: 'pencil',
+                                        iconSize: 'large',
+                                        group: 'left',
+                                        position: 10,
+                                        type: 'select',
+                                        title: '',
+                                        hidden: false,
+                                        itemsOption: {
+                                            url: '/admin/content/template',
+                                            titleAttribute: 'title',
+                                            idAttribute: 'template',
+                                            translate: false,
+                                            markable: true,
+                                            callback: function(item) {
+                                                this.template = item.template;
+                                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
+                                            }.bind(this)
+                                        }
+                                    },
+                                    {
+                                        icon: 'gear',
+                                        iconSize: 'large',
+                                        group: 'left',
+                                        id: 'options-button',
+                                        position: 30,
+                                        items: [
+                                            {
+                                                title: this.sandbox.translate('toolbar.delete'),
+                                                callback: function() {
+                                                    this.sandbox.emit('sulu.content.content.delete', this.data.id);
+                                                }.bind(this)
+                                            },
+                                            {
+                                                title: this.sandbox.translate('toolbar.copy-locale'),
+                                                callback: function() {
+                                                    this.startCopyLocales();
+                                                }.bind(this)
+                                            }
+                                        ]
+                                    },
                                     {
                                         id: 'state',
                                         group: 'left',
@@ -847,27 +969,6 @@ define([
                                                 }.bind(this)
                                             }
                                         ]
-                                    },
-                                    {
-                                        id: 'template',
-                                        icon: 'pencil',
-                                        iconSize: 'large',
-                                        group: 'left',
-                                        position: 10,
-                                        type: 'select',
-                                        title: '',
-                                        hidden: false,
-                                        itemsOption: {
-                                            url: '/admin/content/template',
-                                            titleAttribute: 'title',
-                                            idAttribute: 'template',
-                                            translate: false,
-                                            markable: true,
-                                            callback: function(item) {
-                                                this.template = item.template;
-                                                this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
-                                            }.bind(this)
-                                        }
                                     }
                                 ]
                             }
@@ -903,7 +1004,7 @@ define([
                     },
                     content: {
                         width: 'fixed',
-                        shrinkable: (!!this.options.preview) ? true : false
+                        shrinkable: !!this.options.preview
                     },
                     sidebar: sidebar
                 };
