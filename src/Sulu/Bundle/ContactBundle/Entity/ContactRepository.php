@@ -30,7 +30,7 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
@@ -100,7 +100,7 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')

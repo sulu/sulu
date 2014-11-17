@@ -528,10 +528,10 @@ class ContactController extends AbstractContactController
                 }
 
                 // Set position on contact
-                $position = $this->getPosition($request->get('position'));
+                $position = $this->getContactManager()->getPosition($request->get('position'));
 
                 // create new account-contact relation
-                $this->createMainAccountContact($contact, $parent, $position);
+                $this->getContactManager()->createMainAccountContact($contact, $parent, $position);
             }
             $birthday = $request->get('birthday');
             if (!empty($birthday)) {
@@ -571,65 +571,6 @@ class ContactController extends AbstractContactController
         }
 
         return $this->handleView($view);
-    }
-
-    /**
-     * returns the main account-contact relation or creates a new one
-     *
-     * @param Contact $contact
-     * @param Account $account
-     * @param $position
-     * @return bool|AccountContact
-     */
-    private function getMainAccountContactOrCreateNew(Contact $contact, Account $account, $position)
-    {
-        $accountContact = $this->getMainAccountContact($contact);
-        if (!$accountContact) {
-            $accountContact = $this->createMainAccountContact($contact, $account, $position);
-        } else {
-            $accountContact->setPosition($position);
-        }
-
-        return $accountContact;
-    }
-
-    /**
-     * returns the main account-contact relation
-     *
-     * @param Contact $contact
-     * @return AccountContact|bool
-     */
-    private function getMainAccountContact(Contact $contact)
-    {
-        foreach ($contact->getAccountContacts() as $accountContact) {
-            /** @var AccountContact $accountContact */
-            if ($accountContact->getMain()) {
-                return $accountContact;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * creates a new main Account Contacts relation
-     *
-     * @param Contact $contact
-     * @param Account $account
-     * @param $position
-     * @return AccountContact
-     */
-    private function createMainAccountContact(Contact $contact, Account $account, $position)
-    {
-        $accountContact = new AccountContact();
-        $accountContact->setAccount($account);
-        $accountContact->setContact($contact);
-        $accountContact->setMain(true);
-        $this->getDoctrine()->getManager()->persist($accountContact);
-        $contact->addAccountContact($accountContact);
-        $accountContact->setPosition($position);
-
-        return $accountContact;
     }
 
     /**
@@ -680,39 +621,7 @@ class ContactController extends AbstractContactController
 
                 $contact->setChanged(new DateTime());
 
-                // set account relation
-                $parentData = $request->get('account');
-                if ($parentData != null &&
-                    $parentData['id'] != null &&
-                    $parentData['id'] != 'null' &&
-                    $parentData['id'] != ''
-                ) {
-                    /** @var Account $parent */
-                    $parent = $this->getDoctrine()
-                        ->getRepository(self::$accountEntityName)
-                        ->findAccountById($parentData['id']);
-
-                    if (!$parent) {
-                        throw new EntityNotFoundException(self::$accountEntityName, $parentData['id']);
-                    }
-
-                    // Set position on contact
-                    $position = $this->getPosition($request->get('position'));
-
-                    $accountContact = $this->getMainAccountContactOrCreateNew(
-                        $contact,
-                        $parent,
-                        $position
-                    );
-
-                    if ($accountContact) {
-                        $accountContact->setAccount($parent);
-                    }
-                } else {
-                    if ($accountContact = $this->getMainAccountContact($contact)) {
-                        $em->remove($accountContact);
-                    }
-                }
+                $this->getContactManager()->setMainAccount($contact, $request->request->all());
 
                 // process details
                 if (!($this->processEmails($contact, $request->get('emails', array()))
