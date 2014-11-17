@@ -966,6 +966,44 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertContains('en', $result['concreteLanguages']);
     }
 
+    public function testCopyMultipleLocales()
+    {
+        $data = array(
+            'en' => array(
+                'title' => 'Example',
+                'url' => '/example'
+            )
+        );
+
+        $data['en'] = $this->mapper->save(
+            $data['en'],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', array('de', 'de_at'));
+
+        $result = $this->mapper->load($data['en']->getUuid(), 'default', 'de')->toArray();
+        $this->assertEquals($data['en']->getUuid(), $result['id']);
+        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
+        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+
+        $result = $this->mapper->load($data['en']->getUuid(), 'default', 'de_at')->toArray();
+        $this->assertEquals($data['en']->getUuid(), $result['id']);
+        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
+        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+    }
+
     protected function setUp()
     {
         $this->extensions = array(new TestExtension('test1', 'test1'));
