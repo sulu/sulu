@@ -3,12 +3,13 @@ CHANGELOG for Sulu
 
 * dev-develop
 
-    * ENHANCEMENT #539 [AdminBundle] Added validation for iban and vat numbers from the eu
+    * BUGFIX      #568 [SnippetBundle] Added template to view for Snippets
+    * ENHANCEMENT #539 [AdminBundle]   Added validation for iban and vat numbers from the eu
     * HOTFIX      #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
                                        eager validation of workspace existence.
     * ENHANCEMENT #523 [All]           Refactored and improved functional tests
-    * FEATURE #553 [SnippetBundle] Possiblity to show all snippet types by not providing any
-        snippetType parameters in the ContentType
+    * FEATURE     #553 [SnippetBundle] Possiblity to show all snippet types by not providing any
+                                       snippetType parameters in the ContentType
 
 * 0.11.1 (2014-11-13)
 
