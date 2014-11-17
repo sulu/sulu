@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 0.11.1
+* 0.11.2 (2014-11-17)
 
     * HOTFIX #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes
                                   eager validation of workspace existence.
