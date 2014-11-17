@@ -453,6 +453,24 @@
   margin: 7px 0 0 0;
 }
 
+/**
+ * Copy locales
+ */
+/* line 5, ../scss/modules/node.scss */
+.copy-locales-overlay-content {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+/* line 9, ../scss/modules/node.scss */
+.copy-locales-overlay-content label {
+  display: inline;
+}
+/* line 13, ../scss/modules/node.scss */
+.copy-locales-overlay-content .info {
+  font-size: 12px;
+  color: #999;
+}
+
 /* line 1, ../scss/modules/order-table.scss */
 .order-table {
   list-style-type: none;

@@ -59,9 +59,13 @@ define([
                 var template = [
                     '<div class="copy-locales-overlay-content">',
                     '<label>', this.sandbox.translate('content.contents.settings.copy-locales.copy-from'), '</label>',
-                    '<div id="copy-locales-select"/>',
-                    '<h2 class="divider">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
-                    '<p class="info">', this.sandbox.translate('content.contents.settings.copy-locales.info'), '</p>',
+                    '<div class="grid m-top-10">',
+                    '<div class="grid-row">',
+                    '<div id="copy-locales-select" class="grid-col-6"/>',
+                    '</div>',
+                    '</div>',
+                    '<h2 class="divider m-top-20">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
+                    '<p class="info">* ', this.sandbox.translate('content.contents.settings.copy-locales.info'), '</p>',
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
                 ], i = 0;
 
@@ -87,7 +91,7 @@ define([
                 return [
                     '<div class="grid-col-3">',
                     '<div class="custom-checkbox">',
-                    '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element"/>',
+                    '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element" value="', locale, '"/>',
                     '<span class="icon"></span>',
                     '</div>',
                     '<label for="copy-locales-to-', locale, '">',
@@ -843,10 +847,34 @@ define([
                                     }
                                 ],
                                 okCallback: function() {
-                                    this.copyLocales();
-                                }
+                                    var src = this.sandbox.dom.data('#copy-locales-select', 'selectionValues'),
+                                        $dest = this.sandbox.dom.find('.copy-locales-to-container input:checked'),
+                                        dest = [];
+
+                                    this.sandbox.util.foreach($dest, function($item) {
+                                        dest.push(this.sandbox.dom.val($item));
+                                    }.bind(this));
+
+                                    if (!src || src.length === 0) {
+                                        return false;
+                                    }
+
+                                    this.copyLocale(this.data.id, src[0], dest);
+                                }.bind(this)
                             }
                         ]
+                    }
+                }
+            ]);
+
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#copy-locales-select',
+                        instanceName: 'copy-locale-to',
+                        preSelectedElements: [this.options.language],
+                        data: this.data.concreteLanguages
                     }
                 }
             ]);
