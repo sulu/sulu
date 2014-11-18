@@ -865,11 +865,12 @@ define([
                                 buttons: [
                                     {
                                         type: 'cancel',
-                                        align: 'left'
+                                        align: 'right'
                                     },
                                     {
                                         type: 'ok',
-                                        align: 'right'
+                                        text:this.sandbox.translate('content.contents.settings.copy-locales.ok'),
+                                        align: 'left'
                                     }
                                 ],
                                 okCallback: function() {

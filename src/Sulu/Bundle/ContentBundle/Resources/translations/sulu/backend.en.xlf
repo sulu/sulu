@@ -330,9 +330,34 @@
                 <source>sulu.content.sort.blocks</source>
                 <target>Sort text blocks</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf013" resname="sulu.content.edit.blocks">
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf113" resname="sulu.content.edit.blocks">
                 <source>sulu.content.edit.blocks</source>
                 <target>Edit text blocks</target>
+            </trans-unit>
+
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf013" resname="content.contents.settings.copy-locales.title">
+                <source>content.contents.settings.copy-locales.title</source>
+                <target>Copy language</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf014" resname="content.contents.settings.copy-locales.copy-from">
+                <source>content.contents.settings.copy-locales.copy-from</source>
+                <target>Copy from</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf015" resname="content.contents.settings.copy-locales.current-language">
+                <source>content.contents.settings.copy-locales.current-language</source>
+                <target>current language</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf016" resname="content.contents.settings.copy-locales.target">
+                <source>content.contents.settings.copy-locales.target</source>
+                <target>Target languages</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf017" resname="content.contents.settings.copy-locales.info">
+                <source>content.contents.settings.copy-locales.info</source>
+                <target>New page will be created</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf018" resname="content.contents.settings.copy-locales.ok">
+                <source>content.contents.settings.copy-locales.ok</source>
+                <target>Copy languages</target>
             </trans-unit>
         </body>
     </file>
