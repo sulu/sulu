@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
     * BUGFIX      #568 [SnippetBundle]  Added template to view for Snippets
     * ENHANCEMENT #539 [AdminBundle]    Added validation for iban and vat numbers from the eu
     * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
