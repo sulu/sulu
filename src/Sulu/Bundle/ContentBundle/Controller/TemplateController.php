@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Security\UserInterface;
@@ -188,18 +190,35 @@ class TemplateController extends Controller
     /**
      * returns languages for webspaces
      * @param string $webspaceKey
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getLanguagesAction($webspaceKey)
+    public function getLanguagesAction($webspaceKey, Request $request)
     {
         $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
-        $localizations = array();
+        $id = $request->get('id');
+        $language = $request->get('language');
+        $page = null;
+        $newText = $this->get('translator')->trans('sulu.content.create-new');
+
+        if ($id !== null) {
+            /** @var ContentMapperInterface $contentMapper */
+            $contentMapper = $this->get('sulu.content.mapper');
+            /** @var Page $page */
+            $page = $contentMapper->load($id, $webspaceKey, $language);
+        }
 
         $i = 0;
+        $localizations = array();
         foreach ($webspace->getAllLocalizations() as $localization) {
+            $name = $localization->getLocalization('-');
+            if ($page !== null && !in_array($localization, $page->getConcreteLanguages())) {
+                $name .= ' (' . $newText . ')';
+            }
+
             $localizations[] = array(
                 'localization' => $localization->getLocalization(),
-                'name' => $localization->getLocalization('-'),
+                'name' => $name,
                 'id' => $i++
             );
         }

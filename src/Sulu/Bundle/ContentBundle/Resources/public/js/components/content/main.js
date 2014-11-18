@@ -952,7 +952,7 @@ define([
 
                             toolbar: {
                                 languageChanger: {
-                                    url: '/admin/content/languages/' + this.options.webspace,
+                                    url: '/admin/content/languages/' + this.options.webspace + '?id=' + this.options.id + '&language=' + this.options.language,
                                     preSelected: this.options.language
                                 },
 
