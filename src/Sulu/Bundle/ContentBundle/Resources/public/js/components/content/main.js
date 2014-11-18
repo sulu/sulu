@@ -87,16 +87,16 @@ define([
             },
 
             copyLocalesCheckbox: function(locale, item) {
-
+                var currentLocale = (locale === this.options.language && this.sandbox.dom.$.inArray(locale, item.concreteLanguages) >= 0);
                 return [
                     '<div class="grid-col-3">',
                     '<div class="custom-checkbox">',
-                    '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element" value="', locale, '"/>',
+                    '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element" value="', locale, '"',
+                    (currentLocale ? ' disabled="disabled"' : ''), '/>',
                     '<span class="icon"></span>',
                     '</div>',
-                    '<label for="copy-locales-to-', locale, '">',
-                    locale,
-                        this.sandbox.dom.$.inArray(locale, item.concreteLanguages) < 0 ? ' *' : '',
+                    '<label for="copy-locales-to-', locale, '" class="', (currentLocale ? 'disabled' : ''), '">',
+                    locale, this.sandbox.dom.$.inArray(locale, item.concreteLanguages) < 0 ? ' *' : '',
                     '</label>',
                     '</div>'
                 ].join('');
@@ -542,7 +542,7 @@ define([
             return def;
         },
 
-        load: function(item, webspace, language) {
+        load: function(item, webspace, language, forceReload) {
             var action = 'content';
             if (
                 (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
@@ -551,7 +551,7 @@ define([
                 action = 'settings';
             }
 
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action);
+            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action, undefined, undefined, forceReload);
         },
 
         add: function(parent) {
@@ -820,7 +820,21 @@ define([
 
         startCopyLocales: function() {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
-                languages = [];
+                languages = [],
+                deselectHandler = function(item) {
+                    var id = 'copy-locales-to-' + item;
+
+                    // enable checkbox and label
+                    this.sandbox.dom.prop('#' + id, 'disabled', '');
+                    this.sandbox.dom.removeClass('label[for="' + id + '"]', 'disabled');
+                }.bind(this),
+                selectHandler = function(item) {
+                    var id = 'copy-locales-to-' + item;
+
+                    // disable checkbox and label
+                    this.sandbox.dom.prop('#' + id, 'disabled', 'disabled');
+                    this.sandbox.dom.addClass('label[for="' + id + '"]', 'disabled');
+                }.bind(this);
 
             this.sandbox.dom.append(this.$el, $element);
 
@@ -830,6 +844,9 @@ define([
                     name: locale + (locale === this.options.language ? ' (' + this.sandbox.translate('content.contents.settings.copy-locales.current-language') + ')' : '')
                 });
             }.bind(this));
+
+            this.sandbox.on('husky.select.copy-locale-to.deselected.item', deselectHandler);
+            this.sandbox.on('husky.select.copy-locale-to.selected.item', selectHandler);
 
             this.sandbox.start([
                 {
@@ -857,7 +874,7 @@ define([
                                 ],
                                 okCallback: function() {
                                     var src = this.sandbox.dom.data('#copy-locales-select', 'selection'),
-                                        $dest = this.sandbox.dom.find('.copy-locales-to-container input:checked'),
+                                        $dest = this.sandbox.dom.find('.copy-locales-to-container input:checked:not(input[disabled="disabled"])'),
                                         dest = [];
 
                                     this.sandbox.util.foreach($dest, function($item) {
@@ -868,7 +885,13 @@ define([
                                         return false;
                                     }
 
+                                    this.sandbox.off('husky.select.copy-locale-to.deselected.item', deselectHandler);
+                                    this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler);
                                     this.copyLocale(this.data.id, src[0], dest);
+
+                                    if (this.sandbox.dom.$.inArray(this.options.language, dest) >= 0) {
+                                        this.load(this.data, this.options.webspace, this.options.language, true);
+                                    }
                                 }.bind(this)
                             }
                         ]

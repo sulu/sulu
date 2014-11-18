@@ -464,8 +464,14 @@
 /* line 9, ../scss/modules/node.scss */
 .copy-locales-overlay-content label {
   display: inline;
+  color: #000;
 }
-/* line 13, ../scss/modules/node.scss */
+/* line 14, ../scss/modules/node.scss */
+.copy-locales-overlay-content label.disabled {
+  color: #999;
+  cursor: default;
+}
+/* line 19, ../scss/modules/node.scss */
 .copy-locales-overlay-content .info {
   font-size: 12px;
   color: #999;
