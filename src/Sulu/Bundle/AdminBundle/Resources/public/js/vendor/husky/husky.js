@@ -27189,7 +27189,7 @@ define('__component__$navigation@husky',[],function() {
             this.animating = false;
 
             // binding dom events
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
 
             this.bindCustomEvents();
 
@@ -27368,7 +27368,7 @@ define('__component__$navigation@husky',[],function() {
         /**
          * Interaction
          */
-        bindRoleTableEvents: function() {
+        bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.toggleItems.bind(this), '.navigation-items-toggle, .navigation-subitems-toggle');
             this.sandbox.dom.on(this.$el, 'click', this.toggleSections.bind(this), '.section-toggle');
             this.sandbox.dom.on(this.$el, 'click', this.settingsClicked.bind(this), '.js-navigation-settings');
@@ -31363,7 +31363,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Gets the view and a load to get data and render it
              */
             initRender: function() {
-                this.bindRoleTableEvents();
+                this.bindDOMEvents();
                 this.getPaginationDecorator(this.paginationId);
                 this.getViewDecorator(this.viewId);
                 this.evaluateMatchings();
@@ -31602,7 +31602,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             /**
              * Binds Dom-related events
              */
-            bindRoleTableEvents: function() {
+            bindDOMEvents: function() {
                 if (this.options.resizeListeners === true) {
                     this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.windowResizeListener.bind(this));
                 }
@@ -32351,7 +32351,7 @@ define('__component__$dropdown@husky',[], function() {
             }
 
             // bind dom elements
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
 
             this.bindCustomEvents();
 
@@ -32360,7 +32360,7 @@ define('__component__$dropdown@husky',[], function() {
         },
 
         // bind dom elements
-        bindRoleTableEvents: function() {
+        bindDOMEvents: function() {
 
             // turn off all events
             this.sandbox.dom.off(this.$element);
@@ -32575,11 +32575,11 @@ define('__component__$matrix@husky',[],function() {
 
             sandbox.dom.append(this.$el, this.$element);
 
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
             this.bindCustomEvents();
         },
 
-        bindRoleTableEvents: function() {
+        bindDOMEvents: function() {
             sandbox.dom.on(this.$element, 'click', this.toggleIcon.bind(this), 'tbody > tr > td:has(span[class^="fa-"])');
             sandbox.dom.on(this.$element, 'click', this.setRowActive.bind(this), 'tbody > tr > td:last-child');
         },
@@ -32852,7 +32852,7 @@ define('__component__$search@husky',[], function() {
 
             this.render();
 
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
 
             this.sandbox.emit(INITIALIZED.call(this));
 
@@ -32871,7 +32871,7 @@ define('__component__$search@husky',[], function() {
         },
 
         // bind dom elements
-        bindRoleTableEvents: function() {
+        bindDOMEvents: function() {
             this.sandbox.dom.on(this.$el, 'click', this.selectInput.bind(this), 'input');
             this.sandbox.dom.on(this.$el, 'mousedown', this.submitSearch.bind(this), '.search-icon');
             this.sandbox.dom.on(this.$el, 'mousedown', this.removeSearch.bind(this), '.remove-icon');
@@ -36344,7 +36344,7 @@ define('__component__$select@husky',[], function() {
             this.prepareData();
 
             // bind dom elements
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
             this.bindCustomEvents();
 
             if (this.options.disabled === true) {
@@ -36358,7 +36358,7 @@ define('__component__$select@husky',[], function() {
         //sets the button in enabled state
         enable: function() {
             this.sandbox.dom.removeClass(this.sandbox.dom.children(this.$el, '.husky-select-container'), constants.disabledClass);
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
         },
 
         //sets the button i
@@ -36491,7 +36491,7 @@ define('__component__$select@husky',[], function() {
         },
 
         // bind dom elements
-        bindRoleTableEvents: function() {
+        bindDOMEvents: function() {
 
             // toggle drop-down
             this.sandbox.dom.on(this.$el, 'click', this.labelClickHandler.bind(this), '.dropdown-label');
@@ -37506,7 +37506,7 @@ define('__component__$column-navigation@husky',[], function () {
             this.render();
             this.startBigLoader();
             this.load(this.options.url, 0);
-            this.bindRoleTableEvents();
+            this.bindDOMEvents();
             this.bindCustomEvents();
 
             this.sandbox.emit(INITIALIZED.call(this));
@@ -37822,7 +37822,7 @@ define('__component__$column-navigation@husky',[], function () {
 
         },
 
-        bindRoleTableEvents: function () {
+        bindDOMEvents: function () {
             this.sandbox.dom.on(this.$el, 'click', this.itemSelected.bind(this), 'li:not(.selected)');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.itemMouseEnter.bind(this), '.column-navigation li');
