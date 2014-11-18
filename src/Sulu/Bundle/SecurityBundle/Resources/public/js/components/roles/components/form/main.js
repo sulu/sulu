@@ -46,7 +46,7 @@ define([], function() {
                 this.initializeMatrix(this.sandbox.dom.data('#system', 'selection-values')[0]);
                 this.initializeValidation();
 
-                this.bindDOMEvents();
+                this.bindRoleTableEvents();
                 this.bindCustomEvents();
 
                 this.setHeaderBar(true);
@@ -56,7 +56,7 @@ define([], function() {
             this.render();
         },
 
-        bindDOMEvents: function() {
+        bindRoleTableEvents: function() {
             this.sandbox.dom.on(this.$el, 'change', this.setGod.bind(this), '#god');
         },
 

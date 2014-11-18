@@ -19,6 +19,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -31,7 +32,7 @@ use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
  * Makes the roles accessible through a REST-API
  * @package Sulu\Bundle\SecurityBundle\Controller
  */
-class RoleController extends RestController implements ClassResourceInterface
+class RoleController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluSecurityBundle:Role';
 
@@ -451,5 +452,13 @@ class RoleController extends RestController implements ClassResourceInterface
             throw new EntityNotFoundException('SuluSecurityBundle:SecurityType', $securityTypeData['id']);
         }
         $role->setSecurityType($securityType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.security.roles';
     }
 }

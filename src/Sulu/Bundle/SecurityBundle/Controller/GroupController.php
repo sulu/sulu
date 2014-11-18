@@ -16,6 +16,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -27,7 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
  * Makes the groups accessible through a REST-API
  * @package Sulu\Bundle\SecurityBundle\Controller
  */
-class GroupController extends RestController implements ClassResourceInterface
+class GroupController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluSecurityBundle:Group';
 
@@ -305,5 +306,14 @@ class GroupController extends RestController implements ClassResourceInterface
             }
             $group->setParent($parent);
         }
+    }
+
+    /**
+     * Returns the SecurityContext required for the controller
+     * @return mixed
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.security.groups';
     }
 }
