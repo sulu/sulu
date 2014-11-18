@@ -784,7 +784,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
         $this->assertArrayNotHasKey('enabledShadowLanguage', $response);
-        $this->assertArrayNotHasKey('concreteLanguages', $response);
+        $this->assertArrayHasKey('concreteLanguages', $response);
         $this->assertArrayNotHasKey('shadowOn', $response);
         $this->assertArrayNotHasKey('shadowBaseLanguage', $response);
     }
