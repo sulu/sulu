@@ -1,16 +1,11 @@
-UPGRADE log
-===========
+# Upgrade
 
-dev-develop
------------
+## dev-develop
+* Permissions have to be correct now, because they are applied
+  * otherwise add a permission value of 120 for `sulu.security.roles`,
+    `sulu.security.groups` and `sulu.security.users` to one user to change
+    the settings in the UI
+* Snippet content type defaults to all snippet types available instead of the
+  default one
+  * Explicitly define a snippet type in the parameters if this is not desired
 
-### SnippetBundle 
-
-Not specifying a snippetType in the snippets content type will allow a choice
-from ALL snippet types instead of only the default snippet type. Therefore you
-must explicitly declare the snippet type in a parameter or accept the new
-behavior of showing all snippet types. 
-
-See the
-[documentation](https://github.com/sulu-cmf/docs/blob/master/developer-documentation/300-webspaces/snippets.md)
-for more details.

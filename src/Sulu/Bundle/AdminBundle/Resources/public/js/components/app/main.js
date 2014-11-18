@@ -119,10 +119,20 @@ define(function() {
             this.sandbox.emit(INITIALIZED.call(this));
 
             this.sandbox.util.ajaxError(function(event, request) {
-                if (request.status == 401) {
-                    window.location.replace('/admin/login');
+                switch (request.status) {
+                    case 401:
+                        window.location.replace('/admin/login');
+                        break;
+                    case 403:
+                        this.sandbox.emit(
+                            'sulu.labels.error.show',
+                            'public.forbidden',
+                            'public.forbidden.description',
+                            ''
+                        );
+                        break;
                 }
-            });
+            }.bind(this));
         },
 
         /**

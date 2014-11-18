@@ -21,8 +21,8 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
 
@@ -30,9 +30,8 @@ use FOS\RestBundle\Controller\Annotations\Post;
  * Makes media available through a REST API
  * @package Sulu\Bundle\MediaBundle\Controller
  */
-class MediaController extends RestController implements ClassResourceInterface
+class MediaController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-
     /**
      * @var string
      */
@@ -64,7 +63,7 @@ class MediaController extends RestController implements ClassResourceInterface
     public function getAction($id, Request $request)
     {
         try {
-            $locale = $this->getLocale($request->get('locale'));
+            $locale = $this->getLocale($request);
             $mediaManager = $this->getMediaManager();
             $view = $this->responseGetById(
                 $id,
@@ -106,7 +105,7 @@ class MediaController extends RestController implements ClassResourceInterface
             }
 
             $mediaManager = $this->getMediaManager();
-            $media = $mediaManager->get($this->getLocale($request->get('locale')), array(
+            $media = $mediaManager->get($this->getLocale($request), array(
                 'collection' => $collection,
                 'ids' => $ids,
                 'types' => $types,
@@ -236,7 +235,7 @@ class MediaController extends RestController implements ClassResourceInterface
     {
         return array(
             'id' => $request->get('id'),
-            'locale' => $request->get('locale', $fallback ? $this->getLocale($request->get('locale')) : null),
+            'locale' => $request->get('locale', $fallback ? $this->getLocale($request) : null),
             'type' => $request->get('type'),
             'collection' => $request->get('collection'),
             'versions' => $request->get('versions'),
@@ -284,15 +283,10 @@ class MediaController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @param $requestLocale
-     * @return mixed
+     * {@inheritDoc}
      */
-    protected function getLocale($requestLocale)
+    public function getSecurityContext()
     {
-        if ($requestLocale) {
-            return $requestLocale;
-        }
-
-        return $this->getUser()->getLocale();
+        return 'sulu.media.files';
     }
 }

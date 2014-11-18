@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
 
     * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
+    * ENHANCEMENT #535 [SecurityBundle] Added SecurityListener and secured Content, Media and Security
     * BUGFIX      #568 [SnippetBundle]  Added template to view for Snippets
     * ENHANCEMENT #539 [AdminBundle]    Added validation for iban and vat numbers from the eu
     * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes 

@@ -49,4 +49,16 @@ class SuluMediaAdmin extends Admin
     {
         return 'sulumedia';
     }
+
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Media' => array(
+                    'sulu.media.collections',
+                    'sulu.media.files',
+                )
+            )
+        );
+    }
 }
