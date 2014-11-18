@@ -15,6 +15,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -42,7 +43,6 @@ class CreateUserCommand extends ContainerAwareCommand
                     new InputArgument('email', InputArgument::REQUIRED, 'The email'),
                     new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),
                     new InputArgument('password', InputArgument::REQUIRED, 'The password'),
-                    new InputOption('god', null, InputOption::VALUE_NONE, 'Set the user as God')
                 )
             );
     }
@@ -52,13 +52,19 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $localizations = $this->getContainer()->get('sulu.core.localization_manager')->getLocalizations();
+        $locales = array();
+
+        foreach ($localizations as $localization) {
+            $locales[] = $localization->getLocalization();
+        }
+
         $username = $input->getArgument('username');
         $firstName = $input->getArgument('firstName');
         $lastName = $input->getArgument('lastName');
         $emailText = $input->getArgument('email');
         $locale = $input->getArgument('locale');
         $password = $input->getArgument('password');
-        $god = $input->getOption('god');
 
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
@@ -103,10 +109,8 @@ class CreateUserCommand extends ContainerAwareCommand
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setUser($user);
-        $userRole->setLocale('[]'); // set all locales
+        $userRole->setLocale(json_encode($locales)); // set all locales
         $em->persist($userRole);
-
-        // TODO God Mode
 
         $em->persist($user);
         $em->flush();
@@ -243,16 +247,39 @@ class CreateUserCommand extends ContainerAwareCommand
     {
         // find default role or create a new one
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
-        if (!$role) {
-            $role = new Role();
-            $role->setName('User');
-            $role->setSystem('Sulu');
-            $role->setCreated($now);
-            $role->setChanged($now);
-            $em->persist($role);
 
+        if ($role) {
             return $role;
         }
+
+        $role = new Role();
+        $role->setName('User');
+        $role->setSystem('Sulu');
+        $role->setCreated($now);
+        $role->setChanged($now);
+
+        $pool = $this->getContainer()->get('sulu_admin.admin_pool');
+        $securityContexts = $pool->getSecurityContexts();
+
+        // flatten contexts
+        $securityContextsFlat = array();
+
+        array_walk_recursive(
+            $securityContexts['Sulu'],
+            function ($value) use (&$securityContextsFlat) {
+                $securityContextsFlat[] = $value;
+            }
+        );
+
+        foreach ($securityContextsFlat as $securityContext) {
+            $permission = new Permission();
+            $permission->setRole($role);
+            $permission->setContext($securityContext);
+            $permission->setPermissions(120);
+            $role->addPermission($permission);
+        }
+
+        $em->persist($role);
 
         return $role;
     }
