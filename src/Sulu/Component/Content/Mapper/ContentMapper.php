@@ -1619,12 +1619,24 @@ class ContentMapper implements ContentMapperInterface
             $destLanguageCodes = array($destLanguageCodes);
         }
 
+        /** @var Page $structure */
         $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
 
         $data = $structure->toArray(true);
 
         foreach($destLanguageCodes as $destLanguageCode) {
-            $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
+            $this->save(
+                $data,
+                $structure->getKey(),
+                $webspaceKey,
+                $destLanguageCode,
+                $userId,
+                false,
+                $uuid,
+                null,
+                Structure::STATE_TEST,
+                $structure->getIsShadow()
+            );
         }
 
         return $structure;
