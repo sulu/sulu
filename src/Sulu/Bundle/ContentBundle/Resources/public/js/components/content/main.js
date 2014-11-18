@@ -869,7 +869,7 @@ define([
                                     },
                                     {
                                         type: 'ok',
-                                        text:this.sandbox.translate('content.contents.settings.copy-locales.ok'),
+                                        text: this.sandbox.translate('content.contents.settings.copy-locales.ok'),
                                         align: 'left'
                                     }
                                 ],
