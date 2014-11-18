@@ -60,6 +60,9 @@ define(function() {
             openGhost: function() {
                 return [
                     '<div class="copy-locale-overlay-content grid">',
+                    '<div class="grid-row"><p class="info">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.info'),
+                    '</p></div>',
                     '<div class="grid-row">',
                     '<div class="custom-checkbox">',
                     '<input type="radio" name="action" id="copy-locale-new" checked="checked"/>',
@@ -318,7 +321,7 @@ define(function() {
                 buttons = [
                 {
                     type: 'cancel',
-                    align: 'left'
+                    align: 'right'
                 }
             ];
             this.sandbox.dom.append(this.$el, $element);
@@ -326,7 +329,8 @@ define(function() {
             if (!!okButton) {
                 buttons.push({
                     type: 'ok',
-                    align: 'right'
+                    align: 'left',
+                    text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
                 });
             }
 
