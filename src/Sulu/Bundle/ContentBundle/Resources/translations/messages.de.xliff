@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="1">
                 <source>sulu.content.create-new</source>
-                <target>Create page</target>
+                <target>Seite erstellen</target>
             </trans-unit>
         </body>
     </file>
