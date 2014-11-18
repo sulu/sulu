@@ -2,10 +2,11 @@
  * Copy locales
  */
 
-.copy-locales-overlay-content {
+.copy-locales-overlay-content,
+.copy-locale-overlay-content {
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 
     label {
         display: inline;
@@ -21,4 +22,10 @@
         font-size: 12px;
         color: #999;
     }
+}
+
+#copy-locale-overlay-select {
+    margin-left: 20px;
+    margin-top: 10px;
+    width: 75%;
 }

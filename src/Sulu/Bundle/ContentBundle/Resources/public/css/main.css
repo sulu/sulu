@@ -456,26 +456,37 @@
 /**
  * Copy locales
  */
-/* line 5, ../scss/modules/node.scss */
-.copy-locales-overlay-content {
+/* line 6, ../scss/modules/node.scss */
+.copy-locales-overlay-content,
+.copy-locale-overlay-content {
   margin-left: 20px;
   margin-right: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 }
-/* line 10, ../scss/modules/node.scss */
-.copy-locales-overlay-content label {
+/* line 11, ../scss/modules/node.scss */
+.copy-locales-overlay-content label,
+.copy-locale-overlay-content label {
   display: inline;
   color: #000;
 }
-/* line 15, ../scss/modules/node.scss */
-.copy-locales-overlay-content label.disabled {
+/* line 16, ../scss/modules/node.scss */
+.copy-locales-overlay-content label.disabled,
+.copy-locale-overlay-content label.disabled {
   color: #999;
   cursor: default;
 }
-/* line 20, ../scss/modules/node.scss */
-.copy-locales-overlay-content .info {
+/* line 21, ../scss/modules/node.scss */
+.copy-locales-overlay-content .info,
+.copy-locale-overlay-content .info {
   font-size: 12px;
   color: #999;
+}
+
+/* line 27, ../scss/modules/node.scss */
+#copy-locale-overlay-select {
+  margin-left: 20px;
+  margin-top: 10px;
+  width: 75%;
 }
 
 /* line 1, ../scss/modules/order-table.scss */
