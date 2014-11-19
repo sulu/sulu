@@ -538,7 +538,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $data = $repository->orderBefore($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'copy-locale':
-                    $srcLocale = $this->getRequestParameter($request, 'src', true);
+                    $srcLocale = $this->getLanguage($request);
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
 
                     // call repository method

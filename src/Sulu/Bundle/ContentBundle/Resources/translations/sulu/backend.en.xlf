@@ -389,7 +389,7 @@
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf026" resname="content.contents.new-or-shadow">
                 <source>content.contents.create</source>
-                <target>Seite erstellen</target>
+                <target>Create page</target>
             </trans-unit>
         </body>
     </file>

@@ -70,16 +70,13 @@ define([
                     '   * ', this.sandbox.translate('content.contents.settings.copy-locales.info'),
                     '</p>',
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
-                ], i = 0;
+                ], i = 0, languages = JSON.parse(webspaceLanguages)._embedded[this.options.webspace];
 
-                this.sandbox.util.foreach(this.sandbox.sulu.locales, function(locale) {
+                this.sandbox.util.foreach(languages, function(locale) {
                     if (i % 2 === 0) {
                         template.push((i > 0 ? '</div>' : '') + '<div class="grid-row">');
                     }
-                    template.push(templates.copyLocalesCheckbox.call(this, locale, item));
-                    if (i % 2 === 0) {
-                        template.push('<div>');
-                    }
+                    template.push(templates.copyLocalesCheckbox.call(this, locale.title, item));
                     i++;
                 }.bind(this));
 
@@ -90,9 +87,19 @@ define([
             },
 
             copyLocalesCheckbox: function(locale, item) {
-                var currentLocale = (
+                var concreteLanguages = [],
+                    currentLocale;
+
+                // object to array
+                for (var i in this.data.concreteLanguages) {
+                    if (this.data.concreteLanguages.hasOwnProperty(i)) {
+                        concreteLanguages.push(this.data.concreteLanguages[i]);
+                    }
+                }
+
+                currentLocale = (
                     locale === this.options.language &&
-                    this.sandbox.dom.$.inArray(locale, item.concreteLanguages) >= 0
+                    concreteLanguages.indexOf(locale) >= 0
                 );
 
                 return [
@@ -105,7 +112,7 @@ define([
                     '       <span class="icon"></span>',
                     '   </div>',
                     '   <label for="copy-locales-to-', locale, '" class="', (currentLocale ? 'disabled' : ''), '">',
-                            locale, this.sandbox.dom.$.inArray(locale, item.concreteLanguages) < 0 ? ' *' : '',
+                            locale, concreteLanguages.indexOf(locale) < 0 ? ' *' : '',
                     '   </label>',
                     '</div>'
                 ].join('');
@@ -387,7 +394,7 @@ define([
 
         copyLocale: function(id, src, dest, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&src=' , src , '&dest=', dest.join(','), '&action=copy-locale'
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=', src, '&dest=', dest.join(','), '&action=copy-locale'
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -902,9 +909,7 @@ define([
                                     this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler);
                                     this.copyLocale(this.data.id, src[0], dest);
 
-                                    if (this.sandbox.dom.$.inArray(this.options.language, dest) >= 0) {
-                                        this.load(this.data, this.options.webspace, this.options.language, true);
-                                    }
+                                    this.load(this.data, this.options.webspace, this.options.language, true);
                                 }.bind(this)
                             }
                         ]
