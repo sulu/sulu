@@ -97,7 +97,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
             $tempPath = $base . '/' . $webspace->getKey() . '/' . $temp;
-            $snippetsPath = $base . '/' . $snippets;
 
             $output->writeln("  {$webspace->getName()}");
 
@@ -120,6 +119,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $session->save();
 
         }
+
+        $snippetsPath = $base . '/' . $snippets;
 
         // create snippet nodes
         $this->createRecursive($snippetsPath, $root);
