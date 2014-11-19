@@ -70,14 +70,18 @@ define(function() {
                     '           <input type="radio" name="action" id="copy-locale-new" checked="checked"/>',
                     '           <span class="icon"></span>',
                     '       </div>',
-                    '       <label for="copy-locale-new">', this.sandbox.translate('content.contents.settings.copy-locale.new'), '</label>',
+                    '       <label for="copy-locale-new">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.new'),
+                    '       </label>',
                     '   </div>',
                     '   <div class="grid-row">',
                     '       <div class="custom-checkbox">',
                     '           <input type="radio" name="action" id="copy-locale-copy"/>',
                     '           <span class="icon"></span>',
                     '       </div>',
-                    '       <label for="copy-locale-copy">', this.sandbox.translate('content.contents.settings.copy-locale.copy'), '</label>',
+                    '       <label for="copy-locale-copy">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.copy'),
+                    '       </label>',
                     '       <div id="copy-locale-overlay-select" />',
                     '   </div>',
                     '</div>'
@@ -365,7 +369,8 @@ define(function() {
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
-            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&webspace-node=true';
+            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace +
+                '&language=' + this.options.language + '&webspace-node=true';
 
             this.sandbox.start(
                 [
@@ -513,9 +518,13 @@ define(function() {
          */
         getUrl: function() {
             if (this.getLastSelected() !== null) {
-                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             } else {
-                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             }
         },
 
@@ -524,8 +533,10 @@ define(function() {
          */
         render: function() {
             this.bindCustomEvents();
+            var url = 'text!/admin/content/template/content/column/' + this.options.webspace +
+                '/' + this.options.language + '.html';
 
-            require(['text!/admin/content/template/content/column/' + this.options.webspace + '/' + this.options.language + '.html'], function(template) {
+            require([url], function(template) {
                 var defaults = {
                         translate: this.sandbox.translate
                     },

@@ -455,16 +455,24 @@ define([], function () {
         changeStateCallbacks = {
             default: function (saved, type, highlight) {
                 if (!!saved) {
-                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.disable', 'save-button', !!highlight);
+                    this.sandbox.emit(
+                        'husky.toolbar.' + this.toolbarInstanceName + '.item.disable', 'save-button',
+                        !!highlight
+                    );
                 } else {
-                    this.sandbox.emit('husky.toolbar.' + this.toolbarInstanceName + '.item.enable', 'save-button', false);
+                    this.sandbox.emit(
+                        'husky.toolbar.' + this.toolbarInstanceName + '.item.enable',
+                        'save-button',
+                        false
+                    );
                 }
             }
         },
 
         /**
          * Returns a template useable by the toolbar-component
-         * @param {Object|String} template Can be a JSON-string, String representing a function in toolbarTemplates or a valid array of objects
+         * @param {Object|String} template Can be a JSON-string, String representing a function
+         *                        in toolbarTemplates or a valid array of objects
          * @returns {Object} a template usable by the toolbar-component
          */
         getToolbarTemplate = function (template) {
@@ -575,7 +583,10 @@ define([], function () {
             if (this.options.toolbarParentTemplate !== null) {
 
                 this.options.toolbarParentTemplate = getToolbarTemplate.call(this, parentTemplate);
-                if (!this.options.parentChangeStateCallback || typeof this.options.parentChangeStateCallback !== 'function') {
+                if (
+                    !this.options.parentChangeStateCallback ||
+                    typeof this.options.parentChangeStateCallback !== 'function'
+                ) {
                     this.options.parentChangeStateCallback = getChangeToolbarStateCallback.call(this, parentTemplate);
                 }
 

@@ -43,7 +43,9 @@ define([
                 '</div>',
                 '<div id="preview-toolbar" class="sulu-preview-toolbar">',
                 '    <div id="preview-toolbar-right" class="right">',
-                '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer"><span class="fa-external-link"></span></div>',
+                '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer">',
+                '           <span class="fa-external-link"></span>',
+                '       </div>',
                 '       <div id="preview-toolbar-resolutions" class="resolutions pull-right pointer">',
                 '           <label class="drop-down-trigger">',
                 '               <span class="dropdown-label"><%= resolution %></span>',
@@ -59,13 +61,17 @@ define([
             copyLocales: function(item) {
                 var template = [
                     '<div class="copy-locales-overlay-content">',
-                    '   <label>', this.sandbox.translate('content.contents.settings.copy-locales.copy-from'), '</label>',
+                    '   <label>',
+                            this.sandbox.translate('content.contents.settings.copy-locales.copy-from'),
+                    '   </label>',
                     '   <div class="grid m-top-10">',
                     '       <div class="grid-row">',
                     '       <div id="copy-locales-select" class="grid-col-6"/>',
                     '   </div>',
                     '</div>',
-                    '<h2 class="divider m-top-20">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
+                    '<h2 class="divider m-top-20">',
+                        this.sandbox.translate('content.contents.settings.copy-locales.target'),
+                    '</h2>',
                     '<p class="info">',
                     '   * ', this.sandbox.translate('content.contents.settings.copy-locales.info'),
                     '</p>',
@@ -186,8 +192,11 @@ define([
 
             // load column view
             this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
+                var route = 'content/contents/' +
+                    (!webspace ? this.options.webspace : webspace) + '/' +
+                    (!language ? this.options.language : language);
+                this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
+                this.sandbox.emit('sulu.router.navigate', route);
             }, this);
 
             // getter for content data
@@ -343,13 +352,22 @@ define([
 
             // load list view
             this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+                var route = 'content/contents/' +
+                    (!webspace ? this.options.webspace : webspace) + '/' +
+                    (!language ? this.options.language : language);
                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language));
+                this.sandbox.emit('sulu.router.navigate', route);
             }, this);
         },
 
         getResourceLocator: function(parts, template, callback) {
-            var url = '/admin/api/nodes/resourcelocators/generates?' + (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') + (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') + '&webspace=' + this.options.webspace + '&language=' + this.options.language + '&template=' + template;
+            var url = '/admin/api/nodes/resourcelocators/generates?' +
+                (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') +
+                (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') +
+                '&webspace=' + this.options.webspace +
+                '&language=' + this.options.language +
+                '&template=' + template;
+
             this.sandbox.util.save(url, 'POST', {parts: parts})
                 .then(function(data) {
                     callback(data.resourceLocator);
@@ -358,7 +376,8 @@ define([
 
         move: function(id, parentId, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=move&destination=', parentId
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
+                '&language=' , this.options.language , '&action=move&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -376,7 +395,8 @@ define([
 
         copy: function(id, parentId, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=copy&destination=', parentId
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
+                '&language=' , this.options.language , '&action=copy&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -394,7 +414,8 @@ define([
 
         copyLocale: function(id, src, dest, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=', src, '&dest=', dest.join(','), '&action=copy-locale'
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
+                '&language=', src, '&dest=', dest.join(','), '&action=copy-locale'
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -412,7 +433,8 @@ define([
 
         order: function(id, parentId, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace, '&language=' , this.options.language , '&action=order&destination=', parentId
+                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
+                '&language=' , this.options.language , '&action=order&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -438,7 +460,8 @@ define([
                             processData: true,
 
                             success: function() {
-                                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
+                                var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
+                                this.sandbox.emit('sulu.router.navigate', route);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
@@ -447,10 +470,11 @@ define([
                             processData: true,
 
                             success: function() {
+                                var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
                                 this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
 
                                 this.sandbox.sulu.unlockDeleteSuccessLabel();
-                                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language);
+                                this.sandbox.emit('sulu.router.navigate', route);
                                 this.sandbox.emit('sulu.preview.deleted', id);
                             }.bind(this)
                         });
@@ -536,15 +560,24 @@ define([
             if (!!this.options.id) {
                 this.content.set({id: this.options.id});
             }
-            this.content.fullSave(this.template, this.options.webspace, this.options.language, this.options.parent, this.state, null, {
+            this.content.fullSave(
+                this.template,
+                this.options.webspace,
+                this.options.language,
+                this.options.parent,
+                this.state,
+                null, {
                 // on success save contents id
                 success: function(response) {
-                    var model = response.toJSON();
+                    var model = response.toJSON(), route;
                     if (!!this.options.id) {
                         this.sandbox.emit('sulu.content.contents.saved', model.id, model);
                     } else {
+                        route = 'content/contents/' + this.options.webspace + '/' +
+                            this.options.language + '/edit:' + model.id + '/content';
+
                         this.sandbox.sulu.viewStates.justSaved = true;
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + model.id + '/content');
+                        this.sandbox.emit('sulu.router.navigate', route);
                     }
                     def.resolve();
                 }.bind(this),
@@ -567,14 +600,26 @@ define([
                 action = 'settings';
             }
 
-            this.sandbox.emit('sulu.router.navigate', 'content/contents/' + (!webspace ? this.options.webspace : webspace) + '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action, undefined, undefined, forceReload);
+            this.sandbox.emit(
+                'sulu.router.navigate',
+                'content/contents/' + (!webspace ? this.options.webspace : webspace) +
+                    '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
+                undefined, undefined, forceReload
+            );
         },
 
         add: function(parent) {
             if (!!parent) {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add:' + parent.id + '/content');
+                this.sandbox.emit(
+                    'sulu.router.navigate',
+                    'content/contents/' + this.options.webspace +
+                        '/' + this.options.language + '/add:' + parent.id + '/content'
+                );
             } else {
-                this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content');
+                this.sandbox.emit(
+                    'sulu.router.navigate',
+                    'content/contents/' + this.options.webspace + '/' + this.options.language + '/add/content'
+                );
             }
         },
 
@@ -629,7 +674,11 @@ define([
                         (this.options.content !== 'settings' && this.data.shadowOn === true) ||
                         (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
                         ) {
-                        this.sandbox.emit('sulu.router.navigate', 'content/contents/' + this.options.webspace + '/' + this.options.language + '/edit:' + data.id + '/settings');
+                        this.sandbox.emit(
+                            'sulu.router.navigate',
+                            'content/contents/' + this.options.webspace +
+                            '/' + this.options.language + '/edit:' + data.id + '/settings'
+                        );
                     }
                 }
 
@@ -726,7 +775,10 @@ define([
                     this.sandbox.dom.removeClass($container, style.cssClass);
                 }.bind(this));
                 this.sandbox.dom.addClass($container, newStyle.cssClass);
-                this.sandbox.dom.html(this.sandbox.dom.find('.dropdown-label', $toolbar), this.sandbox.translate(newStyle.name));
+                this.sandbox.dom.html(
+                    this.sandbox.dom.find('.dropdown-label', $toolbar),
+                    this.sandbox.translate(newStyle.name)
+                );
             }
         },
 
@@ -754,7 +806,12 @@ define([
         setTemplate: function(data) {
             this.template = data.originTemplate;
 
-            if (this.data.nodeType === TYPE_CONTENT && this.template !== '' && this.template !== undefined && this.template !== null) {
+            if (
+                this.data.nodeType === TYPE_CONTENT &&
+                this.template !== '' &&
+                this.template !== undefined &&
+                this.template !== null
+            ) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
