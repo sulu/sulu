@@ -16,6 +16,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -189,38 +190,24 @@ class TemplateController extends Controller
 
     /**
      * returns languages for webspaces
-     * @param string $webspaceKey
      * @param Request $request
      * @return JsonResponse
      */
-    public function getLanguagesAction($webspaceKey, Request $request)
+    public function getLanguagesAction()
     {
-        $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
-        $id = $request->get('id');
-        $language = $request->get('language');
-        $page = null;
-        $newText = $this->get('translator')->trans('sulu.content.create-new');
+        $webspaces = $this->getWebspaceManager()->getWebspaceCollection();
 
-        if ($id !== null) {
-            /** @var ContentMapperInterface $contentMapper */
-            $contentMapper = $this->get('sulu.content.mapper');
-            /** @var Page $page */
-            $page = $contentMapper->load($id, $webspaceKey, $language);
-        }
-
-        $i = 0;
         $localizations = array();
-        foreach ($webspace->getAllLocalizations() as $localization) {
-            $name = $localization->getLocalization('-');
-            if ($page !== null && !in_array($localization, $page->getConcreteLanguages())) {
-                $name .= ' (' . $newText . ')';
-            }
+        /** @var Webspace $webspace */
+        foreach ($webspaces as $webspace) {
+            $localizations[$webspace->getKey()] = array();
 
-            $localizations[] = array(
-                'localization' => $localization->getLocalization(),
-                'name' => $name,
-                'id' => $i++
-            );
+            foreach ($webspace->getAllLocalizations() as $localization) {
+                $localizations[$webspace->getKey()][] = array(
+                    'id' => $localization->getLocalization(),
+                    'title' => $localization->getLocalization('-')
+                );
+            }
         }
 
         $data = array(

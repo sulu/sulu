@@ -404,7 +404,28 @@ define([], function () {
                 return [button];
             },
 
-            defaultLanguageChanger: function () {
+            languageChangerData: function(data, callback) {
+                // default callback for language dropdown
+                if (typeof callback !== 'function') {
+                    callback = function(item) {
+                        this.sandbox.emit('sulu.header.toolbar.language-changed', item);
+                    }.bind(this);
+                }
+
+                var button = this.sandbox.util.extend(true, {}, constants.languageChangerDefaults, {
+                    id: 'language',
+                    title: this.options.toolbarLanguageChanger.preSelected || this.sandbox.sulu.user.locale,
+                    items: data,
+                    itemsOption: {
+                        markable: true,
+                        callback: callback
+                    }
+                });
+
+                return [button];
+            },
+
+            defaultLanguageChanger: function() {
                 var button, items = [], i, length;
 
                 // generate dropdown-items
@@ -421,7 +442,7 @@ define([], function () {
                     items: items,
                     itemsOption: {
                         markable: true,
-                        callback: function (item) {
+                        callback: function(item) {
                             this.sandbox.emit(LANGUAGE_CHANGED.call(this), item.locale);
                         }.bind(this)
                     }
@@ -563,11 +584,20 @@ define([], function () {
 
             // if language-changer is desired add it to the current template
             if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.url) {
-                languageChanger = toolbarTemplates.languageChanger.call(this,
-                    this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback);
+                languageChanger = toolbarTemplates.languageChanger.call(
+                    this,
+                    this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback
+                );
+            } else if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.data) {
+                languageChanger = toolbarTemplates.languageChangerData.call(
+                    this,
+                    this.options.toolbarLanguageChanger.data,
+                    this.options.toolbarLanguageChanger.callback
+                );
             } else if (!!this.options.toolbarLanguageChanger) {
                 languageChanger = toolbarTemplates.defaultLanguageChanger.call(this);
             }
+
             this.options.toolbarTemplate = this.options.toolbarTemplate.concat(languageChanger);
         },
 

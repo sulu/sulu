@@ -9,8 +9,9 @@
 
 define([
     'sulucontent/model/content',
-    'sulucontent/components/content/preview/main'
-], function(Content, Preview) {
+    'sulucontent/components/content/preview/main',
+    'text!/admin/content/languages'
+], function(Content, Preview, webspaceLanguages) {
 
     'use strict';
 
@@ -202,7 +203,7 @@ define([
 
             // change language
             this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
-                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.localization);
+                this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
 
@@ -211,9 +212,9 @@ define([
                         data.id = this.options.id;
                     }
 
-                    this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.localization);
+                    this.sandbox.emit('sulu.content.contents.load', data, this.options.webspace, item.id);
                 } else {
-                    this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.localization);
+                    this.sandbox.emit('sulu.content.contents.list', this.options.webspace, item.id);
                 }
             }, this);
 
@@ -933,7 +934,9 @@ define([
                 this.headerInitialized.resolve();
             }.bind(this));
 
-            var noBack = (this.options.id === 'index'), def;
+            var noBack = (this.options.id === 'index'), def,
+                languages = JSON.parse(webspaceLanguages)._embedded[this.options.webspace],
+                length = languages, concreteLanguages = [];
 
             if (this.options.display === 'column') {
                 return {
@@ -945,14 +948,29 @@ define([
                     toolbar: {
                         template: [],
                         languageChanger: {
-                            url: '/admin/content/languages/' + this.options.webspace,
+                            data: languages,
                             preSelected: this.options.language
                         }
                     }
                 };
             } else {
                 def = this.sandbox.data.deferred();
+
                 this.loadDataDeferred.then(function() {
+                    // object to array
+                    for (var i in this.data.concreteLanguages) {
+                        if (this.data.concreteLanguages.hasOwnProperty(i)) {
+                            concreteLanguages.push(this.data.concreteLanguages[i]);
+                        }
+                    }
+
+                    // add create new page flag for not existing pages
+                    for (i = 0, length = languages.length; i < length; i++) {
+                        if (concreteLanguages.indexOf(languages[i].id) < 0) {
+                            languages[i].title += ' (' + this.sandbox.translate('content.contents.new') + ')';
+                        }
+                    }
+
                     var url = '/admin/content/navigation/content' + (!!this.data.id ? '?id=' + this.data.id : ''),
                         x = {
                             noBack: noBack,
@@ -963,7 +981,7 @@ define([
 
                             toolbar: {
                                 languageChanger: {
-                                    url: '/admin/content/languages/' + this.options.webspace + '?id=' + this.options.id + '&language=' + this.options.language,
+                                    data: languages,
                                     preSelected: this.options.language
                                 },
 
