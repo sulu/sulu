@@ -89,17 +89,23 @@ define([
             },
 
             copyLocalesCheckbox: function(locale, item) {
-                var currentLocale = (locale === this.options.language && this.sandbox.dom.$.inArray(locale, item.concreteLanguages) >= 0);
+                var currentLocale = (
+                    locale === this.options.language &&
+                    this.sandbox.dom.$.inArray(locale, item.concreteLanguages) >= 0
+                );
+
                 return [
                     '<div class="grid-col-3">',
-                    '<div class="custom-checkbox">',
-                    '<input type="checkbox" id="copy-locales-to-', locale, '" name="copy-locales-to" class="form-element" value="', locale, '"',
-                    (currentLocale ? ' disabled="disabled"' : ''), '/>',
-                    '<span class="icon"></span>',
-                    '</div>',
-                    '<label for="copy-locales-to-', locale, '" class="', (currentLocale ? 'disabled' : ''), '">',
-                    locale, this.sandbox.dom.$.inArray(locale, item.concreteLanguages) < 0 ? ' *' : '',
-                    '</label>',
+                    '   <div class="custom-checkbox">',
+                    '       <input type="checkbox"',
+                    '              id="copy-locales-to-', locale, '"',
+                    '              name="copy-locales-to" class="form-element" value="', locale, '"',
+                                   (currentLocale ? ' disabled="disabled"' : ''), '/>',
+                    '       <span class="icon"></span>',
+                    '   </div>',
+                    '   <label for="copy-locales-to-', locale, '" class="', (currentLocale ? 'disabled' : ''), '">',
+                            locale, this.sandbox.dom.$.inArray(locale, item.concreteLanguages) < 0 ? ' *' : '',
+                    '   </label>',
                     '</div>'
                 ].join('');
             }
@@ -820,9 +826,10 @@ define([
             }
         },
 
-        startCopyLocales: function() {
+        startCopyLocalesOverlay: function() {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 languages = [],
+                currentLocaleText = this.sandbox.translate('content.contents.settings.copy-locales.current-language'),
                 deselectHandler = function(item) {
                     var id = 'copy-locales-to-' + item;
 
@@ -843,7 +850,7 @@ define([
             this.sandbox.util.foreach(this.data.concreteLanguages, function(locale) {
                 languages.push({
                     id: locale,
-                    name: locale + (locale === this.options.language ? ' (' + this.sandbox.translate('content.contents.settings.copy-locales.current-language') + ')' : '')
+                    name: locale + (locale === this.options.language ? ' (' + currentLocaleText + ')' : '')
                 });
             }.bind(this));
 
@@ -877,7 +884,9 @@ define([
                                 ],
                                 okCallback: function() {
                                     var src = this.sandbox.dom.data('#copy-locales-select', 'selection'),
-                                        $dest = this.sandbox.dom.find('.copy-locales-to-container input:checked:not(input[disabled="disabled"])'),
+                                        $dest = this.sandbox.dom.find(
+                                            '.copy-locales-to-container input:checked:not(input[disabled="disabled"])'
+                                        ),
                                         dest = [];
 
                                     this.sandbox.util.foreach($dest, function($item) {
@@ -1008,7 +1017,7 @@ define([
                                             {
                                                 title: this.sandbox.translate('toolbar.copy-locale'),
                                                 callback: function() {
-                                                    this.startCopyLocales();
+                                                    this.startCopyLocalesOverlay();
                                                 }.bind(this)
                                             }
                                         ]
