@@ -542,7 +542,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $destLocale = $this->getRequestParameter($request, 'dest', true);
 
                     // call repository method
-                    $repository->copyLocale($uuid, $userId, $webspace, $srcLocale, explode(',', $destLocale));
+                    $data = $repository->copyLocale($uuid, $userId, $webspace, $srcLocale, explode(',', $destLocale));
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
