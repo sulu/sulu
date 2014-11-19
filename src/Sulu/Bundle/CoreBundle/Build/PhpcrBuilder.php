@@ -10,6 +10,10 @@
 
 namespace Sulu\Bundle\CoreBundle\Build;
 
+use Doctrine\Bundle\PHPCRBundle\ManagerRegistry;
+use Jackalope\Session;
+use PHPCR\RepositoryException;
+
 /**
  * Builder for initializing PHPCR
  */
@@ -36,7 +40,18 @@ class PhpcrBuilder extends SuluBuilder
      */
     public function build()
     {
+        /** @var ManagerRegistry $phpcr */
         $phpcr = $this->container->get('doctrine_phpcr');
+
+        /** @var Session $session */
+        $session = $phpcr->getConnection();
+
+        // create the workspace
+        try {
+            $session->getWorkspace()->createWorkspace($this->container->getParameter('phpcr_workspace'));
+        } catch (RepositoryException $e) {
+            // do nothing
+        }
 
         // Reinitialize the PHPCR repository
         $this->execCommand('Initializing PHPCR repository (idempotent)', 'doctrine:phpcr:repository:init');

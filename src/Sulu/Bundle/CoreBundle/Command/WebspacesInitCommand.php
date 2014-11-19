@@ -102,7 +102,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $output->writeln("  {$webspace->getName()}");
 
             // create content node
-            $output->writeln("    content: '/{$contentsPath}'");
+            $output->writeln("    content: /{$contentsPath}");
             $content = $this->createRecursive($contentsPath, $root);
             $content->addMixin('sulu:page');
             $this->setBasicProperties($webspace, $content, $template, $userId);
@@ -122,10 +122,13 @@ class WebspacesInitCommand extends ContainerAwareCommand
         }
 
         // create snippet nodes
+        $this->createRecursive($snippetsPath, $root);
+        $output->writeln("    snippets: /{$snippetsPath}");
+
         $snippetStructures = $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
         foreach ($snippetStructures as $snippetStructure) {
             $snippetPath = $snippetsPath . '/' . $snippetStructure->getKey();
-            $output->writeln("    snippets: '/{$snippetPath}'");
+            $output->writeln("    snippets: /{$snippetPath}");
             $this->createRecursive($snippetPath, $root);
         }
         $session->save();
