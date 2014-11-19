@@ -16,6 +16,7 @@
         <service id="sulu_content.admin" class="%sulu_content.admin.class%">
             <tag name="sulu.admin"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
 
