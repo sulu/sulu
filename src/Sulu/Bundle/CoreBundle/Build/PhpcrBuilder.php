@@ -49,7 +49,7 @@ class PhpcrBuilder extends SuluBuilder
         // create the workspace
         try {
             $session->getWorkspace()->createWorkspace($this->container->getParameter('phpcr_workspace'));
-        } catch (RepositoryException $exc) {
+        } catch (RepositoryException $e) {
             // do nothing
         }
 
