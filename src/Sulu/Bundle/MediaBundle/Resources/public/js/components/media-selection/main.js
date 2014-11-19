@@ -418,9 +418,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Starts the grid group
          */
         startGridGroup = function() {
-            // TODO remove high limit and implement automatic reload pagination
-            var gridUrl = '/admin/api/media?limit=99999&' +
-                (this.options.types != '' ? 'types=' + this.options.types + '&' : '');
+            var gridUrl, urlParameter = {};
+
+            if (this.options.types != '') {
+                gridUrl = 'filterByTypes';
+                urlParameter = {types: this.options.types};
+            } else {
+                gridUrl = 'all';
+            }
 
             this.sandbox.start([
                 {
@@ -430,6 +435,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         el: this.sandbox.dom.find(getId.call(this, 'gridGroup')),
                         instanceName: this.options.instanceName,
                         gridUrl: gridUrl,
+                        urlParameter: urlParameter,
                         preselected: this.data.ids,
                         resultKey: this.options.resultKey,
                         dataGridOptions: {

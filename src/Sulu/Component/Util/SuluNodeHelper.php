@@ -11,6 +11,7 @@
 namespace Sulu\Component\Util;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Structure;
 use PHPCR\SessionInterface;
@@ -32,7 +33,7 @@ class SuluNodeHelper
     private $paths;
 
     /**
-     * @var PHPCR\SessionInterface
+     * @var SessionInterface
      */
     private $session;
 
@@ -44,13 +45,16 @@ class SuluNodeHelper
     public function __construct(SessionInterface $session, $languageNamespace, $paths)
     {
         $this->languageNamespace = $languageNamespace;
-        $this->paths = array_merge(array(
-            'base' => null,
-            'content' => null,
-            'route' => null,
-            'temp' => null,
-            'snippet' => null
-        ), $paths);
+        $this->paths = array_merge(
+            array(
+                'base' => null,
+                'content' => null,
+                'route' => null,
+                'temp' => null,
+                'snippet' => null
+            ),
+            $paths
+        );
         $this->session = $session;
     }
 
@@ -65,6 +69,7 @@ class SuluNodeHelper
     {
         $languages = array();
         foreach ($node->getProperties() as $property) {
+            /** @var PropertyInterface $property */
             preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-title/', $property->getName(), $matches);
 
             if ($matches) {
@@ -101,19 +106,21 @@ class SuluNodeHelper
      * Return true if the given node has the given
      * nodeType property (or properties).
      *
-     * The sulu node type is the localname of node types
+     * The sulu node type is the local name of node types
      * with the sulu namespace.
      *
      * Example:
      *   sulu:snippet is the PHPCR node type
      *   snippet is the Sulu node type
      *
-     * @param NodeInterface $nodeTypes
-     * @param string|array $nodeTypes One or more node sulu types
+     * @param NodeInterface $node
+     * @param string|array $suluNodeTypes One or more node sulu types
+     *
+     * @return bool
      */
     public function hasSuluNodeType($node, $suluNodeTypes)
     {
-        foreach ((array) $suluNodeTypes as $suluNodeType) {
+        foreach ((array)$suluNodeTypes as $suluNodeType) {
             if (in_array($suluNodeType, $node->getPropertyValueWithDefault('jcr:mixinTypes', array()))) {
                 return true;
             }
@@ -147,6 +154,7 @@ class SuluNodeHelper
      * @param string $path
      *
      * @return string
+     * @throws \InvalidArgumentException
      */
     public function extractSnippetTypeFromPath($path)
     {
@@ -200,11 +208,10 @@ class SuluNodeHelper
      * according to the $previous flag.
      *
      * @param NodeInterface $node
-     * @param boolean $previous
+     * @param bool $previous
      *
-     * @return NodeInterface
-     *
-     * @throws RuntimeException
+     * @return NodeInterface|null
+     * @throws \RuntimeException
      */
     private function getSiblingNode(NodeInterface $node, $previous = false)
     {
@@ -221,11 +228,13 @@ class SuluNodeHelper
             next($children);
         }
 
-        throw new \RuntimeException(sprintf(
-            'Could not find node with path "%s" as a child of "%s". This should not happen',
-            $node->getPath(),
-            $parentNode->getPath()
-        ));
+        throw new \RuntimeException(
+            sprintf(
+                'Could not find node with path "%s" as a child of "%s". This should not happen',
+                $node->getPath(),
+                $parentNode->getPath()
+            )
+        );
     }
 
     /**
@@ -233,6 +242,7 @@ class SuluNodeHelper
      *
      * @param string $name Name of path segment
      * @return string The path segment
+     * @throws \InvalidArgumentException
      */
     private function getPath($name)
     {

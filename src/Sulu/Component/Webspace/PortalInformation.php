@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -80,7 +81,7 @@ class PortalInformation implements ArrayableInterface
 
     /**
      * Sets the localization for this PortalInformation
-     * @param \Sulu\Component\Webspace\Localization $localization
+     * @param Localization $localization
      */
     public function setLocalization($localization)
     {
@@ -89,7 +90,7 @@ class PortalInformation implements ArrayableInterface
 
     /**
      * Returns the localization for this PortalInformation
-     * @return \Sulu\Component\Webspace\Localization
+     * @return Localization
      */
     public function getLocalization()
     {

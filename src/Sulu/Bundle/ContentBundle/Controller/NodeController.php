@@ -20,6 +20,7 @@ use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
@@ -28,9 +29,8 @@ use Sulu\Component\Content\Structure;
 /**
  * handles content nodes
  */
-class NodeController extends RestController implements ClassResourceInterface
+class NodeController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
-
     use RequestParametersTrait;
 
     /**
@@ -41,6 +41,14 @@ class NodeController extends RestController implements ClassResourceInterface
     private function getLanguage(Request $request)
     {
         return $this->getRequestParameter($request, 'language', true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocale(Request $request)
+    {
+        return $this->getLanguage($request);
     }
 
     /**
@@ -541,5 +549,16 @@ class NodeController extends RestController implements ClassResourceInterface
     protected function getRepository()
     {
         return $this->get('sulu_content.node_repository');
+    }
+
+    /**
+     * Returns the SecurityContext required for the controller
+     * @return mixed
+     */
+    public function getSecurityContext()
+    {
+        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer.admin');
+
+        return 'sulu.webspaces.' . $requestAnalyzer->getCurrentWebspace()->getKey();
     }
 }

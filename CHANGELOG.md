@@ -1,9 +1,29 @@
 CHANGELOG for Sulu
 ==================
 
-* [UNRELEASED]
+* dev-develop
 
-   * HOTFIX #543 [SearchBundle] Fixed re-index command
+    * BUGFIX      #571 [CoreBundle]     Fixed build command
+    * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
+    * ENHANCEMENT #535 [SecurityBundle] Added SecurityListener and secured Content, Media and Security
+    * BUGFIX      #568 [SnippetBundle]  Added template to view for Snippets
+    * ENHANCEMENT #539 [AdminBundle]    Added validation for iban and vat numbers from the eu
+    * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
+                                        eager validation of workspace existence.
+    * ENHANCEMENT #523 [All]            Refactored and improved functional tests
+    * FEATURE     #553 [SnippetBundle]  Possiblity to show all snippet types by not providing any
+    * BUGFIX      #533 [CoreBundle]     Removed request_analyzer.enable option (it is now irrelevant)
+
+    * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to 
+    * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
+                                        Permission-Tab
+* 0.11.1 (2014-11-13)
+
+    * HOTFIX      #543 [SearchBundle]  Fixed re-index command
+    * HOTFIX      #551 [SearchBundle]  Switched to test adapter for tests
+    * HOTFIX      #549 [ContentBundle] Fixed page URL fetching for internal links used in snippets
+    * HOTFIX      #512 [MediaBundle]   Only show Media from specific selected Collection
+    * HOTFIX      #550 [MediaBundle]   Deleted Media do not throw Exception when page is saved
 
 * 0.11.0 (2014-11-12)
 

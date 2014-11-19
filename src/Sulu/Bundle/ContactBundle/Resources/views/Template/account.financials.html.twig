@@ -12,8 +12,12 @@
                 </div>
                 <div class="grid-col-6">
                     <div class="form-group">
-                        <label for="uid"><%=translate('contact.accounts.uid')%></label>
-                        <input id="uid" class="form-element" type="text" data-mapper-property="uid"/>
+                        <label for="vat"><%=translate('contact.accounts.uid')%></label>
+                        <div id="vat"
+                             data-form="true"
+                             data-type="vat-input"
+                             data-validation-required="true"
+                             data-mapper-property="uid"></div>
                     </div>
                 </div>
             </div>

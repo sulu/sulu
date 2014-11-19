@@ -19,9 +19,8 @@ use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 
 /**

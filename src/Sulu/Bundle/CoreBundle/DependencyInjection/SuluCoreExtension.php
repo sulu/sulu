@@ -38,6 +38,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 
+            // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
+            if (!isset($phpcrConfig['backend']['check_login_on_server'])) {
+                $phpcrConfig['backend']['check_login_on_server'] = false;
+            }
+
             foreach ($container->getExtensions() as $name => $extension) {
                 $prependConfig = array();
                 switch ($name) {
@@ -107,6 +112,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $loader->load('rest.xml');
         $loader->load('build.xml');
+        $loader->load('localization.xml');
     }
 
     /**
@@ -117,10 +123,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
-        $container->setParameter(
-            'sulu_core.webspace.request_analyzer.enabled',
-            $webspaceConfig['request_analyzer']['enabled']
-        );
         $container->setParameter(
             'sulu_core.webspace.request_analyzer.priority',
             $webspaceConfig['request_analyzer']['priority']

@@ -18,12 +18,28 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
+use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route;
 
 /**
  * Class Collection
  * The Collection RestObject is the api entity for the CollectionController.
- * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
+ * FIXME Remove limit = 9999 after create cget without pagination
+ * @Relation(
+ *      "all",
+ *      href = @Route(
+ *          "cget_media",
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999  }
+ *      )
+ * )
+ * @Relation(
+ *      "filterByTypes",
+ *      href = @Route(
+ *          "cget_media",
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "types" = "{types}" }
+ *      )
+ * )
  */
 class Collection extends ApiWrapper
 {

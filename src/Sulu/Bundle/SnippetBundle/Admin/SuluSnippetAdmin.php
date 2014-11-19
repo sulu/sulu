@@ -30,7 +30,7 @@ class SuluSnippetAdmin extends Admin
         $rootNavigationItem->addChild($section);
 
         $header = new NavigationItem('navigation.global-content');
-        $header->setIcon('bullseye');
+        $header->setIcon('globe');
         $section->addChild($header);
 
         $item = new NavigationItem('navigation.snippets');

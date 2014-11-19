@@ -40,10 +40,16 @@ class SitemapController extends WebsiteController
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 
+        $localizations = array();
+        foreach ($requestAnalyzer->getCurrentPortal()->getLocalizations() as $localization) {
+            $localizations[] = $localization->getLocalization();
+        }
+
         return $this->render(
             'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
             array(
                 'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
+                'locales' => $localizations,
                 'webspaceKey' => $webspace->getKey()
             ),
             $response

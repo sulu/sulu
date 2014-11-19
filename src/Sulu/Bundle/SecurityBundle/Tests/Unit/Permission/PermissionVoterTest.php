@@ -17,6 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Permission\PermissionVoter;
+use Sulu\Bundle\SecurityBundle\Security\SecurityContext;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -87,7 +88,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            'sulu.security.roles',
+            new SecurityContext('sulu.security.roles'),
             array(
                 'permission' => 'view'
             )
@@ -100,7 +101,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            'sulu.security.roles',
+            new SecurityContext('sulu.security.roles'),
             array(
                 'permission' => 'security'
             )
@@ -113,7 +114,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            'sulu.security.groups',
+            new SecurityContext('sulu.security.groups'),
             array(
                 'permission' => 'view'
             )
@@ -126,7 +127,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            'sulu.security.groups',
+            new SecurityContext('sulu.security.groups'),
             array(
                 'permission' => 'security'
             )
@@ -139,7 +140,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            'sulu.security.groups.nested',
+            new SecurityContext('sulu.security.groups.nested'),
             array(
                 'permission' => 'view'
             )
@@ -152,7 +153,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     {
         $access = $this->voter->vote(
             $this->token,
-            'sulu.security.groups.nested',
+            new SecurityContext('sulu.security.groups.nested'),
             array(
                 'permission' => 'security'
             )

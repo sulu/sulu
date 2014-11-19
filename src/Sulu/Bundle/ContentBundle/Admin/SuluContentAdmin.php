@@ -19,9 +19,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SuluContentAdmin extends Admin
 {
+    /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
 
     public function __construct(WebspaceManagerInterface $webspaceManager, $title, ContainerInterface $container)
     {
+        $this->webspaceManager = $webspaceManager;
+
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
@@ -29,7 +35,7 @@ class SuluContentAdmin extends Admin
         $rootNavigationItem->addChild($section);
 
         /** @var Webspace $webspace */
-        foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $webspaceItem = new NavigationItem($webspace->getName());
             $webspaceItem->setIcon('bullseye');
 
@@ -63,5 +69,22 @@ class SuluContentAdmin extends Admin
     public function getJsBundleName()
     {
         return 'sulucontent';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContexts()
+    {
+        $webspaceContexts = array();
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            /** @var Webspace $webspace */
+            $webspaceContexts[] = 'sulu.webspaces.' . $webspace->getKey();
+        }
+        return array(
+            'Sulu' => array(
+                'Webspaces' => $webspaceContexts
+            )
+        );
     }
 }

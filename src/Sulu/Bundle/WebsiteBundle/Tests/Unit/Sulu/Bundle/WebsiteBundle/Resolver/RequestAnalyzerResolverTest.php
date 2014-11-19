@@ -11,7 +11,7 @@
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;

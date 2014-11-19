@@ -40,6 +40,7 @@ class SnippetApiTest extends SuluTestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->initPhpcr();
