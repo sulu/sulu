@@ -15,7 +15,6 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SuluContentAdmin extends Admin
 {
@@ -24,7 +23,7 @@ class SuluContentAdmin extends Admin
      */
     private $webspaceManager;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $title, ContainerInterface $container)
+    public function __construct(WebspaceManagerInterface $webspaceManager, $title)
     {
         $this->webspaceManager = $webspaceManager;
 

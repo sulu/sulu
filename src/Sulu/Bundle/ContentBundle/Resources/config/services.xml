@@ -17,7 +17,6 @@
             <tag name="sulu.admin"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu_admin.name%</argument>
-            <argument type="service" id="service_container"/>
         </service>
 
         <!-- content -->
