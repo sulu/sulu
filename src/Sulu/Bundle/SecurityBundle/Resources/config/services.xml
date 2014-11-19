@@ -44,14 +44,11 @@
         <service id="sulu_security.salt_generator" class="%sulu_security.salt_generator.class%">
         </service>
 
-        <service id="sulu_security.content_navigation" class="%sulu_security.admin.content_navigation.class%">
-            <tag name="sulu.contact.admin.content_navigation"/>
-        </service>
-
         <service id="sulu_security.admin.roles_navigation" class="%sulu_security.admin.roles_navigation.class%">
         </service>
 
         <service id="sulu_security.content_navigation" class="%sulu_security.admin.content_navigation.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu.contact.admin.content_navigation"/>
         </service>
 
