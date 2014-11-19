@@ -58,11 +58,11 @@ define([
             copyLocales: function(item) {
                 var template = [
                     '<div class="copy-locales-overlay-content">',
-                    '<label>', this.sandbox.translate('content.contents.settings.copy-locales.copy-from'), '</label>',
-                    '<div class="grid m-top-10">',
-                    '<div class="grid-row">',
-                    '<div id="copy-locales-select" class="grid-col-6"/>',
-                    '</div>',
+                    '   <label>', this.sandbox.translate('content.contents.settings.copy-locales.copy-from'), '</label>',
+                    '   <div class="grid m-top-10">',
+                    '       <div class="grid-row">',
+                    '       <div id="copy-locales-select" class="grid-col-6"/>',
+                    '   </div>',
                     '</div>',
                     '<h2 class="divider m-top-20">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
                     '<p class="info">* ', this.sandbox.translate('content.contents.settings.copy-locales.info'), '</p>',
