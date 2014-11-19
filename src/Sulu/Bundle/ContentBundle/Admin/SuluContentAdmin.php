@@ -52,10 +52,7 @@ class SuluContentAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            try {
-                // check if the user has at least view permission for the given webspace
-                $this->securityChecker->checkPermission($this->securityContextPrefix . $webspace->getKey(), 'view');
-
+            if ($this->securityChecker->hasPermission($this->securityContextPrefix . $webspace->getKey(), 'view')) {
                 $webspaceItem = new NavigationItem($webspace->getName());
                 $webspaceItem->setIcon('bullseye');
 
@@ -70,8 +67,6 @@ class SuluContentAdmin extends Admin
                 $webspaceItem->addChild($indexPageItem);
 
                 $section->addChild($webspaceItem);
-            } catch (AccessDeniedException $e) {
-                // don't add the entry, if the user is not allowed to see it
             }
         }
 
