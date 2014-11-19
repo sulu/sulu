@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  * Implementation of Sulu specific security checks, includes a subject, the type of permission and the localization
  * @package Sulu\Bundle\SecurityBundle\Permission
  */
-class SecurityChecker implements SecurityCheckerInterface
+class SecurityChecker extends AbstractSecurityChecker
 {
     /**
      * @var SecurityContextInterface
@@ -33,7 +33,7 @@ class SecurityChecker implements SecurityCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function checkPermission($subject, $permission, $locale = null)
+    public function hasPermission($subject, $permission, $locale = null)
     {
         $attributes = array(
             'permission' => $permission
@@ -48,12 +48,6 @@ class SecurityChecker implements SecurityCheckerInterface
         }
 
         $granted = $this->securityContext->isGranted($attributes, $subject);
-
-        if (!$granted) {
-            throw new AccessDeniedException(
-                sprintf('Permission "%s" in localization "%s" not granted', $permission, $locale)
-            );
-        }
 
         return $granted;
     }

@@ -23,8 +23,16 @@ interface SecurityCheckerInterface
      * @param mixed $subject
      * @param string $permission
      * @param string|null $locale
-     * @return boolan
+     * @return boolean
      * @throws AccessDeniedException
      */
     public function checkPermission($subject, $permission, $locale = null);
+
+    /**
+     * @param $subject
+     * @param $permission
+     * @param string|null $locale
+     * @return boolean
+     */
+    public function hasPermission($subject, $permission, $locale = null);
 } 
