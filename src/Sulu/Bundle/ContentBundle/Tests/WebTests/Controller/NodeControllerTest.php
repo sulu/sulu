@@ -1172,9 +1172,9 @@ class NodeControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/nodes/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&src=en&dest=de,de_at'
+            '/api/nodes/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&language=en&dest=de,de_at'
         );
-        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
