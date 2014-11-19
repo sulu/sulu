@@ -65,7 +65,9 @@ define([
                     '   </div>',
                     '</div>',
                     '<h2 class="divider m-top-20">', this.sandbox.translate('content.contents.settings.copy-locales.target'), '</h2>',
-                    '<p class="info">* ', this.sandbox.translate('content.contents.settings.copy-locales.info'), '</p>',
+                    '<p class="info">',
+                    '   * ', this.sandbox.translate('content.contents.settings.copy-locales.info'),
+                    '</p>',
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
                 ], i = 0;
 
