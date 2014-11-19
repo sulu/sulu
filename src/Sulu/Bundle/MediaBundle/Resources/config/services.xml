@@ -20,6 +20,7 @@
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
+            <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_media.admin.content_navigation" class="%sulu_media.admin.content_navigation.class%"/>
