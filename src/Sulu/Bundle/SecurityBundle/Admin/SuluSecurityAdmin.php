@@ -13,24 +13,36 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
 
 class SuluSecurityAdmin extends Admin
 {
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
 
-    public function __construct($title)
+    public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
+        $this->securityChecker = $securityChecker;
+
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
 
         $settings = new NavigationItem('navigation.settings');
         $settings->setIcon('gear');
 
-        $roles = new NavigationItem('navigation.settings.roles', $settings);
-        $roles->setAction('settings/roles');
-        $roles->setIcon('gear');
+        if ($this->securityChecker->hasPermission('sulu.security.roles', 'view')) {
+            $roles = new NavigationItem('navigation.settings.roles', $settings);
+            $roles->setAction('settings/roles');
+            $roles->setIcon('gear');
+        }
 
-        $section->addChild($settings);
-        $rootNavigationItem->addChild($section);
+        if ($settings->hasChildren()) {
+            $section->addChild($settings);
+            $rootNavigationItem->addChild($section);
+        }
+
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
