@@ -3,31 +3,33 @@
 DB=mysql
 OCWD=`pwd`
 BUNDLE=""
+SULU_ORM=${SULU_ORM:-mysql}
+SULU_PHPCR=${SULU_PHPCR:-doctrine_dbal}
 
 function header {
     echo ""
-    echo -e "\e[32m======================================================\e[0m"
+    echo -e "\x1b[32m======================================================\x1b[0m"
     echo $1
-    echo -e "\e[32m======================================================\e[0m"
+    echo -e "\x1b[32m======================================================\x1b[0m"
     echo ""
 }
 
 function info {
-    echo -e "\e[32m"$1"\e[0m"
+    echo -e "\x1b[32m"$1"\x1b[0m"
 
     echo ""
 }
 
 function comment {
-    echo -e "\e[33m"$1"\e[0m"
+    echo -e "\x1b[33m"$1"\x1b[0m"
     echo ""
 }
 
 function error {
     echo ""
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo $1
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo ""
 }
 
@@ -167,13 +169,13 @@ if [[ ! -s /tmp/failed.tests ]]; then
 else
     # There were failures
     echo ""
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo "Oh no, "`cat /tmp/failed.tests | wc -l`" Component(s) failed:"
     echo ""
     for line in `cat /tmp/failed.tests`; do
         comment " - "$line
     done
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo ""
     exit 1
 fi

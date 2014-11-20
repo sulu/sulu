@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
     * BUGFIX      #571 [CoreBundle]     Fixed build command
     * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
     * ENHANCEMENT #535 [SecurityBundle] Added SecurityListener and secured Content, Media and Security
