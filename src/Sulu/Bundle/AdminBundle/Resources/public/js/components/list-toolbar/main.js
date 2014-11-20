@@ -163,6 +163,7 @@ define([], function() {
                     this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
                 }.bind(this));
             },
+
             defaultEditableList: function() {
                 var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '';
                 listener.default.call(this);

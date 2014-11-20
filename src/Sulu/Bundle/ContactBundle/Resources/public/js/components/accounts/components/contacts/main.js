@@ -32,6 +32,13 @@ define([
                 this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
             }, this);
 
+//
+//            //add clicked
+//            this.sandbox.on('sulu.bottom-toolbar.add', this.addOrEditActivity.bind(this), this);
+
+            //delete clicked
+            this.sandbox.on('sulu.bottom-toolbar.delete', removeContact.bind(this).bind(this), this);
+
             // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
@@ -244,10 +251,30 @@ define([
                         this.sandbox.emit('sulu.list-toolbar.add');
                     }.bind(this)
                 },
+                {
+                    id: 'settings',
+                    icon: 'gear',
+                    items: [
+                        {
+                            id: 'delete',
+                            title: this.sandbox.translate('contact.accounts.contact-remove'),
+                            callback: removeContact.bind(this),
+                            disabled: true
+                        }
+                    ]
                {
                     id: 'delete',
                     icon: 'trash-o',
+                    position: 20,
                     callback: removeContact.bind(this),
+                    disabled: true
+                },
+                {
+                    icon: 'magic',
+                    iconSize: 'large',
+                    group: 'left',
+                    id: 'options-button',
+                    position: 30,
                     disabled: true
                 }
             ];
@@ -298,6 +325,9 @@ define([
             this.sandbox.emit('sulu.', this.options.account);
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
+
+            //init bottom-toolbar
+            this.sandbox.start(this.$el);
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsContactsFields', '/admin/api/contacts/fields?accountContacts=true',

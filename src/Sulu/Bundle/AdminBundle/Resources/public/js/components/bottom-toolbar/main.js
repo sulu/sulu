@@ -5,123 +5,141 @@
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
- *
  */
 
 /**
- * @class Content
+ * @class Bottom-toolbar
  * @constructor
  *
  * @param {Object} [options] Configuration object
- * @param {String} [options.instanceName] The name of the instance
- * @param {Object} [options.contentOptions] options to pass to the tabs-content-component
- * @param {Array} [options.tabsData] array of tabs-items. Contains the tabs-content-component as a string
+ * @param {Object} [options] Configuration object
  */
+define([],
+    function() {
 
-define([], function() {
+        'use strict';
 
-    'use strict';
+        var defaults = {
+                instanceName: 'contact',
+                template: 'default',
+                parentTemplate: null,
+                listener: 'default',
+                parentListener: null
+               // settings: []
+            },
 
-    var defaults = {
-            instanceName: 'content',
-            contentOptions: {},
-            tabsData: null
-        },
+            constants = {
+                bottomToolbarId: '#bottom-list-toolbar'
+            },
 
-        constants = {
-            tabsComponentId: 'content-tabs-component'
-        },
+            /**
+             * Template for bottom toolbar
+             * @returns {*[]}
+             */
+            listTemplate = {
+                default: function(){
+                    return [
+                        {
+                            id: 'add',
+                            icon: 'plus-circle',
+                            class: 'highlight-white',
+                            position: 10,
+                            callback: function() {
+                                this.sandbox.emit('sulu.bottom-toolbar.add');
+                            }.bind(this)
+                        },
+                        {
+                            id: 'delete',
+                            icon: 'trash-o',
+                            position: 20,
+                            disabled: true,
+                            callback: function() {
+                                this.sandbox.emit('sulu.bottom-toolbar.delete');
+                            }.bind(this)
+                        },
+                        {
+                            id: 'settings',
+                            icon: 'magic',
+                            position: 30,
+                            disabled: true
+                        //    items:  this.sandbox.emit('sulu.bottom-toolbar.magic')
+//                            callback: function() {
+//                                this.sandbox.emit('sulu.bottom-toolbar.magic');
+//                            }.bind(this)
+                        }
+                    ];
+                }
+            };
 
-        templates = {
-            skeleton: function() {
-                return [
-                    '<div id="content-tabs"></div>'
-                ].join('');
+//            defineSettingsItems = function() {
+//                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
+//                    postfix;
+//                this.sandbox.on('husky.datagrid.number.selections', function(number) {
+//                    postfix = number > 0 ? 'enable' : 'disable';
+//                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
+//                }.bind(this));
+//            };
+
+        return {
+            initialize: function() {
+
+                this.options = this.sandbox.util.extend({}, defaults, this.options);
+                this.instanceName = this.options.instanceName;
+
+                this.render();
+                this.bindCustomEvents();
+
+            },
+
+            bindCustomEvents: function() {
+                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
+                    postfix;
+                this.sandbox.on('husky.datagrid.number.selections', function(number) {
+                    postfix = number > 0 ? 'enable' : 'disable';
+                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
+                }.bind(this));
+//
+//                // TODO: listen to settings event
+//                this.sandbox.on('settingsevents', function(data) {
+//                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.sets', data, 'settings');
+//                }.bind(this));
+
+            },
+
+            render: function() {
+//                // TODO: check if this.options.template is set && if it is a string OR object
+//                var data =  listTemplate[this.options.template].call(this);
+//                data = this.sandbox.util.extend(true, {}, data, { settings: {
+//                    items: this.options.settings
+//                }});
+
+
+                if (this.options.items.hasOwnProperty('add')) {
+                    // TODO: add items to add
+                   // var first = null;
+                    //this.first = this.options.items.add;
+                    listTemplate.default[0]= this.options.items.add;
+                }
+
+                if (this.options.items.hasOwnProperty('settings')) {
+                    // TODO: add items to add
+                    //this.options.items[1]
+                }
+                else {
+
+                }
+                // init toolbar
+                this.sandbox.start([
+                    {
+                        name: 'toolbar@husky',
+                        options: {
+                            el: constants.bottomToolbarId,
+//                            data: data,
+                            data: listTemplate.default.call(this),
+                            instanceName: this.options.instanceName
+                        }
+                    }
+                ]);
             }
-        },
-
-        /**
-         * trigger after initialization has finished
-         *
-         * @event sulu.content.[INSTANCE_NAME].initialized
-         */
-        INITIALIZED = function() {
-            return createEventName.call(this, 'initialized');
-        },
-
-        /**
-         * Creates the event names
-         * @param postfix {string}
-         * @returns {string}
-         */
-        createEventName = function(postfix) {
-            return 'sulu.content-tabs.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
         };
-
-    return {
-
-        initialize: function() {
-
-            // default
-            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-
-            var template = this.sandbox.util.template(templates.skeleton.call(this));
-
-            // skeleton
-            this.$el.html(template);
-
-            // bind events (also initializes first component)
-            this.bindCustomEvents();
-
-            this.sandbox.emit(INITIALIZED.call(this));
-        },
-
-        /**
-         * listens to tab events
-         */
-        bindCustomEvents: function() {
-            // load component on start
-            this.sandbox.on('husky.tabs.header.initialized', this.startTabComponent.bind(this));
-
-            // load component after click
-            this.sandbox.on('husky.tabs.header.item.select', this.startTabComponent.bind(this));
-        },
-
-        /**
-         * gets called when tabs either got initialized or when tab was clicked
-         * @param item {Object} the Tabs object
-         */
-        startTabComponent: function(item) {
-            var options;
-
-            item = item || this.options.tabsData.items[0];
-
-            if (!item.forceReload && item.action === this.action) {
-                this.sandbox.logger.log('page already loaded; no reload required!');
-                return false;
-            }
-
-            // save action
-            this.action = item.action;
-
-            // resets store to prevent duplicated models
-            if (!!item.resetStore) {
-                this.sandbox.mvc.Store.reset();
-            }
-
-            // stop the current tab
-            App.stop('#' + constants.tabsComponentId);
-
-            // start the new tab-component
-            if (!!item.component) {
-                this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="'+ constants.tabsComponentId +'"/>'));
-                options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponentId}, item.componentOptions);
-                // start component defined by
-                this.sandbox.start([{
-                    name: item.component,
-                    options: options
-                }]);
-            }
-        }
-    };
-});
+    });

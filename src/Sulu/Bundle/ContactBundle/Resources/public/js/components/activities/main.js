@@ -18,7 +18,6 @@ define(
                 overlayId: 'activitiesOverlay',
                 activityListSelector: '#activities-list',
                 activityFormSelector: '#acitivity-form',
-
                 activitiesURL: '/admin/api/activities/'
             },
 
@@ -30,24 +29,23 @@ define(
                 return [
                     {
                         id: 'add',
-                        icon: 'floppy-o',
-                        class: 'highlight',
+                        icon: 'plus-circle',
+                        class: 'highlight-white',
                         title: 'add',
                         position: 10,
                         callback: this.addOrEditActivity.bind(this)
                     },
                     {
-                        id: 'delete',
-                        icon: 'trash-o',
-                        position: 20,
-                        callback: this.removeActivities.bind(this),
-                        disabled: true
-                    },
-                    {
                         id: 'settings',
-                        icon: 'magic',
-                        position: 30,
-                        disabled: true
+                        icon: 'gear',
+                        items: [
+                            {
+                                id: 'delete',
+                                title: this.sandbox.translate('contact.activities.remove'),
+                                callback: this.removeActivities.bind(this),
+                                disabled: true
+                            }
+                        ]
                     }
                 ];
             };
@@ -91,6 +89,17 @@ define(
             },
 
             bindCustomEvents: function() {
+
+                //add clicked
+                this.sandbox.on('sulu.bottom-toolbar.add', this.addOrEditActivity.bind(this), this);
+
+                //delete clicked
+                this.sandbox.on('sulu.bottom-toolbar.delete', this.removeActivities.bind(this), this);
+
+
+                //init magic items icon
+                this.sandbox.on('sulu.bottom-toolbar.magic', this.setSettingsItems.bind(this), this);
+
 
                 // listen for defaults for types/statuses/prios
                 this.sandbox.on('sulu.contacts.activities.set.defaults',
@@ -143,13 +152,37 @@ define(
                     }.bind(this));
                 }.bind(this));
 
-                this.sandbox.dom.on('husky.datagrid.number.selections', function(number) {
+                this.sandbox.on('husky.datagrid.number.selections', function(number) {
                     if (number > 0) {
                         this.sandbox.emit('husky.toolbar.activities.item.enable', 'delete');
                     } else {
                         this.sandbox.emit('husky.toolbar.activities.item.disable', 'delete');
                     }
                 }.bind(this));
+
+                this.sandbox.on('sulu.list-toolbar.delete', function() {
+                    this.sandbox.logger.log("clicked!");
+                }.bind(this));
+            },
+
+
+            /**
+             * Sets the Items to setting icon
+             */
+            setSettingsItems: function() {
+                var title = this.sandbox.translate('contact.contacts.title'),
+                    breadcrumb = [
+                        {title: 'navigation.contacts'},
+                        {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
+                    ];
+
+                if (!!this.options.contact && !!this.options.contact.id) {
+                    title = this.options.contact.fullName;
+                    breadcrumb.push({title: '#' + this.options.contact.id});
+                }
+
+                this.sandbox.emit('sulu.header.set-title', title);
+                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
             },
 
             /**
@@ -284,12 +317,54 @@ define(
                     url = '/admin/api/activities?flat=true&account=' + this.account.id;
                 }
 
+                //init bottom-toolbar
+                //this.sandbox.start(this.$el);
+
+//TODo
+                var component = {
+                    name: 'bottom-toolbar@suluadmin',
+                    options: {
+                        // el: this.$find('#bottom-list-toolbar'),
+                        el: this.$find('#bottom-list-toolbar'),
+                        items: {
+                            add: [
+                                {
+                                    id: 'add-account-contact',
+                                    title: this.sandbox.translate('contact.account.add-account-contact')
+                                    //callback: createRelationOverlay.bind(this)
+                                },
+                                {
+                                    id: 'add-new-contact-to-account',
+                                    title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
+                                    //callback: createContactOverlay.bind(this)
+                                }
+                            ],
+                            settings: [
+                                {
+                                    id: 'add-account-contact',
+                                    title: this.sandbox.translate('contact.account.add-account-contact')
+                                    //callback: createRelationOverlay.bind(this)
+                                },
+                                {
+                                    id: 'add-new-contact-to-account',
+                                    title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
+                                    //callback: createContactOverlay.bind(this)
+                                }
+                            ]
+                        }
+                    }
+                };
+
+                this.sandbox.start([
+                  component
+                ]);
+
                 // init list-toolbar and datagrid
                 this.sandbox.sulu.initListToolbarAndList.call(
                     this,
                     'activitiesContactsFields',
                     '/admin/api/activities/fields',
-                    {
+                   {
                         el: this.$find('#list-toolbar-container'),
                         instanceName: 'activities',
                         inHeader: true,
