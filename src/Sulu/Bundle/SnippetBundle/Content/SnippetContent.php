@@ -87,14 +87,16 @@ class SnippetContent extends ComplexContentType
         $refs = isset($data['ids']) ? $data['ids'] : array();
         $snippets = array();
 
-        foreach ($refs as $i => $ref) {
-            // see https://github.com/jackalope/jackalope/issues/248
-            if (UUIDHelper::isUUID($i)) {
-                $ref = $i;
-            } else {
-            }
+        if (is_array($refs)) {
+            foreach ($refs as $i => $ref) {
+                // see https://github.com/jackalope/jackalope/issues/248
+                if (UUIDHelper::isUUID($i)) {
+                    $ref = $i;
+                } else {
+                }
 
-            $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
+                $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
+            }
         }
 
         $property->setValue($snippets);
