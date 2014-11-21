@@ -183,6 +183,12 @@ abstract class Structure implements StructureInterface
     private $structureTags;
 
     /**
+     * path of node
+     * @var string
+     */
+    private $path;
+
+    /**
      * @param $key string
      */
     public function __construct($key, $metaData)
@@ -912,5 +918,22 @@ abstract class Structure implements StructureInterface
     public function getNodeState()
     {
         return Structure::STATE_PUBLISHED;
+    }
+
+    /**
+     * returns absolute path of node
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 }

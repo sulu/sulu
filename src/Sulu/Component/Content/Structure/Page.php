@@ -67,12 +67,6 @@ abstract class Page extends Structure
     private $internalLinkContent;
 
     /**
-     * absolute path of node
-     * @var string
-     */
-    private $path;
-
-    /**
      * @var string[]
      */
     private $urls;
@@ -284,22 +278,5 @@ abstract class Page extends Structure
     public function setExt($ext)
     {
         $this->ext = $ext;
-    }
-
-    /**
-     * returns absolute path of node
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
     }
 }

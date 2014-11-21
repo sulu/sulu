@@ -195,6 +195,17 @@ interface StructureInterface extends \JsonSerializable
     public function getType();
 
     /**
+     * return the node path
+     * @return string
+     */
+    public function getPath();
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path);
+
+    /**
      * @param boolean $hasTranslation
      */
     public function setHasTranslation($hasTranslation);

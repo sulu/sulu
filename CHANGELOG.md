@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * 0.12.0 (2014-11-25)
 
+    * ENHANCEMENT #586 [WebsiteBundle]  Added node path variable to template
     * BUGFIX      #614 [SecurityBundle] Fixed the security for command lines
     * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
     * BUGFIX      #609 [All]            Allows null value for security subject and fixed snippet internal links bug
