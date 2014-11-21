@@ -7,10 +7,15 @@
  * with this source code in the file LICENSE.
  */
 
-define(['mvc/collection'], function (Collection) {
+define([
+    'mvc/collection',
+    'sulucontact/model/contact'
+], function (Collection, Contact) {
     'use strict';
 
     return new Collection({
+
+        model: Contact,
 
         accountId: null,
 
@@ -20,7 +25,7 @@ define(['mvc/collection'], function (Collection) {
 
         parse: function (response) {
             if (!!response._embedded) {
-                return response._embedded.accountContacts;
+                return response._embedded.contacts;
             } else {
                 return response;
             }
@@ -31,7 +36,7 @@ define(['mvc/collection'], function (Collection) {
         },
 
         url: function () {
-            return '/admin/api/account/' + this.accountId + '/contacts';
+            return '/admin/api/accounts/' + this.accountId + '/contacts';
         }
     });
 });

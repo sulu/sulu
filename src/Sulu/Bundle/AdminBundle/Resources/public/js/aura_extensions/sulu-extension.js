@@ -251,6 +251,10 @@
             app.sandbox.sulu.createAddressString = function(address) {
                 var addressString = '';
 
+                if (!address && typeof address !== 'object') {
+                    throw new Error('no valid address object');
+                }
+
                 isFirst = true;
 
                 // street
