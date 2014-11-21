@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * BUGFIX      #576 [SnippetBundle]  Fixed error when change content type to snippet
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
     * BUGFIX      #571 [CoreBundle]     Fixed build command
     * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
@@ -18,6 +19,7 @@ CHANGELOG for Sulu
     * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to 
     * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
                                         Permission-Tab
+
 * 0.11.1 (2014-11-13)
 
     * HOTFIX      #543 [SearchBundle]  Fixed re-index command
