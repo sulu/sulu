@@ -103,6 +103,7 @@ class {{ cache_class }} extends {{ base_class }}
         $url->setCountry('{{ url.country }}');
         $url->setSegment('{{ url.segment }}');
         $url->setRedirect('{{ url.redirect }}');
+        $url->setAnalyticsKey('{{ url.analyticsKey }}');
         $environment->addUrl($url);
 {% endfor %}
 

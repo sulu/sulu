@@ -45,6 +45,12 @@ class Url implements ArrayableInterface
     private $redirect;
 
     /**
+     * The analytics key for the given url
+     * @var string
+     */
+    private $analyticsKey;
+
+    /**
      * Sets the url
      * @param string $url
      */
@@ -135,6 +141,24 @@ class Url implements ArrayableInterface
     }
 
     /**
+     * Sets the analytics key for this url
+     * @param string $analyticsKey
+     */
+    public function setAnalyticsKey($analyticsKey)
+    {
+        $this->analyticsKey = $analyticsKey;
+    }
+
+    /**
+     * Returns the analytics key
+     * @return string
+     */
+    public function getAnalyticsKey()
+    {
+        return $this->analyticsKey;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function toArray($depth = null)
@@ -145,6 +169,7 @@ class Url implements ArrayableInterface
         $res['country'] = $this->getCountry();
         $res['segment'] = $this->getSegment();
         $res['redirect'] = $this->getRedirect();
+        $res['analyticsKey'] = $this->getAnalyticsKey();
 
         return $res;
     }
