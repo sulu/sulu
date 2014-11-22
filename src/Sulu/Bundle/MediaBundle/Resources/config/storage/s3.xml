@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_media.storage.s3.class">Sulu\Bundle\MediaBundle\Media\Storage\S3Storage</parameter>
+    </parameters>
+    <services>
+        <service id="sulu_media.storage.s3" class="%sulu_media.storage.s3.class%">
+            <argument>%sulu_media.media.storage.local.path%</argument>
+            <argument>%sulu_media.media.storage.local.segments%</argument>
+            <argument type="service" id="logger"/>
+        </service>
+        <service id="sulu_media.storage" alias="sulu_media.storage.s3" />
+    </services>
+</container>
