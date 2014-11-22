@@ -23,6 +23,7 @@ CHANGELOG for Sulu
     * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes
                                         eager validation of workspace existence.
     * ENHANCEMENT #523 [All]            Refactored and improved functional tests
+    * BUGFIX      #597 [ContentBundle]  Reconnect to mysql if connection gone away in websocket
 
 * dev-master
 
