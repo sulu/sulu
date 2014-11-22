@@ -11,6 +11,9 @@
         <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
 {% for locale, url in site.urls if locale in locales %}
         <xhtml:link rel="alternate" hreflang="{{ locale }}" href="{{ content_path(url, site.webspaceKey, locale) }}"/>
+{% if defaultLocale == locale %}
+        <xhtml:link rel="alternate" hreflang="x-default" href="{{ content_path(url, site.webspaceKey, locale) }}"/>
+{% endif %}
 {% endfor %}
     </url>
 {% endif %}

@@ -1554,16 +1554,23 @@ class ContentMapper implements ContentMapperInterface
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
         foreach ($webspace->getAllLocalizations() as $localization) {
+
             // prepare translation vars
             $locale = $localization->getLocalization();
             $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
 
-            // set default value
-            $property->setValue(null);
-            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+            // state property
+            $propertyTranslator = $this->createPropertyTranslator($localization);
+            $statePropertyName = $propertyTranslator->getName('state');
 
-            if (null !== $property->getValue()) {
-                $localizedUrls[$locale] = $property->getValue();
+            if ($node->getPropertyValueWithDefault($statePropertyName, Structure::STATE_TEST) === Structure::STATE_PUBLISHED) {
+                // set default value
+                $property->setValue(null);
+                $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+                if (null !== $property->getValue()) {
+                    $localizedUrls[$locale] = $property->getValue();
+                }
             }
         }
 
