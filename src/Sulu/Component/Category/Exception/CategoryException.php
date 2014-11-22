@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Category\Exception;
 
-class CategoryException extends \Exception
+abstract class CategoryException extends \Exception
 {
     public function toArray()
     {

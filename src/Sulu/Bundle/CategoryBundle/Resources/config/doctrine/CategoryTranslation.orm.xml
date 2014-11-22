@@ -3,7 +3,7 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" table="ca_category_translations">
+    <entity name="Sulu\Component\Category\Model\CategoryTranslation" table="ca_category_translations">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>

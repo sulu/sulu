@@ -46,10 +46,11 @@ class RepositoryFactory
         switch ($type) {
 
             case self::DOCTRINE_ORM:
-                $instance = new EntityRepository(
+                $instance = $this->entityManager->getRepository($model);
+                /*$instance = new EntityRepository(
                     $this->entityManager,
                     $this->entityManager->getClassMetadata($model)
-                );
+                );*/
                 break;
 
             case self::DOCTRINE_MONGODB_ODM:

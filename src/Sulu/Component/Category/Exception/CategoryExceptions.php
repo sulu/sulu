@@ -14,7 +14,7 @@ final class CategoryExceptions
 {
     /**
      * @var int
-     * @description This exception cod is thrown if the category key already exits.
+     * @description This exception code is thrown if the category key already exits.
      */
     const CODE_KEY_ALREADY_EXITS = 1601;
 }

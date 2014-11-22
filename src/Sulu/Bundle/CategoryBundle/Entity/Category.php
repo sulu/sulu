@@ -2,7 +2,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use \Sulu\Component\Category\Model\Category as BaseCategory;
+use Sulu\Component\Category\Model\Category as BaseCategory;
 use Sulu\Component\Category\Model\CategoryInterface;
 
 /**

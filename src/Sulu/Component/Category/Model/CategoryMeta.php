@@ -1,12 +1,23 @@
 <?php
-
-namespace Sulu\Bundle\CategoryBundle\Entity;
-
-/**
- * CategoryMeta
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
-class CategoryMeta
+
+namespace Sulu\Component\Category\Model;
+
+class CategoryMeta implements CategoryMetaInterface
 {
+
+    /**
+     * @var integer
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -23,20 +34,20 @@ class CategoryMeta
     private $locale;
 
     /**
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * @var \Sulu\Bundle\CategoryBundle\Entity\Category
+     * @var CategoryInterface
      */
     private $category;
 
     /**
-     * Set key
-     *
-     * @param string $key
-     * @return CategoryMeta
+     * {@inheritDoc}
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function setKey($key)
     {
@@ -46,9 +57,7 @@ class CategoryMeta
     }
 
     /**
-     * Get key
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getKey()
     {
@@ -56,10 +65,7 @@ class CategoryMeta
     }
 
     /**
-     * Set value
-     *
-     * @param string $value
-     * @return CategoryMeta
+     * {@inheritDoc}
      */
     public function setValue($value)
     {
@@ -69,9 +75,7 @@ class CategoryMeta
     }
 
     /**
-     * Get value
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getValue()
     {
@@ -79,10 +83,7 @@ class CategoryMeta
     }
 
     /**
-     * Set locale
-     *
-     * @param string $locale
-     * @return CategoryMeta
+     * {@inheritDoc}
      */
     public function setLocale($locale)
     {
@@ -92,9 +93,7 @@ class CategoryMeta
     }
 
     /**
-     * Get locale
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getLocale()
     {
@@ -102,22 +101,9 @@ class CategoryMeta
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritDoc}
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set category
-     *
-     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $category
-     * @return CategoryMeta
-     */
-    public function setCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $category)
+    public function setCategory(CategoryInterface $category)
     {
         $this->category = $category;
 
@@ -125,9 +111,7 @@ class CategoryMeta
     }
 
     /**
-     * Get category
-     *
-     * @return \Sulu\Bundle\CategoryBundle\Entity\Category
+     * {@inheritDoc}
      */
     public function getCategory()
     {
