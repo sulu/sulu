@@ -14,6 +14,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\DBAL\DBALException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
+use Sulu\Component\Persistence\Repository\RepositoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
@@ -49,7 +50,7 @@ class CategoryManager implements CategoryManagerInterface
     private $userRepository;
 
     /**
-     * @var CategoryRepositoryInterface
+     * @var RepositoryInterface
      */
     private $categoryRepository;
 
@@ -59,7 +60,7 @@ class CategoryManager implements CategoryManagerInterface
     private $fieldDescriptors;
 
     public function __construct(
-        CategoryRepositoryInterface $categoryRepository,
+        RepositoryInterface $categoryRepository,
         UserRepositoryInterface $userRepository,
         ObjectManager $em,
         EventDispatcherInterface $eventDispatcher
@@ -180,7 +181,7 @@ class CategoryManager implements CategoryManagerInterface
      */
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
-        return $this->categoryRepository->findCategories($parent, $depth, $sortBy, $sortOrder);
+        return $this->categoryRepository->findAll();
     }
 
     /**

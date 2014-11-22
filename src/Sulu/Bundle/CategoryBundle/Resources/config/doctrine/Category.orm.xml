@@ -24,12 +24,12 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <one-to-many field="meta" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryMeta" mapped-by="category">
+        <one-to-many field="meta" target-entity="Sulu\Component\Category\Model\CategoryMeta" mapped-by="category">
             <cascade>
                 <cascade-all/>
             </cascade>
         </one-to-many>
-        <one-to-many field="translations" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation" mapped-by="category">
+        <one-to-many field="translations" target-entity="Sulu\Component\Category\Model\CategoryTranslation" mapped-by="category">
             <cascade>
                 <cascade-all/>
             </cascade>

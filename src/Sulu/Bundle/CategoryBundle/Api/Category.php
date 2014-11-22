@@ -1,19 +1,40 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\CategoryBundle\Api;
 
-use Sulu\Bundle\CategoryBundle\Entity\Category as Entity;
-use Sulu\Bundle\CoreBundle\Entity\ApiEntityWrapper;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslation;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
 use JMS\Serializer\Annotation\Groups;
+use Sulu\Component\Category\Model\CategoryInterface;
+use Sulu\Component\Category\Model\CategoryMeta;
+use Sulu\Component\Category\Model\CategoryMetaInterface;
+use Sulu\Component\Category\Model\CategoryTranslation;
+use Sulu\Component\Category\Model\CategoryTranslationInterface;
+use Sulu\Component\Rest\ApiWrapper;
 
-class Category extends ApiEntityWrapper
+/**
+ * The Category class which will be exported to the API
+ *
+ * @package Sulu\Bundle\CategoryBundle\Api
+ * @Relation("self", href="expr('/api/admin/categories/' ~ object.getId())")
+ * @ExclusionPolicy("all")
+ */
+class Category extends ApiWrapper
 {
 
-    public function __construct(Entity $category, $locale)
+    /**
+     * @param CategoryInterface $category
+     * @param string $locale The locale of this category
+     */
+    public function __construct(CategoryInterface $category, $locale)
     {
         $this->entity = $category;
         $this->locale = $locale;
@@ -23,8 +44,8 @@ class Category extends ApiEntityWrapper
      * Returns the id of the category
      * @VirtualProperty
      * @SerializedName("id")
-     * @return array
-     * @Groups({"fullCategory","partialCategory"})
+     * @return int|string
+     * @Groups({"fullCategory", "partialCategory"})
      */
     public function getId()
     {
@@ -36,7 +57,7 @@ class Category extends ApiEntityWrapper
      * @VirtualProperty
      * @SerializedName("key")
      * @return string
-     * @Groups({"fullCategory","partialCategory"})
+     * @Groups({"fullCategory", "partialCategory"})
      */
     public function getKey()
     {
@@ -147,7 +168,7 @@ class Category extends ApiEntityWrapper
      * Returns the children of a category
      * @VirtualProperty
      * @SerializedName("children")
-     * @return List
+     * @return array
      * @Groups({"fullCategory"})
      */
     public function getChildren()
@@ -166,7 +187,7 @@ class Category extends ApiEntityWrapper
      * Takes a name as string and sets it to the entity
      *
      * @param string $name
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return \Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setName($name)
     {
@@ -179,7 +200,7 @@ class Category extends ApiEntityWrapper
      * Takes meta as array and sets it to the entity
      *
      * @param array $meta
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return \Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setMeta($meta)
     {
@@ -209,8 +230,8 @@ class Category extends ApiEntityWrapper
     /**
      * Sets a given category as the parent of the entity
      *
-     * @param Entity $parent
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @param CategoryInterface $parent
+     * @return \Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setParent($parent)
     {
@@ -223,7 +244,7 @@ class Category extends ApiEntityWrapper
      * Sets the key of the category
      *
      * @param string $key
-     * @return Sulu\Bundle\CategoryBundle\Api\Category
+     * @return \Sulu\Bundle\CategoryBundle\Api\Category
      */
     public function setKey($key)
     {
@@ -251,12 +272,13 @@ class Category extends ApiEntityWrapper
      * Takes an array of CollectionMeta and returns a single meta for a given id
      * @param $meta
      * @param $id
-     * @return CollectionMeta
+     * @return CategoryMetaInterface
      */
     private function getSingleMetaById($meta, $id)
     {
         $return = null;
         foreach ($meta as $singleMeta) {
+            /** @var CategoryMetaInterface $singleMeta */
             if ($singleMeta->getId() === $id) {
                 $return = $singleMeta;
                 break;
@@ -286,8 +308,7 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the translation with the given locale
-     * @param string $locale The locale to return
-     * @return MappingAttributeTranslation
+     * @return CategoryTranslationInterface
      */
     public function getTranslation()
     {

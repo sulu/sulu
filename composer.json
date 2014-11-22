@@ -80,7 +80,9 @@
         "phpunit/phpunit": "3.7.*",
         "zendframework/zend-stdlib": "Needed (as in require dev) in addition to zendsearch",
         "zendframework/zendsearch": "To use the PHP based Zend Search library (based on Lucene)",
-        "massive/build-bundle": "0.2.*"
+        "massive/build-bundle": "0.2.*",
+        "doctrine/mongodb-odm": "1.0.*@dev",
+        "doctrine/mongodb-odm-bundle": "3.0.*@dev"
     },
     "autoload": {
         "psr-0": {
