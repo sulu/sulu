@@ -186,7 +186,7 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
 
     /**
      * Returns the analytics key
-     * @return array
+     * @return string
      */
     public function getCurrentAnalyticsKey()
     {

@@ -102,7 +102,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
 
     /**
      * Analytics key of request
-     * @var array
+     * @var string
      */
     private $analyticsKey;
 
@@ -375,7 +375,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
 
     /**
      * Returns the analytics key
-     * @return array
+     * @return string
      */
     public function getCurrentAnalyticsKey()
     {
