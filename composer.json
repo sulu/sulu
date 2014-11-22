@@ -34,7 +34,8 @@
         "symfony-cmf/testing": "~1.2",
         "symfony/console": "~2.0",
         "symfony/framework-bundle": "~2.2",
-        "willdurand/hateoas-bundle": "0.3.*"
+        "willdurand/hateoas-bundle": "0.3.*",
+        "aws/aws-sdk-php": "2.*"
     },
     "require-dev": {
         "phpcr/phpcr-shell": "~1.0.0@alpha",
