@@ -18,7 +18,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 interface StorageInterface
 {
     /**
-     * Save the document in a storage and give back the path to the document
+     * Save the document in a storage and give back the storageOptions
      * @param $tempPath
      * @param $fileName
      * @param $version

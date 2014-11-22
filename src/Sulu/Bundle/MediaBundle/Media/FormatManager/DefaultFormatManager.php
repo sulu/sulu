@@ -61,11 +61,6 @@ class DefaultFormatManager implements FormatManagerInterface
     private $ghostScriptPath;
 
     /**
-     * @var bool
-     */
-    private $saveImage = false;
-
-    /**
      * @var array
      */
     private $previewMimeTypes = array();
@@ -91,7 +86,6 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
      * @param string $ghostScriptPath
-     * @param bool $saveImage
      * @param array $previewMimeTypes
      * @param array $responseHeaders
      */
@@ -101,7 +95,6 @@ class DefaultFormatManager implements FormatManagerInterface
         FormatCacheInterface $formatCache,
         ImageConverterInterface $converter,
         $ghostScriptPath,
-        $saveImage,
         $previewMimeTypes,
         $responseHeaders
     ) {
@@ -110,7 +103,6 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->formatCache = $formatCache;
         $this->converter = $converter;
         $this->ghostScriptPath = $ghostScriptPath;
-        $this->saveImage = $saveImage;
         $this->previewMimeTypes = $previewMimeTypes;
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
@@ -164,15 +156,13 @@ class DefaultFormatManager implements FormatManagerInterface
                 $status = 200;
 
                 // save image
-                if ($this->saveImage) {
-                    $this->formatCache->save(
-                        $this->createTmpFile($image),
-                        $media->getId(),
-                        $this->replaceExtension($fileName, $imageExtension),
-                        $storageOptions,
-                        $format
-                    );
-                }
+                $this->formatCache->save(
+                    $this->createTmpFile($image),
+                    $media->getId(),
+                    $this->replaceExtension($fileName, $imageExtension),
+                    $storageOptions,
+                    $format
+                );
             } catch (MediaException $e) {
                 // return when available a file extension icon
                 list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));

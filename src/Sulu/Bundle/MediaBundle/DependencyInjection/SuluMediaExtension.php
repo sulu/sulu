@@ -47,7 +47,6 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
-        $container->setParameter('sulu_media.format_cache.save_image', true);
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
@@ -125,11 +124,7 @@ class SuluMediaExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        if (in_array($formatCacheType, array('local', 's3'))) {
-            if ($formatCacheType == 's3') {
-                // no need to use space
-                $container->setParameter('sulu_media.format_cache.save_image', false);
-            }
+        if (in_array($formatCacheType, array('local', 'reverse_proxy'))) {
             $loader->load('format_cache/'.$formatCacheType.'.xml');
         }
         if (in_array($storageCacheType, array('local', 's3'))) {

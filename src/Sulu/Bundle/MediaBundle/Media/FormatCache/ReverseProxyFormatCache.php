@@ -14,7 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
  * Class S3FormatCache
  * @package Sulu\Bundle\MediaBundle\Media\FormatCache
  */
-class S3FormatCache extends LocalFormatCache
+class ReverseProxyFormatCache extends LocalFormatCache
 {
     // TODO S3 Implementation
 }
