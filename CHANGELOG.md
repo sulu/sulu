@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+
+    * HOTFIX #594 [WebsiteBundle] Fixed sitemap alternate link bugs
+
 * 0.11.2 (2014-11-17)
 
     * HOTFIX #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes
