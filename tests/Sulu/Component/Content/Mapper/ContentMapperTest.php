@@ -3104,7 +3104,17 @@ class ContentMapperTest extends PhpcrTestCase
             array('title' => 'Description', 'url' => '/description'),
         );
 
-        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $data[0] = $this->mapper->save(
+            $data[0],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
         $urls = $data[0]->getUrls();
 
         $this->assertArrayNotHasKey('en', $urls);
@@ -3131,7 +3141,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertArrayNotHasKey('de_at', $urls);
         $this->assertArrayNotHasKey('es', $urls);
 
-        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1, true, $data[0]->getUuid());
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1, true, $data[0]->getUuid(), null, Structure::STATE_PUBLISHED);
         $urls = $data[1]->getUrls();
 
         $this->assertEquals('/description', $urls['en']);
