@@ -144,6 +144,12 @@ class MediaException extends Exception
      */
     const EXCEPTION_CODE_S3_UPLOAD = 5021;
 
+    /**
+     * @var int
+     * @description a file could not been deleted from S3
+     */
+    const EXCEPTION_CODE_S3_DELETE_EXCEPTION = 5022;
+
     public function toArray()
     {
         return array(

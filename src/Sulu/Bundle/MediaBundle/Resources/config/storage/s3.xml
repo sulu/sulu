@@ -5,6 +5,7 @@
     </parameters>
     <services>
         <service id="sulu_media.storage.s3" class="%sulu_media.storage.s3.class%">
+            <argument type="string">%sulu_media.storage.options%</argument>
             <argument type="service" id="logger"/>
         </service>
         <service id="sulu_media.storage" alias="sulu_media.storage.s3" />

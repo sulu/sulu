@@ -119,6 +119,7 @@ class SuluMediaExtension extends Extension
         ));
 
         // storage, cache
+        $container->setParameter('sulu_media.storage.options', $config['storage']['service']);
         $formatCacheType = $config['format_cache']['service']['type'];
         $storageCacheType = $config['storage']['service']['type'];
 
