@@ -351,8 +351,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
     private function getResourceLocatorFromRequest(
         PortalInformation $portalInformation,
         Request $request
-    )
-    {
+    ) {
         $path = $request->getPathInfo();
 
         // extract file and extension info
