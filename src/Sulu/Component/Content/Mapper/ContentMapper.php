@@ -1561,7 +1561,7 @@ class ContentMapper implements ContentMapperInterface
 
             // state property
             $propertyTranslator = $this->createPropertyTranslator($localization);
-            $statePropertyName = $propertyTranslator->getName('nodeState');
+            $statePropertyName = $propertyTranslator->getName('state');
 
             if ($node->getPropertyValueWithDefault($statePropertyName, Structure::STATE_TEST) === Structure::STATE_PUBLISHED) {
                 // set default value
