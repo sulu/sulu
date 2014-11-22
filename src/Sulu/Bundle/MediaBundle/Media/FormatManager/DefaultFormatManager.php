@@ -91,7 +91,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param FormatCacheInterface $formatCache
      * @param ImageConverterInterface $converter
      * @param string $ghostScriptPath
-     * @param string $saveImage
+     * @param bool $saveImage
      * @param array $previewMimeTypes
      * @param array $responseHeaders
      */
@@ -110,7 +110,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->formatCache = $formatCache;
         $this->converter = $converter;
         $this->ghostScriptPath = $ghostScriptPath;
-        $this->saveImage = $saveImage == 'true' ? true : false;
+        $this->saveImage = $saveImage;
         $this->previewMimeTypes = $previewMimeTypes;
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
