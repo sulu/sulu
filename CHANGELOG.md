@@ -14,8 +14,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #523 [All]            Refactored and improved functional tests
     * FEATURE     #553 [SnippetBundle]  Possiblity to show all snippet types by not providing any
     * BUGFIX      #533 [CoreBundle]     Removed request_analyzer.enable option (it is now irrelevant)
-
-    * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to 
+    * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to
     * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
 
 * dev-master
