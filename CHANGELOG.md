@@ -17,7 +17,16 @@ CHANGELOG for Sulu
 
     * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to 
     * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
-                                        Permission-Tab
+
+* dev-master
+
+    * HOTFIX #594 [WebsiteBundle] Fixed sitemap alternate link bugs
+
+* 0.11.2 (2014-11-17)
+
+    * HOTFIX #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes
+                                  eager validation of workspace existence.
+
 * 0.11.1 (2014-11-13)
 
     * HOTFIX      #543 [SearchBundle]  Fixed re-index command
