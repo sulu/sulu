@@ -103,6 +103,8 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
             $sql2Where = array_merge($sql2Where, $this->buildPageExclude());
         }
 
+        $sql2Where = array_filter($sql2Where);
+
         return implode(' AND ', $sql2Where);
     }
 
@@ -243,7 +245,9 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
                 $sql2Where[] = 'page.[' . $property->getName() . '] = ' . $tag;
             }
 
-            return '(' . implode(' ' . strtoupper($tagOperator) . ' ', $sql2Where) . ')';
+            if (sizeof($sql2Where) > 0) {
+                return '(' . implode(' ' . strtoupper($tagOperator) . ' ', $sql2Where) . ')';
+            }
         }
 
         return '';

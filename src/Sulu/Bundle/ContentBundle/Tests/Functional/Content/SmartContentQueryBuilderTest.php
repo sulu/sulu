@@ -28,6 +28,7 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
  */
 class SmartContentQueryBuilderTest extends SuluTestCase
 {
+
     /**
      * @var ContentQueryExecutor
      */
@@ -379,6 +380,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
+
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->webspaceManager,
@@ -391,7 +393,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             array(
                 'config' => array(
                     'dataSource' => $root->getIdentifier(),
-                    'tags' => array($this->tag1->getId(), $this->tag2->getId())
+                    'tags' => array($this->tag1->getId(), $this->tag2->getId()),
+                    'tagOperator' => 'and'
                 )
             )
         );
@@ -400,21 +403,21 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         // tag 1
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag1->getId())))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag1->getId()), 'tagOperator' => 'and'))
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals($t1t2 + $t1, sizeof($result));
 
         // tag 2
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag2->getId())))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag2->getId()), 'tagOperator' => 'and'))
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals($t1t2 + $t2, sizeof($result));
 
         // tag 3
         $builder->init(
-            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag3->getId())))
+            array('config' => array('dataSource' => $root->getIdentifier(), 'tags' => array($this->tag3->getId()), 'tagOperator' => 'and'))
         );
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
         $this->assertEquals(0, sizeof($result));
