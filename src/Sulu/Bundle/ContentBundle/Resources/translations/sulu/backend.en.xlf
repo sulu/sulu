@@ -102,6 +102,14 @@
                 <source>smart-content.filter-by-tags</source>
                 <target>Filter by tags</target>
             </trans-unit>
+            <trans-unit id="ea58ee4521c5fe65045dc05092ea7d06" resname="smart-content.use-any-tag">
+                <source>smart-content.use-any-tag</source>
+                <target>Use pages that use ANY tag</target>
+            </trans-unit>
+            <trans-unit id="ea58ee4521c5fe65045dc05092ea7d08" resname="smart-content.use-all-tags">
+                <source>smart-content.use-all-tags</source>
+                <target>Use pages that use ALL tags</target>
+            </trans-unit>
             <trans-unit id="7e3c491707f805797c98a366cf0c28e2" resname="smart-content.sort-by">
                 <source>smart-content.sort-by</source>
                 <target>Sort by</target>

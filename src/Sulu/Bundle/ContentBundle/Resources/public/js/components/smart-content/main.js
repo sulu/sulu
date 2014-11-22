@@ -22,6 +22,7 @@
  * @params {Array} [options.tags] array of tags which are inserted at the beginning
  * @params {String} [options.tagsAutoCompleteUrl] url to which the tags input is sent and can be autocompleted
  * @params {String} [options.tagsGetParameter] parameter name for auto-completing tags
+ * @params {String} [options.preSelectedTagOperator] tag related default operator ('or' or 'and')
  * @params {Array} [options.sortBy] array of sort-possibilities with id and name property
  * @params {Integer} [options.preSelectedSortBy] array with id of the preselected sort-possibility
  * @params {String} [options.preSelectedSortMethod] Sort-method to begin with (asc or desc)
@@ -34,6 +35,7 @@
  * @params {String} [options.includeSubFoldersParameter] parameter for the include-sub-folders-value
  * @params {String} [options.categoryParameter] parameter for the category id
  * @params {String} [options.tagsParameter] parameter for the tags
+ * @params {String} [options.tagOperatorParameter] parameter for the tag operator
  * @params {String} [options.sortByParameter] parameter for the sort-possibility id
  * @params {String} [options.sortMethodParameter] parameter for the sort method
  * @params {String} [options.presentAsParameter] parameter for the presentation-possibility id
@@ -67,6 +69,8 @@
  * @params {String} [options.translations.includeSubFolders] translation key
  * @params {String} [options.translations.filterByCategory] translation key
  * @params {String} [options.translations.filterByTags] translation key
+ * @params {String} [options.translations.useAnyTag] translation key
+ * @params {String} [options.translations.useAllTags] translation key
  * @params {String} [options.translations.sortBy] translation key
  * @params {String} [options.translations.noSorting] translation key
  * @params {String} [options.translations.ascending] translation key
@@ -97,6 +101,7 @@ define([], function() {
             tagsDisabled: false,
             tagsAutoCompleteUrl: '',
             tagsGetParameter: 'search',
+            preSelectedTagOperator: 'or',
             sortBy: [],
             preSelectedSortBy: null,
             preSelectedSortMethod: 'asc',
@@ -110,6 +115,7 @@ define([], function() {
             includeSubFoldersParameter: 'includeSubFolders',
             categoryParameter: 'category',
             tagsParameter: 'tags',
+            tagOperatorParameter: 'tagOperator',
             sortByParameter: 'sortBy',
             sortMethodParameter: 'sortMethod',
             presentAsParameter: 'presentAs',
@@ -139,6 +145,11 @@ define([], function() {
             desc: 'Descanding'
         },
 
+        operators = {
+            or: 'or',
+            and: 'and'
+        },
+
         constants = {
             containerSelector: '.smart-content-container',
             headerSelector: '.header',
@@ -150,6 +161,7 @@ define([], function() {
             includeSubSelector: '.includeSubCheck',
             categoryDDClass: 'category-dropdown',
             tagListClass: 'tag-list',
+            tagOperatorClass: 'tag-list-operator-dropdown',
             sortByDDClass: 'sort-by-dropdown',
             sortMethodDDClass: 'sort-method-dropdown',
             presentAsDDClass: 'present-as-dropdown',
@@ -223,9 +235,16 @@ define([], function() {
                 ].join(''),
 
                 tagList: [
-                    '<div class="item full tags<%= disabled %>">',
+                    '<div class="item-half left tags<%= disabled %>">',
                     '<span class="desc"><%= filterByTagsStr %></span>',
                         '<div class="' + constants.tagListClass + '"></div>',
+                    '</div>'
+                ].join(''),
+
+                tagOperator: [
+                    '<div class="item-half<%= disabled %>">',
+                    '<span class="desc">&nbsp;</span>',
+                        '<div class="' + constants.tagOperatorClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -238,7 +257,8 @@ define([], function() {
 
                 sortMethod: [
                     '<div class="item-half">',
-                        '<div class="' + constants.sortMethodDDClass + ' sortMethod"></div>',
+                    '<span class="desc">&nbsp;</span>',
+                        '<div class="' + constants.sortMethodDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -398,6 +418,8 @@ define([], function() {
                 includeSubFolders: 'smart-content.include-sub-folders',
                 filterByCategory: 'smart-content.filter-by-category',
                 filterByTags: 'smart-content.filter-by-tags',
+                useAnyTag: 'smart-content.use-any-tag',
+                useAllTags: 'smart-content.use-all-tags',
                 sortBy: 'smart-content.sort-by',
                 noSorting: 'smart-content.no-sorting',
                 ascending: 'smart-content.ascending',
@@ -428,6 +450,7 @@ define([], function() {
                 includeSubFolders: this.options.includeSubFolders,
                 category: this.options.preSelectedCategory,
                 tags: this.options.tags,
+                tagOperator: this.options.preSelectedTagOperator,
                 sortBy: this.options.preSelectedSortBy,
                 sortMethod: this.options.preSelectedSortMethod,
                 presentAs: this.options.preSelectedPresentAs,
@@ -833,14 +856,16 @@ define([], function() {
                     filterByTagsStr: this.sandbox.translate(this.translations.filterByTags),
                     disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
                 }));
+                this.$overlayContent.append(_.template(templates.overlayContent.tagOperator)({
+                    disabled: (this.overlayDisabled.tags) ? ' disabled' : ''
+                }));
+                this.$overlayContent.append('<div class="clear"></div>');
             }
             if (!this.options.hideSortBy) {
                 this.$overlayContent.append(_.template(templates.overlayContent.sortBy)({
                     sortByStr: this.sandbox.translate(this.translations.sortBy)
                 }));
-                this.$overlayContent.append(_.template(templates.overlayContent.sortMethod)({
-                    filterByTagsStr: this.sandbox.translate(this.translations.filterByTags)
-                }));
+                this.$overlayContent.append(_.template(templates.overlayContent.sortMethod)());
             }
             this.$overlayContent.append('<div class="clear"></div>');
 
@@ -886,7 +911,22 @@ define([], function() {
                         autocomplete: (this.options.tagsAutoCompleteUrl !== ''),
                         getParameter: this.options.tagsGetParameter,
                         noNewTags: true,
-                        itemsKey: this.options.tagsResultKey
+                        itemsKey: this.options.tagsResultKey,
+                        disabled: this.overlayDisabled.tags
+                    }
+                },
+                {
+                    name: 'select@husky',
+                        options: {
+                            el: this.sandbox.dom.find('.' + constants.tagOperatorClass, this.$overlayContent),
+                            instanceName: this.options.instanceName + constants.tagOperatorClass,
+                            value: 'name',
+                            data: [
+                                {id: operators.or, name: this.sandbox.translate(this.translations.useAnyTag)},
+                                {id: operators.and, name: this.sandbox.translate(this.translations.useAllTags)}
+                            ],
+                            preSelectedElements: [operators[this.options.preSelectedTagOperator]],
+                            disabled: this.overlayDisabled.tags
                     }
                 },
                 {
@@ -907,7 +947,6 @@ define([], function() {
                     options: {
                         el: this.sandbox.dom.find('.' + constants.sortMethodDDClass, this.$overlayContent),
                         instanceName: this.options.instanceName + constants.sortMethodDDClass,
-                        defaultLabel: 'Select sort method',
                         value: 'name',
                         data: [
                             {id: sortMethods.asc, name: this.sandbox.translate(this.translations.ascending)},
@@ -943,6 +982,7 @@ define([], function() {
                     '&', this.options.includeSubFoldersParameter, '=', this.overlayData.includeSubFolders,
                     '&', this.options.categoryParameter, '=', this.overlayData.category,
                     '&', this.options.tagsParameter, '=', this.overlayData.tags,
+                    '&', this.options.tagOperatorParameter, '=', this.overlayData.tagOperator,
                     '&', this.options.sortByParameter, '=', this.overlayData.sortBy,
                     '&', this.options.sortMethodParameter, '=', this.overlayData.sortMethod,
                     '&', this.options.presentAsParameter, '=', this.overlayData.presentAs,
@@ -988,8 +1028,8 @@ define([], function() {
          * event is emited on which the associeted component responses
          */
         getOverlayData: function() {
-            var categoryDef, tagsDef, sortByDef, sortMethodDef, presentAsDef, temp;
-            categoryDef = tagsDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
+            var categoryDef, tagsDef, tagOperatorDef, sortByDef, sortMethodDef, presentAsDef, temp;
+            categoryDef = tagsDef = tagOperatorDef = sortByDef = sortMethodDef = presentAsDef = this.sandbox.data.deferred();
 
             //include sub folders
             this.overlayData.includeSubFolders = this.sandbox.dom.prop(
@@ -1021,6 +1061,13 @@ define([], function() {
                     tagsDef.resolve();
                 }.bind(this));
 
+            //tag operators
+            this.sandbox.emit('husky.select.' + this.options.instanceName + constants.tagOperatorClass + '.get-checked',
+                function(tagOperator) {
+                    this.overlayData.tagOperator = (tagOperator[0] === operators.and) ? operators.and : operators.or;
+                    tagOperatorDef.resolve();
+                }.bind(this));
+
             //sort by
             this.sandbox.emit('husky.select.' + this.options.instanceName + constants.sortByDDClass + '.get-checked',
                 function(sortBy) {
@@ -1042,7 +1089,7 @@ define([], function() {
                     presentAsDef.resolve();
                 }.bind(this));
 
-            this.sandbox.dom.when(categoryDef.promise(), tagsDef.promise(), sortByDef.promise(), sortMethodDef.promise(), presentAsDef.promise()).then(function() {
+            this.sandbox.dom.when(categoryDef.promise(), tagsDef.promise(), tagOperatorDef.promise(), sortByDef.promise(), sortMethodDef.promise(), presentAsDef.promise()).then(function() {
                 this.setElementData(this.overlayData);
                 this.sandbox.emit(INPUT_RETRIEVED.call(this));
             }.bind(this));
