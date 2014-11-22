@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use PHPCR\SessionInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
@@ -38,13 +40,24 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $requestAnalyzer;
 
-    public function __construct(PreviewInterface $preview, AdminRequestAnalyzer $requestAnalyzer, LoggerInterface $logger)
+    /**
+     * @var Registry
+     */
+    private $registry;
+
+    public function __construct(
+        PreviewInterface $preview,
+        AdminRequestAnalyzer $requestAnalyzer,
+        Registry $registry,
+        LoggerInterface $logger
+    )
     {
         $this->content = array();
 
         $this->preview = $preview;
         $this->logger = $logger;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->registry = $registry;
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -55,6 +68,9 @@ class PreviewMessageComponent implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
+
+        $this->reconnect();
+
         $msg = json_decode($msg, true);
 
         if (isset($msg['command']) &&
@@ -81,6 +97,18 @@ class PreviewMessageComponent implements MessageComponentInterface
                     $this->close($from, $msg, $user);
                     break;
             }
+        }
+    }
+
+    /**
+     * Reconnect to
+     */
+    private function reconnect()
+    {
+        $em = $this->registry->getManager();
+        if ($em->getConnection()->ping() === false) {
+            $em->getConnection()->close();
+            $em->getConnection()->connect();
         }
     }
 
