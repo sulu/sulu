@@ -115,7 +115,7 @@ class PreviewMessageComponent implements MessageComponentInterface
 
         try {
             $connection->executeQuery('SELECT 1;');
-        } catch (DBALException $ex) {
+        } catch (DBALException $exc) {
             $this->logger->warning('Mysql reconnect');
             $connection->close();
             $connection->connect();
