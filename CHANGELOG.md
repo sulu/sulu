@@ -6,7 +6,7 @@ CHANGELOG for Sulu
     * FEATURE     #585 [ContentBundle]  Added analytics key to webspace configuration
     * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
-    * BUGFIX      #599 [ContentBundle]  Moved cache for preview from phpcr to filesystem
+    * ENHANCEMENT #599 [ContentBundle]  Moved cache for preview from phpcr to filesystem
 
 * 0.12.0 (2014-11-25)
 
