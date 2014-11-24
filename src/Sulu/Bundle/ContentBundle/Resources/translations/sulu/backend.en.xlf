@@ -387,7 +387,7 @@
                 <source>toolbar.copy-locale</source>
                 <target>Copy languages</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf026" resname="content.contents.new-or-shadow">
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf026" resname="content.contents.new">
                 <source>content.contents.create</source>
                 <target>Create page</target>
             </trans-unit>
