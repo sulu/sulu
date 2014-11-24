@@ -10,11 +10,16 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
@@ -38,13 +43,24 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $requestAnalyzer;
 
-    public function __construct(PreviewInterface $preview, AdminRequestAnalyzer $requestAnalyzer, LoggerInterface $logger)
+    /**
+     * @var Registry
+     */
+    private $registry;
+
+    public function __construct(
+        PreviewInterface $preview,
+        AdminRequestAnalyzer $requestAnalyzer,
+        Registry $registry,
+        LoggerInterface $logger
+    )
     {
         $this->content = array();
 
         $this->preview = $preview;
         $this->logger = $logger;
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->registry = $registry;
     }
 
     public function onOpen(ConnectionInterface $conn)
@@ -55,6 +71,9 @@ class PreviewMessageComponent implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
+
+        $this->reconnect();
+
         $msg = json_decode($msg, true);
 
         if (isset($msg['command']) &&
@@ -81,6 +100,25 @@ class PreviewMessageComponent implements MessageComponentInterface
                     $this->close($from, $msg, $user);
                     break;
             }
+        }
+    }
+
+    /**
+     * Reconnect to
+     */
+    private function reconnect()
+    {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->registry->getManager();
+        /** @var Connection $connection */
+        $connection = $entityManager->getConnection();
+
+        try {
+            $connection->executeQuery('SELECT 1;');
+        } catch (DBALException $exc) {
+            $this->logger->warning('Mysql reconnect');
+            $connection->close();
+            $connection->connect();
         }
     }
 

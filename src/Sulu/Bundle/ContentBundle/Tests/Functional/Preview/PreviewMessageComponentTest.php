@@ -10,6 +10,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
@@ -80,6 +83,16 @@ class PreviewMessageComponentTest extends PhpcrTestCase
      */
     private $component;
 
+    /**
+     * @var Registry
+     */
+    private $registry;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
     protected function setUp()
     {
         $this->prepareControllerResolver();
@@ -95,10 +108,18 @@ class PreviewMessageComponentTest extends PhpcrTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->registry = $this->getMock('Doctrine\Bundle\DoctrineBundle\Registry', array('getManager'), array(), 'Registry', false);
+        $entityManager = $this->getMock('Doctrine\ORM\EntityManager', array('getConnection'), array(), 'EntityManager', false);
+        $this->connection = $this->getMock('Doctrine\DBAL\Connection', array('executeQuery', 'close', 'connect'), array(), 'Connection', false);
+
+        $this->registry->expects($this->any())->method('getManager')->willReturn($entityManager);
+        $entityManager->expects($this->any())->method('getConnection')->willReturn($this->connection);
+
         $this->preview = new Preview($this->contentTypeManager, $this->previewCache, $this->renderer, $this->crawler);
         $this->component = new PreviewMessageComponent(
             $this->preview,
             $this->requestAnalyzer,
+            $this->registry,
             $this->getMock('\Psr\Log\LoggerInterface')
         );
     }
@@ -370,6 +391,8 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testStart()
     {
+        $this->connection->expects($this->any())->method('executeQuery')->willReturn(false);
+
         $data = $this->prepareData();
 
         $i = -1;
@@ -430,6 +453,8 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testUpdate()
     {
+        $this->connection->expects($this->any())->method('executeQuery')->willReturn(false);
+
         $data = $this->prepareData();
 
         $i = 0;
@@ -591,6 +616,70 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'changes' => array(
                         'article' => 'qwertz'
                     )
+                )
+            )
+        );
+    }
+
+    public function testReconnect()
+    {
+        $this->connection->expects($this->any())->method('executeQuery')->will($this->throwException(new DBALException()));
+        $this->connection->expects($this->exactly(2))->method('close')->willReturn(true);
+        $this->connection->expects($this->exactly(2))->method('connect')->willReturn(true);
+
+        $data = $this->prepareData();
+
+        $i = -1;
+
+        $clientForm = $this->prepareClient(
+            function ($string) use (&$i) {
+                $data = json_decode($string);
+                $this->assertEquals($data->msg, 'OK');
+
+                $i++;
+                if ($i == 0) {
+                    $this->assertEquals($data->other, false);
+                } else {
+                    $this->assertEquals($data->other, true);
+                }
+            },
+            $this->exactly(2),
+            'form'
+        );
+        $clientPreview = $this->prepareClient(
+            function ($string) {
+                $data = json_decode($string);
+                $this->assertEquals($data->msg, 'OK');
+                $this->assertEquals($data->other, true);
+            },
+            $this->once(),
+            'preview'
+        );
+
+        $this->component->onMessage(
+            $clientForm,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => $data[0]->getUuid(),
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
+                    'type' => 'form',
+                    'user' => '1'
+                )
+            )
+        );
+
+        $this->component->onMessage(
+            $clientPreview,
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => $data[0]->getUuid(),
+                    'languageCode' => 'de',
+                    'webspaceKey' => 'default',
+                    'type' => 'preview',
+                    'user' => '1'
                 )
             )
         );
