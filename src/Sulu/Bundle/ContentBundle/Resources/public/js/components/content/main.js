@@ -9,9 +9,8 @@
 
 define([
     'sulucontent/model/content',
-    'sulucontent/components/content/preview/main',
-    'text!/admin/content/languages'
-], function(Content, Preview, webspaceLanguages) {
+    'sulucontent/components/content/preview/main'
+], function(Content, Preview) {
 
     'use strict';
 
@@ -23,18 +22,21 @@ define([
          */
         TYPE_CONTENT = 1,
 
+        localizations,
+
         constants = {
             resolutionDropdownData: [
                 {id: 1, name: 'sulu.preview.auto', cssClass: 'auto'},
                 {id: 2, name: 'sulu.preview.desktop', cssClass: 'desktop'},
                 {id: 3, name: 'sulu.preview.tablet', cssClass: 'tablet'},
                 {id: 4, name: 'sulu.preview.smartphone', cssClass: 'smartphone'}
-            ]
+            ],
+            localizationUrl: '/admin/api/webspace/localizations'
         },
 
         templates = {
             preview: [
-                    '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
+                '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
                 '   <div class="wrapper">',
                 '       <div class="viewport">',
                 '           <iframe src="<%= url %>"></iframe>',
@@ -62,7 +64,7 @@ define([
                 var template = [
                     '<div class="copy-locales-overlay-content">',
                     '   <label>',
-                            this.sandbox.translate('content.contents.settings.copy-locales.copy-from'),
+                    this.sandbox.translate('content.contents.settings.copy-locales.copy-from'),
                     '   </label>',
                     '   <div class="grid m-top-10">',
                     '       <div class="grid-row">',
@@ -70,15 +72,15 @@ define([
                     '   </div>',
                     '</div>',
                     '<h2 class="divider m-top-20">',
-                        this.sandbox.translate('content.contents.settings.copy-locales.target'),
+                    this.sandbox.translate('content.contents.settings.copy-locales.target'),
                     '</h2>',
                     '<p class="info">',
                     '   * ', this.sandbox.translate('content.contents.settings.copy-locales.info'),
                     '</p>',
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
-                ], i = 0, languages = JSON.parse(webspaceLanguages)._embedded[this.options.webspace];
+                ], i = 0;
 
-                this.sandbox.util.foreach(languages, function(locale) {
+                this.sandbox.util.foreach(localizations, function(locale) {
                     if (i % 2 === 0) {
                         template.push((i > 0 ? '</div>' : '') + '<div class="grid-row">');
                     }
@@ -104,8 +106,8 @@ define([
                 }
 
                 currentLocale = (
-                    locale === this.options.language &&
-                    concreteLanguages.indexOf(locale) >= 0
+                locale === this.options.language &&
+                concreteLanguages.indexOf(locale) >= 0
                 );
 
                 return [
@@ -114,11 +116,11 @@ define([
                     '       <input type="checkbox"',
                     '              id="copy-locales-to-', locale, '"',
                     '              name="copy-locales-to" class="form-element" value="', locale, '"',
-                                   (currentLocale ? ' disabled="disabled"' : ''), '/>',
+                    (currentLocale ? ' disabled="disabled"' : ''), '/>',
                     '       <span class="icon"></span>',
                     '   </div>',
                     '   <label for="copy-locales-to-', locale, '" class="', (currentLocale ? 'disabled' : ''), '">',
-                            locale, concreteLanguages.indexOf(locale) < 0 ? ' *' : '',
+                    locale, concreteLanguages.indexOf(locale) < 0 ? ' *' : '',
                     '   </label>',
                     '</div>'
                 ].join('');
@@ -162,9 +164,26 @@ define([
         },
 
         loadData: function() {
+            var remainingData = 2;
+
             if (!this.content) {
                 this.content = new Content({id: this.options.id});
             }
+
+            this.sandbox.util.load(constants.localizationUrl + '?webspace=' + this.options.webspace)
+                .then(function(data) {
+                    localizations = data._embedded.localizations.map(function(localization) {
+                        return {
+                            id: localization.localization,
+                            title: localization.localization
+                        };
+                    });
+                    remainingData--;
+
+                    if (remainingData <= 0) {
+                        this.loadDataDeferred.resolve();
+                    }
+                }.bind(this));
 
             if (this.options.id !== undefined) {
                 this.content.fullFetch(
@@ -174,13 +193,21 @@ define([
                     {
                         success: function(content) {
                             this.render(content.toJSON());
-                            this.loadDataDeferred.resolve();
+                            remainingData--;
+
+                            if (remainingData <= 0) {
+                                this.loadDataDeferred.resolve();
+                            }
                         }.bind(this)
                     }
                 );
             } else {
                 this.render(this.content.toJSON());
-                this.loadDataDeferred.resolve();
+                remainingData--;
+
+                if (remainingData <= 0) {
+                    this.loadDataDeferred.resolve();
+                }
             }
         },
 
@@ -286,7 +313,7 @@ define([
             this.sandbox.on('husky.navigation.item.select', function(event) {
                 // when navigation item is already opended do nothing - relevant for homepage
                 if (event.id !== this.options.id) {
-                    this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                    this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
                 }
             }.bind(this));
 
@@ -358,7 +385,7 @@ define([
                 var route = 'content/contents/' +
                     (!webspace ? this.options.webspace : webspace) + '/' +
                     (!language ? this.options.language : language);
-                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
                 this.sandbox.emit('sulu.router.navigate', route);
             }, this);
         },
@@ -380,7 +407,7 @@ define([
         move: function(id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
-                '&language=' , this.options.language , '&action=move&destination=', parentId
+                '&language=', this.options.language, '&action=move&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -399,7 +426,7 @@ define([
         copy: function(id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
-                '&language=' , this.options.language , '&action=copy&destination=', parentId
+                '&language=', this.options.language, '&action=copy&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -437,7 +464,7 @@ define([
         order: function(id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
-                '&language=' , this.options.language , '&action=order&destination=', parentId
+                '&language=', this.options.language, '&action=order&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
@@ -474,7 +501,7 @@ define([
 
                             success: function() {
                                 var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
-                                this.sandbox.emit('sulu.app.ui.reset', { navigation: 'auto', content: 'auto'});
+                                this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
 
                                 this.sandbox.sulu.unlockDeleteSuccessLabel();
                                 this.sandbox.emit('sulu.router.navigate', route);
@@ -570,26 +597,26 @@ define([
                 this.options.parent,
                 this.state,
                 null, {
-                // on success save contents id
-                success: function(response) {
-                    var model = response.toJSON(), route;
-                    if (!!this.options.id) {
-                        this.sandbox.emit('sulu.content.contents.saved', model.id, model);
-                    } else {
-                        route = 'content/contents/' + this.options.webspace + '/' +
+                    // on success save contents id
+                    success: function(response) {
+                        var model = response.toJSON(), route;
+                        if (!!this.options.id) {
+                            this.sandbox.emit('sulu.content.contents.saved', model.id, model);
+                        } else {
+                            route = 'content/contents/' + this.options.webspace + '/' +
                             this.options.language + '/edit:' + model.id + '/content';
 
-                        this.sandbox.sulu.viewStates.justSaved = true;
-                        this.sandbox.emit('sulu.router.navigate', route);
-                    }
-                    def.resolve();
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving profile");
-                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
-                    this.sandbox.emit('sulu.content.contents.save-error');
-                }.bind(this)
-            });
+                            this.sandbox.sulu.viewStates.justSaved = true;
+                            this.sandbox.emit('sulu.router.navigate', route);
+                        }
+                        def.resolve();
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.logger.log("error while saving profile");
+                        this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
+                        this.sandbox.emit('sulu.content.contents.save-error');
+                    }.bind(this)
+                });
 
             return def;
         },
@@ -599,14 +626,14 @@ define([
             if (
                 (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
                 (!!item.type && !!item.type.name && item.type.name === 'shadow')
-                ) {
+            ) {
                 action = 'settings';
             }
 
             this.sandbox.emit(
                 'sulu.router.navigate',
                 'content/contents/' + (!webspace ? this.options.webspace : webspace) +
-                    '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
+                '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
                 undefined, undefined, forceReload
             );
         },
@@ -616,7 +643,7 @@ define([
                 this.sandbox.emit(
                     'sulu.router.navigate',
                     'content/contents/' + this.options.webspace +
-                        '/' + this.options.language + '/add:' + parent.id + '/content'
+                    '/' + this.options.language + '/add:' + parent.id + '/content'
                 );
             } else {
                 this.sandbox.emit(
@@ -676,7 +703,7 @@ define([
                     if (
                         (this.options.content !== 'settings' && this.data.shadowOn === true) ||
                         (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
-                        ) {
+                    ) {
                         this.sandbox.emit(
                             'sulu.router.navigate',
                             'content/contents/' + this.options.webspace +
@@ -1000,8 +1027,7 @@ define([
             }.bind(this));
 
             var noBack = (this.options.id === 'index'), def,
-                languages = JSON.parse(webspaceLanguages)._embedded[this.options.webspace],
-                length = languages, concreteLanguages = [];
+                length, concreteLanguages = [];
 
             if (this.options.display === 'column') {
                 return {
@@ -1013,13 +1039,14 @@ define([
                     toolbar: {
                         template: [],
                         languageChanger: {
-                            data: languages,
+                            data: localizations,
                             preSelected: this.options.language
                         }
                     }
                 };
             } else {
-                def = this.sandbox.data.deferred();
+                var def = this.sandbox.data.deferred(),
+                    dropdownLocalizations = [];
 
                 this.loadDataDeferred.then(function() {
                     // object to array
@@ -1030,14 +1057,21 @@ define([
                     }
 
                     // add create new page flag for not existing pages
-                    for (i = 0, length = languages.length; i < length; i++) {
-                        if (concreteLanguages.indexOf(languages[i].id) < 0) {
-                            languages[i].title += ' (' + this.sandbox.translate('content.contents.new') + ')';
+                    for (i = 0, length = localizations.length; i < length; i++) {
+                        dropdownLocalizations[i] = {
+                            id: localizations[i].id,
+                            title: localizations[i].title
+                        };
+
+                        if (concreteLanguages.indexOf(localizations[i].id) < 0) {
+                            dropdownLocalizations[i].title += [
+                                ' (', this.sandbox.translate('content.contents.new'), ')'
+                            ].join('');
                         }
                     }
 
                     var url = '/admin/content/navigation/content' + (!!this.data.id ? '?id=' + this.data.id : ''),
-                        x = {
+                        header = {
                             noBack: noBack,
 
                             tabs: {
@@ -1046,7 +1080,7 @@ define([
 
                             toolbar: {
                                 languageChanger: {
-                                    data: languages,
+                                    data: dropdownLocalizations,
                                     preSelected: this.options.language
                                 },
 
@@ -1135,7 +1169,7 @@ define([
                                 ]
                             }
                         };
-                    def.resolveWith(this, [x]);
+                    def.resolveWith(this, [header]);
                 }.bind(this));
 
                 return def;
