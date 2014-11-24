@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
@@ -109,7 +110,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
         $this->registry = $this->getMock('Doctrine\Bundle\DoctrineBundle\Registry', array('getManager'), array(), 'Registry', false);
         $entityManager = $this->getMock('Doctrine\ORM\EntityManager', array('getConnection'), array(), 'EntityManager', false);
-        $this->connection = $this->getMock('Doctrine\DBAL\Connection', array('ping', 'close', 'connect'), array(), 'Connection', false);
+        $this->connection = $this->getMock('Doctrine\DBAL\Connection', array('executeQuery', 'close', 'connect'), array(), 'Connection', false);
 
         $this->registry->expects($this->any())->method('getManager')->willReturn($entityManager);
         $entityManager->expects($this->any())->method('getConnection')->willReturn($this->connection);
@@ -390,7 +391,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testStart()
     {
-        $this->connection->expects($this->any())->method('ping')->willReturn(false);
+        $this->connection->expects($this->any())->method('executeQuery')->willReturn(false);
 
         $data = $this->prepareData();
 
@@ -452,7 +453,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testUpdate()
     {
-        $this->connection->expects($this->any())->method('ping')->willReturn(false);
+        $this->connection->expects($this->any())->method('executeQuery')->willReturn(false);
 
         $data = $this->prepareData();
 
@@ -622,7 +623,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testReconnect()
     {
-        $this->connection->expects($this->any())->method('ping')->willReturn(false);
+        $this->connection->expects($this->any())->method('executeQuery')->will($this->throwException(new DBALException()));
         $this->connection->expects($this->exactly(2))->method('close')->willReturn(true);
         $this->connection->expects($this->exactly(2))->method('connect')->willReturn(true);
 

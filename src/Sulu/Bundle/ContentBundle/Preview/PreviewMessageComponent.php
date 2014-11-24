@@ -11,12 +11,15 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use PHPCR\SessionInterface;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class PreviewMessageComponent implements MessageComponentInterface
 {
@@ -105,10 +108,17 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private function reconnect()
     {
-        $em = $this->registry->getManager();
-        if ($em->getConnection()->ping() === false) {
-            $em->getConnection()->close();
-            $em->getConnection()->connect();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->registry->getManager();
+        /** @var Connection $connection */
+        $connection = $entityManager->getConnection();
+
+        try {
+            $connection->executeQuery('SELECT 1;');
+        } catch (DBALException $ex) {
+            $this->logger->warning('Mysql reconnect');
+            $connection->close();
+            $connection->connect();
         }
     }
 
