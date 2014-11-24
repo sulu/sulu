@@ -505,10 +505,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function postTriggerAction($uuid, Request $request)
     {
         // extract parameter
-        $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $action = $this->getRequestParameter($request, 'action', true);
-        $destination = $this->getRequestParameter($request, 'destination', true);
         $userId = $this->getUser()->getId();
 
         // prepare vars
@@ -519,23 +517,39 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             switch ($action) {
                 case 'move':
+                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
+                    $language = $this->getLanguage($request);
+
                     // call repository method
-                    $data = $repository->moveNode($uuid, $destination, $webspace, $language, $userId);
+                    $data = $repository->moveNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'copy':
+                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
+                    $language = $this->getLanguage($request);
+
                     // call repository method
-                    $data = $repository->copyNode($uuid, $destination, $webspace, $language, $userId);
+                    $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
+                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
+                    $language = $this->getLanguage($request);
+
                     // call repository method
-                    $data = $repository->orderBefore($uuid, $destination, $webspace, $language, $userId);
+                    $data = $repository->orderBefore($uuid, $srcLocale, $webspace, $language, $userId);
+                    break;
+                case 'copy-locale':
+                    $srcLocale = $this->getLanguage($request);
+                    $destLocale = $this->getRequestParameter($request, 'dest', true);
+
+                    // call repository method
+                    $data = $repository->copyLocale($uuid, $userId, $webspace, $srcLocale, explode(',', $destLocale));
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
             }
 
             // prepare view
-            $view = $this->view($data, 200);
+            $view = $this->view($data, $data !== null ? 200 : 204);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }

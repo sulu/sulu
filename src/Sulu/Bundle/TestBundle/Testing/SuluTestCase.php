@@ -2,6 +2,12 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use InvalidArgumentException;
+use PHPCR\SessionInterface;
+use Sulu\Bundle\TestBundle\Entity\TestUser;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -24,7 +30,7 @@ abstract class SuluTestCase extends BaseTestCase
      *
      * {@inheritDoc}
      *
-     * @throws InvalidArgumentEXception If the found kernel does
+     * @throws InvalidArgumentException If the found kernel does
      *   not extend SuluTestKernel
      */
     protected static function createKernel(array $options = array())
@@ -74,7 +80,7 @@ abstract class SuluTestCase extends BaseTestCase
     /**
      * Create an authenticated client
      *
-     * @return Symfony\Bundle\FrameworkBundle\Client
+     * @return Client
      */
     protected function createAuthenticatedClient()
     {
@@ -92,7 +98,7 @@ abstract class SuluTestCase extends BaseTestCase
     /**
      * Create client for tests on the "website" context
      *
-     * @return Symfony\Bundle\FrameworkBundle\Client
+     * @return Client
      */
     protected function createWebsiteClient()
     {
@@ -108,6 +114,7 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function initPhpcr()
     {
+        /** @var SessionInterface $session */
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
         $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
@@ -130,7 +137,10 @@ abstract class SuluTestCase extends BaseTestCase
         $webspace = $cmf->addNode('sulu_io');
         $nodes = $webspace->addNode('routes');
         $nodes->addNode('de');
+        $nodes->addNode('de_at');
         $nodes->addNode('en');
+        $nodes->addNode('en_us');
+
         $content = $webspace->addNode('contents');
         $content->setProperty('i18n:en-template', 'default');
         $content->setProperty('i18n:en-creator', 1);
@@ -138,6 +148,7 @@ abstract class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-changer', 1);
         $content->setProperty('i18n:en-changed', new \DateTime());
         $content->addMixin('sulu:content');
+
         $webspace->addNode('temp');
 
         $session->save();
@@ -148,6 +159,7 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function purgeDatabase()
     {
+        /** @var EntityManager $em */
         $em = $this->db('ORM')->getOm();
         $connection = $em->getConnection();
 

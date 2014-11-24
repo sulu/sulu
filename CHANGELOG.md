@@ -15,11 +15,16 @@ CHANGELOG for Sulu
     * FEATURE     #553 [SnippetBundle]  Possiblity to show all snippet types by not providing any
     * BUGFIX      #533 [CoreBundle]     Removed request_analyzer.enable option (it is now irrelevant)
     * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to
-    * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
+    * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in
+                                        Permission-Tab
+    * FEATURE     #564 [ContentBundle]  Added UI to copy content languages
+    * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes
+                                        eager validation of workspace existence.
+    * ENHANCEMENT #523 [All]            Refactored and improved functional tests
 
 * dev-master
 
-    * HOTFIX #594 [WebsiteBundle] Fixed sitemap alternate link bugs
+    * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
 
 * 0.11.2 (2014-11-17)
 
