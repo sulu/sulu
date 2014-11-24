@@ -189,36 +189,6 @@ class TemplateController extends Controller
     }
 
     /**
-     * returns languages for webspaces
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function getLanguagesAction()
-    {
-        $webspaces = $this->getWebspaceManager()->getWebspaceCollection();
-
-        $localizations = array();
-        /** @var Webspace $webspace */
-        foreach ($webspaces as $webspace) {
-            $localizations[$webspace->getKey()] = array();
-
-            foreach ($webspace->getAllLocalizations() as $localization) {
-                $localizations[$webspace->getKey()][] = array(
-                    'id' => $localization->getLocalization(),
-                    'title' => $localization->getLocalization('-')
-                );
-            }
-        }
-
-        $data = array(
-            '_embedded' => $localizations,
-            'total' => sizeof($localizations),
-        );
-
-        return new JsonResponse($data);
-    }
-
-    /**
      * renders template fpr settings
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return Response
