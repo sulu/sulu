@@ -253,6 +253,8 @@ define([
                 this.setHeaderBar(true);
                 this.setTitle(this.data);
 
+                this.sandbox.dom.html('li[data-id="' + this.options.language + '"] a', this.options.language);
+
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.content-save-desc', 'labels.success');
             }, this);
 
