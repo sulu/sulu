@@ -66,7 +66,10 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private $languageNamespace;
 
-    public function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
+    public function __construct(
+        StructureManagerInterface $structureManager,
+        ContentTypeManagerInterface $contentTypeManager
+    )
     {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -77,10 +80,6 @@ class ExcerptStructureExtension extends StructureExtension
      */
     public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
     {
-        if ($data instanceof ArrayableInterface) {
-            $data = $data->toArray();
-        }
-
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
@@ -126,7 +125,7 @@ class ExcerptStructureExtension extends StructureExtension
             $data[$property->getName()] = $property->getValue();
         }
 
-        return new ExcerptValueContainer($data);
+        return $data;
     }
 
     /**
@@ -148,22 +147,24 @@ class ExcerptStructureExtension extends StructureExtension
     /**
      * {@inheritdoc}
      */
-    public function getContentData($value)
+    public function getContentData($container)
     {
-        if ($value instanceof ExcerptValueContainer) {
-            $data = array();
-            foreach ($this->excerptStructure->getProperties() as $property) {
-                if ($value->__isset($property->getName())) {
-                    $property->setValue($value->__get($property->getName()));
-                    $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-                    $data[$property->getName()] = $contentType->getContentData($property);
-                }
-            }
-
-            return $data;
-        } else {
-            return $value;
+        if ($this->excerptStructure === null) {
+            $this->excerptStructure = $this->initExcerptStructure();
         }
+
+        $container = new ExcerptValueContainer($container);
+
+        $data = array();
+        foreach ($this->excerptStructure->getProperties() as $property) {
+            if ($container->__isset($property->getName())) {
+                $property->setValue($container->__get($property->getName()));
+                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                $data[$property->getName()] = $contentType->getContentData($property);
+            }
+        }
+
+        return $data;
     }
 
     /**

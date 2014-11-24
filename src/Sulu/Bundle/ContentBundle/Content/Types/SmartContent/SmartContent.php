@@ -107,19 +107,7 @@ class SmartContent extends ComplexContentType
         $segmentKey,
         $preview = false
     ) {
-        $smartContent = new SmartContentContainer(
-            $this->contentQuery,
-            $this->contentQueryBuilder,
-            $this->tagManager,
-            array_merge($this->getDefaultParams(), $property->getParams()),
-            $webspaceKey,
-            $languageCode,
-            $segmentKey,
-            $preview,
-            $this->stopwatch
-        );
-        $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
-        $property->setValue($smartContent);
+        $property->setValue($data);
     }
 
     /**
@@ -212,19 +200,9 @@ class SmartContent extends ComplexContentType
     public function getViewData(PropertyInterface $property)
     {
         $this->getContentData($property);
-        $container = $property->getValue();
+        $config = $property->getValue();
 
-        if ($container instanceof SmartContentContainer) {
-            return array_merge(
-                $container->getConfig(),
-                array(
-                    'page' => $container->getPage(),
-                    'hasNextPage' => $container->getHasNextPage()
-                )
-            );
-        } else {
-            return array();
-        }
+        return $config;
     }
 
     /**
@@ -237,16 +215,27 @@ class SmartContent extends ComplexContentType
             $property->getParams()
         );
 
-        $value = $property->getValue();
+        $data = $property->getValue();
 
-        // paginate
-        if ($value instanceof SmartContentContainer) {
-            $contentData = $this->loadData($value, $property, $params);
-        } else {
-            $contentData = array();
-        }
+        $container = new SmartContentContainer(
+            $this->contentQuery,
+            $this->contentQueryBuilder,
+            $this->tagManager,
+            array_merge($this->getDefaultParams(), $property->getParams()),
+            $property->getStructure()->getWebspaceKey(),
+            $property->getStructure()->getLanguageCode(),
+            // TODO segmentkey
+            null,
+            $this->stopwatch
+        );
+        $container->setConfig($data === null || !is_array($data) ? array() : $data);
+        $pages = $this->loadData($container, $property, $params);
 
-        return $contentData;
+        $data['page'] = $container->getPage();
+        $data['hasNextPage'] = $container->getHasNextPage();
+        $property->setValue($data);
+
+        return $pages;
     }
 
     /**
