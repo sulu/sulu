@@ -148,6 +148,7 @@ class PreviewControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent());
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
         $response = $client->getResponse()->getContent();
 

@@ -40,6 +40,10 @@ class StructureSerializerTest extends SuluTestCase
         /** @var Page $structure */
         $structure = $this->structureManager->getStructure('structure_serializer');
 
+        $structure->setWebspaceKey('default');
+        $structure->setLanguageCode('de_at');
+        $structure->setUrls(array('de' => '/', 'en' => '/'));
+
         $structure->setUuid('123-123-123');
         $structure->setChanger(1);
         $structure->setChanged($date);
@@ -98,7 +102,12 @@ class StructureSerializerTest extends SuluTestCase
                 'navContexts' => array(),
                 'originTemplate' => 'structure_serializer',
                 'published' => false,
-                'ext' => array()
+                'ext' => array(),
+                '_internals' => array(
+                    'webspace' => 'default',
+                    'locale' => 'de_at',
+                    'urls' => array('de' => '/', 'en' => '/')
+                )
             ),
             $result
         );
@@ -111,6 +120,9 @@ class StructureSerializerTest extends SuluTestCase
         $data = $structure->toArray(true);
 
         $result = $this->serializer->deserialize($data);
+
+        $this->assertEquals('default', $result->getWebspaceKey());
+        $this->assertEquals('de_at', $result->getLanguageCode());
 
         $this->assertEquals('123-123-123', $result->getUuid());
         $this->assertEquals(1, $result->getChanger());
@@ -130,5 +142,7 @@ class StructureSerializerTest extends SuluTestCase
             ),
             $result->getPropertyValue('block')
         );
+
+        $this->assertEquals(array('de' => '/', 'en' => '/'), $result->getUrls());
     }
 }

@@ -39,7 +39,15 @@ class StructureSerializer implements StructureSerializerInterface
      */
     public function serialize(StructureInterface $structure)
     {
-        return $structure->toArray(true);
+        $data = $structure->toArray(true);
+        $data['_internal']['locale'] = $structure->getLanguageCode();
+        $data['_internal']['webspaceKey'] = $structure->getWebspaceKey();
+
+        if ($structure instanceof Structure\Page) {
+            $data['_internal']['urls'] = $structure->getUrls();
+        }
+
+        return $data;
     }
 
     /**
@@ -64,6 +72,9 @@ class StructureSerializer implements StructureSerializerInterface
 
         $result = $this->structureManager->getStructure($data['template'], $type);
 
+        $result->setWebspaceKey($data['_internal']['webspaceKey']);
+        $result->setLanguageCode($data['_internal']['locale']);
+
         $result->setUuid($data['id']);
         $result->setHasChildren($data['hasSub']);
         $result->setPublished($data['published']);
@@ -83,6 +94,7 @@ class StructureSerializer implements StructureSerializerInterface
             $result->setNavContexts($data['navContexts']);
             $result->setOriginTemplate($data['originTemplate']);
             $result->setExt($data['ext']);
+            $result->setUrls($data['_internal']['urls']);
         }
 
         foreach ($result->getProperties(true) as $property) {

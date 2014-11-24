@@ -10,12 +10,16 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Preview\Preview;
 
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
+use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureSerializer\StructureSerializer;
+use Sulu\Component\Content\StructureSerializer\StructureSerializerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -29,15 +33,36 @@ use Sulu\Component\Webspace\Webspace;
 class PreviewCacheProviderTest extends PhpcrTestCase
 {
     /**
-     * @var PhpcrCacheProvider
+     * @var DoctrineCacheProvider
      */
     private $cache;
+
+    /**
+     * @var Cache
+     */
+    private $dataCache;
+
+    /**
+     * @var Cache
+     */
+    private $changesCache;
+
+    /**
+     * @var StructureSerializerInterface
+     */
+    private $structureSerializer;
 
     protected function setUp()
     {
         $this->prepareMapper();
 
-        $this->cache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
+        $this->structureSerializer = new StructureSerializer($this->structureManager);
+        $this->dataCache = new ArrayCache();
+        $this->changesCache = new ArrayCache();
+
+        $this->cache = new DoctrineCacheProvider(
+            $this->mapper, $this->structureSerializer, $this->dataCache, $this->changesCache
+        );
     }
 
     protected function prepareWebspaceManager()
@@ -163,6 +188,11 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         return $data;
     }
 
+    private function getId($userId, $contentUuid, $locale)
+    {
+        return sprintf('%s:%s:%s', $userId, $contentUuid, $locale);
+    }
+
     public function testWarmUp()
     {
         // prepare
@@ -172,11 +202,10 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $this->assertEquals('Testtitle', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/temp/1/preview');
+        $data = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
 
-        $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
-        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+        $this->assertEquals('Testtitle', $data['title']);
+        $this->assertEquals('overview', $data['template']);
     }
 
     public function testSaveStructure()
@@ -193,15 +222,12 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/temp/1/preview');
-
-        $this->assertEquals('TEST', $node->getPropertyValue('i18n:en-title'));
-        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+        $result = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $this->assertEquals('TEST', $result['title']);
+        $this->assertEquals('overview', $result['template']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/default/contents/testtitle');
-
         $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
         $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
     }
@@ -220,11 +246,9 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/temp/1/preview');
-
-        $this->assertEquals('TEST', $node->getPropertyValue('i18n:en-title'));
-        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+        $result = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $this->assertEquals('TEST', $result['title']);
+        $this->assertEquals('overview', $result['template']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/default/contents/testtitle');
@@ -242,11 +266,9 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $result = $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
         $this->assertNotEquals(false, $result);
 
-        $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/temp/1/preview');
-
-        $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
-        $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
+        $result = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $this->assertEquals('Testtitle', $result['title']);
+        $this->assertEquals('overview', $result['template']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/default/contents/testtitle');
@@ -266,7 +288,7 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $data = $this->prepareData();
         $this->cache->warmUp(1, $data[0]->getUuid(), 'default', 'en');
 
-        $result = $this->cache->fetchStructure(1, 'default', 'en');
+        $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals('Testtitle', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getKey());
     }
@@ -275,7 +297,7 @@ class PreviewCacheProviderTest extends PhpcrTestCase
     {
         $this->prepareData();
 
-        $result = $this->cache->fetchStructure(1, 'default', 'en');
+        $result = $this->cache->fetchStructure(1, '123-123-123', 'default', 'en');
         $this->assertFalse($result);
     }
 
@@ -295,16 +317,16 @@ class PreviewCacheProviderTest extends PhpcrTestCase
         $this->cache->warmUp(1, $data[0]->getUuid(), 'default', 'en');
         $changes = array('title' => array('asdf', 'asdf'), 'article' => array(''));
 
-        $result = $this->cache->saveChanges($changes, 1, 'default');
+        $result = $this->cache->saveChanges($changes, 1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals($changes, $result);
 
-        $result = $this->cache->fetchChanges(1, 'default', false);
+        $result = $this->cache->fetchChanges(1, $data[0]->getUuid(), 'default', 'en', false);
         $this->assertEquals($changes, $result);
 
-        $result = $this->cache->fetchChanges(1, 'default');
+        $result = $this->cache->fetchChanges(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals($changes, $result);
 
-        $result = $this->cache->fetchChanges(1, 'default');
+        $result = $this->cache->fetchChanges(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals(array(), $result);
     }
 

@@ -13,9 +13,10 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\Common\Cache\ArrayCache;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
+use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
@@ -28,6 +29,7 @@ use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureSerializer\StructureSerializer;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Navigation;
@@ -100,8 +102,14 @@ class PreviewMessageComponentTest extends PhpcrTestCase
         $this->prepareWebspaceManager();
         $this->prepareMapper();
 
+        $structureSerializer = new StructureSerializer($this->structureManager);
         $this->activeTheme = new ActiveTheme('test', array('test'));
-        $this->previewCache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
+        $this->previewCache = new DoctrineCacheProvider(
+            $this->mapper,
+            $structureSerializer,
+            new ArrayCache(),
+            new ArrayCache()
+        );
         $this->renderer = new PreviewRenderer($this->activeTheme, $this->resolver, $this->webspaceManager);
         $this->crawler = new RdfaCrawler();
         $this->requestAnalyzer = $this->getMockBuilder('Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer')

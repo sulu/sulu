@@ -10,8 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Liip\ThemeBundle\ActiveTheme;
 use ReflectionMethod;
+use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider;
 use Sulu\Bundle\ContentBundle\Preview\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
@@ -24,6 +26,7 @@ use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureSerializer\StructureSerializer;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -75,8 +78,14 @@ class PreviewTest extends PhpcrTestCase
         $this->prepareWebspaceManager();
         $this->prepareMapper();
 
+        $structureSerializer = new StructureSerializer($this->structureManager);
         $this->activeTheme = new ActiveTheme('test', array('test'));
-        $this->previewCache = new PhpcrCacheProvider($this->mapper, $this->sessionManager);
+        $this->previewCache = new DoctrineCacheProvider(
+            $this->mapper,
+            $structureSerializer,
+            new ArrayCache(),
+            new ArrayCache()
+        );
         $this->renderer = new PreviewRenderer($this->activeTheme, $this->resolver, $this->webspaceManager);
         $this->crawler = new RdfaCrawler();
 
@@ -322,10 +331,10 @@ class PreviewTest extends PhpcrTestCase
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
 
         // check cache
-        $node = $this->sessionManager->getTempNode('default', 1)->getNode('preview');
-        $this->assertNotNull($node);
-        $this->assertEquals('Test1', $node->getPropertyValue('i18n:en-title'));
-        $this->assertEquals('Lorem Ipsum dolorem apsum', $node->getPropertyValue('i18n:en-article'));
+        $cachedPage = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
+        $this->assertNotNull($cachedPage);
+        $this->assertEquals('Test1', $cachedPage->getPropertyValue('title'));
+        $this->assertEquals('Lorem Ipsum dolorem apsum', $cachedPage->getPropertyValue('article'));
     }
 
     public function testStopPreview()
@@ -352,7 +361,7 @@ class PreviewTest extends PhpcrTestCase
 
         // check cache
         $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'default', 'en'));
-        $content = $this->previewCache->fetchStructure(1, 'default', 'en');
+        $content = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals('aaaa', $content->getPropertyValue('title'));
         $this->assertEquals('Lorem Ipsum dolorem apsum', $content->getPropertyValue('article'));
     }
@@ -425,7 +434,7 @@ class PreviewTest extends PhpcrTestCase
 
         // check cache
         $this->assertTrue($this->previewCache->contains(1, $data[0]->getUuid(), 'default', 'en'));
-        $content = $this->previewCache->fetchStructure(1, 'default', 'en');
+        $content = $this->previewCache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertEquals(
             array(
                 array(

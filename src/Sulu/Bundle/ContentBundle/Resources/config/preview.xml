@@ -7,24 +7,32 @@
         <parameter key="sulu_content.preview.class">Sulu\Bundle\ContentBundle\Preview\Preview</parameter>
         <parameter key="sulu_content.preview.lifetime">3600</parameter>
         <parameter key="sulu_content.preview.template-namespace">ClientWebsiteBundle:Website:</parameter>
-        <parameter key="sulu_content.preview.cache.class">Sulu\Bundle\ContentBundle\Preview\PhpcrCacheProvider</parameter>
+        <parameter key="sulu_content.preview.cache.class">Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider</parameter>
+        <parameter key="sulu_content.preview.cache.cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
         <parameter key="sulu_content.preview.crawler.class">Sulu\Bundle\ContentBundle\Preview\RdfaCrawler</parameter>
         <parameter key="sulu_content.preview.renderer.class">Sulu\Bundle\ContentBundle\Preview\PreviewRenderer
         </parameter>
     </parameters>
     <services>
         <!-- preview -->
+        <service id="sulu_content.preview.cache.data_cache" class="%sulu_content.preview.cache.cache.class%">
+            <argument type="string">%sulu.cache_dir%/preview/data</argument>
+        </service>
+        <service id="sulu_content.preview.cache.changes_cache" class="%sulu_content.preview.cache.cache.class%">
+            <argument type="string">%sulu.cache_dir%/preview/changes</argument>
+        </service>
         <service id="sulu_content.preview.cache" class="%sulu_content.preview.cache.class%" public="false">
-        <argument type="service" id="sulu.content.mapper"/>
-            <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.content.structure_serializer"/>
+            <argument type="service" id="sulu_content.preview.cache.data_cache"/>
+            <argument type="service" id="sulu_content.preview.cache.changes_cache"/>
         </service>
         <service id="sulu_content.preview.renderer" class="%sulu_content.preview.renderer.class%" public="false">
             <argument type="service" id="liip_theme.active_theme"/>
             <argument type="service" id="controller_resolver"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
         </service>
-        <service id="sulu_content.preview.crawler" class="%sulu_content.preview.crawler.class%" public="false">
-        </service>
+        <service id="sulu_content.preview.crawler" class="%sulu_content.preview.crawler.class%" public="false"/>
         <service id="sulu_content.preview" class="%sulu_content.preview.class%">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu_content.preview.cache"/>
