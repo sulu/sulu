@@ -15,6 +15,8 @@
         <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
         <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
+        <parameter key="sulu.content.structure_serializer.class">Sulu\Component\Content\StructureSerializer\StructureSerializer</parameter>
+
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
@@ -175,6 +177,11 @@
                 <argument key="temp">%sulu.content.node_names.temp%</argument>
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
+        </service>
+
+        <!-- serializer -->
+        <service id="sulu.content.structure_serializer" class="sulu.content.structure_serializer.class">
+            <argument type="service" id="sulu.content.structure_manager" />
         </service>
     </services>
 </container>
