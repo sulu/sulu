@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * ENHANCEMENT #577 [All]            Applied security to navigation items and content tabs
     * ENHANCEMENT #604 [CoreBundle]     Only register services for the current context
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
     * BUGFIX      #571 [CoreBundle]     Fixed build command
