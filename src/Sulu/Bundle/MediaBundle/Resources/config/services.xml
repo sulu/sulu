@@ -20,10 +20,13 @@
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
             <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
-        <service id="sulu_media.admin.content_navigation" class="%sulu_media.admin.content_navigation.class%"/>
+        <service id="sulu_media.admin.content_navigation" class="%sulu_media.admin.content_navigation.class%">
+            <tag name="sulu.context" context="admin"/>
+        </service>
         <service id="sulu_media.media_repository"
                  class="%sulu_media.media_repository.class%"
                  factory-service="doctrine.orm.entity_manager"

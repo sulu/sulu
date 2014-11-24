@@ -31,6 +31,7 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
@@ -50,6 +51,7 @@
         <service id="sulu_security.content_navigation" class="%sulu_security.admin.content_navigation.class%">
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu.contact.admin.content_navigation"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_security.permission_voter" class="%sulu_security.permission_voter.class%" public="false">

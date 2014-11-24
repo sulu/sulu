@@ -15,13 +15,16 @@
         <!-- admin class -->
         <service id="sulu_content.admin" class="%sulu_content.admin.class%">
             <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
 
         <!-- content -->
-        <service id="sulu_content.admin.content_navigation" class="%sulu_content.admin.content_navigation.class%"/>
+        <service id="sulu_content.admin.content_navigation" class="%sulu_content.admin.content_navigation.class%">
+            <tag name="sulu.context" context="admin"/>
+        </service>
         <service id="sulu_content.twig_extension" class="%sulu_content.twig_extension.class%">
             <tag name="twig.extension"/>
             <argument type="service" id="sulu.content.type_manager"/>
