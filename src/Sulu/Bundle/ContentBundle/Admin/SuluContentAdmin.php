@@ -13,9 +13,10 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SuluContentAdmin extends Admin
 {
@@ -24,9 +25,24 @@ class SuluContentAdmin extends Admin
      */
     private $webspaceManager;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $title, ContainerInterface $container)
-    {
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
+     * The prefix for the security context, the key of the webspace has to be appended
+     * @var string
+     */
+    private $securityContextPrefix = 'sulu.webspaces.';
+
+    public function __construct(
+        WebspaceManagerInterface $webspaceManager,
+        SecurityCheckerInterface $securityChecker,
+        $title
+    ) {
         $this->webspaceManager = $webspaceManager;
+        $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
 
@@ -36,20 +52,22 @@ class SuluContentAdmin extends Admin
 
         /** @var Webspace $webspace */
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $webspaceItem = new NavigationItem($webspace->getName());
-            $webspaceItem->setIcon('bullseye');
+            if ($this->securityChecker->hasPermission($this->securityContextPrefix . $webspace->getKey(), 'view')) {
+                $webspaceItem = new NavigationItem($webspace->getName());
+                $webspaceItem->setIcon('bullseye');
 
-            $contentItem = new NavigationItem('navigation.webspaces.content');
-            $contentItem->setAction('content/contents/' . $webspace->getKey());
-            $webspaceItem->addChild($contentItem);
+                $contentItem = new NavigationItem('navigation.webspaces.content');
+                $contentItem->setAction('content/contents/' . $webspace->getKey());
+                $webspaceItem->addChild($contentItem);
 
-            $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
-            $indexPageItem->setAction(
-                'content/contents/' . $webspace->getKey() . '/edit:index/details'
-            );
-            $webspaceItem->addChild($indexPageItem);
+                $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
+                $indexPageItem->setAction(
+                    'content/contents/' . $webspace->getKey() . '/edit:index/details'
+                );
+                $webspaceItem->addChild($indexPageItem);
 
-            $section->addChild($webspaceItem);
+                $section->addChild($webspaceItem);
+            }
         }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
@@ -79,8 +97,9 @@ class SuluContentAdmin extends Admin
         $webspaceContexts = array();
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /** @var Webspace $webspace */
-            $webspaceContexts[] = 'sulu.webspaces.' . $webspace->getKey();
+            $webspaceContexts[] = $this->securityContextPrefix . $webspace->getKey();
         }
+
         return array(
             'Sulu' => array(
                 'Webspaces' => $webspaceContexts
