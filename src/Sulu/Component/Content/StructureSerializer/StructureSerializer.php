@@ -17,7 +17,7 @@ use Sulu\Component\Content\StructureManagerInterface;
 /**
  * Serializer for structures
  */
-class StructureSerializer
+class StructureSerializer implements StructureSerializerInterface
 {
     /**
      * @var StructureManagerInterface
