@@ -1,5 +1,9 @@
 # Upgrade
 
+## dev-develop
+* Remove `/cmf/<webspace>/temp` from repository
+  * run `app/console doctrine:phpcr:node:remove /cmf/<webspace>/temp` foreach webspace
+
 ## 0.12.0
 * Permissions have to be correct now, because they are applied
   * otherwise add a permission value of 120 for `sulu.security.roles`,
