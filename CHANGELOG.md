@@ -24,6 +24,7 @@ CHANGELOG for Sulu
                                         eager validation of workspace existence.
     * ENHANCEMENT #523 [All]            Refactored and improved functional tests
     * BUGFIX      #597 [ContentBundle]  Reconnect to mysql if connection gone away in websocket
+    * FEATURE     #368 [SnippetBundle]  Added `sulu:snippet:locale-copy`-command
 
 * dev-master
 

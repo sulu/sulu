@@ -8,12 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Command;
+namespace Sulu\Bundle\SnippetBundle\Command;
 
 use Jackalope\Query\QueryManager;
 use Jackalope\Session;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -24,13 +26,18 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * Copy internationalized properties from one locale to another
  */
-class ContentLocaleCopyCommand extends ContainerAwareCommand
+class SnippetLocaleCopyCommand extends ContainerAwareCommand
 {
     /**
      * The namespace for languages
      * @var string
      */
     private $languageNamespace;
+
+    /**
+     * @var SnippetRepository
+     */
+    private $snippetRepository;
 
     /**
      * @var ContentMapperInterface
@@ -57,23 +64,22 @@ class ContentLocaleCopyCommand extends ContainerAwareCommand
      */
     public function configure()
     {
-        $this->setName('sulu:content:locale-copy');
-        $this->setDescription('Copy content nodes from one locale to another');
+        $this->setName('sulu:snippet:locale-copy');
+        $this->setDescription('Copy snippet nodes from one locale to another');
         $this->setHelp(
             <<<EOT
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>
-to <info>destLocale</info> on all nodes from a specific webspace.
+to <info>destLocale</info> on all snippet nodes from a specific type.
 
-    %command.full_name% sulu_io de en --dry-run
+    %command.full_name% de en --dry-run
 
 You can overwrite existing values using the <info>overwrite</info> option:
 
-    %command.full_name% sulu_io de en --overwrite --dry-run
+    %command.full_name% de en --overwrite --dry-run
 
 Remove the <info>dry-run</info> option to actually persist the changes.
 EOT
         );
-        $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Copy locales in nodes belonging to this webspace');
         $this->addArgument('srcLocale', InputArgument::REQUIRED, 'Locale to copy from (e.g. de)');
         $this->addArgument('destLocale', InputArgument::REQUIRED, 'Locale to copy to (e.g. en)');
         $this->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite existing locales');
@@ -85,7 +91,6 @@ EOT
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $webspaceKey = $input->getArgument('webspaceKey');
         $srcLocale = $input->getArgument('srcLocale');
         $destLocale = $input->getArgument('destLocale');
         $overwrite = $input->getOption('overwrite');
@@ -94,11 +99,12 @@ EOT
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getManager()->getPhpcrSession();
         $this->queryManager = $this->session->getWorkspace()->getQueryManager();
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
+        $this->snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
 
         $this->output = $output;
 
-        $this->copyNodes($webspaceKey, $srcLocale, $destLocale, $overwrite);
+        $this->copyNodes($srcLocale, $destLocale, $overwrite);
 
         if (false === $dryRun) {
             $this->output->writeln('<info>Saving ...</info>');
@@ -109,60 +115,39 @@ EOT
         }
     }
 
-    private function copyNodes($webspaceKey, $srcLocale, $destLocale, $overwrite)
+    private function copyNodes($srcLocale, $destLocale, $overwrite)
     {
-        $node = $this->contentMapper->loadStartPage($webspaceKey, $srcLocale);
+        $nodes = $this->snippetRepository->getSnippets($srcLocale);
 
-        // copy start node
-        $this->copyNodeRecursive($node, $webspaceKey, $srcLocale, $destLocale, $overwrite);
-    }
-
-    private function copyNodeRecursive(StructureInterface $structure, $webspaceKey, $srcLocale, $destLocale, $overwrite)
-    {
-        $this->copyNode($webspaceKey, $srcLocale, $destLocale, $structure, $overwrite);
-
-        if (!$structure->getHasChildren()) {
-            return;
-        }
-
-        foreach ($this->contentMapper->loadByParent($structure->getUuid(), $webspaceKey, $srcLocale) as $child) {
-            $this->copyNodeRecursive($child, $webspaceKey, $srcLocale, $destLocale, $overwrite);
+        foreach ($nodes as $node) {
+            $this->copyNode($srcLocale, $destLocale, $node, $overwrite);
         }
     }
 
-    private function copyNode($webspaceKey, $srcLocale, $destLocale, StructureInterface $structure, $overwrite = false)
+    private function copyNode($srcLocale, $destLocale, StructureInterface $structure, $overwrite = false)
     {
         if (!$overwrite) {
-            $destStructure = $this->contentMapper->load($structure->getUuid(), $webspaceKey, $destLocale, true);
+            $destStructure = $this->contentMapper->load($structure->getUuid(), null, $destLocale, true);
 
             if (!($destStructure->getType() && $destStructure->getType()->getName() === 'ghost')) {
                 $this->output->writeln(
                     '<info>Processing aborted: </info>' .
-                    $structure->getPath() . ' <comment>(use overwrite option to force)</comment>'
+                    $structure->getNodeName() . ' <comment>(use overwrite option to force)</comment>'
                 );
 
                 return;
             }
         }
 
-        try {
-            $this->contentMapper->copyLanguage(
-                $structure->getUuid(),
-                $structure->getChanger(),
-                $webspaceKey,
-                $srcLocale,
-                $destLocale
-            );
+        $this->contentMapper->copyLanguage(
+            $structure->getUuid(),
+            $structure->getChanger(),
+            null,
+            $srcLocale,
+            $destLocale,
+            Structure::TYPE_SNIPPET
+        );
 
-            $this->output->writeln('<info>Processing: </info>' . $structure->getPath());
-        } catch (ResourceLocatorAlreadyExistsException $e) {
-            $this->output->writeln(
-                sprintf(
-                    '<info>Processing aborted: </info> %s <comment>Resource Locator "%s" already exists',
-                    $structure->getPath(),
-                    $structure->getResourceLocator()
-                )
-            );
-        }
+        $this->output->writeln('<info>Processing: </info>' . $structure->getNodeName());
     }
 }
