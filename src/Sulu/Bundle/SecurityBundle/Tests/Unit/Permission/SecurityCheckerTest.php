@@ -60,6 +60,14 @@ class SecurityCheckerTest extends ProphecyTestCase
         $this->assertTrue($granted);
     }
 
+    public function testIsGrantedFalsyValue()
+    {
+        $object = null;
+
+        // should always return true for falsy values
+        $this->assertTrue($this->securityChecker->checkPermission($object, 'view', 'de'));
+    }
+
     public function testIsGrantedFail()
     {
         $this->setExpectedException(
