@@ -86,11 +86,11 @@ define([], function() {
                 return [
                     '<div class="grid">',
                     '   <div class="grid-row">',
-                    '       <div class="grid-row-8"/>',
-                    '       <div class="grid-row-4" id="', options.ids.search, '"/>',
+                    '       <div class="grid-col-8"/>',
+                    '       <div class="grid-col-4" id="', options.ids.search, '"/>',
                     '   </div>',
                     '   <div class="grid-row">',
-                    '       <div class="grid-row-12" id="', options.ids.snippetList, '"/>',
+                    '       <div class="grid-col-12" id="', options.ids.snippetList, '"/>',
                     '   </div>',
                     '</div>'
                 ].join('');

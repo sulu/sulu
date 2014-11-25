@@ -62,10 +62,30 @@ module.exports = function (grunt) {
                 tasks: ['publish']
             }
         },
-        uglify: min
+        uglify: min,
+        compass: {
+            dev: {
+                options: {
+                    sassDir: 'Resources/public/scss/',
+                    specify: ['Resources/public/scss/main.scss'],
+                    cssDir: 'Resources/public/css/',
+                    relativeAssets: false
+                }
+            }
+        },
+        cssmin: {
+            // TODO: options: { banner: '<%= meta.banner %>' },
+            compress: {
+                files: {
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                }
+            }
+        }
     });
 
     grunt.registerTask('publish', [
+        'compass:dev',
+        'cssmin',
         'clean:public',
         'copy:public',
         'copy:public_dev'
