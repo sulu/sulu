@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
     * BUGFIX      #571 [CoreBundle]     Fixed build command
     * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
