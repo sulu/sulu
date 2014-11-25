@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 0.12.0
 * Permissions have to be correct now, because they are applied
   * otherwise add a permission value of 120 for `sulu.security.roles`,
     `sulu.security.groups` and `sulu.security.users` to one user to change
