@@ -248,7 +248,11 @@ class BlockContentType extends ComplexContentType
                             $languageCode,
                             $segmentKey
                         );
-                        $node->getSession()->save(); // FIXME repositoryException throw in session save when change from array to string phpcr type
+
+                        $session = $node->getSession();
+                        if ($session) {
+                            $session->save(); // FIXME repositoryException throw in session save when change from array to string phpcr type
+                        }
                     } catch (RepositoryException $e) {
                         $contentType->remove(
                             $node->getName(),
