@@ -70,6 +70,8 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getPageMock(7, false);
         } elseif ($structureKey == 'external-link') {
             return $this->getPageMock(8, false);
+        } elseif ($structureKey == 'snippet') {
+            return $this->getPageMock(9, false);
         }
 
         return null;
@@ -223,6 +225,23 @@ class ContentMapperTest extends PhpcrTestCase
                         'external',
                         '',
                         'text_line',
+                        true,
+                        true,
+                        1,
+                        1,
+                        array(),
+                        array(new PropertyTag('sulu.rlp', 1))
+                    )
+                )
+            );
+        } elseif ($type == 9) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'internal', // same as internal link to test content type switch
+                        '',
+                        'snippet',
                         true,
                         true,
                         1,
@@ -3184,6 +3203,54 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/beschreibung', $urls['de']);
         $this->assertArrayNotHasKey('de_at', $urls);
         $this->assertArrayNotHasKey('es', $urls);
+    }
+
+    public function testContentTypeSwitch()
+    {
+        try {
+            // REF
+            $data1 = array(
+                'title' => 'Test',
+                'url' => '/test/test',
+                'blog' => 'Thats a good test'
+            );
+            $structure1 = $this->mapper->save($data1, 'extension', 'default', 'en', 1);
+
+            $this->assertTrue($structure1 instanceof StructureInterface);
+
+            // Internal Link with String Type
+            $data2 = array(
+                'title' => 'Test',
+                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'internal' => $structure1->getUuid()
+            );
+            $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
+            $this->assertTrue($structure2 instanceof StructureInterface);
+
+            $uuid = $structure2->getUuid();
+            $this->assertNotEmpty($uuid);
+
+            // change to array
+            $data2['internal'] = array(
+                $structure1->getUuid()
+            );
+
+            $structure2 = $this->mapper->save($data2, 'snippet', 'default', 'en', 1, true, $uuid);
+            $this->assertTrue($structure2 instanceof StructureInterface);
+
+            $uuid = $structure2->getUuid();
+            $this->assertNotEmpty($uuid);
+
+            // change to string
+            $data2['internal'] = $structure1->getUuid();
+            $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
+            $this->assertTrue($structure2 instanceof StructureInterface);
+
+            $uuid = $structure2->getUuid();
+            $this->assertNotEmpty($uuid);
+        } catch (\Exception $e) {
+            $this->fail('Exception thrown: ' . $e->getMessage());
+        }
     }
 }
 
