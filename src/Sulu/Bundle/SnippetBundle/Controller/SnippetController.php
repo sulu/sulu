@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
