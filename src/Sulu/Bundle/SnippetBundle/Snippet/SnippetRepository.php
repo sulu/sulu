@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
+use Jackalope\Query\Query;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
@@ -111,6 +112,63 @@ class SnippetRepository
         $sortOrder = null
     )
     {
+        $query = $this->getSnippetsQuery($languageCode, $type, $offset, $max, $search, $sortBy, $sortOrder);
+
+        return $this->contentMapper->loadByQuery($query, $languageCode, null, false, true);
+    }
+
+    /**
+     * Return snippets amount
+     *
+     * If $type is given then only return the snippets of that type.
+     *
+     * @param string $languageCode
+     * @param string $type Optional snippet type
+     * @param string $search
+     * @param string $sortBy
+     * @param string $sortOrder
+     *
+     * @throws \InvalidArgumentException
+     * @return Snippet[]
+     */
+    public function getSnippetsAmount(
+        $languageCode,
+        $type = null,
+        $search = null,
+        $sortBy = null,
+        $sortOrder = null)
+    {
+        $query = $this->getSnippetsQuery($languageCode, $type, null, null, $search, $sortBy, $sortOrder);
+        $result = $query->execute();
+
+        return count(iterator_to_array($result->getRows()));
+    }
+
+    /**
+     * Return snippets load query
+     *
+     * If $type is given then only return the snippets of that type.
+     *
+     * @param string $languageCode
+     * @param string $type Optional snippet type
+     * @param integer $offset Optional offset
+     * @param integer $max Optional max
+     * @param string $search
+     * @param string $sortBy
+     * @param string $sortOrder
+     *
+     * @return Query
+     */
+    private function getSnippetsQuery(
+        $languageCode,
+        $type = null,
+        $offset = null,
+        $max = null,
+        $search = null,
+        $sortBy = null,
+        $sortOrder = null
+    )
+    {
         $snippetNode = $this->sessionManager->getSnippetNode($type);
         $workspace = $this->sessionManager->getSession()->getWorkspace();
         $queryManager = $workspace->getQueryManager();
@@ -172,8 +230,6 @@ class SnippetRepository
             $sortOrder !== null ? strtoupper($sortOrder) : 'ASC'
         );
 
-        $query = $qb->getQuery();
-
-        return $this->contentMapper->loadByQuery($query, $languageCode, null, false, true);
+        return $qb->getQuery();
     }
 }
