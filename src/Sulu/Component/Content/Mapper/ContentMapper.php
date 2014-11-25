@@ -19,6 +19,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
+use PHPCR\ValueFormatException;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -506,14 +507,33 @@ class ContentMapper implements ContentMapperInterface
                             'property' => $property
                         );
                     } else {
-                        $type->write(
-                            $node,
-                            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            null
-                        );
+                        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+                        try {
+                            $type->write(
+                                $node,
+                                $translatedProperty,
+                                $userId,
+                                $webspaceKey,
+                                $languageCode,
+                                null
+                            );
+                        } catch (ValueFormatException $e) {
+                            $type->remove(
+                                $node,
+                                $translatedProperty,
+                                $webspaceKey,
+                                $languageCode,
+                                null
+                            );
+                            $type->write(
+                                $node,
+                                $translatedProperty,
+                                $userId,
+                                $webspaceKey,
+                                $languageCode,
+                                null
+                            );
+                        }
                     }
                 } elseif ($isShadow) {
                     // nothing
