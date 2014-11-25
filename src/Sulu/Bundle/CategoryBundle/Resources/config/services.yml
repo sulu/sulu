@@ -11,8 +11,11 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
+        - { name: sulu.context, context: admin }
     sulu_category.admin.content_navigation:
-            class: %sulu_category.admin.content_navigation.class%
+        class: %sulu_category.admin.content_navigation.class%
+        tags:
+        - { name: sulu.context, context: admin }
 
     sulu_category.category_repository:
             class: %sulu_category.category_repository.class%

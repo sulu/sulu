@@ -466,7 +466,7 @@ class ContentMapper implements ContentMapperInterface
                     $propertyTranslator->getName('published')
                 );
             }
-        } else {
+        } elseif (isset($state)) {
             $this->changeState(
                 $node,
                 $state,
@@ -1575,16 +1575,23 @@ class ContentMapper implements ContentMapperInterface
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
         foreach ($webspace->getAllLocalizations() as $localization) {
+
             // prepare translation vars
             $locale = $localization->getLocalization();
             $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
 
-            // set default value
-            $property->setValue(null);
-            $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+            // state property
+            $propertyTranslator = $this->createPropertyTranslator($localization);
+            $statePropertyName = $propertyTranslator->getName('state');
 
-            if (null !== $property->getValue()) {
-                $localizedUrls[$locale] = $property->getValue();
+            if ($node->getPropertyValueWithDefault($statePropertyName, Structure::STATE_TEST) === Structure::STATE_PUBLISHED) {
+                // set default value
+                $property->setValue(null);
+                $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
+
+                if (null !== $property->getValue()) {
+                    $localizedUrls[$locale] = $property->getValue();
+                }
             }
         }
 
@@ -1627,13 +1634,38 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode)
-    {
+    public function copyLanguage(
+        $uuid,
+        $userId,
+        $webspaceKey,
+        $srcLanguageCode,
+        $destLanguageCodes,
+        $structureType = Structure::TYPE_PAGE
+    ) {
+        if (!is_array($destLanguageCodes)) {
+            $destLanguageCodes = array($destLanguageCodes);
+        }
+
         $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
 
         $data = $structure->toArray(true);
 
-        $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
+        foreach($destLanguageCodes as $destLanguageCode) {
+            $this->save(
+                $data,
+                $structure->getKey(),
+                $webspaceKey,
+                $destLanguageCode,
+                $userId,
+                false,
+                $uuid,
+                null,
+                Structure::STATE_TEST,
+                $structure->getIsShadow(),
+                $structure->getShadowBaseLanguage(),
+                $structureType
+            );
+        }
 
         return $structure;
     }
