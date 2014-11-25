@@ -3,7 +3,8 @@ CHANGELOG for Sulu
 
 * dev-develop
 
-    * BUGFIX      #576 [SnippetBundle]  Fixed error when change content type to snippet
+    * ENHANCEMENT #577 [All]            Applied security to navigation items and content tabs
+    * ENHANCEMENT #604 [CoreBundle]     Only register services for the current context
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
     * BUGFIX      #571 [CoreBundle]     Fixed build command
     * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
@@ -15,10 +16,25 @@ CHANGELOG for Sulu
     * ENHANCEMENT #523 [All]            Refactored and improved functional tests
     * FEATURE     #553 [SnippetBundle]  Possiblity to show all snippet types by not providing any
     * BUGFIX      #533 [CoreBundle]     Removed request_analyzer.enable option (it is now irrelevant)
-
-    * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to 
-    * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in 
+    * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to
+    * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in
                                         Permission-Tab
+    * FEATURE     #564 [ContentBundle]  Added UI to copy content languages
+    * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes
+                                        eager validation of workspace existence.
+    * ENHANCEMENT #523 [All]            Refactored and improved functional tests
+    * BUGFIX      #597 [ContentBundle]  Reconnect to mysql if connection gone away in websocket
+    * FEATURE     #368 [SnippetBundle]  Added `sulu:snippet:locale-copy`-command
+    * BUGFIX      #576 [SnippetBundle]  Fixed error when change content type to snippet
+
+* dev-master
+
+    * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
+
+* 0.11.2 (2014-11-17)
+
+    * HOTFIX #559 [CoreBundle]    Workaround upstream reg. in DoctrinePHPCRBundle, which causes
+                                  eager validation of workspace existence.
 
 * 0.11.1 (2014-11-13)
 

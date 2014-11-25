@@ -234,7 +234,7 @@
 /* block add-button */
 /* line 48, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
-  background-color: #ccc;
+  background-color: #cccccc;
   cursor: default;
 }
 
@@ -312,7 +312,7 @@
 .resource-locator-history li::after {
   clear: both;
 }
-/* line 34, ../scss/modules/resource-locator.scss */
+/* line 37, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date,
 .resource-locator-history .options-restore,
@@ -322,7 +322,7 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
-/* line 44, ../scss/modules/resource-locator.scss */
+/* line 45, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date {
   float: left;
@@ -382,7 +382,7 @@
 /* line 34, ../scss/modules/smart-content.scss */
 .smart-overlay-content .desc {
   font-size: 14px;
-  color: #999;
+  color: #999999;
   padding-bottom: 5px;
   display: block;
 }
@@ -393,13 +393,13 @@
 }
 /* line 44, ../scss/modules/smart-content.scss */
 .smart-overlay-content label {
-  color: #000;
+  color: black;
   font-size: 12px;
 }
 /* line 48, ../scss/modules/smart-content.scss */
 .smart-overlay-content .sublabel {
   font-size: 10px;
-  color: #999;
+  color: #999999;
 }
 /* line 52, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item-half {
@@ -434,7 +434,7 @@
 .smart-overlay-content .sortMethod {
   margin-top: 25px;
 }
-/* line 77, ../scss/modules/smart-content.scss */
+/* line 78, ../scss/modules/smart-content.scss */
 .smart-overlay-content input.limit-to,
 .smart-overlay-content input.data-source {
   padding-left: 10px;
@@ -453,6 +453,42 @@
   margin: 7px 0 0 0;
 }
 
+/**
+ * Copy locales
+ */
+/* line 6, ../scss/modules/node.scss */
+.copy-locales-overlay-content,
+.copy-locale-overlay-content {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 60px;
+}
+/* line 11, ../scss/modules/node.scss */
+.copy-locales-overlay-content label,
+.copy-locale-overlay-content label {
+  display: inline;
+  color: #000;
+}
+/* line 16, ../scss/modules/node.scss */
+.copy-locales-overlay-content label.disabled,
+.copy-locale-overlay-content label.disabled {
+  color: #999;
+  cursor: default;
+}
+/* line 21, ../scss/modules/node.scss */
+.copy-locales-overlay-content .info,
+.copy-locale-overlay-content .info {
+  font-size: 14px;
+  color: #999;
+}
+
+/* line 27, ../scss/modules/node.scss */
+#copy-locale-overlay-select {
+  margin-left: 20px;
+  margin-top: 10px;
+  width: 50%;
+}
+
 /* line 1, ../scss/modules/order-table.scss */
 .order-table {
   list-style-type: none;
@@ -468,7 +504,7 @@
 .order-table li::after {
   clear: both;
 }
-/* line 15, ../scss/modules/order-table.scss */
+/* line 16, ../scss/modules/order-table.scss */
 .order-table .node-name,
 .order-table .options-select {
   display: block;

@@ -10,10 +10,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -183,33 +186,6 @@ class TemplateController extends Controller
                 'webspace' => $webspace
             )
         );
-    }
-
-    /**
-     * returns languages for webspaces
-     * @param string $webspaceKey
-     * @return JsonResponse
-     */
-    public function getLanguagesAction($webspaceKey)
-    {
-        $webspace = $this->getWebspaceManager()->findWebspaceByKey($webspaceKey);
-        $localizations = array();
-
-        $i = 0;
-        foreach ($webspace->getAllLocalizations() as $localization) {
-            $localizations[] = array(
-                'localization' => $localization->getLocalization(),
-                'name' => $localization->getLocalization('-'),
-                'id' => $i++
-            );
-        }
-
-        $data = array(
-            '_embedded' => $localizations,
-            'total' => sizeof($localizations),
-        );
-
-        return new JsonResponse($data);
     }
 
     /**

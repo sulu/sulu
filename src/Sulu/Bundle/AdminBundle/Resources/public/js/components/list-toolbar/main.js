@@ -324,6 +324,10 @@ define([], function() {
                     }
                 };
 
+            if (this.options.hasOwnProperty('hasSearch')) {
+                options.hasSearch = this.options.hasSearch;
+            }
+
             // see if template has listener set
             if (this.options.listener) {
                 this.options.listener.call(this);
