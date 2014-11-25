@@ -395,7 +395,7 @@ class SnippetController
                             'search' => '{searchString}',
                             'sortBy' => $sortBy ?: '{sortBy}',
                             'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'page' => $page ?: '{page}',
+                            'page' => 1,
                             'limit' => $limit ?: '{limit}'
                         )
                     ),
