@@ -391,7 +391,7 @@
                 <source>content.contents.create</source>
                 <target>Create page</target>
             </trans-unit>
-            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf027" content.contents.settings.copy-locales.default-label">
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf027" resname="content.contents.settings.copy-locales.default-label">
                 <source>content.contents.settings.copy-locales.default-label</source>
                 <target>Choose language ...</target>
             </trans-unit>
