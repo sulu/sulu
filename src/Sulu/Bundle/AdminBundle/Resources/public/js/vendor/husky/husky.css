@@ -8009,7 +8009,7 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   vertical-align: middle;
   margin: auto;
-  background-color: white;
+  background-color: transparent;
   padding-left: 3px;
   text-decoration: none;
 }
