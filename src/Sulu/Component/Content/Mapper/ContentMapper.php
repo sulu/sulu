@@ -465,7 +465,7 @@ class ContentMapper implements ContentMapperInterface
                     $propertyTranslator->getName('published')
                 );
             }
-        } else {
+        } elseif (isset($state)) {
             $this->changeState(
                 $node,
                 $state,
@@ -1613,13 +1613,38 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode)
-    {
+    public function copyLanguage(
+        $uuid,
+        $userId,
+        $webspaceKey,
+        $srcLanguageCode,
+        $destLanguageCodes,
+        $structureType = Structure::TYPE_PAGE
+    ) {
+        if (!is_array($destLanguageCodes)) {
+            $destLanguageCodes = array($destLanguageCodes);
+        }
+
         $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
 
         $data = $structure->toArray(true);
 
-        $this->save($data, $structure->getKey(), $webspaceKey, $destLanguageCode, $userId, false, $uuid);
+        foreach($destLanguageCodes as $destLanguageCode) {
+            $this->save(
+                $data,
+                $structure->getKey(),
+                $webspaceKey,
+                $destLanguageCode,
+                $userId,
+                false,
+                $uuid,
+                null,
+                Structure::STATE_TEST,
+                $structure->getIsShadow(),
+                $structure->getShadowBaseLanguage(),
+                $structureType
+            );
+        }
 
         return $structure;
     }

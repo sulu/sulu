@@ -232,6 +232,77 @@
              * MISC
              *********/
 
+            var isFirst,
+
+                prefixIfNotFirst = function(addressString, prefix) {
+                    if (!isFirst) {
+                        addressString += prefix;
+                    } else {
+                        isFirst = false;
+                    }
+                    return addressString;
+                };
+
+            /**
+             * creates an address string from an object
+             * @param address
+             * @returns {string}
+             */
+            app.sandbox.sulu.createAddressString = function(address) {
+                var addressString = '';
+
+                if (!address && typeof address !== 'object') {
+                    throw new Error('no valid address object');
+                }
+
+                isFirst = true;
+
+                // street
+                if (!!address.street) {
+                    addressString = prefixIfNotFirst(addressString, '');
+                    addressString += address.street;
+                }
+                // number
+                if (!!address.number) {
+                    addressString = prefixIfNotFirst(addressString, ' ');
+                    addressString += address.number;
+                }
+                // addition
+                if (!!address.addition) {
+                    addressString = prefixIfNotFirst(addressString, ' - ');
+                    addressString += address.addition;
+                }
+                // zip
+                if (!!address.zip) {
+                    addressString = prefixIfNotFirst(addressString, ', ');
+                    addressString += address.zip;
+                }
+
+                // zip
+                if (!!address.city) {
+                    if (!!address.city) {
+                        addressString = prefixIfNotFirst(addressString, ' ');
+                    } else {
+                        addressString = prefixIfNotFirst(addressString, ', ');
+                    }
+                    addressString += address.city;
+                }
+
+                // state
+                if (!!address.state) {
+                    addressString = prefixIfNotFirst(addressString, ', ');
+                    addressString += address.state;
+                }
+
+                // country
+                if (!!address.country) {
+                    addressString = prefixIfNotFirst(addressString, ', ');
+                    addressString += address.country.name;
+                }
+
+                return addressString;
+            };
+
             /**
              * initializes sulu list-toolbar with column options and datagrid
              * @param key {String} Settings key
@@ -239,7 +310,7 @@
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
              */
-            app.sandbox.sulu.initListToolbarAndList = function (key, url, listToolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function (data) {
                     var toolbarDefaults = {
                             columnOptions: {

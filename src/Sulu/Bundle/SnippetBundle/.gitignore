@@ -18,8 +18,6 @@ TEMP_*.php
 /bin/jackrabbit/*
 
 # test cache
-/Tests/Resources/app/cache/*
-/Tests/Resources/app/logs/*
 /Tests/app/cache/*
 /Tests/app/logs/*
 

@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
 use Sulu\Component\Webspace\Exception\PortalLocalizationNotFoundException;
 
@@ -124,7 +125,7 @@ class Portal
 
     /**
      * Sets the localizations to this portal
-     * @param \Sulu\Component\Webspace\Localization[] $localizations
+     * @param Localization[] $localizations
      */
     public function setLocalizations($localizations)
     {
@@ -133,7 +134,7 @@ class Portal
 
     /**
      * Returns the languages of this portal
-     * @return \Sulu\Component\Webspace\Localization[] The languages of this portal
+     * @return Localization[] The languages of this portal
      */
     public function getLocalizations()
     {
@@ -152,7 +153,7 @@ class Portal
     }
 
     /**
-     * @param \Sulu\Component\Webspace\Localization $defaultLocalization
+     * @param Localization $defaultLocalization
      */
     public function setDefaultLocalization($defaultLocalization)
     {
@@ -160,7 +161,7 @@ class Portal
     }
 
     /**
-     * @return \Sulu\Component\Webspace\Localization
+     * @return Localization
      */
     public function getDefaultLocalization()
     {

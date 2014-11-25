@@ -25,7 +25,7 @@ class PortalInformationTest extends ProphecyTestCase
         $this->portalInformation = new PortalInformation(null, null, null, null, null);
         $this->webspace = $this->prophesize('Sulu\Component\Webspace\Webspace');
         $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
-        $this->localization = $this->prophesize('Sulu\Component\Webspace\Localization');
+        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
     }
 
     public function provideUrl()

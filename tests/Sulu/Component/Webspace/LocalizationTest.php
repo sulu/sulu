@@ -3,7 +3,6 @@
 namespace Sulu\Component\Localization;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
-use Sulu\Component\Webspace\Localization;
 
 class LocalizationTest extends ProphecyTestCase
 {

@@ -88,7 +88,8 @@ class SnippetController
     {
         $this->initEnv($request);
 
-        $type = $request->query->get('type', null);
+        // if the type parameter is falsy, assign NULL to $type
+        $type = $request->query->get('type', null) ? : null;
         $uuidsString = $request->get('ids');
 
         if ($uuidsString) {
@@ -131,7 +132,7 @@ class SnippetController
     {
         $this->initEnv($request);
 
-        $snippet = $this->contentMapper->load($uuid, null, $this->languageCode, true);
+        $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
 
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
 

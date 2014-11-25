@@ -10,3 +10,7 @@ sulu_content.node.seo:
     type: rest
     parent: sulu_content.node
     resource: Sulu\Bundle\ContentBundle\Controller\SeoController
+
+sulu_content.webspace.localization:
+    type: rest
+    resource: Sulu\Bundle\ContentBundle\Controller\WebspaceLocalizationController

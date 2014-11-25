@@ -245,10 +245,10 @@ interface ContentMapperInterface
      * @param $userId
      * @param $webspaceKey
      * @param $srcLanguageCode
-     * @param $destLanguageCode
+     * @param $destLanguageCodes
      * @return StructureInterface
      */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode);
+    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCodes);
 
     /**
      * order node with uuid before the node with beforeUuid

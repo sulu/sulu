@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -97,12 +97,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
             $tempPath = $base . '/' . $webspace->getKey() . '/' . $temp;
-            $snippetsPath = $base . '/' . $snippets;
 
             $output->writeln("  {$webspace->getName()}");
 
             // create content node
-            $output->writeln("    content: '/{$contentsPath}'");
+            $output->writeln("    content: /{$contentsPath}");
             $content = $this->createRecursive($contentsPath, $root);
             $content->addMixin('sulu:page');
             $this->setBasicProperties($webspace, $content, $template, $userId);
@@ -121,11 +120,16 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         }
 
+        $snippetsPath = $base . '/' . $snippets;
+
         // create snippet nodes
+        $this->createRecursive($snippetsPath, $root);
+        $output->writeln("    snippets: /{$snippetsPath}");
+
         $snippetStructures = $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
         foreach ($snippetStructures as $snippetStructure) {
             $snippetPath = $snippetsPath . '/' . $snippetStructure->getKey();
-            $output->writeln("    snippets: '/{$snippetPath}'");
+            $output->writeln("    snippets: /{$snippetPath}");
             $this->createRecursive($snippetPath, $root);
         }
         $session->save();

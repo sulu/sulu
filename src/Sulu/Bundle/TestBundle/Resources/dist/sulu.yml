@@ -1,0 +1,72 @@
+framework:
+    secret: secret
+    router: { resource: "%kernel.root_dir%/config/routing.yml" }
+    templating: { engines: ['twig'] }
+    test: ~
+    session:
+        storage_id: session.storage.mock_file
+    profiler:
+        enabled: false
+
+fos_rest:
+    routing_loader:
+        default_format: json
+
+monolog:
+    handlers:
+        main:
+            type:         fingers_crossed
+            action_level: error
+            handler:      nested
+        nested:
+            type:  stream
+            path:  %kernel.logs_dir%/%kernel.environment%.log
+            level: debug
+
+sulu_core:
+    cache_dir: %kernel.root_dir%/cache/sulu
+    content:
+        structure:
+             paths:
+                 pages:
+                     path: %kernel.root_dir%/Resources/pages
+                     internal: false
+                 templates:
+                     path: %kernel.root_dir%/Resources/snippets
+                     internal: false
+                     type: snippet
+    webspace: ~
+
+sulu_admin:
+    name: SULU 2.0
+
+
+liip_theme:
+    themes: ["default"]
+    active_theme: "default"
+    load_controllers: false
+
+doctrine:
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+        resolve_target_entities:
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
+        mappings:
+            gedmo_tree:
+                type: xml
+                prefix: Gedmo\Tree\Entity
+                dir: "%kernel.root_dir%/../../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                alias: GedmoTree # this one is optional and will default to the name set for the mapping
+                is_bundle: false
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            tree: true
+
+parameters:
+    # Just a dirty hack to get the jms serializer bundle correctly working
+    # schmittjoh/JMSSerializerBundle#270 (comment)
+    jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy

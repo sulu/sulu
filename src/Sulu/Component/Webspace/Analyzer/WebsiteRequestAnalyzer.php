@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace\Analyzer;
 
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -268,7 +268,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
 
     /**
      * Sets the current localization
-     * @param \Sulu\Component\Webspace\Localization $localization
+     * @param Localization $localization
      */
     protected function setCurrentLocalization($localization)
     {

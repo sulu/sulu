@@ -15,19 +15,13 @@ define([], function() {
             {value: 'view', icon: 'eye'},
             {value: 'add', icon: 'plus-circle'},
             {value: 'edit', icon: 'pencil'},
-            {value: 'delete', icon: 'trash-o'},
-            {value: 'archive', icon: 'archive'},
-            {value: 'live', icon: 'signal'},
-            {value: 'security', icon: 'unlock-alt'}
+            {value: 'delete', icon: 'trash-o'}
         ],
         permissionTitles = [
             'security.permissions.view',
             'security.permissions.add',
             'security.permissions.edit',
-            'security.permissions.delete',
-            'security.permissions.archive',
-            'security.permissions.live',
-            'security.permissions.security'
+            'security.permissions.delete'
         ],
         permissionData,
         matrixContainerSelector = '#matrix-container',

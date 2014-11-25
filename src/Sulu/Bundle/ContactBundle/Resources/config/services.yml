@@ -28,8 +28,11 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
         - { name: sulu.admin }
+        - { name: sulu.context, context: admin }
     sulu_contact.admin.content_navigation:
         class: %sulu_contact.admin.content_navigation.class%
+        tags:
+        - { name: sulu.context, context: admin }
 
     sulu_contact.import:
         class: %sulu_contact.import.class%

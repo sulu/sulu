@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Property;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class ParentChildAnyFinder implements LocalizationFinderInterface
@@ -107,7 +107,7 @@ class ParentChildAnyFinder implements LocalizationFinderInterface
     /**
      * Finds the next available parent-localization in which the node has a translation
      * @param NodeInterface $contentNode The node, which properties will be checked
-     * @param \Sulu\Component\Webspace\Localization $localization The localization to start the search for
+     * @param Localization $localization The localization to start the search for
      * @param TranslatedProperty $property The property which will be checked for the translation
      * @return Localization|null
      */

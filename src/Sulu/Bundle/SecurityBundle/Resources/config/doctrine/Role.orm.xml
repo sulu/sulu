@@ -5,7 +5,11 @@
     <entity name="Sulu\Bundle\SecurityBundle\Entity\Role" table="se_roles"
             repository-class="Sulu\Bundle\SecurityBundle\Entity\RoleRepository">
 
-        <one-to-many field="permissions" target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role"/>
+        <one-to-many field="permissions" target-entity="Sulu\Bundle\SecurityBundle\Entity\Permission" mapped-by="role">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
         <one-to-many field="userRoles" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserRole" mapped-by="role"/>
 
         <many-to-many field="groups" target-entity="Sulu\Bundle\SecurityBundle\Entity\Group" mapped-by="roles"/>

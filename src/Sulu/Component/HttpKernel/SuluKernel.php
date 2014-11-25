@@ -16,6 +16,22 @@ abstract class SuluKernel extends Kernel
     const CONTEXT_WEBSITE = 'website';
 
     /**
+     * Overload the parent constructor method to add an additional
+     * constructor argument
+     *
+     * {@inheritDoc}
+     *
+     * @param string $environment 
+     * @param bool $debug
+     * @param string $suluContext The Sulu context (self::CONTEXT_ADMIN, self::CONTEXT_WEBSITE)
+     */
+    public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
+    {
+        $this->setContext($suluContext);
+        parent::__construct($environment, $debug);
+    }
+
+    /**
      * Return the application context.
      *
      * The context indicates to the runtime code which

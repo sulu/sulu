@@ -26,7 +26,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
@@ -2213,6 +2213,23 @@ class ContentMapperTest extends PhpcrTestCase
         $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', 'en');
 
         $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+    }
+
+    public function testMultipleLanguagesCopy()
+    {
+        $data = $this->prepareSinglePageTestData();
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', array('en', 'de_at'));
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'de_at');
 
         $this->assertEquals('Page-1', $result->title);
         $this->assertEquals('/page-1', $result->url);

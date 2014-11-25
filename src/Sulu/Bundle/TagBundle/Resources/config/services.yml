@@ -10,6 +10,7 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
             - { name: sulu.admin }
+            - { name: sulu.context, context: admin }
 
     sulu_tag.tag_repository:
         class: %sulu_tag.tag_repository.class%

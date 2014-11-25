@@ -17,12 +17,13 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Bundle\SecurityBundle\Security\SecurityContext;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class PermissionVoter implements VoterInterface
 {
-    const USER_CLASS = 'Sulu\Bundle\SecurityBundle\Entity\User';
+    const SECURITY_CONTEXT_CLASS = 'Sulu\Bundle\SecurityBundle\Security\SecurityContext';
 
     /**
      * The permissions avaiable, defined by config
@@ -58,7 +59,7 @@ class PermissionVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        return $class === self::USER_CLASS || is_subclass_of($class, self::USER_CLASS);
+        return $class === self::SECURITY_CONTEXT_CLASS || is_subclass_of($class, self::SECURITY_CONTEXT_CLASS);
     }
 
     /**
@@ -68,7 +69,7 @@ class PermissionVoter implements VoterInterface
      * ACCESS_GRANTED, ACCESS_DENIED, or ACCESS_ABSTAIN.
      *
      * @param TokenInterface $token      A TokenInterface instance
-     * @param mixed $object     The object to secure
+     * @param SecurityContext $object     The object to secure
      * @param array $attributes An array of attributes associated with the method being invoked
      * @return integer either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
      */
@@ -79,8 +80,8 @@ class PermissionVoter implements VoterInterface
         $user = $token->getUser();
 
         // if not our attribute or class, we can't decide
-        if (!is_object($user) ||
-            !$this->supportsClass(get_class($user)) ||
+        if (!is_object($object) ||
+            !$this->supportsClass(get_class($object)) ||
             !$this->supportsAttribute($attributes)
         ) {
             return VoterInterface::ACCESS_ABSTAIN;
@@ -107,7 +108,7 @@ class PermissionVoter implements VoterInterface
 
     /**
      * Checks if the given group has the permission to execute the desired task
-     * @param mixed $object
+     * @param SecurityContext $object
      * @param array $attributes
      * @param Group $group
      * @param array $locales
@@ -138,7 +139,7 @@ class PermissionVoter implements VoterInterface
 
     /**
      * Checks if the given set of permissions grants to execute the desired task
-     * @param mixed $object
+     * @param SecurityContext $object
      * @param array $attributes
      * @param Collection $permissions
      * @param array $locales
@@ -158,7 +159,7 @@ class PermissionVoter implements VoterInterface
 
     /**
      * Checks if the combination of permission and userrole is allowed for the given attributes
-     * @param string $object
+     * @param SecurityContext $object
      * @param array $attributes
      * @param Permission $permission
      * @param array|null $locales
@@ -166,7 +167,7 @@ class PermissionVoter implements VoterInterface
      */
     private function isGranted($object, array $attributes, Permission $permission, $locales)
     {
-        $hasContext = $permission->getContext() == $object;
+        $hasContext = $permission->getContext() == $object->getSecurityContext();
 
         $hasPermission = $permission->getPermissions() & $this->permissions[$attributes['permission']];
 

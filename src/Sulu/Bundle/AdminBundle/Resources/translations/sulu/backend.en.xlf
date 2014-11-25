@@ -1030,6 +1030,14 @@
                 <source>phone.mobile</source>
                 <target>Mobile</target>
             </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d52" resname="public.forbidden.description">
+                <source>public.forbidden</source>
+                <target>Operation forbidden</target>
+            </trans-unit>
+            <trans-unit id="9052063af3ba0f52ef7a4d3c0298d54" resname="public.forbidden">
+                <source>public.forbidden.description</source>
+                <target>The available permissions are not sufficient for this operation</target>
+            </trans-unit>
             <!-- POOL-ALPIN_SPEZIFISCH -->
             <trans-unit id="9051763af3ba0f52ef7a4d3c0298d50" resname="contact.contacts.hobbies">
                 <source>contact.contacts.hobbies</source>
@@ -1417,6 +1425,10 @@
             <trans-unit id="a504f522de145650142c0b4820e29a4f" resname="public.number">
                 <source>public.number</source>
                 <target>Nummer</target>
+            </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a4f" resname="labels.successfully-saved">
+                <source>labels.successfully-saved</source>
+                <target>Data has been successfully saved.</target>
             </trans-unit>
         </body>
     </file>

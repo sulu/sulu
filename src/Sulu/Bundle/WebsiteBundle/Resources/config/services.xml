@@ -29,6 +29,7 @@
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
             <argument type="string">%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- navigation mapper -->

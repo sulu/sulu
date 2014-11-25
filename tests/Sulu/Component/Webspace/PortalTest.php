@@ -24,7 +24,7 @@ class PortalTest extends ProphecyTestCase
         parent::setUp();
         $this->portal = new Portal();
         $this->environment = $this->prophesize('Sulu\Component\Webspace\Environment');
-        $this->localization = $this->prophesize('Sulu\Component\Webspace\Localization');
+        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
         $this->url = $this->prophesize('Sulu\Component\Webspace\Url');
     }
 

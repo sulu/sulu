@@ -94,7 +94,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      */
     public function getAction($id, Request $request)
     {
-        $locale = $this->getLocale($request->get('locale'));
+        $locale = $this->getLocale($request);
         $categoryManager = $this->get('sulu_category.category_manager');
         $view = $this->responseGetById(
             $id,
@@ -124,7 +124,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $sortOrder = $request->get('sortOrder');
             $categoryManager = $this->get('sulu_category.category_manager');
             $categories = $categoryManager->findChildren($key, $sortBy, $sortOrder);
-            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request));
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
         $view = $this->view($list, 200);
@@ -150,7 +150,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $sortOrder = $request->get('sortOrder');
             $categoryManager = $this->get('sulu_category.category_manager');
             $categories = $categoryManager->find($parent, $depth, $sortBy, $sortOrder);
-            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request->get('locale')));
+            $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request));
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
         $view = $this->view($list, 200);
@@ -230,19 +230,6 @@ class CategoryController extends RestController implements ClassResourceInterfac
     }
 
     /**
-     * @param $requestLocale
-     * @return mixed
-     */
-    protected function getLocale($requestLocale)
-    {
-        if ($requestLocale) {
-            return $requestLocale;
-        }
-
-        return $this->getUser()->getLocale();
-    }
-
-    /**
      * Handles the change of a category. Used in PUT and PATCH
      *
      * @param $id
@@ -260,14 +247,12 @@ class CategoryController extends RestController implements ClassResourceInterfac
                 'name' => $request->get('name'),
                 'meta' => $request->get('meta'),
                 'parent' => $request->get('parent'),
-                'locale' => $this->getLocale($request->get('locale'))
+                'locale' => $this->getLocale($request)
             ];
             $categoryEntity = $categoryManager->save($data, $this->getUser()->getId());
             $categoryWrapper = $categoryManager->getApiObject(
                 $categoryEntity,
-                $this->getLocale(
-                    $request->get('locale')
-                )
+                $this->getLocale($request)
             );
 
             $view = $this->view($categoryWrapper, 200);

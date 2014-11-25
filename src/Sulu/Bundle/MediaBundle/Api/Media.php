@@ -30,7 +30,6 @@ use JMS\Serializer\Annotation\Groups;
 /**
  * Class Media
  * The Media RestObject is the api entity for the MediaController.
- * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
  */
 class Media extends ApiWrapper

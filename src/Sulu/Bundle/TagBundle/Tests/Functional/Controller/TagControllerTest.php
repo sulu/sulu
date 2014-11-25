@@ -52,13 +52,7 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/tags/' . $this->tag1->getId(),
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $this->tag1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -74,13 +68,7 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/tags?flat=true',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags?flat=true'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -96,13 +84,7 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/tags?flat=true&search=tag2&searchFields=name',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags?flat=true&search=tag2&searchFields=name'
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -116,13 +98,7 @@ class TagControllerTest extends SuluTestCase
         $client = $this->createAuthenticatedClient();
         $client->request(
             'GET',
-            '/api/tags/11230',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/11230'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -163,12 +139,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'POST',
             '/api/tags',
-            array('name' => 'tag1'),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('name' => 'tag1')
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -184,12 +155,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tags/' . $this->tag1->getId(),
-            array('name' => 'tag1_new'),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('name' => 'tag1_new')
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -198,13 +164,7 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/tags/' . $this->tag1->getId(),
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $this->tag1->getId()
         );
 
         $response = json_decode($client->getResponse()->getContent());
@@ -220,12 +180,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tags/' . $this->tag2->getId(),
-            array('name' => 'tag1'),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('name' => 'tag1')
         );
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
@@ -241,12 +196,7 @@ class TagControllerTest extends SuluTestCase
         $client->request(
             'PUT',
             '/api/tags/4711',
-            array('name' => 'tag1_new'),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            array('name' => 'tag1_new')
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -265,25 +215,13 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'DELETE',
-            '/api/tags/' . $this->tag1->getId(),
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $this->tag1->getId()
         );
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
         $client->request(
             'GET',
-            '/api/tags/' . $this->tag1->getId(),
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/' . $this->tag1->getId()
         );
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
@@ -294,13 +232,7 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'DELETE',
-            '/api/tags/4711',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags/4711'
         );
         $this->assertEquals('404', $client->getResponse()->getStatusCode());
     }
@@ -400,11 +332,6 @@ class TagControllerTest extends SuluTestCase
                 array(
                     'name' => 'tag6'
                 )
-            ),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
             )
         );
 
@@ -418,13 +345,7 @@ class TagControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/tags?flat=true',
-            array(),
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test'
-            )
+            '/api/tags?flat=true'
         );
 
         $response = json_decode($client->getResponse()->getContent());

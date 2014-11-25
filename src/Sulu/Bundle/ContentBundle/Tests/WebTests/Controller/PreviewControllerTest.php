@@ -107,13 +107,7 @@ class PreviewControllerTest extends SuluTestCase
 
     public function testRender()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
 
         $data = array(
             'title' => 'Testtitle',
@@ -138,13 +132,7 @@ class PreviewControllerTest extends SuluTestCase
 
     public function testRenderHtml5()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
 
         $data = array(
             'title' => 'Testtitle',
@@ -171,13 +159,7 @@ class PreviewControllerTest extends SuluTestCase
 
     public function testRenderInvalidHtml()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
 
         $data = array(
             'title' => 'Testtitle',
