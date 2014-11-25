@@ -517,7 +517,7 @@ class ContentMapper implements ContentMapperInterface
                                 $languageCode,
                                 null
                             );
-                            $session->save();
+                            $session->save(); // FIXME repositoryException throw in session save when change from array to string phpcr type
                         } catch (RepositoryException $e) {
                             $type->remove(
                                 $node,
