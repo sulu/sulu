@@ -57,7 +57,7 @@ class SnippetRepository
         $session = $this->sessionManager->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        return (array) $node->getReferences();
+        return (array)$node->getReferences();
     }
 
     /**
@@ -110,8 +110,7 @@ class SnippetRepository
         $search = null,
         $sortBy = null,
         $sortOrder = null
-    )
-    {
+    ) {
         $query = $this->getSnippetsQuery($languageCode, $type, $offset, $max, $search, $sortBy, $sortOrder);
 
         return $this->contentMapper->loadByQuery($query, $languageCode, null, false, true);
@@ -136,8 +135,8 @@ class SnippetRepository
         $type = null,
         $search = null,
         $sortBy = null,
-        $sortOrder = null)
-    {
+        $sortOrder = null
+    ) {
         $query = $this->getSnippetsQuery($languageCode, $type, null, null, $search, $sortBy, $sortOrder);
         $result = $query->execute();
 
@@ -167,8 +166,7 @@ class SnippetRepository
         $search = null,
         $sortBy = null,
         $sortOrder = null
-    )
-    {
+    ) {
         $snippetNode = $this->sessionManager->getSnippetNode($type);
         $workspace = $this->sessionManager->getSession()->getWorkspace();
         $queryManager = $workspace->getQueryManager();
@@ -213,8 +211,16 @@ class SnippetRepository
 
         if (null !== $search) {
             $searchConstraint = $qf->orConstraint(
-                $qf->fullTextSearch('a', 'i18n:' . $languageCode . '-title', $search . '%'),
-                $qf->fullTextSearch('a', 'i18n:' . $languageCode . '-template', $search . '%')
+                $qf->comparison(
+                    $qf->propertyValue('a', 'i18n:' . $languageCode . '-title'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE,
+                    $qf->literal('%' . $search . '%')
+                ),
+                $qf->comparison(
+                    $qf->propertyValue('a', 'template'),
+                    QueryObjectModelConstantsInterface::JCR_OPERATOR_LIKE,
+                    $qf->literal('%' . $search . '%')
+                )
             );
             $qb->andWhere($searchConstraint);
         }
