@@ -19,7 +19,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use PHPCR\ValueFormatException;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -517,7 +517,8 @@ class ContentMapper implements ContentMapperInterface
                                 $languageCode,
                                 null
                             );
-                        } catch (ValueFormatException $e) {
+                            $session->save();
+                        } catch (RepositoryException $e) {
                             $type->remove(
                                 $node,
                                 $translatedProperty,

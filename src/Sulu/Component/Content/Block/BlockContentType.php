@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Block;
 
 use PHPCR\NodeInterface;
-use PHPCR\ValueFormatException;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -248,7 +248,8 @@ class BlockContentType extends ComplexContentType
                             $languageCode,
                             $segmentKey
                         );
-                    } catch (ValueFormatException $e) {
+                        $node->getSession()->save();
+                    } catch (RepositoryException $e) {
                         $contentType->remove(
                             $node->getName(),
                             $blockPropertyWrapper,
