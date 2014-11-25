@@ -75,7 +75,6 @@ class SnippetContent extends ComplexContentType
      * @param PropertyInterface $property
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param string $segmentKey
      */
     protected function setData(
         $data,
