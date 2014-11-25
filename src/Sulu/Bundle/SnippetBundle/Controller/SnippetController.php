@@ -394,9 +394,7 @@ class SnippetController
                             'language' => $locale,
                             'search' => '{searchString}',
                             'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'page' => 1,
-                            'limit' => $limit ?: '{limit}'
+                            'sortOrder' => $sortOrder ?: '{sortOrder}'
                         )
                     ),
                 ),

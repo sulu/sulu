@@ -85,7 +85,7 @@ define([], function() {
             data: function(options) {
                 return [
                     '<div class="grid">',
-                    '   <div class="grid-row">',
+                    '   <div class="grid-row search-row">',
                     '       <div class="grid-col-8"/>',
                     '       <div class="grid-col-4" id="', options.ids.search, '"/>',
                     '   </div>',
@@ -244,7 +244,7 @@ define([], function() {
                     options: {
                         el: getId.call(this, 'search'),
                         instanceName: this.options.instanceName + '-search',
-                        appearance: 'black small',
+                        appearance: 'white small outline',
                         slide: false
                     }
                 },
