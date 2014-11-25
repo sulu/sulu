@@ -238,11 +238,11 @@ class BlockContentType extends ComplexContentType
 
                     // save sub property
                     $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                    $blockProperty = new BlockPropertyWrapper($subProperty, $property, $i);
+                    $blockPropertyWrapper = new BlockPropertyWrapper($subProperty, $property, $i);
                     try {
                         $contentType->write(
                             $node,
-                            $blockProperty,
+                            $blockPropertyWrapper,
                             $userId,
                             $webspaceKey,
                             $languageCode,
@@ -251,14 +251,14 @@ class BlockContentType extends ComplexContentType
                     } catch (ValueFormatException $e) {
                         $contentType->remove(
                             $node->getName(),
-                            $blockProperty,
+                            $blockPropertyWrapper,
                             $webspaceKey,
                             $languageCode,
                             $segmentKey
                         );
                         $contentType->write(
                             $node,
-                            $blockProperty,
+                            $blockPropertyWrapper,
                             $userId,
                             $webspaceKey,
                             $languageCode,
