@@ -35,6 +35,10 @@ class SecurityChecker extends AbstractSecurityChecker
      */
     public function hasPermission($subject, $permission, $locale = null)
     {
+        if (!$subject) {
+            return true;
+        }
+
         $attributes = array(
             'permission' => $permission
         );
