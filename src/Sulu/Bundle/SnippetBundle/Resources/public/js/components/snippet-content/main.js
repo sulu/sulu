@@ -84,7 +84,15 @@ define([], function() {
 
             data: function(options) {
                 return [
-                    '<div id="', options.ids.snippetList, '"/>',
+                    '<div class="grid">',
+                    '   <div class="grid-row">',
+                    '       <div class="grid-row-8"/>',
+                    '       <div class="grid-row-4" id="', options.ids.search, '"/>',
+                    '   </div>',
+                    '   <div class="grid-row">',
+                    '       <div class="grid-row-12" id="', options.ids.snippetList, '"/>',
+                    '   </div>',
+                    '</div>'
                 ].join('');
             },
 
@@ -116,7 +124,8 @@ define([], function() {
                 addButton: 'snippet-content-' + this.options.instanceName + '-add',
                 configButton: 'snippet-content-' + this.options.instanceName + '-config',
                 content: 'snippet-content-' + this.options.instanceName + '-content',
-                snippetList: 'snippet-content-' + this.options.instanceName + '-column-navigation'
+                snippetList: 'snippet-content-' + this.options.instanceName + '-column-navigation',
+                search: 'snippet-content-' + this.options.instanceName + '-search'
             };
             this.sandbox.dom.html(this.$el, templates.skeleton(this.options));
 
@@ -229,8 +238,16 @@ define([], function() {
          * initialize column navigation
          */
         initSnippetList = function() {
-
             this.sandbox.start([
+                {
+                    name: 'search@husky',
+                    options: {
+                        el: getId.call(this, 'search'),
+                        instanceName: this.options.instanceName + '-search',
+                        appearance: 'black small',
+                        slide: false
+                    }
+                },
                 {
                     name: 'datagrid@husky',
                     options: {
@@ -240,6 +257,7 @@ define([], function() {
                         sortable: false,
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'snippetList'),
+                        searchInstanceName: this.options.instanceName + '-search',
                         viewOptions: {
                             table: {
                                 selectItem: {
@@ -252,7 +270,7 @@ define([], function() {
                                 showHead: true,
                                 contentContainer: '#content',
                                 highlightSelected: true
-                            },
+                            }
                         },
                         matchings: [
                             {
@@ -277,6 +295,17 @@ define([], function() {
          */
         bindDomEvents = function() {
             this.sandbox.dom.on(this.$el, 'click', removeSnippet.bind(this), '.-list .remove');
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                return false;
+            }.bind(this), '.search-icon');
+            this.sandbox.dom.on(this.$el, 'keydown', function(e) {
+                if (event.keyCode === 13) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    return false;
+                }
+            }.bind(this), '.search-input');
         },
 
         /**
