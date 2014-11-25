@@ -89,12 +89,11 @@ class SnippetController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getSnippetsAction(Request $request)
-    {
+    public function getSnippetsAction(Request $request) {
         $this->initEnv($request);
 
         // if the type parameter is falsy, assign NULL to $type
-        $type = $request->query->get('type', null) ? : null;
+        $type = $request->query->get('type', null) ?: null;
         $page = $request->get('page', 1);
 
         $limit = $request->get('limit');
@@ -135,6 +134,8 @@ class SnippetController
                     $sortOrder
                 );
             }
+
+            $total = count($snippets);
         } else {
             $snippets = $this->snippetRepository->getSnippets(
                 $this->languageCode,
@@ -146,7 +147,7 @@ class SnippetController
                 $sortOrder
             );
 
-            $amount = $this->snippetRepository->getSnippetsAmount(
+            $total = $this->snippetRepository->getSnippetsAmount(
                 $this->languageCode,
                 $type,
                 $search,
@@ -154,7 +155,7 @@ class SnippetController
                 $sortOrder
             );
 
-            $pages = floor($amount / $limit) + 1;
+            $pages = floor($total / $limit) + 1;
         }
 
         $data = array();
@@ -163,7 +164,7 @@ class SnippetController
             $data[] = $snippet->toArray();
         }
 
-        $data = $this->decorateList($data, $this->languageCode, $limit, $page, $pages, $sortBy, $sortOrder, $search);
+        $data = $this->decorateList($data, $this->languageCode, $limit, $page, $pages, $sortBy, $sortOrder, $search, $total);
 
         return $this->viewHandler->handle(View::create($data));
     }
@@ -176,8 +177,7 @@ class SnippetController
      *
      * @Get(defaults={"uuid" = ""})
      */
-    public function getSnippetAction(Request $request, $uuid = null)
-    {
+    public function getSnippetAction(Request $request, $uuid = null) {
         $this->initEnv($request);
 
         $snippet = $this->contentMapper->load($uuid, null, $this->languageCode, true);
@@ -192,8 +192,7 @@ class SnippetController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postSnippetAction(Request $request)
-    {
+    public function postSnippetAction(Request $request) {
         $this->initEnv($request);
         $data = $request->request->all();
 
@@ -217,8 +216,7 @@ class SnippetController
      * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putSnippetAction(Request $request, $uuid)
-    {
+    public function putSnippetAction(Request $request, $uuid) {
         $this->initEnv($request);
         $data = $request->request->all();
 
@@ -243,8 +241,7 @@ class SnippetController
      * @param string $uuid
      * @return JsonResponse
      */
-    public function deleteSnippetAction(Request $request, $uuid)
-    {
+    public function deleteSnippetAction(Request $request, $uuid) {
         $webspaceKey = $request->query->get('webspace', null);
 
         $references = $this->snippetRepository->getReferences($uuid);
@@ -267,8 +264,7 @@ class SnippetController
      * TODO refactor
      * @return JsonResponse
      */
-    public function getSnippetFieldsAction()
-    {
+    public function getSnippetFieldsAction() {
         return new JsonResponse(
             array(
                 array(
@@ -333,8 +329,7 @@ class SnippetController
     /**
      * Returns user
      */
-    private function getUser()
-    {
+    private function getUser() {
         $token = $this->securityContext->getToken();
 
         if (null === $token) {
@@ -347,8 +342,7 @@ class SnippetController
     /**
      * Initiates the environment
      */
-    private function initEnv(Request $request)
-    {
+    private function initEnv(Request $request) {
         $this->languageCode = $request->query->get('language', null);
 
         if (!$this->languageCode) {
@@ -359,8 +353,7 @@ class SnippetController
     /**
      * Returns a required parameter
      */
-    private function getRequired(Request $request, $parameterName)
-    {
+    private function getRequired(Request $request, $parameterName) {
         $value = $request->request->get($parameterName);
 
         if (null === $value) {
@@ -388,24 +381,24 @@ class SnippetController
         $pages = null,
         $sortBy = null,
         $sortOrder = null,
-        $search = null
-    )
-    {
+        $search = null,
+        $total = null
+    ) {
         $result = array(
-            'total' => count($data),
+            'total' => $total,
             '_links' => array(
                 'find' => array(
                     'href' => $this->urlGenerator->generate(
-                            'get_snippets',
-                            array(
-                                'language' => $locale,
-                                'search' => '{searchString}',
-                                'sortBy' => $sortBy ?: '{sortBy}',
-                                'sortOrder' => $sortOrder ?: '{sortOrder}',
-                                'page' => $page ?: '{page}',
-                                'limit' => $limit ?: '{limit}'
-                            )
-                        ),
+                        'get_snippets',
+                        array(
+                            'language' => $locale,
+                            'search' => '{searchString}',
+                            'sortBy' => $sortBy ?: '{sortBy}',
+                            'sortOrder' => $sortOrder ?: '{sortOrder}',
+                            'page' => $page ?: '{page}',
+                            'limit' => $limit ?: '{limit}'
+                        )
+                    ),
                 ),
                 'sortable' => array(
                     'href' => $this->urlGenerator->generate(
@@ -445,19 +438,30 @@ class SnippetController
                             'limit' => $limit ?: '{limit}'
                         )
                     ),
-                    'first' => array(
-                        'href' => $this->urlGenerator->generate(
-                            'get_snippets',
-                            array(
-                                'language' => $locale,
-                                'search' => $search ?: '{searchString}',
-                                'sortBy' => $sortBy ?: '{sortBy}',
-                                'sortOrder' => $sortOrder ?: '{sortOrder}',
-                                'page' => $pages,
-                                'limit' => $limit ?: '{limit}'
-                            )
-                        ),
-                    )
+                ),
+                'last' => array(
+                    'href' => $this->urlGenerator->generate(
+                        'get_snippets',
+                        array(
+                            'language' => $locale,
+                            'search' => $search ?: '{searchString}',
+                            'sortBy' => $sortBy ?: '{sortBy}',
+                            'sortOrder' => $sortOrder ?: '{sortOrder}',
+                            'page' => $pages,
+                            'limit' => $limit ?: '{limit}'
+                        )
+                    ),
+                ),
+                'all' => array(
+                    'href' => $this->urlGenerator->generate(
+                        'get_snippets',
+                        array(
+                            'language' => $locale,
+                            'search' => $search ?: '{searchString}',
+                            'sortBy' => $sortBy ?: '{sortBy}',
+                            'sortOrder' => $sortOrder ?: '{sortOrder}'
+                        )
+                    ),
                 )
             ),
             '_embedded' => array(
@@ -533,8 +537,7 @@ class SnippetController
     /**
      * Decorate snippets for HATEOAS
      */
-    private function decorateSnippets(array $snippets, $locale)
-    {
+    private function decorateSnippets(array $snippets, $locale) {
         $res = array();
         foreach ($snippets as $snippet) {
             $res[] = $this->decorateSnippet($snippet, $locale);
@@ -546,25 +549,24 @@ class SnippetController
     /**
      * Decorate snippet for HATEOAS
      */
-    private function decorateSnippet(array $snippet, $locale)
-    {
+    private function decorateSnippet(array $snippet, $locale) {
         return array_merge(
             $snippet,
             array(
                 '_links' => array(
                     'self' => $this->urlGenerator->generate(
-                            'get_snippet',
-                            array('uuid' => $snippet['id'], 'language' => $locale)
-                        ),
+                        'get_snippet',
+                        array('uuid' => $snippet['id'], 'language' => $locale)
+                    ),
                     'delete' => $this->urlGenerator->generate(
-                            'delete_snippet',
-                            array('uuid' => $snippet['id'], 'language' => $locale)
-                        ),
+                        'delete_snippet',
+                        array('uuid' => $snippet['id'], 'language' => $locale)
+                    ),
                     'new' => $this->urlGenerator->generate('post_snippet', array('language' => $locale)),
                     'update' => $this->urlGenerator->generate(
-                            'put_snippet',
-                            array('uuid' => $snippet['id'], 'language' => $locale)
-                        ),
+                        'put_snippet',
+                        array('uuid' => $snippet['id'], 'language' => $locale)
+                    ),
                 ),
             )
         );
@@ -581,8 +583,7 @@ class SnippetController
      *
      * @return Response
      */
-    private function getReferentialIntegrityResponse($webspace, $references)
-    {
+    private function getReferentialIntegrityResponse($webspace, $references) {
         $data = array(
             'structures' => array(),
             'other' => array(),
@@ -590,7 +591,12 @@ class SnippetController
 
         foreach ($references as $reference) {
             if ($reference->getParent()->isNodeType('sulu:page')) {
-                $content = $this->contentMapper->load($reference->getParent()->getIdentifier(), $webspace, $this->languageCode, true);
+                $content = $this->contentMapper->load(
+                    $reference->getParent()->getIdentifier(),
+                    $webspace,
+                    $this->languageCode,
+                    true
+                );
                 $data['structures'][] = $content->toArray();
             } else {
                 $data['other'] = $reference->getPath();
