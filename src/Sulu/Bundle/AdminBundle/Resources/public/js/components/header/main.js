@@ -364,7 +364,8 @@ define([], function () {
                     {
                         id: 'settings',
                         icon: 'magic',
-                        position: 30
+                        position: 30,
+                        disabled: true
                     }
                 ];
             },
