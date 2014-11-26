@@ -29,6 +29,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #523 [All]            Refactored and improved functional tests
     * BUGFIX      #597 [ContentBundle]  Reconnect to mysql if connection gone away in websocket
     * FEATURE     #368 [SnippetBundle]  Added `sulu:snippet:locale-copy`-command
+    * BUGFIX      #576 [SnippetBundle]  Fixed error when change content type to snippet
 
 * 0.11.2 (2014-11-17)
 
