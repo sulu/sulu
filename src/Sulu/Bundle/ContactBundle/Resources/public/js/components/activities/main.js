@@ -317,46 +317,41 @@ define(
                     url = '/admin/api/activities?flat=true&account=' + this.account.id;
                 }
 
-                //init bottom-toolbar
-                //this.sandbox.start(this.$el);
-
-//TODo
-                var component = {
-                    name: 'bottom-toolbar@suluadmin',
-                    options: {
-                        // el: this.$find('#bottom-list-toolbar'),
-                        el: this.$find('#bottom-list-toolbar'),
-                        items: {
-                            add: [
-                                {
-                                    id: 'add-account-contact',
-                                    title: this.sandbox.translate('contact.account.add-account-contact')
-                                    //callback: createRelationOverlay.bind(this)
-                                },
-                                {
-                                    id: 'add-new-contact-to-account',
-                                    title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
-                                    //callback: createContactOverlay.bind(this)
-                                }
-                            ],
-                            settings: [
-                                {
-                                    id: 'add-account-contact',
-                                    title: this.sandbox.translate('contact.account.add-account-contact')
-                                    //callback: createRelationOverlay.bind(this)
-                                },
-                                {
-                                    id: 'add-new-contact-to-account',
-                                    title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
-                                    //callback: createContactOverlay.bind(this)
-                                }
-                            ]
+                // init bottom-toolbar
+                this.sandbox.start([
+                    {
+                        name: 'bottom-toolbar@suluadmin',
+                        options: {
+                            // el: this.$find('#bottom-list-toolbar'),
+                            el: this.$find('#bottom-list-toolbar'),
+                            items: {
+                                add: [
+                                    {
+                                        id: 'add-account-contact',
+                                        title: this.sandbox.translate('contact.account.add-account-contact')
+                                        //callback: createRelationOverlay.bind(this)
+                                    },
+                                    {
+                                        id: 'add-new-contact-to-account',
+                                        title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
+                                        //callback: createContactOverlay.bind(this)
+                                    }
+                                ],
+                                settings: [
+                                    {
+                                        id: 'add-account-contact',
+                                        title: this.sandbox.translate('contact.account.add-account-contact')
+                                        //callback: createRelationOverlay.bind(this)
+                                    },
+                                    {
+                                        id: 'add-new-contact-to-account',
+                                        title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
+                                        //callback: createContactOverlay.bind(this)
+                                    }
+                                ]
+                            }
                         }
                     }
-                };
-
-                this.sandbox.start([
-                  component
                 ]);
 
                 // init list-toolbar and datagrid
@@ -364,7 +359,7 @@ define(
                     this,
                     'activitiesContactsFields',
                     '/admin/api/activities/fields',
-                   {
+                    {
                         el: this.$find('#list-toolbar-container'),
                         instanceName: 'activities',
                         inHeader: true,
