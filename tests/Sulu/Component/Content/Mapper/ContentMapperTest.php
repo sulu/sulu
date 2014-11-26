@@ -3219,45 +3219,45 @@ class ContentMapperTest extends PhpcrTestCase
     {
         try {
             // REF
-            $data1 = array(
+            $internalLinkData = array(
                 'title' => 'Test',
                 'url' => '/test/test',
                 'blog' => 'Thats a good test'
             );
-            $internalLink = $this->mapper->save($data1, 'extension', 'default', 'en', 1);
+            $internalLink = $this->mapper->save($internalLinkData, 'extension', 'default', 'en', 1);
 
             // REF
-            $data1 = array(
+            $snippetData = array(
                 'title' => 'Test',
                 'url' => '/test/test',
                 'blog' => 'Thats a good test'
             );
-            $snippet = $this->mapper->save($data1, 'default_snippet', 'default', 'en', 1, true, null, null,null,null,null, Structure::TYPE_SNIPPET);
+            $snippet = $this->mapper->save($snippetData, 'default_snippet', 'default', 'en', 1, true, null, null,null,null,null, Structure::TYPE_SNIPPET);
 
 
             // Internal Link with String Type
-            $data2 = array(
+            $testSiteData = array(
                 'title' => 'Test',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'internal' => $internalLink->getUuid()
             );
-            $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
+            $testSiteStructure = $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1);
 
-            $uuid = $structure2->getUuid();
+            $uuid = $testSiteStructure->getUuid();
 
-            // change to array
-            $data2['internal'] = array(
+            // Change to Snippet Array
+            $testSiteData['internal'] = array(
+                $snippet->getUuid(),
                 $snippet->getUuid()
             );
-            $data2['nodeType'] = Structure::NODE_TYPE_CONTENT;
+            $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
-            $this->mapper->save($data2, 'with_snipplet', 'default', 'en', 1, true, $uuid);
+            $this->mapper->save($testSiteData, 'with_snipplet', 'default', 'en', 1, true, $uuid);
 
-            /*
-            // change to string
-            $data2['internal'] = $structure1->getUuid();
-            $this->mapper->save($data2, 'internal-link', 'default', 'en', 1, true, $uuid);
-            */
+            // Change to Internal Link String
+            $testSiteData['internal'] = $internalLink->getUuid();
+            $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
+            $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1, true, $uuid);
         } catch (\Exception $e) {
             $this->fail('Exception thrown(' . get_class($e) . '): ' . $e->getMessage() . PHP_EOL . $e->getFile() . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString());
         }

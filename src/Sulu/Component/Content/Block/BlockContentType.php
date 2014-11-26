@@ -239,38 +239,23 @@ class BlockContentType extends ComplexContentType
                     // save sub property
                     $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                     $blockPropertyWrapper = new BlockPropertyWrapper($subProperty, $property, $i);
-                    try {
-                        $contentType->write(
-                            $node,
-                            $blockPropertyWrapper,
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-
-                        $session = $node->getSession();
-                        if ($session) {
-                            $session->save(); // FIXME repositoryException throw in session save when change from array to string phpcr type
-                        }
-                    } catch (RepositoryException $e) {
-                        $contentType->remove(
-                            $node->getName(),
-                            $blockPropertyWrapper,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-                        $contentType->write(
-                            $node,
-                            $blockPropertyWrapper,
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-                    }
-                }
+                    // TODO find a better why for change Types (same hack is used in ContentMapper:save )
+                    $contentType->remove(
+                        $node->getName(),
+                        $blockPropertyWrapper,
+                        $webspaceKey,
+                        $languageCode,
+                        $segmentKey
+                    );
+                    $contentType->write(
+                        $node,
+                        $blockPropertyWrapper,
+                        $userId,
+                        $webspaceKey,
+                        $languageCode,
+                        $segmentKey
+                    );
+            }
             }
         } else {
             throw new UnexpectedPropertyType($property, $this);

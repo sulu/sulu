@@ -508,33 +508,22 @@ class ContentMapper implements ContentMapperInterface
                         );
                     } else {
                         $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
-                        try {
-                            $type->write(
-                                $node,
-                                $translatedProperty,
-                                $userId,
-                                $webspaceKey,
-                                $languageCode,
-                                null
-                            );
-                            $session->save(); // FIXME repositoryException throw in session save when change from array to string phpcr type
-                        } catch (RepositoryException $e) {
-                            $type->remove(
-                                $node,
-                                $translatedProperty,
-                                $webspaceKey,
-                                $languageCode,
-                                null
-                            );
-                            $type->write(
-                                $node,
-                                $translatedProperty,
-                                $userId,
-                                $webspaceKey,
-                                $languageCode,
-                                null
-                            );
-                        }
+                        // TODO find a better why for change Types (same hack is used in BlockContentType:write )
+                        $type->remove(
+                            $node,
+                            $translatedProperty,
+                            $webspaceKey,
+                            $languageCode,
+                            null
+                        );
+                        $type->write(
+                            $node,
+                            $translatedProperty,
+                            $userId,
+                            $webspaceKey,
+                            $languageCode,
+                            null
+                        );
                     }
                 } elseif ($isShadow) {
                     // nothing
