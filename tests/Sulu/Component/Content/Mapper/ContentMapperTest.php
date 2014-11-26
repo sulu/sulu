@@ -70,6 +70,10 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getPageMock(7, false);
         } elseif ($structureKey == 'external-link') {
             return $this->getPageMock(8, false);
+        } elseif ($structureKey == 'with_snipplet') {
+            return $this->getPageMock(9);
+        } elseif ($structureKey == 'default_snippet') {
+            return $this->getPageMock(10, false);
         }
 
         return null;
@@ -91,10 +95,17 @@ class ContentMapperTest extends PhpcrTestCase
             'overview'
         );
 
-        $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
-            array($name[$type], 'asdf', 'asdf', 2400)
-        );
+        if ($type == 10) {
+            $structureMock = $this->getMockForAbstractClass(
+                '\Sulu\Component\Content\Structure\Snippet',
+                array($name[$type], 'asdf', 'asdf', 2400)
+            );
+        } else {
+            $structureMock = $this->getMockForAbstractClass(
+                '\Sulu\Component\Content\Structure\Page',
+                array($name[$type], 'asdf', 'asdf', 2400)
+            );
+        }
 
         $method = new ReflectionMethod(
             get_class($structureMock), 'addChild'
@@ -230,6 +241,24 @@ class ContentMapperTest extends PhpcrTestCase
                         array(),
                         array(new PropertyTag('sulu.rlp', 1))
                     )
+                )
+            );
+        } elseif ($type == 9) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'internal', // same as internal link to test content type switch
+                        '',
+                        'snippet'
+                    )
+                )
+            );
+        } elseif ($type == 10) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('article', '', 'text_area', false, true)
                 )
             );
         }
@@ -3184,6 +3213,54 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/beschreibung', $urls['de']);
         $this->assertArrayNotHasKey('de_at', $urls);
         $this->assertArrayNotHasKey('es', $urls);
+    }
+
+    public function testContentTypeSwitch()
+    {
+        try {
+            // REF
+            $internalLinkData = array(
+                'title' => 'Test',
+                'url' => '/test/test',
+                'blog' => 'Thats a good test'
+            );
+            $internalLink = $this->mapper->save($internalLinkData, 'extension', 'default', 'en', 1);
+
+            // REF
+            $snippetData = array(
+                'title' => 'Test',
+                'url' => '/test/test',
+                'blog' => 'Thats a good test'
+            );
+            $snippet = $this->mapper->save($snippetData, 'default_snippet', 'default', 'en', 1, true, null, null,null,null,null, Structure::TYPE_SNIPPET);
+
+
+            // Internal Link with String Type
+            $testSiteData = array(
+                'title' => 'Test',
+                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'internal' => $internalLink->getUuid()
+            );
+            $testSiteStructure = $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1);
+
+            $uuid = $testSiteStructure->getUuid();
+
+            // Change to Snippet Array
+            $testSiteData['internal'] = array(
+                $snippet->getUuid(),
+                $snippet->getUuid()
+            );
+            $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
+
+            $this->mapper->save($testSiteData, 'with_snipplet', 'default', 'en', 1, true, $uuid);
+
+            // Change to Internal Link String
+            $testSiteData['internal'] = $internalLink->getUuid();
+            $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
+            $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1, true, $uuid);
+        } catch (\Exception $e) {
+            $this->fail('Exception thrown(' . get_class($e) . '): ' . $e->getMessage() . PHP_EOL . $e->getFile() . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString());
+        }
     }
 }
 

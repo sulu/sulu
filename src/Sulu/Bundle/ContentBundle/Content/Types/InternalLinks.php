@@ -75,7 +75,10 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = $node->getPropertyValueWithDefault($property->getName(), '{}');
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
 
         $this->setData($data, $property, $webspaceKey, $languageCode);
     }
@@ -173,7 +176,9 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->getProperty($property->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**

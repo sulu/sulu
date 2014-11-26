@@ -169,7 +169,9 @@ class MediaSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->getProperty($property->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**

@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+
+    * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
+
 * 0.12.0 (2014-11-25)
 
     * ENHANCEMENT #586 [WebsiteBundle]  Added node path variable to template

@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Block;
 
 use PHPCR\NodeInterface;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -229,31 +230,32 @@ class BlockContentType extends ComplexContentType
             for ($i = 0; $i < $len; $i++) {
                 /** @var PropertyInterface $subProperty */
                 foreach ($blockProperty->getProperties($i) as $key => $subProperty) {
-                    if ($key !== 'type') {
-                        // save sub property
-                        $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                        $contentType->write(
-                            $node,
-                            new BlockPropertyWrapper($subProperty, $property, $i),
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-                    } else {
+                    if ($key === 'type') {
                         // save type property
                         $typeProperty->setValue($subProperty);
-                        $contentType = $this->contentTypeManager->get($typeProperty->getContentTypeName());
-                        $contentType->write(
-                            $node,
-                            new BlockPropertyWrapper($typeProperty, $property, $i),
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
+                        $subProperty = $typeProperty;
                     }
-                }
+
+                    // save sub property
+                    $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+                    $blockPropertyWrapper = new BlockPropertyWrapper($subProperty, $property, $i);
+                    // TODO find a better why for change Types (same hack is used in ContentMapper:save )
+                    $contentType->remove(
+                        $node,
+                        $blockPropertyWrapper,
+                        $webspaceKey,
+                        $languageCode,
+                        $segmentKey
+                    );
+                    $contentType->write(
+                        $node,
+                        $blockPropertyWrapper,
+                        $userId,
+                        $webspaceKey,
+                        $languageCode,
+                        $segmentKey
+                    );
+            }
             }
         } else {
             throw new UnexpectedPropertyType($property, $this);
@@ -270,7 +272,9 @@ class BlockContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        // TODO: Implement remove() method.
+        foreach ($node->getProperties($property->getName().'-*')  as $nodeProperty) {
+            $node->getProperty($nodeProperty->getName())->remove();
+        }
     }
 
     /**

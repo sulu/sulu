@@ -127,7 +127,10 @@ class SmartContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = $node->getPropertyValueWithDefault($property->getName(), '{}');
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
 
         if (!empty($data['tags'])) {
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);

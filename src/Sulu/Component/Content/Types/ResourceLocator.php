@@ -169,7 +169,9 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $segmentKey = null
     ) {
         $this->strategy->deleteByPath($property->getValue(), $webspaceKey, $languageCode, $segmentKey);
-        $node->remove($property->getName());
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**
