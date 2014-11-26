@@ -241,7 +241,7 @@ class BlockContentType extends ComplexContentType
                     $blockPropertyWrapper = new BlockPropertyWrapper($subProperty, $property, $i);
                     // TODO find a better why for change Types (same hack is used in ContentMapper:save )
                     $contentType->remove(
-                        $node->getName(),
+                        $node,
                         $blockPropertyWrapper,
                         $webspaceKey,
                         $languageCode,
