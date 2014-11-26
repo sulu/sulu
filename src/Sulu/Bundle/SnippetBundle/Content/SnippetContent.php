@@ -92,7 +92,6 @@ class SnippetContent extends ComplexContentType
                 // see https://github.com/jackalope/jackalope/issues/248
                 if (UUIDHelper::isUUID($i)) {
                     $ref = $i;
-                } else {
                 }
 
                 $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
