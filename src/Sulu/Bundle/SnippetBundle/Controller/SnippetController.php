@@ -89,7 +89,8 @@ class SnippetController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getSnippetsAction(Request $request) {
+    public function getSnippetsAction(Request $request)
+    {
         $this->initEnv($request);
 
         // if the type parameter is falsy, assign NULL to $type
@@ -177,7 +178,8 @@ class SnippetController
      *
      * @Get(defaults={"uuid" = ""})
      */
-    public function getSnippetAction(Request $request, $uuid = null) {
+    public function getSnippetAction(Request $request, $uuid = null)
+    {
         $this->initEnv($request);
 
         $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
@@ -192,7 +194,8 @@ class SnippetController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postSnippetAction(Request $request) {
+    public function postSnippetAction(Request $request)
+    {
         $this->initEnv($request);
         $data = $request->request->all();
 
@@ -216,7 +219,8 @@ class SnippetController
      * @param string $uuid
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function putSnippetAction(Request $request, $uuid) {
+    public function putSnippetAction(Request $request, $uuid)
+    {
         $this->initEnv($request);
         $data = $request->request->all();
 
@@ -241,7 +245,8 @@ class SnippetController
      * @param string $uuid
      * @return JsonResponse
      */
-    public function deleteSnippetAction(Request $request, $uuid) {
+    public function deleteSnippetAction(Request $request, $uuid)
+    {
         $webspaceKey = $request->query->get('webspace', null);
 
         $references = $this->snippetRepository->getReferences($uuid);
@@ -264,7 +269,8 @@ class SnippetController
      * TODO refactor
      * @return JsonResponse
      */
-    public function getSnippetFieldsAction() {
+    public function getSnippetFieldsAction()
+    {
         return new JsonResponse(
             array(
                 array(
@@ -329,7 +335,8 @@ class SnippetController
     /**
      * Returns user
      */
-    private function getUser() {
+    private function getUser()
+    {
         $token = $this->securityContext->getToken();
 
         if (null === $token) {
@@ -342,7 +349,8 @@ class SnippetController
     /**
      * Initiates the environment
      */
-    private function initEnv(Request $request) {
+    private function initEnv(Request $request)
+    {
         $this->languageCode = $request->query->get('language', null);
 
         if (!$this->languageCode) {
@@ -353,7 +361,8 @@ class SnippetController
     /**
      * Returns a required parameter
      */
-    private function getRequired(Request $request, $parameterName) {
+    private function getRequired(Request $request, $parameterName)
+    {
         $value = $request->request->get($parameterName);
 
         if (null === $value) {
@@ -535,7 +544,8 @@ class SnippetController
     /**
      * Decorate snippets for HATEOAS
      */
-    private function decorateSnippets(array $snippets, $locale) {
+    private function decorateSnippets(array $snippets, $locale)
+    {
         $res = array();
         foreach ($snippets as $snippet) {
             $res[] = $this->decorateSnippet($snippet, $locale);
@@ -547,7 +557,8 @@ class SnippetController
     /**
      * Decorate snippet for HATEOAS
      */
-    private function decorateSnippet(array $snippet, $locale) {
+    private function decorateSnippet(array $snippet, $locale)
+    {
         return array_merge(
             $snippet,
             array(
@@ -581,7 +592,8 @@ class SnippetController
      *
      * @return Response
      */
-    private function getReferentialIntegrityResponse($webspace, $references) {
+    private function getReferentialIntegrityResponse($webspace, $references)
+    {
         $data = array(
             'structures' => array(),
             'other' => array(),
