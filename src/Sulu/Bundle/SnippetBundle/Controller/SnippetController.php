@@ -143,7 +143,7 @@ class SnippetController
             $data[] = $snippet->toArray();
         }
 
-        $data = $this->decorateList($data, $this->languageCode, $limit, $page, $pages, $sortBy, $sortOrder, $search, $total);
+        $data = $this->decorateList($data, $this->languageCode, $limit, $page, $pages, $sortBy, $sortOrder, $search, $total, $type);
 
         return $this->viewHandler->handle(View::create($data));
     }
@@ -369,7 +369,8 @@ class SnippetController
         $sortBy = null,
         $sortOrder = null,
         $search = null,
-        $total = null
+        $total = null,
+        $type = null
     ) {
         $result = array(
             'total' => $total,
@@ -381,7 +382,8 @@ class SnippetController
                             'language' => $locale,
                             'search' => '{searchString}',
                             'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}'
+                            'sortOrder' => $sortOrder ?: '{sortOrder}',
+                            'type' => $type ?: '{type}',
                         )
                     ),
                 ),
@@ -394,7 +396,8 @@ class SnippetController
                             'sortBy' => $sortBy ?: '{sortBy}',
                             'sortOrder' => $sortOrder ?: '{sortOrder}',
                             'page' => $page ?: '{page}',
-                            'limit' => $limit ?: '{limit}'
+                            'limit' => $limit ?: '{limit}',
+                            'type' => $type ?: '{type}',
                         )
                     ),
                 ),
@@ -407,7 +410,8 @@ class SnippetController
                             'sortBy' => $sortBy ?: '{sortBy}',
                             'sortOrder' => $sortOrder ?: '{sortOrder}',
                             'page' => '{page}',
-                            'limit' => '{limit}'
+                            'limit' => '{limit}',
+                            'type' => $type ?: '{type}',
                         )
                     ),
                 ),
@@ -420,7 +424,8 @@ class SnippetController
                             'sortBy' => $sortBy ?: '{sortBy}',
                             'sortOrder' => $sortOrder ?: '{sortOrder}',
                             'page' => '1',
-                            'limit' => $limit ?: '{limit}'
+                            'limit' => $limit ?: '{limit}',
+                            'type' => $type ?: '{type}',
                         )
                     ),
                 ),
@@ -433,7 +438,8 @@ class SnippetController
                             'sortBy' => $sortBy ?: '{sortBy}',
                             'sortOrder' => $sortOrder ?: '{sortOrder}',
                             'page' => $pages,
-                            'limit' => $limit ?: '{limit}'
+                            'limit' => $limit ?: '{limit}',
+                            'type' => $type ?: '{type}',
                         )
                     ),
                 ),
@@ -444,7 +450,8 @@ class SnippetController
                             'language' => $locale,
                             'search' => $search ?: '{searchString}',
                             'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}'
+                            'sortOrder' => $sortOrder ?: '{sortOrder}',
+                            'type' => $type ?: '{type}',
                         )
                     ),
                 )
@@ -454,16 +461,21 @@ class SnippetController
             ),
         );
 
-        $selfLinkArgument = array('language' => $locale);
+        $selfLinkArgument = array(
+            'language' => $locale,
+            'type' => $type ?: '{type}',
+        );
         $nextLinkAttributes = array(
             'language' => $locale,
             'page' => $page + 1,
-            'limit' => $limit ?: '{limit}'
+            'limit' => $limit ?: '{limit}',
+            'type' => $type ?: '{type}',
         );
         $previousLinkAttributes = array(
             'language' => $locale,
             'page' => $page - 1,
-            'limit' => $limit ?: '{limit}'
+            'limit' => $limit ?: '{limit}',
+            'type' => $type ?: '{type}',
         );
 
         if ($limit !== null) {
