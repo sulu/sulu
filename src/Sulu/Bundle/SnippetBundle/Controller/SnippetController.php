@@ -98,8 +98,8 @@ class SnippetController
         $page = $request->get('page', 1);
 
         $limit = $request->get('limit');
-        if ($limit === '') {
-            $limit = null;
+        if (empty($limit)) {
+            $limit = 10;
         }
 
         $search = $request->get('search');
@@ -117,47 +117,25 @@ class SnippetController
             $sortOrder = null;
         }
 
-        if ($limit === null) {
-            $uuidsString = $request->get('ids');
-            $pages = null;
+        $snippets = $this->snippetRepository->getSnippets(
+            $this->languageCode,
+            $type,
+            ($page - 1) * $limit,
+            $limit,
+            $search,
+            $sortBy,
+            $sortOrder
+        );
 
-            if ($uuidsString) {
-                $uuids = explode(',', $uuidsString);
-                $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $this->languageCode);
-            } else {
-                $snippets = $this->snippetRepository->getSnippets(
-                    $this->languageCode,
-                    $type,
-                    null,
-                    null,
-                    $search,
-                    $sortBy,
-                    $sortOrder
-                );
-            }
+        $total = $this->snippetRepository->getSnippetsAmount(
+            $this->languageCode,
+            $type,
+            $search,
+            $sortBy,
+            $sortOrder
+        );
 
-            $total = count($snippets);
-        } else {
-            $snippets = $this->snippetRepository->getSnippets(
-                $this->languageCode,
-                $type,
-                ($page - 1) * $limit,
-                $limit,
-                $search,
-                $sortBy,
-                $sortOrder
-            );
-
-            $total = $this->snippetRepository->getSnippetsAmount(
-                $this->languageCode,
-                $type,
-                $search,
-                $sortBy,
-                $sortOrder
-            );
-
-            $pages = floor($total / $limit) + 1;
-        }
+        $pages = floor($total / $limit) + 1;
 
         $data = array();
 
