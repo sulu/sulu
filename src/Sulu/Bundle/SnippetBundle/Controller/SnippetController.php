@@ -14,6 +14,8 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManager;
+use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
@@ -93,14 +95,10 @@ class SnippetController
     {
         $this->initEnv($request);
 
+        $listRestHelper = new ListRestHelper($request);
+
         // if the type parameter is falsy, assign NULL to $type
         $type = $request->query->get('type', null) ?: null;
-        $page = $request->get('page', 1);
-
-        $limit = $request->get('limit');
-        if (empty($limit)) {
-            $limit = 10;
-        }
 
         $search = $request->get('search');
         if ($search === '') {
@@ -127,8 +125,8 @@ class SnippetController
             $snippets = $this->snippetRepository->getSnippets(
                 $this->languageCode,
                 $type,
-                ($page - 1) * $limit,
-                $limit,
+                $listRestHelper->getOffset(),
+                $listRestHelper->getLimit(),
                 $search,
                 $sortBy,
                 $sortOrder
@@ -143,15 +141,21 @@ class SnippetController
             );
         }
 
-        $pages = ceil($total / $limit);
-
         $data = array();
 
         foreach ($snippets as $snippet) {
             $data[] = $snippet->toArray();
         }
 
-        $data = $this->decorateList($data, $this->languageCode, $limit, $page, $pages, $sortBy, $sortOrder, $search, $total, $type);
+        $data = new ListRepresentation(
+            $this->decorateSnippets($data, $this->languageCode),
+            'snippets',
+            'get_snippets',
+            $request->query->all(),
+            $listRestHelper->getPage(),
+            $listRestHelper->getLimit(),
+            $total
+        );
 
         return $this->viewHandler->handle(View::create($data));
     }
@@ -317,20 +321,20 @@ class SnippetController
             )
         );
     }
-
+    
     /**
-     * Returns user
-     */
-    private function getUser()
-    {
-        $token = $this->securityContext->getToken();
+    * Returns user
+    */
+   private function getUser()
+   {
+       $token = $this->securityContext->getToken();
 
-        if (null === $token) {
-            throw new \InvalidArgumentException('No user is set');
-        }
-
-        return $token->getUser();
-    }
+       if (null === $token) {
+           throw new \InvalidArgumentException('No user is set');
+       }
+       
+       return $token->getUser();
+   }
 
     /**
      * Initiates the environment
@@ -361,182 +365,6 @@ class SnippetController
         }
 
         return $value;
-    }
-
-    /**
-     * Decorate the list for HATEOAS
-     *
-     * TODO: Use the HateoasBundle / JMSSerializer to do this.
-     */
-    private function decorateList(
-        array $data,
-        $locale,
-        $limit = null,
-        $page = null,
-        $pages = null,
-        $sortBy = null,
-        $sortOrder = null,
-        $search = null,
-        $total = null,
-        $type = null
-    ) {
-        $result = array(
-            'total' => $total,
-            '_links' => array(
-                'find' => array(
-                    'href' => $this->urlGenerator->generate(
-                        'get_snippets',
-                        array(
-                            'language' => $locale,
-                            'search' => '{searchString}',
-                            'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'type' => $type ?: '{type}',
-                        )
-                    ),
-                ),
-                'sortable' => array(
-                    'href' => $this->urlGenerator->generate(
-                        'get_snippets',
-                        array(
-                            'language' => $locale,
-                            'search' => $search ?: '{searchString}',
-                            'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'page' => $page ?: '{page}',
-                            'limit' => $limit ?: '{limit}',
-                            'type' => $type ?: '{type}',
-                        )
-                    ),
-                ),
-                'pagination' => array(
-                    'href' => $this->urlGenerator->generate(
-                        'get_snippets',
-                        array(
-                            'language' => $locale,
-                            'search' => $search ?: '{searchString}',
-                            'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'page' => '{page}',
-                            'limit' => '{limit}',
-                            'type' => $type ?: '{type}',
-                        )
-                    ),
-                ),
-                'first' => array(
-                    'href' => $this->urlGenerator->generate(
-                        'get_snippets',
-                        array(
-                            'language' => $locale,
-                            'search' => $search ?: '{searchString}',
-                            'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'page' => '1',
-                            'limit' => $limit ?: '{limit}',
-                            'type' => $type ?: '{type}',
-                        )
-                    ),
-                ),
-                'last' => array(
-                    'href' => $this->urlGenerator->generate(
-                        'get_snippets',
-                        array(
-                            'language' => $locale,
-                            'search' => $search ?: '{searchString}',
-                            'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'page' => $pages,
-                            'limit' => $limit ?: '{limit}',
-                            'type' => $type ?: '{type}',
-                        )
-                    ),
-                ),
-                'all' => array(
-                    'href' => $this->urlGenerator->generate(
-                        'get_snippets',
-                        array(
-                            'language' => $locale,
-                            'search' => $search ?: '{searchString}',
-                            'sortBy' => $sortBy ?: '{sortBy}',
-                            'sortOrder' => $sortOrder ?: '{sortOrder}',
-                            'type' => $type ?: '{type}',
-                        )
-                    ),
-                )
-            ),
-            '_embedded' => array(
-                'snippets' => $this->decorateSnippets($data, $locale)
-            ),
-        );
-
-        $selfLinkArgument = array(
-            'language' => $locale,
-            'type' => $type ?: '{type}',
-        );
-        $nextLinkAttributes = array(
-            'language' => $locale,
-            'page' => $page + 1,
-            'limit' => $limit ?: '{limit}',
-            'type' => $type ?: '{type}',
-        );
-        $previousLinkAttributes = array(
-            'language' => $locale,
-            'page' => $page - 1,
-            'limit' => $limit ?: '{limit}',
-            'type' => $type ?: '{type}',
-        );
-
-        if ($limit !== null) {
-            $result['limit'] = intval($limit);
-            $selfLinkArgument['limit'] = $limit;
-        }
-
-        if ($page !== null) {
-            $result['page'] = intval($page);
-            $selfLinkArgument['page'] = $page;
-        }
-
-        if ($pages !== null) {
-            $result['pages'] = intval($pages);
-        }
-
-        if ($sortBy !== null) {
-            $selfLinkArgument['sortBy'] = $sortBy;
-            $nextLinkAttributes['sortBy'] = $sortBy;
-            $previousLinkAttributes['sortBy'] = $sortBy;
-        }
-
-        if ($sortOrder !== null) {
-            $selfLinkArgument['sortOrder'] = $sortOrder;
-            $nextLinkAttributes['sortOrder'] = $sortOrder;
-            $previousLinkAttributes['sortOrder'] = $sortOrder;
-        }
-
-        if ($search !== null) {
-            $selfLinkArgument['search'] = $search;
-            $nextLinkAttributes['search'] = $search;
-            $previousLinkAttributes['search'] = $search;
-        }
-
-        $selfLink = $this->urlGenerator->generate('get_snippets', $selfLinkArgument);
-
-        $result['_links']['self'] = array(
-            'href' => $selfLink,
-        );
-
-        if ($page > 1) {
-            $result['_links']['previous'] = array(
-                'href' => $this->urlGenerator->generate('get_snippets', $previousLinkAttributes)
-            );
-        }
-
-        if ($page < $pages) {
-            $result['_links']['next'] = array(
-                'href' => $this->urlGenerator->generate('get_snippets', $nextLinkAttributes),
-            );
-        }
-
-        return $result;
     }
 
     /**
