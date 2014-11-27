@@ -135,7 +135,7 @@ class SnippetController
             $sortOrder
         );
 
-        $pages = floor($total / $limit) + 1;
+        $pages = ceil($total / $limit);
 
         $data = array();
 
