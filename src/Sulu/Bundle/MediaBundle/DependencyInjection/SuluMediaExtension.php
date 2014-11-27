@@ -24,6 +24,7 @@ class SuluMediaExtension extends Extension
 {
     const DEFAULT_FORMAT_NAME = '170x170';
     const DEFAULT_GHOST_SCRIPT_PATH = 'ghostscript';
+    const DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER = 'web';
 
     /**
      * {@inheritDoc}
@@ -46,7 +47,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
-        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
+        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../' . $config['format_cache']['public_folder'] . '/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
         $container->setParameter('sulu_media.format_manager.mime_types', array(
