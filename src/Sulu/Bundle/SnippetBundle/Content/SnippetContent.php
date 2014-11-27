@@ -75,6 +75,7 @@ class SnippetContent extends ComplexContentType
      * @param PropertyInterface $property
      * @param string $webspaceKey
      * @param string $languageCode
+     * @param string $segmentKey
      */
     protected function setData(
         $data,
@@ -86,7 +87,7 @@ class SnippetContent extends ComplexContentType
         $refs = isset($data['ids']) ? $data['ids'] : array();
         $snippets = array();
 
-        if(is_array($refs)) {
+        if (is_array($refs)) {
             foreach ($refs as $i => $ref) {
                 // see https://github.com/jackalope/jackalope/issues/248
                 if (UUIDHelper::isUUID($i)) {

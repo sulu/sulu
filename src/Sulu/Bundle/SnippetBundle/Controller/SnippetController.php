@@ -180,7 +180,7 @@ class SnippetController
     public function getSnippetAction(Request $request, $uuid = null) {
         $this->initEnv($request);
 
-        $snippet = $this->contentMapper->load($uuid, null, $this->languageCode, true);
+        $snippet = $this->contentMapper->load($uuid, null, $this->languageCode);
 
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
 

@@ -365,15 +365,15 @@
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf020" resname="content.contents.settings.copy-locale.info">
                 <source>content.contents.settings.copy-locale.info</source>
-                <target><![CDATA[Diese Seite existiert nicht.<br/>Bitte wählen Sie eine der folgenden optionen:]]></target>
+                <target><![CDATA[Diese Seite existiert nicht.<br/>Bitte wählen Sie eine der folgenden Optionen:]]></target>
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf021" resname="content.contents.settings.copy-locale.new">
                 <source>content.contents.settings.copy-locale.new</source>
-                <target><![CDATA[Erstelle eine neue <b>leere Seite</b> in dieser Sprache]]></target>
+                <target><![CDATA[Erstellen Sie eine neue <b>leere Seite</b> in dieser Sprache]]></target>
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf022" resname="content.contents.settings.copy-locale.copy">
                 <source>content.contents.settings.copy-locale.copy</source>
-                <target><![CDATA[Erstelle eine neue Seite in dieser Sprache und <b>kopiere den Inhalt von</b>:]]></target>
+                <target><![CDATA[Erstellen Sie eine neue Seite in dieser Sprache und <b>kopieren Sie den Inhalt von</b>:]]></target>
             </trans-unit>
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf023" resname="content.contents.settings.copy-locale.select-default">
                 <source>content.contents.settings.copy-locale.select-default"</source>
@@ -390,6 +390,10 @@
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf026" resname="content.contents.new">
                 <source>content.contents.create</source>
                 <target>Seite erstellen</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf027" resname="content.contents.settings.copy-locales.default-label">
+                <source>content.contents.settings.copy-locales.default-label</source>
+                <target>Sprache auswählen ...</target>
             </trans-unit>
         </body>
     </file>

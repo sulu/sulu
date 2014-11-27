@@ -16,6 +16,8 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
+use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Component\Content\Block\BlockContentType;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -34,6 +36,7 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
@@ -216,6 +219,14 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->internalPrefix
             );
 
+            $structureResolver = new StructureResolver($this->contentTypeManager, $this->structureManager);
+
+            $snippet = new SnippetContent(
+                $this->mapper,
+                $structureResolver,
+                'not in use'
+            );
+
             $resourceLocator = new ResourceLocator($strategy, 'not in use');
             $this->containerValueMap = array_merge(
                 $this->containerValueMap,
@@ -225,6 +236,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
+                    'sulu_snippet.content.snippet' => $snippet,
                     'sulu.content.type.block' => new BlockContentType(
                             $this->contentTypeManager,
                             'not in use',
@@ -244,6 +256,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->contentTypeManager->mapAliasToServiceId('text_area', 'sulu.content.type.text_area');
             $this->contentTypeManager->mapAliasToServiceId('resource_locator', 'sulu.content.type.resource_locator');
             $this->contentTypeManager->mapAliasToServiceId('block', 'sulu.content.type.block');
+            $this->contentTypeManager->mapAliasToServiceId('snippet', 'sulu_snippet.content.snippet');
         }
     }
 
@@ -369,7 +382,8 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'base' => 'cmf',
                     'route' => 'routes',
                     'content' => 'contents',
-                    'temp' => 'temp'
+                    'temp' => 'temp',
+                    'snippet' => 'snippets',
                 )
             );
         }
@@ -437,6 +451,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PageNodeType(), true);
+            $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SnippetNodeType(), true);
 
             NodeHelper::purgeWorkspace($this->session);
             $this->session->save();
@@ -444,6 +459,9 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $cmf = $this->session->getRootNode()->addNode('cmf');
             $cmf->addMixin('mix:referenceable');
             $this->session->save();
+
+            $snippetsNode = $cmf->addNode('snippets');
+            $snippetsNode->addNode('default_snippet');
 
             $default = $cmf->addNode('default');
             $default->addMixin('mix:referenceable');

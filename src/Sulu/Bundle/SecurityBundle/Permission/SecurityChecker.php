@@ -35,6 +35,12 @@ class SecurityChecker extends AbstractSecurityChecker
      */
     public function hasPermission($subject, $permission, $locale = null)
     {
+        if (!$subject || !$this->securityContext->getToken()) {
+            // if there is no subject the operation is allowed, since we have nothing to check against
+            // if there is no token we are not behind a firewall, so the action is also allowed (e.g. command execution)
+            return true;
+        }
+
         $attributes = array(
             'permission' => $permission
         );

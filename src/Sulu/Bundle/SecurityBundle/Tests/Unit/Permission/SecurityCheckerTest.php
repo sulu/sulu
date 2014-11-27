@@ -31,6 +31,7 @@ class SecurityCheckerTest extends ProphecyTestCase
         parent::setUp();
 
         $this->securityContext = $this->prophesize('Symfony\Component\Security\Core\SecurityContextInterface');
+        $this->securityContext->getToken()->willReturn(true); // stands for a valid token
         $this->securityChecker = new SecurityChecker($this->securityContext->reveal());
     }
 
@@ -58,6 +59,14 @@ class SecurityCheckerTest extends ProphecyTestCase
         $granted = $this->securityChecker->checkPermission($object, 'view', 'de');
 
         $this->assertTrue($granted);
+    }
+
+    public function testIsGrantedFalsyValue()
+    {
+        $object = null;
+
+        // should always return true for falsy values
+        $this->assertTrue($this->securityChecker->checkPermission($object, 'view', 'de'));
     }
 
     public function testIsGrantedFail()
@@ -88,5 +97,13 @@ class SecurityCheckerTest extends ProphecyTestCase
         )->willReturn(false);
 
         $this->securityChecker->checkPermission('sulu.media.collection', 'view');
+    }
+
+    public function testIsGrantedWithoutToken()
+    {
+        $this->securityContext->getToken()->willReturn(null);
+        $this->securityContext->isGranted(Argument::any(), Argument::any())->willReturn(false);
+
+        $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
     }
 }

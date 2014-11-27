@@ -3,6 +3,14 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
+
+* 0.12.0 (2014-11-25)
+
+    * ENHANCEMENT #586 [WebsiteBundle]  Added node path variable to template
+    * BUGFIX      #614 [SecurityBundle] Fixed the security for command lines
+    * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
+    * BUGFIX      #609 [All]            Allows null value for security subject and fixed snippet internal links bug
     * ENHANCEMENT #577 [All]            Applied security to navigation items and content tabs
     * ENHANCEMENT #604 [CoreBundle]     Only register services for the current context
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
@@ -24,10 +32,7 @@ CHANGELOG for Sulu
                                         eager validation of workspace existence.
     * ENHANCEMENT #523 [All]            Refactored and improved functional tests
     * BUGFIX      #597 [ContentBundle]  Reconnect to mysql if connection gone away in websocket
-
-* dev-master
-
-    * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
+    * FEATURE     #368 [SnippetBundle]  Added `sulu:snippet:locale-copy`-command
 
 * 0.11.2 (2014-11-17)
 

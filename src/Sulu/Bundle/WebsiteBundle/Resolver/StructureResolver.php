@@ -47,7 +47,8 @@ class StructureResolver implements StructureResolverInterface
             'changer' => $structure->getChanger(),
             'created' => $structure->getCreated(),
             'changed' => $structure->getChanged(),
-            'template' => $structure->getKey()
+            'template' => $structure->getKey(),
+            'path' => $structure->getPath(),
         );
 
         if ($structure instanceof Page) {

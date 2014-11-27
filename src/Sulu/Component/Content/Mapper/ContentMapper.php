@@ -19,6 +19,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -465,7 +466,7 @@ class ContentMapper implements ContentMapperInterface
                     $propertyTranslator->getName('published')
                 );
             }
-        } else {
+        } elseif (isset($state)) {
             $this->changeState(
                 $node,
                 $state,
@@ -506,9 +507,18 @@ class ContentMapper implements ContentMapperInterface
                             'property' => $property
                         );
                     } else {
+                        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+                        // TODO find a better why for change Types (same hack is used in BlockContentType:write )
+                        $type->remove(
+                            $node,
+                            $translatedProperty,
+                            $webspaceKey,
+                            $languageCode,
+                            null
+                        );
                         $type->write(
                             $node,
-                            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                            $translatedProperty,
                             $userId,
                             $webspaceKey,
                             $languageCode,
@@ -1613,13 +1623,18 @@ class ContentMapper implements ContentMapperInterface
     /**
      * {@inheritDoc}
      */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCodes)
-    {
+    public function copyLanguage(
+        $uuid,
+        $userId,
+        $webspaceKey,
+        $srcLanguageCode,
+        $destLanguageCodes,
+        $structureType = Structure::TYPE_PAGE
+    ) {
         if (!is_array($destLanguageCodes)) {
             $destLanguageCodes = array($destLanguageCodes);
         }
 
-        /** @var Page $structure */
         $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
 
         $data = $structure->toArray(true);
@@ -1635,7 +1650,9 @@ class ContentMapper implements ContentMapperInterface
                 $uuid,
                 null,
                 Structure::STATE_TEST,
-                $structure->getIsShadow()
+                $structure->getIsShadow(),
+                $structure->getShadowBaseLanguage(),
+                $structureType
             );
         }
 
