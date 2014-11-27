@@ -57,7 +57,7 @@ class SnippetRepository
         $session = $this->sessionManager->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        return (array)$node->getReferences();
+        return iterator_to_array($node->getReferences());
     }
 
     /**
