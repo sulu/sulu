@@ -117,23 +117,31 @@ class SnippetController
             $sortOrder = null;
         }
 
-        $snippets = $this->snippetRepository->getSnippets(
-            $this->languageCode,
-            $type,
-            ($page - 1) * $limit,
-            $limit,
-            $search,
-            $sortBy,
-            $sortOrder
-        );
+        $uuidsString = $request->get('ids');
 
-        $total = $this->snippetRepository->getSnippetsAmount(
-            $this->languageCode,
-            $type,
-            $search,
-            $sortBy,
-            $sortOrder
-        );
+        if ($uuidsString) {
+            $uuids = explode(',', $uuidsString);
+            $snippets = $this->snippetRepository->getSnippetsByUuids($uuids, $this->languageCode);
+            $total = count($snippets);
+        } else {
+            $snippets = $this->snippetRepository->getSnippets(
+                $this->languageCode,
+                $type,
+                ($page - 1) * $limit,
+                $limit,
+                $search,
+                $sortBy,
+                $sortOrder
+            );
+
+            $total = $this->snippetRepository->getSnippetsAmount(
+                $this->languageCode,
+                $type,
+                $search,
+                $sortBy,
+                $sortOrder
+            );
+        }
 
         $pages = ceil($total / $limit);
 
