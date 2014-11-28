@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
 
 * 0.12.0 (2014-11-25)
