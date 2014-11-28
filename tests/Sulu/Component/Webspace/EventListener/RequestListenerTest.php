@@ -10,17 +10,13 @@
 
 namespace Sulu\Component\Webspace\EventListener;
 
-use PHPUnit_Framework_MockObject_MockObject;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-class RequestListenerTest extends \PHPUnit_Framework_TestCase
+class RequestListenerTest extends ProphecyTestCase
 {
     /**
      * @var RequestListener
@@ -28,84 +24,42 @@ class RequestListenerTest extends \PHPUnit_Framework_TestCase
     private $requestListener;
 
     /**
-     * @var WebsiteRequestAnalyzer
+     * @var RequestAnalyzerInterface
      */
     private $requestAnalyzer;
 
     /**
-     * @var PHPUnit_Framework_MockObject_MockObject
+     * @var GetResponseEvent
      */
-    private $webspaceManager;
-
-    /**
-     * @var PHPUnit_Framework_MockObject_MockObject
-     */
-    private $userRepository;
+    private $getResponseEvent;
 
     public function setUp()
     {
-        $this->webspaceManager = $this->getMockForAbstractClass(
-            '\Sulu\Component\Webspace\Manager\WebspaceManagerInterface',
-            array(),
-            '',
-            true,
-            true,
-            true,
-            array('findPortalInformationByUrl')
-        );
+        parent::setUp();
 
-        $this->userRepository = $this->getMockForAbstractClass(
-            '\Sulu\Component\Security\UserRepositoryInterface',
-            array(),
-            '',
-            true,
-            true,
-            true,
-            array('setSystem')
-        );
+        $this->getResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\GetResponseEvent');
 
-        $this->requestAnalyzer = new WebsiteRequestAnalyzer($this->webspaceManager, $this->userRepository, 'prod');
+        $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
 
-        $this->requestListener = new RequestListener($this->requestAnalyzer);
+        $this->requestListener = new RequestListener($this->requestAnalyzer->reveal());
     }
 
     public function testAnalyze()
     {
-        $webspace = new Webspace();
-        $webspace->setKey('sulu');
+        $this->getResponseEvent->isMasterRequest()->willReturn(true);
+        $this->getResponseEvent->getRequest()->willReturn(new Request());
 
-        $portal = new Portal();
-        $portal->setKey('sulu');
+        $this->requestListener->onKernelRequest($this->getResponseEvent->reveal());
 
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
+        $this->requestAnalyzer->analyze(Argument::any())->shouldHaveBeenCalled();
+    }
 
-        $portalInformation = new PortalInformation(
-            RequestAnalyzerInterface::MATCH_TYPE_FULL,
-            $webspace,
-            $portal,
-            $localization,
-            'sulu.lo/test',
-            null,
-            null
-        );
+    public function testNoAnalyzerForSubRequest()
+    {
+        $this->getResponseEvent->isMasterRequest()->willReturn(false);
 
-        $this->webspaceManager->expects($this->any())->method('findPortalInformationByUrl')->will(
-            $this->returnValue($portalInformation)
-        );
+        $this->requestListener->onKernelRequest($this->getResponseEvent->reveal());
 
-        $kernel = $this->getMock('\Symfony\Component\HttpKernel\Kernel', array(), array(), '', false);
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
-        $request->request = new ParameterBag(array('post' => 1));
-        $request->query = new ParameterBag(array('get' => 1));
-        $this->requestListener->onKernelRequest(new GetResponseEvent($kernel, $request, ''));
-
-        $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
-        $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
-        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getCurrentPostParameter());
-        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getCurrentGetParameter());
+        $this->requestAnalyzer->analyze(Argument::any())->shouldNotHaveBeenCalled();
     }
 }
