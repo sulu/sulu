@@ -31,6 +31,8 @@ class RequestListener
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $this->requestAnalyzer->analyze($event->getRequest());
+        if ($event->isMasterRequest()) {
+            $this->requestAnalyzer->analyze($event->getRequest());
+        }
     }
 }
