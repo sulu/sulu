@@ -1,8 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
-* 0.12.1 (2014-11-27)
-   * HOTFIX      #618 [MediaBundle]     Made web folder for format cache configure enable
+* dev-master
+   * HOTFIX       #619 [MediaBundle]    Made web folder for format cache configurable
 
 * 0.12.0 (2014-11-25)
 
