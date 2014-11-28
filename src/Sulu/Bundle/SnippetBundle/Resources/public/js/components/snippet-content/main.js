@@ -239,7 +239,7 @@ define([], function() {
          */
         initSnippetList = function() {
             this.sandbox.start([
-                {
+                /*{
                     name: 'search@husky',
                     options: {
                         el: getId.call(this, 'search'),
@@ -247,7 +247,7 @@ define([], function() {
                         appearance: 'white small outline',
                         slide: false
                     }
-                },
+                },*/
                 {
                     name: 'datagrid@husky',
                     options: {
@@ -258,6 +258,11 @@ define([], function() {
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'snippetList'),
                         searchInstanceName: this.options.instanceName + '-search',
+                        paginationOptions: {
+                            dropdown: {
+                                limit: 99999
+                            }
+                        },
                         viewOptions: {
                             table: {
                                 selectItem: {
