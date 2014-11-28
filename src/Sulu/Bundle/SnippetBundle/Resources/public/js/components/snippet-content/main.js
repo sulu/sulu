@@ -83,8 +83,16 @@ define([], function() {
             },
 
             data: function(options) {
-                return[
-                    '<div id="', options.ids.snippetList, '"/>',
+                return [
+                    '<div class="grid">',
+                    '   <div class="grid-row search-row">',
+                    '       <div class="grid-col-8"/>',
+                    '       <div class="grid-col-4" id="', options.ids.search, '"/>',
+                    '   </div>',
+                    '   <div class="grid-row">',
+                    '       <div class="grid-col-12" id="', options.ids.snippetList, '"/>',
+                    '   </div>',
+                    '</div>'
                 ].join('');
             },
 
@@ -116,7 +124,8 @@ define([], function() {
                 addButton: 'snippet-content-' + this.options.instanceName + '-add',
                 configButton: 'snippet-content-' + this.options.instanceName + '-config',
                 content: 'snippet-content-' + this.options.instanceName + '-content',
-                snippetList: 'snippet-content-' + this.options.instanceName + '-column-navigation'
+                snippetList: 'snippet-content-' + this.options.instanceName + '-column-navigation',
+                search: 'snippet-content-' + this.options.instanceName + '-search'
             };
             this.sandbox.dom.html(this.$el, templates.skeleton(this.options));
 
@@ -181,7 +190,7 @@ define([], function() {
             this.sandbox.dom.on(getId.call(this, 'content'), 'click', removeSnippet.bind(this), 'li .remove');
 
             // adjust position of overlay after column-navigation has initialized
-            this.sandbox.on('husky.datagrid.initialized', function() {
+            this.sandbox.on('husky.datagrid.view.rendered', function() {
                 this.sandbox.emit('husky.overlay.snippet-content.' + this.options.instanceName + '.add.set-position');
             }.bind(this));
         },
@@ -207,7 +216,7 @@ define([], function() {
             } else {
                 renderFooter.call(this);
             }
-            this.sandbox.emit('husky.column-navigation.'+ this.options.instanceName +'.unmark', dataId);
+            this.sandbox.emit('husky.column-navigation.' + this.options.instanceName + '.unmark', dataId);
             this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
         },
 
@@ -218,7 +227,7 @@ define([], function() {
         removeItemWithId = function(id) {
             for (var i = -1, length = this.items.length; ++i < length;) {
                 if (id === this.items[i].id) {
-                    this.items.splice(i ,1);
+                    this.items.splice(i, 1);
                     return true;
                 }
             }
@@ -229,18 +238,31 @@ define([], function() {
          * initialize column navigation
          */
         initSnippetList = function() {
-
             this.sandbox.start([
+                /*{
+                    name: 'search@husky',
+                    options: {
+                        el: getId.call(this, 'search'),
+                        instanceName: this.options.instanceName + '-search',
+                        appearance: 'white small outline',
+                        slide: false
+                    }
+                },*/
                 {
                     name: 'datagrid@husky',
                     options: {
                         url: this.URIGetAll.str,
                         preselected: this.data.ids,
-                        pagination: false,
                         resultKey: this.options.resultKey,
                         sortable: false,
                         columnOptionsInstanceName: '',
                         el: getId.call(this, 'snippetList'),
+                        searchInstanceName: this.options.instanceName + '-search',
+                        paginationOptions: {
+                            dropdown: {
+                                limit: 99999
+                            }
+                        },
                         viewOptions: {
                             table: {
                                 selectItem: {
@@ -253,7 +275,7 @@ define([], function() {
                                 showHead: true,
                                 contentContainer: '#content',
                                 highlightSelected: true
-                            },
+                            }
                         },
                         matchings: [
                             {
@@ -278,6 +300,17 @@ define([], function() {
          */
         bindDomEvents = function() {
             this.sandbox.dom.on(this.$el, 'click', removeSnippet.bind(this), '.-list .remove');
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                return false;
+            }.bind(this), '.search-icon');
+            this.sandbox.dom.on(this.$el, 'keydown', function(e) {
+                if (event.keyCode === 13) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    return false;
+                }
+            }.bind(this), '.search-input');
         },
 
         /**
@@ -287,7 +320,7 @@ define([], function() {
             if (this.items.length !== 0) {
                 this.linkList = this.sandbox.dom.createElement('<ul class="items-list"/>');
 
-                this.sandbox.util.each(this.items, function (i) {
+                this.sandbox.util.each(this.items, function(i) {
                     renderSnippetItem.call(this, this.items[i], this.linkList);
                 }.bind(this));
 
@@ -358,7 +391,7 @@ define([], function() {
             ]);
         },
 
-        setSnippets = function () {
+        setSnippets = function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(selected) {
                 this.data.ids = selected;
                 setData.call(this, this.data);
@@ -419,11 +452,11 @@ define([], function() {
                 if (!!this.data.ids && this.data.ids.length > 0) {
                     this.sandbox.util.load(this.URIGet.str)
                         .then(thenFunction.bind(this))
-                        .fail(function (error) {
+                        .fail(function(error) {
                             this.sandbox.logger.log(error);
                         }.bind(this));
                 } else {
-                    thenFunction.call(this, { '_embedded': { 'snippets': [] }});
+                    thenFunction.call(this, {'_embedded': {'snippets': []}});
                 }
             }
         },
@@ -459,13 +492,14 @@ define([], function() {
          * generates the URI for getting all the snippets of the configured type
          */
         setURIGetAll = function() {
-            var newURIGetAll = [
-                this.options.urlAll,
-                '?language=',
-                this.options.language,
-                '&type=',
-                this.options.snippetType
-            ].join('');
+            var delimiter = (this.options.urlAll.indexOf('?') === -1) ? '?' : '&',
+                newURIGetAll = [
+                    this.options.urlAll,
+                    delimiter, 'language=',
+                    this.options.language,
+                    '&type=',
+                    this.options.snippetType
+                ].join('');
 
             if (newURIGetAll !== this.URIGetAll.str) {
                 this.URIGetAll.str = newURIGetAll;
@@ -490,12 +524,12 @@ define([], function() {
 
             // we add some "junk" data to the payload so that it will not resolve as "false" when there
             // are no IDs
-            this.data = { junk: 'junk', ids: [] };
+            this.data = {junk: 'junk', ids: []};
             this.linkList = null;
 
             this.sandbox.util.each([
                 'snippetType', 'language', 'webspace', 'urlGet', 'urlAll'
-            ], function (key) {
+            ], function(key) {
                 if (this.options[key] === null) {
                     throw 'you must specify the "' + key + '" option';
                 }

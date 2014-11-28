@@ -8009,7 +8009,7 @@ a.btn-black, a.btn-highlight {
   line-height: 30px;
   vertical-align: middle;
   margin: auto;
-  background-color: white;
+  background-color: transparent;
   padding-left: 3px;
   text-decoration: none;
 }
@@ -8072,6 +8072,10 @@ a.btn-black, a.btn-highlight {
 .search-container.small .search-icon {
   padding-right: 15px;
   font-size: 12px;
+}
+/* line 113, ../scss/modules/search.scss */
+.search-container.outline .input-round {
+  border: 1px #999 solid;
 }
 
 /* line 5, ../scss/modules/tabs.scss */

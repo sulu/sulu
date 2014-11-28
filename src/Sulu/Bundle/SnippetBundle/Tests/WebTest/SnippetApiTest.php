@@ -119,6 +119,27 @@ class SnippetApiTest extends SuluTestCase
                 ),
                 2
             ),
+            array(
+                array(
+                    'limit' => 2,
+                    'page' => 1
+                ),
+                2
+            ),
+            array(
+                array(
+                    'limit' => 2,
+                    'page' => 2
+                ),
+                2
+            ),
+            array(
+                array(
+                    'limit' => 2,
+                    'page' => 3
+                ),
+                1
+            ),
         );
     }
 
