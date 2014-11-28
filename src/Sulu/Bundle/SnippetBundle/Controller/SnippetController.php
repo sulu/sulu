@@ -100,21 +100,6 @@ class SnippetController
         // if the type parameter is falsy, assign NULL to $type
         $type = $request->query->get('type', null) ?: null;
 
-        $search = $request->get('search');
-        if ($search === '') {
-            $search = null;
-        }
-
-        $sortBy = $request->get('sortBy');
-        if ($sortBy === '') {
-            $sortBy = null;
-        }
-
-        $sortOrder = $request->get('sortOrder');
-        if ($sortOrder === '') {
-            $sortOrder = null;
-        }
-
         $uuidsString = $request->get('ids');
 
         if ($uuidsString) {
@@ -127,17 +112,17 @@ class SnippetController
                 $type,
                 $listRestHelper->getOffset(),
                 $listRestHelper->getLimit(),
-                $search,
-                $sortBy,
-                $sortOrder
+                $listRestHelper->getSearchPattern(),
+                $listRestHelper->getSortColumn(),
+                $listRestHelper->getSortOrder()
             );
 
             $total = $this->snippetRepository->getSnippetsAmount(
                 $this->languageCode,
                 $type,
-                $search,
-                $sortBy,
-                $sortOrder
+                $listRestHelper->getSearchPattern(),
+                $listRestHelper->getSortColumn(),
+                $listRestHelper->getSortOrder()
             );
         }
 
