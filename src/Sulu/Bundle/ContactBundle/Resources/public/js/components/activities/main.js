@@ -333,7 +333,7 @@ define(
                 // init bottom-toolbar
                 this.sandbox.start([
                     {
-                        name: 'list-toolbar@suluadmin',
+                        name: 'bottom-toolbar@suluadmin',
                         options: {
                             el: this.$find('#bottom-list-toolbar'),
                             instanceName: 'activities',
