@@ -32,10 +32,6 @@ define([
                 this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
             }, this);
 
-//
-//            //add clicked
-//            this.sandbox.on('sulu.bottom-toolbar.add', this.addOrEditActivity.bind(this), this);
-
             //delete clicked
             this.sandbox.on('sulu.bottom-toolbar.delete', removeContact.bind(this).bind(this), this);
 
@@ -226,12 +222,13 @@ define([
             }.bind(this));
         },
 
-        // list-toolbar template
+    // list-toolbar template
         listTemplate = function() {
             return [
                 {
                     id: 'add',
                     icon: 'plus-circle',
+                    //icon: 'gear',
                     class: 'highlight-white',
                     position: 1,
                     title: this.sandbox.translate('sulu.list-toolbar.add'),
@@ -248,33 +245,19 @@ define([
                         }
                     ],
                     callback: function() {
-                        this.sandbox.emit('sulu.list-toolbar.add');
+                        this.sandbox.emit('sulu.bottom-toolbar.add');
                     }.bind(this)
                 },
                 {
                     id: 'settings',
-                    icon: 'gear',
-                    items: [
-                        {
-                            id: 'delete',
-                            title: this.sandbox.translate('contact.accounts.contact-remove'),
-                            callback: removeContact.bind(this),
-                            disabled: true
-                        }
-                    ]
-               {
+                    icon: 'magic',
+                    disabled: true
+                },
+                {
                     id: 'delete',
                     icon: 'trash-o',
                     position: 20,
                     callback: removeContact.bind(this),
-                    disabled: true
-                },
-                {
-                    icon: 'magic',
-                    iconSize: 'large',
-                    group: 'left',
-                    id: 'options-button',
-                    position: 30,
                     disabled: true
                 }
             ];
@@ -302,6 +285,7 @@ define([
         templates: ['/admin/contact/template/contact/list'],
 
         initialize: function() {
+            this.instanceName = this.options.instanceName;
 
             this.formOfAddress = null;
             this.render();
@@ -326,8 +310,17 @@ define([
 
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
-            //init bottom-toolbar
-            this.sandbox.start(this.$el);
+            // init bottom-toolbar
+            this.sandbox.start([
+                {
+                    name: 'bottom-toolbar@suluadmin',
+                    options: {
+                        el: this.$find('#bottom-list-toolbar'),
+                        instanceName: 'contacts',
+                        template: listTemplate.call(this)
+                    }
+                }
+            ]);
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsContactsFields', '/admin/api/contacts/fields?accountContacts=true',

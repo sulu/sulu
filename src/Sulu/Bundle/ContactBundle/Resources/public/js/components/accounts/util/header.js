@@ -141,6 +141,7 @@ define(['app-config'], function(AppConfig) {
                     iconSize: 'large',
                     group: 'left',
                     id: 'options-button',
+                    disabled: true,
                     position: 30
                 };
 
@@ -163,7 +164,6 @@ define(['app-config'], function(AppConfig) {
                 id: 'delete',
                 icon: 'trash-o',
                 iconSize: 'large',
-                class: 'highlight',
                 position: 20,
                 group: 'left',
                 callback: function() {

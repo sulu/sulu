@@ -32,18 +32,31 @@ define(
                         icon: 'plus-circle',
                         class: 'highlight-white',
                         title: 'add',
-                        position: 10,
+                        position: 1,
                         callback: this.addOrEditActivity.bind(this)
+                    },
+                    {
+                        id: 'delete',
+                        icon: 'trash-o',
+                        position: 20,
+                        callback: this.removeActivities.bind(this),
+                        disabled: true
                     },
                     {
                         id: 'settings',
                         icon: 'gear',
+                        position: 30,
                         items: [
                             {
-                                id: 'delete',
-                                title: this.sandbox.translate('contact.activities.remove'),
-                                callback: this.removeActivities.bind(this),
+                                title: this.sandbox.translate('sulu.list-toolbar.import'),
                                 disabled: true
+                            },
+                            {
+                                title: this.sandbox.translate('sulu.list-toolbar.export'),
+                                disabled: true
+                            },
+                            {
+                                type: 'columnOptions'
                             }
                         ]
                     }
@@ -97,8 +110,8 @@ define(
                 this.sandbox.on('sulu.bottom-toolbar.delete', this.removeActivities.bind(this), this);
 
 
-                //init magic items icon
-                this.sandbox.on('sulu.bottom-toolbar.magic', this.setSettingsItems.bind(this), this);
+                //init settings items icon
+                this.sandbox.on('sulu.list-toolbar.magic', this.setSettingsItems.bind(this), this);
 
 
                 // listen for defaults for types/statuses/prios
@@ -320,35 +333,13 @@ define(
                 // init bottom-toolbar
                 this.sandbox.start([
                     {
-                        name: 'bottom-toolbar@suluadmin',
+                        name: 'list-toolbar@suluadmin',
                         options: {
-                            // el: this.$find('#bottom-list-toolbar'),
                             el: this.$find('#bottom-list-toolbar'),
-                            items: {
-                                add: [
-                                    {
-                                        id: 'add-account-contact',
-                                        title: this.sandbox.translate('contact.account.add-account-contact')
-                                        //callback: createRelationOverlay.bind(this)
-                                    },
-                                    {
-                                        id: 'add-new-contact-to-account',
-                                        title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
-                                        //callback: createContactOverlay.bind(this)
-                                    }
-                                ],
-                                settings: [
-                                    {
-                                        id: 'add-account-contact',
-                                        title: this.sandbox.translate('contact.account.add-account-contact')
-                                        //callback: createRelationOverlay.bind(this)
-                                    },
-                                    {
-                                        id: 'add-new-contact-to-account',
-                                        title: this.sandbox.translate('contact.accounts.add-new-contact-to-account')
-                                        //callback: createContactOverlay.bind(this)
-                                    }
-                                ]
+                            instanceName: 'activities',
+                            template: listTemplate.call(this),
+                            columnOptions: {
+                                key: 'activitiesContactsFields'
                             }
                         }
                     }
