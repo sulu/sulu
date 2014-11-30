@@ -20,7 +20,6 @@ define([],
         'use strict';
 
         var defaults = {
-                // instanceName: 'contact',
                 instanceName: 'content',
                 template: 'default',
                 parentTemplate: null,
@@ -110,14 +109,6 @@ define([],
                         postfix = !!enable ? 'enable' : 'disable';
                         this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
                     }.bind(this));
-
-//                    this.sandbox.on('husky.datagrid.number.selections', function(number) {
-//                        if (number > 0) {
-//                            this.sandbox.emit('husky.toolbar.activities.item.enable', 'delete');
-//                        } else {
-//                            this.sandbox.emit('husky.toolbar.activities.item.disable', 'delete');
-//                        }
-//                    }.bind(this));
                 },
 
                 defaultEditableList: function() {
@@ -298,18 +289,7 @@ define([],
                     this.sandbox.dom.hide(this.$el);
                     startToolbarInHeader.call(this, options);
                 }
-
-                // startToolbarComponent.call(this, this.options);
             }
-
-//            listener: function() {
-//                var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
-//                    postfix;
-//                this.sandbox.on('husky.datagrid.number.selections', function(number) {
-//                    postfix = number > 0 ? 'enable' : 'disable';
-//                    this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
-//                }.bind(this));
-//            }
         };
     });
 
