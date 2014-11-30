@@ -106,7 +106,7 @@ define(
                 //add clicked
                 this.sandbox.on('sulu.bottom-toolbar.add', this.addOrEditActivity.bind(this), this);
 
-                //delete clicked
+                //delete clicked on list
                 this.sandbox.on('sulu.bottom-toolbar.delete', this.removeActivities.bind(this), this);
 
 
@@ -352,7 +352,7 @@ define(
                     '/admin/api/activities/fields',
                     {
                         el: this.$find('#list-toolbar-container'),
-                        instanceName: 'activities',
+                        instanceName: 'accounts',
                         inHeader: true,
                         template: listTemplate.call(this)
                     },
