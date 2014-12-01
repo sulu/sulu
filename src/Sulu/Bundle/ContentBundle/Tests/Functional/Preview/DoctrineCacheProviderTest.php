@@ -182,15 +182,21 @@ class DoctrineCacheProviderTest extends PhpcrTestCase
             )
         );
 
-        $data[0] =  $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
-        $data[1] =  $this->mapper->save($data[1], 'overview', 'default', 'en', 1);
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1);
 
         return $data;
     }
 
     private function getId($userId, $contentUuid, $locale)
     {
-        return sprintf('%s:%s:%s', $userId, $contentUuid, $locale);
+        $method = new ReflectionMethod(
+            get_class($this->cache), 'getId'
+        );
+
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($this->cache, array($userId, $contentUuid, $locale));
     }
 
     public function testWarmUp()
@@ -202,7 +208,7 @@ class DoctrineCacheProviderTest extends PhpcrTestCase
         $this->assertEquals('Testtitle', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $data = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $data = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
 
         $this->assertEquals('Testtitle', $data['title']);
         $this->assertEquals('overview', $data['template']);
@@ -216,13 +222,14 @@ class DoctrineCacheProviderTest extends PhpcrTestCase
 
         $data[0]->getProperty('title')->setValue('TEST');
 
-        $result = $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
+        $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
+        $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertNotEquals(false, $result);
 
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $result = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $result = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
         $this->assertEquals('TEST', $result['title']);
         $this->assertEquals('overview', $result['template']);
 
@@ -240,13 +247,14 @@ class DoctrineCacheProviderTest extends PhpcrTestCase
 
         $data[0]->getProperty('title')->setValue('TEST');
 
-        $result = $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
+        $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
+        $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertNotEquals(false, $result);
 
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $result = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $result = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
         $this->assertEquals('TEST', $result['title']);
         $this->assertEquals('overview', $result['template']);
 
@@ -263,10 +271,11 @@ class DoctrineCacheProviderTest extends PhpcrTestCase
         $this->cache->warmUp(1, $data[0]->getUuid(), 'default', 'en');
         $this->cache->saveStructure($data[1], 1, $data[1]->getUuid(), 'default', 'en');
 
-        $result = $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
+        $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'default', 'en');
+        $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'default', 'en');
         $this->assertNotEquals(false, $result);
 
-        $result = unserialize($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')));
+        $result = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
         $this->assertEquals('Testtitle', $result['title']);
         $this->assertEquals('overview', $result['template']);
 
