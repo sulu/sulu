@@ -20,7 +20,8 @@ define([
             contactSelector: '#contact-field',
             positionSelector: '#company-contact-position',
             newContactFormSelector: '#contact-form',
-            contactListSelector: '#people-list'
+            contactListSelector: '#people-list',
+            bottomToolbarId: '#bottom-list-toolbar'
         },
 
         companyPosition = null,
@@ -314,7 +315,7 @@ define([
                 {
                     name: 'bottom-toolbar@suluadmin',
                     options: {
-                        el: this.$find('#bottom-list-toolbar'),
+                        el: constants.bottomToolbarId,
                         instanceName: 'contacts',
                         template: listTemplate.call(this)
                     }
