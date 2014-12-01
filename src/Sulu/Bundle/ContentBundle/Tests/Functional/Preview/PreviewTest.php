@@ -15,6 +15,7 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
@@ -45,6 +46,11 @@ class PreviewTest extends SuluTestCase
 
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->preview = $this->getContainer()->get('sulu_content.preview');
+
+        /** @var AdminRequestAnalyzer $requestAnalyzer */
+        $requestAnalyzer = $this->getContainer()->get('sulu_core.webspace.request_analyzer');
+        $requestAnalyzer->setWebspaceKey('sulu_io');
+        $requestAnalyzer->setLocalizationCode('en');
 
         $class = new \ReflectionClass(get_class($this->preview));
         $property = $class->getProperty('previewCache');

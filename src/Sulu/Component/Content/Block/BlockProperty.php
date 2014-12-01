@@ -12,25 +12,32 @@ namespace Sulu\Component\Content\Block;
 
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Discriminator;
 
 /**
  * representation of a block node in template xml
+ * @Discriminator(disabled=true)
  */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
     /**
      * properties managed by this block
      * @var BlockPropertyType[]
+     * @Type("array<string,Sulu\Component\Content\Block\BlockPropertyType>")
      */
     private $types = array();
 
     /**
      * @var array
+     * @Exclude
      */
     private $properties = array();
 
     /**
      * @var string
+     * @Type("string")
      */
     private $defaultTypeName;
 

@@ -13,13 +13,23 @@ namespace Sulu\Component\Content;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
+use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Util\ArrayableInterface;
-use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Discriminator;
 use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
+ *
+ * @Discriminator(
+ *     field = "propertyType",
+ *     map = {
+ *         "property": "Sulu\Component\Content\Property",
+ *         "block": "Sulu\Component\Content\Block\BlockProperty"
+ *     }
+ * )
  */
 class Property implements PropertyInterface, \JsonSerializable
 {
@@ -432,6 +442,7 @@ class Property implements PropertyInterface, \JsonSerializable
         }
 
         $data['value'] = json_encode($this->value);
+        $data['propertyType'] = $this instanceof BlockProperty ? 'block' : 'property';
 
         return $data;
     }
@@ -447,7 +458,7 @@ class Property implements PropertyInterface, \JsonSerializable
             $propertyMetadata->setValue($this, $data[$propertyName]);
         }
 
-        $this->value = json_decode($data['value'], true);
+        $this->setValue(json_decode($data['value'], true));
         $this->structure = $visitor->getResult();
 
         return $data;
