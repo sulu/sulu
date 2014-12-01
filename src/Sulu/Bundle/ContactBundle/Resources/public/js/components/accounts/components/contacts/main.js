@@ -33,7 +33,7 @@ define([
             }, this);
 
             //delete clicked
-            this.sandbox.on('sulu.bottom-toolbar.delete', removeContact.bind(this).bind(this), this);
+            this.sandbox.on('sulu.bottom-toolbar.delete', removeContact.bind(this), this);
 
             // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', function() {
