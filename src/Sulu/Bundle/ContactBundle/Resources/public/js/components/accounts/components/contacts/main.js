@@ -222,13 +222,12 @@ define([
             }.bind(this));
         },
 
-    // list-toolbar template
+    // bottom-toolbar template
         listTemplate = function() {
             return [
                 {
                     id: 'add',
                     icon: 'plus-circle',
-                    //icon: 'gear',
                     class: 'highlight-white',
                     position: 1,
                     title: this.sandbox.translate('sulu.list-toolbar.add'),
