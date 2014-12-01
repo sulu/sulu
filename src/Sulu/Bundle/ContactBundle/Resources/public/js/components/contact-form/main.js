@@ -28,7 +28,7 @@ define([
             fieldTypeId: 'field-type-select',
             editDeleteSelector: '.delete',
             editDeleteIcon: 'fa-minus-circle',
-            editUndoDeleteIcon: 'fa- plus-circle',
+            editUndoDeleteIcon: 'fa-plus-circle',
             fadedClass: 'faded',
             addressFormId: '#address-form',
             bankAccountFormId: '#bank-account-form',

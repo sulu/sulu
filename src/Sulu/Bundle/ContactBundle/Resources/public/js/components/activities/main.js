@@ -102,7 +102,7 @@ define(
             },
 
             bindCustomEvents: function() {
-                
+
               // listen for defaults for types/statuses/prios
                 this.sandbox.on('sulu.contacts.activities.set.defaults',
                     function(defaults) {
