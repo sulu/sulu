@@ -64,7 +64,6 @@ interface PreviewCacheProviderInterface
      * @param string string $contentUuid
      * @param string string $webspaceKey
      * @param string string $locale
-     * @return StructureInterface
      */
     public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale);
 

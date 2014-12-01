@@ -14,7 +14,6 @@ use Doctrine\Common\Cache\Cache;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureSerializer\StructureSerializerInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
  * provides a cache for preview with phpcr
@@ -44,7 +43,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     /**
      * @var int
      */
-    private $lifeTime;
+    private $cacheLifeTime;
 
     /**
      * prefix for property names and node name
@@ -62,13 +61,12 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         Cache $changesCache,
         $prefix = 'preview',
         $cacheLifeTime = 3600
-    )
-    {
+    ) {
         $this->contentMapper = $contentMapper;
         $this->serializer = $structureSerializer;
         $this->dataCache = $dataCache;
         $this->changesCache = $changesCache;
-        $this->lifeTime = $cacheLifeTime;
+        $this->cacheLifeTime = $cacheLifeTime;
         $this->prefix = $prefix;
     }
 
@@ -121,9 +119,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         $id = $this->getId($userId, $contentUuid, $locale);
 
         if ($this->contains($userId, $contentUuid, $webspaceKey, $locale)) {
-            return $this->serializer->deserialize(
-                unserialize($this->dataCache->fetch($id))
-            );
+            return $this->serializer->deserialize($this->dataCache->fetch($id));
         } else {
             return false;
         }
@@ -137,9 +133,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         $data = $this->serializer->serialize($content);
 
         $id = $this->getId($userId, $contentUuid, $locale);
-        $this->dataCache->save($id, serialize($data), $this->lifeTime);
-
-        return $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
+        $this->dataCache->save($id, $data, $this->cacheLifeTime);
     }
 
     /**
@@ -148,7 +142,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function fetchChanges($userId, $contentUuid, $webspaceKey, $locale, $remove = true)
     {
         $id = $this->getId($userId, $contentUuid, $locale);
-        $changes = unserialize($this->changesCache->fetch($id));
+        $changes = $this->changesCache->fetch($id);
 
         if ($remove) {
             $this->saveChanges(array(), $userId, $contentUuid, $webspaceKey, $locale);
@@ -163,9 +157,9 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function saveChanges($changes, $userId, $contentUuid, $webspaceKey, $locale)
     {
         $id = $this->getId($userId, $contentUuid, $locale);
-        $this->changesCache->save($id, serialize($changes), $this->lifeTime);
+        $this->changesCache->save($id, $changes, $this->cacheLifeTime);
 
-        return unserialize($this->changesCache->fetch($id));
+        return $this->changesCache->fetch($id);
     }
 
     /**

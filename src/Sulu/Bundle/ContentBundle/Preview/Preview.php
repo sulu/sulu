@@ -122,7 +122,9 @@ class Preview implements PreviewInterface
                 );
             }
 
-            return $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+            $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+
+            return $this->previewCache->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
         }
 
         return false;

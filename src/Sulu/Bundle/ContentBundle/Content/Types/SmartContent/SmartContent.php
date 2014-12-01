@@ -94,18 +94,10 @@ class SmartContent extends ComplexContentType
     /**
      * @param $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @param bool $preview
      */
     protected function setData(
         $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey,
-        $preview = false
+        PropertyInterface $property
     ) {
         $property->setValue($data);
     }

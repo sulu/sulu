@@ -136,7 +136,7 @@ class ExcerptStructureExtension extends StructureExtension
         // should be done before parent::setLanguageCode because it uses the $thi<->properties
         // which will be set in initExcerptStructure
         if ($this->excerptStructure === null) {
-            $this->excerptStructure = $this->initExcerptStructure();
+            $this->initProperties();
         }
 
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
@@ -148,14 +148,10 @@ class ExcerptStructureExtension extends StructureExtension
      */
     public function getContentData($container)
     {
-        if ($this->excerptStructure === null) {
-            $this->excerptStructure = $this->initExcerptStructure();
-        }
-
         $container = new ExcerptValueContainer($container);
 
         $data = array();
-        foreach ($this->excerptStructure->getProperties() as $property) {
+        foreach ($this->getExcerptStructure()->getProperties() as $property) {
             if ($container->__isset($property->getName())) {
                 $property->setValue($container->__get($property->getName()));
                 $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -167,16 +163,26 @@ class ExcerptStructureExtension extends StructureExtension
     }
 
     /**
-     * initiates structure and properties
+     * Returns and caches excerpt-structure
+     * @return StructureInterface
      */
-    private function initExcerptStructure()
+    private function getExcerptStructure()
     {
-        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
-        /** @var PropertyInterface $property */
-        foreach ($excerptStructure->getProperties() as $property) {
-            $this->properties[] = $property->getName();
+        if($this->excerptStructure === null) {
+            $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
         }
 
-        return $excerptStructure;
+        return $this->excerptStructure;
+    }
+
+    /**
+     * initiates structure and properties
+     */
+    private function initProperties()
+    {
+        /** @var PropertyInterface $property */
+        foreach ($this->getExcerptStructure()->getProperties() as $property) {
+            $this->properties[] = $property->getName();
+        }
     }
 }

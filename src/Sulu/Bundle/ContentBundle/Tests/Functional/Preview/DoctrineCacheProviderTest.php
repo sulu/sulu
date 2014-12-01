@@ -30,7 +30,7 @@ use Sulu\Component\Webspace\Webspace;
  * @group functional
  * @group preview
  */
-class PreviewCacheProviderTest extends PhpcrTestCase
+class DoctrineCacheProviderTest extends PhpcrTestCase
 {
     /**
      * @var DoctrineCacheProvider
