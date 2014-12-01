@@ -154,7 +154,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('overview', $result['key']);
 
         $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/contents/testtitle');
+        $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
         $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
         $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
     }
@@ -179,7 +179,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('overview', $result['key']);
 
         $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/contents/testtitle');
+        $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
 
         $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
         $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
@@ -200,13 +200,13 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('overview', $result['key']);
 
         $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/contents/testtitle');
+        $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
 
         $this->assertEquals('Testtitle', $node->getPropertyValue('i18n:en-title'));
         $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));
 
         $session = $this->sessionManager->getSession();
-        $node = $session->getNode('/cmf/default/contents/testtitle2');
+        $node = $session->getNode('/cmf/sulu_io/contents/testtitle2');
 
         $this->assertEquals('Testtitle2', $node->getPropertyValue('i18n:en-title'));
         $this->assertEquals('overview', $node->getPropertyValue('i18n:en-template'));

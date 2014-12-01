@@ -10,32 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
-use Doctrine\Common\Cache\ArrayCache;
-use Liip\ThemeBundle\ActiveTheme;
-use ReflectionMethod;
-use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
-use Sulu\Bundle\ContentBundle\Preview\Preview;
-use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
-use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
-use Sulu\Bundle\ContentBundle\Preview\PreviewRenderer;
-use Sulu\Bundle\ContentBundle\Preview\RdfaCrawler;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureSerializer\StructureSerializer;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
-use Sulu\Component\Webspace\Navigation;
-use Sulu\Component\Webspace\NavigationContext;
-use Sulu\Component\Webspace\Theme;
-use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
@@ -43,227 +21,24 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
  * @group functional
  * @group preview
  */
-class PreviewMessageComponentTest extends PhpcrTestCase
+class PreviewMessageComponentTest extends SuluTestCase
 {
-    /**
-     * @var PreviewInterface
-     */
-    private $preview;
-
-    /**
-     * @var PreviewCacheProviderInterface
-     */
-    private $previewCache;
-
-    /**
-     * @var ActiveTheme
-     */
-    private $activeTheme;
-
-    /**
-     * @var PreviewRenderer
-     */
-    private $renderer;
-
-    /**
-     * @var RdfaCrawler
-     */
-    private $crawler;
-
-    /**
-     * @var ControllerResolverInterface
-     */
-    private $resolver;
-
-    /**
-     * @var AdminRequestAnalyzer
-     */
-    private $requestAnalyzer;
-
     /**
      * @var PreviewMessageComponent
      */
     private $component;
 
     /**
-     * @var Registry
+     * @var ContentMapperInterface
      */
-    private $registry;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private $mapper;
 
     protected function setUp()
     {
-        $this->prepareControllerResolver();
+        parent::initPhpcr();
 
-        $this->prepareWebspaceManager();
-        $this->prepareMapper();
-
-        $structureSerializer = new StructureSerializer($this->structureManager);
-        $this->activeTheme = new ActiveTheme('test', array('test'));
-        $this->previewCache = new DoctrineCacheProvider(
-            $this->mapper,
-            $structureSerializer,
-            new ArrayCache(),
-            new ArrayCache()
-        );
-        $this->renderer = new PreviewRenderer($this->activeTheme, $this->resolver, $this->webspaceManager);
-        $this->crawler = new RdfaCrawler();
-        $this->requestAnalyzer = $this->getMockBuilder('Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->registry = $this->getMock('Doctrine\Bundle\DoctrineBundle\Registry', array('getManager'), array(), 'Registry', false);
-        $entityManager = $this->getMock('Doctrine\ORM\EntityManager', array('getConnection'), array(), 'EntityManager', false);
-        $this->connection = $this->getMock('Doctrine\DBAL\Connection', array('executeQuery', 'close', 'connect'), array(), 'Connection', false);
-
-        $this->registry->expects($this->any())->method('getManager')->willReturn($entityManager);
-        $entityManager->expects($this->any())->method('getConnection')->willReturn($this->connection);
-
-        $this->preview = new Preview($this->contentTypeManager, $this->previewCache, $this->renderer, $this->crawler);
-        $this->component = new PreviewMessageComponent(
-            $this->preview,
-            $this->requestAnalyzer,
-            $this->registry,
-            $this->getMock('\Psr\Log\LoggerInterface')
-        );
-    }
-
-    protected function prepareWebspaceManager()
-    {
-        if ($this->webspaceManager === null) {
-            $webspace = new Webspace();
-            $en = new Localization();
-            $en->setLanguage('en');
-            $en_us = new Localization();
-            $en_us->setLanguage('en');
-            $en_us->setCountry('us');
-            $en_us->setParent($en);
-            $en->addChild($en_us);
-
-            $de = new Localization();
-            $de->setLanguage('de');
-            $de_at = new Localization();
-            $de_at->setLanguage('de');
-            $de_at->setCountry('at');
-            $de_at->setParent($de);
-            $de->addChild($de_at);
-
-            $theme = new Theme();
-            $theme->setKey('test');
-            $webspace->setTheme($theme);
-
-            $es = new Localization();
-            $es->setLanguage('es');
-
-            $webspace->addLocalization($en);
-            $webspace->addLocalization($de);
-            $webspace->addLocalization($es);
-
-            $webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
-
-            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
-            $this->webspaceManager->expects($this->any())
-                ->method('findWebspaceByKey')
-                ->will($this->returnValue($webspace));
-        }
-    }
-
-    public function prepareControllerResolver()
-    {
-        $controller = $this->getMock('\Sulu\Bundle\WebsiteBundle\Controller\WebsiteController', array('indexAction'));
-        $controller->expects($this->any())
-            ->method('indexAction')
-            ->will($this->returnCallback(array($this, 'indexCallback')));
-
-        $this->resolver = $this->getMock('\Symfony\Component\HttpKernel\Controller\ControllerResolverInterface');
-        $this->resolver->expects($this->any())
-            ->method('getController')
-            ->will($this->returnValue(array($controller, 'indexAction')));
-    }
-
-    public function structureCallback()
-    {
-        return $this->prepareStructureMock();
-    }
-
-    public function prepareStructureMock()
-    {
-        $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
-            array('overview', 'asdf', 'asdf', 2400)
-        );
-        $structureMock->setLanguageCode('en');
-        $structureMock->setWebspaceKey('sulu_io');
-
-        $method = new ReflectionMethod(
-            get_class($structureMock), 'addChild'
-        );
-
-        $method->setAccessible(true);
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property(
-                    'title',
-                    'title',
-                    'text_line',
-                    false,
-                    true,
-                    1,
-                    1,
-                    array()
-                )
-            )
-        );
-
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property(
-                    'url', 'url', 'resource_locator',
-                    false,
-                    true,
-                    1,
-                    1,
-                    array(),
-                    array(new PropertyTag('sulu.rlp', 1))
-                )
-            )
-        );
-
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('article', 'article', 'text_area')
-            )
-        );
-
-        $block = new BlockProperty('block', 'block', false, false, 4, 2);
-        $type1 = new BlockPropertyType('type1', '');
-
-        $prop = new Property('title', 'title', 'text_line');
-        $type1->addChild($prop);
-
-        $prop = new Property('article', 'article', 'text_area', false, false, 4, 2);
-        $type1->addChild($prop);
-
-        $block->addType($type1);
-
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                $block
-            )
-        );
-
-        $structureMock->getProperty('title')->setValue('Title');
-        $structureMock->getProperty('article')->setValue('Lorem Ipsum dolorem apsum');
-
-        return $structureMock;
+        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->component = $this->getContainer()->get('sulu_content.preview.message_component');
     }
 
     /**
@@ -303,8 +78,8 @@ class PreviewMessageComponentTest extends PhpcrTestCase
             )
         );
 
-        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'en', 1);
-        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1);
+        $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1);
 
         return $data;
     }
@@ -399,8 +174,6 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testStart()
     {
-        $this->connection->expects($this->any())->method('executeQuery')->willReturn(false);
-
         $data = $this->prepareData();
 
         $i = -1;
@@ -437,7 +210,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'form',
                     'user' => '1'
                 )
@@ -451,7 +224,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'preview',
                     'user' => '1'
                 )
@@ -461,8 +234,6 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testUpdate()
     {
-        $this->connection->expects($this->any())->method('executeQuery')->willReturn(false);
-
         $data = $this->prepareData();
 
         $i = 0;
@@ -527,7 +298,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'form',
                     'user' => '1'
                 )
@@ -554,7 +325,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'content' => $data[0]->getUuid(),
                     'templateKey' => 'overview',
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'preview',
                     'user' => '1'
                 )
@@ -569,7 +340,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'content' => $data[1]->getUuid(),
                     'templateKey' => 'overview',
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'form',
                     'user' => '1'
                 )
@@ -584,7 +355,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'content' => $data[1]->getUuid(),
                     'templateKey' => 'overview',
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'preview',
                     'user' => '1'
                 )
@@ -599,7 +370,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'content' => $data[1]->getUuid(),
                     'templateKey' => 'overview',
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'form',
                     'user' => '1',
                     'changes' => array(
@@ -618,7 +389,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'content' => $data[1]->getUuid(),
                     'templateKey' => 'overview',
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'form',
                     'user' => '1',
                     'changes' => array(
@@ -631,10 +402,6 @@ class PreviewMessageComponentTest extends PhpcrTestCase
 
     public function testReconnect()
     {
-        $this->connection->expects($this->any())->method('executeQuery')->will($this->throwException(new DBALException()));
-        $this->connection->expects($this->exactly(2))->method('close')->willReturn(true);
-        $this->connection->expects($this->exactly(2))->method('connect')->willReturn(true);
-
         $data = $this->prepareData();
 
         $i = -1;
@@ -671,7 +438,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'form',
                     'user' => '1'
                 )
@@ -685,7 +452,7 @@ class PreviewMessageComponentTest extends PhpcrTestCase
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
                     'languageCode' => 'de',
-                    'webspaceKey' => 'default',
+                    'webspaceKey' => 'sulu_io',
                     'type' => 'preview',
                     'user' => '1'
                 )
