@@ -48,6 +48,7 @@ class StructureResolver implements StructureResolverInterface
             'created' => $structure->getCreated(),
             'changed' => $structure->getChanged(),
             'template' => $structure->getKey(),
+            'locale' => $structure->getLanguageCode(),
             'path' => $structure->getPath(),
         );
 

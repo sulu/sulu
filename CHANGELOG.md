@@ -5,6 +5,7 @@ CHANGELOG for Sulu
 
     * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
+    * FEATURE     #623 [ContentBundle]  Add locale as twig variable to get current language code
 
 * 0.12.0 (2014-11-25)
 
