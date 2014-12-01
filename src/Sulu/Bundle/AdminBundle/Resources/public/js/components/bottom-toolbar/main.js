@@ -12,7 +12,13 @@
  * @constructor
  *
  * @param {Object} [options] Configuration object
- * @param {Object} [options] Configuration object
+ * @param {String} [options.instanceName] name of the instance
+ * @param {Object} [options.columnOptions] options to pass to the toolbar-columnOptions
+ * @param {String|Array} [options.template] Template of items for the toolbar. Can be Object with valid structure (see husky) or a string representing an object with items (e.g. 'default')
+ * @param {String} [options.listener] listens to tab events
+ * @param {String|Array} [options.ParentTemplate] same as toolbarTemplate. Gets merged with template
+ * @param {String} [options.parentListener] see if template has listener set
+ * @param {String} [options.el] element to store options
  */
 define([],
     function() {
