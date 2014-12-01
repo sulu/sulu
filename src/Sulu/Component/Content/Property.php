@@ -10,10 +10,13 @@
 
 namespace Sulu\Component\Content;
 
+use JMS\Serializer\Context;
+use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
@@ -414,5 +417,39 @@ class Property implements PropertyInterface, \JsonSerializable
         } else {
             return $this->getValue();
         }
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "serialization")
+     */
+    public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
+    {
+        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+
+        $data = array();
+        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            $data[$propertyName] = $propertyMetadata->getValue($this);
+        }
+
+        $data['value'] = json_encode($this->value);
+
+        return $data;
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "deserialization")
+     */
+    public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
+    {
+        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+
+        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            $propertyMetadata->setValue($this, $data[$propertyName]);
+        }
+
+        $this->value = json_decode($data['value'], true);
+        $this->structure = $visitor->getResult();
+
+        return $data;
     }
 }

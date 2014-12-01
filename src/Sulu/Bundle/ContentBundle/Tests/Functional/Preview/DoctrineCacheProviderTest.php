@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
  * @group functional
@@ -50,12 +51,18 @@ class DoctrineCacheProviderTest extends SuluTestCase
      */
     private $mapper;
 
+    /**
+     * @var SessionManagerInterface
+     */
+    private $sessionManager;
+
     protected function setUp()
     {
         parent::initPhpcr();
 
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->serializer = $this->getContainer()->get('jms_serializer');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
 
         $this->dataCache = new ArrayCache();
         $this->changesCache = new ArrayCache();
@@ -117,9 +124,13 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('Testtitle', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
+        foreach ($result->getProperties(true) as $property) {
+            $this->assertEquals($result, $property->getStructure());
+        }
+
         $data = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
 
-        $this->assertEquals('Testtitle', $data['properties']['title']['value']);
+        $this->assertEquals('Testtitle', json_decode($data['properties']['title']['value']));
         $this->assertEquals('overview', $data['key']);
     }
 
@@ -138,9 +149,9 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $result = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
-        $this->assertEquals('TEST', $result['title']);
-        $this->assertEquals('overview', $result['template']);
+        $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
+        $this->assertEquals('TEST', json_decode($result['properties']['title']['value']));
+        $this->assertEquals('overview', $result['key']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/default/contents/testtitle');
@@ -163,9 +174,9 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
-        $result = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
-        $this->assertEquals('TEST', $result['title']);
-        $this->assertEquals('overview', $result['template']);
+        $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
+        $this->assertEquals('TEST', json_decode($result['properties']['title']['value']));
+        $this->assertEquals('overview', $result['key']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/default/contents/testtitle');
@@ -184,9 +195,9 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'en');
         $this->assertNotEquals(false, $result);
 
-        $result = $this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en'));
-        $this->assertEquals('Testtitle', $result['title']);
-        $this->assertEquals('overview', $result['template']);
+        $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
+        $this->assertEquals('Testtitle', json_decode($result['properties']['title']['value']));
+        $this->assertEquals('overview', $result['key']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/default/contents/testtitle');
