@@ -48,14 +48,6 @@ define(
                         position: 30,
                         items: [
                             {
-                                title: this.sandbox.translate('sulu.list-toolbar.import'),
-                                disabled: true
-                            },
-                            {
-                                title: this.sandbox.translate('sulu.list-toolbar.export'),
-                                disabled: true
-                            },
-                            {
                                 type: 'columnOptions'
                             }
                         ]
