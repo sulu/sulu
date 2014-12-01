@@ -26,7 +26,7 @@ define([],
         'use strict';
 
         var defaults = {
-                instanceName: 'content',
+                instanceName: '',
                 template: 'default',
                 parentTemplate: null,
                 listener: 'default',
