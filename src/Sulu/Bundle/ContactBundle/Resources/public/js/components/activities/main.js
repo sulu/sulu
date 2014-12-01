@@ -102,19 +102,8 @@ define(
             },
 
             bindCustomEvents: function() {
-
-                //add clicked
-                this.sandbox.on('sulu.bottom-toolbar.add', this.addOrEditActivity.bind(this), this);
-
-                //delete clicked on list
-                this.sandbox.on('sulu.bottom-toolbar.delete', this.removeActivities.bind(this), this);
-
-
-                //init settings items icon
-                this.sandbox.on('sulu.list-toolbar.magic', this.setSettingsItems.bind(this), this);
-
-
-                // listen for defaults for types/statuses/prios
+                
+              // listen for defaults for types/statuses/prios
                 this.sandbox.on('sulu.contacts.activities.set.defaults',
                     function(defaults) {
                         this.activityDefaults = defaults;
@@ -176,26 +165,6 @@ define(
                 this.sandbox.on('sulu.list-toolbar.delete', function() {
                     this.sandbox.logger.log("clicked!");
                 }.bind(this));
-            },
-
-
-            /**
-             * Sets the Items to setting icon
-             */
-            setSettingsItems: function() {
-                var title = this.sandbox.translate('contact.contacts.title'),
-                    breadcrumb = [
-                        {title: 'navigation.contacts'},
-                        {title: 'contact.contacts.title', event: 'sulu.contacts.contacts.list'}
-                    ];
-
-                if (!!this.options.contact && !!this.options.contact.id) {
-                    title = this.options.contact.fullName;
-                    breadcrumb.push({title: '#' + this.options.contact.id});
-                }
-
-                this.sandbox.emit('sulu.header.set-title', title);
-                this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
             },
 
             /**
