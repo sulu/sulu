@@ -227,7 +227,6 @@ define([],
                 return template;
             },
 
-
             /**
              * Delegates the start of the toolbar to the header
              */
@@ -274,7 +273,6 @@ define([],
                         showTitleAsTooltip: true
                     };
 
-
                 // see if template has listener set
                 if (this.options.listener) {
                     this.options.listener.call(this);
@@ -284,17 +282,11 @@ define([],
                     this.options.parentListener.call(this);
                 }
 
-                // start the toolbar right ahead or delegate the initialization to the header
-                if (this.options.inHeader !== true) {
+                // start the toolbar right ahead or delegate the initialization
                     $container = this.sandbox.dom.createElement('<div />');
                     this.html($container);
                     options.el = $container;
                     startToolbarComponent.call(this, options);
-                } else {
-                    // hide element-container, because toolbar gets rendered in header
-                    this.sandbox.dom.hide(this.$el);
-                    startToolbarInHeader.call(this, options);
-                }
             }
         };
     });
