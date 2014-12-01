@@ -249,7 +249,7 @@ define([
                 },
                 {
                     id: 'settings',
-                    icon: 'magic',
+                    icon: 'gear',
                     disabled: true
                 },
                 {
