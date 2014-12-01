@@ -13,6 +13,8 @@ namespace Sulu\Component\Content;
 use DateTime;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * The Structure class represenets content structure and is the super type
@@ -50,106 +52,124 @@ abstract class Structure implements StructureInterface
     /**
      * webspaceKey of node
      * @var string
+     * @Type("string")
      */
     private $webspaceKey;
 
     /**
      * languageCode of node
      * @var string
+     * @Type("string")
      */
     private $languageCode;
 
     /**
      * unique key of template
      * @var string
+     * @Type("string")
      */
     private $key;
 
     /**
      * array of properties
      * @var array
+     * @Type("array<string,Sulu\Component\Content\Property>")
      */
     private $properties = array();
 
     /**
      * has structure sub structures
      * @var bool
+     * @Type("boolean")
      */
     private $hasChildren = false;
 
     /**
      * children of node
      * @var StructureInterface[]
+     * @Exclude
      */
     private $children = null;
 
     /**
      * uuid of node in CR
      * @var string
+     * @Type("string")
      */
     private $uuid;
 
     /**
      * user id of creator
      * @var int
+     * @Type("integer")
      */
     private $creator;
 
     /**
      * user id of changer
      * @var int
+     * @Type("integer")
      */
     private $changer;
 
     /**
      * datetime of creation
      * @var DateTime
+     * @Type("DateTime")
      */
     private $created;
 
     /**
      * datetime of last changed
      * @var DateTime
+     * @Type("DateTime")
      */
     private $changed;
 
     /**
      * first published
      * @var DateTime
+     * @Type("DateTime")
      */
     private $published;
 
     /**
      * structure translation is valid
      * @var boolean
+     * @Type("boolean")
      */
     private $hasTranslation;
 
     /**
      * @var StructureType
+     * @Type("Sulu\Component\Content\StructureType")
      */
     private $type;
 
     /**
      * @var array
+     * @Type("array")
      */
     private $tags = array();
 
     /**
      * type of node
      * @var integer
+     * @Type("integer")
      */
     private $nodeType;
 
     /**
      * indicates internal structure
      * @var boolean
+     * @Type("boolean")
      */
     private $internal;
 
     /**
      * content node is a shadow for another content
      * @var boolean
+     * @Type("boolean")
      */
     private $isShadow;
 
@@ -157,6 +177,7 @@ abstract class Structure implements StructureInterface
      * when shadow is enabled, this node is a shadow for
      * this language
      * @var string
+     * @Type("string")
      */
     private $shadowBaseLanguage = '';
 
@@ -164,27 +185,32 @@ abstract class Structure implements StructureInterface
      * the shadows which are activated on this node. Note this is
      * not stored in the phpcr node, it is determined by the content mapper.
      * @var array
+     * @Type("array")
      */
     private $enabledShadowLanguages = array();
 
     /**
      * @var array
+     * @Type("array")
      */
     private $concreteLanguages = array();
 
     /**
      * @var Metadata
+     * @Type("Sulu\Component\Content\Metadata")
      */
     private $metaData;
 
     /**
      * @var StructureTag[]
+     * @Type("array")
      */
     private $structureTags;
 
     /**
      * path of node
      * @var string
+     * @Type("string")
      */
     private $path;
 

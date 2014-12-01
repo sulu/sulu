@@ -11,9 +11,10 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
+use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureSerializer\StructureSerializerInterface;
 
 /**
  * provides a cache for preview with phpcr
@@ -26,9 +27,14 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     private $contentMapper;
 
     /**
-     * @var StructureSerializerInterface
+     * @var SerializerInterface
      */
     private $serializer;
+
+    /**
+     * @var string
+     */
+    private $serializeType = 'json';
 
     /**
      * @var Cache
@@ -56,7 +62,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
-        StructureSerializerInterface $structureSerializer,
+        SerializerInterface $structureSerializer,
         Cache $dataCache,
         Cache $changesCache,
         $prefix = 'preview',
@@ -73,9 +79,9 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     /**
      * Returns cache id
      */
-    private function getId($userId, $contentUuid, $locale)
+    private function getId($userId, $contentUuid, $locale, $postFix = null)
     {
-        return sprintf('%s:%s:%s', $userId, $contentUuid, $locale);
+        return sprintf('%s:%s:%s%s', $userId, $contentUuid, $locale, ($postFix ? ':' . $postFix : ''));
     }
 
     /**
@@ -92,7 +98,10 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function delete($userId, $contentUuid, $webspaceKey, $locale)
     {
         $id = $this->getId($userId, $contentUuid, $locale);
+        $classId = $this->getId($userId, $contentUuid, $locale, 'class');
+
         $this->dataCache->delete($id);
+        $this->dataCache->delete($classId);
         $this->changesCache->delete($id);
     }
 
@@ -117,9 +126,13 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function fetchStructure($userId, $contentUuid, $webspaceKey, $locale)
     {
         $id = $this->getId($userId, $contentUuid, $locale);
+        $classId = $this->getId($userId, $contentUuid, $locale, 'class');
 
         if ($this->contains($userId, $contentUuid, $webspaceKey, $locale)) {
-            return $this->serializer->deserialize($this->dataCache->fetch($id));
+            $class = $this->dataCache->fetch($classId);
+            $data = $this->dataCache->fetch($id);
+
+            return $this->serializer->deserialize($data, $class, $this->serializeType);
         } else {
             return false;
         }
@@ -130,10 +143,12 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale)
     {
-        $data = $this->serializer->serialize($content);
+        $data = $this->serializer->serialize($content, $this->serializeType);
 
         $id = $this->getId($userId, $contentUuid, $locale);
-        $this->dataCache->save($id, $data, $this->cacheLifeTime);
+        $classId = $this->getId($userId, $contentUuid, $locale, 'class');
+        $this->dataCache->save($id, $data, $this->cacheLifeTime, $this->cacheLifeTime);
+        $this->dataCache->save($classId, get_class($content), $this->cacheLifeTime);
     }
 
     /**
@@ -168,9 +183,9 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale)
     {
         $structure = $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
-        $data = $this->serializer->serialize($structure);
+        $data = $this->serializer->serialize($structure, $this->serializeType);
         $data['template'] = $template;
-        $structure = $this->serializer->deserialize($data);
+        $structure = $this->serializer->deserialize($data, Structure::class, $this->serializeType);
 
         $this->saveStructure($structure, $userId, $contentUuid, $webspaceKey, $locale);
     }

@@ -177,10 +177,5 @@
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
         </service>
-
-        <!-- serializer -->
-        <service id="sulu.content.structure_serializer" class="%sulu.content.structure_serializer.class%">
-            <argument type="service" id="sulu.content.structure_manager" />
-        </service>
     </services>
 </container>

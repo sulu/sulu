@@ -14,6 +14,8 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * This structure represents a page in the CMS
@@ -23,51 +25,60 @@ abstract class Page extends Structure
     /**
      * template to render content
      * @var string
+     * @Type("string")
      */
     private $view;
 
     /**
      * controller to render content
      * @var string
+     * @Type("string")
      */
     private $controller;
 
     /**
      * time to cache content
      * @var int
+     * @Type("integer")
      */
     private $cacheLifeTime;
 
     /**
      * defines in which navigation context assigned
      * @var string[]
+     * @Type("array")
      */
     private $navContexts;
 
     /**
      * state of node
      * @var int
+     * @Type("integer")
      */
     private $nodeState;
 
     /**
      * @var array
+     * @Type("array")
      */
     private $ext = array();
 
     /**
      * @var string
+     * @Type("string")
      */
     private $originTemplate;
 
     /**
      * content node that holds the internal link
      * @var StructureInterface
+     * @Exclude()
      */
     private $internalLinkContent;
 
     /**
      * @var string[]
+     * @Type("array")
      */
     private $urls;
 

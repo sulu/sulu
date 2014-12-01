@@ -10,7 +10,10 @@
 
 namespace Sulu\Component\Content;
 
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Util\ArrayableInterface;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
@@ -20,70 +23,82 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * name of property
      * @var string
+     * @Type("string")
      */
     private $name;
 
     /**
      * @var Metadata
+     * @Type("Sulu\Component\Content\Metadata")
      */
     private $metadata;
 
     /**
      * is property mandatory
      * @var bool
+     * @Type("boolean")
      */
     private $mandatory;
 
     /**
      * is property multilingual
      * @var bool
+     * @Type("boolean")
      */
     private $multilingual;
 
     /**
      * min occurs of property value
      * @var int
+     * @Type("integer")
      */
     private $minOccurs;
 
     /**
      * max occurs of property value
      * @var int
+     * @Type("integer")
      */
     private $maxOccurs;
 
     /**
      * name of content type
      * @var string
+     * @Type("string")
      */
     private $contentTypeName;
 
     /**
      * parameter of property to merge with parameter of content type
      * @var array
+     * @Type("array")
      */
     private $params;
 
     /**
      * tags defined in xml
      * @var PropertyTag[]
+     * @Type("array<Sulu\Component\Content\PropertyTag>")
      */
     private $tags;
 
     /**
      * column span
      * @var string
+     * @Type("string")
      */
     private $col;
 
     /**
      * value of property
      * @var mixed
+     * @Exclude
      */
     private $value;
 
     /**
      * @var StructureInterface
+     * @Exclude
      */
     private $structure;
 
@@ -101,8 +116,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $params = array(),
         $tags = array(),
         $col = null
-    )
-    {
+    ) {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
         $this->maxOccurs = $maxOccurs;
@@ -111,7 +125,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->name = $name;
         $this->metadata = new Metadata($metaData);
         $this->params = $params;
-        $this->tags =$tags;
+        $this->tags = $tags;
         $this->col = $col;
     }
 
