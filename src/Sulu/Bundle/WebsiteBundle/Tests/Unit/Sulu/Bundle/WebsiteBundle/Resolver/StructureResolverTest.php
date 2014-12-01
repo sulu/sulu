@@ -69,6 +69,7 @@ class StructureResolverTest extends ProphecyTestCase
         $structure->getCreated()->willReturn('date');
         $structure->getChanged()->willReturn('date');
         $structure->getPath()->willReturn('test-path');
+        $structure->getLanguageCode()->willReturn('en');
         $structure->getUrls()->willReturn(array('en' => '/description', 'de' => '/beschreibung', 'es' => null));
 
         $expected = array(
@@ -87,6 +88,7 @@ class StructureResolverTest extends ProphecyTestCase
             'created' => 'date',
             'changed' => 'date',
             'template' => 'test',
+            'locale' => 'en',
             'urls' => array('en' => '/description', 'de' => '/beschreibung', 'es' => null),
             'path' => 'test-path',
         );
