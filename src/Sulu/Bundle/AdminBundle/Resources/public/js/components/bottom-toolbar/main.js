@@ -41,6 +41,33 @@ define([],
                 bottomToolbarId: '#bottom-list-toolbar'
             },
 
+             /**
+             * listens on add event
+             *
+             * @event sulu.bottom-toolbar.[INSTANCE_NAME].add
+             */
+            ADD_CLICKED = function() {
+                return this.sandbox.emit(creatEventName.call(this,'add'));
+            },
+
+            /**
+             * listens on delete event
+             *
+             * @event sulu.bottom-toolbar.[INSTANCE_NAME].delete
+             */
+            DEL_CLICKED = function() {
+                return this.sandbox.emit(creatEventName.call(this,'delete'));
+            },
+
+            /**
+             * create emit of specific instanceNme
+             *
+             * @param {String} event name
+             */
+            creatEventName = function(postfix){
+                return 'sulu.bottom-toolbar.'+((!!this.options.instanceName)?this.options.instanceName+'.':'')+postfix;
+            },
+
             /**
              * Template for bottom toolbar
              * @returns {*[]}
@@ -53,17 +80,13 @@ define([],
                             icon: 'plus-circle',
                             class: 'highlight-white',
                             position: 1,
-                            callback: function() {
-                                this.sandbox.emit('sulu.bottom-toolbar.add');
-                            }.bind(this)
+                            callback: ADD_CLICKED.bind(this)
                         },
                         {
                             id: 'delete',
                             icon: 'trash-o',
                             position: 20,
-                            callback: function() {
-                                this.sandbox.emit('sulu.bottom-toolbar.delete');
-                            }.bind(this)
+                            callback: DEL_CLICKED.bind(this)
                         },
                         {
                             id: 'settings',
@@ -104,16 +127,6 @@ define([],
                     this.sandbox.on('husky.datagrid.number.selections', function(number) {
                         postfix = number > 0 ? 'enable' : 'disable';
                         this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
-                    }.bind(this));
-
-                    this.sandbox.on('sulu.bottom-toolbar.' + instanceName + 'delete.state-change', function(enable) {
-                        postfix = !!enable ? 'enable' : 'disable';
-                        this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
-                    }.bind(this));
-
-                    this.sandbox.on('sulu.bottom-toolbar.' + instanceName + 'edit.state-change', function(enable) {
-                        postfix = !!enable ? 'enable' : 'disable';
-                        this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'edit', false);
                     }.bind(this));
                 },
 
