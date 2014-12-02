@@ -43,7 +43,7 @@ interface PreviewCacheProviderInterface
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @return StructureInterface
+     * @return boolean|StructureInterface
      */
     public function warmUp($userId, $contentUuid, $webspaceKey, $locale);
 

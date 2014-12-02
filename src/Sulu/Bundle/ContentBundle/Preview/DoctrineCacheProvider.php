@@ -166,7 +166,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
 
         $id = $this->getId($userId, $contentUuid, $locale);
         $classId = $this->getId($userId, $contentUuid, $locale, 'class');
-        $this->dataCache->save($id, $data, $this->cacheLifeTime, $this->cacheLifeTime);
+        $this->dataCache->save($id, $data, $this->cacheLifeTime);
         $this->dataCache->save($classId, get_class($content), $this->cacheLifeTime);
     }
 
