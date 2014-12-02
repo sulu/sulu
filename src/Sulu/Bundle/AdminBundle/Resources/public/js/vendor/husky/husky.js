@@ -15768,7 +15768,7 @@ define('aura/ext/mediator', ['eventemitter','underscore'],function () {
       app.sandbox.off = function (name, listener) {
         if(!this._events) { return; }
         this._events = _.reject(this._events, function (evt) {
-          var ret = (evt.name === name && evt.listener === listener);
+          var ret = (evt.name === name);
           if (ret) { mediator.off(name, evt.callback); }
           return ret;
         });
@@ -15861,14 +15861,14 @@ define('aura/ext/components', [],function() {
       var dfd = app.core.data.deferred();
       var before, after, args = [].slice.call(arguments, 2);
       before = invokeCallbacks("before", fnName, context, args);
-      var result;
 
       before.then(function() {
-        var result =  fn.apply(context, args);
-        return result;
-      }).then(function() {
-        invokeCallbacks("after", fnName, context, args).then(function() {
-          dfd.resolve(result);
+        return fn.apply(context, args);
+      }).then(function(result) {
+        return invokeCallbacks("after", fnName, context, args.concat(result)).then(function() {
+          core.data.when(result).then(function() {
+            dfd.resolve(result) 
+          });
         }, dfd.reject);
       }).fail(function(err) {
         app.logger.error("Error in Component " + context.options.name + " " + fnName + " callback", err);
@@ -15886,6 +15886,8 @@ define('aura/ext/components', [],function() {
      */
     function Component(options) {
       var opts = _.clone(options);
+      var dfd = core.data.deferred();
+      var self = this;
 
       /**
        * The Components' options Object, passed to its constructor.
@@ -15910,7 +15912,12 @@ define('aura/ext/components', [],function() {
        */
       this.$el        = core.dom.find(opts.el);
 
-      this.invokeWithCallbacks('initialize', this.options);
+      this.initialized = dfd.promise();
+
+      this.invokeWithCallbacks('initialize', this.options).then(function() {
+        dfd.resolve(self);
+      });
+
       return this;
     }
 
@@ -16063,7 +16070,7 @@ define('aura/ext/components', [],function() {
           // Sandbox owns its el and vice-versa
           newComponent.$el.data('__sandbox_ref__', sandbox.ref);
 
-          var initialized = core.data.when(newComponent);
+          var initialized = newComponent.initialized;
 
           initialized.then(function(ret) { dfd.resolve(ret); });
           initialized.fail(function(err) { dfd.reject(err); });
@@ -16224,7 +16231,7 @@ define('aura/ext/components', [],function() {
          * the component instance itself, as per the component method.
          *
          * @method components.before
-         * @param  {String}   methodName    eg. 'initialize', 'remove'
+         * @param  {String}   methodName    eg. 'initialize', 'destroy'
          * @param  {Function} fn            actual function to run
          */
         app.components.before = function(methodName, fn) {
@@ -16236,7 +16243,7 @@ define('aura/ext/components', [],function() {
          * Same as components.before, but executed after the method invocation.
          *
          * @method components.after
-         * @param  {[type]}   methodName eg. 'initialize', 'remove'
+         * @param  {[type]}   methodName eg. 'initialize', 'destroy'
          * @param  {Function} fn         actual function to run
          */
         app.components.after = function(methodName, fn) {
@@ -16298,7 +16305,7 @@ define('aura/ext/components', [],function() {
           }
           var self = this;
 
-          Component.startAll(list).done(function () {
+          return Component.startAll(list).done(function () {
             var components   = Array.prototype.slice.call(arguments);
             _.each(components, function (w) {
               w.sandbox._component = w;
@@ -16307,8 +16314,6 @@ define('aura/ext/components', [],function() {
             });
             self._children = children;
           });
-
-          return this;
         };
 
       },
@@ -27497,6 +27502,21 @@ define('bower_components/aura/lib/aura',[
      * @param  {undefined|String} DOM Selector
      */
     app.sandbox.stop = function(selector) {
+      // Stop sandbox directly if the selector is a ref and which _ref can be
+      // found
+      var sandbox = app.sandboxes.get(selector);
+      
+      if (sandbox) {
+        stopSandbox(sandbox);
+      }
+
+      // Return early if selector is invalid
+      try {
+        $.find(selector);
+      } catch (err) {
+        return err;
+      }
+
       if (selector) {
         app.core.dom.find(selector, this.el).each(function(i, el) {
           var ref = app.core.dom.find(el).data('__sandbox_ref__');
@@ -27516,7 +27536,9 @@ define('bower_components/aura/lib/aura',[
         _.invoke(sandbox._children, 'stop');
         app.core.mediator.emit(event, sandbox);
         if (sandbox._component) {
+          // remove is deprecated 
           sandbox._component.invokeWithCallbacks('remove');
+          sandbox._component.invokeWithCallbacks('destroy');
         }
         sandbox.stopped  = true;
         sandbox.el && app.core.dom.find(sandbox.el).remove();
@@ -46634,6 +46656,17 @@ define("datepicker-zh-TW", function(){});
                  */
                 app.sandbox.numberFormat = function(number, types) {
                     return Globalize.format(number, types);
+                };
+
+                /**
+                 * Parses a float value according to the given culture
+                 * @param value
+                 * @param radix default 10
+                 * @param culture current culture if no culture given
+                 * @returns {*}
+                 */
+                app.sandbox.parseFloat = function(value, radix, culture) {
+                    return Globalize.parseFloat(value, radix, culture);
                 };
 
                 /**
