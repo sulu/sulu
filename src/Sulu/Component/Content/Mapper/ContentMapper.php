@@ -1820,7 +1820,6 @@ class ContentMapper implements ContentMapperInterface
      * @param StructureInterface $content
      * @param NodeInterface $node
      * @param string $parentResourceLocator
-     * @param boolean $move
      * @param string $webspaceKey
      * @param string $languageCode
      * @param int $userId
