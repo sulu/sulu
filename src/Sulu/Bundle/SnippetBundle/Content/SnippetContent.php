@@ -82,8 +82,20 @@ class SnippetContent extends ComplexContentType
     protected function setData($data, PropertyInterface $property)
     {
         $refs = isset($data['ids']) ? $data['ids'] : array();
+        $ids = array();
+        if (is_array($refs)) {
+            foreach ($refs as $i => $ref) {
+                // see https://github.com/jackalope/jackalope/issues/248
+                if (UUIDHelper::isUUID($i)) {
+                    $ref = $i;
+                }
 
-        $property->setValue($refs);
+                $ids[] = $ref;
+            }
+        }
+
+        $data['ids'] = $ids;
+        $property->setValue($data);
     }
 
     /**
@@ -118,11 +130,14 @@ class SnippetContent extends ComplexContentType
         $snippetReferences = array();
         $values = $property->getValue();
 
-        $values = array_merge(array(
-            'ids' => array(),
-        ), $values);
+        $values = array_merge(
+            array(
+                'ids' => array(),
+            ),
+            $values
+        );
 
-        foreach ((array) $values['ids'] as $value) {
+        foreach ((array)$values['ids'] as $value) {
             if ($value instanceof Snippet) {
                 $snippetReferences[] = $value->getUuid();
             } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
@@ -202,23 +217,16 @@ class SnippetContent extends ComplexContentType
     private function loadSnippets($ids, $webspaceKey, $locale)
     {
         $snippets = array();
-        if (is_array($ids)) {
-            foreach ($ids as $i => $ref) {
-                // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($i)) {
-                    $ref = $i;
-                }
+        foreach ($ids as $i => $ref) {
+            if (!array_key_exists($ref, $this->snippetCache)) {
+                $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+                $resolved = $this->structureResolver->resolve($snippet);
+                $resolved['view']['template'] = $snippet->getKey();
 
-                if (!array_key_exists($ref, $this->snippetCache)) {
-                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
-                    $resolved = $this->structureResolver->resolve($snippet);
-                    $resolved['view']['template'] = $snippet->getKey();
-
-                    $this->snippetCache[$ref] = $resolved;
-                }
-
-                $snippets[] = $this->snippetCache[$ref];
+                $this->snippetCache[$ref] = $resolved;
             }
+
+            $snippets[] = $this->snippetCache[$ref];
         }
 
         return $snippets;
