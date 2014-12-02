@@ -147,7 +147,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
             $old = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
             if ($old !== '/') {
                 if ($old != null) {
-                    $this->getStrategy()->move($old, $value, $webspaceKey, $languageCode, $segmentKey);
+                    $this->getStrategy()->move($old, $value, $node, $userId, $webspaceKey, $languageCode, $segmentKey);
                 } else {
                     $this->getStrategy()->save($node, $value, $webspaceKey, $languageCode, $segmentKey);
                 }
