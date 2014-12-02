@@ -18,6 +18,7 @@ use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**
@@ -56,11 +57,17 @@ class DoctrineCacheProviderTest extends SuluTestCase
      */
     private $sessionManager;
 
+    /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
     protected function setUp()
     {
         parent::initPhpcr();
 
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
         $this->serializer = $this->getContainer()->get('jms_serializer');
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
 
@@ -68,7 +75,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->changesCache = new ArrayCache();
 
         $this->cache = new DoctrineCacheProvider(
-            $this->mapper, $this->serializer, $this->dataCache, $this->changesCache
+            $this->mapper, $this->structureManager, $this->serializer, $this->dataCache, $this->changesCache
         );
     }
 
