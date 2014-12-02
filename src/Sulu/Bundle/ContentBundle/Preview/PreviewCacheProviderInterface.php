@@ -91,14 +91,14 @@ interface PreviewCacheProviderInterface
 
     /**
      * appends changes to existing changes in cache and returns new array
-     * @param array $changes
+     * @param array $newChanges
      * @param integer $userId
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @return array
      */
-    public function appendChanges($changes, $userId, $contentUuid, $webspaceKey, $locale);
+    public function appendChanges($newChanges, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * changes template of cached node

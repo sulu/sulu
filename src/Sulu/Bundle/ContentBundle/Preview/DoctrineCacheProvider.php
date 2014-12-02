@@ -15,6 +15,7 @@ use JMS\Serializer\SerializerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 
@@ -181,7 +182,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
             $this->saveChanges(array(), $userId, $contentUuid, $webspaceKey, $locale);
         }
 
-        return $changes;
+        return $changes ?: array();
     }
 
     /**
@@ -200,21 +201,43 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale)
     {
+        /** @var Page $structure */
         $structure = $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
-        $data = json_decode($this->serializer->serialize($structure, $this->serializeType));
-        $data['key'] = $template;
-        $structure = $this->serializer->deserialize(json_encode($data), get_class($this->structureManager->getStructure($template)), $this->serializeType);
+        /** @var Page $newStructure */
+        $newStructure = $this->structureManager->getStructure($template);
 
-        $this->saveStructure($structure, $userId, $contentUuid, $webspaceKey, $locale);
+        $newStructure->setExt($structure->getExt());
+        $newStructure->setWebspaceKey($structure->getWebspaceKey());
+        $newStructure->setLanguageCode($structure->getLanguageCode());
+        $newStructure->setUrls($structure->getUrls());
+        $newStructure->setUuid($structure->getUuid());
+
+        $newStructure->setChanged($structure->getChanged());
+        $newStructure->setChanger($structure->getChanger());
+        $newStructure->setCreated($structure->getCreated());
+        $newStructure->setCreator($structure->getCreator());
+
+        $newStructure->setNodeState($structure->getNodeState());
+        $newStructure->setPublished($structure->getPublished());
+        $newStructure->setOriginTemplate($structure->getOriginTemplate());
+        $newStructure->setPath($structure->getPath());
+        $newStructure->setNodeType($structure->getNodeType());
+        $newStructure->setShadowBaseLanguage($structure->getShadowBaseLanguage());
+        $newStructure->setConcreteLanguages($structure->getConcreteLanguages());
+        $newStructure->setHasTranslation($structure->getHasTranslation());
+        $newStructure->setIsShadow($structure->getIsShadow());
+
+        $this->saveStructure($newStructure, $userId, $contentUuid, $webspaceKey, $locale);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function appendChanges($changes, $userId, $contentUuid, $webspaceKey, $locale)
+    public function appendChanges($newChanges, $userId, $contentUuid, $webspaceKey, $locale)
     {
-        $changes = array_merge($this->fetchChanges($userId, $contentUuid, $webspaceKey, $locale), $changes);
+        $oldChanges = $this->fetchChanges($userId, $contentUuid, $webspaceKey, $locale, false);
+        $newChanges = array_merge($oldChanges, $newChanges);
 
-        return $this->saveChanges($changes, $userId, $contentUuid, $webspaceKey, $locale);
+        return $this->saveChanges($newChanges, $userId, $contentUuid, $webspaceKey, $locale);
     }
 }
