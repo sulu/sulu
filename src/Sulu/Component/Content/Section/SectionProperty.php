@@ -62,8 +62,6 @@ class SectionProperty extends Property implements SectionPropertyInterface
      */
     public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
     {
-        parent::setValue($this->getValue());
-
         return parent::serializeToJson($visitor, $data, $context);
     }
 

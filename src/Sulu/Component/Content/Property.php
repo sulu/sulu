@@ -456,7 +456,7 @@ class Property implements PropertyInterface, \JsonSerializable
             );
         }
 
-        $data['value'] = json_encode($this->value);
+        $data['value'] = json_encode($this->getValue());
 
         // set discriminator value
         if ($this instanceof BlockPropertyInterface) {

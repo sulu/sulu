@@ -98,18 +98,18 @@ class BlockContentType extends ComplexContentType
                     $segmentKey
                 );
 
+                $blockPropertyType = $blockProperty->initProperties($i, $typeProperty->getValue());
+
                 /** @var PropertyInterface $subProperty */
-                foreach ($blockProperty->initProperties($i, $typeProperty->getValue())->getChildProperties() as $key => $subProperty) {
-                    if ($key !== 'type') {
-                        $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                        $contentType->read(
-                            $node,
-                            new BlockPropertyWrapper($subProperty, $property, $i),
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-                    }
+                foreach ($blockPropertyType->getChildProperties() as $subProperty) {
+                    $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
+                    $contentType->read(
+                        $node,
+                        new BlockPropertyWrapper($subProperty, $property, $i),
+                        $webspaceKey,
+                        $languageCode,
+                        $segmentKey
+                    );
                 }
             }
         } else {
@@ -165,9 +165,11 @@ class BlockContentType extends ComplexContentType
             $len = sizeof($data);
 
             for ($i = 0; $i < $len; $i++) {
+                $blockPropertyType = $blockProperty->initProperties($i, $data[$i]['type']);
+
                 /** @var PropertyInterface $subProperty */
-                foreach ($blockProperty->initProperties($i, $data[$i]['type']) as $key => $subProperty) {
-                    if ($key !== 'type' && isset($data[$i][$subProperty->getName()])) {
+                foreach ($blockPropertyType->getChildProperties() as $subProperty) {
+                    if (isset($data[$i][$subProperty->getName()])) {
                         $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                         $contentType->readForPreview(
                             $data[$i][$subProperty->getName()],

@@ -254,8 +254,6 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
     {
-        parent::setValue($this->getValue());
-
         return parent::serializeToJson($visitor, $data, $context);
     }
 
