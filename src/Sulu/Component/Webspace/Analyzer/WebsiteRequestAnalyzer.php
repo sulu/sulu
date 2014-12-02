@@ -100,6 +100,12 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      */
     private $postParameter;
 
+    /**
+     * Analytics key of request
+     * @var string
+     */
+    private $analyticsKey;
+
     public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
@@ -125,6 +131,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         if ($portalInformation != null) {
             $this->setCurrentMatchType($portalInformation->getType());
             $this->setCurrentRedirect($portalInformation->getRedirect());
+            $this->analyticsKey = $portalInformation->getAnalyticsKey();
             if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
                 $this->setCurrentPortalUrl($portalInformation->getUrl());
                 $this->setCurrentWebspace($portalInformation->getWebspace());
@@ -364,5 +371,14 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         );
 
         return array($resourceLocator, $formatResult);
+    }
+
+    /**
+     * Returns the analytics key
+     * @return string
+     */
+    public function getCurrentAnalyticsKey()
+    {
+        return $this->analyticsKey;
     }
 }
