@@ -71,7 +71,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureManagerInterface $structureManager,
-        SerializerInterface $structureSerializer,
+        SerializerInterface $serializer,
         Cache $dataCache,
         Cache $changesCache,
         $prefix = 'preview',
@@ -79,7 +79,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureManager = $structureManager;
-        $this->serializer = $structureSerializer;
+        $this->serializer = $serializer;
         $this->dataCache = $dataCache;
         $this->changesCache = $changesCache;
         $this->cacheLifeTime = $cacheLifeTime;

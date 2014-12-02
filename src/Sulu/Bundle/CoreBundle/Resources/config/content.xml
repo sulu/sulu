@@ -15,8 +15,6 @@
         <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
         <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
-        <parameter key="sulu.content.structure_serializer.class">Sulu\Component\Content\StructureSerializer\StructureSerializer</parameter>
-
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>

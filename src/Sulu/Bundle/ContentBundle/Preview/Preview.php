@@ -191,7 +191,7 @@ class Preview implements PreviewInterface
      */
     public function getChanges($userId, $contentUuid, $webspaceKey, $locale)
     {
-        return $this->previewCache->fetchChanges($userId,$contentUuid, $webspaceKey, $locale);
+        return $this->previewCache->fetchChanges($userId, $contentUuid, $webspaceKey, $locale);
     }
 
     /**
@@ -241,10 +241,10 @@ class Preview implements PreviewInterface
         if (false !== ($sequence = $this->crawler->getSequence($content, $property))) {
             $tmp = $data;
             $data = $sequence['property']->getValue();
-            $value = & $data;
+            $value = &$data;
             $len = sizeof($sequence['index']);
             for ($i = 0; $i < $len; $i++) {
-                $value = & $value[$sequence['index'][$i]];
+                $value = &$value[$sequence['index'][$i]];
             }
             $value = $tmp;
             $instance = $sequence['property'];
