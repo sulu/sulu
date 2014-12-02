@@ -203,6 +203,18 @@ class SuluNodeHelper
     }
 
     /**
+     * Return translated property name
+     *
+     * @param string $propertyName
+     * @param string $locale
+     * @return string
+     */
+    public function getTranslatedPropertyName($propertyName, $locale)
+    {
+        return sprintf('%s:%s-%s', $this->languageNamespace, $locale, $propertyName);
+    }
+
+    /**
      * Return either the next or previous sibling of the given node
      * according to the $previous flag.
      *
