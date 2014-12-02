@@ -13,6 +13,8 @@ namespace Sulu\Component\Content;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Type;
@@ -402,19 +404,11 @@ class Property implements PropertyInterface, \JsonSerializable
 
     public function __clone()
     {
-        $clone = new Property(
-            $this->getName(),
-            $this->getMetadata(),
-            $this->getMandatory(),
-            $this->getMultilingual(),
-            $this->getMaxOccurs(),
-            $this->getMinOccurs(),
-            $this->getParams()
-        );
-
-        $clone->setValue($this->getValue());
-
-        return $clone;
+        $value = $this->getValue();
+        if (is_object($value)) {
+            $value = clone $value;
+        }
+        $this->setValue($value);
     }
 
     /**
@@ -435,10 +429,19 @@ class Property implements PropertyInterface, \JsonSerializable
     public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
     {
         $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+        $graphNavigator = $context->getNavigator();
 
         $data = array();
+        /**
+         * @var string $propertyName
+         * @var PropertyMetadata $propertyMetadata
+         */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
-            $data[$propertyName] = $propertyMetadata->getValue($this);
+            $data[$propertyName] = $graphNavigator->accept(
+                $propertyMetadata->getValue($this),
+                $propertyMetadata->type,
+                $context
+            );
         }
 
         $data['value'] = json_encode($this->value);
@@ -453,9 +456,22 @@ class Property implements PropertyInterface, \JsonSerializable
     public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
     {
         $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+        $graphNavigator = $context->getNavigator();
 
+        /**
+         * @var string $propertyName
+         * @var PropertyMetadata $propertyMetadata
+         */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
-            $propertyMetadata->setValue($this, $data[$propertyName]);
+            if (!($propertyMetadata instanceof StaticPropertyMetadata)) {
+                $value = $graphNavigator->accept(
+                    $data[$propertyName],
+                    $propertyMetadata->type,
+                    $context
+                );
+
+                $propertyMetadata->setValue($this, $value);
+            }
         }
 
         $this->setValue(json_decode($data['value'], true));

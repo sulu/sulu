@@ -10,11 +10,15 @@
 
 namespace Sulu\Component\Content\Block;
 
+use JMS\Serializer\Context;
+use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Discriminator;
+use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * representation of a block node in template xml
@@ -30,8 +34,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
     private $types = array();
 
     /**
-     * @var array
-     * @Exclude
+     * @var BlockPropertyType[]
+     * @Type("array<integer,Sulu\Component\Content\Block\BlockPropertyType>")
      */
     private $properties = array();
 
@@ -130,24 +134,28 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * initiate new child with given type name
      * @param integer $index
      * @param string $typeName
-     * @return PropertyInterface[]
+     * @return BlockPropertyType
      */
     public function initProperties($index, $typeName)
     {
-        $this->properties[$index] = array('type' => $typeName);
-
-        /** @var PropertyInterface $subProperty */
-        foreach ($this->getChildProperties($typeName) as $subProperty) {
-            $this->properties[$index][$subProperty->getName()] = clone($subProperty);
-        }
+        $type = $this->getType($typeName);
+        $this->properties[$index] = clone($type);
 
         return $this->properties[$index];
     }
 
     /**
+     * clears all initialized properties
+     */
+    public function clearProperties()
+    {
+        $this->properties = array();
+    }
+
+    /**
      * returns properties for given index
      * @param integer $index
-     * @return PropertyInterface[]
+     * @return BlockPropertyType
      */
     public function getProperties($index)
     {
@@ -179,16 +187,14 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $len = count($value);
             for ($i = 0; $i < $len; $i++) {
                 $item = $value[$i];
-                $result = array('type' => $item['type']);
+                $type = $this->initProperties($i, $item['type']);
 
                 /** @var PropertyInterface $subProperty */
-                foreach ($this->getChildProperties($item['type']) as $subProperty) {
+                foreach ($type->getChildProperties() as $subProperty) {
                     if (isset($item[$subProperty->getName()])) {
                         $subProperty->setValue($item[$subProperty->getName()]);
-                        $result[$subProperty->getName()] = clone($subProperty);
                     }
                 }
-                $this->properties[] = $result;
             }
         }
     }
@@ -200,12 +206,10 @@ class BlockProperty extends Property implements BlockPropertyInterface
     public function getValue()
     {
         $data = array();
-        foreach ($this->properties as $value) {
-            $result = array('type' => $value['type']);
-            foreach ($value as $typeName => $contentType) {
-                if ($typeName !== 'type') {
-                    $result[$typeName] = $contentType->getValue();
-                }
+        foreach ($this->properties as $type) {
+            $result = array('type' => $type->getName());
+            foreach ($type->getChildProperties() as $property) {
+                $result[$property->getName()] = $property->getValue();
             }
             $data[] = $result;
         }
@@ -243,5 +247,23 @@ class BlockProperty extends Property implements BlockPropertyInterface
         $clone->setValue($this->getValue());
 
         return $clone;
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "serialization")
+     */
+    public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
+    {
+        parent::setValue($this->getValue());
+
+        return parent::serializeToJson($visitor, $data, $context);
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "deserialization")
+     */
+    public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
+    {
+        return parent::deserializeToJson($visitor, $data, $context);
     }
 }

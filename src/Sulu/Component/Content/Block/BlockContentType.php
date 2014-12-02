@@ -99,7 +99,7 @@ class BlockContentType extends ComplexContentType
                 );
 
                 /** @var PropertyInterface $subProperty */
-                foreach ($blockProperty->initProperties($i, $typeProperty->getValue()) as $key => $subProperty) {
+                foreach ($blockProperty->initProperties($i, $typeProperty->getValue())->getChildProperties() as $key => $subProperty) {
                     if ($key !== 'type') {
                         $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
                         $contentType->read(
@@ -228,38 +228,72 @@ class BlockContentType extends ComplexContentType
             );
 
             for ($i = 0; $i < $len; $i++) {
-                /** @var PropertyInterface $subProperty */
-                foreach ($blockProperty->getProperties($i) as $key => $subProperty) {
-                    if ($key === 'type') {
-                        // save type property
-                        $typeProperty->setValue($subProperty);
-                        $subProperty = $typeProperty;
-                    }
+                $blockPropertyType = $blockProperty->getProperties($i);
 
-                    // save sub property
-                    $contentType = $this->contentTypeManager->get($subProperty->getContentTypeName());
-                    $blockPropertyWrapper = new BlockPropertyWrapper($subProperty, $property, $i);
-                    // TODO find a better why for change Types (same hack is used in ContentMapper:save )
-                    $contentType->remove(
+                // save type property
+                $typeProperty->setValue($blockPropertyType->getName());
+                $this->writeProperty(
+                    $typeProperty,
+                    $property,
+                    $i,
+                    $node,
+                    $userId,
+                    $webspaceKey,
+                    $languageCode,
+                    $segmentKey
+                );
+
+                foreach ($blockProperty->getProperties($i)->getChildProperties() as $subProperty) {
+                    $this->writeProperty(
+                        $subProperty,
+                        $property,
+                        $i,
                         $node,
-                        $blockPropertyWrapper,
-                        $webspaceKey,
-                        $languageCode,
-                        $segmentKey
-                    );
-                    $contentType->write(
-                        $node,
-                        $blockPropertyWrapper,
                         $userId,
                         $webspaceKey,
                         $languageCode,
                         $segmentKey
                     );
-            }
+                }
             }
         } else {
             throw new UnexpectedPropertyType($property, $this);
         }
+    }
+
+    /**
+     * write a property to node
+     */
+    private function writeProperty(
+        PropertyInterface $property,
+        PropertyInterface $blockProperty,
+        $index,
+        NodeInterface $node,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey
+    ) {
+        // save sub property
+        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+        $blockPropertyWrapper = new BlockPropertyWrapper($property, $blockProperty, $index);
+
+        // TODO find a better why for change Types (same hack is used in ContentMapper:save )
+        $contentType->remove(
+            $node,
+            $blockPropertyWrapper,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
+        $contentType->write(
+            $node,
+            $blockPropertyWrapper,
+            $userId,
+            $webspaceKey,
+            $languageCode,
+            $segmentKey
+        );
     }
 
     /**
@@ -330,18 +364,16 @@ class BlockContentType extends ComplexContentType
 
         $data = array();
         for ($i = 0; $i < $blockProperty->getLength(); $i++) {
-            $properties = $blockProperty->getProperties($i);
+            $blockPropertyType = $blockProperty->getProperties($i);
 
             if ($returnType) {
-                $type = $properties['type'];
+                $type = $blockPropertyType->getName();
                 $data[$i] = array('type' => $type);
             }
 
-            unset($properties['type']);
-
-            foreach ($properties as $prop) {
-                $contentType = $this->contentTypeManager->get($prop->getContentTypeName());
-                $data[$i][$prop->getName()] = $dataCallback($contentType, $prop);
+            foreach ($blockPropertyType->getChildProperties() as $childProperty) {
+                $contentType = $this->contentTypeManager->get($childProperty->getContentTypeName());
+                $data[$i][$childProperty->getName()] = $dataCallback($contentType, $childProperty);
             }
         }
 

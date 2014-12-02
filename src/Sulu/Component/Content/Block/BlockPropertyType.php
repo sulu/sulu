@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Block;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\PropertyInterface;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * representation of a block type node in template xml
@@ -21,17 +22,20 @@ class BlockPropertyType
 {
     /**
      * @var string
+     * @Type("string")
      */
     private $name;
 
     /**
      * @var Metadata
+     * @Type("Sulu\Component\Content\Metadata")
      */
     private $metadata;
 
     /**
      * properties managed by this block
      * @var PropertyInterface[]
+     * @Type("array<Sulu\Component\Content\Property>")
      */
     private $childProperties = array();
 
@@ -48,6 +52,22 @@ class BlockPropertyType
     public function getChildProperties()
     {
         return $this->childProperties;
+    }
+
+    /**
+     * returns child property with given name
+     * @param string $name
+     * @return null|PropertyInterface
+     */
+    public function getProperty($name)
+    {
+        foreach ($this->getChildProperties() as $property) {
+            if ($property->getName() === $name) {
+                return $property;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -101,12 +121,10 @@ class BlockPropertyType
 
     public function __clone()
     {
-        $result = new BlockPropertyType($this->getName(), $this->getMetadata());
-        $result->childProperties = array();
-        foreach ($this->getChildProperties() as $childProperties) {
-            $result->addChild(clone($childProperties));
+        $properties = $this->childProperties;
+        $this->childProperties = array();
+        foreach ($properties as $childProperty) {
+            $this->addChild(clone $childProperty);
         }
-
-        return $result;
     }
 }

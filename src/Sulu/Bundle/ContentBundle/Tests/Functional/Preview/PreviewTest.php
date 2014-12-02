@@ -127,28 +127,28 @@ class PreviewTest extends SuluTestCase
 
     public function render($title, $article, $block, $partial = false)
     {
-        $template = '
-            <div id="content" vocab="http://sulu.io/" typeof="Content">
-                <h1 property="title">%s</h1>
-                <h1 property="title">PREF: %s</h1>
-                <div property="article">%s</div>
-                <div property="block" typeof="collection">';
+        $template = "<div id=\"content\" vocab=\"http://sulu.io/\" typeof=\"Content\">\n" .
+            "<h1 property=\"title\">%s</h1>\n" .
+            "<h1 property=\"title\">PREF: %s</h1>\n" .
+            "<div property=\"article\">%s</div>\n" .
+            "<div property=\"block\" typeof=\"collection\">\n";
+
         $i = 0;
         foreach ($block as $b) {
             $subTemplate = '';
             foreach ($b['article'] as $a) {
-                $subTemplate .= sprintf('<li property="article">%s</li>', $a);
+                $subTemplate .= sprintf("<li property=\"article\">%s</li>\n", $a);
             }
             $template .= sprintf(
-                '<div rel="block" typeof="block"><h1 property="title">%s</h1><ul>%s</ul></div>',
+                "<div rel=\"block\" typeof=\"block\">\n<h1 property=\"title\">%s</h1>\n<ul>\n%s</ul>\n</div>\n",
                 $b['title'],
                 $subTemplate
             );
             $i++;
         }
-        $template .= '</div></div>';
+        $template .= "</div>\n</div>\n";
         if (!$partial) {
-            $template = '<html vocab="http://schema.org/" typeof="Content"><body>' . $template . '</body></html>';
+            $template = "<html vocab=\"http://schema.org/\" typeof=\"Content\">\n<body>\n" . $template . "</body>\n</html>\n";
         }
 
         return sprintf($template, $title, $title, $article);
@@ -245,11 +245,9 @@ class PreviewTest extends SuluTestCase
         );
 
         // check result
-        $this->assertEquals(['New-Block-Article-1-1', 'New-Block-Article-1-2'], $changes['block,0,article']);
-
         $this->assertEquals(1, sizeof($changes['block,0']));
         $this->assertEquals(
-            "<h1 property=\"title\">New-Block-Title-1</h1>\n" .
+            "\n<h1 property=\"title\">New-Block-Title-1</h1>\n" .
             "<ul>\n" .
             "<li property=\"article\">New-Block-Article-1-1</li>\n" .
             "<li property=\"article\">New-Block-Article-1-2</li>\n" .
@@ -258,7 +256,7 @@ class PreviewTest extends SuluTestCase
         );
         $this->assertEquals(1, sizeof($changes['block,1']));
         $this->assertEquals(
-            "<h1 property=\"title\">New-Block-Title-2</h1>\n" .
+            "\n<h1 property=\"title\">New-Block-Title-2</h1>\n" .
             "<ul>\n" .
             "<li property=\"article\">Block-Article-2-1</li>\n" .
             "<li property=\"article\">Block-Article-2-2</li>\n" .
