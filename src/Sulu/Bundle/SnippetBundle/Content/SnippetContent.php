@@ -41,6 +41,11 @@ class SnippetContent extends ComplexContentType
     protected $structureResolver;
 
     /**
+     * @var array
+     */
+    private $snippetCache = array();
+
+    /**
      * Constructor
      */
     public function __construct(
@@ -73,32 +78,12 @@ class SnippetContent extends ComplexContentType
      * Set data to given property
      * @param array $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
      */
-    protected function setData(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode
-    )
+    protected function setData($data, PropertyInterface $property)
     {
         $refs = isset($data['ids']) ? $data['ids'] : array();
-        $snippets = array();
 
-        if (is_array($refs)) {
-            foreach ($refs as $i => $ref) {
-                // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($i)) {
-                    $ref = $i;
-                }
-
-                $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
-            }
-        }
-
-        $property->setValue($snippets);
+        $property->setValue($refs);
     }
 
     /**
@@ -107,7 +92,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData(array('ids' => $refs), $property, $webspaceKey, $languageCode);
+        $this->setData(array('ids' => $refs), $property);
     }
 
     /**
@@ -115,7 +100,7 @@ class SnippetContent extends ComplexContentType
      */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $this->setData($data, $property);
     }
 
     /**
@@ -172,8 +157,7 @@ class SnippetContent extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array(
-        );
+        return array();
     }
 
     /**
@@ -181,20 +165,16 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        $snippets = $property->getValue();
-        $viewData = array();
+        $webspaceKey = $property->getStructure()->getWebspaceKey();
+        $locale = $property->getStructure()->getLanguageCode();
 
-        /** @var Snippet $snippet */
-        foreach ($snippets as $snippet) {
-            $resolved = $this->structureResolver->resolve($snippet);
-
-            // add template to view
-            $resolved['view']['template'] = $snippet->getKey();
-
-            $viewData[] = $resolved['view'];
+        $refs = $property->getValue();
+        $contentData = array();
+        foreach ($this->loadSnippets($refs, $webspaceKey, $locale) as $snippet) {
+            $contentData[] = $snippet['view'];
         }
 
-        return $viewData;
+        return $contentData;
     }
 
     /**
@@ -202,14 +182,45 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        $snippets = $property->getValue();
-        $contentData = array();
+        $webspaceKey = $property->getStructure()->getWebspaceKey();
+        $locale = $property->getStructure()->getLanguageCode();
 
-        foreach ($snippets as $snippet) {
-            $resolved = $this->structureResolver->resolve($snippet);
-            $contentData[] = $resolved['content'];
+        $refs = $property->getValue();
+        $contentData = array();
+        foreach ($this->loadSnippets($refs, $webspaceKey, $locale) as $snippet) {
+            $contentData[] = $snippet['content'];
         }
 
         return $contentData;
+    }
+
+    /**
+     * load snippet and serialize them
+     *
+     * additionally cache it by id in this class
+     */
+    private function loadSnippets($ids, $webspaceKey, $locale)
+    {
+        $snippets = array();
+        if (is_array($ids)) {
+            foreach ($ids as $i => $ref) {
+                // see https://github.com/jackalope/jackalope/issues/248
+                if (UUIDHelper::isUUID($i)) {
+                    $ref = $i;
+                }
+
+                if (!array_key_exists($ref, $this->snippetCache)) {
+                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+                    $resolved = $this->structureResolver->resolve($snippet);
+                    $resolved['view']['template'] = $snippet->getKey();
+
+                    $this->snippetCache[$ref] = $resolved;
+                }
+
+                $snippets[] = $this->snippetCache[$ref];
+            }
+        }
+
+        return $snippets;
     }
 }
