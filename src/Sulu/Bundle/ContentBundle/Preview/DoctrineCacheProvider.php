@@ -201,9 +201,9 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     public function updateTemplate($template, $userId, $contentUuid, $webspaceKey, $locale)
     {
         $structure = $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
-        $data = $this->serializer->serialize($structure, $this->serializeType);
-        $data['template'] = $template;
-        $structure = $this->serializer->deserialize($data, Structure::class, $this->serializeType);
+        $data = json_decode($this->serializer->serialize($structure, $this->serializeType));
+        $data['key'] = $template;
+        $structure = $this->serializer->deserialize(json_encode($data), get_class($this->structureManager->getStructure($template)), $this->serializeType);
 
         $this->saveStructure($structure, $userId, $contentUuid, $webspaceKey, $locale);
     }
