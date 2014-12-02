@@ -185,7 +185,9 @@ class SnippetContent extends ComplexContentType
 
         $refs = $property->getValue();
         $contentData = array();
-        foreach ($this->loadSnippets($refs, $webspaceKey, $locale) as $snippet) {
+
+        $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids']:array();
+        foreach ($this->loadSnippets($ids, $webspaceKey, $locale) as $snippet) {
             $contentData[] = $snippet['view'];
         }
 
@@ -201,8 +203,10 @@ class SnippetContent extends ComplexContentType
         $locale = $property->getStructure()->getLanguageCode();
 
         $refs = $property->getValue();
+        $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids']:array();
+
         $contentData = array();
-        foreach ($this->loadSnippets($refs, $webspaceKey, $locale) as $snippet) {
+        foreach ($this->loadSnippets($ids, $webspaceKey, $locale) as $snippet) {
             $contentData[] = $snippet['content'];
         }
 
