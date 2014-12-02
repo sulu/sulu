@@ -11,9 +11,12 @@
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
+use Sulu\Component\Util\SuluNodeHelper;
 
 /**
  * base class for Resource Locator Path Strategy
@@ -36,15 +39,33 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $cleaner;
 
     /**
-     * @param string $name name of RLP Strategy
-     * @param RlpMapperInterface $mapper
-     * @param PathCleanupInterface $cleaner
+     * @var StructureManagerInterface
      */
-    public function __construct($name, RlpMapperInterface $mapper, PathCleanupInterface $cleaner)
-    {
+    protected $structureManager;
+
+    /**
+     * @var ContentTypeManagerInterface
+     */
+    protected $contentTypeManager;
+
+    /**
+     * @var SuluNodeHelper
+     */
+    protected $nodeHelper;
+
+    /**
+     * Constructor
+     */
+    public function __construct(
+        $name,
+        RlpMapperInterface $mapper,
+        PathCleanupInterface $cleaner,
+        StructureManagerInterface $structureManager
+    ) {
         $this->name = $name;
         $this->mapper = $mapper;
         $this->cleaner = $cleaner;
+        $this->structureManager = $structureManager;
     }
 
     /**
@@ -120,17 +141,56 @@ abstract class RlpStrategy implements RlpStrategyInterface
     }
 
     /**
-     * creates a new resourcelocator and creates the correct history
-     * @param string $src old resource locator
-     * @param string $dest new resource locator
-     * @param string $webspaceKey key of portal
-     * @param string $languageCode
-     * @param string $segmentKey
+     * {@inheritdoc}
      */
-    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null)
-    {
+    public function move(
+        $src,
+        $dest,
+        NodeInterface $contentNode,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
         // delegate to mapper
-        return $this->mapper->move($src, $dest, $webspaceKey, $languageCode, $segmentKey);
+        $this->mapper->move($src, $dest, $webspaceKey, $languageCode, $segmentKey);
+
+        // TODO services: $this->adaptResourceLocators($contentNode, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+
+    /**
+     * adopts resource locator of children by iteration
+     */
+    private function adaptResourceLocators(
+        NodeInterface $contentNode,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        foreach ($contentNode->getNodes() as $node) {
+            // determine structure
+            $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
+            $template = $node->getPropertyValue($templatePropertyName);
+            $structure = $this->structureManager->getStructure($template);
+
+            // only if rlp exists
+            if ($structure->hasTag('sulu.rlp')) {
+                // get rlp
+                $rlp = $this->loadByContent($contentNode, $webspaceKey, $languageCode);
+
+                // determine rlp property
+                $property = $structure->getPropertyByTagName('sulu.rlp');
+                $contentType = $this->contentTypeManager->get($property->getContentTypeName());
+                $property->setValue($rlp);
+
+                // write value to node
+                $contentType->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+            }
+
+            // iteration
+            $this->adaptResourceLocators($node, $userId, $webspaceKey, $languageCode, $segmentKey);
+        }
     }
 
     /**

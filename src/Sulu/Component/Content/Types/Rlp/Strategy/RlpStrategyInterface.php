@@ -59,11 +59,21 @@ interface RlpStrategyInterface
      * creates a new resourcelocator and creates the correct history
      * @param string $src old resource locator
      * @param string $dest new resource locator
+     * @param NodeInterface $contentNode
+     * @param int $userId
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
      */
-    public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null);
+    public function move(
+        $src,
+        $dest,
+        NodeInterface $contentNode,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    );
 
     /**
      * returns path for given contentNode
