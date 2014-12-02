@@ -127,7 +127,7 @@ class PreviewControllerTest extends SuluTestCase
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
+        $this->assertTrue(strpos($response, '<h1 property="title">Hello Hikaru Sulu</h1>') > -1);
     }
 
     public function testRenderHtml5()
