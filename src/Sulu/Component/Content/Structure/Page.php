@@ -290,4 +290,19 @@ abstract class Page extends Structure
     {
         $this->ext = $ext;
     }
+
+    public function copyFrom(StructureInterface $structure)
+    {
+        if ($structure instanceof Page) {
+            $this->setNodeState($structure->getNodeState());
+            $this->setUrls($structure->getUrls());
+            $this->setExt($structure->getExt());
+            $this->setOriginTemplate($structure->getOriginTemplate());
+            $this->setIsShadow($structure->getIsShadow());
+            $this->setShadowBaseLanguage($structure->getShadowBaseLanguage());
+            $this->setConcreteLanguages($structure->getConcreteLanguages());
+        }
+
+        parent::copyFrom($structure);
+    }
 }

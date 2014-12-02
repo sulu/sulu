@@ -962,4 +962,24 @@ abstract class Structure implements StructureInterface
     {
         $this->path = $path;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copyFrom(StructureInterface $structure)
+    {
+        $this->setWebspaceKey($structure->getWebspaceKey());
+        $this->setLanguageCode($structure->getLanguageCode());
+        $this->setUuid($structure->getUuid());
+
+        $this->setChanged($structure->getChanged());
+        $this->setChanger($structure->getChanger());
+        $this->setCreated($structure->getCreated());
+        $this->setCreator($structure->getCreator());
+
+        $this->setPublished($structure->getPublished());
+        $this->setPath($structure->getPath());
+        $this->setNodeType($structure->getNodeType());
+        $this->setHasTranslation($structure->getHasTranslation());
+    }
 }

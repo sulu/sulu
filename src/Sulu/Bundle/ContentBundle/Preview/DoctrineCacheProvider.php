@@ -206,26 +206,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         /** @var Page $newStructure */
         $newStructure = $this->structureManager->getStructure($template);
 
-        $newStructure->setExt($structure->getExt());
-        $newStructure->setWebspaceKey($structure->getWebspaceKey());
-        $newStructure->setLanguageCode($structure->getLanguageCode());
-        $newStructure->setUrls($structure->getUrls());
-        $newStructure->setUuid($structure->getUuid());
-
-        $newStructure->setChanged($structure->getChanged());
-        $newStructure->setChanger($structure->getChanger());
-        $newStructure->setCreated($structure->getCreated());
-        $newStructure->setCreator($structure->getCreator());
-
-        $newStructure->setNodeState($structure->getNodeState());
-        $newStructure->setPublished($structure->getPublished());
-        $newStructure->setOriginTemplate($structure->getOriginTemplate());
-        $newStructure->setPath($structure->getPath());
-        $newStructure->setNodeType($structure->getNodeType());
-        $newStructure->setShadowBaseLanguage($structure->getShadowBaseLanguage());
-        $newStructure->setConcreteLanguages($structure->getConcreteLanguages());
-        $newStructure->setHasTranslation($structure->getHasTranslation());
-        $newStructure->setIsShadow($structure->getIsShadow());
+        $newStructure->copyFrom($structure);
 
         $this->saveStructure($newStructure, $userId, $contentUuid, $webspaceKey, $locale);
     }
