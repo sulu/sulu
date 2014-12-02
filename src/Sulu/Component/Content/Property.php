@@ -16,6 +16,8 @@ use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
@@ -29,7 +31,8 @@ use JMS\Serializer\Annotation\HandlerCallback;
  *     field = "propertyType",
  *     map = {
  *         "property": "Sulu\Component\Content\Property",
- *         "block": "Sulu\Component\Content\Block\BlockProperty"
+ *         "block": "Sulu\Component\Content\Block\BlockProperty",
+ *         "section": "Sulu\Component\Content\Section\SectionProperty"
  *     }
  * )
  */
@@ -431,6 +434,15 @@ class Property implements PropertyInterface, \JsonSerializable
         $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
         $graphNavigator = $context->getNavigator();
 
+        // FIXME deactivate event serializer.pre_serialize which calls an eventlistener in hateos-bundle
+        // this event listener throw an exception at Hateoas\Serializer\Metadata\InlineDeferrer::getParentObjectInlining
+        // at line 75 because the given metadata has no property inline
+        $reflection = new \ReflectionClass(get_class($graphNavigator));
+        $propertyReflection = $reflection->getProperty('dispatcher');
+        $propertyReflection->setAccessible(true);
+        $dispatcher = $propertyReflection->getValue($graphNavigator);
+        $propertyReflection->setValue($graphNavigator, null);
+
         $data = array();
         /**
          * @var string $propertyName
@@ -445,7 +457,17 @@ class Property implements PropertyInterface, \JsonSerializable
         }
 
         $data['value'] = json_encode($this->value);
-        $data['propertyType'] = $this instanceof BlockProperty ? 'block' : 'property';
+
+        // set discriminator value
+        if ($this instanceof BlockPropertyInterface) {
+            $data['propertyType'] = 'block';
+        } elseif ($this instanceof SectionPropertyInterface) {
+            $data['propertyType'] = 'section';
+        } else {
+            $data['propertyType'] = 'property';
+        }
+
+        $propertyReflection->setValue($graphNavigator, $dispatcher);
 
         return $data;
     }

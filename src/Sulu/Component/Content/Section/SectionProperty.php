@@ -10,8 +10,13 @@
 
 namespace Sulu\Component\Content\Section;
 
+use JMS\Serializer\Context;
+use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * defines a section for properties
@@ -22,6 +27,7 @@ class SectionProperty extends Property implements SectionPropertyInterface
     /**
      * properties managed by this block
      * @var PropertyInterface[]
+     * @Type("array<Sulu\Component\Content\Property>")
      */
     private $childProperties = array();
 
@@ -49,5 +55,23 @@ class SectionProperty extends Property implements SectionPropertyInterface
     public function addChild(PropertyInterface $property)
     {
         $this->childProperties[] = $property;
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "serialization")
+     */
+    public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
+    {
+        parent::setValue($this->getValue());
+
+        return parent::serializeToJson($visitor, $data, $context);
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "deserialization")
+     */
+    public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
+    {
+        return parent::deserializeToJson($visitor, $data, $context);
     }
 }

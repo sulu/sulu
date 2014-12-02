@@ -23,6 +23,7 @@
         </service>
         <service id="sulu_content.preview.cache_provider" class="%sulu_content.preview.cache_provider.class%" public="false">
             <argument type="service" id="sulu.content.mapper"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="jms_serializer" />
             <argument type="service" id="sulu_content.preview.cache_provider.data_cache"/>
             <argument type="service" id="sulu_content.preview.cache_provider.changes_cache"/>
