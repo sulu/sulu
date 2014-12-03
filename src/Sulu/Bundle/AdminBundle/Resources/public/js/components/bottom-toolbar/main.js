@@ -41,13 +41,13 @@ define([],
                 bottomToolbarId: '#bottom-list-toolbar'
             },
 
-             /**
+            /**
              * listens on add event
              *
              * @event sulu.bottom-toolbar.[INSTANCE_NAME].add
              */
             ADD_CLICKED = function() {
-                return this.sandbox.emit(createEventName.call(this,'add'));
+                return this.sandbox.emit(createEventName.call(this, 'add'));
             },
 
             /**
@@ -56,7 +56,7 @@ define([],
              * @event sulu.bottom-toolbar.[INSTANCE_NAME].delete
              */
             DEL_CLICKED = function() {
-                return this.sandbox.emit(createEventName.call(this,'delete'));
+                return this.sandbox.emit(createEventName.call(this, 'delete'));
             },
 
             /**
@@ -64,7 +64,7 @@ define([],
              *
              * @param {String} event name
              */
-            createEventName = function(postfix){
+            createEventName = function(postfix) {
                 return 'sulu.bottom-toolbar.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
             },
 
@@ -283,10 +283,10 @@ define([],
                 }
 
                 // start the toolbar right ahead or delegate the initialization
-                    $container = this.sandbox.dom.createElement('<div />');
-                    this.html($container);
-                    options.el = $container;
-                    startToolbarComponent.call(this, options);
+                $container = this.sandbox.dom.createElement('<div />');
+                this.html($container);
+                options.el = $container;
+                startToolbarComponent.call(this, options);
             }
         };
     });
