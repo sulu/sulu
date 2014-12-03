@@ -47,7 +47,7 @@ define([],
              * @event sulu.bottom-toolbar.[INSTANCE_NAME].add
              */
             ADD_CLICKED = function() {
-                return this.sandbox.emit(creatEventName.call(this,'add'));
+                return this.sandbox.emit(createEventName.call(this,'add'));
             },
 
             /**
@@ -56,7 +56,7 @@ define([],
              * @event sulu.bottom-toolbar.[INSTANCE_NAME].delete
              */
             DEL_CLICKED = function() {
-                return this.sandbox.emit(creatEventName.call(this,'delete'));
+                return this.sandbox.emit(createEventName.call(this,'delete'));
             },
 
             /**
@@ -64,7 +64,7 @@ define([],
              *
              * @param {String} event name
              */
-            creatEventName = function(postfix){
+            createEventName = function(postfix){
                 return 'sulu.bottom-toolbar.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
             },
 
@@ -116,6 +116,8 @@ define([],
                 default: function() {
                     var instanceName = this.options.instanceName ? this.options.instanceName + '.' : '',
                         postfix;
+
+                    //listens on and enables delete button
                     this.sandbox.on('husky.datagrid.number.selections', function(number) {
                         postfix = number > 0 ? 'enable' : 'disable';
                         this.sandbox.emit('husky.toolbar.' + instanceName + 'item.' + postfix, 'delete', false);
@@ -232,13 +234,6 @@ define([],
                 return template;
             },
 
-            /**
-             * Delegates the start of the toolbar to the header
-             */
-            startToolbarInHeader = function(options) {
-                // remove configured el (let header decide which container to use)
-                this.sandbox.emit('sulu.header.set-toolbar', options);
-            },
             /**
              * Starts the husky-toolbar with given options
              * @param options {object} options The options to pass to the toolbar-component
