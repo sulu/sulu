@@ -32,14 +32,6 @@ define(['app-config'], function(AppConfig) {
                     callback: function() {
                         this.sandbox.emit('sulu.header.toolbar.delete');
                     }.bind(this)
-                },
-                {
-                    icon: 'magic',
-                    iconSize: 'large',
-                    group: 'left',
-                    id: 'options-button',
-                    disabled: true,
-                    position: 30
                 }
             ],
             configDropdown = {
