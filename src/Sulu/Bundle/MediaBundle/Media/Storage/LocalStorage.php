@@ -17,10 +17,6 @@ use Symfony\Component\HttpKernel\Tests\Logger;
 
 class LocalStorage implements StorageInterface
 {
-    /**
-     * @var string
-     */
-    private $storageOption = null;
 
     /**
      * @var string

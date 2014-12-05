@@ -23,7 +23,8 @@
         "sulu/category-bundle": "@dev",
         "sulu/security-bundle": "@dev",
         "sulu/contact-bundle": "@dev",
-        "willdurand/hateoas-bundle": "0.3.*"
+        "willdurand/hateoas-bundle": "0.3.*",
+        "aws/aws-sdk-php": "2.*"
     },
     "require-dev": {
         "sensio/framework-extra-bundle": "~3.0",

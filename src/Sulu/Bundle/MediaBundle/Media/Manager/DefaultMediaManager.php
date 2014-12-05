@@ -749,6 +749,7 @@ class DefaultMediaManager implements MediaManagerInterface
         foreach ($mediaEntity->getFiles() as $file) {
             /** @var FileVersion $fileVersion */
             foreach ($file->getFileVersions() as $fileVersion) {
+                $this->storage->remove($fileVersion->getStorageOptions());
                 $this->formatManager->purge(
                     $mediaEntity->getId(),
                     $fileVersion->getName(),

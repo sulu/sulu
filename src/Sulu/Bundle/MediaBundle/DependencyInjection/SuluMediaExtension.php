@@ -24,6 +24,8 @@ class SuluMediaExtension extends Extension
 {
     const DEFAULT_FORMAT_NAME = '170x170';
     const DEFAULT_GHOST_SCRIPT_PATH = 'ghostscript';
+    const FORMAT_CACHE_SERVICE_PREFIX = 'sulu_media.format_cache';
+    const STORAGE_SERVICE_PREFIX = 'sulu_media.storage';
 
     /**
      * {@inheritDoc}
@@ -45,7 +47,6 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
-        $container->setParameter('sulu_media.format_cache.save_image', 'true');
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
@@ -117,7 +118,20 @@ class SuluMediaExtension extends Extension
             )
         ));
 
+        // storage, cache
+        $container->setParameter('sulu_media.storage.options', $config['storage']['service']);
+        $formatCacheType = $config['format_cache']['service']['type'];
+        $storageCacheType = $config['storage']['service']['type'];
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+
+        if (in_array($formatCacheType, array('local', 'reverse_proxy'))) {
+            $loader->load('format_cache/'.$formatCacheType.'.xml');
+        }
+        if (in_array($storageCacheType, array('local', 's3'))) {
+            $loader->load('storage/'.$storageCacheType.'.xml');
+        }
+
         $loader->load('services.xml');
 
         if (true === $config['search']['enabled']) {

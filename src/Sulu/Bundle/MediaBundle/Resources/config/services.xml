@@ -6,10 +6,8 @@
         <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\DefaultMediaManager</parameter>
         <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
-        <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
         <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
         <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager</parameter>
-        <parameter key="sulu_media.format_cache.class">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
         <parameter key="sulu_media.image.converter.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\DefaultCommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
@@ -39,19 +37,7 @@
                  factory-method="getRepository">
             <argument>SuluMediaBundle:Collection</argument>
         </service>
-        <service id="sulu_media.storage" class="%sulu_media.storage.class%">
-            <argument>%sulu_media.media.storage.local.path%</argument>
-            <argument>%sulu_media.media.storage.local.segments%</argument>
-            <argument type="service" id="logger"/>
-        </service>
         <service id="sulu_media.file_validator" class="%sulu_media.file_validator.class%" />
-        <service id="sulu_media.format_cache" class="%sulu_media.format_cache.class%">
-            <argument type="service" id="filesystem"/>
-            <argument>%sulu_media.format_cache.path%</argument>
-            <argument type="expression">service('router').getRouteCollection().get('sulu_media.website.image.proxy').getPath()</argument>
-            <argument>%sulu_media.format_cache.segments%</argument>
-            <argument>%sulu_media.image.formats%</argument>
-        </service>
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
             <argument>%sulu_media.image.formats%</argument>
             <argument type="service" id="sulu_media.image.command_manager" />
@@ -92,7 +78,6 @@
             <argument type="service" id="sulu_media.format_cache" />
             <argument type="service" id="sulu_media.image.converter" />
             <argument type="string">%ghost_script.path%</argument>
-            <argument type="string">%sulu_media.format_cache.save_image%</argument>
             <argument type="string">%sulu_media.format_manager.mime_types%</argument>
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
         </service>
@@ -112,6 +97,5 @@
             <argument type="string">%sulu_media.collection.previews.limit%</argument>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
         </service>
-
     </services>
 </container>
