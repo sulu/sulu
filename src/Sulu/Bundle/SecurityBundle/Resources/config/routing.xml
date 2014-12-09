@@ -15,4 +15,7 @@
     <route id="sulu_security.template.role.list" path="/template/role/list.html">
         <default key="_controller">SuluSecurityBundle:Template:roleList</default>
     </route>
+    <route id="sulu_security.profile.change_language" path="/profile/changeLanguage">
+        <default key="_controller">SuluSecurityBundle:Profile:changeLanguage</default>
+    </route>
 </routes>
