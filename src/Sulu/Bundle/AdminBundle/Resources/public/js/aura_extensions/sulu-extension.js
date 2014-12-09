@@ -310,11 +310,15 @@
              * @param datagridOptions {Object}
              */
             app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function(data) {
+                var fieldsKey = key + 'Fields',
+                    pageSizeKey = key + 'PageSize',
+                    limit = this.sandbox.sulu.getUserSetting(pageSizeKey);
+
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, fieldsKey, ['translation', 'default', 'editable', 'validation', 'width'], url, function(data) {
                     var toolbarDefaults = {
                             columnOptions: {
                                 data: data,
-                                key: key,
+                                key: fieldsKey,
                                 url: url
                             },
                             instanceName: 'content',
@@ -331,9 +335,18 @@
                                     noItemsText: 'public.empty-list',
                                     stickyHeader: true
                                 }
+                            },
+                            paginationOptions: {
+                                dropdown: {
+                                    limit: limit
+                                }
                             }
                         },
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
+
+                    if (!gridOptions.paginationOptions.dropdown.limit) {
+                        delete gridOptions.paginationOptions.dropdown.limit;
+                    }
 
                     gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
                     gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
@@ -349,6 +362,11 @@
                             options: gridOptions
                         }
                     ]);
+
+                    // save page size when changed
+                    this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
+                        this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
+                    }.bind(this));
                 }.bind(this));
             };
 
