@@ -116,10 +116,23 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de', 'sulu_io');
         $property = $pageStructure->getProperty('hotels');
-        $data = $this->contentType->getContentData($property, 'sulu_io', 'de', null);
+        $data = $this->contentType->getContentData($property);
         $this->assertCount(2, $data);
         $hotel1 = reset($data);
         $this->assertEquals('Le grande budapest', $hotel1['title']);
+        $hotel2 = next($data);
+        $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
+    }
+
+    public function testGetContentDataShadow()
+    {
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
+        $property = $pageStructure->getProperty('hotels');
+        $data = $this->contentType->getContentData($property);
+        $this->assertCount(2, $data);
+        $hotel1 = reset($data);
+        $this->assertEquals('Le grande budapest (en)', $hotel1['title']);
         $hotel2 = next($data);
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
