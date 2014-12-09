@@ -8,6 +8,10 @@ security:
 
     encoders:
         Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+        Sulu\Bundle\SecurityBundle\Entity\User:
+            algorithm: sha512
+            iterations: 5000
+            encode_as_base64: false
 
     providers:
         testprovider:
