@@ -10,80 +10,113 @@
 
 namespace Sulu\Component\Content;
 
+use JMS\Serializer\Context;
+use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Discriminator;
+use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
+ *
+ * @Discriminator(
+ *     field = "propertyType",
+ *     map = {
+ *         "property": "Sulu\Component\Content\Property",
+ *         "block": "Sulu\Component\Content\Block\BlockProperty",
+ *         "section": "Sulu\Component\Content\Section\SectionProperty"
+ *     }
+ * )
  */
 class Property implements PropertyInterface, \JsonSerializable
 {
     /**
      * name of property
      * @var string
+     * @Type("string")
      */
     private $name;
 
     /**
      * @var Metadata
+     * @Type("Sulu\Component\Content\Metadata")
      */
     private $metadata;
 
     /**
      * is property mandatory
      * @var bool
+     * @Type("boolean")
      */
     private $mandatory;
 
     /**
      * is property multilingual
      * @var bool
+     * @Type("boolean")
      */
     private $multilingual;
 
     /**
      * min occurs of property value
      * @var int
+     * @Type("integer")
      */
     private $minOccurs;
 
     /**
      * max occurs of property value
      * @var int
+     * @Type("integer")
      */
     private $maxOccurs;
 
     /**
      * name of content type
      * @var string
+     * @Type("string")
      */
     private $contentTypeName;
 
     /**
      * parameter of property to merge with parameter of content type
      * @var array
+     * @Type("array")
      */
     private $params;
 
     /**
      * tags defined in xml
      * @var PropertyTag[]
+     * @Type("array<Sulu\Component\Content\PropertyTag>")
      */
     private $tags;
 
     /**
      * column span
      * @var string
+     * @Type("string")
      */
     private $col;
 
     /**
      * value of property
      * @var mixed
+     * @Exclude
      */
     private $value;
 
     /**
      * @var StructureInterface
+     * @Exclude
      */
     private $structure;
 
@@ -101,8 +134,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $params = array(),
         $tags = array(),
         $col = null
-    )
-    {
+    ) {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
         $this->maxOccurs = $maxOccurs;
@@ -111,7 +143,7 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->name = $name;
         $this->metadata = new Metadata($metaData);
         $this->params = $params;
-        $this->tags =$tags;
+        $this->tags = $tags;
         $this->col = $col;
     }
 
@@ -375,19 +407,11 @@ class Property implements PropertyInterface, \JsonSerializable
 
     public function __clone()
     {
-        $clone = new Property(
-            $this->getName(),
-            $this->getMetadata(),
-            $this->getMandatory(),
-            $this->getMultilingual(),
-            $this->getMaxOccurs(),
-            $this->getMinOccurs(),
-            $this->getParams()
-        );
-
-        $clone->setValue($this->getValue());
-
-        return $clone;
+        $value = $this->getValue();
+        if (is_object($value)) {
+            $value = clone $value;
+        }
+        $this->setValue($value);
     }
 
     /**
@@ -400,5 +424,75 @@ class Property implements PropertyInterface, \JsonSerializable
         } else {
             return $this->getValue();
         }
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "serialization")
+     */
+    public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
+    {
+        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+        $graphNavigator = $context->getNavigator();
+
+        $data = array();
+
+        /**
+         * @var string $propertyName
+         * @var PropertyMetadata $propertyMetadata
+         */
+        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            $context->pushPropertyMetadata($propertyMetadata);
+            $data[$propertyName] = $graphNavigator->accept(
+                $propertyMetadata->getValue($this),
+                $propertyMetadata->type,
+                $context
+            );
+            $context->popPropertyMetadata();
+        }
+
+        $data['value'] = json_encode($this->getValue());
+
+        // set discriminator value
+        if ($this instanceof BlockPropertyInterface) {
+            $data['propertyType'] = 'block';
+        } elseif ($this instanceof SectionPropertyInterface) {
+            $data['propertyType'] = 'section';
+        } else {
+            $data['propertyType'] = 'property';
+        }
+
+        return $data;
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "deserialization")
+     */
+    public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
+    {
+        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+        $graphNavigator = $context->getNavigator();
+
+        /**
+         * @var string $propertyName
+         * @var PropertyMetadata $propertyMetadata
+         */
+        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            if (!($propertyMetadata instanceof StaticPropertyMetadata)) {
+                $context->pushPropertyMetadata($propertyMetadata);
+                $value = $graphNavigator->accept(
+                    $data[$propertyName],
+                    $propertyMetadata->type,
+                    $context
+                );
+                $context->popPropertyMetadata();
+
+                $propertyMetadata->setValue($this, $value);
+            }
+        }
+
+        $this->setValue(json_decode($data['value'], true));
+        $this->structure = $visitor->getResult();
+
+        return $data;
     }
 }

@@ -109,8 +109,8 @@ abstract class StructureExtension implements StructureExtensionInterface
     /**
      * {@inheritdoc}
      */
-    public function getContentData($value)
+    public function getContentData($container)
     {
-        return $value;
+        return $container;
     }
 }

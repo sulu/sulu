@@ -615,8 +615,8 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $expected = $nodes[$item['uuid']];
 
             $this->assertEquals($expected->title, $item['my_title']);
-            $this->assertEquals($expected->getExt()['excerpt']->title, $item['ext_title']);
-            $this->assertEquals($expected->getExt()['excerpt']->tags, $item['ext_tags']);
+            $this->assertEquals($expected->getExt()['excerpt']['title'], $item['ext_title']);
+            $this->assertEquals($expected->getExt()['excerpt']['tags'], $item['ext_tags']);
         }
     }
 
