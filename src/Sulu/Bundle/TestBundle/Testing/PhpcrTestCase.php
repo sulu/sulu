@@ -135,6 +135,11 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $templateResolver;
 
     /**
+     * @var SuluNodeHelper
+     */
+    protected $nodeHelper;
+
+    /**
      * The default language for the content mapper
      * @var string
      */
@@ -189,7 +194,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
-            $nodeHelper = new SuluNodeHelper(
+            $this->nodeHelper = new SuluNodeHelper(
                 $this->sessionManager->getSession(),
                 'i18n', 
                 array(
@@ -205,7 +210,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $cleaner,
                 $this->structureManager,
                 $this->contentTypeManager,
-                $nodeHelper
+                $this->nodeHelper
             );
 
             $this->mapper = new ContentMapper(
@@ -217,7 +222,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $cleaner,
                 $this->webspaceManager,
                 $this->templateResolver,
-                $nodeHelper,
+                $this->nodeHelper,
                 $strategy,
                 $this->language,
                 $this->defaultTemplates,
