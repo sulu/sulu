@@ -26,7 +26,7 @@ define(function() {
             expandIcon: 'fa-chevron-right',
             noTransitionsClass: 'no-transitions',
             versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
-            changeLanguageUrl: '/admin/security/profile/changeLanguage'
+            changeLanguageUrl: '/admin/security/profile/change-language'
         },
 
         templates = {
