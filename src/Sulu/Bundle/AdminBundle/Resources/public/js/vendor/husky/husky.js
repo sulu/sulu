@@ -29525,7 +29525,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param record {Object} the data of the record
          */
         executeRowPostRenderActions: function(record) {
-            if (record.selected === true) {
+            if (!!this.datagrid.itemIsSelected.call(this.datagrid, record.id)) {
                 this.toggleSelectRecord(record.id, true);
             } else {
                 this.toggleSelectAllItem(false);
@@ -30512,10 +30512,10 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                     title: this.sandbox.util.cropMiddle(title, 24),
                     description: this.sandbox.util.cropMiddle(description, 32),
                     styleClass: (this.options.large === true) ? constants.largeClass : constants.smallClass,
-                    checked: !!record.selected
+                    checked: !!this.datagrid.itemIsSelected.call(this.datagrid, record.id)
                 })
             );
-            if (record.selected === true) {
+            if (this.datagrid.itemIsSelected.call(this.datagrid, record.id)) {
                 this.selectItem(id, true);
             }
             this.sandbox.dom.data(this.$thumbnails[id], 'id', id);
@@ -31650,15 +31650,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
         },
 
         /**
-         * triggers husky.datagrid.items.selected event, which returns all selected item data
-         * @event husky.datagrid.data.get-selected
-         * @param  {Function} callback function receives array of selected items
-         */
-        DATA_GET_SELECTED = function() {
-            return this.createEventName('data.get-selected');
-        },
-
-        /**
          * Private Methods
          * --------------------------------------------------------------------
          */
@@ -31719,6 +31710,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                 this.matchings = [];
                 this.requestFields = [];
+                this.selectedItems = [];
 
                 // make a copy of the decorators for each datagrid instance
                 // if you directly access the decorators variable the datagrid-context in the decorators will be overwritten
@@ -31734,10 +31726,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                 this.$loader = null;
                 this.isLoading = false;
+                this.initialLoaded = false;
 
                 // append datagrid to html element
                 this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
-                this.elId = this.sandbox.dom.attr(this.$el, 'id');
                 this.$el.append(this.$element);
 
                 this.sort = {
@@ -31771,9 +31763,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.load({
                         url: url
                     });
-
                 } else if (!!this.options.data) {
-
                     this.sandbox.logger.log('load data from array');
                     this.data = {};
                     if (!!this.options.resultKey && !!this.options.data[this.options.resultKey]) {
@@ -31881,7 +31871,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Renders the data of the datagrid
              */
             render: function() {
-                this.preSelectItems();
+                if (!this.initialLoaded) {
+                    this.preSelectItems();
+                    this.initialLoaded = true;
+                }
 
                 this.renderView();
                 if (!!this.paginations[this.paginationId]) {
@@ -32309,11 +32302,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     callback(this.getSelectedItemIds());
                 }.bind(this));
 
-                // trigger selectedItems
-                this.sandbox.on(DATA_GET_SELECTED.call(this), function(callback) {
-                    callback(this.getSelectedItemData());
-                }.bind(this));
-
                 // add a single data record
                 this.sandbox.on(RECORD_ADD.call(this), this.addRecordHandler.bind(this));
                 // add multiple data records
@@ -32484,9 +32472,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Sets all data records unselected
              */
             deselectAllItems: function() {
-                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    this.data.embedded[i].selected = false;
-                }
+                this.selectedItems = [];
                 // emit events with selected data
                 this.sandbox.emit(ALL_DESELECT.call(this));
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), 0);
@@ -32499,10 +32485,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             selectAllItems: function() {
                 var ids = [], i, length;
                 for (i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (this.selectingAllowed(this.data.embedded[i].id)) {
-                        this.data.embedded[i].selected = true;
-                        ids.push(this.data.embedded[i].id);
-                    }
+                    this.setItemSelected(this.data.embedded[i].id);
                 }
                 // emit events with selected data
                 this.sandbox.emit(ALL_SELECT.call(this), ids);
@@ -32515,36 +32498,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Array} array with all ids
              */
             getSelectedItemIds: function() {
-                var data = [];
-                this.iterateSelectedItems(function(item) {
-                    data.push(item.id);
-                });
-                return data;
-            },
-
-            /**
-             * Returns the data of all selected items
-             * @return {Array} array of objects containing the selected data
-             */
-            getSelectedItemData: function() {
-                var data = [];
-                this.iterateSelectedItems(function(item) {
-                    data.push(item);
-                });
-                return data;
-            },
-
-            /**
-             * function which iterates through data. on every selected item a callback is called
-             * @param callback Selected item is passed
-             */
-            iterateSelectedItems: function(callback) {
-                var i, length;
-                for (i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (this.data.embedded[i].selected === true) {
-                        callback(this.data.embedded[i]);
-                    }
-                }
+                return this.selectedItems;
             },
 
             /**
@@ -32553,13 +32507,13 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @param items {Array} array with all items that should be selected
              */
             setSelectedItems: function(items) {
-                var count = 0, i, length;
-                for (i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (items.indexOf(this.data.embedded[i].id) !== -1 && this.selectingAllowed(this.data.embedded[i].id)) {
-                        this.data.embedded[i].selected = true;
+                var count = 0, i, length, position;
+                for (i = -1, length = items.length; ++i < length;) {
+                    if (this.selectedItems.indexOf(items[i]) === -1 && this.selectingAllowed(items[i])) {
+                        this.selectedItems.push(items[i]);
                         count++;
-                    } else {
-                        this.data.embedded[i].selected = false;
+                    } else if ((position = this.selectedItems.indexOf(items[i])) !== -1) {
+                        this.selectedItems.splice(position, 1);
                     }
                 }
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), count);
@@ -32571,12 +32525,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {Boolean} returns true if item is selected
              */
             itemIsSelected: function(id) {
-                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (this.data.embedded[i].id === id) {
-                        return this.data.embedded[i].selected;
-                    }
-                }
-                return false;
+                return this.selectedItems.indexOf(id) !== -1;
             },
 
             /**
@@ -32585,9 +32534,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Boolean} true of operation was successfull
              */
             setItemSelected: function(id) {
-                var itemIndex = this.getRecordIndexById(id);
-                if (itemIndex !== null && this.selectingAllowed(id)) {
-                    this.data.embedded[itemIndex].selected = true;
+                if (this.selectedItems.indexOf(id) === -1) {
+                    this.selectedItems.push(id);
                     // emit events with selected data
                     this.sandbox.emit(ITEM_SELECT.call(this), id);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
@@ -32603,9 +32551,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Boolean} true of operation was succesfull
              */
             setItemUnselected: function(id) {
-                var itemIndex = this.getRecordIndexById(id);
-                if (itemIndex !== null) {
-                    this.data.embedded[itemIndex].selected = false;
+                var position;
+
+                if ((position = this.selectedItems.indexOf(id)) !== -1) {
+                    this.selectedItems.splice(position, 1);
                     // emit events with selected data
                     this.sandbox.emit(ITEM_DESELECT.call(this), id);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
@@ -32758,7 +32707,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.load({url: url,
                         success: function() {
                             this.sandbox.emit(UPDATED.call(this), 'changed page');
-                        }.bind(this)});
+                        }.bind(this)
+                    });
                 }
             },
 
@@ -35106,6 +35056,7 @@ define('__component__$toolbar@husky',[],function() {
  * @param {Function} [options.selectCallback] function which will be called when element is selected
  * @param {Array} [options.fields] A list of the fields to show inside the dropdown
  * @param {String} [options.dropdownSizeClass] The styling class for the dropdown. Defined inside the autocomplete stylesheet
+ * @param {String} [options.footerContent] Could be a template or just text
  */
 
 define('__component__$auto-complete@husky',[], function() {
@@ -35134,7 +35085,8 @@ define('__component__$auto-complete@husky',[], function() {
         excludes: [],
         selectCallback: null,
         fields: [],
-        dropdownSizeClass: ''
+        dropdownSizeClass: '',
+        footerContent: ''
     },
 
     templates = {
@@ -35225,6 +35177,14 @@ define('__component__$auto-complete@husky',[], function() {
         return createEventName.call(this, 'is-matched');
     },
 
+    /**
+     * raised after autocomplete footer was clicked
+     * @event husky.auto-complete.footer.clicked
+     */
+    FOOTER_CLICKED = function() {
+        return createEventName.call(this, 'footer.clicked');
+    },
+
     /** returns normalized event names */
     createEventName = function(postFix) {
         return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -35263,17 +35223,17 @@ define('__component__$auto-complete@husky',[], function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            this._template = null;
+            this.suggestionTpl = null;
+            this.footerTpl = null;
             this.data = null;
             this.matched = true;
             this.matches = [];
-            this.executeBlurHandler = true;
             this.excludes = this.parseExcludes(this.options.excludes);
             this.localData = {};
             this.localData._embedded = {};
             this.localData._embedded[this.options.resultKey] = this.options.localData;
 
-            this.setTemplate();
+            this.setTemplates();
 
             this.render();
             this.bindDomEvents();
@@ -35283,16 +35243,17 @@ define('__component__$auto-complete@husky',[], function() {
         },
 
         /**
-         * Initializes the template for a suggestion element
+         * Initializes the templates
          */
-        setTemplate: function() {
+        setTemplates: function() {
             var iconHTML = '';
             if (this.options.suggestionIcon !== '') {
                 iconHTML = '<span class="fa-' + this.options.suggestionIcon + ' icon"></span>';
             }
 
+            // suggestions
             if (this.options.fields.length) {
-                this._template = this.sandbox.util.template('' +
+                this.suggestionTpl = this.sandbox.util.template('' +
                     '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
                     '   <div class="border">' +
                     '       <div class="text">' +
@@ -35303,7 +35264,7 @@ define('__component__$auto-complete@husky',[], function() {
                     '   </div>' +
                     '</div>');
             } else {
-                this._template = this.sandbox.util.template('' +
+                this.suggestionTpl = this.sandbox.util.template('' +
                     '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
                     '   <div class="border">' +
                             iconHTML +
@@ -35311,16 +35272,24 @@ define('__component__$auto-complete@husky',[], function() {
                     '   </div>' +
                     '</div>');
             }
+
+            if (!!this.options.footerContent) {
+                this.footerTpl = this.sandbox.util.template(
+                    '<div class="auto-complete-footer">' +
+                        this.options.footerContent +
+                    '</div>'
+                );
+            }
         },
 
         /**
          * @param context {object} context for template - id, name
          * @returns {String} html of suggestion element
          */
-        buildTemplate: function(context) {
+        buildSuggestionTemplate: function(context) {
             var domObj;
-            if (this._template !== null) {
-                domObj = this.sandbox.dom.createElement(this._template({ context: context, fields: this.options.fields }));
+            if (this.suggestionTpl !== null) {
+                domObj = this.sandbox.dom.createElement(this.suggestionTpl({ context: context, fields: this.options.fields }));
                 if (this.isExcluded(context)) {
                     this.sandbox.dom.addClass(domObj, 'disabled');
                 }
@@ -35385,7 +35354,14 @@ define('__component__$auto-complete@husky',[], function() {
                             //saves the fact that the current input has matches
                             this.matches.push(context);
                             this.matched = true;
-                            return this.buildTemplate(context);
+                            return this.buildSuggestionTemplate(context);
+                        }.bind(this),
+
+                        footer: function() {
+                            if (!!this.footerTpl) {
+                                return this.footerTpl();
+                            }
+                            return null;
                         }.bind(this)
                     }
                 };
@@ -35514,29 +35490,24 @@ define('__component__$auto-complete@husky',[], function() {
                 }
             }.bind(this));
 
-            //ensures that the blur callback does not get called
-            this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'mousedown', function() {
-                this.executeBlurHandler = false;
-            }.bind(this));
-
             this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'click', function() {
                 return false;
             }.bind(this), '.disabled');
 
             this.sandbox.dom.on(this.$valueField, 'blur', function() {
-
                 //don't do anything if the dropdown is clicked on
-                if (this.executeBlurHandler === true) {
-                    if (this.options.emptyOnBlur === false) {
-                        this.handleBlur();
-                    } else {
-                        this.clearValueFieldValue();
-                    }
+                if (this.options.emptyOnBlur === false) {
+                    this.handleBlur();
                 } else {
-                    this.executeBlurHandler = true;
+                    this.clearValueFieldValue();
                 }
-
             }.bind(this));
+
+            this.sandbox.dom.on(this.$el, 'click', function() {
+                this.sandbox.dom.blur(this.$valueField);
+                this.clearValueFieldValue();
+                this.sandbox.emit(FOOTER_CLICKED.call(this));
+            }.bind(this), '.auto-complete-footer');
 
             // clear data attribute when input is empty
             this.sandbox.dom.on(this.$valueField, 'focusout', function() {
@@ -35755,6 +35726,7 @@ define('__component__$auto-complete@husky',[], function() {
  * @param {String} [options.suggestionIcon] Icon Class-suffix for autocomplete-suggestion-icon
  * @param {Array} [options.delimiters] Array of key-codes which trigger a tag input
  * @param {Boolean} [options.noNewTags] If true only auto-completed tags are accepted
+ * @param {String} [options.footerContent] Could be a template or just text
  */
 define('__component__$auto-complete-list@husky',[], function() {
 
@@ -36040,7 +36012,8 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 getParameter: this.options.getParameter,
                                 suggestionIcon: this.options.suggestionIcon,
                                 autoCompleteIcon: this.options.autoCompleteIcon,
-                                resultKey: this.options.resultKey
+                                resultKey: this.options.resultKey,
+                                footerContent: this.options.footerContent
                             },
                             this.options.autocompleteOptions
                         )
@@ -46567,7 +46540,14 @@ define("datepicker-zh-TW", function(){});
                     if (!app.config.culture || !app.config.culture.name) {
                         return key;
                     }
-                    var translation = Globalize.localize(key, app.config.culture.name);
+
+                    try {
+                        var translation = Globalize.localize(key, app.config.culture.name);
+                    } catch (e) {
+                        app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
+                        return key;
+                    }
+
                     return !!translation ? translation : key;
                 };
 
@@ -47632,7 +47612,7 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
                 },
 
                 setValue: function(selector, value) {
-                    return app.core.dom.$(selector).typeahead('setQuery', value);
+                    return app.core.dom.$(selector).typeahead('val', value);
                 }
             };
         }

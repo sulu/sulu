@@ -180,8 +180,16 @@ define([
                         getParameter: 'search',
                         resultKey: 'contacts',
                         instanceName: 'contact',
-                        valueKey: 'fullName',
-                        noNewValues: true
+                        noNewValues: true,
+                        fields: [
+                            {
+                                id: 'id',
+                                width: '60px'
+                            },
+                            {
+                                id: 'fullName'
+                            }
+                        ]
                     }
                 }
             ]);

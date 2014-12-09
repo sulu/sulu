@@ -7748,6 +7748,23 @@ a.btn-black, a.btn-highlight {
 }
 
 /* line 11, ../scss/modules/auto-complete.scss */
+.auto-complete-footer {
+  position: relative;
+  z-index: 5;
+  padding: 5px;
+  font-size: 14px;
+  background-color: #cccccc;
+  color: #000;
+  text-align: center;
+}
+/* line 20, ../scss/modules/auto-complete.scss */
+.auto-complete-footer:hover {
+  color: #fff;
+  background-color: #52b6ca;
+  cursor: pointer;
+}
+
+/* line 27, ../scss/modules/auto-complete.scss */
 .husky-auto-complete {
   position: relative;
   top: 0px;
@@ -7817,37 +7834,33 @@ a.btn-black, a.btn-highlight {
 .husky-auto-complete .text {
   font-size: 14px;
 }
-/* line 25, ../scss/modules/auto-complete.scss */
+/* line 41, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"] {
   font-size: 14px;
 }
-/* line 28, ../scss/modules/auto-complete.scss */
+/* line 44, ../scss/modules/auto-complete.scss */
 .husky-auto-complete input[type="text"]:focus {
   outline: 0 none;
 }
-/* line 34, ../scss/modules/auto-complete.scss */
-.husky-auto-complete.is-large .tt-dropdown-menu {
-  width: 150%;
-}
-/* line 39, ../scss/modules/auto-complete.scss */
+/* line 49, ../scss/modules/auto-complete.scss */
 .husky-auto-complete .front {
   padding-left: 5px;
 }
-/* line 43, ../scss/modules/auto-complete.scss */
+/* line 53, ../scss/modules/auto-complete.scss */
 .form-horizontal .husky-auto-complete {
   margin-top: 0;
 }
 
-/* line 48, ../scss/modules/auto-complete.scss */
+/* line 58, ../scss/modules/auto-complete.scss */
 .twitter-typeahead {
   width: 100%;
 }
-/* line 51, ../scss/modules/auto-complete.scss */
+/* line 61, ../scss/modules/auto-complete.scss */
 .twitter-typeahead input[type="text"] {
   border-radius: 3px 3px 0 0;
 }
 
-/* line 56, ../scss/modules/auto-complete.scss */
+/* line 66, ../scss/modules/auto-complete.scss */
 .tt-suggestions {
   width: 100%;
   top: 37px;
@@ -7855,50 +7868,50 @@ a.btn-black, a.btn-highlight {
   border-radius: 3px;
 }
 
-/* line 63, ../scss/modules/auto-complete.scss */
+/* line 73, ../scss/modules/auto-complete.scss */
 .tt-dropdown-menu {
-  width: 100%;
+  min-width: 100%;
   border: 1px solid #cccccc;
   margin-top: -1px;
   border-radius: 3px;
 }
 
-/* line 71, ../scss/modules/auto-complete.scss */
+/* line 81, ../scss/modules/auto-complete.scss */
 .tt-hint {
   display: none;
 }
 
-/* line 75, ../scss/modules/auto-complete.scss */
+/* line 85, ../scss/modules/auto-complete.scss */
 .tt-suggestion {
   height: 25px;
   width: 100%;
 }
 
-/* line 81, ../scss/modules/auto-complete.scss */
+/* line 91, ../scss/modules/auto-complete.scss */
 .suggestion:hover,
 .tt-cursor .suggestion {
   background: #52b6ca;
   color: white;
 }
-/* line 85, ../scss/modules/auto-complete.scss */
+/* line 95, ../scss/modules/auto-complete.scss */
 .suggestion:hover.disabled,
 .tt-cursor .suggestion.disabled {
   background: #efefef;
 }
 
-/* line 90, ../scss/modules/auto-complete.scss */
+/* line 100, ../scss/modules/auto-complete.scss */
 .suggestion {
   white-space: nowrap;
   color: black;
   padding: 0 6px;
   position: relative;
 }
-/* line 96, ../scss/modules/auto-complete.scss */
+/* line 106, ../scss/modules/auto-complete.scss */
 .suggestion .border {
   height: 25px;
   white-space: nowrap;
 }
-/* line 100, ../scss/modules/auto-complete.scss */
+/* line 110, ../scss/modules/auto-complete.scss */
 .suggestion .border .icon {
   display: inline-block;
   margin: 0 10px 0 10px;
@@ -7910,11 +7923,11 @@ a.btn-black, a.btn-highlight {
   left: 4px;
   top: 0;
 }
-/* line 111, ../scss/modules/auto-complete.scss */
+/* line 121, ../scss/modules/auto-complete.scss */
 .suggestion .border .icon + .text {
   padding-left: 30px;
 }
-/* line 116, ../scss/modules/auto-complete.scss */
+/* line 126, ../scss/modules/auto-complete.scss */
 .suggestion .border .text {
   display: inline-block;
   width: 100%;
@@ -7922,13 +7935,13 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-/* line 125, ../scss/modules/auto-complete.scss */
+/* line 135, ../scss/modules/auto-complete.scss */
 .suggestion.disabled {
   color: #999999;
   cursor: default;
 }
 
-/* line 131, ../scss/modules/auto-complete.scss */
+/* line 141, ../scss/modules/auto-complete.scss */
 .suggestion-column {
   display: inline-block;
   overflow: hidden;

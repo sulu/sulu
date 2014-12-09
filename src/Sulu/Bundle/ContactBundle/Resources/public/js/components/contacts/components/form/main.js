@@ -213,7 +213,16 @@ define([], function() {
                             value: !!data.account ? data.account : '',
                             instanceName: this.companyInstanceName,
                             valueName: 'name',
-                            noNewValues: true
+                            noNewValues: true,
+                            fields: [
+                                {
+                                    id: 'id',
+                                    width: '60px'
+                                },
+                                {
+                                    id: 'name'
+                                }
+                            ]
                         }
                     }
                 ]);

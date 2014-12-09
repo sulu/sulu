@@ -112,6 +112,15 @@ define([], function() {
                         noNewValues: true,
                         excludes: [
                             {id: data.id, name: data.name}
+                        ],
+                        fields: [
+                            {
+                                id: 'id',
+                                width: '60px'
+                            },
+                            {
+                                id: 'name'
+                            }
                         ]
                     }
                 }
