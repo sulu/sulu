@@ -18,6 +18,7 @@ use Sulu\Component\Content\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Structure\Snippet;
 
 /**
@@ -180,14 +181,20 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        $webspaceKey = $property->getStructure()->getWebspaceKey();
-        $locale = $property->getStructure()->getLanguageCode();
+        /** @var Page $page */
+        $page = $property->getStructure();
+        $webspaceKey = $page->getWebspaceKey();
+        $locale = $page->getLanguageCode();
+        $shadowLocale = null;
+        if ($page->getIsShadow()) {
+            $shadowLocale = $page->getShadowBaseLanguage();
+        }
 
         $refs = $property->getValue();
         $contentData = array();
 
         $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids']:array();
-        foreach ($this->loadSnippets($ids, $webspaceKey, $locale) as $snippet) {
+        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
             $contentData[] = $snippet['view'];
         }
 
@@ -199,14 +206,20 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        $webspaceKey = $property->getStructure()->getWebspaceKey();
-        $locale = $property->getStructure()->getLanguageCode();
+        /** @var Page $page */
+        $page = $property->getStructure();
+        $webspaceKey = $page->getWebspaceKey();
+        $locale = $page->getLanguageCode();
+        $shadowLocale = null;
+        if ($page->getIsShadow()) {
+            $shadowLocale = $page->getShadowBaseLanguage();
+        }
 
         $refs = $property->getValue();
-        $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids']:array();
+        $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids'] : array();
 
         $contentData = array();
-        foreach ($this->loadSnippets($ids, $webspaceKey, $locale) as $snippet) {
+        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
             $contentData[] = $snippet['content'];
         }
 
@@ -218,12 +231,15 @@ class SnippetContent extends ComplexContentType
      *
      * additionally cache it by id in this class
      */
-    private function loadSnippets($ids, $webspaceKey, $locale)
+    private function loadSnippets($ids, $webspaceKey, $locale, $shadowLocale = null)
     {
         $snippets = array();
         foreach ($ids as $i => $ref) {
             if (!array_key_exists($ref, $this->snippetCache)) {
                 $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+                if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
+                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
+                }
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
 
