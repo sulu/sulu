@@ -11,11 +11,16 @@
 namespace Sulu\Component\Content\Rlp\Strategy;
 
 use Jackalope\Node;
-use PHPCR\NodeInterface;
 use ReflectionClass;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
+use Sulu\Component\Util\SuluNodeHelper;
+
+//FIXME remove on update to phpunit 3.8, caused by https://github.com/sebastianbergmann/phpunit/issues/604
+interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
+{
+}
 
 class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -77,9 +82,20 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('getParentPath')
             ->will($this->returnValue('/parent'));
 
+        $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\StructureManagerInterface');
+        $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
+        $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', array(), array(), '', false);
+
         $this->strategy = $this->getMockForAbstractClass(
             $this->className,
-            array('test-strategy', $this->mapper, new PathCleanup()),
+            array(
+                'test-strategy',
+                $this->mapper,
+                new PathCleanup(),
+                $structureManager,
+                $contentTypeManager,
+                $nodeHelper
+            ),
             'TestStrategy'
         );
         $this->strategy->expects($this->any())
@@ -195,7 +211,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $this->isSaved = false;
         // its a delegate
-        $this->strategy->save($this->getNodeMock(), '/test/test-1', 'default', 'de');
+        $this->strategy->save($this->getNodeMock(), '/test/test-1', 1, 'default', 'de');
 
         $this->assertTrue($this->isSaved);
     }
@@ -218,9 +234,14 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testMove()
     {
+        $contentNode = $this->getMock('Sulu\Component\Content\Rlp\Strategy\NodeInterface', array(), array(), '', false);
+        $contentNode->expects($this->any())
+            ->method('getNodes')
+            ->willReturn(array());
+
         $this->isMoved = false;
         // its a delegate
-        $this->strategy->move('/test/test', '/test/test-1', 'default', 'de');
+        $this->strategy->move('/test/test', '/test/test-1', $contentNode, 1, 'default', 'de');
 
         $this->assertTrue($this->isMoved);
     }
