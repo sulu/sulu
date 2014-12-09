@@ -9,6 +9,8 @@ CHANGELOG for Sulu
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
     * ENHANCEMENT #599 [ContentBundle]  Moved cache for preview from phpcr to filesystem
     * BUGFIX      #632 [SecurityBundle] Fixed language changer for admin
+    * BUGFIX      #633 [SnippetBundle]  Load snippets always in requested language (except there is no translation and
+                                        the page is a shadow then use this language)
 
 * 0.12.0 (2014-11-25)
 
