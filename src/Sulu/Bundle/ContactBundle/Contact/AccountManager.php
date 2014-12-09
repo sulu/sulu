@@ -164,9 +164,9 @@ class AccountManager extends AbstractContactManager
      * @param $locale
      * @return array
      */
-    public function findContactByAccountId($id, $locale)
+    public function findContactsByAccountId($id, $locale, $onlyFetchMainAccounts = false)
     {
-        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false);
+        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false, $onlyFetchMainAccounts);
         $contacts = [];
         if ($contactsEntities) {
             foreach ($contactsEntities as $contact) {

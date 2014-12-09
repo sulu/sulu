@@ -187,7 +187,7 @@ class AccountController extends AbstractContactController
         } else {
             $contactManager = $this->getContactManager();
             $locale = $this->getUser()->getLocale();
-            $contacts = $contactManager->findContactByAccountId($id, $locale);
+            $contacts = $contactManager->findContactsByAccountId($id, $locale, false);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
         }
         $view = $this->view($list, 200);
