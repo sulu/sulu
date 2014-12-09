@@ -13,6 +13,7 @@ namespace Sulu\Component\Util;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\Util\PathHelper;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use PHPCR\SessionInterface;
 
@@ -212,6 +213,19 @@ class SuluNodeHelper
     public function getTranslatedPropertyName($propertyName, $locale)
     {
         return sprintf('%s:%s-%s', $this->languageNamespace, $locale, $propertyName);
+    }
+
+    /**
+     * Return translated property
+     *
+     * @param \Sulu\Component\Content\PropertyInterface $property
+     * @param string $locale
+     * @param string $prefix
+     * @return \Sulu\Component\Content\PropertyInterface
+     */
+    public function getTranslatedProperty($property, $locale, $prefix = null)
+    {
+        return new TranslatedProperty($property, $locale, $this->languageNamespace, $prefix);
     }
 
     /**

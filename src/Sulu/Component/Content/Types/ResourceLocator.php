@@ -144,12 +144,25 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
     ) {
         $value = $property->getValue();
         if ($value != null && $value != '') {
+            $oldProperty = $node->getPropertyValueWithDefault($property->getName(), null);
             $old = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
             if ($old !== '/') {
-                if ($old != null) {
-                    $this->getStrategy()->move($old, $value, $node, $userId, $webspaceKey, $languageCode, $segmentKey);
-                } else {
-                    $this->getStrategy()->save($node, $value, $webspaceKey, $languageCode, $segmentKey);
+                // only if property value is the same as tree value (is different in move / copy / rename workflow)
+                // or the tree value does not exist
+                if ($old === null || $oldProperty === $old) {
+                    if ($old != null) {
+                        $this->getStrategy()->move(
+                            $old,
+                            $value,
+                            $node,
+                            $userId,
+                            $webspaceKey,
+                            $languageCode,
+                            $segmentKey
+                        );
+                    } else {
+                        $this->getStrategy()->save($node, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
+                    }
                 }
                 $node->setProperty($property->getName(), $value);
             }
