@@ -62,7 +62,7 @@ define(function () {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/category/template/category/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'categoriesFields', '/admin/api/categories/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'categories', '/admin/api/categories/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     template: 'default',
