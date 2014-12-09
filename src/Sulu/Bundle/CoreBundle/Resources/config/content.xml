@@ -122,6 +122,7 @@
         <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
+            <argument type="service" id="sulu.content.structure_manager" />
         </service>
 
         <!-- simple content types -->
