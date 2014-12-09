@@ -241,7 +241,7 @@ define(function () {
          */
         startDatagrid: function () {
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'mediaFields', '/admin/api/media/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'media', '/admin/api/media/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
