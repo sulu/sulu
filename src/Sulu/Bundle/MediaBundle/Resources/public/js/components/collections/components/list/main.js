@@ -100,7 +100,7 @@ define(function () {
          */
         initializeGrid: function() {
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'collections', '/admin/api/media/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'collections', '/admin/api/collection/fields',
                 {
                     el: this.$find(constants.toolbarSelector),
                     instanceName: this.options.instanceName,
