@@ -99,41 +99,19 @@ define(function () {
          * Initializes the acutal grid
          */
         initializeGrid: function() {
-            //todo: fetch matchings from url. don't hardcode them in the JS-Code
-            this.sandbox.start([
+            // init list-toolbar and datagrid
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'collections', '/admin/api/media/fields',
                 {
-                    name: 'datagrid@husky',
-                    options: {
-                        el: this.$find(constants.datagridSelector),
-                        url: '/admin/api/collections',
-                        view: 'group',
-                        resultKey: 'collections',
-                        matchings: [
-                            {
-                                name: 'title',
-                                type: 'title'
-                            },
-                            {
-                                name: 'mediaNumber',
-                                type: 'count'
-                            },
-                            {
-                                name: 'thumbnails',
-                                type: 'thumbnails'
-                            }
-                        ]
-                    }
-                },
-                {
-                    name: 'list-toolbar@suluadmin',
-                    options: {
-                        el: this.$find(constants.toolbarSelector),
-                        instanceName: this.options.instanceName,
-                        template: 'onlyAdd',
-                        inHeader: true
-                    }
-                }
-            ]);
+                    el: this.$find(constants.toolbarSelector),
+                    instanceName: this.options.instanceName,
+                    template: 'onlyAdd',
+                    inHeader: true
+                }, {
+                    el: this.$find(constants.datagridSelector),
+                    url: '/admin/api/collections',
+                    view: 'group',
+                    resultKey: 'collections'
+                });
         },
 
         /**
