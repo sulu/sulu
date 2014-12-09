@@ -200,7 +200,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 )
             );
             $cleaner = new PathCleanup();
-            $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner);
+            $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner, $this->structureManager);
 
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,

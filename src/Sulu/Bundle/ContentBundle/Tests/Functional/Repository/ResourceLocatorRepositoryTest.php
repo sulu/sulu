@@ -70,7 +70,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
 
     private function prepareResourceLocatorRepository()
     {
-        $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), new PathCleanup());
+        $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), new PathCleanup(), $this->structureManager);
         $this->repository = new ResourceLocatorRepository(
             $strategy,
             $this->structureManager,
