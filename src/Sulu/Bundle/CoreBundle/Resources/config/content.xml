@@ -123,6 +123,8 @@
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu.util.node_helper"/>
         </service>
 
         <!-- simple content types -->

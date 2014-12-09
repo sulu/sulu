@@ -49,11 +49,13 @@ interface RlpStrategyInterface
      * creates a new route for given path
      * @param NodeInterface $contentNode reference node
      * @param string $path path to generate
+     * @param int $userId
      * @param string $webspaceKey key of portal
      * @param string $languageCode
      * @param string $segmentKey
+     * @return
      */
-    public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null);
+    public function save(NodeInterface $contentNode, $path, $userId, $webspaceKey, $languageCode, $segmentKey = null);
 
     /**
      * creates a new resourcelocator and creates the correct history

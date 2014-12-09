@@ -200,7 +200,13 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 )
             );
             $cleaner = new PathCleanup();
-            $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner, $this->structureManager);
+            $strategy = new TreeStrategy(
+                new PhpcrMapper($this->sessionManager, '/cmf/routes'),
+                $cleaner,
+                $this->structureManager,
+                $this->contentTypeManager,
+                $nodeHelper
+            );
 
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
@@ -382,7 +388,6 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'base' => 'cmf',
                     'route' => 'routes',
                     'content' => 'contents',
-                    'temp' => 'temp',
                     'snippet' => 'snippets',
                 )
             );
@@ -507,9 +512,6 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $en_usPath->setProperty('sulu:content', $this->contents);
             $en_usPath->addMixin('sulu:path');
             $this->languageRoutes['en_us'] = $en_usPath;
-            $this->session->save();
-
-            $this->routes = $default->addNode('temp');
             $this->session->save();
         }
     }
