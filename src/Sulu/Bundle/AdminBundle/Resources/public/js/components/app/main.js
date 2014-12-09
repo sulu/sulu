@@ -25,7 +25,8 @@ define(function() {
             shrinkIcon: 'fa-chevron-left',
             expandIcon: 'fa-chevron-right',
             noTransitionsClass: 'no-transitions',
-            versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases'
+            versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
+            changeLanguageUrl: '/admin/security/profile/changeLanguage'
         },
 
         templates = {
@@ -439,8 +440,8 @@ define(function() {
         changeUserLocale: function(locale) {
             //Todo: don't use hardcoded url
             this.sandbox.util.ajax({
-                type: 'PATCH',
-                url: '/admin/api/users/' + this.options.user.id,
+                type: 'POST',
+                url: constants.changeLanguageUrl,
                 contentType: 'application/json', // payload format
                 dataType: 'json', // response format
                 data: JSON.stringify({
