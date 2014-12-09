@@ -434,26 +434,20 @@ class Property implements PropertyInterface, \JsonSerializable
         $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
         $graphNavigator = $context->getNavigator();
 
-        // FIXME deactivate event serializer.pre_serialize which calls an eventlistener in hateos-bundle
-        // this event listener throw an exception at Hateoas\Serializer\Metadata\InlineDeferrer::getParentObjectInlining
-        // at line 75 because the given metadata has no property inline
-        $reflection = new \ReflectionClass(get_class($graphNavigator));
-        $propertyReflection = $reflection->getProperty('dispatcher');
-        $propertyReflection->setAccessible(true);
-        $dispatcher = $propertyReflection->getValue($graphNavigator);
-        $propertyReflection->setValue($graphNavigator, null);
-
         $data = array();
+
         /**
          * @var string $propertyName
          * @var PropertyMetadata $propertyMetadata
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            $context->pushPropertyMetadata($propertyMetadata);
             $data[$propertyName] = $graphNavigator->accept(
                 $propertyMetadata->getValue($this),
                 $propertyMetadata->type,
                 $context
             );
+            $context->popPropertyMetadata();
         }
 
         $data['value'] = json_encode($this->getValue());
@@ -466,8 +460,6 @@ class Property implements PropertyInterface, \JsonSerializable
         } else {
             $data['propertyType'] = 'property';
         }
-
-        $propertyReflection->setValue($graphNavigator, $dispatcher);
 
         return $data;
     }
@@ -486,11 +478,13 @@ class Property implements PropertyInterface, \JsonSerializable
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             if (!($propertyMetadata instanceof StaticPropertyMetadata)) {
+                $context->pushPropertyMetadata($propertyMetadata);
                 $value = $graphNavigator->accept(
                     $data[$propertyName],
                     $propertyMetadata->type,
                     $context
                 );
+                $context->popPropertyMetadata();
 
                 $propertyMetadata->setValue($this, $value);
             }
