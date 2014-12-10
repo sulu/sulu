@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -201,29 +201,15 @@ define([], function() {
             },
 
             initForm: function(data) {
+                var options = Config.get('sulucontact.components.autocomplete.default.account');
+                options.el = '#company';
+                options.value = !!data.account ? data.account : '';
+                options.instanceName = this.companyInstanceName;
 
                 this.sandbox.start([
                     {
                         name: 'auto-complete@husky',
-                        options: {
-                            el: '#company',
-                            remoteUrl: '/admin/api/accounts?searchFields=name&flat=true&fields=id,name',
-                            resultKey: 'accounts',
-                            getParameter: 'search',
-                            value: !!data.account ? data.account : '',
-                            instanceName: this.companyInstanceName,
-                            valueName: 'name',
-                            noNewValues: true,
-                            fields: [
-                                {
-                                    id: 'id',
-                                    width: '60px'
-                                },
-                                {
-                                    id: 'name'
-                                }
-                            ]
-                        }
+                        options: options
                     }
                 ]);
 

@@ -10,8 +10,9 @@
 define([
     'mvc/relationalstore',
     'text!sulucontact/components/accounts/components/contacts/contact-relation.form.html',
-    'text!sulucontact/components/accounts/components/contacts/contact.form.html'
-], function(RelationalStore, ContactRelationForm, ContactForm) {
+    'text!sulucontact/components/accounts/components/contacts/contact.form.html',
+    'config'
+], function(RelationalStore, ContactRelationForm, ContactForm, Config) {
 
     'use strict';
 
@@ -144,7 +145,10 @@ define([
         },
 
         createRelationOverlay = function(data) {
-            var template, $overlay, $list;
+            var template, $overlay, $list, options;
+
+            options = Config.get('sulucontact.components.autocomplete.default.contact');
+            options.el = constants.contactSelector;
 
             // extend data by additional variables
             data = this.sandbox.util.extend(true, {}, {
@@ -174,23 +178,7 @@ define([
                 },
                 {
                     name: 'auto-complete@husky',
-                    options: {
-                        el: constants.contactSelector,
-                        remoteUrl: '/admin/api/contacts?flat=true&fields=id,fullName&searchFields=fullName',
-                        getParameter: 'search',
-                        resultKey: 'contacts',
-                        instanceName: 'contact',
-                        noNewValues: true,
-                        fields: [
-                            {
-                                id: 'id',
-                                width: '60px'
-                            },
-                            {
-                                id: 'fullName'
-                            }
-                        ]
-                    }
+                    options: options
                 }
             ]);
 
