@@ -2,7 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * 0.13.0 (2014-12-10)
-   * HOTFIX       #619 [MediaBundle]    Made web folder for format cache configurable
+    * HOTFIX       #619 [MediaBundle]    Made web folder for format cache configurable
     * FEATURE     #637 [WebsiteBundle]  Multisort method and Twig filter
     * FEATURE     #585 [ContentBundle]  Added analytics key to webspace configuration
     * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
