@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
 
+    * FEATURE     #637 [WebsiteBundle]  Multisort method and Twig filter
     * FEATURE     #585 [ContentBundle]  Added analytics key to webspace configuration
     * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
