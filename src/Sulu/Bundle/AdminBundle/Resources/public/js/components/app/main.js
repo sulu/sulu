@@ -120,7 +120,6 @@ define(function() {
             this.sandbox.emit(INITIALIZED.call(this));
 
             this.sandbox.util.ajaxError(function(event, request) {
-                console.log(request);
                 switch (request.status) {
                     case 401:
                         window.location.replace('/admin/login');
@@ -133,7 +132,7 @@ define(function() {
                             ''
                         );
                         break;
-                    case 500:
+                    default:
                         this.sandbox.emit(
                             'sulu.labels.error.show',
                             this.extractErrorMessage(request),
@@ -152,7 +151,7 @@ define(function() {
          * @return {string}
          */
         extractErrorMessage: function (request) {
-            var message = [];
+            var message = [request.status];
 
             // if response is symfony JSON exception
             if (request.responseJSON !== undefined) {
