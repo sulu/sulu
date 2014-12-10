@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-
+    * FEATURE     #634 [All]            Created new configuration component, added new configuration for autocomplete
+                                        and refactored usage of autocomplete
     * FEATURE     #585 [ContentBundle]  Added analytics key to webspace configuration
     * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
