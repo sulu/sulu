@@ -31418,11 +31418,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
         namespace = 'husky.datagrid.',
 
-        /**
-         * Used to store the window resize handler and unbind it later
-         */
-        dataGridWindowResize = null,
-
         /* TRIGGERS EVENTS */
 
         /**
@@ -31738,6 +31733,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
                 this.$el.append(this.$element);
 
+                this.dataGridWindowResize = null;
+
                 this.sort = {
                     attribute: null,
                     direction: null
@@ -31754,7 +31751,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             remove: function() {
                 this.unbindWindowResize();
                 this.gridViews[this.viewId].destroy();
-                
+
                 if (!!this.paginations[this.paginationId]) {
                     this.paginations[this.paginationId].destroy();
                 }
@@ -32282,13 +32279,13 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             bindDOMEvents: function() {
                 if (this.options.resizeListeners === true) {
-                    dataGridWindowResize = this.windowResizeListener.bind(this);
-                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', dataGridWindowResize);
+                    this.dataGridWindowResize = this.windowResizeListener.bind(this);
+                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
                 }
             },
 
             unbindWindowResize: function() {
-                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize', dataGridWindowResize);
+                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
             },
 
             /**
