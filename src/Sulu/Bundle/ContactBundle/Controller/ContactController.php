@@ -343,7 +343,6 @@ class ContactController extends AbstractContactController
      */
     public function cgetAction(Request $request)
     {
-        return new Response('foobar', 407);
         if ($request->get('flat') == 'true') {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->getRestHelper();
