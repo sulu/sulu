@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
     * ENHANCEMENT #599 [ContentBundle]  Moved cache for preview from phpcr to filesystem
     * BUGFIX      #632 [SecurityBundle] Fixed language changer for admin
+    * BUGFIX      #627 [ALL]            Fixed damaged urls when moving/copy/rename
 
 * 0.12.0 (2014-11-25)
 
