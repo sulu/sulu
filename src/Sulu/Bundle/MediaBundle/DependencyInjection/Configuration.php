@@ -44,7 +44,15 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('format_manager')
                 ->addDefaultsIfNotSet()
                     ->children()
-                    ->arrayNode('response_headers')->prototype('scalar')->end()
+                        ->arrayNode('response_headers')->prototype('scalar')->end()
+                    ->end()
+                ->end()
+            ->end()
+            ->arrayNode('format_cache')
+                ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('public_folder')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER)->end()
+                    ->end()
                 ->end()
             ->end();
 
