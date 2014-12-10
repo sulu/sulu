@@ -164,6 +164,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
     ) {
         // delegate to mapper
         $this->mapper->move($src, $dest, $webspaceKey, $languageCode, $segmentKey);
+        $contentNode->getSession()->save();
 
         $this->adaptResourceLocators($contentNode, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
