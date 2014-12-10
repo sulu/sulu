@@ -50,7 +50,6 @@ class SuluNodeHelper
                 'base' => null,
                 'content' => null,
                 'route' => null,
-                'temp' => null,
                 'snippet' => null
             ),
             $paths

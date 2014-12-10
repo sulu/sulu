@@ -133,10 +133,8 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         }
 
         $hotels = $page->getPropertyValue('hotels');
-        $this->assertCount(count($data['hotels']['ids']), $hotels);
+        $this->assertCount(count($data['hotels']['ids']), $hotels['ids']);
 
-        foreach ($hotels as $hotel) {
-            $this->assertInstanceOf('Sulu\Component\Content\Structure\Snippet', $hotel);
-        }
+        $this->assertEquals($data['hotels'], $hotels);
     }
 }

@@ -14,7 +14,6 @@ use Sulu\Component\Content\StructureInterface;
 
 /**
  * provides a interface to cache preview data
- * @package Sulu\Bundle\ContentBundle\Preview
  */
 interface PreviewCacheProviderInterface
 {
@@ -31,10 +30,12 @@ interface PreviewCacheProviderInterface
     /**
      * deletes cache for given user
      * @param integer $userId
+     * @param string $contentUuid
      * @param string $webspaceKey
+     * @param string $locale
      * @return boolean
      */
-    public function delete($userId, $webspaceKey);
+    public function delete($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * clones original node and prepare cache node
@@ -42,18 +43,19 @@ interface PreviewCacheProviderInterface
      * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
-     * @return StructureInterface
+     * @return boolean|StructureInterface
      */
     public function warmUp($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * returns cached structure
      * @param integer $userId
+     * @param string $contentUuid
      * @param string $webspaceKey
      * @param string $locale
      * @return boolean|StructureInterface
      */
-    public function fetchStructure($userId, $webspaceKey, $locale);
+    public function fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * saves given structure in cache
@@ -62,36 +64,41 @@ interface PreviewCacheProviderInterface
      * @param string string $contentUuid
      * @param string string $webspaceKey
      * @param string string $locale
-     * @return StructureInterface
      */
     public function saveStructure(StructureInterface $content, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * returns cached changes
      * @param integer $userId
+     * @param string $contentUuid
      * @param string $webspaceKey
+     * @param string $locale
      * @param boolean $remove if TRUE remove changes after read (singleton)
      * @return array
      */
-    public function fetchChanges($userId, $webspaceKey, $remove = true);
+    public function fetchChanges($userId, $contentUuid, $webspaceKey, $locale, $remove = true);
 
     /**
      * save changes in cache
      * @param array $changes
      * @param integer $userId
+     * @param string $contentUuid
      * @param string $webspaceKey
+     * @param string $locale
      * @return array
      */
-    public function saveChanges($changes, $userId, $webspaceKey);
+    public function saveChanges($changes, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * appends changes to existing changes in cache and returns new array
-     * @param array $changes
+     * @param array $newChanges
      * @param integer $userId
+     * @param string $contentUuid
      * @param string $webspaceKey
+     * @param string $locale
      * @return array
      */
-    public function appendChanges($changes, $userId, $webspaceKey);
+    public function appendChanges($newChanges, $userId, $contentUuid, $webspaceKey, $locale);
 
     /**
      * changes template of cached node

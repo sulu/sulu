@@ -276,4 +276,10 @@ interface StructureInterface extends \JsonSerializable
      * @return integer
      */
     public function getNodeState();
+
+    /**
+     * Copy static values from another structure
+     * @param StructureInterface $structure
+     */
+    public function copyFrom(StructureInterface $structure);
 }

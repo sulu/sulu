@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
+use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -73,8 +74,8 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->property->expects($this->once())
             ->method('setValue')
             ->will($this->returnCallback(function ($snippets) use ($me) {
-                foreach ($snippets as $snippet) {
-                    $me->assertInstanceOf('HotelSnippetCache', $snippet);
+                foreach ($snippets['ids'] as $snippet) {
+                    $me->assertTrue(UUIDHelper::isUUID($snippet));
                 }
             }));
 

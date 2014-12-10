@@ -2141,7 +2141,8 @@ class ContentMapper implements ContentMapperInterface
                         'locale' => $locale,
                         'webspaceKey' => $key,
                         'template' => $templateKey,
-                        'parent' => $parent
+                        'parent' => $parent,
+                        'order' => $node->hasProperty('sulu:order') ? $node->getPropertyValue('sulu:order') : null,
                     ),
                     $fieldsData
                 );

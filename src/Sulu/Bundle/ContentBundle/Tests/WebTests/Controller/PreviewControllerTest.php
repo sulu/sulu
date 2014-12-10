@@ -127,7 +127,7 @@ class PreviewControllerTest extends SuluTestCase
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
+        $this->assertTrue(strpos($response, '<h1 property="title">Hello Hikaru Sulu</h1>') > -1);
     }
 
     public function testRenderHtml5()
@@ -148,6 +148,7 @@ class PreviewControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
+        $response = json_decode($client->getResponse()->getContent());
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
         $response = $client->getResponse()->getContent();
 

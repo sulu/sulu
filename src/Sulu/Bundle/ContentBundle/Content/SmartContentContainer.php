@@ -88,12 +88,6 @@ class SmartContentContainer implements ArrayableInterface
     private $hasNextPage;
 
     /**
-     * true environment is preview
-     * @var bool
-     */
-    private $preview;
-
-    /**
      * @var Stopwatch
      */
     private $stopwatch;
@@ -109,7 +103,6 @@ class SmartContentContainer implements ArrayableInterface
         $webspaceKey,
         $languageCode,
         $segmentKey,
-        $preview = false,
         Stopwatch $stopwatch = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -117,7 +110,6 @@ class SmartContentContainer implements ArrayableInterface
         $this->tagManager = $tagManager;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
-        $this->preview = $preview;
         $this->params = $params;
         $this->stopwatch = $stopwatch;
     }
