@@ -53,7 +53,6 @@ EOT
 
         // path parts
         $webspacePrefix = $container->getParameter('sulu.content.node_names.base');
-        $tempName = $container->getParameter('sulu.content.node_names.temp');
 
         $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page"';
 
@@ -82,7 +81,7 @@ EOT
                 }
                 $webspaceKey = $matches[1];
 
-                if ($tempName !== $matches[2] && $webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
+                if ($webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
                     $structure = $contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
 
                     try {

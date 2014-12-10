@@ -29,8 +29,6 @@ use \DateTime;
 
 /**
  * Creates default routes in PHPCR for webspaces
- *
- * @package Sulu\Bundle\CoreBundle\Command
  */
 class WebspacesInitCommand extends ContainerAwareCommand
 {
@@ -40,7 +38,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
     private $properties;
 
     /**
-     * @var StructureManager
+     * @var StructureManagerInterface
      */
     private $structureManager;
 
@@ -58,7 +56,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $base = $this->getContainer()->getParameter('sulu.content.node_names.base');
         $contents = $this->getContainer()->getParameter('sulu.content.node_names.content');
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
-        $temp = $this->getContainer()->getParameter('sulu.content.node_names.temp');
         $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
@@ -96,7 +93,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
         foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
             $contentsPath = $base . '/' . $webspace->getKey() . '/' . $contents;
             $routesPath = $base . '/' . $webspace->getKey() . '/' . $routes;
-            $tempPath = $base . '/' . $webspace->getKey() . '/' . $temp;
 
             $output->writeln("  {$webspace->getName()}");
 
@@ -111,11 +107,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $output->writeln("    routes:");
             $route = $this->createRecursive($routesPath, $root);
             $this->createLanguageRoutes($webspace, $route, $content, $output);
-            $session->save();
-
-            // create temp node
-            $output->writeln("    temp: '/{$tempPath}'");
-            $this->createRecursive($tempPath, $root);
             $session->save();
 
         }

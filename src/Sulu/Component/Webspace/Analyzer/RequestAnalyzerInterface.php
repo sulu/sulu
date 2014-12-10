@@ -116,4 +116,11 @@ interface RequestAnalyzerInterface
      * @return array
      */
     public function getCurrentGetParameter();
+
+
+    /**
+     * Returns the analytics key
+     * @return string
+     */
+    public function getCurrentAnalyticsKey();
 }

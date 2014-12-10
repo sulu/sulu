@@ -1,11 +1,21 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 0.13.0 (2014-12-10)
    * HOTFIX       #619 [MediaBundle]    Made web folder for format cache configurable
+    * FEATURE     #637 [WebsiteBundle]  Multisort method and Twig filter
+    * FEATURE     #585 [ContentBundle]  Added analytics key to webspace configuration
+    * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
+    * BUGFIX      #544 [ContentBundle]  Fixed PHPCR Format Value switches
+    * ENHANCEMENT #599 [ContentBundle]  Moved cache for preview from phpcr to filesystem
+    * BUGFIX      #632 [SecurityBundle] Fixed language changer for admin
+    * BUGFIX      #633 [SnippetBundle]  Load snippets always in requested language (except there is no translation and
+                                        the page is a shadow then use this language)
 
 * 0.12.0 (2014-11-25)
 
+    * ENHANCEMENT #586 [WebsiteBundle]  Added node path variable to template
+    * BUGFIX      #614 [SecurityBundle] Fixed the security for command lines
     * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
     * BUGFIX      #609 [All]            Allows null value for security subject and fixed snippet internal links bug
     * ENHANCEMENT #577 [All]            Applied security to navigation items and content tabs

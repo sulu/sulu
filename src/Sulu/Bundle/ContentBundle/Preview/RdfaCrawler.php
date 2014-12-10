@@ -102,7 +102,7 @@ class RdfaCrawler
                         unset($indexSequence[sizeof($indexSequence) - 1]);
                         $indexSequence = array_values($indexSequence);
 
-                        $propertyInstance = $propertyInstance->getProperties($lastIndex)[$sequence[$i]];
+                        $propertyInstance = $propertyInstance->getProperties($lastIndex)->getProperty($sequence[$i]);
                     }
                 } else {
                     $indexSequence[] = intval($sequence[$i]);

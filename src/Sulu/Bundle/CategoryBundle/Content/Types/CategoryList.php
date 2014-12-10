@@ -117,8 +117,10 @@ class CategoryList extends ComplexContentType
      */
     public function remove(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $property = $node->getProperty($property->getName());
-        $property->remove();
+        if($node->hasProperty($property->getName())) {
+            $property = $node->getProperty($property->getName());
+            $property->remove();
+        }
     }
 
     /**

@@ -75,7 +75,10 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = $node->getPropertyValueWithDefault($property->getName(), '{}');
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
 
         $this->setData($data, $property, $webspaceKey, $languageCode);
     }
@@ -101,22 +104,10 @@ class InternalLinks extends ComplexContentType
      * set data to property
      * @param string[] $data ids of images
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
      */
-    private function setData($data, PropertyInterface $property, $webspaceKey, $languageCode)
+    private function setData($data, PropertyInterface $property)
     {
-        $container = new InternalLinksContainer(
-            isset($data['ids']) ? $data['ids'] : array(),
-            $this->contentQueryExecutor,
-            $this->contentQueryBuilder,
-            array_merge($this->getDefaultParams(), $property->getParams()),
-            $this->logger,
-            $webspaceKey,
-            $languageCode
-        );
-
-        $property->setValue($container);
+        $property->setValue($data);
     }
 
     /**
@@ -173,7 +164,9 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->getProperty($property->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**
@@ -189,6 +182,17 @@ class InternalLinks extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        return $property->getValue()->getData();
+        $data = $property->getValue();
+        $container = new InternalLinksContainer(
+            isset($data['ids']) ? $data['ids'] : array(),
+            $this->contentQueryExecutor,
+            $this->contentQueryBuilder,
+            array_merge($this->getDefaultParams(), $property->getParams()),
+            $this->logger,
+            $property->getStructure()->getWebspaceKey(),
+            $property->getStructure()->getLanguageCode()
+        );
+
+        return $container->getData();
     }
 }

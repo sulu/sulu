@@ -53,7 +53,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'resourceLocatorPrefix' => $requestAnalyzer->getCurrentResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getCurrentResourceLocator(),
                 'get' => $requestAnalyzer->getCurrentGetParameter(),
-                'post' => $requestAnalyzer->getCurrentPostParameter()
+                'post' => $requestAnalyzer->getCurrentPostParameter(),
+                'analyticsKey' => $requestAnalyzer->getCurrentAnalyticsKey(),
             )
         );
     }

@@ -93,6 +93,7 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $requestAnalyzer->getCurrentGetParameter()->willReturn(array('p' => 1));
         $requestAnalyzer->getCurrentPostParameter()->willReturn(array());
         $requestAnalyzer->getCurrentPortal()->willReturn($portal);
+        $requestAnalyzer->getCurrentAnalyticsKey()->willReturn('analyticsKey');
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
@@ -105,7 +106,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
                     'get' => array('p' => 1),
-                    'post' => array()
+                    'post' => array(),
+                    'analyticsKey' => 'analyticsKey'
                 )
             ),
             $result

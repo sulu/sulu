@@ -277,7 +277,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
         $property->expects($this->any())->method('getParams')->will($this->returnValue(array('properties' => array('my_title' => 'title'))));
 
-        $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainer);
+        $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainer->getConfig());
 
         $this->smartContent->read($node, $property, 'test', 'en', 's');
     }
@@ -293,7 +293,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
                 'page_parameter' => 'p',
                 'properties' => array()
             ),
-            'test', 'en', 's', true
+            'test', 'en', 's'
         );
         $smartContentContainerPreview->setConfig(
             array(
@@ -333,7 +333,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
         $property->expects($this->any())->method('getParams')->will($this->returnValue(array()));
 
-        $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainerPreview);
+        $property->expects($this->exactly(1))->method('setValue')->with($smartContentContainerPreview->getConfig());
 
         $this->smartContent->readForPreview(
             array('tags' => array('Tag1', 'Tag2'), 'limitResult' => 2),
@@ -359,34 +359,32 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\StructureInterface'
         );
 
-        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $config = array('dataSource' => 'some-uuid');
-        $smartContentContainer->expects($this->exactly(2))->method('getConfig')->will($this->returnValue($config));
 
-        $smartContentContainer->expects($this->once())
-            ->method('getData')
-            ->with($this->equalTo(array('123-123-123')), $this->equalTo(6), $this->equalTo(0))
-            ->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
+        $property->expects($this->at(1))->method('getValue')
+            ->willReturn($config);
+        $property->expects($this->any())->method('getValue')
+            ->willReturn(array_merge($config, array('page' => 1, 'hasNextPage' => true)));
 
-        $property->expects($this->exactly(2))->method('getValue')
-            ->will($this->returnValue($smartContentContainer));
-        $property->expects($this->exactly(1))->method('getParams')
+        $property->expects($this->exactly(2))->method('getParams')
             ->will($this->returnValue(array('max_per_page' => 5)));
-        $property->expects($this->exactly(1))->method('getStructure')
+        $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
+
+        $this->contentQuery->expects($this->once())->method('execute')
+            ->with(
+                $this->equalTo(null),
+                $this->equalTo(array(null)),
+                $this->equalTo($this->contentQueryBuilder),
+                $this->equalTo(true),
+                $this->equalTo(-1),
+                $this->equalTo(6),
+                $this->equalTo(null)
+            )->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
-
-        $smartContentContainer->expects($this->once())->method('setPage')->with(1);
-        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue(1));
-
-        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with(true);
-        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue(true));
 
         $viewData = $this->smartContent->getViewData($property);
 
@@ -408,21 +406,25 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             'Sulu\Component\Content\StructureInterface'
         );
 
-        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $smartContentContainer->expects($this->once())
-            ->method('getData')
-            ->with($this->equalTo(array('123-123-123')))
-            ->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
-
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue($smartContentContainer));
-        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('dataSource' => '123-123-123')));
+
+        $property->expects($this->exactly(2))->method('getParams')
             ->will($this->returnValue(array()));
-        $property->expects($this->exactly(1))->method('getStructure')
+
+        $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
+
+        $this->contentQuery->expects($this->once())->method('execute')
+            ->with(
+                $this->equalTo(null),
+                $this->equalTo(array(null)),
+                $this->equalTo($this->contentQueryBuilder),
+                $this->equalTo(true),
+                $this->equalTo(-1),
+                $this->equalTo(null),
+                $this->equalTo(null)
+            )->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
 
@@ -448,29 +450,26 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
 
-        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $smartContentContainer->expects($this->once())
-            ->method('getData')
-            ->with($this->equalTo(array('123-123-123')), $this->equalTo(6), $this->equalTo(0))
-            ->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
-
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue($smartContentContainer));
-        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('dataSource' => '123-123-123')));
+
+        $property->expects($this->exactly(2))->method('getParams')
             ->will($this->returnValue(array('max_per_page' => 5)));
-        $property->expects($this->exactly(1))->method('getStructure')
+        $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
+        $this->contentQuery->expects($this->once())->method('execute')
+            ->with(
+                $this->equalTo(null),
+                $this->equalTo(array(null)),
+                $this->equalTo($this->contentQueryBuilder),
+                $this->equalTo(true),
+                $this->equalTo(-1),
+                $this->equalTo(6),
+                $this->equalTo(0)
+            )->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
+
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
-
-        $smartContentContainer->expects($this->once())->method('setPage')->with(1);
-        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue(1));
-
-        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with(true);
-        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue(true));
 
         $contentData = $this->smartContent->getContentData($property);
 
@@ -513,33 +512,28 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
 
-        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $config = array('limitResult' => $limitResult);
-        $smartContentContainer->expects($this->exactly(1))->method('getConfig')->will($this->returnValue($config));
+        $config = array('limitResult' => $limitResult, 'dataSource' => '123-123-123');
 
         if ($limit) {
-            $smartContentContainer->expects($this->once())
-                ->method('getData')
-                ->with($this->equalTo(array($uuid)), $this->equalTo($limit), $this->equalTo($offset))
-                ->will($this->returnValue($data));
+            $this->contentQuery->expects($this->once())->method('execute')
+                ->with(
+                    $this->equalTo(null),
+                    $this->equalTo(array(null)),
+                    $this->equalTo($this->contentQueryBuilder),
+                    $this->equalTo(true),
+                    $this->equalTo(-1),
+                    $this->equalTo($limit),
+                    $this->equalTo($offset)
+                )->will($this->returnValue($data));
         }
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue($smartContentContainer));
-        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue($config));
+        $property->expects($this->exactly(2))->method('getParams')
             ->will($this->returnValue(array('max_per_page' => $pageSize)));
-        $property->expects($this->exactly(1))->method('getStructure')
+        $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
-
-        $smartContentContainer->expects($this->once())->method('setPage')->with($page);
-        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue($page));
-
-        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with($hasNextPage);
-        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue($hasNextPage));
 
         $contentData = $this->smartContent->getContentData($property);
         $this->assertEquals($expectedData, $contentData);
@@ -565,33 +559,32 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
 
-        $smartContentContainer = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Content\SmartContentContainer')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $config = array('limitResult' => $limitResult);
-        $smartContentContainer->expects($this->exactly(2))->method('getConfig')->will($this->returnValue($config));
+        $config = array('limitResult' => $limitResult, 'dataSource' => '123-123-123');
 
         if ($limit) {
-            $smartContentContainer->expects($this->once())
-                ->method('getData')
-                ->with($this->equalTo(array($uuid)), $this->equalTo($limit), $this->equalTo($offset))
-                ->will($this->returnValue($data));
+            $this->contentQuery->expects($this->once())->method('execute')
+                ->with(
+                    $this->equalTo(null),
+                    $this->equalTo(array(null)),
+                    $this->equalTo($this->contentQueryBuilder),
+                    $this->equalTo(true),
+                    $this->equalTo(-1),
+                    $this->equalTo($limit),
+                    $this->equalTo($offset)
+                )->will($this->returnValue($data));
         }
-        $property->expects($this->exactly(2))->method('getValue')
-            ->will($this->returnValue($smartContentContainer));
-        $property->expects($this->exactly(1))->method('getParams')
+
+        $property->expects($this->at(1))->method('getValue')
+            ->willReturn($config);
+        $property->expects($this->any())->method('getValue')
+            ->willReturn(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)));
+
+        $property->expects($this->exactly(2))->method('getParams')
             ->will($this->returnValue(array('max_per_page' => $pageSize)));
-        $property->expects($this->exactly(1))->method('getStructure')
+        $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
-
-        $smartContentContainer->expects($this->once())->method('setPage')->with($page);
-        $smartContentContainer->expects($this->any())->method('getPage')->will($this->returnValue($page));
-
-        $smartContentContainer->expects($this->once())->method('setHasNextPage')->with($hasNextPage);
-        $smartContentContainer->expects($this->any())->method('getHasNextPage')->will($this->returnValue($hasNextPage));
 
         $viewData = $this->smartContent->getViewData($property);
         $this->assertEquals(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)), $viewData);

@@ -19,6 +19,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
+use PHPCR\RepositoryException;
 use Sulu\Component\Content\BreadcrumbItem;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
@@ -506,9 +507,18 @@ class ContentMapper implements ContentMapperInterface
                             'property' => $property
                         );
                     } else {
+                        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+                        // TODO find a better why for change Types (same hack is used in BlockContentType:write )
+                        $type->remove(
+                            $node,
+                            $translatedProperty,
+                            $webspaceKey,
+                            $languageCode,
+                            null
+                        );
                         $type->write(
                             $node,
-                            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+                            $translatedProperty,
                             $userId,
                             $webspaceKey,
                             $languageCode,
@@ -2131,7 +2141,8 @@ class ContentMapper implements ContentMapperInterface
                         'locale' => $locale,
                         'webspaceKey' => $key,
                         'template' => $templateKey,
-                        'parent' => $parent
+                        'parent' => $parent,
+                        'order' => $node->hasProperty('sulu:order') ? $node->getPropertyValue('sulu:order') : null,
                     ),
                     $fieldsData
                 );

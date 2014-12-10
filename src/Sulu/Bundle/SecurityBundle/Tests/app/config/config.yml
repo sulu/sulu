@@ -1,3 +1,6 @@
+imports:
+    - { resource: security.yml }
+
 framework:
     secret: secret
     router: { resource: "%kernel.root_dir%/config/routing.yml" }
@@ -56,25 +59,6 @@ parameters:
     # https://github.com/schmittjoh/JMSSerializerBundle/pull/270#issuecomment-21171800
     jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
     locale: en
-
-
-security:
-    encoders:
-        Sulu\Bundle\SecurityBundle\Entity\User:
-            algorithm: sha512
-            iterations: 5000
-            encode_as_base64: false
-
-    providers:
-        sulu:
-            entity:
-                class: SuluSecurityBundle:User
-                property: username
-
-    firewalls:
-        sulu:
-            pattern: ^/
-            anonymous: ~
 
 sulu_core:
     phpcr:
