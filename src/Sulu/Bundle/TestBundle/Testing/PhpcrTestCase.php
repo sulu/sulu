@@ -135,6 +135,11 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $templateResolver;
 
     /**
+     * @var SuluNodeHelper
+     */
+    protected $nodeHelper;
+
+    /**
      * The default language for the content mapper
      * @var string
      */
@@ -189,7 +194,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
-            $nodeHelper = new SuluNodeHelper(
+            $this->nodeHelper = new SuluNodeHelper(
                 $this->sessionManager->getSession(),
                 'i18n', 
                 array(
@@ -200,7 +205,13 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 )
             );
             $cleaner = new PathCleanup();
-            $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner);
+            $strategy = new TreeStrategy(
+                new PhpcrMapper($this->sessionManager, '/cmf/routes'),
+                $cleaner,
+                $this->structureManager,
+                $this->contentTypeManager,
+                $this->nodeHelper
+            );
 
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
@@ -211,7 +222,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $cleaner,
                 $this->webspaceManager,
                 $this->templateResolver,
-                $nodeHelper,
+                $this->nodeHelper,
                 $strategy,
                 $this->language,
                 $this->defaultTemplates,
@@ -382,7 +393,6 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'base' => 'cmf',
                     'route' => 'routes',
                     'content' => 'contents',
-                    'temp' => 'temp',
                     'snippet' => 'snippets',
                 )
             );
@@ -507,9 +517,6 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $en_usPath->setProperty('sulu:content', $this->contents);
             $en_usPath->addMixin('sulu:path');
             $this->languageRoutes['en_us'] = $en_usPath;
-            $this->session->save();
-
-            $this->routes = $default->addNode('temp');
             $this->session->save();
         }
     }
