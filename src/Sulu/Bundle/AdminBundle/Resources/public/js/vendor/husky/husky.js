@@ -29226,8 +29226,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.remove(this.$el);
             this.sandbox.stop(this.sandbox.dom.find('*', this.$el));
+            this.sandbox.dom.remove(this.$el);
             this.setVariables();
         },
 
@@ -31750,11 +31750,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             remove: function() {
                 this.unbindWindowResize();
-                this.gridViews[this.viewId].destroy();
-
-                if (!!this.paginations[this.paginationId]) {
-                    this.paginations[this.paginationId].destroy();
-                }
+                this.destroy();
             },
 
             /**
@@ -31939,7 +31935,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Destroys the view and the pagination
              */
             destroy: function() {
-                if (this.gridViews[this.viewId].rendered === true) {
+                if (!!this.gridViews[this.viewId].rendered === true) {
                     this.gridViews[this.viewId].destroy();
                     if (!!this.paginations[this.paginationId]) {
                         this.paginations[this.paginationId].destroy();
