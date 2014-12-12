@@ -1,3 +1,4 @@
+
 /** vim: et:ts=4:sw=4:sts=4
  * @license RequireJS 2.1.9 Copyright (c) 2010-2012, The Dojo Foundation All Rights Reserved.
  * Available via the MIT or new BSD license.
@@ -29226,8 +29227,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.dom.remove(this.$el);
             this.sandbox.stop(this.sandbox.dom.find('*', this.$el));
+            this.sandbox.dom.remove(this.$el);
             this.setVariables();
         },
 
@@ -30076,7 +30077,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
-            if (!!this.table.rows[recordId]) {
+            if (!!recordId && !!this.table.rows[recordId]) {
                 if (this.options.highlightSelected === true) {
                     this.uniqueHighlightRecord(recordId);
                 }
@@ -31418,11 +31419,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
         namespace = 'husky.datagrid.',
 
-        /**
-         * Used to store the window resize handler and unbind it later
-         */
-        dataGridWindowResize = null,
-
         /* TRIGGERS EVENTS */
 
         /**
@@ -31738,6 +31734,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
                 this.$el.append(this.$element);
 
+                this.dataGridWindowResize = null;
+
                 this.sort = {
                     attribute: null,
                     direction: null
@@ -31753,11 +31751,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
             remove: function() {
                 this.unbindWindowResize();
-                this.gridViews[this.viewId].destroy();
-                
-                if (!!this.paginations[this.paginationId]) {
-                    this.paginations[this.paginationId].destroy();
-                }
+                this.destroy();
             },
 
             /**
@@ -31942,7 +31936,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Destroys the view and the pagination
              */
             destroy: function() {
-                if (this.gridViews[this.viewId].rendered === true) {
+                if (!!this.gridViews[this.viewId].rendered === true) {
                     this.gridViews[this.viewId].destroy();
                     if (!!this.paginations[this.paginationId]) {
                         this.paginations[this.paginationId].destroy();
@@ -32282,13 +32276,13 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             bindDOMEvents: function() {
                 if (this.options.resizeListeners === true) {
-                    dataGridWindowResize = this.windowResizeListener.bind(this);
-                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', dataGridWindowResize);
+                    this.dataGridWindowResize = this.windowResizeListener.bind(this);
+                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
                 }
             },
 
             unbindWindowResize: function() {
-                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize', dataGridWindowResize);
+                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
             },
 
             /**
@@ -46675,15 +46669,23 @@ define("datepicker-zh-TW", function(){});
                  * @param messages
                  */
                 app.setLanguage = function(cultureName, messages) {
-                    var setLanguage = function() {
-                        Globalize.culture(cultureName);
-                        app.sandbox.globalize.addCultureInfo(cultureName, messages);
-                    };
+                    var dfd = app.core.data.deferred(),
+                        setLanguage = function() {
+                            Globalize.culture(cultureName);
+                            app.sandbox.globalize.addCultureInfo(cultureName, messages);
+                        };
+
                     if (cultureName !== 'en') {
-                        require(['cultures/globalize.culture.' + cultureName], setLanguage.bind(this));
+                        require(['cultures/globalize.culture.' + cultureName], function() {
+                            setLanguage();
+                            dfd.resolve();
+                        });
                     } else {
                         setLanguage();
+                        dfd.resolve();
                     }
+
+                    return dfd.promise();
                 };
             },
 
@@ -46692,7 +46694,8 @@ define("datepicker-zh-TW", function(){});
                     if (!app.config.culture.messages) {
                         app.config.culture.messages = { };
                     }
-                    app.setLanguage(app.config.culture.name, app.config.culture.messages);
+                    
+                    return app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
             }
         };
@@ -47831,4 +47834,3 @@ define('husky_extensions/util',[],function() {
         }
     };
 });
-
