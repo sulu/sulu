@@ -46668,15 +46668,23 @@ define("datepicker-zh-TW", function(){});
                  * @param messages
                  */
                 app.setLanguage = function(cultureName, messages) {
-                    var setLanguage = function() {
-                        Globalize.culture(cultureName);
-                        app.sandbox.globalize.addCultureInfo(cultureName, messages);
-                    };
+                    var dfd = app.core.data.deferred(),
+                        setLanguage = function() {
+                            Globalize.culture(cultureName);
+                            app.sandbox.globalize.addCultureInfo(cultureName, messages);
+                        };
+
                     if (cultureName !== 'en') {
-                        require(['cultures/globalize.culture.' + cultureName], setLanguage.bind(this));
+                        require(['cultures/globalize.culture.' + cultureName], function() {
+                            setLanguage();
+                            dfd.resolve();
+                        });
                     } else {
                         setLanguage();
+                        dfd.resolve();
                     }
+
+                    return dfd.promise();
                 };
             },
 
@@ -46685,7 +46693,8 @@ define("datepicker-zh-TW", function(){});
                     if (!app.config.culture.messages) {
                         app.config.culture.messages = { };
                     }
-                    app.setLanguage(app.config.culture.name, app.config.culture.messages);
+                    
+                    return app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
             }
         };
