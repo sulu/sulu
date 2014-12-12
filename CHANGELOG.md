@@ -1,6 +1,10 @@
 CHANGELOG for Sulu
 ==================
 
+* 0.13.2 (2014-12-12)
+    * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
+    * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener) 
+
 * 0.13.1 (2014-12-11)
     * HOTFIX      #--- [AdminBundle]    Added missing frontend (css/js) build
 
