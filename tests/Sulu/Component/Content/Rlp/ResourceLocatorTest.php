@@ -63,7 +63,7 @@ class ResourceLocatorTest extends SuluTestCase
         $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
         $this->session = $this->sessionManager->getSession();
         $this->rlpMapper = new PhpcrMapper($this->getContainer()->get('sulu.phpcr.session'));
-        $this->strategy = new TreeStrategy($this->rlpMapper, new PathCleanup());
+        $this->strategy = $this->getContainer()->get('sulu.content.rlp.strategy.tree');
 
         $this->resourceLocator = new ResourceLocator($this->strategy, 'not-in-use');
     }
