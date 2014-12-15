@@ -18,6 +18,7 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\RestHelperInterface;
@@ -27,7 +28,7 @@ use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
  * Makes categories available through a REST API
  * @package Sulu\Bundle\CategoryBundle\Controller
  */
-class CategoryController extends RestController implements ClassResourceInterface
+class CategoryController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
@@ -314,5 +315,14 @@ class CategoryController extends RestController implements ClassResourceInterfac
         );
 
         return $list;
+    }
+
+    /**
+     * Returns the SecurityContext required for the controller
+     * @return mixed
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.settings.categories';
     }
 }
