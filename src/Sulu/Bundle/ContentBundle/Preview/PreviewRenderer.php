@@ -14,6 +14,7 @@ use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
@@ -34,11 +35,21 @@ class PreviewRenderer
      */
     private $controllerResolver;
 
-    public function __construct(ActiveTheme $activeTheme, ControllerResolverInterface $controllerResolver, WebspaceManagerInterface $webspaceManager)
-    {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        ActiveTheme $activeTheme,
+        ControllerResolverInterface $controllerResolver,
+        WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack
+    ) {
         $this->activeTheme = $activeTheme;
         $this->controllerResolver = $controllerResolver;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
     }
 
     /**
