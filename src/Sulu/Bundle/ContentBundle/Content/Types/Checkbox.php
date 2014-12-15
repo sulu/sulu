@@ -56,7 +56,7 @@ class Checkbox extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        
+
         if ($value !== null && $value !== false && $value !== 'false' && $value !== '') {
             $node->setProperty($property->getName(), true);
         } else {
