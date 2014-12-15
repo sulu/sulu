@@ -20,6 +20,8 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
 
+// TODO remove formats
+
 class ImagineImageConverter implements ImageConverterInterface
 {
     /**

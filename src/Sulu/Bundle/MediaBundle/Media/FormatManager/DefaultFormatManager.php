@@ -29,6 +29,8 @@ use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
+// TODO formats
+
 /**
  * @package Sulu\Bundle\MediaBundle\Media\FormatManager
  */
@@ -266,6 +268,9 @@ class DefaultFormatManager implements FormatManagerInterface
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {
             $options['animated'] = true;
         }
+
+        // TODO here add quality: 'jpeg_quality' => 0 - 100
+        // 'png_compression_level' => 0 - 9
 
         return $options;
     }
