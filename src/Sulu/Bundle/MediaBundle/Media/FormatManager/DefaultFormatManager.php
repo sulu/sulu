@@ -299,7 +299,7 @@ class DefaultFormatManager implements FormatManagerInterface
             $options['animated'] = true;
         }
 
-        return array_merge($options, $formatOptions['options']);
+        return array_merge($options, $formatOptions);
     }
 
     /**
