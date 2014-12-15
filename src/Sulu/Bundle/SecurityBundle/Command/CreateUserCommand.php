@@ -102,7 +102,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->persist($contact);
         $em->flush();
 
-        $user = new User();
+        $user = $this->getUser();
         $user->setContact($contact);
         $user->setUsername($username);
         $user->setSalt($this->generateSalt());
@@ -122,6 +122,11 @@ class CreateUserCommand extends ContainerAwareCommand
         $output->writeln(
             sprintf('Created user <comment>%s</comment> in role <comment>%s</comment>', $username, $roleName)
         );
+    }
+
+    protected function getUser()
+    {
+        return new User();
     }
 
     /**

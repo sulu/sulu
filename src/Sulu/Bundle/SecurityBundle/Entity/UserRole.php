@@ -35,7 +35,7 @@ class UserRole extends ApiEntity
     private $locale;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $user;
 
@@ -92,10 +92,10 @@ class UserRole extends ApiEntity
     /**
      * Set user
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $user
+     * @param \Sulu\Component\Security\UserInterface $user
      * @return UserRole
      */
-    public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user)
+    public function setUser(\Sulu\Component\Security\UserInterface $user)
     {
         $this->user = $user;
 
@@ -105,7 +105,7 @@ class UserRole extends ApiEntity
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getUser()
     {
