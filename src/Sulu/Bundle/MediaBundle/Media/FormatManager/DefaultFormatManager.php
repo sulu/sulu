@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
@@ -29,10 +30,8 @@ use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
-// TODO formats
-
 /**
- * @package Sulu\Bundle\MediaBundle\Media\FormatManager
+ * Sulu format manager for media
  */
 class DefaultFormatManager implements FormatManagerInterface
 {
@@ -88,6 +87,11 @@ class DefaultFormatManager implements FormatManagerInterface
     private $fileSystem;
 
     /**
+     * @var array
+     */
+    private $formats;
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
@@ -96,6 +100,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $saveImage
      * @param array $previewMimeTypes
      * @param array $responseHeaders
+     * @param array $formats
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -105,7 +110,8 @@ class DefaultFormatManager implements FormatManagerInterface
         $ghostScriptPath,
         $saveImage,
         $previewMimeTypes,
-        $responseHeaders
+        $responseHeaders,
+        $formats
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -116,6 +122,7 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->previewMimeTypes = $previewMimeTypes;
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
+        $this->formats = $formats;
     }
 
     /**
@@ -148,7 +155,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $this->prepareMedia($mimeType, $original);
 
                 // convert Media to format
-                $image = $this->converter->convert($original, $format);
+                $image = $this->converter->convert($original, $this->getFormatOptions($format));
 
                 // remove profiles and comments
                 $image->strip();
@@ -195,6 +202,22 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
+     * return the options for the given format
+     * @param $format
+     * @return array
+     * @throws ImageProxyInvalidImageFormat
+     */
+    protected function getFormatOptions($format)
+    {
+        if (!isset($this->formats[$format])) {
+            throw new ImageProxyInvalidImageFormat('Format was not found');
+        }
+
+        return $this->formats[$format];
+    }
+
+
+    /**
      * @param string $format
      * @param string $fileExtension
      * @return Response
@@ -209,7 +232,7 @@ class DefaultFormatManager implements FormatManagerInterface
             return $this->returnFallbackImage($format);
         }
 
-        $image = $this->converter->convert($placeholder, $format);
+        $image = $this->converter->convert($placeholder, $this->getFormatOptions($format));
 
         $image = $image->get($imageExtension);
 
@@ -226,7 +249,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
         $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
 
-        $image = $this->converter->convert($placeholder, $format);
+        $image = $this->converter->convert($placeholder, $this->getFormatOptions($format));
 
         $image = $image->get($imageExtension);
 
@@ -470,7 +493,7 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $formats = array();
 
-        foreach ($this->converter->getFormats() as $format) {
+        foreach ($this->formats as $format) {
             $formats[$format['name']] = $this->formatCache->getMediaUrl(
                 $id,
                 $this->replaceExtension($fileName, $this->getImageExtension($fileName)),

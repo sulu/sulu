@@ -11,23 +11,18 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
 use Imagine\Gd\Imagine as GdImagine;
-use Imagine\Image\Palette\CMYK;
 use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
-use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\ManagerInterface;
 
-// TODO remove formats
-
+/**
+ * Sulu imagine converter for media
+ */
 class ImagineImageConverter implements ImageConverterInterface
 {
-    /**
-     * @var array
-     */
-    private $formats;
 
     /**
      * @var GdImagine|ImagickImagine
@@ -40,12 +35,10 @@ class ImagineImageConverter implements ImageConverterInterface
     protected $commandManager;
 
     /**
-     * @param $formats
      * @param ManagerInterface $commandManager
      */
-    public function __construct($formats, ManagerInterface $commandManager)
+    public function __construct(ManagerInterface $commandManager)
     {
-        $this->formats = $formats;
         $this->commandManager = $commandManager;
     }
 
@@ -64,10 +57,8 @@ class ImagineImageConverter implements ImageConverterInterface
     /**
      * {@inheritdoc}
      */
-    public function convert($originalPath, $format)
+    public function convert($originalPath, $formatOptions)
     {
-        $formatOptions = $this->getFormatOptions($format);
-
         $imagine = $this->newImage();
 
         try {
@@ -97,14 +88,6 @@ class ImagineImageConverter implements ImageConverterInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFormats()
-    {
-        return $this->formats;
-    }
-
-    /**
      * set the image palette to RGB
      */
     protected function toRGB()
@@ -112,21 +95,6 @@ class ImagineImageConverter implements ImageConverterInterface
         if ($this->image->palette()->name() == 'cmyk') {
             $this->image->usePalette(new RGB());
         }
-    }
-
-    /**
-     * return the options for the given format
-     * @param $format
-     * @return array
-     * @throws ImageProxyInvalidImageFormat
-     */
-    protected function getFormatOptions($format)
-    {
-        if (!isset($this->formats[$format])) {
-            throw new ImageProxyInvalidImageFormat('Format was not found');
-        }
-
-        return $this->formats[$format];
     }
 
     /**

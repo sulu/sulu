@@ -53,7 +53,6 @@
             <argument>%sulu_media.image.formats%</argument>
         </service>
         <service id="sulu_media.image.converter" class="%sulu_media.image.converter.class%">
-            <argument>%sulu_media.image.formats%</argument>
             <argument type="service" id="sulu_media.image.command_manager" />
         </service>
 
@@ -95,6 +94,7 @@
             <argument type="string">%sulu_media.format_cache.save_image%</argument>
             <argument type="string">%sulu_media.format_manager.mime_types%</argument>
             <argument type="string">%sulu_media.format_manager.response_headers%</argument>
+            <argument>%sulu_media.image.formats%</argument>
         </service>
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
