@@ -348,7 +348,7 @@
                             },
                             gridOptions;
 
-                        if(!!limit){
+                        if (!!limit) {
                             gridDefaults['paginationOptions'] = paginationOptionsDefaults;
                         }
 
@@ -382,25 +382,30 @@
              * @param datagridOptions {Object} options to pass to the datagrid component
              */
             app.sandbox.sulu.initList = function(key, url, datagridOptions) {
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, key, ['translation', 'default', 'editable', 'validation', 'width'], url, function(data) {
-                    // the default options
-                    var options = {
-                        view: 'table',
-                        pagination: 'dropdown',
-                        matchings: data
-                    };
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
+                    this,
+                    key,
+                    ['translation', 'default', 'editable', 'validation', 'width'],
+                    url,
+                    function(data) {
+                        // the default options
+                        var options = {
+                            view: 'table',
+                            pagination: 'dropdown',
+                            matchings: data
+                        };
 
-                    // merge default options with passed ones
-                    options = this.sandbox.util.extend(true, {}, options, datagridOptions);
+                        // merge default options with passed ones
+                        options = this.sandbox.util.extend(true, {}, options, datagridOptions);
 
-                    //start list-toolbar and datagrid
-                    this.sandbox.start([
-                        {
-                            name: 'datagrid@husky',
-                            options: options
-                        }
-                    ]);
-                }.bind(this));
+                        //start list-toolbar and datagrid
+                        this.sandbox.start([
+                            {
+                                name: 'datagrid@husky',
+                                options: options
+                            }
+                        ]);
+                    }.bind(this));
             };
         }
     });
