@@ -32,7 +32,7 @@ class XmlFormatLoader extends FileLoader
     /**
      * @var array
      */
-    private $defaultOptions;
+    private $defaultOptions = array();
 
     /**
      * @return array
@@ -111,7 +111,7 @@ class XmlFormatLoader extends FileLoader
                 $formats[$name] = array(
                     'name' => $name,
                     'commands' => $commands,
-                    'options' => array_merge($options, $this->defaultOptions)
+                    'options' => array_merge($this->defaultOptions, $options)
                 );
             }
         }
