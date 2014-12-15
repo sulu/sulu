@@ -12,7 +12,9 @@
     <xs:complexType name="formatType">
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
+
             <xs:element type="commandsType" name="commands" maxOccurs="unbounded" minOccurs="1"/>
+            <xs:element type="optionsType" name="options" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -32,6 +34,12 @@
     <xs:complexType name="parametersType">
         <xs:sequence>
             <xs:element type="parameterType" name="parameter" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="optionsType">
+        <xs:sequence>
+            <xs:element type="parameterType" name="option" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

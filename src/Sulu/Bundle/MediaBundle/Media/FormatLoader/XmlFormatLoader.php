@@ -30,6 +30,27 @@ class XmlFormatLoader extends FileLoader
     private $xpath;
 
     /**
+     * @var array
+     */
+    private $defaultOptions;
+
+    /**
+     * @return array
+     */
+    public function getDefaultOptions()
+    {
+        return $this->defaultOptions;
+    }
+
+    /**
+     * @param array $defaultOptions
+     */
+    public function setDefaultOptions($defaultOptions)
+    {
+        $this->defaultOptions = $defaultOptions;
+    }
+
+    /**
      * Load formats from a xml file
      *
      * @param mixed $resource The resource
@@ -46,9 +67,8 @@ class XmlFormatLoader extends FileLoader
     }
 
     /**
-     *
      * @param $file
-     * @return Portal
+     * @return array
      */
     private function parseXml($file)
     {
@@ -82,9 +102,16 @@ class XmlFormatLoader extends FileLoader
                     $commands[] = $command;
                 }
 
+                $options = array();
+                $optionNodes = $this->xpath->query('x:options/x:option', $formatNode);
+                foreach ($optionNodes as $optionNode) {
+                    $options[$optionNode->attributes->getNamedItem('name')->nodeValue] = $optionNode->nodeValue;
+                }
+
                 $formats[$name] = array(
                     'name' => $name,
-                    'commands' => $commands
+                    'commands' => $commands,
+                    'options' => array_merge($options, $this->defaultOptions)
                 );
             }
         }

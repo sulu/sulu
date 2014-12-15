@@ -147,6 +147,10 @@ class DefaultFormatManager implements FormatManagerInterface
                     throw new InvalidMimeTypeForPreviewException($mimeType);
                 }
 
+                // get format options
+                $format = $this->getFormat($format);
+                $formatOptions = $format['options'];
+
                 // load Original
                 $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
                 $original = $this->createTmpFile($this->getFile($uri));
@@ -155,7 +159,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $this->prepareMedia($mimeType, $original);
 
                 // convert Media to format
-                $image = $this->converter->convert($original, $this->getFormatOptions($format));
+                $image = $this->converter->convert($original, $format);
 
                 // remove profiles and comments
                 $image->strip();
@@ -167,7 +171,10 @@ class DefaultFormatManager implements FormatManagerInterface
                 $imageExtension = $this->getImageExtension($fileName);
 
                 // get image
-                $image = $image->get($imageExtension, $this->getOptionsFromImage($image, $imageExtension));
+                $image = $image->get(
+                    $imageExtension,
+                    $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
+                );
 
                 // HTTP Status
                 $status = 200;
@@ -207,7 +214,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @return array
      * @throws ImageProxyInvalidImageFormat
      */
-    protected function getFormatOptions($format)
+    protected function getFormat($format)
     {
         if (!isset($this->formats[$format])) {
             throw new ImageProxyInvalidImageFormat('Format was not found');
@@ -215,7 +222,6 @@ class DefaultFormatManager implements FormatManagerInterface
 
         return $this->formats[$format];
     }
-
 
     /**
      * @param string $format
@@ -232,7 +238,7 @@ class DefaultFormatManager implements FormatManagerInterface
             return $this->returnFallbackImage($format);
         }
 
-        $image = $this->converter->convert($placeholder, $this->getFormatOptions($format));
+        $image = $this->converter->convert($placeholder, $this->getFormat($format));
 
         $image = $image->get($imageExtension);
 
@@ -249,7 +255,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
         $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
 
-        $image = $this->converter->convert($placeholder, $this->getFormatOptions($format));
+        $image = $this->converter->convert($placeholder, $this->getFormat($format));
 
         $image = $image->get($imageExtension);
 
@@ -283,9 +289,10 @@ class DefaultFormatManager implements FormatManagerInterface
     /**
      * @param ImageInterface $image
      * @param string $imageExtension
+     * @param array $formatOptions
      * @return array
      */
-    protected function getOptionsFromImage(ImageInterface $image, $imageExtension)
+    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
     {
         $options = array();
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {

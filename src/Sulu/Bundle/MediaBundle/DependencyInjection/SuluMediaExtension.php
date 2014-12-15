@@ -36,6 +36,10 @@ class SuluMediaExtension extends Extension
 
         $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
         $container->setParameter('sulu_media.format_manager.response_headers', $config['format_manager']['response_headers']);
+        $container->setParameter(
+            'sulu_media.format_manager.default_imagine_options',
+            $config['format_manager']['default_imagine_options']
+        );
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
