@@ -229,8 +229,10 @@ abstract class RlpStrategy implements RlpStrategyInterface
                 $contentType->write($node, $translatedProperty, $userId, $webspaceKey, $languageCode, $segmentKey);
             }
 
+            // for node move the tree will be copied to then there is the iteration over this function
+            // for node copy the iteration is done by the content-type which calls over the move function
+            //     recursively this function
             if ($iterate) {
-                // iteration
                 $this->adaptResourceLocators($node, $userId, $webspaceKey, $languageCode, $segmentKey);
             }
         }

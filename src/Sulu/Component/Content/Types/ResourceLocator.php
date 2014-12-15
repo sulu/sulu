@@ -143,32 +143,36 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         $segmentKey = null
     ) {
         $value = $property->getValue();
-        if ($value != null && $value != '') {
-            $oldProperty = $node->getPropertyValueWithDefault($property->getName(), null);
-            $old = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
-            if ($old !== '/') {
-                // only if property value is the same as tree value (is different in move / copy / rename workflow)
-                // or the tree value does not exist
-                if ($old === null || $oldProperty === $old) {
-                    if ($old != null) {
-                        $this->getStrategy()->move(
-                            $old,
-                            $value,
-                            $node,
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            $segmentKey
-                        );
-                    } else {
-                        $this->getStrategy()->save($node, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
-                    }
-                }
-                $node->setProperty($property->getName(), $value);
-            }
-        } else {
+
+        if ($value === null || $value === '') {
             $this->remove($node, $property, $webspaceKey, $languageCode, $segmentKey);
+
+            return;
         }
+
+        $propertyValue = $node->getPropertyValueWithDefault($property->getName(), null);
+        $treeValue = $this->getResourceLocator($node, $webspaceKey, $languageCode, $segmentKey);
+        if ($treeValue === '/') {
+            return;
+        }
+
+        // only if property value is the same as tree value (is different in move / copy / rename workflow)
+        // or the tree value does not exist
+        if ($treeValue === null) {
+            $this->getStrategy()->save($node, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
+        } elseif ($propertyValue === $treeValue) {
+            $this->getStrategy()->move(
+                $treeValue,
+                $value,
+                $node,
+                $userId,
+                $webspaceKey,
+                $languageCode,
+                $segmentKey
+            );
+        }
+
+        $node->setProperty($property->getName(), $value);
     }
 
     /**
