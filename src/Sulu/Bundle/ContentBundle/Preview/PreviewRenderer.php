@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Liip\ThemeBundle\ActiveTheme;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,11 +55,11 @@ class PreviewRenderer
 
     /**
      * renders content with the real website controller
-     * @param StructureInterface $content
+     * @param Page $content
      * @param bool $partial
      * @return string
      */
-    public function render(StructureInterface $content, $partial = false)
+    public function render(Page $content, $partial = false)
     {
         // set active theme
         $webspace = $this->webspaceManager->findWebspaceByKey($content->getWebspaceKey());
