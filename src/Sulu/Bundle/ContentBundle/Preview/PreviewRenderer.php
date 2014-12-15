@@ -58,8 +58,10 @@ class PreviewRenderer
         $request->attributes->set('_controller', $content->getController());
         $controller = $this->controllerResolver->getController($request);
 
+        $this->requestStack->push($request);
         /** @var Response $response */
         $response = $controller[0]->{$controller[1]}($content, true, $partial);
+        $this->requestStack->pop();
 
         return $response->getContent();
     }
