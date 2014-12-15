@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\PropertyInterface;
 
 /**
  * Content type definition
@@ -156,4 +157,13 @@ interface ContentTypeInterface
      * @return array
      */
     public function getContentData(PropertyInterface $property);
+
+    /**
+     * Return the UUIDs that are referenced by this content type for
+     * the given PropertyInterface instance
+     *
+     * @param PropertyInterface $property
+     * @return array
+     */
+    public function getReferencedUuids(PropertyInterface $property);
 }

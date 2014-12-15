@@ -101,6 +101,17 @@ class InternalLinks extends ComplexContentType
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $data = $property->getValue();
+        $uuids = isset($data['ids']) ? $data['ids'] : array();
+
+        return $uuids;
+    }
+
+    /**
      * set data to property
      * @param string[] $data ids of images
      * @param PropertyInterface $property
