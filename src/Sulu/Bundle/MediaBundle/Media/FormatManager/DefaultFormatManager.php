@@ -299,10 +299,7 @@ class DefaultFormatManager implements FormatManagerInterface
             $options['animated'] = true;
         }
 
-        // TODO here add quality: 'jpeg_quality' => 0 - 100
-        // 'png_compression_level' => 0 - 9
-
-        return $options;
+        return array_merge($options, $formatOptions['options']);
     }
 
     /**
