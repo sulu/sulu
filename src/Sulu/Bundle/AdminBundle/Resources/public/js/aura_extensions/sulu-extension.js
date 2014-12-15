@@ -314,60 +314,65 @@
                     pageSizeKey = key + 'PageSize',
                     limit = this.sandbox.sulu.getUserSetting(pageSizeKey);
 
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(this, fieldsKey, ['translation', 'default', 'editable', 'validation', 'width'], url, function(data) {
-                    var toolbarDefaults = {
-                            columnOptions: {
-                                data: data,
-                                key: fieldsKey,
-                                url: url
+                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
+                    this,
+                    fieldsKey,
+                    ['translation', 'default', 'editable', 'validation', 'width'],
+                    url,
+                    function(data) {
+                        var toolbarDefaults = {
+                                columnOptions: {
+                                    data: data,
+                                    key: fieldsKey,
+                                    url: url
+                                },
+                                instanceName: 'content',
+                                inHeader: false
                             },
-                            instanceName: 'content',
-                            inHeader: false
-                        },
-                        toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
-
-                        gridDefaults = {
-                            view: 'table',
-                            pagination: 'dropdown',
-                            matchings: data,
-                            viewOptions: {
-                                table: {
-                                    noItemsText: 'public.empty-list',
-                                    stickyHeader: true
+                            toolbarOptions = this.sandbox.util.extend(true, {}, toolbarDefaults, listToolbarOptions),
+                            gridDefaults = {
+                                view: 'table',
+                                pagination: 'dropdown',
+                                matchings: data,
+                                viewOptions: {
+                                    table: {
+                                        noItemsText: 'public.empty-list',
+                                        stickyHeader: true
+                                    }
                                 }
                             },
-                            paginationOptions: {
+                            paginationOptionsDefaults = {
                                 dropdown: {
                                     limit: limit
                                 }
-                            }
-                        },
-                        gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
+                            },
+                            gridOptions;
 
-                    if (!gridOptions.paginationOptions.dropdown.limit) {
-                        delete gridOptions.paginationOptions.dropdown.limit;
-                    }
-
-                    gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
-                    gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
-
-                    //start list-toolbar and datagrid
-                    this.sandbox.start([
-                        {
-                            name: 'list-toolbar@suluadmin',
-                            options: toolbarOptions
-                        },
-                        {
-                            name: 'datagrid@husky',
-                            options: gridOptions
+                        if(!!limit){
+                            gridDefaults['paginationOptions'] = paginationOptionsDefaults;
                         }
-                    ]);
 
-                    // save page size when changed
-                    this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
-                        this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
+                        gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
+                        gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
+                        gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+
+                        //start list-toolbar and datagrid
+                        this.sandbox.start([
+                            {
+                                name: 'list-toolbar@suluadmin',
+                                options: toolbarOptions
+                            },
+                            {
+                                name: 'datagrid@husky',
+                                options: gridOptions
+                            }
+                        ]);
+
+                        // save page size when changed
+                        this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
+                            this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
+                        }.bind(this));
                     }.bind(this));
-                }.bind(this));
             };
 
             /**
