@@ -10,20 +10,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\Command;
 
-use DateTime;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
-use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -52,7 +43,7 @@ class CreateRoleCommand extends ContainerAwareCommand
     {
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
-        $now =new \Datetime();
+        $now = new \Datetime();
 
         $role = new Role();
         $role->setName($input->getArgument('name'));
@@ -110,7 +101,7 @@ class CreateRoleCommand extends ContainerAwareCommand
             $question->setValidator(
                 function ($name) use ($doctrine) {
                     if (empty($name)) {
-                        throw new \Exception('rolename can not be empty');
+                        throw new \InvalidArgumentException('rolename cannot be empty');
                     }
 
                     $roles = $doctrine->getRepository('SuluSecurityBundle:Role')->findBy(array('name' => $name));

@@ -135,19 +135,19 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
             $question->setValidator(
-                function ($value) use ($doctrine) {
-                    if (empty($value)) {
-                        throw new \Exception('Username can not be empty');
+                function ($username) use ($doctrine) {
+                    if (empty($username)) {
+                        throw new \InvalidArgumentException('Username can not be empty');
                     }
 
                     $users = $doctrine->getRepository('SuluSecurityBundle:User')->findBy(
-                        array('username' => $value)
+                        array('username' => $username)
                     );
                     if (count($users) > 0) {
-                        throw new \Exception('username not unique');
+                        throw new \InvalidArgumentException('Username not unique');
                     }
 
-                    return $value;
+                    return $username;
                 }
             );
 
@@ -158,12 +158,12 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('firstName')) {
             $question = new Question('Please choose a FirstName: ');
             $question->setValidator(
-                function ($value) use ($doctrine) {
-                    if (empty($value)) {
-                        throw new \Exception('FirstName can not be empty');
+                function ($firstName) use ($doctrine) {
+                    if (empty($firstName)) {
+                        throw new \InvalidArgumentException('FirstName can not be empty');
                     }
 
-                    return $value;
+                    return $firstName;
                 }
             );
 
@@ -174,12 +174,12 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('lastName')) {
             $question = new Question('Please choose a LastName: ');
             $question->setValidator(
-                function ($value) use ($doctrine) {
-                    if (empty($value)) {
-                        throw new \Exception('LastName can not be empty');
+                function ($lastName) use ($doctrine) {
+                    if (empty($lastName)) {
+                        throw new \InvalidArgumentException('LastName can not be empty');
                     }
 
-                    return $value;
+                    return $lastName;
                 }
             );
 
@@ -190,12 +190,12 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose a Email: ');
             $question->setValidator(
-                function ($value) use ($doctrine) {
-                    if (empty($value)) {
-                        throw new \Exception('Email can not be empty');
+                function ($email) use ($doctrine) {
+                    if (empty($email)) {
+                        throw new \InvalidArgumentException('Email can not be empty');
                     }
 
-                    return $value;
+                    return $email;
                 }
             );
 
@@ -206,12 +206,12 @@ class CreateUserCommand extends ContainerAwareCommand
         if (!$input->getArgument('locale')) {
             $question = new Question('Please choose a locale: ');
             $question->setValidator(
-                function ($value) use ($doctrine) {
-                    if (empty($value)) {
-                        throw new \Exception('Locale can not be empty');
+                function ($locale) use ($doctrine) {
+                    if (empty($locale)) {
+                        throw new \InvalidArgumentException('Locale can not be empty');
                     }
 
-                    return $value;
+                    return $locale;
                 }
             );
 
@@ -244,12 +244,12 @@ class CreateUserCommand extends ContainerAwareCommand
             $question = new Question('Please choose a Password: ');
             $question->setHidden(true);
             $question->setValidator(
-                function ($value) use ($doctrine) {
-                    if (empty($value)) {
-                        throw new \Exception('Password can not be empty');
+                function ($password) use ($doctrine) {
+                    if (empty($password)) {
+                        throw new \InvalidArgumentException('Password can not be empty');
                     }
 
-                    return $value;
+                    return $password;
                 }
             );
 
