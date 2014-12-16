@@ -194,7 +194,7 @@ define([
             }
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'accountsFields', '/admin/api/accounts/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'accounts', '/admin/api/accounts/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'accounts',
