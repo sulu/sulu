@@ -38,7 +38,8 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
                             'y' => '170',
                         )
                     )
-                )
+                ),
+                'options' => array()
             ),
             '50x50' => array(
                 'name' => '50x50',
@@ -50,7 +51,8 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
                             'y' => '50',
                         )
                     )
-                )
+                ),
+                'options' => array()
             ),
             '150x100' => array(
                 'name' => '150x100',
@@ -62,8 +64,9 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
                             'y' => '100',
                         )
                     )
-                )
-            ),
+                ),
+                'options' => array()
+            )
         ));
     }
 }
