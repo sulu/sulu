@@ -22,10 +22,10 @@ interface FormatManagerInterface
     /**
      * Return the image by a given url
      * @param int $id
-     * @param string $format
+     * @param string $formatName
      * @return Response
      */
-    public function returnImage($id, $format);
+    public function returnImage($id, $formatName);
 
     /**
      * Return media id and format

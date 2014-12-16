@@ -6,6 +6,7 @@ CHANGELOG for Sulu
                                         and refactored usage of autocomplete
     * BUGFIX      #627 [ALL]            Fixed damaged urls when moving/copy/rename
     * ENHANCEMENT #639 [ALL]            Save page size for datagrid
+    * FEATURE     #659 [MediaBundle]    Configurable image quality settings
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
