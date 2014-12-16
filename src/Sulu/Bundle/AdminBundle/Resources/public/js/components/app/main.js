@@ -132,8 +132,41 @@ define(function() {
                             ''
                         );
                         break;
+                    default:
+                        this.sandbox.emit(
+                            'sulu.labels.error.show',
+                            this.extractErrorMessage(request),
+                            'public.server_error',
+                            ''
+                        );
+                        break;
                 }
             }.bind(this));
+        },
+
+        /**
+         * Extract an error message (or messages) from the response
+         *
+         * @param {object} request
+         * @return {string}
+         */
+        extractErrorMessage: function (request) {
+            var message = [request.status];
+
+            // if response is symfony JSON exception
+            if (request.responseJSON !== undefined) {
+                var response = request.responseJSON
+
+                this.sandbox.util.each(response, function (index) {
+                    var exception = response[index];
+
+                    if (exception.message !== undefined) {
+                        message.push(exception.message);
+                    }
+                });
+            }
+
+            return message.join(", ");
         },
 
         /**

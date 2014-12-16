@@ -7,6 +7,7 @@ CHANGELOG for Sulu
     * BUGFIX      #627 [ALL]            Fixed damaged urls when moving/copy/rename
     * ENHANCEMENT #639 [ALL]            Save page size for datagrid
     * FEATURE     #659 [MediaBundle]    Configurable image quality settings
+    * ENHANCEMENT #644 [ALL]            Displaying an error label everytime a request fails
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
