@@ -128,7 +128,7 @@ class DefaultFormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function returnImage($id, $format)
+    public function returnImage($id, $formatName)
     {
         try {
             // load Media
@@ -148,7 +148,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 }
 
                 // get format options
-                $format = $this->getFormat($format);
+                $format = $this->getFormat($formatName);
                 $formatOptions = $format['options'];
 
                 // load Original
@@ -186,7 +186,7 @@ class DefaultFormatManager implements FormatManagerInterface
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
-                        $format
+                        $formatName
                     );
                 }
             } catch (MediaException $e) {
