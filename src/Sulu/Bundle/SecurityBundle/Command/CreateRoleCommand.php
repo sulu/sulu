@@ -101,12 +101,12 @@ class CreateRoleCommand extends ContainerAwareCommand
             $question->setValidator(
                 function ($name) use ($doctrine) {
                     if (empty($name)) {
-                        throw new \InvalidArgumentException('rolename cannot be empty');
+                        throw new \InvalidArgumentException('Rolename cannot be empty');
                     }
 
                     $roles = $doctrine->getRepository('SuluSecurityBundle:Role')->findBy(array('name' => $name));
                     if (count($roles) > 0) {
-                        throw new \Exception('name not unique');
+                        throw new \InvalidArgumentException(sprintf('Rolename "%s" is not unique', $name));
                     }
 
                     return $name;

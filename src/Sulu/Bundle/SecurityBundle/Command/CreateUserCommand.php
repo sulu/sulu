@@ -144,7 +144,7 @@ class CreateUserCommand extends ContainerAwareCommand
                         array('username' => $username)
                     );
                     if (count($users) > 0) {
-                        throw new \InvalidArgumentException('Username not unique');
+                        throw new \InvalidArgumentException(sprintf('Username "%s" is not unique', $username));
                     }
 
                     return $username;
