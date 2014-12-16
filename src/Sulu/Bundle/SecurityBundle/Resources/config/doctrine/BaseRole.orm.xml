@@ -7,7 +7,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="name" type="string" column="name" length="60"/>
+        <field name="name" type="string" column="name" length="60" unique="true"/>
         <field name="system" type="string" column="system" length="60"/>
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>

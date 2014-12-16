@@ -1,5 +1,9 @@
 # Upgrade
 
+## dev-develop
+* Role name is now unique
+  * check roles and give them unique names
+
 ## 0.13.0
 * Remove `/cmf/<webspace>/temp` from repository
   * run `app/console doctrine:phpcr:node:remove /cmf/<webspace>/temp` foreach webspace
