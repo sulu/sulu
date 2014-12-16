@@ -24,13 +24,14 @@ use FOS\RestBundle\View\View;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 
 /**
  * handles snippets
  */
-class SnippetController
+class SnippetController implements SecuredControllerInterface
 {
     /**
      * @var ContentMapper
@@ -326,7 +327,7 @@ class SnippetController
      */
     private function initEnv(Request $request)
     {
-        $this->languageCode = $request->query->get('language', null);
+        $this->languageCode = $this->getLocale($request);
 
         if (!$this->languageCode) {
             throw new \InvalidArgumentException('You must provide the "language" query parameter');
@@ -425,5 +426,24 @@ class SnippetController
         }
 
         return new JsonResponse($data, 409);
+    }
+
+    /**
+     * Returns the locale for the given request
+     * @param Request $request
+     * @return string
+     */
+    public function getLocale(Request $request)
+    {
+        return $request->query->get('language', null);
+    }
+
+    /**
+     * Returns the SecurityContext required for the controller
+     * @return mixed
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.global.snippets';
     }
 }

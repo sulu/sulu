@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
 
 /**
  * Admin for snippet
@@ -20,23 +21,35 @@ use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 class SuluSnippetAdmin extends Admin
 {
     /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
      * Constructor
      */
-    public function __construct($title)
+    public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
+        $this->securityChecker = $securityChecker;
+
         $rootNavigationItem = new NavigationItem($title);
 
         $section = new NavigationItem('navigation.webspaces');
-        $rootNavigationItem->addChild($section);
 
-        $header = new NavigationItem('navigation.global-content');
-        $header->setIcon('globe');
-        $section->addChild($header);
+        $global = new NavigationItem('navigation.global-content');
+        $global->setIcon('globe');
+        $section->addChild($global);
 
-        $item = new NavigationItem('navigation.snippets');
-        $item->setIcon('bullseye');
-        $item->setAction('snippet/snippets');
-        $header->addChild($item);
+        if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
+            $snippet = new NavigationItem('navigation.snippets');
+            $snippet->setIcon('bullseye');
+            $snippet->setAction('snippet/snippets');
+            $global->addChild($snippet);
+        }
+
+        if ($global->hasChildren()) {
+            $rootNavigationItem->addChild($section);
+        }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
@@ -55,5 +68,16 @@ class SuluSnippetAdmin extends Admin
     public function getJsBundleName()
     {
         return 'sulusnippet';
+    }
+
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Global' => array(
+                    'sulu.global.snippets'
+                )
+            )
+        );
     }
 }
