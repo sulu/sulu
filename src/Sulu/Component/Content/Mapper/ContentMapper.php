@@ -227,6 +227,7 @@ class ContentMapper implements ContentMapperInterface
                 'changed',
                 'created',
                 'creator',
+                'published',
                 'state',
                 'title',
                 'template',
@@ -2096,6 +2097,7 @@ class ContentMapper implements ContentMapperInterface
             $changer = $node->getPropertyValue($propertyTranslator->getName('changer'));
             $created = $node->getPropertyValue($propertyTranslator->getName('created'));
             $creator = $node->getPropertyValue($propertyTranslator->getName('creator'));
+            $published = $node->getPropertyValueWithDefault($propertyTranslator->getName('published'), null);
 
             $path = $row->getPath('page');
 
@@ -2133,6 +2135,7 @@ class ContentMapper implements ContentMapperInterface
                         'changed' => $changed,
                         'changer' => $changer,
                         'created' => $created,
+                        'published' => $published,
                         'creator' => $creator,
                         'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
                         'url' => $url,
