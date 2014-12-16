@@ -38,7 +38,7 @@ class CreateUserCommandTest extends SuluTestCase
 
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
-        $now =new \Datetime();
+        $now = new \Datetime();
 
         $role = new Role();
         $role->setName('test');
