@@ -90,7 +90,7 @@ class DefaultFormatManagerTest extends ProphecyTestCase
             1,
             'dummy.gif',
             array('a' => 'b'),
-            $formats['640x480']
+            '640x480'
         )->willReturn(null);
 
         $formatManager = new DefaultFormatManager(

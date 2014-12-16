@@ -191,11 +191,11 @@ class DefaultFormatManager implements FormatManagerInterface
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
+                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName));
             }
         } catch (MediaException $e) {
             // return default image
-            list($image, $status, $imageExtension) = $this->returnFallbackImage($format);
+            list($image, $status, $imageExtension) = $this->returnFallbackImage($formatName);
         }
 
         // clear temp files
