@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #634 [All]            Created new configuration component, added new configuration for autocomplete
+                                        and refactored usage of autocomplete
     * BUGFIX      #627 [ALL]            Fixed damaged urls when moving/copy/rename
     * ENHANCEMENT #639 [ALL]            Save page size for datagrid
 

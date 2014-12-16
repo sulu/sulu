@@ -46578,14 +46578,16 @@ define("datepicker-zh-TW", function(){});
                      * @param {string|Date} date
                      * @returns {string}
                      */
-                    format: function(date) {
+                    format: function(date, returnDateOnly) {
                         var returnDate, returnTime;
                         if(typeof date === 'string'){
                             date = this.parse(date);
                         }
 
                         returnDate = Globalize.format(date, Globalize.culture().calendar.patterns.d);
-                        returnTime = Globalize.format(date, Globalize.culture().calendar.patterns.t);
+                        if (returnDateOnly === true) {
+                            returnTime = Globalize.format(date, Globalize.culture().calendar.patterns.t);
+                        }
 
                         return ( (!!returnDate) ? returnDate : '' ) +
                                ( (!!returnDate && !!returnTime) ? ' ': '' ) +
@@ -46701,7 +46703,7 @@ define("datepicker-zh-TW", function(){});
                     if (!app.config.culture.messages) {
                         app.config.culture.messages = { };
                     }
-                    
+
                     return app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
             }

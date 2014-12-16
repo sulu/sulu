@@ -7,6 +7,9 @@
  * with this source code in the file LICENSE.
  */
 
+/**
+ * @deprecated use config component instead
+ */
 define(function() {
 
     'use strict';
