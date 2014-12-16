@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * FEATURE     #659 [MediaBundle]    Configurable image quality settings
     * ENHANCEMENT #644 [ALL]            Displaying an error label everytime a request fails
     * ENHANCEMENT #665 [SecurityBundle] Added role creation command and question for role in user creation
+    * FEATURE     #662 [ALL]            Applied security to snippet, categories and tags
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
