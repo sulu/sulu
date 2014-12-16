@@ -1042,7 +1042,7 @@
             </trans-unit>
             <trans-unit id="9052063af3ba0f52ef7a4d1c0218d54" resname="public.server_error">
                 <source>public.server_error</source>
-                <target>Server-fehler</target>
+                <target>Serverfehler</target>
             </trans-unit>
             <!-- POOL-ALPIN_SPEZIFISCH -->
             <trans-unit id="9051763af3ba0f52ef7a4d3c0298d50" resname="contact.contacts.hobbies">
