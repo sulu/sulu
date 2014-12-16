@@ -13,8 +13,8 @@
         <xs:sequence>
             <xs:element type="xs:string" name="name"/>
 
-            <xs:element type="commandsType" name="commands" minOccurs="0"/>
-            <xs:element type="optionsType" name="options" minOccurs="0"/>
+            <xs:element type="commandsType" name="commands" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="optionsType" name="options" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
