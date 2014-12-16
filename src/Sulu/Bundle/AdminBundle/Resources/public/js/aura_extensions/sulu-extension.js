@@ -198,7 +198,9 @@
 
             /**
              * Shows a standard delete warning dialog
-             * @param callback {Function} callback function to execute after dialog got closed. The callback gets always executed (with true or false as first argument, whether the dialog got confirmed or not)
+             * @param callback {Function} callback function to execute after dialog got closed. The callback gets always
+             *                            executed (with true or false as first argument, whether the dialog got
+             *                            confirmed or not)
              * @param title {String} custom title of the dialog
              * @param description {String} custom description of the dialog
              */
@@ -353,8 +355,9 @@
                         }
 
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
-                        gridOptions.searchInstanceName = gridOptions.searchInstanceName ? gridOptions.searchInstanceName : toolbarOptions.instanceName;
-                        gridOptions.columnOptionsInstanceName = gridOptions.columnOptionsInstanceName ? gridOptions.columnOptionsInstanceName : toolbarOptions.instanceName;
+                        gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
+                        gridOptions.columnOptionsInstanceName =
+                            gridOptions.columnOptionsInstanceName || toolbarOptions.instanceName;
 
                         //start list-toolbar and datagrid
                         this.sandbox.start([
@@ -372,13 +375,15 @@
                         this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
                             this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
                         }.bind(this));
-                    }.bind(this));
+                    }.bind(this)
+                );
             };
 
             /**
              * Gets matchings data from user-settings and initializes a datagrid only
              * @param key {String} the user settings key
-             * @param url {String} url to load the matchings data from. (needed, but only used if matchings are not cached with the key)
+             * @param url {String} url to load the matchings data from. (needed, but only used if matchings are not
+             *                     cached with the key)
              * @param datagridOptions {Object} options to pass to the datagrid component
              */
             app.sandbox.sulu.initList = function(key, url, datagridOptions) {
