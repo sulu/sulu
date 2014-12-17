@@ -39293,6 +39293,7 @@ define('__component__$ckeditor@husky',[], function() {
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
+ * @params {String} [options.slides[].subTitle] the sub-title of the overlay
  * @params {String|Boolean} [options.slides[].closeIcon] icon class for the close button. If false no close icon will be displayed
  * @params {Function} [options.slides[].closeCallback] @deprecated Use 'cancelCallback' instead
  * @params {Function} [options.slides[].cancelCallback] callback which gets executed after the overlay gets canceled
@@ -39347,6 +39348,7 @@ define('__component__$overlay@husky',[], function() {
         slideDefaults = {
             index: -1,
             title: '',
+            subTitle: null,
             closeIcon: 'times',
             message: '',
             closeCallback: null,
@@ -39452,8 +39454,9 @@ define('__component__$overlay@husky',[], function() {
             ].join(''),
             slideSkeleton: [
                 '<div class="slide slide-<%= index %> <%= cssClass %>">',
-                '   <div class="overlay-header">',
+                '   <div class="overlay-header<% if(subTitle) { %> with-sub-title<% } %>">',
                 '       <span class="title"><%= title %></span>',
+                '       <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
                 '       <% if (!!closeIcon) { %><a class="fa-<%= closeIcon %> close-button" href="#"></a><% } %>',
                 '   </div>',
                 '   <div class="overlay-content"></div>',
@@ -39929,10 +39932,12 @@ define('__component__$overlay@husky',[], function() {
 
             var slide, $el;
             for (slide in this.slides) {
-                $el = this.initSlideSkeleton(slide);
-                this.initButtons(slide);
-                this.setContent(slide);
-                this.sandbox.dom.append(this.overlay.$slides, $el);
+                if (this.slides.hasOwnProperty(slide)) {
+                    $el = this.initSlideSkeleton(slide);
+                    this.initButtons(slide);
+                    this.setContent(slide);
+                    this.sandbox.dom.append(this.overlay.$slides, $el);
+                }
             }
         },
 
@@ -39942,6 +39947,7 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.slides[slide].$el = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.slideSkeleton, {
                     title: this.sandbox.util.cropMiddle(this.slides[slide].title, 38),
+                    subTitle: !!this.slides[slide].subTitle ? this.slides[slide].subTitle : null,
                     closeIcon: this.slides[slide].closeIcon,
                     index: this.slides[slide].index,
                     cssClass: this.slides[slide].cssClass
