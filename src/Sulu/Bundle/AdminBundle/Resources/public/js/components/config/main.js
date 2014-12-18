@@ -33,15 +33,16 @@ define(function() {
          * @returns {*} configuration object
          */
         get: function(key) {
+            var empty,
+                value = null;
             if (!!key && typeof(key) === 'string' && config.hasOwnProperty(key)) {
-                var value = config[key], empty;
+                value = config[key];
                 if (typeof value === 'object') {
                     empty = (value instanceof Array) ? [] : {};
                     value = jQuery.extend(true, empty, value);
                 }
-                return value;
             }
-            return null;
+            return value;
         }
     };
 });
