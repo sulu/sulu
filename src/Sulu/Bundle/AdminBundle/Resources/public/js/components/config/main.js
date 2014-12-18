@@ -33,7 +33,16 @@ define(function() {
          * @returns {*} configuration object
          */
         get: function(key) {
-            return !!key && typeof(key) === 'string' ? config[key] : null;
+            var empty,
+                value = null;
+            if (!!key && typeof(key) === 'string' && config.hasOwnProperty(key)) {
+                value = config[key];
+                if (typeof value === 'object') {
+                    empty = (value instanceof Array) ? [] : {};
+                    value = jQuery.extend(true, empty, value);
+                }
+            }
+            return value;
         }
     };
 });
