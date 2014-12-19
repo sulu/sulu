@@ -42290,7 +42290,8 @@ define('__component__$input@husky',[], function() {
             datepickerOptions: {
                 orientation: 'auto',
                 startDate: -Infinity,
-                endDate: Infinity
+                endDate: Infinity,
+                todayHighlight: true
             },
             colorPickerOptions: {},
             frontIcon: null,

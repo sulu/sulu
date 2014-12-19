@@ -1,8 +1,24 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * FEATURE     #634 [All]            Created new configuration component, added new configuration for autocomplete
+                                        and refactored usage of autocomplete
+    * BUGFIX      #627 [ALL]            Fixed damaged urls when moving/copy/rename
+    * ENHANCEMENT #639 [ALL]            Save page size for datagrid
+    * FEATURE     #659 [MediaBundle]    Configurable image quality settings
+    * ENHANCEMENT #644 [ALL]            Displaying an error label everytime a request fails
+    * ENHANCEMENT #665 [SecurityBundle] Added role creation command and question for role in user creation
+
+* 0.13.2 (2014-12-12)
+    * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
+    * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener) 
+
+* 0.13.1 (2014-12-11)
+    * HOTFIX      #--- [AdminBundle]    Added missing frontend (css/js) build
+
 * 0.13.0 (2014-12-10)
-   * HOTFIX       #619 [MediaBundle]    Made web folder for format cache configurable
+    * HOTFIX      #619 [MediaBundle]    Made web folder for format cache configurable
     * FEATURE     #637 [WebsiteBundle]  Multisort method and Twig filter
     * FEATURE     #585 [ContentBundle]  Added analytics key to webspace configuration
     * BUGFIX      #612 [SnippetBundle]  Introduced snippet pagination
