@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Imagine as ImagickImagine;
+use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidFormatOptionsException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
@@ -47,11 +48,11 @@ class ImagineImageConverter implements ImageConverterInterface
      */
     protected function newImage()
     {
-        if (!class_exists('Imagick')) {
+        try {
+            return new ImagickImagine();
+        } catch (RuntimeException $ex) {
             return new GdImagine();
         }
-
-        return new ImagickImagine();
     }
 
     /**
