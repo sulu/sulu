@@ -31863,7 +31863,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                             } else if (key === 'name') {
                                 matchingObject.attribute = matching.name;
                             } else if (key === 'sortable') {
-                                matchingObject.sortable = matching.sortable
+                                matchingObject.sortable = matching.sortable;
                                 if (typeof matching.sortable === 'string') {
                                     matchingObject.sortable = JSON.parse(matching.sortable);
                                 }
@@ -31941,7 +31941,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Destroys the view and the pagination
              */
             destroy: function() {
-                if (!!this.gridViews[this.viewId].rendered === true) {
+                if (this.gridViews[this.viewId].rendered === true) {
                     this.gridViews[this.viewId].destroy();
                     if (!!this.paginations[this.paginationId]) {
                         this.paginations[this.paginationId].destroy();
@@ -32439,9 +32439,21 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Handles the row remove event
              */
             removeRecordHandler: function(recordId) {
-                if (!!this.gridViews[this.viewId].removeRecord) {
+                if (!!this.gridViews[this.viewId].removeRecord && !!recordId) {
                     this.gridViews[this.viewId].removeRecord(recordId);
+                    this.removeRecordFromSelected(recordId);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
+                }
+            },
+
+            /**
+             * Removes a record from the selected items
+             * @param recordId
+             */
+            removeRecordFromSelected: function(recordId){
+                var index = this.selectedItems.indexOf(recordId);
+                if (index > -1) {
+                    this.selectedItems.splice(index, 1);
                 }
             },
 
@@ -32502,13 +32514,13 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Sets all data records selected
              */
             selectAllItems: function() {
-                var ids = [], i, length;
+                var i, length;
                 for (i = -1, length = this.data.embedded.length; ++i < length;) {
                     this.setItemSelected(this.data.embedded[i].id);
                 }
                 // emit events with selected data
-                this.sandbox.emit(ALL_SELECT.call(this), ids);
-                this.sandbox.emit(NUMBER_SELECTIONS.call(this), ids.length);
+                this.sandbox.emit(ALL_SELECT.call(this), this.selectedItems);
+                this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.selectedItems.length);
                 this.setSelectedItemsToData();
             },
 
@@ -32658,11 +32670,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {boolean} true if record got successfully deleted
              */
             removeRecord: function(recordId) {
-                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
-                    if (recordId === this.data.embedded[i].id) {
-                        this.data.embedded.splice(i, 1);
-                        this.rerenderPagination();
-                        return true;
+                if (!!recordId) {
+                    var i, length;
+                    for (i = -1, length = this.data.embedded.length; ++i < length;) {
+                        if (recordId === this.data.embedded[i].id) {
+                            this.removeRecordFromSelected(recordId);
+                            this.data.embedded.splice(i, 1);
+                            this.rerenderPagination();
+                            return true;
+                        }
                     }
                 }
                 return false;
