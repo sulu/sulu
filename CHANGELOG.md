@@ -5,6 +5,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
     * BUGFIX      #681 [TAGBUNDLE]      Fixed filtering of tags in Tag list and Media edit Overlay
+    * BUGFIX      #681 [MediaBundle]    Fixed imagick detection
+    * BUGFIX      #681 [TagBundle]      Fixed filtering of tags in Tag list and Media edit Overlay
     * FEATURE     #634 [All]            Created new configuration component, added new configuration for autocomplete
                                         and refactored usage of autocomplete
     * BUGFIX      #627 [ContentBundle]  Fixed damaged urls when moving/copy/rename
