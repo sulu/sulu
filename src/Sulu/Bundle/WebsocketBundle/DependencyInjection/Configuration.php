@@ -32,8 +32,8 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('ip_address')->defaultValue('127.0.0.1')->end()
                         ->scalarNode('port')->defaultValue('9876')->end()
-                        ->scalarNode('host_name')->defaultValue('localhost')->end()
-                    ->ene()
+                        ->scalarNode('http_host')->defaultValue('localhost')->end()
+                    ->end()
                 ->end()
             ->end();
 
