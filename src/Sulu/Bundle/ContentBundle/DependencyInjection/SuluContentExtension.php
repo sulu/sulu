@@ -55,8 +55,6 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('sulu_content.preview.fallback.interval', $config['preview']['fallback']['interval']);
-        $container->setParameter('sulu_content.preview.websocket.port', $config['preview']['websocket']['port']);
-        $container->setParameter('sulu_content.preview.websocket.url', $config['preview']['websocket']['url']);
 
         $errorTemplate = null;
         if (isset($config['preview']['error_template'])) {

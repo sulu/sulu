@@ -149,8 +149,9 @@ class PreviewController extends Controller
                             'language' => $locale
                         )
                     ),
-                'wsUrl' => 'ws://' . $request->getHttpHost(),
-                'wsPort' => $this->container->getParameter('sulu_content.preview.websocket.port'),
+                'wsUrl' => 'ws://' . $this->container->getParameter('sulu_websocket.server.http_host'),
+                'wsPort' => $this->container->getParameter('sulu_websocket.server.port'),
+                'wsRoute' => '/content/preview',
                 'interval' => $this->container->getParameter('sulu_content.preview.fallback.interval'),
                 'contentUuid' => $contentUuid,
                 'webspaceKey' => $webspaceKey,

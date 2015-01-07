@@ -66,8 +66,9 @@
             <argument type="string">sulu-content</argument>
             <argument type="collection">
                 <argument key="defaultTemplate" type="string">%sulu.content.structure.default_type.page%</argument>
-                <argument key="wsPort" type="string">%sulu_content.preview.websocket.port%</argument>
-                <argument key="wsUrl" type="string">%sulu_content.preview.websocket.url%</argument>
+                <argument key="wsPort" type="string">%sulu_websocket.server.port%</argument>
+                <argument key="wsUrl" type="string">ws://%sulu_websocket.server.http_host%</argument>
+                <argument key="wsRoute" type="string">/content/preview</argument>
                 <argument key="showInSortModeTag" type="string">sulu.content.sortmode.show</argument>
             </argument>
 
