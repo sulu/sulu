@@ -13,6 +13,12 @@
         </one-to-many>
         <one-to-many field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" mapped-by="collection"/>
         <one-to-many field="children" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionInterface" mapped-by="parent"/>
+        <many-to-one field="parent" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="children">
+            <join-columns>
+                <join-column name="idCollectionsParent" referenced-column-name="id" on-delete="SET NULL" />
+            </join-columns>
+            <gedmo:tree-parent/>
+        </many-to-one>
 
     </entity>
 </doctrine-mapping>

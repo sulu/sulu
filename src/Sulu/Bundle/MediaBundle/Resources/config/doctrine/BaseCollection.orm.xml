@@ -21,12 +21,6 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <many-to-one field="parent" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionInterface" inversed-by="children">
-            <join-columns>
-                <join-column name="idCollectionsParent" referenced-column-name="id" on-delete="SET NULL" />
-            </join-columns>
-            <gedmo:tree-parent/>
-        </many-to-one>
         <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
             <join-columns>
                 <join-column name="idCollectionTypes" referenced-column-name="id" nullable="false"/>

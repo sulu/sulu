@@ -35,6 +35,12 @@ class Collection extends BaseCollection
     private $children;
 
     /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     */
+    private $parent;
+
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -43,6 +49,30 @@ class Collection extends BaseCollection
         $this->media = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
+
+    /**
+     * Set parent
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
+     * @return CollectionInterface
+     */
+    public function setParent(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
 
     /**
      * Add meta

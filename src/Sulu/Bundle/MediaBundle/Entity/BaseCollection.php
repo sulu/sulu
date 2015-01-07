@@ -56,11 +56,6 @@ abstract class BaseCollection implements CollectionInterface
     private $id;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
-     */
-    private $parent;
-
-    /**
      * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */
     private $type;
@@ -279,29 +274,6 @@ abstract class BaseCollection implements CollectionInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set parent
-     *
-     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
-     * @return CollectionInterface
-     */
-    public function setParent(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get parent
-     *
-     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
-     */
-    public function getParent()
-    {
-        return $this->parent;
     }
 
     /**
