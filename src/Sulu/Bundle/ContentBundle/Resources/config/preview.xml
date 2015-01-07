@@ -46,6 +46,8 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="doctrine"/>
             <argument type="service" id="logger"/>
+
+            <tag name="sulu.websocket.app" route="/content/preview" />
         </service>
 
         <service id="sulu_content.preview.exception_listener" class="%sulu_content.preview.exception_listener.class%">

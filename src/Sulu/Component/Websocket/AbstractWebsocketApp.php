@@ -44,6 +44,14 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    function onClose(ConnectionInterface $conn)
+    {
+        $this->clients->detach($conn);
+    }
+
+    /**
      * Returns query of upgrade request
      * @param ConnectionInterface $conn
      * @return array

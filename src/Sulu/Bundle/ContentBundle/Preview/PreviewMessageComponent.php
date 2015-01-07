@@ -17,11 +17,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
+use Sulu\Component\Websocket\AbstractWebsocketApp;
+use Sulu\Component\Websocket\WebsocketAppInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class PreviewMessageComponent implements MessageComponentInterface
+class PreviewMessageComponent extends AbstractWebsocketApp
 {
     /**
      * @var array
@@ -48,13 +50,17 @@ class PreviewMessageComponent implements MessageComponentInterface
      */
     private $registry;
 
+    /**
+     * {@inheritdoc}
+     */
+    protected $name='sulu_content.preview';
+
     public function __construct(
         PreviewInterface $preview,
         AdminRequestAnalyzer $requestAnalyzer,
         Registry $registry,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->content = array();
 
         $this->preview = $preview;
@@ -65,6 +71,8 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $conn)
     {
+        parent::onOpen($conn);
+
         $this->logger->debug("Connection {$conn->resourceId} has connected");
     }
 
@@ -104,7 +112,7 @@ class PreviewMessageComponent implements MessageComponentInterface
     }
 
     /**
-     * Reconnect to
+     * Reconnect to mysql
      */
     private function reconnect()
     {
@@ -277,6 +285,8 @@ class PreviewMessageComponent implements MessageComponentInterface
 
     public function onClose(ConnectionInterface $conn)
     {
+        parent::onClose($conn);
+
         $this->logger->debug("Connection {$conn->resourceId} has disconnected");
     }
 
