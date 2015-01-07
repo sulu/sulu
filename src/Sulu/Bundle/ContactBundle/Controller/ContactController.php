@@ -606,6 +606,19 @@ class ContactController extends AbstractContactController
                 ->getRepository($contactEntity)
                 ->findById($id);
 
+            //Find the contact From Account Entity
+            $accountEntityName = 'SuluContactBundle:Account';
+            $account = $this->getDoctrine()
+                ->getRepository($accountEntityName)
+                ->findOneBy(array('mainContact' => $id));
+
+            //Set mainContact NULL
+            if ($account) {
+                if ($request->get('account')['id'] == null) {
+                    $account->setMainContact();
+                }
+            }
+
             if (!$contact) {
                 throw new EntityNotFoundException($contactEntity, $id);
             } else {
