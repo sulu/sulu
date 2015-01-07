@@ -1,0 +1,1 @@
+require.config({paths:{suluwebsocket:"../../suluwebsocket/js"}}),define({name:"Sulu Websocket Bundle",initialize:function(){"use strict"}});

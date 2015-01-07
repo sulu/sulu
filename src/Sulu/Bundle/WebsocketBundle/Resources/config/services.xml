@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="sulu_websocket.manager.class">Sulu\Component\Websocket\RatchetAppManager</parameter>
+        <parameter key="sulu_websocket.admin.class">Sulu\Bundle\WebsocketBundle\Admin\SuluWebsocketAdmin</parameter>
     </parameters>
 
     <services>
@@ -13,6 +14,10 @@
             <argument type="string">%sulu_websocket.server.port%</argument>
             <argument type="string">%sulu_websocket.server.http_host%</argument>
             <argument type="string">%sulu_websocket.server.ip_address%</argument>
+        </service>
+
+        <service id="sulu_websocket.admin" class="%sulu_websocket.admin.class%">
+            <tag name="sulu.admin"/>
         </service>
     </services>
 </container>
