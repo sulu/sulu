@@ -66,7 +66,7 @@ class RatchetAppManager implements AppManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function add($route, AppInterface $app, $allowedOrigins = array('*'), $httpHost = null)
+    public function add($route, WebsocketAppInterface $app, $allowedOrigins = array('*'), $httpHost = null)
     {
         $this->ratchetApp->route($route, $app, $allowedOrigins, $httpHost);
     }

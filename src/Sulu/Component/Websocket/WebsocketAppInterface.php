@@ -15,7 +15,7 @@ use Ratchet\ComponentInterface;
 /**
  * Interface for a websocket app
  */
-interface AppInterface extends ComponentInterface
+interface WebsocketAppInterface extends ComponentInterface
 {
 
 }
