@@ -27,6 +27,14 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('sulu_websocket');
 
         $rootNode->children()
+                ->arrayNode('server')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('ip_address')->defaultValue('127.0.0.1')->end()
+                        ->scalarNode('port')->defaultValue('9876')->end()
+                        ->scalarNode('host_name')->defaultValue('localhost')->end()
+                    ->ene()
+                ->end()
             ->end();
 
         return $treeBuilder;
