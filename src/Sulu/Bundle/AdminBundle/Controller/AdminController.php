@@ -13,8 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
@@ -93,5 +93,12 @@ class AdminController extends Controller
         $response = isset($system) ? $contexts[$system] : $contexts;
 
         return new JsonResponse($response);
+    }
+
+    /**
+     * Returns config for admin
+     */
+    public function configAction()
+    {
     }
 }
