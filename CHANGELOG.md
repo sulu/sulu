@@ -1,6 +1,8 @@
 CHANGELOG for Sulu
 ==================
 
+    * FEATURE     #--- [WebsiteBundle]  Add Command to generate sitemap.xml
+
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
     * HOTFIX      #--- [AdminBundle]    Fixed datagrid destroy method (remove window resize listener) 

@@ -4,7 +4,7 @@
 {% for site in sitemap if site.locale in locales %}
 {% if site.nodeType == 1 %}
 {% set siteLocale = site.locale %}
-{% set url = sitemap_url(site.url, site.locale) %}
+{% set url = sitemap_url(site.url, site.locale, site.webspaceKey) %}
 {% if url != false %}
     <url>
         <loc>{{ url }}</loc>
