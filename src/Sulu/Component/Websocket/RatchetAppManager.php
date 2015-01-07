@@ -53,7 +53,7 @@ class RatchetAppManager implements AppManagerInterface
      * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
      * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you.
      */
-    function __construct($port, $httpHost = 'localhost', $ipAddress = '127.0.0.1', $loop)
+    function __construct($port, $httpHost = 'localhost', $ipAddress = '127.0.0.1', $loop = null)
     {
         $this->port = $port;
         $this->httpHost = $httpHost;
