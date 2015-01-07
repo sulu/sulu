@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_tag.admin.class">Sulu\Bundle\TagBundle\Admin\SuluTagAdmin</parameter>
+        <parameter key="sulu_tag.tag_manager.class">Sulu\Bundle\TagBundle\Tag\TagManager</parameter>
+        <parameter key="sulu_tag.tag_repository.class">Sulu\Bundle\TagBundle\Entity\TagRepository</parameter>
+        <parameter key="sulu_tag.content.type.tag_list.class">Sulu\Bundle\TagBundle\Content\Types\TagList</parameter>
+    </parameters>
+    <services>
+        <service id="sulu_tag.admin" class="%sulu_tag.admin.class%">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument>%sulu_admin.name%</argument>
+        </service>
+        <service id="sulu_tag.tag_repository" class="%sulu_tag.tag_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluTagBundle:Tag</argument>
+        </service>
+        <service id="sulu_tag.tag_manager" class="%sulu_tag.tag_manager.class%">
+            <argument type="service" id="sulu_tag.tag_repository"/>
+            <argument type="service" id="sulu_security.user_repository"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+        <service id="sulu_tag.content.type.tag_list" class="%sulu_tag.content.type.tag_list.class%">
+            <tag name="sulu.content.type" alias="tag_list"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument>%sulu_tag.content.type.tag_list.template%</argument>
+        </service>
+    </services>
+</container>
