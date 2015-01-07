@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('server')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('ip_address')->defaultValue('0.0.0.0')->end()
+                        ->scalarNode('ip_address')->defaultValue('127.0.0.1')->end()
                         ->scalarNode('port')->defaultValue('9876')->end()
                         ->scalarNode('http_host')->defaultValue('localhost')->end()
                     ->end()

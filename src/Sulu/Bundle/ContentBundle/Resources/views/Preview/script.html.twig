@@ -18,6 +18,7 @@
 
                 url: '{{ wsUrl }}',
                 port: '{{ wsPort }}',
+                route: '{{ wsRoute }}',
 
                 supported: function() {
                     var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
@@ -37,7 +38,7 @@
                 init: function() {
                     try {
                         // create websocket
-                        this.conn = new WebSocket(this.url + ':' + this.port);
+                        this.conn = new WebSocket(this.url + ':' + this.port + this.route);
 
                         // on open
                         this.conn.onopen = function(e) {

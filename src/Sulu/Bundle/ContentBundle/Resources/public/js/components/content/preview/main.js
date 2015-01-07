@@ -91,7 +91,7 @@ define(['app-config'], function(AppConfig) {
 
                 init: function(template) {
                     var configSection = AppConfig.getSection('sulu-content'),
-                        url = configSection.wsUrl + ':' + configSection.wsPort,
+                        url = configSection.wsUrl + ':' + configSection.wsPort +  configSection.wsRoute,
                         def = this.sandbox.data.deferred();
 
                     this.sandbox.logger.log('Connect to url: ' + url);

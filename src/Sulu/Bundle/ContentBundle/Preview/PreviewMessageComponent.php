@@ -23,7 +23,7 @@ use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class PreviewMessageComponent extends AbstractWebsocketApp
+class PreviewMessageComponent extends AbstractWebsocketApp implements MessageComponentInterface
 {
     /**
      * @var array
@@ -53,7 +53,7 @@ class PreviewMessageComponent extends AbstractWebsocketApp
     /**
      * {@inheritdoc}
      */
-    protected $name='sulu_content.preview';
+    protected $name = 'sulu_content.preview';
 
     public function __construct(
         PreviewInterface $preview,
@@ -61,6 +61,8 @@ class PreviewMessageComponent extends AbstractWebsocketApp
         Registry $registry,
         LoggerInterface $logger
     ) {
+        parent::__construct();
+
         $this->content = array();
 
         $this->preview = $preview;
