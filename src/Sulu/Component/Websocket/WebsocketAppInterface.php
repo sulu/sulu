@@ -17,5 +17,9 @@ use Ratchet\ComponentInterface;
  */
 interface WebsocketAppInterface extends ComponentInterface
 {
-
+    /**
+     * Returns name of app
+     * @return string
+     */
+public function getName();
 }

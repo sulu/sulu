@@ -13,7 +13,7 @@ use Ratchet\App;
 use React\EventLoop\LoopInterface;
 
 /**
- * Class manages retchat websocket apps
+ * Class manages ratchet websocket apps
  */
 class RatchetAppManager implements AppManagerInterface
 {
@@ -42,10 +42,16 @@ class RatchetAppManager implements AppManagerInterface
     private $loop;
 
     /**
-     * Retchat app
+     * Ratchet app
      * @var App
      */
     private $ratchetApp;
+
+    /**
+     * Container for websocket apps
+     * @var array
+     */
+    private $apps = array();
 
     /**
      * @param int $port Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843
@@ -69,6 +75,13 @@ class RatchetAppManager implements AppManagerInterface
     public function add($route, WebsocketAppInterface $app, $allowedOrigins = array('*'), $httpHost = null)
     {
         $this->ratchetApp->route($route, $app, $allowedOrigins, $httpHost);
+
+        $this->apps[] = array(
+            'route' => $route,
+            'app' => $app,
+            'allowedOrigins' => $allowedOrigins,
+            'httpHost' => $httpHost
+        );
     }
 
     /**
@@ -77,5 +90,37 @@ class RatchetAppManager implements AppManagerInterface
     public function run()
     {
         $this->ratchetApp->run();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApps()
+    {
+        return $this->apps;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getHttpHost()
+    {
+        return $this->httpHost;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
     }
 }

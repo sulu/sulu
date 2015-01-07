@@ -22,6 +22,11 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     private $clients;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * initialize clients container
      */
     public function __construct()
@@ -74,4 +79,15 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
 
         return $default;
     }
+
+    /**
+     * Returns name of app
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
 }

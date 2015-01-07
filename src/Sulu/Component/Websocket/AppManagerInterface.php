@@ -27,4 +27,28 @@ interface AppManagerInterface
      * Run the server by entering the event loop
      */
     public function run();
+
+    /**
+     * Returns apps and configuration
+     * @return array
+     */
+    public function getApps();
+
+    /**
+     * Returns port to listen on
+     * @return int
+     */
+    public function getPort();
+
+    /**
+     * Returns HTTP hostname clients intend to connect to
+     * @return string
+     */
+    public function getHttpHost();
+
+    /**
+     * Return IP address to bind to
+     * @return string
+     */
+    public function getIpAddress();
 }
