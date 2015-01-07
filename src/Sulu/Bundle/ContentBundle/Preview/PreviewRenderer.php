@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Liip\ThemeBundle\ActiveTheme;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
