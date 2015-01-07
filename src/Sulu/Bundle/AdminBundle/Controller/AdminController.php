@@ -81,6 +81,10 @@ class AdminController extends Controller
         return new JsonResponse($admins);
     }
 
+    /**
+     * Returns contexts of admin
+     * @return JsonResponse
+     */
     public function contextsAction()
     {
         $contexts = $this->get('sulu_admin.admin_pool')->getSecurityContexts();
