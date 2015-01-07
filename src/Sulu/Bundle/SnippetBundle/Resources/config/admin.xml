@@ -11,6 +11,7 @@
 
     <services>
         <service id="sulu_snippet.admin" class="%sulu_snippet.admin.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
