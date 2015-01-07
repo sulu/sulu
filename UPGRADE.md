@@ -3,6 +3,7 @@
 ## dev-develop
 * Role name is now unique
   * check roles and give them unique names
+* Apply all permissions correctly, otherwise users won't be able to work on snippets, categories or tags anymore
 
 ## 0.13.0
 * Remove `/cmf/<webspace>/temp` from repository
