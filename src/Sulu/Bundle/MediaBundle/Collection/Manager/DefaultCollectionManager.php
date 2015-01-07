@@ -58,7 +58,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * @var ObjectManager
      */
-    private $em;
+    protected $em;
 
     /**
      * @var int

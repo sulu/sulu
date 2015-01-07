@@ -125,7 +125,7 @@ class CollectionMeta
      * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collection
      * @return CollectionMeta
      */
-    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collection)
+    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection)
     {
         $this->collection = $collection;
 
@@ -135,7 +135,7 @@ class CollectionMeta
     /**
      * Get collection
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
     public function getCollection()
     {

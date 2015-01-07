@@ -17,7 +17,7 @@
             </cascade>
         </one-to-many>
 
-        <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" inversed-by="media">
+        <many-to-one field="collection" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionInterface" inversed-by="media">
             <join-columns>
                 <join-column name="idCollections" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
             </join-columns>

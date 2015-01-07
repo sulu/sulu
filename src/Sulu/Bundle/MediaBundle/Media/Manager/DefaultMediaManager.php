@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
@@ -147,7 +148,7 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
-        CollectionRepository $collectionRepository,
+        CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
         ObjectManager $em,
         StorageInterface $storage,
