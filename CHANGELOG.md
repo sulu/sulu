@@ -2,14 +2,16 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #634 [All]            Created new configuration component, added new configuration for autocomplete
+    * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
                                         and refactored usage of autocomplete
-    * BUGFIX      #627 [ALL]            Fixed damaged urls when moving/copy/rename
-    * ENHANCEMENT #639 [ALL]            Save page size for datagrid
+    * BUGFIX      #627 [ContentBundle]  Fixed damaged urls when moving/copy/rename
+    * ENHANCEMENT #639 [AdminBundle]    Save page size for datagrid
     * FEATURE     #659 [MediaBundle]    Configurable image quality settings
-    * ENHANCEMENT #644 [ALL]            Displaying an error label everytime a request fails
+    * ENHANCEMENT #644 [AdminBundle]    Displaying an error label everytime a request fails
     * ENHANCEMENT #665 [SecurityBundle] Added role creation command and question for role in user creation
-    * FEATURE     #662 [ALL]            Applied security to snippet, categories and tags
+    * FEATURE     #662 [SnippetBundle]  Applied security
+    * FEATURE     #662 [CategoryBundle] Applied security
+    * FEATURE     #662 [TagBundle]      Applied security
     * BUGFIX      #654 [ContentBundle]  Added dummy request to request stack for preview rendering.
                                         This is important when template uses ESI
 
@@ -36,8 +38,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #586 [WebsiteBundle]  Added node path variable to template
     * BUGFIX      #614 [SecurityBundle] Fixed the security for command lines
     * HOTFIX      #594 [WebsiteBundle]  Fixed sitemap alternate link bugs
-    * BUGFIX      #609 [All]            Allows null value for security subject and fixed snippet internal links bug
-    * ENHANCEMENT #577 [All]            Applied security to navigation items and content tabs
+    * BUGFIX      #609 [SecurityBundle] Allows null value for security subject and fixed snippet internal links bug
+    * ENHANCEMENT #577 [SecurityBundle] Applied security to navigation items and content tabs
     * ENHANCEMENT #604 [CoreBundle]     Only register services for the current context
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
     * BUGFIX      #571 [CoreBundle]     Fixed build command
