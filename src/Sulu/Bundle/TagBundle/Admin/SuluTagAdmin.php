@@ -63,6 +63,9 @@ class SuluTagAdmin extends Admin
         return 'sulutag';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSecurityContexts()
     {
         return array(

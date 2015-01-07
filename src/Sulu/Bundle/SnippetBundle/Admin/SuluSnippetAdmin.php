@@ -70,6 +70,9 @@ class SuluSnippetAdmin extends Admin
         return 'sulusnippet';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSecurityContexts()
     {
         return array(

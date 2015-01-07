@@ -61,6 +61,9 @@ class SuluCategoryAdmin extends Admin
         return 'sulucategory';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getSecurityContexts()
     {
         return array(

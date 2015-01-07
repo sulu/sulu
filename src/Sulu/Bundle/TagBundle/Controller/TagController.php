@@ -318,8 +318,7 @@ class TagController extends RestController implements ClassResourceInterface, Se
     }
 
     /**
-     * Returns the SecurityContext required for the controller
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getSecurityContext()
     {

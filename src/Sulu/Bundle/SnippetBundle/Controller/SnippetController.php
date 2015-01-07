@@ -429,9 +429,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Returns the locale for the given request
-     * @param Request $request
-     * @return string
+     * {@inheritDoc}
      */
     public function getLocale(Request $request)
     {
@@ -439,8 +437,7 @@ class SnippetController implements SecuredControllerInterface
     }
 
     /**
-     * Returns the SecurityContext required for the controller
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getSecurityContext()
     {
