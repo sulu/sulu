@@ -1,1 +1,1 @@
-require.config({paths:{suluwebsocket:"../../suluwebsocket/js"}}),define({name:"Sulu Websocket Bundle",initialize:function(){"use strict"}});
+require.config({paths:{suluwebsocket:"../../suluwebsocket/js","ws-manager":"../../suluwebsocket/js/component/ws-manager/main"}}),define(["config","ws-manager"],function(a,b){return{name:"Sulu Websocket Bundle",initialize:function(){"use strict";b.init(a.get("sulu.websocket.server"),a.get("sulu.websocket.apps"))}}});
