@@ -14,8 +14,39 @@ define(function() {
 
     'use strict';
 
+    var defaults = {port: 9876, httpHost: 'localhost', ssl: false};
+
     return {
-        getClient: function(name) {
+        apps: {},
+
+        config: {},
+
+        url: null,
+
+        init: function(config, apps) {
+            this.config = config;
+            this.apps = apps;
+        },
+
+        getConfig: function(name) {
+            return this.config[name] || defaults[name] || null;
+        },
+
+        getUrl: function(appName) {
+            if (this.url === null) {
+                var host = this.getConfig('httpHost'),
+                    port = this.getConfig('port'),
+                    ssl = this.getConfig('ssl');
+
+                this.url = (ssl ? 'wss://' : 'ws://') + host + ':' + port;
+            }
+
+            // TODO generate route with params
+            return this.url + this.apps[appName].route;
+        },
+
+        getClient: function(appName) {
+            return new WebSocket(this.getUrl(appName))
         }
     };
 });

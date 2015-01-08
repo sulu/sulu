@@ -9,17 +9,21 @@
 
 require.config({
     paths: {
-        suluwebsocket: '../../suluwebsocket/js'
+        suluwebsocket: '../../suluwebsocket/js',
+        'ws-manager': '../../suluwebsocket/js/component/ws-manager/main'
     }
 });
 
-define({
+define(['config', 'ws-manager'], function(Config, WsManager) {
 
-    name: "Sulu Websocket Bundle",
+    return {
+        name: 'Sulu Websocket Bundle',
 
-    initialize: function(app) {
+        initialize: function(app) {
 
-        'use strict';
+            'use strict';
 
+            WsManager.init(Config.get('sulu.websocket.server'), Config.get('sulu.websocket.apps'));
+        }
     }
 });

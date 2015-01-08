@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="sulu_websocket.manager.class">Sulu\Component\Websocket\RatchetAppManager</parameter>
         <parameter key="sulu_websocket.admin.class">Sulu\Bundle\WebsocketBundle\Admin\SuluWebsocketAdmin</parameter>
+        <parameter key="sulu_websocket.jsconfig.class">Sulu\Bundle\WebsocketBundle\Admin\AppJsConfig</parameter>
     </parameters>
 
     <services>
@@ -18,6 +19,23 @@
 
         <service id="sulu_websocket.admin" class="%sulu_websocket.admin.class%">
             <tag name="sulu.admin"/>
+        </service>
+
+        <service id="sulu_content.jsconfig.server" class="%sulu_content.jsconfig.class%">
+            <argument type="string">sulu.websocket.server</argument>
+            <argument type="collection">
+                <argument key="wsPort" type="string">%sulu_websocket.server.port%</argument>
+                <argument key="wsUrl" type="string">ws://%sulu_websocket.server.http_host%</argument>
+                <argument key="apps" type="string">/content/preview</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
+        </service>
+
+        <service id="sulu_content.jsconfig.apps" class="%sulu_websocket.jsconfig.class%">
+            <argument type="service" id="sulu_websocket.manager"/>
+
+            <tag name="sulu.js_config"/>
         </service>
     </services>
 </container>
