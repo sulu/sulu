@@ -53,6 +53,7 @@ doctrine:
         resolve_target_entities:
             Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
             Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
+            Sulu\Bundle\MediaBundle\Entity\CollectionInterface: Sulu\Bundle\MediaBundle\Entity\Collection
         mappings:
             gedmo_tree:
                 type: xml

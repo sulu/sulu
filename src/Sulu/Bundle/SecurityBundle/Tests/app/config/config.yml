@@ -34,6 +34,7 @@ doctrine:
         resolve_target_entities:
             Sulu\Component\Security\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
             Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
+            Sulu\Bundle\MediaBundle\Entity\CollectionInterface: Sulu\Bundle\MediaBundle\Entity\Collection
 
 stof_doctrine_extensions:
     orm:
