@@ -16,6 +16,11 @@ sulu_admin.routes:
     defaults:
         _controller: SuluAdminBundle:Admin:bundles
 
+sulu_admin.config:
+    path: /config
+    defaults:
+        _controller: SuluAdminBundle:Admin:config
+
 sulu_admin.contexts:
     path: /contexts
     defaults:

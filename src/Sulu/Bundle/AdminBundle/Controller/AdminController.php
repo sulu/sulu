@@ -18,11 +18,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
+const USER_DATA_ID = 'sulu_admin.user_data_service';
+    const JS_CONFIG_ID = 'sulu_admin.jsconfig_pool';
+
+    /**
+     * Renders admin ui
+     * @return Response
+     */
     public function indexAction()
     {
         // get user data
-        $userDataServiceId = $this->container->getParameter('sulu_admin.user_data_service');
-        $jsconfigServiceId = 'sulu_admin.jsconfig_pool';
+        $userDataServiceId = $this->container->getParameter(self::USER_DATA_ID);
 
         $user = array();
         if ($this->has($userDataServiceId)) {
@@ -33,8 +39,8 @@ class AdminController extends Controller
 
                 // get js config from bundles
                 $jsconfig = array();
-                if ($this->has($jsconfigServiceId)) {
-                    $jsconfig = $this->get($jsconfigServiceId);
+                if ($this->has(self::JS_CONFIG_ID)) {
+                    $jsconfig = $this->get(self::JS_CONFIG_ID);
                     $jsconfig = $jsconfig->getConfigParams();
                 }
 
@@ -97,8 +103,17 @@ class AdminController extends Controller
 
     /**
      * Returns config for admin
+     * @return JsonResponse
      */
     public function configAction()
     {
+        // get js config from bundles
+        $jsconfig = array();
+        if ($this->has(self::JS_CONFIG_ID)) {
+            $jsconfig = $this->get(self::JS_CONFIG_ID);
+            $jsconfig = $jsconfig->getConfigParams();
+        }
+
+        return new JsonResponse($jsconfig);
     }
 }
