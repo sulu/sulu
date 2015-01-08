@@ -90,13 +90,18 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     }
 
     /**
-     * Returns name of app
-     * @return string
+     * {@inheritdoc}
      */
     public function getName()
     {
         return $this->name;
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
+    function __toString()
+    {
+        return $this->getName();
+    }
 }

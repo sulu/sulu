@@ -76,11 +76,11 @@ class RatchetAppManager implements AppManagerInterface
     {
         $this->ratchetApp->route($route, $app, $allowedOrigins, $httpHost);
 
-        $this->apps[] = array(
+        $this->apps[$app->getName()] = array(
             'route' => $route,
-            'app' => $app,
+            'name' => $app->getName(),
             'allowedOrigins' => $allowedOrigins,
-            'httpHost' => $httpHost
+            'httpHost' => $httpHost?:$this->getHttpHost()
         );
     }
 
