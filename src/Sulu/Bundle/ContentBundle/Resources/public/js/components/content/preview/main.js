@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config', 'ws-manager'], function(AppConfig, WsManager) {
 
     'use strict';
 
@@ -90,12 +90,10 @@ define(['app-config'], function(AppConfig) {
                 },
 
                 init: function(template) {
-                    var configSection = AppConfig.getSection('sulu-content'),
-                        url = configSection.wsUrl + ':' + configSection.wsPort +  configSection.wsRoute,
-                        def = this.sandbox.data.deferred();
+                    var def = this.sandbox.data.deferred();
 
                     this.sandbox.logger.log('Connect to url: ' + url);
-                    ws.socket = new WebSocket(url);
+                    ws.socket = WsManager.getClient('sulu_content.preview');
 
                     ws.socket.onopen = function() {
                         this.sandbox.logger.log('Connection established!');
