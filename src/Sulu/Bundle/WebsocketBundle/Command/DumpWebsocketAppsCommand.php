@@ -48,10 +48,10 @@ class DumpWebsocketAppsCommand extends ContainerAwareCommand
         foreach ($manager->getApps() as $app) {
             $table->addRow(
                 array(
-                    $app['app']->getName(),
+                    $app['name'],
                     $app['route'],
                     print_r($app['allowedOrigins'], true),
-                    $app['httpHost'] ?: $manager->getHttpHost()
+                    $manager->getHttpHost()
                 )
             );
         }
