@@ -1,0 +1,10 @@
+<sulu = 'http://sulu.io/phpcr'>
+<cont = 'http://sulu.io/phpcr/content'>
+
+[sulu:structure] > nt:unstructured
+[sulu:snippet] > sulu:structure
+[sulu:page] > sulu:structure
+[sulu:route] > nt:unstructured
+
+[sulu:webspace] > nt:unstructured
+

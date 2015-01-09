@@ -1,0 +1,10 @@
+doctrine_phpcr:
+    odm:
+        auto_mapping: true
+        locales:
+            de: [ 'en' ]
+
+
+
+
+

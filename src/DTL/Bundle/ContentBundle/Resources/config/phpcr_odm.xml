@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="dtl_content.event_subscriber.phpcr_odm.structure.class">DTL\Component\Content\EventSubscriber\PhpcrOdmStructureSubscriber</parameter>
+        <parameter key="dtl_content.initializer.class">DTL\Bundle\ContentBundle\Initializer\PhpcrOdmInitializer</parameter>
+    </parameters>
+
+    <services>
+        <service id="dtl_content.event_subscriber.phpcr_odm.structure" class="%dtl_content.event_subscriber.phpcr_odm.structure.class%">
+            <argument type="service" id="doctrine_phpcr.odm.document_manager" />
+            <argument type="service" id="dtl_content.serializer.flat" />
+        </service>
+
+        <service id="dtl_content.initializer" class="%dtl_content.initializer.class%">
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <tag name="doctrine_phpcr.initializer" />
+        </service>
+    </services>
+</container>

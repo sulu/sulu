@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\StructureBundle\Document;
+namespace DTL\Bundle\ContentBundle\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -17,69 +17,75 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
  *
  * Page and Snippet Documents will extend this class.
  *
- * @PHPCR\Document(
- *     translator="property"
- *     mixins=[sulu:structure]
+ * @PHPCR\MappedSuperclass(
+ *     translator="attribute"
  * )
- * @PHPCR\MappedSuperclass()
  */
 class Structure
 {
     /**
+     * @PHPCR\Locale()
+     */
+    private $locale;
+
+    /**
      * @PHPCR\NodeName()
      */
-    protected $name;
+    private $name;
 
     /**
      * @PHPCR\ParentDocument()
      */
-    protected $parent;
+    private $parent;
 
     /**
      * @PHPCR\Children()
      */
-    protected $children;
+    private $children;
 
     /**
-     * @PHPCR\String(translated=true, property="sulu:title")
+     * @PHPCR\String(translated=true, property="sulu:title", translated=true)
      */
-    protected $title;
+    private $title;
 
     /**
-     * @PHPCR\String(property="sulu:template")
+     * @PHPCR\String(translated=true, property="sulu:template", translated=true)
      */
-    protected $template;
+    private $template;
 
     /**
      * @PHPCR\Long(property="sulu:creator")
      */
-    protected $creator;
+    private $creator;
 
     /**
      * @PHPCR\Long(property="sulu:changer")
      */
-    protected $changer;
+    private $changer;
 
     /**
      * @PHPCR\Date(property="sulu:created")
      */
-    protected $created;
+    private $created;
 
     /**
      * @PHPCR\Date(property="sulu:updated")
      */
-    protected $updated;
+    private $updated;
 
     /**
-     * @PHPCR\Node()
+     * Content data.
+     * This is not mapped, it is serialized by event listener.
+     *
+     * @see DTL\Component\Content\EventSubscriber\PhpcrOdmStructureSubscriber
      */
-    protected $node;
+    private $contentData = array();
 
     public function getParent() 
     {
         return $this->parent;
     }
-    
+
     public function setParent($parent)
     {
         $this->parent = $parent;
@@ -155,22 +161,23 @@ class Structure
         $this->updated = $updated;
     }
 
-    public function getContent()
+    public function getContentData()
     {
-        $res = array();
-        foreach ($this->node->getProperties('cont:*') as $name => $property) {
-            $res[$name] = $property->getValue();
-        }
-
-        return $res;
+        return $this->contentData;
     }
 
-    public function getContent($key)
+    public function setContentData($contentData)
     {
-        
+        $this->contentData = $contentData;
     }
 
-    public function getTranslatedContentValue($key)
+    public function getName() 
     {
+        return $this->name;
+    }
+    
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

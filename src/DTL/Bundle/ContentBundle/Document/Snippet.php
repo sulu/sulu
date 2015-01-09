@@ -8,14 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\StructureBundle\Document;
+namespace DTL\Bundle\ContentBundle\Document;
 
 use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
 /**
  * Snippet Structure class
  *
- * @PHPCR\Document()
+ * @PHPCR\Document(
+ *     nodeType="sulu:snippet"
+ * )
  */
 class Snippet extends Structure
 {
