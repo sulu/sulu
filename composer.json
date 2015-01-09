@@ -79,7 +79,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Sulu\\": "src/"
+            "Sulu\\": "src/",
+            "DTL\\": "src/"
         }
     }
 }
