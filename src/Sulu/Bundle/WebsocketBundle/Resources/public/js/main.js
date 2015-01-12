@@ -14,7 +14,7 @@ require.config({
     }
 });
 
-define(['config', 'ws-manager'], function(Config, WsManager) {
+define(['config', 'websocket-manager'], function(Config, WebsocketManager) {
 
     return {
         name: 'Sulu Websocket Bundle',
@@ -23,7 +23,7 @@ define(['config', 'ws-manager'], function(Config, WsManager) {
 
             'use strict';
 
-            WsManager.init(Config.get('sulu.websocket.server'), Config.get('sulu.websocket.apps'));
+            WebsocketManager.init(Config.get('sulu.websocket.server'), Config.get('sulu.websocket.apps'));
         }
     }
 });

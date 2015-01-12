@@ -29,7 +29,7 @@ define(function() {
         },
 
         getConfig: function(name) {
-            return this.config[name] || defaults[name] || null;
+            return this.config[name] || defaults[name];
         },
 
         getUrl: function(appName) {

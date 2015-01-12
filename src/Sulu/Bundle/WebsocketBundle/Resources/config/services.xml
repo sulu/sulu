@@ -24,9 +24,8 @@
         <service id="sulu_content.jsconfig.server" class="%sulu_content.jsconfig.class%">
             <argument type="string">sulu.websocket.server</argument>
             <argument type="collection">
-                <argument key="wsPort" type="string">%sulu_websocket.server.port%</argument>
-                <argument key="wsUrl" type="string">ws://%sulu_websocket.server.http_host%</argument>
-                <argument key="apps" type="string">/content/preview</argument>
+                <argument key="port" type="string">%sulu_websocket.server.port%</argument>
+                <argument key="httpHost" type="string">%sulu_websocket.server.http_host%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>
