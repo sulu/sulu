@@ -51,7 +51,7 @@ class ContactRepository extends EntityRepository
             ->leftJoin('u.urls', 'urls')
             ->leftJoin('urls.urlType', 'urlType')
             ->leftJoin('u.title', 'title')
-            ->leftJoin('accountContacts.positionq', 'position')
+            ->leftJoin('accountContacts.position', 'position')
             ->leftJoin('u.medias', 'medias')
             ->leftJoin('u.categories', 'categories')
             ->addSelect('position')
