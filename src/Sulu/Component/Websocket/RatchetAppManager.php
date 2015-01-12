@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Component\Websocket;
 
 use Ratchet\App;
@@ -59,7 +60,7 @@ class RatchetAppManager implements AppManagerInterface
      * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
      * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you.
      */
-    function __construct($port, $httpHost = 'localhost', $ipAddress = '127.0.0.1', $loop = null)
+    function __construct($port, $httpHost = 'localhost', $ipAddress = '127.0.0.1', LoopInterface $loop = null)
     {
         $this->port = $port;
         $this->httpHost = $httpHost;
@@ -125,5 +126,14 @@ class RatchetAppManager implements AppManagerInterface
     public function getIpAddress()
     {
         return $this->ipAddress;
+    }
+
+    /**
+     * Return used event loop if null default loop will be created
+     * @return LoopInterface
+     */
+    public function getLoop()
+    {
+        return $this->loop;
     }
 }

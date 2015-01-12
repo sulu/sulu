@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Websocket;
 
+use React\EventLoop\LoopInterface;
+
 /**
  * Interface for a app-manager
  */
@@ -51,4 +53,10 @@ interface AppManagerInterface
      * @return string
      */
     public function getIpAddress();
+
+    /**
+     * Return used event loop if null default loop will be created
+     * @return LoopInterface
+     */
+    public function getLoop();
 }
