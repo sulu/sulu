@@ -15,6 +15,7 @@ CHANGELOG for Sulu
     * BUGFIX      #654 [ContentBundle]  Added dummy request to request stack for preview rendering.
                                         This is important when template uses ESI
     * BUGFIX      #661 [WebsiteBundle]  Added published date to resolver
+    * BUGFIX      #655 [ContentBundle]  Fixed checkbox read for preview
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
