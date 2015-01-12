@@ -224,7 +224,7 @@ define(['app-config'], function(AppConfig) {
             update = function(property, value) {
                 if (!!this.initiated) {
                     var changes = {};
-                    if (!!property && !!value) {
+                    if (!!property) {
                         changes[property] = value;
                     } else if (this.sandbox.form.getObject(this.formId)) {
                         changes = this.sandbox.form.getData(this.formId);
