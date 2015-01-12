@@ -70,7 +70,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $roleName = $input->getArgument('role');
         $password = $input->getArgument('password');
 
-        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine = $this->getDoctrine();
         $em = $doctrine->getManager();
 
         $emailTypes = $doctrine->getRepository('SuluContactBundle:EmailType')->findAll();
@@ -80,6 +80,13 @@ class CreateUserCommand extends ContainerAwareCommand
                 'Cannot find any SuluContactBundle:EmailType entities in database, maybe you ' .
                 'should load the fixtures?'
             );
+        }
+
+        $user = $doctrine->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername($username);
+
+        if ($user) {
+            $output->writeln(sprintf('<error>User "%s" already exists</error>', $username));
+            return 1;
         }
 
         $email = new Email();
@@ -108,7 +115,16 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
+
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array('name' => $roleName));
+
+        if (!$role) {
+            throw new \InvalidArgumentException(sprintf(
+                'Role "%s" not found. The following roles are registered: "%s"',
+                $roleName,
+                implode('", "', $this->getRoleNames())
+            ));
+        }
 
         $userRole = new UserRole();
         $userRole->setRole($role);
@@ -130,7 +146,7 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine = $this->getDoctrine();
 
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
@@ -220,22 +236,13 @@ class CreateUserCommand extends ContainerAwareCommand
         }
 
         if (!$input->getArgument('role')) {
-            $query = $doctrine->getRepository('SuluSecurityBundle:Role')
-                ->createQueryBuilder('role')
-                ->select('role.name')
-                ->getQuery();
-
-            $roles = array();
-            foreach ($query->getArrayResult() as $roleEntity) {
-                $roles[] = $roleEntity['name'];
-            }
+            $roleNames = $this->getRoleNames();
 
             $question = new ChoiceQuestion(
                 'Please choose a role: ',
-                $roles,
+                $roleNames,
                 0
             );
-
             $value = $helper->ask($input, $output, $question);
             $input->setArgument('role', $value);
         }
@@ -279,5 +286,15 @@ class CreateUserCommand extends ContainerAwareCommand
         $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
+    }
+
+    private function getRoleNames()
+    {
+        return $this->getDoctrine()->getRepository('SuluSecurityBundle:Role')->getRoleNames();
+    }
+
+    private function getDoctrine()
+    {
+        return $this->getContainer()->get('doctrine');
     }
 }
