@@ -196,7 +196,7 @@ class ContactManager extends AbstractContactManager
             // if a main account exists - remove it
             if ($accountContact = $this->getMainAccountContact($contact)) {
 
-                // if main Contact -Set it to null
+                // if this contact is the main-Contact - set mainContact to null
                 if ($accountContact->getAccount()->getMainContact() === $contact) {
                     $accountContact->getAccount()->setMainContact(null);
                 }
