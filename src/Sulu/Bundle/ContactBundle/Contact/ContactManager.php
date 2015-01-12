@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Api\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
