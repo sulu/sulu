@@ -44,6 +44,7 @@ CHANGELOG for Sulu
                                         This is important when template uses ESI
     * BUGFIX      #661 [WebsiteBundle]  Added published date to resolver
     * BUGFIX      #655 [ContentBundle]  Fixed checkbox read for preview
+    * FEATURE     #684 [ALL]            Implemented Websocket Component to standardize Websocket implementations
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
