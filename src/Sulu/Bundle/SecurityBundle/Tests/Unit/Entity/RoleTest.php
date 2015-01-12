@@ -23,7 +23,7 @@ class RoleTest extends \PHPUnit_Framework_TestCase
 
     public function testBeforeSave()
     {
-        $this->role->beforeSave();
+        $this->role->updateTimestamps();
         $this->assertNotNull($this->role->getCreated());
         $this->assertNotNull($this->role->getChanged());
 
@@ -32,7 +32,7 @@ class RoleTest extends \PHPUnit_Framework_TestCase
         $this->role->setCreated($created);
         $this->role->setChanged($changed);
 
-        $this->role->beforeSave();
+        $this->role->updateTimestamps();
 
         $this->assertEquals($created, $this->role->getCreated());
         $this->assertGreaterThan($changed->format('c'), $this->role->getChanged()->format('c'));

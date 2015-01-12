@@ -57,9 +57,11 @@ abstract class BaseRole implements RoleInterface
     private $securityType;
 
     /**
-     * Update updated and created fields before save
+     * Update the timestamps (changed + created).
+     * This method is mapped to the PRE_PERSIST and PRE_UPDATE
+     * lifecycle events.
      */
-    public function beforeSave()
+    public function updateTimestamps()
     {
         if (null == $this->created) {
             $this->created = new \DateTime();

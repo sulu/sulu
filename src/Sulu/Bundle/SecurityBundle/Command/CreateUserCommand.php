@@ -82,7 +82,7 @@ class CreateUserCommand extends ContainerAwareCommand
             );
         }
 
-        $user = $doctrine->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername($username);
+        $user = $doctrine->getRepository('SuluSecurityBundle:User')->findOneByUsername($username);
 
         if ($user) {
             $output->writeln(sprintf('<error>User "%s" already exists</error>', $username));
@@ -288,11 +288,28 @@ class CreateUserCommand extends ContainerAwareCommand
         return $encoder->encodePassword($password, $salt);
     }
 
+    /**
+     * Return the names of all the roles
+     *
+     * @return array
+     * @throws RuntimeException If no roles exist
+     */
     private function getRoleNames()
     {
-        return $this->getDoctrine()->getRepository('SuluSecurityBundle:Role')->getRoleNames();
+        $roleNames = $this->getDoctrine()->getRepository('SuluSecurityBundle:Role')->getRoleNames();
+
+        if (empty($roleNames)) {
+            throw new \RuntimeException(sprintf(
+                'The system currently has no roles. Use the "sulu:security:role:create" command to create roles.'
+            ));
+        }
     }
 
+    /**
+     * Return the doctrine service
+     *
+     * @return Doctrine\Common\Persistence\ManagerRegistry
+     */
     private function getDoctrine()
     {
         return $this->getContainer()->get('doctrine');

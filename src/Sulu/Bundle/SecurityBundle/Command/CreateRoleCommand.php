@@ -46,7 +46,7 @@ class CreateRoleCommand extends ContainerAwareCommand
         $name = $input->getArgument('name');
         $system = $input->getArgument('system');
 
-        $repository = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\Role');
+        $repository = $em->getRepository('SuluSecurityBundle:Role');
 
         $role = $repository->findOneByName($name);
 
