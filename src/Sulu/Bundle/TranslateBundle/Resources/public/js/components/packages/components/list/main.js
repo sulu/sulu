@@ -66,7 +66,7 @@ define([], function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/translate/template/package/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'packagesFields', '/admin/api/packages/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'packages', '/admin/api/packages/fields',
                 {
                     el: '#list-toolbar-container',
                     instanceName: 'package',

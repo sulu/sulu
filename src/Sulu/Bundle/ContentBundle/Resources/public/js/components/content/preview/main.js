@@ -19,6 +19,8 @@ define(['app-config'], function(AppConfig) {
                     var def = this.sandbox.data.deferred();
                     if (!ajax.initiated) {
                         this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
+                        this.sandbox.dom.on(this.$el, 'change', updateEvent.bind(this),
+                            'input[type="checkbox"].preview-update, input[type="radio"].preview-update');
 
                         ajax.start.call(this, def, template);
                         ajax.initiated = true;
@@ -224,7 +226,7 @@ define(['app-config'], function(AppConfig) {
             update = function(property, value) {
                 if (!!this.initiated) {
                     var changes = {};
-                    if (!!property && !!value) {
+                    if (!!property) {
                         changes[property] = value;
                     } else if (this.sandbox.form.getObject(this.formId)) {
                         changes = this.sandbox.form.getData(this.formId);

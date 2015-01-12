@@ -34,13 +34,17 @@ class ImageFormatCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $this->container = $container;
-        $container->setParameter('sulu_media.image.formats', $this->loadThemeFormats());
+        $container->setParameter(
+            'sulu_media.image.formats',
+            $this->loadThemeFormats($container->getParameter('sulu_media.format_manager.default_imagine_options'))
+        );
     }
 
     /**
+     * @param array $defaultOptions
      * @return array
      */
-    protected function loadThemeFormats()
+    protected function loadThemeFormats($defaultOptions)
     {
         $activeFormats = array();
         $suluFormats = $this->container->getParameter('sulu_media.image.formats');
@@ -67,6 +71,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
                     $locator = new FileLocator($folder);
                     $loader = new XmlFormatLoader($locator);
+                    $loader->setDefaultOptions($defaultOptions);
                     $themeFormats = $loader->load($fileName);
                     foreach ($themeFormats as $format) {
                         if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {

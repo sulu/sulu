@@ -25,8 +25,8 @@ class BaseTestCase extends SuluTestCase
     {
         $this->initPhpcr();
         $fs = new Filesystem;
-
         $fs->remove(__DIR__ . '/../app/data');
+
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
     }
 
@@ -62,6 +62,8 @@ class BaseTestCase extends SuluTestCase
 
         /** @var ContentMapperInterface $mapper */
         $mapper = $this->getContainer()->get('sulu.content.mapper');
-        $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $structure = $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+
+        return $structure;
     }
 }

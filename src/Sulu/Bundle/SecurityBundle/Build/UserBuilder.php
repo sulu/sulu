@@ -40,6 +40,8 @@ class UserBuilder extends SuluBuilder
     {
         $user = 'admin';
         $password = 'admin';
+        $roleName = 'User';
+        $system = 'Sulu';
         $doctrine = $this->container->get('doctrine')->getManager();
         $userRep = $doctrine->getRepository('SuluSecurityBundle:User');
 
@@ -55,15 +57,32 @@ class UserBuilder extends SuluBuilder
             return;
         }
 
-        $this->execCommand('Creating user: ' . $user, 'sulu:security:user:create', array(
-            'username' => $user,
-            'firstName' => 'Adam',
-            'lastName' => 'Ministrator',
-            'email' => 'admin@example.com',
-            'locale' => 'de',
-            'password' => $password,
+        $this->execCommand(
+            'Creating role: ' . $roleName,
+            'sulu:security:role:create',
+            array(
+                'name' => $roleName,
+                'system' => $system
         ));
+        $this->output->writeln(
+            sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
+        );
 
-        $this->output->writeln(sprintf('Created user "<comment>%s</comment>" with password "<comment>%s</comment>"', $user, $password));
+        $this->execCommand(
+            'Creating user: ' . $user,
+            'sulu:security:user:create',
+            array(
+                'username' => $user,
+                'firstName' => 'Adam',
+                'lastName' => 'Ministrator',
+                'email' => 'admin@example.com',
+                'locale' => 'de',
+                'role' => $roleName,
+                'password' => $password
+            )
+        );
+        $this->output->writeln(
+            sprintf('Created user "<comment>%s</comment>" with password "<comment>%s</comment>"', $user, $password)
+        );
     }
 }

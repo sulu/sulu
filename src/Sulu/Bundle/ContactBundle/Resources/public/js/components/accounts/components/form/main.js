@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -80,7 +80,7 @@ define([], function() {
         },
 
         render: function() {
-            var data, excludeItem;
+            var data, excludeItem, options;
 
             this.sandbox.once('sulu.contacts.set-defaults', this.setDefaults.bind(this));
             this.sandbox.once('sulu.contacts.set-types', this.setTypes.bind(this));
@@ -98,22 +98,15 @@ define([], function() {
                 excludeItem.push({id: this.options.data.id});
             }
 
+            options = Config.get('sulucontact.components.autocomplete.default.account');
+            options.el = '#company';
+            options.value = !!data.parent ? data.parent : null;
+            options.instanceName = 'companyAccount' + data.id,
+
             this.sandbox.start([
                 {
                     name: 'auto-complete@husky',
-                    options: {
-                        el: '#company',
-                        remoteUrl: '/admin/api/accounts?searchFields=name&fields=id,name&flat=true',
-                        getParameter: 'search',
-                        resultKey: 'accounts',
-                        value: !!data.parent ? data.parent : null,
-                        instanceName: 'companyAccount' + data.id,
-                        valueName: 'name',
-                        noNewValues: true,
-                        excludes: [
-                            {id: data.id, name: data.name}
-                        ]
-                    }
+                    options: options
                 }
             ]);
 

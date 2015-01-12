@@ -14,6 +14,10 @@
                 <source>security.user.activate</source>
                 <target>Activate user</target>
             </trans-unit>
+            <trans-unit id="a50af522ac183350142c0b4720e29a6f" resname="security.roles.error.non-unique">
+                <source>security.roles.error.non-unique</source>
+                <target>Name of role has to be unique</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -62,6 +62,7 @@ class SuluSecurityListener
                 }
                 break;
             case 'PUT':
+            case 'PATCH':
                 $permission = 'edit';
                 break;
             case 'DELETE':

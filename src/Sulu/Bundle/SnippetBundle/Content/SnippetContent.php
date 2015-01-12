@@ -135,7 +135,7 @@ class SnippetContent extends ComplexContentType
             array(
                 'ids' => array(),
             ),
-            $values
+            is_array($values) ? $values : array()
         );
 
         foreach ((array)$values['ids'] as $value) {

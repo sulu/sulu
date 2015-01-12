@@ -8,7 +8,7 @@
         </id>
         <field name="name" type="string" column="name" length="255"/>
         <field name="description" type="text" column="description" nullable="true"/>
-        <one-to-many field="collections" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection"
+        <one-to-many field="collections" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionInterface"
                      mapped-by="type"/>
     </entity>
 </doctrine-mapping>

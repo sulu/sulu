@@ -38,7 +38,7 @@ class Media
     private $files;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\Collection
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      * @Exclude
      */
     private $collection;
@@ -158,10 +158,10 @@ class Media
     /**
      * Set collection
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collection
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection
      * @return Media
      */
-    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collection)
+    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection)
     {
         $this->collection = $collection;
 
@@ -169,9 +169,9 @@ class Media
     }
 
     /**
-     * Get collection
+     * Get collectionInterface
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
     public function getCollection()
     {

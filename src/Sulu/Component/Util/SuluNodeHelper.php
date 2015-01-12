@@ -13,6 +13,7 @@ namespace Sulu\Component\Util;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\Util\PathHelper;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use PHPCR\SessionInterface;
 
@@ -99,6 +100,28 @@ class SuluNodeHelper
         }
 
         return null;
+    }
+
+    /**
+     * Return all the localized values of the localized property indicated
+     * by $name
+     *
+     * @param NodeInterface $node
+     * @param string $name  Name of localized property
+     */
+    public function getLocalizedPropertyValues(NodeInterface $node, $name)
+    {
+        $values = array();
+        foreach ($node->getProperties() as $property) {
+            /** @var PropertyInterface $property */
+            preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-' . $name . '/', $property->getName(), $matches);
+
+            if ($matches) {
+                $values[$matches[1]] = $property->getValue();
+            }
+        }
+
+        return $values;
     }
 
     /**
@@ -200,6 +223,31 @@ class SuluNodeHelper
     public function getPreviousNode(NodeInterface $node)
     {
         return $this->getSiblingNode($node, true);
+    }
+
+    /**
+     * Return translated property name
+     *
+     * @param string $propertyName
+     * @param string $locale
+     * @return string
+     */
+    public function getTranslatedPropertyName($propertyName, $locale)
+    {
+        return sprintf('%s:%s-%s', $this->languageNamespace, $locale, $propertyName);
+    }
+
+    /**
+     * Return translated property
+     *
+     * @param \Sulu\Component\Content\PropertyInterface $property
+     * @param string $locale
+     * @param string $prefix
+     * @return \Sulu\Component\Content\PropertyInterface
+     */
+    public function getTranslatedProperty($property, $locale, $prefix = null)
+    {
+        return new TranslatedProperty($property, $locale, $this->languageNamespace, $prefix);
     }
 
     /**
