@@ -19,4 +19,3 @@
 * Snippet content type defaults to all snippet types available instead of the
   default one
   * Explicitly define a snippet type in the parameters if this is not desired
-
