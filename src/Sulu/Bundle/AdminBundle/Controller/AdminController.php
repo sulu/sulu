@@ -18,7 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
-const USER_DATA_ID = 'sulu_admin.user_data_service';
+    /**
+     * ID of user data sevice
+     */
+    const USER_DATA_ID = 'sulu_admin.user_data_service';
+
+    /**
+     * ID of js config service
+     */
     const JS_CONFIG_ID = 'sulu_admin.jsconfig_pool';
 
     /**
