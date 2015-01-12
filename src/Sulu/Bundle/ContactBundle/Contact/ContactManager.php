@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
@@ -155,8 +156,7 @@ class ContactManager extends AbstractContactManager
         // set account relation
         if (isset($data['account']) &&
             isset($data['account']['id']) &&
-            $data['account']['id'] != 'null'&&
-            !$this->getMainAccountContact($contact)
+            $data['account']['id'] != 'null'
         ) {
             $accountId = $data['account']['id'];
 
@@ -196,16 +196,11 @@ class ContactManager extends AbstractContactManager
         } else {
             // if a main account exists - remove it
             if ($accountContact = $this->getMainAccountContact($contact)) {
-                
-                $qb = $this->em->createQueryBuilder();
-                $query = $qb->update(self::$accountEntityName, 'u')
-                    ->set('u.mainContact', ':mc')
-                    ->where("u.id = :accId AND u.mainContact = :mcId")
-                    ->setParameter('accId', $accountContact->getAccount()->getId())
-                    ->setParameter('mc', null)
-                    ->setParameter('mcId', $contact->getId())
-                    ->getQuery();
-                $query->execute();
+
+                // if main Contact -Set it to null
+                if ($accountContact->getAccount()->getMainContact() === $contact) {
+                    $accountContact->getAccount()->setMainContact(null);
+                }
 
                 $this->em->remove($accountContact);
                 $this->em->flush();
