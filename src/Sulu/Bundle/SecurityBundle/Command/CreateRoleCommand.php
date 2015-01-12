@@ -43,13 +43,25 @@ class CreateRoleCommand extends ContainerAwareCommand
     {
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
-        $now = new \Datetime();
+        $name = $input->getArgument('name');
+        $system = $input->getArgument('system');
+
+        $repository = $em->getRepository('SuluSecurityBundle:Role');
+
+        $role = $repository->findOneByName($name);
+
+        if ($role) {
+            $output->writeln(sprintf(
+                '<error>Role "%s" already exists</error>',
+                $name
+            ));
+
+            return 1;
+        }
 
         $role = new Role();
-        $role->setName($input->getArgument('name'));
-        $role->setSystem($input->getArgument('system'));
-        $role->setCreated($now);
-        $role->setChanged($now);
+        $role->setName($name);
+        $role->setSystem($system);
 
         $pool = $this->getContainer()->get('sulu_admin.admin_pool');
         $securityContexts = $pool->getSecurityContexts();
