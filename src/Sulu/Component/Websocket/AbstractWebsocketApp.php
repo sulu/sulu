@@ -10,7 +10,10 @@
 
 namespace Sulu\Component\Websocket;
 
+use Guzzle\Http\Message\RequestInterface;
 use Ratchet\ConnectionInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Abstract websocket app
@@ -58,7 +61,40 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
      */
     protected function getQuery(ConnectionInterface $conn)
     {
-        return $conn->WebSocket->request->getUrl(true)->getQuery();
+        return $this->getRequest($conn)->getUrl(true)->getQuery();
+    }
+
+    /**
+     * Returns request of connection
+     * @param ConnectionInterface $conn
+     * @return RequestInterface
+     */
+    protected function getRequest(ConnectionInterface $conn)
+    {
+        return $conn->WebSocket->request;
+    }
+
+    /**
+     * Returns session of connection
+     * @param ConnectionInterface $conn
+     * @return SessionInterface
+     */
+    protected function getSession(ConnectionInterface $conn)
+    {
+        return $conn->Session;
+    }
+
+    /**
+     * Returns user for given firewall
+     * @param string $firewall
+     * @return UserInterface
+     */
+    protected function getUser(ConnectionInterface $conn, $firewall)
+    {
+        $serializedToken = $this->getSession($conn)->get('_security_' . $firewall);
+        $token = unserialize($serializedToken);
+
+        return $token->getUser();
     }
 
     /**
