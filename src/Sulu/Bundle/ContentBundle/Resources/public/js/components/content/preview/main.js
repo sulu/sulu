@@ -19,6 +19,7 @@ define(['app-config'], function(AppConfig) {
                     var def = this.sandbox.data.deferred();
                     if (!ajax.initiated) {
                         this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
+                        this.sandbox.dom.on(this.$el, 'change', updateEvent.bind(this), 'input[type="checkbox"].preview-update');
 
                         ajax.start.call(this, def, template);
                         ajax.initiated = true;
