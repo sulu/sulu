@@ -11,6 +11,7 @@
 namespace Sulu\Component\Websocket;
 
 use Ratchet\App;
+use Ratchet\Session\SessionProvider;
 use React\EventLoop\LoopInterface;
 
 /**
@@ -55,17 +56,24 @@ class RatchetAppManager implements AppManagerInterface
     private $apps = array();
 
     /**
+     * @var \SessionHandlerInterface
+     */
+    private $sessionHandler;
+
+    /**
      * @param int $port Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843
+     * @param \SessionHandlerInterface $sessionHandler Handler for http sessions
      * @param string $httpHost HTTP hostname clients intend to connect to. MUST match JS `new WebSocket('ws://$httpHost');`
      * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
      * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you.
      */
-    function __construct($port, $httpHost = 'localhost', $ipAddress = '127.0.0.1', LoopInterface $loop = null)
+    function __construct($port, \SessionHandlerInterface $sessionHandler, $httpHost = 'localhost', $ipAddress = '127.0.0.1', LoopInterface $loop = null)
     {
         $this->port = $port;
         $this->httpHost = $httpHost;
         $this->ipAddress = $ipAddress;
         $this->loop = $loop;
+        $this->sessionHandler = $sessionHandler;
     }
 
     /**
@@ -90,7 +98,8 @@ class RatchetAppManager implements AppManagerInterface
         $this->ratchetApp = new App($this->getHttpHost(), $this->getPort(), $this->getIpAddress(), $this->loop);
 
         foreach ($this->apps as $app) {
-            $this->ratchetApp->route($app['route'], $app['app'], $app['allowedOrigins'], $app['httpHost']);
+            $sessionApp = new SessionProvider($app['app'], $this->sessionHandler);
+            $this->ratchetApp->route($app['route'], $sessionApp, $app['allowedOrigins'], $app['httpHost']);
         }
 
         $this->ratchetApp->run();
