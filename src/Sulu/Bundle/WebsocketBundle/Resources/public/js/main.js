@@ -10,7 +10,7 @@
 require.config({
     paths: {
         suluwebsocket: '../../suluwebsocket/js',
-        'ws-manager': '../../suluwebsocket/js/component/ws-manager/main'
+        'websocket-manager': '../../suluwebsocket/js/component/websocket-manager/main'
     }
 });
 

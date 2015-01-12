@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'ws-manager'], function(AppConfig, WsManager) {
+define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager) {
 
     'use strict';
 
@@ -93,7 +93,7 @@ define(['app-config', 'ws-manager'], function(AppConfig, WsManager) {
                     var def = this.sandbox.data.deferred();
 
                     this.sandbox.logger.log('Connect to url: ' + url);
-                    ws.socket = WsManager.getClient('sulu_content.preview');
+                    ws.socket = WebsocketManager.getClient('sulu_content.preview');
 
                     ws.socket.onopen = function() {
                         this.sandbox.logger.log('Connection established!');
