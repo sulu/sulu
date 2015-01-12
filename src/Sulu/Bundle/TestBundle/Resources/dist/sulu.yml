@@ -36,6 +36,7 @@ sulu_core:
                      internal: false
                      type: snippet
     webspace: ~
+    locales: [ "en", "de" ]
 
 sulu_admin:
     name: SULU 2.0
