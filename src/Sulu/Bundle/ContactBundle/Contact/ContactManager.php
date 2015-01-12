@@ -203,7 +203,6 @@ class ContactManager extends AbstractContactManager
 
                 $this->em->remove($accountContact);
                 $this->em->flush();
-
             }
         }
     }
