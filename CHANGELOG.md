@@ -14,6 +14,7 @@ CHANGELOG for Sulu
     * FEATURE     #662 [TagBundle]      Applied security
     * BUGFIX      #654 [ContentBundle]  Added dummy request to request stack for preview rendering.
                                         This is important when template uses ESI
+    * BUGFIX      #661 [WebsiteBundle]  Added published date to resolver
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
