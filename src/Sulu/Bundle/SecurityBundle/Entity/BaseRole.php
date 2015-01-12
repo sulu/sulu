@@ -57,6 +57,18 @@ abstract class BaseRole implements RoleInterface
     private $securityType;
 
     /**
+     * Update updated and created fields before save
+     */
+    public function beforeSave()
+    {
+        if (null == $this->created) {
+            $this->created = new \DateTime();
+        }
+
+        $this->changed = new \DateTime();
+    }
+
+    /**
      * Set name
      *
      * @param string $name
