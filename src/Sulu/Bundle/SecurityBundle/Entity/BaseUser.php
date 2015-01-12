@@ -29,62 +29,62 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      * @var string
      * @Expose
      */
-    private $username;
+    protected $username;
 
     /**
      * @var string
      * @Expose
      */
-    private $password;
+    protected $password;
 
     /**
      * @var string
      * @Expose
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @var integer
      * @Expose
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $salt;
+    protected $salt;
 
     /**
      * @var string
      * @Expose
      */
-    private $privateKey;
+    protected $privateKey;
 
     /**
      * @var string
      */
-    private $apiKey;
+    protected $apiKey;
 
     /**
      * @var boolean
      */
-    private $locked = false;
+    protected $locked = false;
 
     /**
      * @var boolean
      * @Expose
      */
-    private $enabled = true;
+    protected $enabled = true;
 
     /**
      * @var \DateTime
      */
-    private $lastLogin;
+    protected $lastLogin;
 
     /**
      * @var string
      */
-    private $confirmationKey;
+    protected $confirmationKey;
 
     /**
      * Constructor
