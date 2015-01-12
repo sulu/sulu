@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 0.14.0 (2015-01-15)
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
     * BUGFIX      #681 [TagBundle]      Fixed filtering of tags in Tag list and Media edit Overlay
