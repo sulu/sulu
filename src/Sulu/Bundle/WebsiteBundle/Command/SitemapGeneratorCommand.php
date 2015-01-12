@@ -47,7 +47,6 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
             $output->writeln('<fire>Error: WebspaceKey needed! e.g: "sulu:website:sitemap:generate sulu_io"</fire>');
             return false;
         }
-        $webRoot = $this->getContainer()->getParameter('kernel.root_dir') . '/../web';
 
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->getContainer()->get('sulu_website.sitemap');
@@ -73,10 +72,12 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
             )
         );
 
-        if (!is_dir($webRoot . '/sitemaps')) {
-            mkdir($webRoot . '/sitemaps');
+        $siteMapFolder = $this->getContainer()->getParameter('sulu_website.sitemap.cache.folder');
+
+        if (!is_dir($siteMapFolder)) {
+            mkdir($siteMapFolder);
         }
-        file_put_contents($webRoot . '/sitemaps/' . $webspaceKey . '.xml', $sitemap);
+        file_put_contents($siteMapFolder . '/' . $webspaceKey . '.xml', $sitemap);
         $output->writeln('<done>Done: Generated in '. (microtime(true) - $time) .' seconds!</done>');
     }
 }

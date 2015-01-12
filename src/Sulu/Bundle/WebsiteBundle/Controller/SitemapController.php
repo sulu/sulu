@@ -33,8 +33,8 @@ class SitemapController extends WebsiteController
 
         $webspace = $requestAnalyzer->getCurrentWebspace();
 
-        $webRoot = $this->container->getParameter('kernel.root_dir') . '/../web';
-        $siteMapPath = $webRoot . '/sitemaps/' . $webspace->getKey() . '.xml';
+        $siteMapRoot = $this->container->getParameter('kernel.root_dir') . '/data/sitemaps';
+        $siteMapPath = $siteMapRoot . '/' . $webspace->getKey() . '.xml';
 
         // remove empty first line
         // FIXME empty line in website kernel
@@ -43,6 +43,8 @@ class SitemapController extends WebsiteController
         }
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
+
+        $siteMapPath = $this->container->getParameter('sulu_website.sitemap.cache.folder') . '/' . $webspace->getKey() . '.xml';
 
         if (file_exists($siteMapPath)) {
             $sitemap = file_get_contents($siteMapPath);
