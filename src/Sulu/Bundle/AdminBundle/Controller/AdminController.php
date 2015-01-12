@@ -14,7 +14,6 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
@@ -30,7 +29,7 @@ class AdminController extends Controller
 
     /**
      * Renders admin ui
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
@@ -75,7 +74,7 @@ class AdminController extends Controller
 
     /**
      * Returns a array of all bundles
-     * @return Response
+     * @return JsonResponse
      */
     public function bundlesAction()
     {
