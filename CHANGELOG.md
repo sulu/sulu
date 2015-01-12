@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
                                         and refactored usage of autocomplete
     * BUGFIX      #627 [ContentBundle]  Fixed damaged urls when moving/copy/rename
