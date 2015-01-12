@@ -32,11 +32,9 @@ class SitemapController extends WebsiteController
         $sitemapGenerator = $this->get('sulu_website.sitemap');
 
         $webspace = $requestAnalyzer->getCurrentWebspace();
-        $currentPortal = $requestAnalyzer->getCurrentPortal();
-        $defaultLocale = null;
-        if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
-            $defaultLocale = $defaultLocale->getLocalization();
-        }
+
+        $webRoot = $this->container->getParameter('kernel.root_dir') . '/../web';
+        $siteMapPath = $webRoot . '/sitemaps/' . $webspace->getKey() . '.xml';
 
         // remove empty first line
         // FIXME empty line in website kernel
@@ -46,20 +44,33 @@ class SitemapController extends WebsiteController
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 
-        $localizations = array();
-        foreach ($requestAnalyzer->getCurrentPortal()->getLocalizations() as $localization) {
-            $localizations[] = $localization->getLocalization();
+        if (file_exists($siteMapPath)) {
+            $sitemap = file_get_contents($siteMapPath);
+            $response->setContent($sitemap);
+        } else {
+            $currentPortal = $requestAnalyzer->getCurrentPortal();
+            $defaultLocale = null;
+            if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
+                $defaultLocale = $defaultLocale->getLocalization();
+            }
+
+            $localizations = array();
+            foreach ($requestAnalyzer->getCurrentPortal()->getLocalizations() as $localization) {
+                $localizations[] = $localization->getLocalization();
+            }
+
+            $response = $this->render(
+                'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
+                array(
+                    'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
+                    'locales' => $localizations,
+                    'defaultLocale' => $defaultLocale,
+                    'webspaceKey' => $webspace->getKey()
+                ),
+                $response
+            );
         }
 
-        return $this->render(
-            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-            array(
-                'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
-                'locales' => $localizations,
-                'defaultLocale' => $defaultLocale,
-                'webspaceKey' => $webspace->getKey()
-            ),
-            $response
-        );
+        return $response;
     }
 }

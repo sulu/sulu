@@ -16,10 +16,6 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * Class SitemapGeneratorCommand
- * @package ${NAMESPACE}
- */
 class SitemapGeneratorCommand extends ContainerAwareCommand
 {
 
@@ -44,6 +40,9 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
         $style2 = new OutputFormatterStyle('green');
         $output->getFormatter()->setStyle('done', $style2);
 
+        $output->writeln('Start generating sitemap for: "' . $webspaceKey . '".');
+        $output->writeln('Process can take some seconds');
+
         if (empty($webspaceKey)) {
             $output->writeln('<fire>Error: WebspaceKey needed! e.g: "sulu:website:sitemap:generate sulu_io"</fire>');
             return false;
@@ -61,16 +60,23 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
             $localizationCodes[] = $localization->getLocalization();
         }
 
+        $sitemapPages = $sitemapGenerator->generateAllLocals($webspaceKey, true);
+        $output->writeln('Pages Count: ' . count($sitemapPages));
+
         $sitemap = $this->getContainer()->get('templating')->render(
             'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
             array(
-                'sitemap' => $sitemapGenerator->generateAllLocals($webspaceKey, true),
+                'sitemap' => $sitemapPages,
                 'locales' => $localizationCodes,
                 'defaultLocale' => $localizations,
                 'webspaceKey' => $webspaceKey
-            ));
+            )
+        );
 
-        file_put_contents($webRoot . '/sitemap.xml', $sitemap);
+        if (!is_dir($webRoot . '/sitemaps')) {
+            mkdir($webRoot . '/sitemaps');
+        }
+        file_put_contents($webRoot . '/sitemaps/' . $webspaceKey . '.xml', $sitemap);
         $output->writeln('<done>Done: Generated in '. (microtime(true) - $time) .' seconds!</done>');
     }
 }
