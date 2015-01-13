@@ -18,18 +18,11 @@ use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Websocket\AbstractWebsocketApp;
-use Sulu\Component\Websocket\WebsocketAppInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class PreviewMessageComponent extends AbstractWebsocketApp implements MessageComponentInterface
 {
-    /**
-     * @var array
-     */
-    protected $content;
-
     /**
      * @var PreviewInterface
      */
@@ -63,53 +56,68 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
     ) {
         parent::__construct();
 
-        $this->content = array();
-
         $this->preview = $preview;
         $this->logger = $logger;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->registry = $registry;
     }
-
-    public function onOpen(ConnectionInterface $conn)
-    {
-        parent::onOpen($conn);
-
-        $this->logger->debug("Connection {$conn->resourceId} has connected");
-    }
-
+    
+    /**
+     * {@inheritdoc}
+     */
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $this->logger->debug("Connection {$from->resourceId} has send a message: {$msg}");
+        // get context for message
+        $context = $this->getContext($from);
+        $this->logger->debug("Connection {$context->getId()} has send a message: {$msg}");
 
+        // reconnect mysql
         $this->reconnect();
 
+        // decode message
         $msg = json_decode($msg, true);
 
-        if (isset($msg['command']) &&
-            isset($msg['user']) &&
-            isset($msg['content']) &&
-            isset($msg['type']) &&
-            in_array(
-                strtolower($msg['type']),
-                array('form', 'preview')
-            )
-        ) {
-            $user = $msg['user'];
-            switch ($msg['command']) {
-                case 'start':
-                    $this->start($from, $msg, $user);
-                    break;
-                case 'stop':
-                    $this->stop($from, $msg, $user);
-                    break;
-                case 'update':
-                    $this->update($from, $msg, $user);
-                    break;
-                case 'close':
-                    $this->close($from, $msg, $user);
-                    break;
-            }
+        try {
+            $this->execute($from, $context, $msg);
+        } catch (\Exception $e) {
+            // send fail message
+            $from->send(
+                json_encode(
+                    array(
+                        'command' => 'fail',
+                        'code' => $e->getCode(),
+                        'msg' => $e->getMessage()
+                    )
+                )
+            );
+        }
+    }
+
+    /**
+     * Executes command
+     * @param ConnectionInterface $from
+     * @param ConnectionContextInterface $context
+     * @param array $msg
+     * @throws ContextParametersNotFoundException
+     * @throws MissingParameterException
+     */
+    private function execute(ConnectionInterface $from, ConnectionContextInterface $context, $msg)
+    {
+        if (!array_key_exists('command', $msg)) {
+            throw new MissingParameterException('command');
+        }
+        $command = $msg['command'];
+
+        switch ($command) {
+            case 'start':
+                $this->start($from, $context, $msg);
+                break;
+            case 'stop':
+                $this->stop($from, $context);
+                break;
+            case 'update':
+                $this->update($from, $context, $msg);
+                break;
         }
     }
 
@@ -132,59 +140,46 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
         }
     }
 
-    private function start(ConnectionInterface $from, $msg, $user)
+    /**
+     * Start preview session
+     * @param ConnectionInterface $from
+     * @param PreviewConnectionContext $context
+     * @param array $msg
+     * @throws MissingParameterException
+     */
+    private function start(ConnectionInterface $from, PreviewConnectionContext $context, $msg)
     {
+        // init session
+        // content uuid
+        if (!array_key_exists('content', $msg)) {
+            throw new MissingParameterException('content');
+        }
         $contentUuid = $msg['content'];
-        $type = strtolower($msg['type']);
-        $locale = $msg['languageCode'];
+        $context->setContentUuid($contentUuid);
+
+        // locale
+        if (!array_key_exists('locale', $msg)) {
+            throw new MissingParameterException('locale');
+        }
+        $locale = $msg['locale'];
+        $context->setLocale($locale);
+
+        // webspace key
+        if (array_key_exists('webspaceKey', $msg)) {
+            throw new MissingParameterException('webspaceKey');
+        }
         $webspaceKey = $msg['webspaceKey'];
+        $context->setLocale($webspaceKey);
 
-        if (isset($msg['template'])) {
-            $template = $msg['template'];
-        } else {
-            $template = null;
-        }
-        if (isset($msg['data'])) {
-            $data = $msg['data'];
-        } else {
-            $data = null;
-        }
+        // get user id
+        $user = $context->getAdminUser()->getId();
 
-        if ($type === 'form') {
-            $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
-        } elseif (!$this->preview->started($user, $contentUuid, $webspaceKey, $locale)) {
-            $this->preview->start($user, $contentUuid, $webspaceKey, $locale);
-        }
+        // init message vars
+        $template = array_key_exists('template', $msg) ? $msg['template'] : null;
+        $data = array_key_exists('data', $msg) ? $msg['data'] : null;
 
-        // generate unique cache id
-        $id = $user . '-' . $contentUuid;
-        if (!array_key_exists($id, $this->content)) {
-            $this->content[$id] = array(
-                'content' => $contentUuid,
-                'user' => $user
-            );
-        }
-
-        // save client for type
-        $this->content[$id][$type] = $from;
-
-        // inform other part
-        $otherType = ($type == 'form' ? 'preview' : 'form');
-        $other = false;
-        if (isset($this->content[$id][$otherType])) {
-            $other = true;
-            $this->content[$id][$otherType]->send(
-                json_encode(
-                    array(
-                        'command' => 'start',
-                        'content' => $contentUuid,
-                        'type' => $type,
-                        'msg' => 'OK',
-                        'other' => true
-                    )
-                )
-            );
-        }
+        // start preview
+        $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
 
         // send ok message
         $from->send(
@@ -192,108 +187,118 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
                 array(
                     'command' => 'start',
                     'content' => $contentUuid,
-                    'type' => $type,
-                    'msg' => 'OK',
-                    'other' => $other
+                    'msg' => 'OK'
                 )
             )
         );
     }
 
-    private function stop(ConnectionInterface $from, $msg, $user)
+    /**
+     * Stop preview session
+     * @param ConnectionInterface $from
+     * @param PreviewConnectionContext $context
+     */
+    private function stop(ConnectionInterface $from, PreviewConnectionContext $context)
     {
-        $contentUuid = $msg['content'];
-        $locale = $msg['languageCode'];
-        $webspaceKey = $msg['webspaceKey'];
+        // get user id
+        $user = $context->getAdminUser()->getId();
 
+        // get session vars
+        $contentUuid = $context->getContentUuid();
+        $locale = $context->getLocale();
+        $webspaceKey = $context->getWebspaceKey();
+
+        // stop preview
         $this->preview->stop($user, $contentUuid, $webspaceKey, $locale);
+
+        // send ok message
+        $from->send(
+            json_encode(
+                array(
+                    'command' => 'start',
+                    'content' => $contentUuid,
+                    'msg' => 'OK'
+                )
+            )
+        );
     }
 
-    private function update(ConnectionInterface $from, $msg, $user)
+    /**
+     * Updates properties of current session content
+     * @param ConnectionInterface $from
+     * @param PreviewConnectionContext $context
+     * @param array $msg
+     * @throws ContextParametersNotFoundException
+     * @throws MissingParameterException
+     */
+    private function update(ConnectionInterface $from, PreviewConnectionContext $context, $msg)
     {
-        $content = $msg['content'];
-        $type = strtolower($msg['type']);
-        $changes = $msg['changes'];
-        $id = $user . '-' . $content;
+        // check context parameters
+        if ($context->hasContextParameters()) {
+            throw new ContextParametersNotFoundException();
+        }
 
-        // FIXME implement error handling
-        if ($type == 'form' && $changes !== null && is_array($changes)) {
-            $languageCode = $msg['languageCode'];
-            $webspaceKey = $msg['webspaceKey'];
-            $this->requestAnalyzer->setWebspaceKey($webspaceKey);
-            $this->requestAnalyzer->setLocalizationCode($languageCode);
+        // get user id
+        $user = $context->getAdminUser()->getId();
 
-            foreach ($changes as $property => $data) {
-                // update property
-                $this->preview->updateProperty(
-                    $user,
-                    $content,
-                    $webspaceKey,
-                    $languageCode,
-                    $property,
-                    $data
-                );
-            }
+        // get session vars
+        $contentUuid = $context->getContentUuid();
+        $locale = $context->getLocale();
+        $webspaceKey = $context->getWebspaceKey();
 
-            // send ok message
-            $from->send(
-                json_encode(
-                    array(
-                        'command' => 'update',
-                        'content' => $content,
-                        'type' => 'form',
-                        'msg' => 'OK'
+        // init msg vars
+        if (array_key_exists('data', $msg) && is_array($msg['data'])) {
+            throw new MissingParameterException('data');
+        }
+        $changes = $msg['data'];
+
+        $this->requestAnalyzer->setWebspaceKey($webspaceKey);
+        $this->requestAnalyzer->setLocalizationCode($locale);
+
+        foreach ($changes as $property => $data) {
+            // update property
+            $this->preview->updateProperty(
+                $user,
+                $contentUuid,
+                $webspaceKey,
+                $locale,
+                $property,
+                $data
+            );
+        }
+
+        // send ok message
+        $from->send(
+            json_encode(
+                array(
+                    'command' => 'update',
+                    'content' => $contentUuid,
+                    'data' => $this->preview->getChanges(
+                        $user,
+                        $contentUuid,
+                        $webspaceKey,
+                        $locale
                     )
                 )
-            );
-
-            // if there are some changes
-            if (isset($this->content[$id]) &&
-                isset($this->content[$id]['preview'])
-            ) {
-                // get changes
-                $changes = $this->preview->getChanges(
-                    $user,
-                    $content,
-                    $webspaceKey,
-                    $languageCode
-                );
-
-                if (sizeof($changes) > 0) {
-                    // get preview client
-                    /** @var ConnectionInterface $previewClient */
-                    $previewClient = $this->content[$id]['preview'];
-                    $changes = json_encode(
-                        array(
-                            'command' => 'changes',
-                            'content' => $content,
-                            'type' => 'preview',
-                            'changes' => $changes
-                        )
-                    );
-                    $this->logger->debug("Changes send {$changes}");
-
-                    // send changes command
-                    $previewClient->send($changes);
-                }
-            }
-        }
+            )
+        );
     }
 
-    private function close(ConnectionInterface $from, $msg, $user)
-    {
-        $this->logger->debug("Connection {$from->resourceId} has called close");
-    }
-
-    public function onClose(ConnectionInterface $conn)
+    /**
+     * {@inheritdoc}
+     */
+    public function onError(ConnectionInterface $conn, \Exception $e)
     {
         parent::onClose($conn);
 
-        $this->logger->debug("Connection {$conn->resourceId} has disconnected");
+        $this->logger->error("An error has occurred: {$e->getMessage()}");
     }
 
-    public function onError(ConnectionInterface $conn, \Exception $e)
+    /**
+     * {@inheritdoc}
+     */
+    protected function createContext(ConnectionInterface $conn)
     {
-        $this->logger->error("An error has occurred: {$e->getMessage()}");
+        return new PreviewConnectionContext($conn);
     }
 }
