@@ -103,6 +103,28 @@ class SuluNodeHelper
     }
 
     /**
+     * Return all the localized values of the localized property indicated
+     * by $name
+     *
+     * @param NodeInterface $node
+     * @param string $name  Name of localized property
+     */
+    public function getLocalizedPropertyValues(NodeInterface $node, $name)
+    {
+        $values = array();
+        foreach ($node->getProperties() as $property) {
+            /** @var PropertyInterface $property */
+            preg_match('/^' . $this->languageNamespace . ':([a-zA-Z_]*?)-' . $name . '/', $property->getName(), $matches);
+
+            if ($matches) {
+                $values[$matches[1]] = $property->getValue();
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * Return true if the given node has the given
      * nodeType property (or properties).
      *

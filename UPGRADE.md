@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 0.14.0
 * Role name is now unique
   * check roles and give them unique names
 * Apply all permissions correctly, otherwise users won't be able to work on snippets, categories or tags anymore
@@ -19,4 +19,3 @@
 * Snippet content type defaults to all snippet types available instead of the
   default one
   * Explicitly define a snippet type in the parameters if this is not desired
-

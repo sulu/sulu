@@ -1,6 +1,6 @@
 <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
     <div class="grid">
-        <div class="text-blocks-header">
+        <div id="text-block-header-{{ id|raw }}" class="text-blocks-header">
             <div id="sort-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.sort.blocks') %></div>
             <div id="edit-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right hidden"><%= translate('sulu.content.edit.blocks') %></div>
             <div class="clear"></div>
