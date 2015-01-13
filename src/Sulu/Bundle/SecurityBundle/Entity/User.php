@@ -15,12 +15,6 @@ use JMS\Serializer\Annotation\SerializedName;
 class User extends BaseUser
 {
     /**
-     * @var integer
-     * @Expose
-     */
-    private $userLevel = 0;
-
-    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      * @Expose
      */
@@ -42,29 +36,6 @@ class User extends BaseUser
      * @var \Doctrine\Common\Collections\Collection
      */
     private $userSettings;
-
-    /**
-     * Set userLevel
-     *
-     * @param integer $userLevel
-     * @return User
-     */
-    public function setUserLevel($userLevel)
-    {
-        $this->userLevel = $userLevel;
-
-        return $this;
-    }
-
-    /**
-     * Get userLevel
-     *
-     * @return integer
-     */
-    public function getUserLevel()
-    {
-        return $this->userLevel;
-    }
 
     /**
      * Add userRoles
