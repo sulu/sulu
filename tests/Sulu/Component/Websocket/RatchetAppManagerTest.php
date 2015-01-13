@@ -17,8 +17,9 @@ class RatchetAppManagerTest extends ProphecyTestCase
     public function testConstructor()
     {
         $loop = $this->prophesize('React\EventLoop\LoopInterface');
+        $sessionHandler = $this->prophesize('SessionHandlerInterface');
 
-        $manager = new RatchetAppManager(9876, 'sulu.io', '192.168.0.1', $loop->reveal());
+        $manager = new RatchetAppManager(9876, $sessionHandler->reveal(), 'sulu.io', '192.168.0.1', $loop->reveal());
 
         $this->assertEquals(9876, $manager->getPort());
         $this->assertEquals('sulu.io', $manager->getHttpHost());
