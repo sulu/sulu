@@ -55,6 +55,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 use Sulu\Component\Util\SuluNodeHelper;
 use PHPCR\PropertyType;
+use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -649,7 +650,7 @@ class ContentMapper implements ContentMapperInterface
 
         // throw an content.node.save event
         $event = new ContentNodeEvent($node, $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
 
         return $structure;
     }
@@ -804,7 +805,7 @@ class ContentMapper implements ContentMapperInterface
 
         // throw an content.node.save event
         $event = new ContentNodeEvent($node, $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_SAVE, $event);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
 
         return $structure;
     }
@@ -1216,6 +1217,64 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
+     * Load/hydrate a shalow structure with the given node.
+     * Shallow structures do not have content properties / extensions
+     * hydrated.
+     *
+     * @param NodeInterface $node
+     * @param string $localization
+     * @param string $webspaceKey
+     *
+     * @return StructureInterface
+     */
+    public function loadShallowStructureByNode(NodeInterface $contentNode, $localization, $webspaceKey)
+    {
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ? : Structure::TYPE_PAGE;
+        $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
+
+        $nodeType = $contentNode->getPropertyValueWithDefault(
+            $propertyTranslator->getName('nodeType'),
+            Structure::NODE_TYPE_CONTENT
+        );
+
+        $originTemplateKey = $this->defaultTemplates[$structureType];
+        $templateKey = $contentNode->getPropertyValueWithDefault(
+            $propertyTranslator->getName('template'),
+            $originTemplateKey
+        );
+
+        $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
+        $structure = $this->getStructure($templateKey, $structureType);
+
+        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
+        $structure->setNodeType(
+            $contentNode->getPropertyValueWithDefault(
+                $propertyTranslator->getName('nodeType'),
+                Structure::NODE_TYPE_CONTENT
+            )
+        );
+        $structure->setWebspaceKey($webspaceKey);
+        $structure->setLanguageCode($localization);
+        $structure->setCreator($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('creator'), 0));
+        $structure->setChanger($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changer'), 0));
+        $structure->setCreated(
+            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('created'), new \DateTime())
+        );
+        $structure->setChanged(
+            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changed'), new \DateTime())
+        );
+        $structure->setHasChildren($contentNode->hasNodes());
+        $structure->setEnabledShadowLanguages(
+            $this->getEnabledShadowLanguages($contentNode)
+        );
+        $structure->setConcreteLanguages(
+            $this->getConcreteLanguages($contentNode)
+        );
+
+        return $structure;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function loadByNode(
@@ -1227,9 +1286,9 @@ class ContentMapper implements ContentMapperInterface
         $excludeShadow = true
     ) {
         $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ? : Structure::TYPE_PAGE;
-
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
+        // START: getAvailableLocalization
         if ($this->stopwatch) {
             $this->stopwatch->start('contentManager.loadByNode');
             $this->stopwatch->start('contentManager.loadByNode.available-localization');
@@ -1262,6 +1321,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $availableLocalization = $this->getShadowLocale($contentNode, $availableLocalization);
+        // END: getAvailableLocalization
 
         if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
             return null;
@@ -1284,7 +1344,6 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
-
         $structure = $this->getStructure($templateKey, $structureType);
 
         // set structure to ghost, if the available localization does not match the requested one
@@ -1596,7 +1655,7 @@ class ContentMapper implements ContentMapperInterface
         $session = $this->getSession();
         $node = $session->getNodeByIdentifier($uuid);
 
-        $this->deleteRecursively($node, $dereference);
+        $this->deleteRecursively($node, $webspaceKey, $dereference);
         $session->save();
     }
 
@@ -1865,10 +1924,11 @@ class ContentMapper implements ContentMapperInterface
      * Remove node with references (path, history path ...)
      *
      * @param NodeInterface $node
+     * @param string Webspace - required by event listeners
      * @param boolean $dereference Remove REFERENCE properties (or property
      *   values in the case of multi-value) from referencing nodes
      */
-    private function deleteRecursively(NodeInterface $node, $dereference = false)
+    private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
     {
         foreach ($node->getReferences() as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
@@ -1893,10 +1953,24 @@ class ContentMapper implements ContentMapperInterface
             }
 
             if ($this->nodeHelper->hasSuluNodeType($child, array('sulu:path'))) {
-                $this->deleteRecursively($child);
+                $this->deleteRecursively($child, $webspace, $dereference);
             }
         }
+
+        $dispatchPost = false;
+
+        // if the node being deleted is a structure, dispatch an event
+        if ($this->nodeHelper->getStructureTypeForNode($node)) {
+            $event = new ContentNodeDeleteEvent($this, $this->nodeHelper, $node, $webspace);
+            $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_DELETE, $event);
+            $dispatchPost = true;
+        }
+
         $node->remove();
+
+        if (true === $dispatchPost) {
+            $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_DELETE, $event);
+        }
     }
 
     /**

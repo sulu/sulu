@@ -2,6 +2,17 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
+    * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
+
+* 0.14.0 (2015-01-15)
+    * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
+    * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
+    * BUGFIX      #681 [TagBundle]      Fixed filtering of tags in Tag list and Media edit Overlay
+    * BUGFIX      #681 [MediaBundle]    Fixed imagick detection
+    * FEATURE     #581 [SearchBundle]   Structures deindexed on delete
+    * FEATURE     #581 [Content]        NODE_SAVE renamed to NODE_POST_SAVE
+    * FEATURE     #581 [Content]        New events: NODE_PRE_DELETE, NODE_POST_DELETE
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
                                         and refactored usage of autocomplete
     * BUGFIX      #627 [ContentBundle]  Fixed damaged urls when moving/copy/rename
@@ -44,16 +55,6 @@ CHANGELOG for Sulu
     * ENHANCEMENT #577 [SecurityBundle] Applied security to navigation items and content tabs
     * ENHANCEMENT #604 [CoreBundle]     Only register services for the current context
     * ENHANCEMENT #--- [Tests]          Fixed output colors for Mac users
-    * BUGFIX      #571 [CoreBundle]     Fixed build command
-    * ENHANCEMENT #556 [MediaBundle]    Enhanced url generation for collections
-    * ENHANCEMENT #535 [SecurityBundle] Added SecurityListener and secured Content, Media and Security
-    * BUGFIX      #568 [SnippetBundle]  Added template to view for Snippets
-    * ENHANCEMENT #539 [AdminBundle]    Added validation for iban and vat numbers from the eu
-    * HOTFIX      #559 [CoreBundle]     Workaround upstream reg. in DoctrinePHPCRBundle, which causes 
-                                        eager validation of workspace existence.
-    * ENHANCEMENT #523 [All]            Refactored and improved functional tests
-    * FEATURE     #553 [SnippetBundle]  Possiblity to show all snippet types by not providing any
-    * BUGFIX      #533 [CoreBundle]     Removed request_analyzer.enable option (it is now irrelevant)
     * FEATURE     #563 [CoreBundle]     Introduced LocalizationProviders to offer the possibility to
     * BUGFIX      #563 [SecurityBundle] Showing correct localizations in UserRole-Assignment in
                                         Permission-Tab

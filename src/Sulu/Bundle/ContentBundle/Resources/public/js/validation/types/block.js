@@ -216,6 +216,12 @@ define([
                         this.$addButton.addClass('empty');
                         this.$el.addClass('empty');
                     }
+
+                    if (this.getChildren().size() <= 1) {
+                        $('#text-block-header-' + this.id).hide();
+                    } else {
+                        $('#text-block-header-' + this.id).show();
+                    }
                 },
 
                 internalSetValue: function(value) {

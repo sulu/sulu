@@ -28,27 +28,24 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
         $this->property6 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
         $this->property7 = $this->getMockBuilder('Jackalope\Property')->disableOriginalConstructor()->getMock();
 
-        $this->property1->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('i18n:fr-title'));
-        $this->property2->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('bas:barfoo'));
-        $this->property3->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('i18n:it-barfoo'));
-        $this->property4->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('i18n:de-title'));
-        $this->property5->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('i18n:de-bbbaaaa'));
-        $this->property6->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('i18n:de-seo-title'));
-        $this->property7->expects($this->any())
-            ->method('getName')
-            ->will($this->returnValue('i18n:de-de-title'));
+        $propertyIndex = 1;
+        foreach (array(
+            'i18n:fr-title' => 'One title',
+            'bas:barfoo' => 'Two title',
+            'i18n:it-barfoo' => 'Three title',
+            'i18n:de-title' => 'Four title',
+            'i18n:de-bbbaaaa' => 'Five title',
+            'i18n:de-seo-title' => 'Six title',
+            'i18n:de-de-title' => 'Seven title',
+        ) as $propertyName => $propertyValue) {
+            $this->{'property' . $propertyIndex}->expects($this->any())
+                ->method('getName')
+                ->will($this->returnValue($propertyName));
+            $this->{'property' . $propertyIndex}->expects($this->any())
+                ->method('getValue')
+                ->will($this->returnValue($propertyValue));
+            $propertyIndex++;
+        }
 
         $this->node->expects($this->any())
             ->method('getProperties')
@@ -78,6 +75,17 @@ class SuluNodeHelperTest extends \PHPUnit_Framework_TestCase
 
         // languages are only counted if they are on the "template" property
         $this->assertEquals(array('fr', 'de'), $languages);
+    }
+
+    public function testLocalizedPropertyValues()
+    {
+        $localizedValues = $this->helper->getLocalizedPropertyValues($this->node, 'title');
+
+        // languages are only counted if they are on the "template" property
+        $this->assertEquals(array(
+            'fr' => 'One title',
+            'de' => 'Four title',
+        ), $localizedValues);
     }
 
     public function provideExtractWebspaceFromPath()

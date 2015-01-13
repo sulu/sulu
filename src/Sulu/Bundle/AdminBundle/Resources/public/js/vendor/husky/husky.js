@@ -28982,6 +28982,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.removeIcon] icon to use for the remove-row item
  * @param {Number} [options.croppedMaxLength] the length to which croppable cells will be cropped on overflow
  * @param {Boolean} [options.stickyHeader] true to make the table header sticky
+ * @param {Boolean} [options.openPathToSelectedChildren] true to show path to selected children
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -29014,7 +29015,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         stickyHeader: false,
         icons: [],
         removeIcon: 'trash-o',
-        croppedMaxLength: 35
+        croppedMaxLength: 35,
+        openPathToSelectedChildren: false
     },
 
     constants = {
@@ -29190,6 +29192,25 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
+
+            if(!!this.options.openPathToSelectedChildren){
+                var eventName = '';
+                if(!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
+                } else {
+                    eventName = 'husky.datagrid.view.rendered';
+                }
+                this.sandbox.on(eventName, this.openPathToSelectedChildren.bind(this));
+            }
+        },
+
+        /**
+         * Opens path to all selected children
+         */
+        openPathToSelectedChildren: function(){
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
+                this.openParents(id);
+            }.bind(this));
         },
 
         /**
@@ -30306,7 +30327,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record
          */
         openParents: function(recordId) {
-            if (!!this.table.rows[recordId]) {
+            if (!!this.table && !!this.table.rows[recordId]) {
                 var parentId = this.table.rows[recordId].parent;
                 if (!!parentId) {
                     if (!!this.table.rows[parentId].parent) {
@@ -32811,7 +32832,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         template = this.sandbox.uritemplate.parse(this.data.links.sortable.href);
                         url = this.sandbox.uritemplate.expand(template, {sortBy: attribute, sortOrder: direction});
 
-                        this.sandbox.emit(DATA_SORT.call(this));
+                        this.sandbox.emit(DATA_SORT.call(this), {attribute: attribute, direction: direction});
 
                         this.load({
                             url: url,
@@ -40197,7 +40218,7 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * Su
+         * Support for key down events
          * @param event
          */
         keyHandler: function(event) {
@@ -40205,6 +40226,10 @@ define('__component__$overlay@husky',[], function() {
             if (event.keyCode === 27) {
                 this.closeHandler();
             } else if (event.keyCode === 13) {
+                // when enter is pressed in textarea overlay should not be closed
+                if(event.target.tagName === 'TEXTAREA'){
+                   return;
+                }
                 this.okHandler();
             }
         },
@@ -46627,18 +46652,6 @@ define("datepicker-zh-TW", function(){});
                         });
                     },
 
-                    culture: function(cultureName) {
-                        var setLanguage = function() {
-                            Globalize.culture(cultureName);
-                        };
-
-                        if (cultureName !== 'en') {
-                            require(['cultures/globalize.culture.' + cultureName], setLanguage.bind(this));
-                        } else {
-                            setLanguage();
-                        }
-                    },
-
                     getLocale: function() {
                         return Globalize.culture().name;
                     },
@@ -46651,12 +46664,13 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 app.sandbox.translate = function(key) {
+                    var translation;
                     if (!app.config.culture || !app.config.culture.name) {
                         return key;
                     }
 
                     try {
-                        var translation = Globalize.localize(key, app.config.culture.name);
+                        translation = Globalize.localize(key, app.config.culture.name);
                     } catch (e) {
                         app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
                         return key;
@@ -46669,6 +46683,7 @@ define("datepicker-zh-TW", function(){});
                     /**
                      * returns formatted date string
                      * @param {string|Date} date
+                     * @param {Boolean} returnDateOnly
                      * @returns {string}
                      */
                     format: function(date, returnDateOnly) {
@@ -46771,33 +46786,22 @@ define("datepicker-zh-TW", function(){});
                  * @param messages
                  */
                 app.setLanguage = function(cultureName, messages) {
-                    var dfd = app.core.data.deferred(),
-                        setLanguage = function() {
-                            Globalize.culture(cultureName);
-                            app.sandbox.globalize.addCultureInfo(cultureName, messages);
-                        };
-
-                    if (cultureName !== 'en') {
-                        require(['cultures/globalize.culture.' + cultureName], function() {
-                            setLanguage();
-                            dfd.resolve();
-                        });
-                    } else {
-                        setLanguage();
-                        dfd.resolve();
-                    }
-
-                    return dfd.promise();
+                    Globalize.culture(cultureName);
+                    app.sandbox.globalize.addCultureInfo(cultureName, messages);
                 };
+
+                if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
+                    return require(['cultures/globalize.culture.' + app.config.culture.name]);
+                }
             },
 
             afterAppStart: function(app) {
                 if (!!app.config.culture && !!app.config.culture) {
                     if (!app.config.culture.messages) {
-                        app.config.culture.messages = { };
+                        app.config.culture.messages = {};
                     }
 
-                    return app.setLanguage(app.config.culture.name, app.config.culture.messages);
+                    app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
             }
         };
