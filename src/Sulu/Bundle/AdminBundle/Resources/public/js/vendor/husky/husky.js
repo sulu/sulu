@@ -40197,7 +40197,7 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * Su
+         * Support for key down events
          * @param event
          */
         keyHandler: function(event) {
@@ -40205,6 +40205,10 @@ define('__component__$overlay@husky',[], function() {
             if (event.keyCode === 27) {
                 this.closeHandler();
             } else if (event.keyCode === 13) {
+                // when enter is pressed in textarea overlay should not be closed
+                if(event.target.tagName === 'TEXTAREA'){
+                   return;
+                }
                 this.okHandler();
             }
         },
@@ -46639,12 +46643,13 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 app.sandbox.translate = function(key) {
+                    var translation;
                     if (!app.config.culture || !app.config.culture.name) {
                         return key;
                     }
 
                     try {
-                        var translation = Globalize.localize(key, app.config.culture.name);
+                        translation = Globalize.localize(key, app.config.culture.name);
                     } catch (e) {
                         app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
                         return key;
@@ -46657,6 +46662,7 @@ define("datepicker-zh-TW", function(){});
                     /**
                      * returns formatted date string
                      * @param {string|Date} date
+                     * @param {Boolean} returnDateOnly
                      * @returns {string}
                      */
                     format: function(date, returnDateOnly) {
@@ -46763,7 +46769,7 @@ define("datepicker-zh-TW", function(){});
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
                 };
 
-                if (!!app.config.culture && app.config.culture.name && app.config.culture.name !== 'en') {
+                if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
                     return require(['cultures/globalize.culture.' + app.config.culture.name]);
                 }
             },
