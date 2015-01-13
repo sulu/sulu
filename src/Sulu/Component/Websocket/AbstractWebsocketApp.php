@@ -48,7 +48,11 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
-        $this->clients->attach($conn);
+        if (!$this->getContext($conn)->isValid()) {
+            $conn->close();
+        } else {
+            $this->clients->attach($conn);
+        }
     }
 
     /**

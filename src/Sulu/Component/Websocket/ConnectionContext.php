@@ -13,6 +13,7 @@ use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
 use Ratchet\ConnectionInterface;
 use Sulu\Bundle\ContentBundle\Preview\ConnectionContextInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -36,6 +37,11 @@ class ConnectionContext implements ConnectionContextInterface
     private $session = null;
 
     /**
+     * @var ParameterBag
+     */
+    private $parameters;
+
+    /**
      * @var string
      */
     private $id;
@@ -54,6 +60,8 @@ class ConnectionContext implements ConnectionContextInterface
         if (isset($conn->resourceId)) {
             $this->id = $conn->resourceId;
         }
+
+        $this->parameters = new ParameterBag();
     }
 
     /**
@@ -110,5 +118,21 @@ class ConnectionContext implements ConnectionContextInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isValid()
+    {
+        return true;
     }
 }

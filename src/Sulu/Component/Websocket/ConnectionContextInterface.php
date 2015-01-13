@@ -12,8 +12,8 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
-use Ratchet\ConnectionInterface;
 use Sulu\Component\Security\UserInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -60,4 +60,16 @@ interface ConnectionContextInterface
      * @return string
      */
     public function getId();
+
+    /**
+     * Indicates that the context is valid
+     * @return boolean
+     */
+    public function isValid();
+
+    /**
+     * Returns parameters for current session
+     * @return ParameterBag
+     */
+    public function getParameters();
 }
