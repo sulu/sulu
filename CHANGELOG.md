@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
+
 * 0.14.0 (2015-01-15)
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
