@@ -10,8 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
-use Ratchet\ConnectionInterface;
-use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
+use Sulu\Bundle\ContentBundle\Preview\PreviewMessageHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
@@ -22,10 +21,10 @@ use Symfony\Component\HttpKernel\Log\NullLogger;
  * @group functional
  * @group preview
  */
-class PreviewMessageComponentTest extends SuluTestCase
+class PreviewMessageHandlerHandler extends SuluTestCase
 {
     /**
-     * @var PreviewMessageComponent
+     * @var PreviewMessageHandler
      */
     private $component;
 
@@ -40,50 +39,41 @@ class PreviewMessageComponentTest extends SuluTestCase
 
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
 
-        $this->component = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent')
-            ->setConstructorArgs(
-                array(
-                    $this->getContainer()->get('sulu_content.preview'),
-                    $this->getContainer()->get('sulu_core.webspace.request_analyzer.admin'),
-                    $this->getContainer()->get('doctrine'),
-                    new NullLogger()
-                )
-            )
-            ->setMethods(array('createContext'))
+        $this->component = new PreviewMessageHandler(
+            $this->getContainer()->get('sulu_content.preview'),
+            $this->getContainer()->get('sulu_core.webspace.request_analyzer.admin'),
+            $this->getContainer()->get('doctrine'),
+            new NullLogger()
+        );
+    }
+
+    private function createContext($conn)
+    {
+        $context = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Preview\PreviewConnectionContext')
+            ->setConstructorArgs(array($conn))
+            ->setMethods(array('getAdminUser'))
             ->getMock();
 
-        $this->component
-            ->expects($this->any())
-            ->method('createContext')
-            ->willReturnCallback(
-                function (ConnectionInterface $conn) {
-                    $context = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Preview\PreviewConnectionContext')
-                        ->setConstructorArgs(array($conn))
-                        ->setMethods(array('getAdminUser'))
-                        ->getMock();
+        $user = $this->getMockBuilder('Sulu\Component\Security\UserInterface')
+            ->disableOriginalConstructor()
+            ->setMethods(
+                array(
+                    'getId',
+                    'getLocale',
+                    'getRoles',
+                    'getPassword',
+                    'getSalt',
+                    'getUsername',
+                    'eraseCredentials'
+                )
+            )
+            ->getMock();
 
-                    $user = $this->getMockBuilder('Sulu\Component\Security\UserInterface')
-                        ->disableOriginalConstructor()
-                        ->setMethods(
-                            array(
-                                'getId',
-                                'getLocale',
-                                'getRoles',
-                                'getPassword',
-                                'getSalt',
-                                'getUsername',
-                                'eraseCredentials'
-                            )
-                        )
-                        ->getMock();
+        $user->expects($this->any())->method('getId')->willReturn(1);
 
-                    $user->expects($this->any())->method('getId')->willReturn(1);
+        $context->expects($this->any())->method('getAdminUser')->willReturn($user);
 
-                    $context->expects($this->any())->method('getAdminUser')->willReturn($user);
-
-                    return $context;
-                }
-            );
+        return $context;
     }
 
     /**
@@ -173,7 +163,7 @@ class PreviewMessageComponentTest extends SuluTestCase
             $this->exactly(1)
         );
 
-        $this->component->onMessage(
+        $this->component->handle(
             $client,
             json_encode(
                 array(
@@ -182,7 +172,8 @@ class PreviewMessageComponentTest extends SuluTestCase
                     'locale' => 'de',
                     'webspaceKey' => 'sulu_io',
                 )
-            )
+            ),
+            $this->createContext($client)
         );
     }
 
@@ -191,7 +182,7 @@ class PreviewMessageComponentTest extends SuluTestCase
         $data = $this->prepareData();
 
         $i = 0;
-        $client1 = $this->prepareClient(
+        $client = $this->prepareClient(
             function ($string) use (&$i, $data) {
                 $decoded = json_decode($string, true);
 
@@ -213,8 +204,8 @@ class PreviewMessageComponentTest extends SuluTestCase
             $this->exactly(3)
         );
 
-        $this->component->onMessage(
-            $client1,
+        $this->component->handle(
+            $client,
             json_encode(
                 array(
                     'command' => 'start',
@@ -223,11 +214,12 @@ class PreviewMessageComponentTest extends SuluTestCase
                     'locale' => 'de',
                     'webspaceKey' => 'sulu_io'
                 )
-            )
+            ),
+            $this->createContext($client)
         );
 
-        $this->component->onMessage(
-            $client1,
+        $this->component->handle(
+            $client,
             json_encode(
                 array(
                     'command' => 'update',
@@ -236,11 +228,12 @@ class PreviewMessageComponentTest extends SuluTestCase
                     )
 
                 )
-            )
+            ),
+            $this->createContext($client)
         );
 
-        $this->component->onMessage(
-            $client1,
+        $this->component->handle(
+            $client,
             json_encode(
                 array(
                     'command' => 'update',
@@ -248,7 +241,8 @@ class PreviewMessageComponentTest extends SuluTestCase
                         'content' => 'qwertz'
                     )
                 )
-            )
+            ),
+            $this->createContext($client)
         );
     }
 }

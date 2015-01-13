@@ -16,13 +16,13 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
-use Ratchet\MessageComponentInterface;
-use Sulu\Component\Websocket\AbstractWebsocketApp;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
+use Sulu\Component\Websocket\Exception\MissingParameterException;
+use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class PreviewMessageComponent extends AbstractWebsocketApp implements MessageComponentInterface
+class PreviewMessageHandler implements MessageHandlerInterface
 {
     /**
      * @var PreviewInterface
@@ -55,8 +55,6 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
         Registry $registry,
         LoggerInterface $logger
     ) {
-        parent::__construct();
-
         $this->preview = $preview;
         $this->logger = $logger;
         $this->requestAnalyzer = $requestAnalyzer;
@@ -66,28 +64,22 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
     /**
      * {@inheritdoc}
      */
-    public function onMessage(ConnectionInterface $from, $msgString)
+    public function handle(ConnectionInterface $conn, array $message, ConnectionContextInterface $context)
     {
-        // get context for message
-        $context = $this->getContext($from);
-
         // reconnect mysql
         $this->reconnect();
 
-        // decode message
-        $msg = json_decode($msgString, true);
-
         try {
-            $this->execute($from, $context, $msg);
+            $this->execute($conn, $context, $message);
         } catch (\Exception $e) {
             // send fail message
-            $from->send(
+            $conn->send(
                 json_encode(
                     array(
                         'command' => 'fail',
                         'code' => $e->getCode(),
                         'msg' => $e->getMessage(),
-                        'parentMsg' => $msg
+                        'parentMsg' => $message
                     )
                 )
             );
@@ -96,13 +88,13 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
 
     /**
      * Executes command
-     * @param ConnectionInterface $from
+     * @param ConnectionInterface $conn
      * @param ConnectionContextInterface $context
      * @param array $msg
      * @throws ContextParametersNotFoundException
      * @throws MissingParameterException
      */
-    private function execute(ConnectionInterface $from, ConnectionContextInterface $context, $msg)
+    private function execute(ConnectionInterface $conn, ConnectionContextInterface $context, $msg)
     {
         if (!array_key_exists('command', $msg)) {
             throw new MissingParameterException('command');
@@ -111,13 +103,13 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
 
         switch ($command) {
             case 'start':
-                $this->start($from, $context, $msg);
+                $this->start($conn, $context, $msg);
                 break;
             case 'stop':
-                $this->stop($from, $context);
+                $this->stop($conn, $context);
                 break;
             case 'update':
-                $this->update($from, $context, $msg);
+                $this->update($conn, $context, $msg);
                 break;
         }
     }
@@ -143,12 +135,12 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
 
     /**
      * Start preview session
-     * @param ConnectionInterface $from
+     * @param ConnectionInterface $conn
      * @param PreviewConnectionContext $context
      * @param array $msg
      * @throws MissingParameterException
      */
-    private function start(ConnectionInterface $from, PreviewConnectionContext $context, $msg)
+    private function start(ConnectionInterface $conn, PreviewConnectionContext $context, $msg)
     {
         // init session
         // content uuid
@@ -183,7 +175,7 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
         $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
 
         // send ok message
-        $from->send(
+        $conn->send(
             json_encode(
                 array(
                     'command' => 'start',
@@ -283,23 +275,5 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
                 )
             )
         );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onError(ConnectionInterface $conn, \Exception $e)
-    {
-        parent::onClose($conn);
-
-        $this->logger->error("An error has occurred: {$e->getMessage()}");
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function createContext(ConnectionInterface $conn)
-    {
-        return new PreviewConnectionContext($conn);
     }
 }

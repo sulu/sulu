@@ -41,9 +41,9 @@ class AddMessageDispatcherPass implements CompilerPassInterface
 
             foreach ($tags as $attributes) {
                 $dispatcherName = $attributes['dispatcher'];
-                $name = $attributes['name'];
+                $alias = $attributes['alias'];
 
-                $dispatchers[$dispatcherName]->addMethodCall('add', array($name, $handler));
+                $dispatchers[$dispatcherName]->addMethodCall('add', array($alias, $handler));
             }
         }
     }
@@ -58,7 +58,7 @@ class AddMessageDispatcherPass implements CompilerPassInterface
         $taggedDispatchers = $container->findTaggedServiceIds(self::DISPATCHER_TAG);
 
         foreach ($taggedDispatchers as $id => $tags) {
-            $dispatcher = new Reference($id);
+            $dispatcher = $container->getDefinition($id);
 
             foreach ($tags as $attributes) {
                 $alias = $attributes['alias'];
