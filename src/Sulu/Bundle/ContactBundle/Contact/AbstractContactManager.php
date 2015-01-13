@@ -26,6 +26,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $addressTypeEntityName = 'SuluContactBundle:AddressType';
 
     /**
      * @var ObjectManager $em
@@ -219,5 +220,18 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         return null;
+    }
+
+    /**
+     * return address type by name
+     * @param $name
+     * @param bool $strict defines if only part of string needs to be matched
+     * @return mixed
+     */
+    public function getAddressTypeByName($name, $strict = false)
+    {
+        return $this->em
+            ->getRepository(self::$addressTypeEntityName)
+            ->findOneByName($name, $strict);
     }
 }

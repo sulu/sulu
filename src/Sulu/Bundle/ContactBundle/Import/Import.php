@@ -29,6 +29,7 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Note;
 use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
+use Sulu\Bundle\ContactBundle\Import\Exception\ImportException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
@@ -56,6 +57,12 @@ class Import
         'delimiter' => ';',
         'enclosure' => '"',
     );
+
+    /**
+     * defaults that are set for a specific key (if not set in data) e.g.: address1_label = 'mobile'
+     * @var array
+     */
+    protected $defaults = array();
 
     /**
      * define entity names
@@ -142,6 +149,12 @@ class Import
      */
     protected $headerData = array();
 
+    /**
+     * holds the amount of header variables
+     * @var int
+     */
+    protected $headerCount;
+
     // TODO: split mappings for accounts and contacts
     /**
      * defines mappings of columns in import file
@@ -207,6 +220,16 @@ class Import
         Account::TYPE_LEAD => 'lead',
         Account::TYPE_CUSTOMER => 'customer',
         Account::TYPE_SUPPLIER => 'supplier',
+    );
+
+    /**
+     * defines mappings of address / url / email / phone / fax types in import file
+     * @var array
+     */
+    protected $contactLabelMappings = array(
+        'work' => '.work',
+        'home' => '.home',
+        'mobile' => '.mobile',
     );
 
     /**
@@ -344,6 +367,12 @@ class Import
                 if (array_key_exists('formOfAddress', $mappings)) {
                     $this->setFormOfAddressMappings($mappings['formOfAddress']);
                 }
+                if (array_key_exists('contactLabels', $mappings)) {
+                    $this->contactLabelMappings = $mappings['contactLabels'];
+                }
+                if (array_key_exists('defaults', $mappings)) {
+                    $this->defaults = $mappings['defaults'];
+                }
 
                 return $mappings;
             }
@@ -406,6 +435,8 @@ class Import
         $this->initDefaults();
 
         $row = 0;
+        $successCount = 0;
+        $errorCount = 0;
         $this->headerData = array();
 
         try {
@@ -420,7 +451,13 @@ class Import
                 // for first row, save headers
                 if ($row === 0) {
                     $this->headerData = $data;
+                    $this->headerCount = count($data);
                 } else {
+
+                    if ($this->headerCount !== count($data)) {
+                        throw new ImportException('The number of fields does not match the number of header values');
+                    }
+
                     // get associativeData
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
 
@@ -432,12 +469,15 @@ class Import
                         // reinitialize defaults (lost with call of clear)
                         $this->initDefaults();
                     }
+
+                    $successCount++;
                 }
             } catch (DBALException $dbe) {
                 $this->debug(sprintf("ABORTING DUE TO DATABASE ERROR: %s \n", $dbe->getMessage()));
                 throw $dbe;
             } catch (\Exception $e) {
                 $this->debug(sprintf("ERROR while processing data row %d: %s \n", $row, $e->getMessage()));
+                $errorCount++;
             }
 
             // check limit and break loop if necessary
@@ -447,7 +487,9 @@ class Import
             }
             $row++;
 
-            print(sprintf("%d ", $row));
+            if (self::DEBUG) {
+                print(sprintf("%d ", $row));
+            }
         }
         // finish with a flush
         $this->em->flush();
@@ -551,7 +593,7 @@ class Import
         }
 
         // add address if set
-        $address = $this->createAddress($data, $account);
+        $address = $this->createAddresses($data, $account);
         if ($address !== null) {
             $this->getAccountManager()->addAddress($account, $address, true);
         }
@@ -765,19 +807,45 @@ class Import
     }
 
     /**
+     * iterates through data and adds addresses
+     * @param $data
+     * @param $entity
+     */
+    protected function createAddresses($data, $entity) {
+        // add urls
+        $first = true;
+        for ($i = 0, $len = 10; ++$i < $len;) {
+            foreach ($data as $key => $value) {
+                if (strpos($key, 'address' . $i) !== false) {
+                    $address = $this->createAddress($data, $i);
+                    // add address to entity
+                    if ($address !== null) {
+                        $first = $first || $address->getPrimaryAddress();
+                        $this->getManager($entity)->addAddress($entity, $address, $first);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * creates an address entity based on passed data
      * @param $data
+     * @param int $id index of the address in data array (e.g. 1 => address1_street)
      * @return null|Address
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
-    protected function createAddress($data)
+    protected function createAddress($data, $id = 1)
     {
         // set address
         $address = new Address();
         $addAddress = false;
+        $prefix = 'address' . $id . '_';
 
-        if ($this->checkData('street', $data)) {
-            $street = $data['street'];
+        // street
+        if ($this->checkData($prefix . 'street', $data)) {
+            $street = $data[$prefix . 'street'];
 
             // separate street and number
             if ($this->options['streetNumberSplit']) {
@@ -792,37 +860,65 @@ class Import
             $address->setStreet($street);
             $addAddress = true;
         }
-        if (isset($number) || $this->checkData('number', $data)) {
-            $number = isset($number) ? $number : $data['number'];
+        // number
+        if (isset($number) || $this->checkData($prefix . 'number', $data)) {
+            $number = isset($number) ? $number : $data[$prefix . 'number'];
             $address->setNumber($number);
         }
-        if ($this->checkData('zip', $data)) {
-            $address->setZip($data['zip']);
+        // zip
+        if ($this->checkData($prefix . 'zip', $data)) {
+            $address->setZip($data[$prefix . 'zip']);
             $addAddress = true;
         }
-        if ($this->checkData('city', $data)) {
-            $address->setCity($data['city']);
+        // city
+        if ($this->checkData($prefix . 'city', $data)) {
+            $address->setCity($data[$prefix . 'city']);
             $addAddress = true;
         }
-        if ($this->checkData('postbox', $data)) {
-            $address->setPostboxNumber($data['postbox']);
+        // state
+        if ($this->checkData($prefix . 'state', $data)) {
+            $address->setCity($data[$prefix . 'state']);
             $addAddress = true;
         }
-        if ($this->checkData('postbox_zip', $data)) {
-            $address->setPostboxPostcode($data['postbox_zip']);
+        // postbox
+        if ($this->checkData($prefix . 'postbox', $data)) {
+            $address->setPostboxNumber($data[$prefix . 'postbox']);
             $addAddress = true;
         }
-        if ($this->checkData('postbox_city', $data)) {
-            $address->setPostboxCity($data['postbox_city']);
+        if ($this->checkData($prefix . 'postbox_zip', $data)) {
+            $address->setPostboxPostcode($data[$prefix . 'postbox_zip']);
             $addAddress = true;
         }
-        if ($this->checkData('country', $data)) {
+        if ($this->checkData($prefix . 'postbox_city', $data)) {
+            $address->setPostboxCity($data[$prefix . 'postbox_city']);
+            $addAddress = true;
+        }
+        // billing address
+        if ($this->checkData($prefix . 'isbilling', $data)) {
+            $address->setBillingAddress(
+                $this->getBoolValue($data[$prefix . 'isbilling'])
+            );
+        }
+        // delivery address
+        if ($this->checkData($prefix . 'isdelivery', $data)) {
+            $address->setDeliveryAddress(
+                $this->getBoolValue($data[$prefix . 'isdelivery'])
+            );
+        }
+        // primary address
+        if ($this->checkData($prefix . 'isprimary', $data)) {
+            $address->setPrimaryAddress(
+                $this->getBoolValue($data[$prefix . 'isprimary'])
+            );
+        }
+        // country
+        if ($this->checkData($prefix . 'country', $data)) {
             $country = $this->em->getRepository($this->countryEntityName)->findOneByCode(
-                $this->mapCountryCode($data['country'])
+                $this->mapCountryCode($data[$prefix . 'country'])
             );
 
             if (!$country) {
-                throw new EntityNotFoundException('Country', $data['country']);
+                throw new EntityNotFoundException('Country', $data[$prefix . 'country']);
             }
 
             $address->setCountry($country);
@@ -833,13 +929,38 @@ class Import
 
         // only add address if part of it is defined
         if ($addAddress) {
-            $address->setAddressType($this->defaultTypes['addressType']);
+            if ($this->checkData($prefix . 'label', $data)) {
+                $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                $addressType = $this->getContactManager()->getAddressTypeByName($contactLabel);
+            } else {
+                $addressType = $this->defaultTypes['addressType'];
+            }
+
+            $address->setAddressType($addressType);
+
+
             $this->em->persist($address);
 
             return $address;
         }
 
         return null;
+    }
+
+    /**
+     * returns true if $value is true or y or j or 1
+     * @param $value
+     * @return bool
+     */
+    protected function getBoolValue($value) {
+        if ($value == true ||
+            strtolower($value) === 'y' ||
+            strtolower($value) === 'j' ||
+            $value == '1'
+        ) {
+            return true;
+        }
+        return false;
     }
 
     // gets financial information and adds it
@@ -979,10 +1100,7 @@ class Import
         $this->em->persist($contact);
 
         // add address if set
-        $address = $this->createAddress($data, $contact);
-        if ($address !== null) {
-            $this->getContactManager()->addAddress($contact, $address, true);
-        }
+        $this->createAddresses($data, $contact);
 
         // process emails, phones, faxes, urls and notes
         $this->processEmails($data, $contact);
@@ -1174,7 +1292,7 @@ class Import
             }
         }
 
-        return $associativeData;
+        return array_merge($this->defaults, $associativeData);
     }
 
     protected function loadAccountCategories()
@@ -1246,6 +1364,19 @@ class Import
             return $mappingIndex;
         } else {
             return Account::TYPE_BASIC;
+        }
+    }
+
+    /**
+     * @param $typeString
+     * @return int|mixed
+     */
+    protected function mapContactLabels($typeString)
+    {
+        if (array_key_exists($typeString, $this->contactLabelMappings)) {
+            return $this->contactLabelMappings[$typeString];
+        } else {
+            return $typeString;
         }
     }
 
