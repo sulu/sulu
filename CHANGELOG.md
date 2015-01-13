@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
                                         and refactored usage of autocomplete
     * BUGFIX      #627 [ContentBundle]  Fixed damaged urls when moving/copy/rename
