@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -26,21 +27,42 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class MediaControllerTest extends SuluTestCase
 {
     /**
+     * @var EntityManager
+     */
+    private $em;
+    
+    /**
+     * @var CollectionType
+     */
+    private $collectionType;
+    
+    /**
      * @var Collection
      */
-    protected $collection;
+    private $collection;
+    
+    /**
+     * @var MediaType
+     */
+    private $documentType;
 
     /**
-     * @var Media
+     * @var MediaType
      */
-    protected $media;
+    private $imageType;
 
+    /**
+     * @var MediaType
+     */
+    private $videoType;
+    
     protected function setUp()
     {
         parent::setUp();
         $this->purgeDatabase();
         $this->em = $this->db('ORM')->getOm();
         $this->cleanImage();
+        $this->setUpCollection();
         $this->setUpMedia();
     }
 
@@ -72,38 +94,18 @@ class MediaControllerTest extends SuluTestCase
 
     protected function setUpMedia()
     {
-        // Media
-        $media = new Media();
-
-        $media->setCreated(new DateTime());
-        $media->setChanged(new DateTime());
-        $this->media = $media;
-
         // Create Media Type
-        $mediaType = new MediaType();
-        $mediaType->setName('document');
-        $mediaType->setDescription('This is a document');
+        $this->documentType = new MediaType();
+        $this->documentType->setName('document');
+        $this->documentType->setDescription('This is a document');
 
-        $imageType = new MediaType();
-        $imageType->setName('image');
-        $imageType->setDescription('This is an image');
+        $this->imageType = new MediaType();
+        $this->imageType->setName('image');
+        $this->imageType->setDescription('This is an image');
 
-        $videoType = new MediaType();
-        $videoType->setName('video');
-        $videoType->setDescription('This is a video');
-
-        $videoType = new MediaType();
-        $videoType->setName('audio');
-        $videoType->setDescription('This is an audio');
-
-        $media->setType($imageType);
-
-        // create file
-        $file = new File();
-        $file->setVersion(1);
-        $file->setCreated(new DateTime());
-        $file->setChanged(new DateTime());
-        $file->setMedia($media);
+        $this->videoType = new MediaType();
+        $this->videoType->setName('video');
+        $this->videoType->setDescription('This is a video');
 
         // create some tags
         $tag1 = new Tag();
@@ -116,24 +118,47 @@ class MediaControllerTest extends SuluTestCase
         $tag2->setChanged(new DateTime());
         $tag2->setName('Tag 2');
 
+        $this->em->persist($tag1);
+        $this->em->persist($tag2);
+        $this->em->persist($this->documentType);
+        $this->em->persist($this->imageType);
+        $this->em->persist($this->videoType);
+
+        $this->em->flush();
+    }
+    
+    protected function createMedia($name)
+    {
+        $media = new Media();
+        $media->setCreated(new DateTime());
+        $media->setChanged(new DateTime());
+        $media->setType($this->imageType);
+
+        // create file
+        $file = new File();
+        $file->setVersion(1);
+        $file->setCreated(new DateTime());
+        $file->setChanged(new DateTime());
+        $file->setMedia($media);
+
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
         $fileVersion->setCreated(new DateTime());
         $fileVersion->setChanged(new DateTime());
-        $fileVersion->setName('photo.jpeg');
+        $fileVersion->setName($name . '.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setStorageOptions('{"segment":"1","fileName":"photo.jpeg"}');
+        $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.jpeg"}');
         mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
-        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/photo.jpeg');
+        copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/'. $name . '.jpeg');
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();
         $fileVersionMeta->setLocale('en-gb');
-        $fileVersionMeta->setTitle('photo');
+        $fileVersionMeta->setTitle($name);
         $fileVersionMeta->setDescription('description');
         $fileVersionMeta->setFileVersion($fileVersion);
 
@@ -142,68 +167,58 @@ class MediaControllerTest extends SuluTestCase
         $file->addFileVersion($fileVersion);
 
         $media->addFile($file);
+        $media->setCollection($this->collection);
 
-        // Setup Collection
-        $collection = new Collection();
-
-        $this->setUpCollection($collection);
-
-        $media->setCollection($collection);
-
-        $this->em->persist($tag1);
-        $this->em->persist($tag2);
         $this->em->persist($media);
         $this->em->persist($file);
         $this->em->persist($fileVersionMeta);
         $this->em->persist($fileVersion);
-        $this->em->persist($mediaType);
-        $this->em->persist($imageType);
-        $this->em->persist($videoType);
 
         $this->em->flush();
+
+        return $media;
     }
 
-    protected function setUpCollection(&$collection)
+    protected function setUpCollection()
     {
+        $this->collection = new Collection();
         $style = array(
             'type' => 'circle',
             'color' => '#ffcc00'
         );
 
-        $collection->setStyle(json_encode($style));
+        $this->collection->setStyle(json_encode($style));
 
-        $collection->setCreated(new DateTime());
-        $collection->setChanged(new DateTime());
-        $this->collection = $collection;
+        $this->collection->setCreated(new DateTime());
+        $this->collection->setChanged(new DateTime());
 
         // Create Collection Type
-        $collectionType = new CollectionType();
-        $collectionType->setName('Default Collection Type');
-        $collectionType->setDescription('Default Collection Type');
-        $this->collectionType = $collectionType;
+        $this->collectionType = new CollectionType();
+        $this->collectionType->setName('Default Collection Type');
+        $this->collectionType->setDescription('Default Collection Type');
 
-        $collection->setType($collectionType);
+        $this->collection->setType($this->collectionType);
 
         // Collection Meta 1
         $collectionMeta = new CollectionMeta();
         $collectionMeta->setTitle('Test Collection');
         $collectionMeta->setDescription('This Description is only for testing');
         $collectionMeta->setLocale('en-gb');
-        $collectionMeta->setCollection($collection);
+        $collectionMeta->setCollection($this->collection);
 
-        $collection->addMeta($collectionMeta);
+        $this->collection->addMeta($collectionMeta);
 
         // Collection Meta 2
         $collectionMeta2 = new CollectionMeta();
         $collectionMeta2->setTitle('Test Kollektion');
         $collectionMeta2->setDescription('Dies ist eine Test Beschreibung');
         $collectionMeta2->setLocale('de');
-        $collectionMeta2->setCollection($collection);
+        $collectionMeta2->setCollection($this->collection);
 
-        $collection->addMeta($collectionMeta2);
+        $this->collection->addMeta($collectionMeta2);
 
-        $this->em->persist($collection);
-        $this->em->persist($collectionType);
+        $this->em->persist($this->collection);
+        $this->em->persist($this->collectionType);
         $this->em->persist($collectionMeta);
         $this->em->persist($collectionMeta2);
     }
@@ -231,18 +246,19 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testGetById()
     {
+        $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media/' . $this->media->getId()
+            '/api/media/' . $media->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($media->getId(), $response->id);
         $this->assertNotNull($response->type->id);
         $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
@@ -256,6 +272,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testcGet()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -277,6 +295,7 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testcGetCollection()
     {
+        $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -291,7 +310,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
+        $this->assertEquals($media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -300,6 +319,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testcGetCollectionTypes()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -314,7 +335,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
+        $this->assertEquals($media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -344,6 +365,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testcGetCollectionTypesMultiple()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
@@ -358,7 +381,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
+        $this->assertEquals($media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -367,11 +390,13 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testcGetIds()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media?ids=' . $this->media->getId()
+            '/api/media?ids=' . $media->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
@@ -381,7 +406,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotEmpty($response);
 
         $this->assertEquals(1, $response->total);
-        $this->assertEquals($this->media->getId(), $response->_embedded->media[0]->id);
+        $this->assertEquals($media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
     }
 
@@ -523,6 +548,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testFileVersionUpdate()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
@@ -531,7 +558,7 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/media/' . $this->media->getId(),
+            '/api/media/' . $media->getId(),
             array(
                 'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
@@ -557,7 +584,7 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
         $this->assertEquals('en-gb', $response->locale);
@@ -579,11 +606,13 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testPutWithoutFile()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'PUT',
-            '/api/media/' . $this->media->getId(),
+            '/api/media/' . $media->getId(),
             array(
                 'collection' => $this->collection->getId(),
                 'locale' => 'en-gb',
@@ -604,7 +633,7 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(1, $response->version);
         $this->assertEquals('en-gb', $response->locale);
@@ -626,6 +655,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testFileVersionUpdateWithoutDetails()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $imagePath = $this->getImagePath();
@@ -634,7 +665,7 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'POST',
-            '/api/media/' . $this->media->getId(),
+            '/api/media/' . $media->getId(),
             array(
                 'collection' => $this->collection->getId()
             ),
@@ -649,7 +680,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
     }
@@ -659,16 +690,18 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testDeleteById()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
-        $client->request('DELETE', '/api/media/' . $this->media->getId());
+        $client->request('DELETE', '/api/media/' . $media->getId());
         $this->assertNotNull($client->getResponse()->getStatusCode());
 
         $client = $this->createAuthenticatedClient();
 
         $client->request(
             'GET',
-            '/api/media/' .  $this->media->getId()
+            '/api/media/' .  $media->getId()
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -683,6 +716,8 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testDeleteCollection()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/collections/' . $this->collection->getId());
@@ -692,7 +727,7 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/media/' . $this->media->getId()
+            '/api/media/' . $media->getId()
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -707,6 +742,7 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testDeleteByIdNotExisting()
     {
+        $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
 
         $client->request('DELETE', '/api/media/404');
@@ -722,12 +758,14 @@ class MediaControllerTest extends SuluTestCase
      */
     public function testDownloadCounter()
     {
+        $media = $this->createMedia('photo');
+
         $client = $this->createAuthenticatedClient();
 
         ob_start();
         $client->request(
             'GET',
-            '/media/' . $this->media->getId() . '/download/photo.jpeg'
+            '/media/' . $media->getId() . '/download/photo.jpeg'
         );
         ob_end_clean();
 
@@ -735,14 +773,14 @@ class MediaControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/media/' . $this->media->getId()
+            '/api/media/' . $media->getId()
         );
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($media->getId(), $response->id);
         $this->assertNotNull($response->type->id);
         $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
