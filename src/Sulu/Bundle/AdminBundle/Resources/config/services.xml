@@ -4,13 +4,27 @@
         <parameter key="sulu_admin.admin_pool.class">Sulu\Bundle\AdminBundle\Admin\AdminPool</parameter>
         <parameter key="sulu_admin.js_config_pool.class">Sulu\Bundle\AdminBundle\Admin\JsConfigPool</parameter>
         <parameter key="sulu_admin.widgets_handler.class">Sulu\Bundle\AdminBundle\Widgets\WidgetsHandler</parameter>
+        <parameter key="sulu_admin.message_dispatcher.app.class">Sulu\Component\Websocket\MessageDispatcher\AuthenticatedMessageDispatcherApp</parameter>
+        <parameter key="sulu_admin.message_dispatcher.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher</parameter>
     </parameters>
+
     <services>
         <service id="sulu_admin.admin_pool" class="%sulu_admin.admin_pool.class%"/>
         <service id="sulu_admin.js_config_pool" class="%sulu_admin.js_config_pool.class%"/>
         <service id="sulu_admin.widgets_handler" class="%sulu_admin.widgets_handler.class%">
             <argument type="service" id="templating"/>
             <argument>%sulu_admin.widget_groups%</argument>
+        </service>
+
+        <service id="sulu_admin.message_dispatcher" class="%sulu_admin.message_dispatcher.class%" public="false">
+            <tag name="sulu.websocket.message.dispatcher" alias="admin"/>
+        </service>
+        <service id="sulu_admin.message_dispatcher.app" class="%sulu_admin.message_dispatcher.app.class%">
+            <argument type="string">admin</argument>
+            <argument type="service" id="sulu_admin.message_dispatcher"/>
+            <argument type="string">admin</argument>
+
+            <tag name="sulu.websocket.app" route="/admin" />
         </service>
     </services>
 </container>
