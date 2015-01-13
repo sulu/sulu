@@ -28982,6 +28982,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.removeIcon] icon to use for the remove-row item
  * @param {Number} [options.croppedMaxLength] the length to which croppable cells will be cropped on overflow
  * @param {Boolean} [options.stickyHeader] true to make the table header sticky
+ * @param {Boolean} [options.openPathToSelectedChildren] true to show path to selected children
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -29014,7 +29015,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         stickyHeader: false,
         icons: [],
         removeIcon: 'trash-o',
-        croppedMaxLength: 35
+        croppedMaxLength: 35,
+        openPathToSelectedChildren: false
     },
 
     constants = {
@@ -29190,6 +29192,25 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
+
+            if(!!this.options.openPathToSelectedChildren){
+                var eventName = '';
+                if(!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
+                } else {
+                    eventName = 'husky.datagrid.view.rendered';
+                }
+                this.sandbox.on(eventName, this.openPathToSelectedChildren.bind(this));
+            }
+        },
+
+        /**
+         * Opens path to all selected children
+         */
+        openPathToSelectedChildren: function(){
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
+                this.openParents(id);
+            }.bind(this));
         },
 
         /**
@@ -30306,7 +30327,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record
          */
         openParents: function(recordId) {
-            if (!!this.table.rows[recordId]) {
+            if (!!this.table && !!this.table.rows[recordId]) {
                 var parentId = this.table.rows[recordId].parent;
                 if (!!parentId) {
                     if (!!this.table.rows[parentId].parent) {
