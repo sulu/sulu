@@ -370,6 +370,7 @@ class AccountController extends AbstractContactController
     public function cgetAction(Request $request)
     {
         $type = $request->get('type');
+        $hasNoParent = $request->get('hasNoParent');
 
         // define filters
         $filter = array();
@@ -394,6 +395,10 @@ class AccountController extends AbstractContactController
 
             if ($type) {
                 $listBuilder->where($this->fieldDescriptors['type'], $type);
+            }
+
+            if($hasNoParent && $hasNoParent == 'true'){
+                $listBuilder->where($this->fieldDescriptors['parent'], null);
             }
 
             foreach ($filter as $key => $value) {
@@ -1491,6 +1496,16 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
+        );
+
+        $this->fieldDescriptors['parent'] = new DoctrineFieldDescriptor(
+            'parent',
+            'parent',
+            self::$entityName,
+            'contact.accounts.company',
+            array(),
+            false,
+            false
         );
     }
 }
