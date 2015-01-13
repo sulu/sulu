@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Websocket\AbstractWebsocketApp;
+use Sulu\Component\Websocket\ConnectionContextInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
@@ -65,17 +66,16 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
     /**
      * {@inheritdoc}
      */
-    public function onMessage(ConnectionInterface $from, $msg)
+    public function onMessage(ConnectionInterface $from, $msgString)
     {
         // get context for message
         $context = $this->getContext($from);
-        $this->logger->debug("Connection {$context->getId()} has send a message: {$msg}");
 
         // reconnect mysql
         $this->reconnect();
 
         // decode message
-        $msg = json_decode($msg, true);
+        $msg = json_decode($msgString, true);
 
         try {
             $this->execute($from, $context, $msg);
@@ -86,7 +86,8 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
                     array(
                         'command' => 'fail',
                         'code' => $e->getCode(),
-                        'msg' => $e->getMessage()
+                        'msg' => $e->getMessage(),
+                        'parentMsg' => $msg
                     )
                 )
             );
@@ -165,11 +166,11 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
         $context->setLocale($locale);
 
         // webspace key
-        if (array_key_exists('webspaceKey', $msg)) {
+        if (!array_key_exists('webspaceKey', $msg)) {
             throw new MissingParameterException('webspaceKey');
         }
         $webspaceKey = $msg['webspaceKey'];
-        $context->setLocale($webspaceKey);
+        $context->setWebspaceKey($webspaceKey);
 
         // get user id
         $user = $context->getAdminUser()->getId();
@@ -234,7 +235,7 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
     private function update(ConnectionInterface $from, PreviewConnectionContext $context, $msg)
     {
         // check context parameters
-        if ($context->hasContextParameters()) {
+        if (!$context->hasContextParameters()) {
             throw new ContextParametersNotFoundException();
         }
 
@@ -247,7 +248,7 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
         $webspaceKey = $context->getWebspaceKey();
 
         // init msg vars
-        if (array_key_exists('data', $msg) && is_array($msg['data'])) {
+        if (!array_key_exists('data', $msg) && is_array($msg['data'])) {
             throw new MissingParameterException('data');
         }
         $changes = $msg['data'];
