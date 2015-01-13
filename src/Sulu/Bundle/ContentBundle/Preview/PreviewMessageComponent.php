@@ -61,7 +61,7 @@ class PreviewMessageComponent extends AbstractWebsocketApp implements MessageCom
         $this->requestAnalyzer = $requestAnalyzer;
         $this->registry = $registry;
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -29,9 +29,10 @@ class RatchetAppManagerTest extends ProphecyTestCase
     public function testAdd()
     {
         $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
+        $sessionHandler = $this->prophesize('SessionHandlerInterface');
         $app->getName()->willReturn('test');
 
-        $manager = new RatchetAppManager(9876);
+        $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
 
         $manager->add('/content', $app->reveal());
 
@@ -51,10 +52,11 @@ class RatchetAppManagerTest extends ProphecyTestCase
 
     public function testAddAllowedOrigins()
     {
+        $sessionHandler = $this->prophesize('SessionHandlerInterface');
         $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
         $app->getName()->willReturn('test');
 
-        $manager = new RatchetAppManager(9876);
+        $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
 
         $manager->add('/content', $app->reveal(), array('test'));
 
@@ -74,10 +76,11 @@ class RatchetAppManagerTest extends ProphecyTestCase
 
     public function testAddHttpHost()
     {
+        $sessionHandler = $this->prophesize('SessionHandlerInterface');
         $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
         $app->getName()->willReturn('test');
 
-        $manager = new RatchetAppManager(9876);
+        $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
 
         $manager->add('/content', $app->reveal(), array('test'), 'sulu.io');
 
