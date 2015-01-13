@@ -10,12 +10,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 
+use Ratchet\ConnectionInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Log\NullLogger;
 
 /**
  * @group functional
@@ -38,7 +39,51 @@ class PreviewMessageComponentTest extends SuluTestCase
         parent::initPhpcr();
 
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->component = $this->getContainer()->get('sulu_content.preview.message_component');
+
+        $this->component = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Preview\PreviewMessageComponent')
+            ->setConstructorArgs(
+                array(
+                    $this->getContainer()->get('sulu_content.preview'),
+                    $this->getContainer()->get('sulu_core.webspace.request_analyzer.admin'),
+                    $this->getContainer()->get('doctrine'),
+                    new NullLogger()
+                )
+            )
+            ->setMethods(array('createContext'))
+            ->getMock();
+
+        $this->component
+            ->expects($this->any())
+            ->method('createContext')
+            ->willReturnCallback(
+                function (ConnectionInterface $conn) {
+                    $context = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Preview\PreviewConnectionContext')
+                        ->setConstructorArgs(array($conn))
+                        ->setMethods(array('getAdminUser'))
+                        ->getMock();
+
+                    $user = $this->getMockBuilder('Sulu\Component\Security\UserInterface')
+                        ->disableOriginalConstructor()
+                        ->setMethods(
+                            array(
+                                'getId',
+                                'getLocale',
+                                'getRoles',
+                                'getPassword',
+                                'getSalt',
+                                'getUsername',
+                                'eraseCredentials'
+                            )
+                        )
+                        ->getMock();
+
+                    $user->expects($this->any())->method('getId')->willReturn(1);
+
+                    $context->expects($this->any())->method('getAdminUser')->willReturn($user);
+
+                    return $context;
+                }
+            );
     }
 
     /**
@@ -84,66 +129,9 @@ class PreviewMessageComponentTest extends SuluTestCase
         return $data;
     }
 
-    public function renderCallback()
-    {
-        $args = func_get_args();
-        /** @var StructureInterface $content */
-        $content = $args[1]['content'];
-
-        $result = $this->render(
-            $content->getPropertyValue('title'),
-            $content->getPropertyValue('article'),
-            $content->getPropertyValue('block')
-        );
-
-        return $result;
-    }
-
-    public function indexCallback(StructureInterface $structure, $preview = false, $partial = false)
-    {
-        return new Response(
-            $this->render(
-                $structure->getPropertyValue('title'),
-                $structure->getPropertyValue('article'),
-                $structure->getPropertyValue('block'),
-                $partial
-            )
-        );
-    }
-
-    public function render($title, $article, $block, $partial = false)
-    {
-        $template = '
-            <div id="content" vocab="http://sulu.io/" typeof="Content">
-                <h1 property="title">%s</h1>
-                <h1 property="title">PREF: %s</h1>
-                <div property="article">%s</div>
-                <div property="block" typeof="collection">';
-        $i = 0;
-        foreach ($block as $b) {
-            $subTemplate = '';
-            foreach ($b['article'] as $a) {
-                $subTemplate .= sprintf('<li property="article">%s</li>', $a);
-            }
-            $template .= sprintf(
-                '<div rel="block" typeof="block"><h1 property="title">%s</h1><ul>%s</ul></div>',
-                $b['title'],
-                $subTemplate
-            );
-            $i++;
-        }
-        $template .= '</div></div>';
-        if (!$partial) {
-            $template = '<html vocab="http://schema.org/" typeof="Content"><body>' . $template . '</body></html>';
-        }
-
-        return sprintf($template, $title, $title, $article);
-    }
-
     private function prepareClient(
         callable $sendCallback,
         $sendExpects = null,
-        $name = 'CON_1',
         callable $closeCallback = null,
         $closeExpects = null
     ) {
@@ -167,7 +155,7 @@ class PreviewMessageComponentTest extends SuluTestCase
                 ->will($this->returnCallback($closeCallback));
         }
 
-        $client->resourceId = $name;
+        $client->resourceId = uniqid();
 
         return $client;
     }
@@ -176,57 +164,23 @@ class PreviewMessageComponentTest extends SuluTestCase
     {
         $data = $this->prepareData();
 
-        $i = -1;
-
-        $clientForm = $this->prepareClient(
-            function ($string) use (&$i) {
-                $data = json_decode($string);
-                $this->assertEquals($data->msg, 'OK');
-
-                $i++;
-                if ($i == 0) {
-                    $this->assertEquals($data->other, false);
-                } else {
-                    $this->assertEquals($data->other, true);
-                }
+        $client = $this->prepareClient(
+            function ($string) use ($data) {
+                $decoded = json_decode($string);
+                $this->assertEquals($decoded->msg, 'OK');
+                $this->assertEquals($decoded->content, $data[0]->getUuid());
             },
-            $this->exactly(2),
-            'form'
-        );
-        $clientPreview = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-                $this->assertEquals($data->msg, 'OK');
-                $this->assertEquals($data->other, true);
-            },
-            $this->once(),
-            'preview'
+            $this->exactly(1)
         );
 
         $this->component->onMessage(
-            $clientForm,
+            $client,
             json_encode(
                 array(
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
-                    'languageCode' => 'de',
+                    'locale' => 'de',
                     'webspaceKey' => 'sulu_io',
-                    'type' => 'form',
-                    'user' => '1'
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientPreview,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[0]->getUuid(),
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'preview',
-                    'user' => '1'
                 )
             )
         );
@@ -237,143 +191,47 @@ class PreviewMessageComponentTest extends SuluTestCase
         $data = $this->prepareData();
 
         $i = 0;
-        $clientForm1 = $this->prepareClient(
-            function ($string) use (&$i) {
-                $data = json_decode($string);
+        $client1 = $this->prepareClient(
+            function ($string) use (&$i, $data) {
+                $decoded = json_decode($string, true);
 
-                if ($i == 0 && $data->command == 'start') {
-                    $this->assertEquals($data->msg, 'OK');
-                    $this->assertEquals($data->other, false);
+                if ($i == 0 && $decoded['command'] == 'start') {
+                    $this->assertEquals('OK', $decoded['msg']);
                     $i++;
-                } elseif ($i == 1 && $data->command == 'start') {
-                    $this->assertEquals($data->msg, 'OK');
-                    $this->assertEquals($data->other, true);
-                } elseif (($i == 2 || $i == 3) && $data->command == 'update') {
-                    $this->assertEquals($data->msg, 'OK');
+                } elseif ($i == 1 && $decoded['command'] == 'update') {
+                    $this->assertEquals($data[0]->getUuid(), $decoded['content']);
+                    $this->assertEquals(array('Hello Hikaru Sulu'), $decoded['data']['title']);
+                    $i++;
+                } elseif ($i == 2 && $decoded['command'] == 'update') {
+                    $this->assertEquals($data[0]->getUuid(), $decoded['content']);
+                    $this->assertEquals(array('This is a fabulous test case!'), $decoded['data']['content']);
+                    $i++;
                 } else {
                     $this->assertTrue(false);
                 }
             },
-            $this->any(),
-            'form1'
-        );
-        $clientPreview1 = $this->prepareClient(
-            function ($string) use (&$i) {
-                $data = json_decode($string);
-
-                if ($i == 1 && $data->command == 'start') {
-                    $this->assertEquals($data->msg, 'OK');
-                    $this->assertEquals($data->other, true);
-                    $i++;
-                } elseif ($i == 2 && $data->command == 'changes') {
-                    $this->assertEquals('asdf', $data->changes->title[0]);
-                    $this->assertEquals('PREF: asdf', $data->changes->title[1]);
-                    $i++;
-                } elseif ($i == 3 && $data->command == 'changes') {
-                    $this->assertEquals('qwertz', $data->changes->article[0]);
-                } else {
-                    $this->assertTrue(false);
-                }
-            },
-            $this->any(),
-            'preview1'
+            $this->exactly(3)
         );
 
-        $clientForm2 = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-
-                if ($data->command != 'start') {
-                    // no update will be sent
-                    $this->assertTrue(false);
-                }
-            },
-            $this->any(),
-            'form2'
-        );
         $this->component->onMessage(
-            $clientForm2,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[0]->getUuid(),
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'form',
-                    'user' => '1'
-                )
-            )
-        );
-
-        $clientPreview2 = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-
-                if ($data->command != 'start') {
-                    // no update will be sent
-                    $this->assertTrue(false);
-                }
-            },
-            $this->any(),
-            'preview2'
-        );
-        $this->component->onMessage(
-            $clientPreview2,
+            $client1,
             json_encode(
                 array(
                     'command' => 'start',
                     'content' => $data[0]->getUuid(),
                     'templateKey' => 'overview',
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'preview',
-                    'user' => '1'
+                    'locale' => 'de',
+                    'webspaceKey' => 'sulu_io'
                 )
             )
         );
 
         $this->component->onMessage(
-            $clientForm1,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[1]->getUuid(),
-                    'templateKey' => 'overview',
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'form',
-                    'user' => '1'
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientPreview1,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[1]->getUuid(),
-                    'templateKey' => 'overview',
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'preview',
-                    'user' => '1'
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientForm1,
+            $client1,
             json_encode(
                 array(
                     'command' => 'update',
-                    'content' => $data[1]->getUuid(),
-                    'templateKey' => 'overview',
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'form',
-                    'user' => '1',
-                    'changes' => array(
+                    'data' => array(
                         'title' => 'asdf'
                     )
 
@@ -382,79 +240,13 @@ class PreviewMessageComponentTest extends SuluTestCase
         );
 
         $this->component->onMessage(
-            $clientForm1,
+            $client1,
             json_encode(
                 array(
                     'command' => 'update',
-                    'content' => $data[1]->getUuid(),
-                    'templateKey' => 'overview',
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'form',
-                    'user' => '1',
-                    'changes' => array(
-                        'article' => 'qwertz'
+                    'data' => array(
+                        'content' => 'qwertz'
                     )
-                )
-            )
-        );
-    }
-
-    public function testReconnect()
-    {
-        $data = $this->prepareData();
-
-        $i = -1;
-
-        $clientForm = $this->prepareClient(
-            function ($string) use (&$i) {
-                $data = json_decode($string);
-                $this->assertEquals($data->msg, 'OK');
-
-                $i++;
-                if ($i == 0) {
-                    $this->assertEquals($data->other, false);
-                } else {
-                    $this->assertEquals($data->other, true);
-                }
-            },
-            $this->exactly(2),
-            'form'
-        );
-        $clientPreview = $this->prepareClient(
-            function ($string) {
-                $data = json_decode($string);
-                $this->assertEquals($data->msg, 'OK');
-                $this->assertEquals($data->other, true);
-            },
-            $this->once(),
-            'preview'
-        );
-
-        $this->component->onMessage(
-            $clientForm,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[0]->getUuid(),
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'form',
-                    'user' => '1'
-                )
-            )
-        );
-
-        $this->component->onMessage(
-            $clientPreview,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[0]->getUuid(),
-                    'languageCode' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                    'type' => 'preview',
-                    'user' => '1'
                 )
             )
         );
