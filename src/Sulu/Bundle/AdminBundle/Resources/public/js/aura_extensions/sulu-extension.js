@@ -252,14 +252,14 @@
                 insertOrderParamsInUrl = function(url, order) {
                     if (!!order) {
                         var idxBy = url.indexOf('sortBy'),
-                            idxOrder = url.indexOf('sortOrder');
+                            idxOrder = url.indexOf('sortOrder'),
+                            divider = '&';
 
                         if (idxBy === -1 && idxOrder === -1) {
                             if (url.indexOf('?') === -1) {
-                                return url + '?sortBy=' + order.attribute + '&sortOrder=' + order.direction;
-                            } else {
-                                return url + '&sortBy=' + order.attribute + '&sortOrder=' + order.direction;
+                                divider = '?';
                             }
+                            return url + divider + 'sortBy=' + order.attribute + '&sortOrder=' + order.direction;
                         } else if (idxBy > -1 && idxOrder > -1) {
                             url = url.replace(/(sortBy=(\w)+)/, 'sortBy=' + order.attribute);
                             url = url.replace(/(sortOrder=(\w)+)/, 'sortOrder=' + order.direction);

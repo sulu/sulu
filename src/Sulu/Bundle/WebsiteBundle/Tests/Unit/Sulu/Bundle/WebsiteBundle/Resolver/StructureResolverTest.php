@@ -68,6 +68,7 @@ class StructureResolverTest extends ProphecyTestCase
         $structure->getChanger()->willReturn(1);
         $structure->getCreated()->willReturn('date');
         $structure->getChanged()->willReturn('date');
+        $structure->getPublished()->willReturn('date');
         $structure->getPath()->willReturn('test-path');
         $structure->getUrls()->willReturn(array('en' => '/description', 'de' => '/beschreibung', 'es' => null));
 
@@ -86,6 +87,7 @@ class StructureResolverTest extends ProphecyTestCase
             'changer' => 1,
             'created' => 'date',
             'changed' => 'date',
+            'published' => 'date',
             'template' => 'test',
             'urls' => array('en' => '/description', 'de' => '/beschreibung', 'es' => null),
             'path' => 'test-path',
