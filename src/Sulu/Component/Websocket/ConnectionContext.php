@@ -12,7 +12,6 @@ namespace Sulu\Component\Websocket;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
 use Ratchet\ConnectionInterface;
-use Sulu\Bundle\ContentBundle\Preview\ConnectionContextInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 

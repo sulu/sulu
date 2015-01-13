@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Preview;
+namespace Sulu\Component\Websocket;
 
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;

@@ -11,7 +11,6 @@
 namespace Sulu\Component\Websocket;
 
 use Ratchet\ConnectionInterface;
-use Sulu\Bundle\ContentBundle\Preview\ConnectionContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -78,7 +77,7 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
      */
     protected function getContext(ConnectionInterface $conn)
     {
-        if (array_key_exists($conn->resourceId, $this->contexts)) {
+        if (!array_key_exists($conn->resourceId, $this->contexts)) {
             $this->contexts[$conn->resourceId] = $this->createContext($conn);
         }
 
