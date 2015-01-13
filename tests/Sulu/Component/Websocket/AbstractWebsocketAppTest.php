@@ -16,34 +16,41 @@ class AbstractWebsocketAppTest extends ProphecyTestCase
 {
     public function testOpen()
     {
-        $app = $this->prophesize('Sulu\Component\Websocket\AbstractWebsocketApp');
-        $reflectionClass = new \ReflectionClass(get_class($app));
+        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp');
+
+        $reflectionClass = new \ReflectionClass('Sulu\Component\Websocket\AbstractWebsocketApp');
         $reflectionProperty = $reflectionClass->getProperty('clients');
         $reflectionProperty->setAccessible(true);
 
         $connection = $this->prophesize('Ratchet\ConnectionInterface');
-        $app->reveal()->OnOpen($connection->reveal());
+        $connectionInstance = $connection->reveal();
+        $connectionInstance->resourceId = uniqid();
+
+        $app->OnOpen($connectionInstance);
 
         /** @var \SplObjectStorage $clients */
         $clients = $reflectionProperty->getValue($app);
-        $this->assertTrue($clients->contains($connection->reveal()));
+        $this->assertTrue($clients->contains($connectionInstance));
     }
 
     public function testClose()
     {
-        $app = $this->prophesize('Sulu\Component\Websocket\AbstractWebsocketApp');
-        $reflectionClass = new \ReflectionClass(get_class($app));
+        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp');
+        $reflectionClass = new \ReflectionClass('Sulu\Component\Websocket\AbstractWebsocketApp');
         $reflectionProperty = $reflectionClass->getProperty('clients');
         $reflectionProperty->setAccessible(true);
 
         $connection = $this->prophesize('Ratchet\ConnectionInterface');
-        $clients = new \SplObjectStorage();
-        $clients->attach($connection->reveal());
+        $connectionInstance = $connection->reveal();
+        $connectionInstance->resourceId = uniqid();
 
-        $app->reveal()->OnClose($connection->reveal());
+        $clients = new \SplObjectStorage();
+        $clients->attach($connectionInstance);
+
+        $app->OnClose($connectionInstance);
 
         /** @var \SplObjectStorage $clients */
         $clients = $reflectionProperty->getValue($app);
-        $this->assertFalse($clients->contains($connection->reveal()));
+        $this->assertFalse($clients->contains($connectionInstance));
     }
 }
