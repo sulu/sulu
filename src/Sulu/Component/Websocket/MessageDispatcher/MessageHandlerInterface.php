@@ -10,10 +10,17 @@
 
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
+
 /**
  * Interface MessageHandlerInterface
  */
 interface MessageHandlerInterface
 {
-
+    /**
+     * Processes given message
+     * @param array $message
+     * @param ConnectionContextInterface $context
+     */
+    public function handle(array $message, ConnectionContextInterface $context);
 }
