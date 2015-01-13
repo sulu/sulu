@@ -11,7 +11,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Security\UserInterface;
-use Sulu\Component\Websocket\ConnectionContext;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
 
 /**
  * Connection context for preview

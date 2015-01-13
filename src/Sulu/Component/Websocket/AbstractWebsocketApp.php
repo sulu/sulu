@@ -11,6 +11,8 @@
 namespace Sulu\Component\Websocket;
 
 use Ratchet\ConnectionInterface;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -60,6 +62,14 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     function onClose(ConnectionInterface $conn)
     {
         $this->clients->detach($conn);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function onError(ConnectionInterface $conn, \Exception $e)
+    {
+        $this->onClose($conn);
     }
 
     /**

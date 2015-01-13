@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Websocket\AbstractWebsocketApp;
-use Sulu\Component\Websocket\ConnectionContextInterface;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
