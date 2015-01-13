@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\WebsocketBundle;
 
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler\RouteProviderCompilerPass;
+use Sulu\Bundle\WebsocketBundle\DependencyInjection\Compiler\AddMessageDispatcherPass;
 use Sulu\Bundle\WebsocketBundle\DependencyInjection\Compiler\AddWebsocketAppPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -28,5 +29,6 @@ class SuluWebsocketBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new AddWebsocketAppPass());
+        $container->addCompilerPass(new AddMessageDispatcherPass());
     }
 }
