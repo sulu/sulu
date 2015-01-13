@@ -242,6 +242,33 @@
                         isFirst = false;
                     }
                     return addressString;
+                },
+
+                /**
+                 * Adds the user specific order params to the url
+                 * @param url
+                 * @param order
+                 */
+                insertOrderParamsInUrl = function(url, order) {
+                    if (!!order) {
+                        var idxBy = url.indexOf('sortBy'),
+                            idxOrder = url.indexOf('sortOrder'),
+                            divider = '&';
+
+                        if (idxBy === -1 && idxOrder === -1) {
+                            if (url.indexOf('?') === -1) {
+                                divider = '?';
+                            }
+                            return url + divider + 'sortBy=' + order.attribute + '&sortOrder=' + order.direction;
+                        } else if (idxBy > -1 && idxOrder > -1) {
+                            url = url.replace(/(sortBy=(\w)+)/, 'sortBy=' + order.attribute);
+                            url = url.replace(/(sortOrder=(\w)+)/, 'sortOrder=' + order.direction);
+                            return url;
+                        } else {
+                            this.sandbox.logger.error('Invalid list url! Either sortBy or sortOrder or both are missing!');
+                        }
+                    }
+                    return url;
                 };
 
             /**
@@ -312,9 +339,11 @@
              * @param datagridOptions {Object}
              */
             app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
-                var fieldsKey = key + 'Fields',
+                var orderKey = key + 'Order',
+                    fieldsKey = key + 'Fields',
                     pageSizeKey = key + 'PageSize',
-                    limit = this.sandbox.sulu.getUserSetting(pageSizeKey);
+                    limit = this.sandbox.sulu.getUserSetting(pageSizeKey),
+                    order = this.sandbox.sulu.getUserSetting(orderKey);
 
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
                     this,
@@ -355,6 +384,10 @@
                         }
 
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
+
+                        // replace default order by custom order settings
+                        gridOptions.url = insertOrderParamsInUrl(gridOptions.url,order);
+
                         gridOptions.searchInstanceName = gridOptions.searchInstanceName || toolbarOptions.instanceName;
                         gridOptions.columnOptionsInstanceName =
                             gridOptions.columnOptionsInstanceName || toolbarOptions.instanceName;
@@ -374,6 +407,11 @@
                         // save page size when changed
                         this.sandbox.on('husky.datagrid.page-size.changed', function(size) {
                             this.sandbox.sulu.saveUserSetting(pageSizeKey, size);
+                        }.bind(this));
+
+                        // save sorting when changed
+                        this.sandbox.on('husky.datagrid.data.sort', function(data) {
+                            this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
                     }.bind(this)
                 );

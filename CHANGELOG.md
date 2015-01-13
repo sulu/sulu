@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
     * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
 
 * 0.14.0 (2015-01-15)
