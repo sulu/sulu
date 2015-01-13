@@ -152,7 +152,9 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
         $fileVersion->setStorageOptions('{"segment":"1","fileName":"' . $name . '.jpeg"}');
-        mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
+        if (!file_exists(__DIR__ . '/../../uploads/media/1')) {
+            mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);
+        }
         copy($this->getImagePath(), __DIR__ . '/../../uploads/media/1/'. $name . '.jpeg');
 
         // create meta
@@ -408,6 +410,29 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->total);
         $this->assertEquals($media->getId(), $response->_embedded->media[0]->id);
         $this->assertEquals('photo.jpeg', $response->_embedded->media[0]->name);
+    }
+
+    public function testcGetMultipleIds()
+    {
+        $media1 = $this->createMedia('photo1');
+        $media2 = $this->createMedia('photo2');
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/media?ids=' . $media2->getId() . ',' . $media1->getId()
+        );
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals($media2->getId(), $response->_embedded->media[0]->id);
+        $this->assertEquals('photo2.jpeg', $response->_embedded->media[0]->name);
+        $this->assertEquals($media1->getId(), $response->_embedded->media[1]->id);
+        $this->assertEquals('photo1.jpeg', $response->_embedded->media[1]->name);
     }
 
     /**

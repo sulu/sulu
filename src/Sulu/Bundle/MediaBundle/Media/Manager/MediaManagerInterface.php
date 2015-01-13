@@ -42,6 +42,14 @@ interface MediaManagerInterface
     public function getById($id, $locale);
 
     /**
+     * Returns the medias with the given ids in the specified order
+     * @param array $ids
+     * @param string $locale
+     * @return Media[]
+     */
+    public function getByIds(array $ids, $locale);
+
+    /**
      * Creates a new media or overrides an existing one
      * @param UploadedFile $uploadedFile
      * @param array $data The data of the category to save
