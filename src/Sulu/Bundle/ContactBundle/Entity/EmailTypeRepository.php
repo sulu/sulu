@@ -10,6 +10,6 @@ use Doctrine\ORM\Query;
  * Class AddressTypeRepository
  * @package Sulu\Bundle\ContactBundle\Entity
  */
-class AddressTypeRepository extends BaseTypeRepository
+class EmailTypeRepository extends BaseTypeRepository
 {
 }
