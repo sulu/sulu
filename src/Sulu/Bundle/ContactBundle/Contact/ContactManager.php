@@ -180,6 +180,11 @@ class ContactManager extends AbstractContactManager
 
             // remove previous main accountContact
             if ($mainAccountContact && $mainAccountContact !== $accountContact) {
+
+                // if this contact is the main-Contact - set mainContact to null
+                if ($mainAccountContact->getAccount()->getMainContact() === $contact) {
+                    $mainAccountContact->getAccount()->setMainContact(null);
+                }
                 $this->em->remove($mainAccountContact);
             }
 
