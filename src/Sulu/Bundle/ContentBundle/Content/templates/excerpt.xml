@@ -25,6 +25,13 @@
             </meta>
         </property>
 
+        <property name="hide_in_sitemap" type="checkbox">
+            <meta>
+                <title lang="de">In Sitemap ausblenden</title>
+                <title lang="en">Hide in sitemap</title>
+            </meta>
+        </property>
+
         <property name="description" type="text_editor">
             <meta>
                 <title lang="de">Beschreibung</title>
