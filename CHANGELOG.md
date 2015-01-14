@@ -1,5 +1,6 @@
 CHANGELOG for Sulu
 ==================
+    * FEATURE     #714 [ContentBundle]  Add Option to hide page in sidemap
 
 * dev-develop
     * ENHANCEMENT #740 [SecurityBundle] Made role content navigation extendable
