@@ -14,7 +14,7 @@ use Ratchet\ConnectionInterface;
 /**
  * Websocket context which implies logged in user in a specific firewall
  */
-class AuthenticatedConnectionContext extends ConnectionContext
+class AuthenticatedConnectionContext extends ConnectionContext implements AuthenticatedConnectionContextInterface
 {
     /**
      * @var string
@@ -26,6 +26,14 @@ class AuthenticatedConnectionContext extends ConnectionContext
         parent::__construct($conn);
 
         $this->firewall = $firewall;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFirewallUser()
+    {
+        return $this->getUser($this->firewall);
     }
 
     /**

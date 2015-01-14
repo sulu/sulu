@@ -13,9 +13,8 @@ namespace Sulu\Component\Websocket\ConnectionContext;
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
 use Sulu\Component\Security\UserInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * Represents a client websocket-session
@@ -68,8 +67,28 @@ interface ConnectionContextInterface
     public function isValid();
 
     /**
-     * Returns parameters for current session
-     * @return ParameterBag
+     * Get parameter with given name
+     * @param string $name
+     * @return mixed
      */
-    public function getParameters();
+    public function get($name);
+
+    /**
+     * Get parameter with given name
+     * @param string $name
+     * @return boolean
+     */
+    public function has($name);
+
+    /**
+     * Get parameter with given name
+     * @param string $name
+     * @param mixed $value
+     */
+    public function set($name, $value);
+
+    /**
+     * Clear all parameter
+     */
+    public function clear();
 }

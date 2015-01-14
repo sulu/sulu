@@ -11,6 +11,7 @@ namespace Sulu\Component\Websocket\MessageDispatcher;
 
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\AuthenticatedConnectionContext;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 
 /**
  * Extends the message dispatcher app with authentication
@@ -35,5 +36,13 @@ class AuthenticatedMessageDispatcherApp extends MessageDispatcherApp
     protected function createContext(ConnectionInterface $conn)
     {
         return new AuthenticatedConnectionContext($this->firewall, $conn);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function createMessageHandlerContext(ConnectionContextInterface $context, $handlerName)
+    {
+        return new AuthenticatedMessageHandlerContext($context, $handlerName);
     }
 }

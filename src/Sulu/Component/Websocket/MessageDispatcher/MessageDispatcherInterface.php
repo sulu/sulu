@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 
 /**
@@ -26,9 +27,11 @@ interface MessageDispatcherInterface
 
     /**
      * Dispatch event to handler with given name
+     * @param ConnectionInterface $conn
      * @param string $name Message name
      * @param array $message
      * @param ConnectionContextInterface $context
+     * @return
      */
-    public function dispatch($name, array $message, ConnectionContextInterface $context);
+    public function dispatch(ConnectionInterface $conn, $name, array $message, ConnectionContextInterface $context);
 }

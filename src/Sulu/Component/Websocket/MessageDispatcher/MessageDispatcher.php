@@ -9,6 +9,7 @@
  */
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Websocket\Exception\HandlerNotFoundException;
 
@@ -33,12 +34,12 @@ class MessageDispatcher implements MessageDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch($name, array $message, ConnectionContextInterface $context)
+    public function dispatch(ConnectionInterface $conn, $name, array $message, ConnectionContextInterface $context)
     {
         if (!array_key_exists($name, $this->handler)) {
             throw new HandlerNotFoundException($name);
         }
 
-        $this->handler[$name]->handle($message, $context);
+        $this->handler[$name]->handle($conn, $message, $context);
     }
 }

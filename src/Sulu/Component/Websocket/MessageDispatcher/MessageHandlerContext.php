@@ -7,59 +7,36 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+namespace Sulu\Component\Websocket\MessageDispatcher;
 
-namespace Sulu\Component\Websocket\ConnectionContext;
-
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\QueryString;
-use Ratchet\ConnectionInterface;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
- * Simple websocket context
+ * Message handler connection context
  */
-class ConnectionContext implements ConnectionContextInterface
+class MessageHandlerContext implements ConnectionContextInterface
 {
     /**
-     * @var RequestInterface
+     * @var ConnectionContextInterface
      */
-    private $request = null;
+    protected $context;
 
     /**
-     * @var QueryString
+     * @var string
      */
-    private $query = null;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session = null;
+    private $handlerName;
 
     /**
      * @var ParameterBag
      */
     private $parameters;
 
-    /**
-     * @var string
-     */
-    private $id;
-
-    public function __construct(ConnectionInterface $conn)
+    function __construct(ConnectionContextInterface $context, $handlerName)
     {
-        if (isset($conn->WebSocket)) {
-            $this->request = $conn->WebSocket->request;
-            $this->query = $this->request->getUrl(true)->getQuery();
-        }
-
-        if (isset($conn->Session)) {
-            $this->session = $conn->Session;
-        }
-
-        if (isset($conn->resourceId)) {
-            $this->id = $conn->resourceId;
-        }
+        $this->context = $context;
+        $this->handlerName = $handlerName;
 
         $this->parameters = new ParameterBag();
     }
@@ -69,7 +46,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getQuery()
     {
-        return $this->query;
+        return $this->context->getQuery();
     }
 
     /**
@@ -77,7 +54,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getRequest()
     {
-        return $this->request;
+        return $this->context->getRequest();
     }
 
     /**
@@ -85,7 +62,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getSession()
     {
-        return $this->session;
+        return $this->context->getSession();
     }
 
     /**
@@ -93,11 +70,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getToken($firewall)
     {
-        if ($this->session !== null) {
-            return unserialize($this->session->get('_security_' . $firewall));
-        }
-
-        return null;
+        return $this->context->getToken($firewall);
     }
 
     /**
@@ -105,11 +78,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getUser($firewall)
     {
-        if (null !== ($token = $this->getToken($firewall))) {
-            return $token->getUser();
-        }
-
-        return null;
+        return $this->context->getUser($firewall);
     }
 
     /**
@@ -117,15 +86,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function getId()
     {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
+        return $this->context->getId();
     }
 
     /**
@@ -133,7 +94,7 @@ class ConnectionContext implements ConnectionContextInterface
      */
     public function isValid()
     {
-        return true;
+        return $this->context->isValid();
     }
 
     /**
@@ -161,7 +122,7 @@ class ConnectionContext implements ConnectionContextInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Clear all parameter
      */
     public function clear()
     {

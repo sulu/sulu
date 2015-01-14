@@ -50,7 +50,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         $msg = json_decode($msg, true);
 
         try {
-            $this->dispatch($context, $msg);
+            $this->dispatch($from, $context, $msg);
         } catch (\Exception $e) {
             // send fail message
             $from->send(
@@ -69,19 +69,36 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
 
     /**
      * Dispatches message to handler with dispatcher service
+     * @param ConnectionInterface $conn
      * @param ConnectionContextInterface $context
      * @param array $msg
      * @throws MissingParameterException
      */
-    private function dispatch(ConnectionContextInterface $context, array $msg)
+    private function dispatch(ConnectionInterface $conn, ConnectionContextInterface $context, array $msg)
     {
-        if(!array_key_exists('event', $msg)){
-            throw new MissingParameterException('event');
+        if (!array_key_exists('handler', $msg)) {
+            throw new MissingParameterException('handler');
         }
         if(!array_key_exists('message', $msg)){
             throw new MissingParameterException('message');
         }
 
-        $this->messageDispatcher->dispatch($msg['event'], $msg['message'], $context);
+        $this->messageDispatcher->dispatch(
+            $conn,
+            $msg['handler'],
+            $msg['message'],
+            $this->createMessageHandlerContext($context, $msg['handler'])
+        );
+    }
+
+    /**
+     * Create a message handler context
+     * @param ConnectionContextInterface $context
+     * @param string $handlerName
+     * @return MessageHandlerContext
+     */
+    protected function createMessageHandlerContext(ConnectionContextInterface $context, $handlerName)
+    {
+        return new MessageHandlerContext($context, $handlerName);
     }
 }
