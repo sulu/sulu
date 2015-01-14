@@ -47,7 +47,7 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="logger"/>
 
-            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="preview" />
+            <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.preview" />
         </service>
 
         <service id="sulu_content.preview.exception_listener" class="%sulu_content.preview.exception_listener.class%">

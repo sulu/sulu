@@ -16,8 +16,8 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
-use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
 use Sulu\Component\Websocket\Exception\MissingParameterException;
+use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -64,7 +64,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(ConnectionInterface $conn, array $message, ConnectionContextInterface $context)
+    public function handle(ConnectionInterface $conn, array $message, MessageHandlerContext $context)
     {
         // reconnect mysql
         $this->reconnect();
@@ -89,12 +89,12 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Executes command
      * @param ConnectionInterface $conn
-     * @param ConnectionContextInterface $context
+     * @param MessageHandlerContext $context
      * @param array $msg
      * @throws ContextParametersNotFoundException
      * @throws MissingParameterException
      */
-    private function execute(ConnectionInterface $conn, ConnectionContextInterface $context, $msg)
+    private function execute(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
     {
         if (!array_key_exists('command', $msg)) {
             throw new MissingParameterException('command');
@@ -136,11 +136,11 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Start preview session
      * @param ConnectionInterface $conn
-     * @param PreviewConnectionContext $context
+     * @param MessageHandlerContext $context
      * @param array $msg
      * @throws MissingParameterException
      */
-    private function start(ConnectionInterface $conn, PreviewConnectionContext $context, $msg)
+    private function start(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
     {
         // init session
         // content uuid
@@ -148,24 +148,24 @@ class PreviewMessageHandler implements MessageHandlerInterface
             throw new MissingParameterException('content');
         }
         $contentUuid = $msg['content'];
-        $context->setContentUuid($contentUuid);
+        $context->set('content', $contentUuid);
 
         // locale
         if (!array_key_exists('locale', $msg)) {
             throw new MissingParameterException('locale');
         }
         $locale = $msg['locale'];
-        $context->setLocale($locale);
+        $context->set('locale', $locale);
 
         // webspace key
         if (!array_key_exists('webspaceKey', $msg)) {
             throw new MissingParameterException('webspaceKey');
         }
         $webspaceKey = $msg['webspaceKey'];
-        $context->setWebspaceKey($webspaceKey);
+        $context->set('webspaceKey', $webspaceKey);
 
         // get user id
-        $user = $context->getAdminUser()->getId();
+        $user = $context->getFirewallUser()->getId();
 
         // init message vars
         $template = array_key_exists('template', $msg) ? $msg['template'] : null;
@@ -189,20 +189,22 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Stop preview session
      * @param ConnectionInterface $from
-     * @param PreviewConnectionContext $context
+     * @param MessageHandlerContext $context
      */
-    private function stop(ConnectionInterface $from, PreviewConnectionContext $context)
+    private function stop(ConnectionInterface $from, MessageHandlerContext $context)
     {
         // get user id
-        $user = $context->getAdminUser()->getId();
+        $user = $context->getFirewallUser()->getId();
 
         // get session vars
-        $contentUuid = $context->getContentUuid();
-        $locale = $context->getLocale();
-        $webspaceKey = $context->getWebspaceKey();
+        $contentUuid = $context->get('content');
+        $locale = $context->get('locale');
+        $webspaceKey = $context->get('webspaceKey');
 
         // stop preview
         $this->preview->stop($user, $contentUuid, $webspaceKey, $locale);
+
+        $context->clear();
 
         // send ok message
         $from->send(
@@ -219,25 +221,29 @@ class PreviewMessageHandler implements MessageHandlerInterface
     /**
      * Updates properties of current session content
      * @param ConnectionInterface $from
-     * @param PreviewConnectionContext $context
+     * @param MessageHandlerContext $context
      * @param array $msg
      * @throws ContextParametersNotFoundException
      * @throws MissingParameterException
      */
-    private function update(ConnectionInterface $from, PreviewConnectionContext $context, $msg)
+    private function update(ConnectionInterface $from, MessageHandlerContext $context, $msg)
     {
         // check context parameters
-        if (!$context->hasContextParameters()) {
+        if (
+            !$context->has('content') &&
+            !$context->has('locale') &&
+            !$context->has('webspaceKey')
+        ) {
             throw new ContextParametersNotFoundException();
         }
 
         // get user id
-        $user = $context->getAdminUser()->getId();
+        $user = $context->getFirewallUser()->getId();
 
         // get session vars
-        $contentUuid = $context->getContentUuid();
-        $locale = $context->getLocale();
-        $webspaceKey = $context->getWebspaceKey();
+        $contentUuid = $context->get('content');
+        $locale = $context->get('locale');
+        $webspaceKey = $context->get('webspaceKey');
 
         // init msg vars
         if (!array_key_exists('data', $msg) && is_array($msg['data'])) {

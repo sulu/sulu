@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Log\NullLogger;
  * @group functional
  * @group preview
  */
-class PreviewMessageHandlerHandler extends SuluTestCase
+class PreviewMessageHandlerTest extends SuluTestCase
 {
     /**
      * @var PreviewMessageHandler

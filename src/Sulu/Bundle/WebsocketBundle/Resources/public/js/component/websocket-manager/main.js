@@ -10,7 +10,11 @@
 /**
  * Provides Websocket connections
  */
-define(function() {
+define([
+    'websocket/abstract',
+    'websocket/client',
+    'websocket/fallback'
+], function(AbstractClient, WebsocketClient, WebsocketFallback) {
 
     'use strict';
 
@@ -45,8 +49,17 @@ define(function() {
             return this.url + this.apps[appName].route;
         },
 
-        getClient: function(appName) {
+        getSocket: function(appName) {
             return new WebSocket(this.getUrl(appName))
+        },
+
+        getClient: function(appName) {
+            // TODO cache client by name
+            // TODO fallback detection
+            //  - check if websocket exists
+            //  - onerror create fallback client
+            //  - onopen create websocket client
+            return new WebsocketClient(this.apps[appName], this.getSocket(appName))
         }
     };
 });
