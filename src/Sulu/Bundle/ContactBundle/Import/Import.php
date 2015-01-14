@@ -373,6 +373,9 @@ class Import
                 if (array_key_exists('defaults', $mappings)) {
                     $this->defaults = $mappings['defaults'];
                 }
+                if (array_key_exists('mainContactTypes', $mappings)) {
+                    $this->defaults = $mappings['mainContactTypes'];
+                }
 
                 return $mappings;
             }
@@ -546,8 +549,8 @@ class Import
         if ($this->checkData('account_corporation', $data)) {
             $account->setCorporation($data['account_corporation']);
         }
-        if ($this->checkData('account_disabled', $data, 'bool')) {
-            $account->setDisabled($data['account_disabled']);
+        if ($this->checkData('account_disabled', $data)) {
+            $account->setDisabled($this->getBoolValue($data['account_disabled']));
         }
         if ($this->checkData('account_uid', $data)) {
             $account->setUid($data['account_uid']);
@@ -581,16 +584,7 @@ class Import
         $this->processPhones($data, $account);
         $this->processFaxes($data, $account);
         $this->processUrls($data, $account);
-        $this->processNotes($data, $account);
-
-        // phone with type isdn
-        if ($this->checkData('phone_isdn', $data, null, 60)) {
-            $phone = new Phone();
-            $phone->setPhone($data['phone_isdn']);
-            $phone->setPhoneType($this->defaultTypes['phoneTypeIsdn']);
-            $this->em->persist($phone);
-            $account->addPhone($phone);
-        }
+        $this->processNotes($data, $account, 'account_');
 
         // add address if set
         $address = $this->createAddresses($data, $account);
@@ -635,9 +629,21 @@ class Import
         // add emails
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('email' . $i, $data)) {
+                $emailIndex = 'email' . $i;
+                $prefix = $emailIndex . '_';
+
                 $email = new Email();
-                $email->setEmail($data['email' . $i]);
-                $email->setEmailType($this->defaultTypes['emailType']);
+                $email->setEmail($data[$emailIndex]);
+
+                // set label
+                if ($this->checkData($prefix . 'label', $data)) {
+                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $type = $this->getContactManager()->getEmailTypeByName($contactLabel);
+                } else {
+                    $type = $this->defaultTypes['emailType'];
+                }
+                $email->setEmailType($type);
+
                 $this->em->persist($email);
                 $entity->addEmail($email);
             }
@@ -655,9 +661,21 @@ class Import
         // add phones
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('phone' . $i, $data, null, 60)) {
+                $phoneIndex = 'phone' . $i;
+                $prefix = $phoneIndex . '_';
+
                 $phone = new Phone();
-                $phone->setPhone($data['phone' . $i]);
-                $phone->setPhoneType($this->defaultTypes['phoneType']);
+                $phone->setPhone($data[$phoneIndex]);
+
+                // set label
+                if ($this->checkData($prefix . 'label', $data)) {
+                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $type = $this->getContactManager()->getPhoneTypeByName($contactLabel);
+                } else {
+                    $type = $this->defaultTypes['phoneType'];
+                }
+                $phone->setPhoneType($type);
+
                 $this->em->persist($phone);
                 $entity->addPhone($phone);
             }
@@ -675,9 +693,21 @@ class Import
         // add faxes
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('fax' . $i, $data, null, 60)) {
+                $faxIndex = 'fax' . $i;
+                $prefix = $faxIndex . '_';
+
                 $fax = new Fax();
-                $fax->setFax($data['fax' . $i]);
-                $fax->setFaxType($this->defaultTypes['faxType']);
+                // set fax
+                $fax->setFax($data[$faxIndex]);
+                // set label
+                if ($this->checkData($prefix . 'label', $data)) {
+                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $type = $this->getContactManager()->getFaxTypeByName($contactLabel);
+                } else {
+                    $type = $this->defaultTypes['faxType'];
+                }
+                $fax->setFaxType($type);
+
                 $this->em->persist($fax);
                 $entity->addFax($fax);
             }
@@ -695,9 +725,22 @@ class Import
         // add urls
         for ($i = 0, $len = 10; ++$i < $len;) {
             if ($this->checkData('url' . $i, $data, null, 255)) {
+                $urlIndex = 'url' . $i;
+                $prefix = $urlIndex . '_';
+
                 $url = new Url();
-                $url->setUrl($data['url' . $i]);
-                $url->setUrlType($this->defaultTypes['urlType']);
+                // set url
+                $url->setUrl($data[$urlIndex]);
+                // set label
+                if ($this->checkData($prefix . 'label', $data)) {
+                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $type = $this->getContactManager()->getUrlTypeByName($contactLabel);
+                } else {
+                    $type = $this->defaultTypes['urlType'];
+                }
+                $url->setUrlType($type);
+
+                // persist
                 $this->em->persist($url);
                 $entity->addUrl($url);
             }
@@ -710,16 +753,20 @@ class Import
      * @param $data
      * @param $entity
      */
-    protected function processNotes($data, $entity)
+    protected function processNotes($data, $entity, $prefix = '')
     {
         // add note -> only use one note
         // TODO: use multiple notes, when contact is extended
         $noteValues = array();
+        if ($this->checkData($prefix . 'note', $data)) {
+            $noteValues[] = $data[$prefix . 'note'];
+        }
         for ($i = 0, $len = 10; ++$i < $len;) {
-            if ($this->checkData('note' . $i, $data)) {
-                $noteValues[] = $data['note' . $i];
+            if ($this->checkData($prefix . 'note' . $i, $data)) {
+                $noteValues[] = $data[$prefix . 'note' . $i];
             }
         }
+        // concat all notes to one single note
         if (sizeof($noteValues) > 0) {
             $note = new Note();
             $note->setValue(implode("\n", $noteValues));
@@ -877,7 +924,12 @@ class Import
         }
         // state
         if ($this->checkData($prefix . 'state', $data)) {
-            $address->setCity($data[$prefix . 'state']);
+            $address->setState($data[$prefix . 'state']);
+            $addAddress = true;
+        }
+        // extension
+        if ($this->checkData($prefix . 'extension', $data)) {
+            $address->setAddition($data[$prefix . 'extension']);
             $addAddress = true;
         }
         // postbox
@@ -891,6 +943,11 @@ class Import
         }
         if ($this->checkData($prefix . 'postbox_city', $data)) {
             $address->setPostboxCity($data[$prefix . 'postbox_city']);
+            $addAddress = true;
+        }
+        // note
+        if ($this->checkData($prefix . 'note', $data)) {
+            $address->setNote($data[$prefix . 'note']);
             $addAddress = true;
         }
         // billing address
@@ -969,19 +1026,26 @@ class Import
         // TODO handle one or more bank accounts
         for ($i = 0, $len = 10; ++$i < $len;) {
             // if iban is set, then add bank account
-            if ($this->checkData('iban' . $i, $data)) {
-                $bank = new BankAccount();
-                $bank->setIban($data['iban' . $i]);
+            if ($this->checkData('bank' . $i, $data)) {
+                $bankIndex = 'bank' . $i;
+                $prefix = $bankIndex . '_';
 
-                if ($this->checkData('bic' . $i, $data)) {
-                    $bank->setBic($data['bic' . $i]);
+                $bank = new BankAccount();
+                if ($this->checkData($prefix . 'iban', $data)) {
+                    $bank->setIban($data[$prefix . 'iban']);
+                } else {
+                    throw new ImportException('no Iban provided for entity with id '. $entity->getId());
                 }
-                if ($this->checkData('bank' . $i, $data)) {
-                    $bank->setBankName($data['bank' . $i]);
+
+                if ($this->checkData($prefix . 'bic', $data)) {
+                    $bank->setBic($data[$prefix . 'bic']);
+                }
+                if ($this->checkData($bankIndex, $data)) {
+                    $bank->setBankName($data[$bankIndex]);
                 }
                 // set bank to public
-                if ($this->checkData('bank_public' . $i, $data, 'bool')) {
-                    $bank->setPublic($data['bank_public' . $i]);
+                if ($this->checkData($prefix . 'public', $data, 'bool')) {
+                    $bank->setPublic($data[$prefix . 'public']);
                 } else {
                     $bank->setPublic(false);
                 }
@@ -1040,7 +1104,7 @@ class Import
                 $this->setContactData($data, $contact);
             }
             // create account relation
-            $this->setAccountContactRelation($data, $contact, $row);
+            $this->setAccountContactRelations($data, $contact, $row);
 
             return $contact;
 
@@ -1073,8 +1137,8 @@ class Import
             $this->addTitle($data['contact_title'], $contact);
         }
 
-        if ($this->checkData('contact_formOfAddress', $data)) {
-            $contact->setFormOfAddress($this->mapFormOfAddress($data['contact_formOfAddress']));
+        if ($this->checkData('contact_form_of_address', $data)) {
+            $contact->setFormOfAddress($this->mapFormOfAddress($data['contact_form_of_address']));
         }
 
         if ($this->checkData('contact_salutation', $data)) {
@@ -1086,7 +1150,7 @@ class Import
         }
 
         if ($this->checkData('contact_disabled', $data)) {
-            $contact->setDisabled($data['contact_disabled']);
+            $contact->setDisabled($this->getBoolValue($data['contact_disabled']));
         }
 
         if ($this->checkData('contact_tag', $data)) {
@@ -1107,7 +1171,7 @@ class Import
         $this->processPhones($data, $contact);
         $this->processFaxes($data, $contact);
         $this->processUrls($data, $contact);
-        $this->processNotes($data, $contact);
+        $this->processNotes($data, $contact, 'contact_');
     }
 
     /**
@@ -1123,25 +1187,54 @@ class Import
     }
 
     /**
-     * adds a accountcontact relation if not existent
+     * either creates a single contact relation (contact_account) or multiple relations (contact_account1..n)
      * @param $data
      * @param $contact
      * @param $row
      */
-    protected function setAccountContactRelation($data, $contact, $row)
+    protected function setAccountContactRelations($data, $contact, $row)
     {
-        if ($this->checkData('contact_parent', $data)) {
-            $account = $this->getAccountByKey($data['contact_parent']);
+        $index = 'contact_account';
+
+        if ($this->checkData($index, $data)) {
+            $this->setAccountContactRelation($data, $contact, $row, $index);
+        } else {
+            // iterate through account_contacts
+            for ($i = 0, $len = 10; ++$i < $len;) {
+                if ($this->checkData($index . $i, $data)) {
+                    $this->setAccountContactRelation($data, $contact, $row, $index . $i);
+                }
+            }
+        }
+    }
+
+    /**
+     * adds a accountcontact relation if not existent
+     * @param $data
+     * @param $contact
+     * @param $row
+     * @param $index - account-index in data array
+     */
+    protected function setAccountContactRelation($data, $contact, $row, $index)
+    {
+        if ($this->checkData($index, $data)) {
+            $account = $this->getAccountByKey($data[$index]);
 
             if (!$account) {
-                // throw new \Exception('could not find '.$data['contact_parent'].' in accounts');
-                $this->debug(sprintf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data['contact_parent']));
+                // throw new \Exception('could not find '.$data['contact_parent_id'].' in accounts');
+                $this->debug(sprintf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data[$index]));
             } else {
 
                 // check if relation already exists
                 $accountContact = null;
                 if (!$this->em->getUnitOfWork()->isScheduledForInsert($contact)) {
-                    $accountContact = $this->em->getRepository($this->accountContactEntityName)->findOneBy(array($account => $account, $contact => $contact));
+                    $accountContact = $this->em
+                        ->getRepository($this->accountContactEntityName)
+                        ->findOneBy(array(
+                            $account => $account,
+                            $contact => $contact
+                            )
+                        );
                 }
 
                 if (!$accountContact) {
@@ -1154,10 +1247,15 @@ class Import
                     $this->em->persist($accountContact);
                 }
 
-                // check if main relation exists
+                // check if relation should be set to main
                 $main = false;
-                if (!$this->mainRelationExists($contact)) {
-                    $main = true;
+                if ($this->checkData('contact_account_is_main', $data)) {
+                    $main = $this->getBoolValue($data['contact_account_is_main']);
+                } else {
+                    // check if main relation exists
+                    if (!$this->mainRelationExists($contact)) {
+                        $main = true;
+                    }
                 }
                 $accountContact->setMain($main);
 
@@ -1230,7 +1328,7 @@ class Import
     protected function createAccountParentRelation($data, $row)
     {
         // if account has parent
-        if ($this->checkData('account_parent', $data)) {
+        if ($this->checkData('account_parent_id', $data)) {
             // get account
             $externalId = $this->getExternalId($data, $row);
             /** @var Account $account */
@@ -1240,7 +1338,7 @@ class Import
                 throw new \Exception(sprintf('account with id %s could not be found.', $externalId));
             }
             // get parent account
-            $parent = $this->getAccountByKey($data['account_parent']);
+            $parent = $this->getAccountByKey($data['account_parent_id']);
             $account->setParent($parent);
         }
     }
