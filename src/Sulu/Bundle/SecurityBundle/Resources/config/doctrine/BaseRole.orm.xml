@@ -28,5 +28,10 @@
             </join-columns>
         </many-to-one>
 
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="updateTimestamps" />
+            <lifecycle-callback type="preUpdate" method="updateTimestamps" />
+        </lifecycle-callbacks>
+
     </mapped-superclass>
 </doctrine-mapping>

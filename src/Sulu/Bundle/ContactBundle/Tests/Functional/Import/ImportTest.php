@@ -67,10 +67,6 @@ class ImportTest extends SuluTestCase
         $phoneType = new PhoneType();
         $phoneType->setName('Business');
         $this->em->persist($phoneType);
-        $isdnPhoneType = new PhoneType();
-        $isdnPhoneType->setId(2);
-        $isdnPhoneType->setName('ISDN');
-        $this->em->persist($isdnPhoneType);
         $mobilePhoneType = new PhoneType();
         $mobilePhoneType->setId(3);
         $mobilePhoneType->setName('Mobile');
@@ -106,12 +102,11 @@ class ImportTest extends SuluTestCase
             array(
                 'emailType' => $emailType->getId(),
                 'phoneType' => $phoneType->getId(),
-                'phoneTypeIsdn' => $isdnPhoneType->getId(),
                 'phoneTypeMobile' => $mobilePhoneType->getId(),
                 'addressType' => $addressType->getId(),
                 'urlType' => $urlType->getId(),
                 'faxType' => $faxType->getId(),
-                'country' => $country->GetId(),
+                'country' => $country->getId(),
             ),
             array(), // FIXME: this is not beeing used by import currently (fill in when needed)
             array(
@@ -180,7 +175,6 @@ class ImportTest extends SuluTestCase
      */
     public function testContactFileNotFound()
     {
-        $this->import->setAccountFile(self::$fixturePath . 'accounts_mapping_needed.csv');
         $this->import->setContactFile('this-file-does-not-exist.csv');
         $this->import->execute();
     }
@@ -216,7 +210,7 @@ class ImportTest extends SuluTestCase
         $this->assertEquals(Account::TYPE_SUPPLIER, $account->getType());
         $this->assertEquals('ATU 1234 5678', $account->getUid());
         $this->assertNull($account->getParent());
-        $this->assertEquals('0', $account->getDisabled());
+        $this->assertEquals(false, $account->getDisabled());
 
         // addresss
         /** @var Address $address */
@@ -229,13 +223,12 @@ class ImportTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $address->getCity());
 
         // phones
-        $this->assertEquals(3, sizeof($account->getPhones()));
+        $this->assertEquals(2, sizeof($account->getPhones()));
         $this->assertEquals('+43 (123) 456-0', $account->getPhones()->get(0)->getPhone());
         $this->assertEquals('Business', $account->getPhones()->get(0)->getPhoneType()->getName());
         $this->assertEquals('+43 (123) 456-78', $account->getPhones()->get(1)->getPhone());
         $this->assertEquals('Business', $account->getPhones()->get(1)->getPhoneType()->getName());
-        $this->assertEquals('+43 (123) 456-1', $account->getPhones()->get(2)->getPhone());
-        $this->assertEquals('ISDN', $account->getPhones()->get(2)->getPhoneType()->getName());
+
         // notes
         $this->assertEquals(1, sizeof($account->getNotes()));
         $this->assertEquals('just a simple note', $account->getNotes()->get(0)->getValue());
@@ -261,8 +254,8 @@ class ImportTest extends SuluTestCase
         $this->assertEquals(null, $account->getCorporation());
         $this->assertEquals(Account::TYPE_CUSTOMER, $account->getType());
         $this->assertEquals('DEU 5678 1234', $account->getUid());
-        $this->assertNotNull($account->getParent()->getId());
-        $this->assertEquals('0', $account->getDisabled());
+        $this->assertNotNull($account->getParent());
+        $this->assertEquals(false, $account->getDisabled());
 
         // addresss
         /** @var Address $address */

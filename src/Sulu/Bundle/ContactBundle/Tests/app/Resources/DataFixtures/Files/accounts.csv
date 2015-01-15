@@ -1,3 +1,3 @@
-account_type;account_id;account_name;account_corporation;street;number;country;zip;city;phone1;phone2;account_uid;account_disabled;note1;fax1;phone_isdn;email1;url1;account_parent;
-supplier;1;Test Company 1;Office;Street;1;AT;6850;Dornbirn;+43 (123) 456-0;+43 (123) 456-78;ATU 1234 5678;0;just a simple note;+43 (123) 456-78;+43 (123) 456-1;test@test.com;www.test.com;;
-customer;2;Child Customer;;Street;2;DE;88131;Lindau;+43 (123) 789;;DEU 5678 1234;0;;+43 (123) 456-98;;test@company.com;www.company.com;1;
+account_type;account_id;account_name;account_corporation;address1_street;address1_number;address1_country;address1_zip;address1_city;phone1;phone2;account_uid;account_disabled;account_note1;fax1;email1;url1;account_parent_id;
+supplier;1;Test Company 1;Office;Street;1;AT;6850;Dornbirn;+43 (123) 456-0;+43 (123) 456-78;ATU 1234 5678;0;just a simple note;+43 (123) 456-78;test@test.com;www.test.com;;
+customer;2;Child Customer;;Street;2;DE;88131;Lindau;+43 (123) 789;;DEU 5678 1234;0;;+43 (123) 456-98;test@company.com;www.company.com;1;
