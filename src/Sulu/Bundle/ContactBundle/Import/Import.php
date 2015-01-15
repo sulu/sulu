@@ -1678,14 +1678,6 @@ class Import
             ->getRepository($phoneTypeEntity)
             ->find($config['phoneType']);
 
-        $defaults['phoneTypeIsdn'] = $this->em
-            ->getRepository($phoneTypeEntity)
-            ->find($config['phoneTypeIsdn']);
-
-        $defaults['phoneTypeMobile'] = $this->em
-            ->getRepository($phoneTypeEntity)
-            ->find($config['phoneTypeMobile']);
-
         $addressTypeEntity = 'SuluContactBundle:AddressType';
         $defaults['addressType'] = $this->em
             ->getRepository($addressTypeEntity)
