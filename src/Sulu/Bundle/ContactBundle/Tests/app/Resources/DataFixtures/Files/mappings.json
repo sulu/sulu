@@ -24,18 +24,18 @@
         "account_type" : "type",
         "account_corporation" : "division",
         "account_disabled" : "disabled",
-        "account_parent" : "parent",
+        "account_parent_id" : "parent",
         "account_uid" : "uid",
         "url1" : "web",
-        "country" : "country",
-        "zip" : "plz",
-        "street" : "street",
-        "city" : "city",
+        "address1_country" : "country",
+        "address1_zip" : "plz",
+        "address1_street" : "street",
+        "address1_city" : "city",
         "phone1" : "phone1",
         "phone2" : "phone2",
-        "phone_isdn" : "isdn",
-        "phone_mobile" : "mobile",
+        "phone3_label" : "mobile",
+        "phone3" : "mobile",
         "fax1" : "fax",
-        "note1" : "note"
+        "account_note1" : "note"
     }
 }
