@@ -290,4 +290,97 @@ abstract class AbstractContactManager implements ContactManagerInterface
             ->getRepository(self::$emailTypeEntityName)
             ->findOneByName($name, $strict);
     }
+
+    /**
+     * clears all relational data from entity and deletes it
+     * @param $entity
+     */
+    public function deleteAllRelations($entity)
+    {
+        $this->deleteNotes($entity);
+        $this->deleteAddresses($entity);
+        $this->deleteEmails($entity);
+        $this->deleteFaxes($entity);
+        $this->deletePhones($entity);
+        $this->deleteUrls($entity);
+    }
+
+    /**
+     * deletes all notes that are assigned to entity
+     * @param $entity
+     */
+    public function deleteNotes($entity)
+    {
+        if ($entity->getNotes()) {
+            $this->deleteAllEntitiesOfCollection($entity->getNotes());
+        }
+    }
+
+    /**
+     * deletes all phones that are assigned to entity
+     * @param $entity
+     */
+    public function deletePhones($entity)
+    {
+        if ($entity->getPhones()) {
+            $this->deleteAllEntitiesOfCollection($entity->getPhones());
+        }
+    }
+
+    /**
+     * deletes all faxes that are assigned to entity
+     * @param $entity
+     */
+    public function deleteFaxes($entity)
+    {
+        if ($entity->getFaxes()) {
+            $this->deleteAllEntitiesOfCollection($entity->getFaxes());
+        }
+    }
+
+    /**
+     * deletes all urls that are assigned to entity
+     * @param $entity
+     */
+    public function deleteUrls($entity)
+    {
+        if ($entity->getUrls()) {
+            $this->deleteAllEntitiesOfCollection($entity->getUrls());
+        }
+    }
+
+    /**
+     * deletes all addresses that are assigned to entity
+     * @param $entity
+     */
+    public function deleteAddresses($entity)
+    {
+        // clear addresses
+        if ($entity->getAccountAddresses()) {
+            foreach ($entity->getAccountAddresses() as $accountAddresses) {
+                $this->em->remove($accountAddresses->getAddress());
+                $this->em->remove($accountAddresses);
+            }
+        }
+    }
+
+    /**
+     * deletes all emails that are assigned to entity
+     * @param $entity
+     */
+    public function deleteEmails($entity)
+    {
+        if ($entity->getEmails()) {
+            $this->deleteAllEntitiesOfCollection($entity->getEmails());
+        }
+    }
+
+    /**
+     * @param $arrayCollection
+     */
+    protected function deleteAllEntitiesOfCollection($arrayCollection) {
+        foreach ($arrayCollection as $entity) {
+            $this->em->remove($entity);
+        }
+    }
 }
