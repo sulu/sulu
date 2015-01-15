@@ -58,7 +58,7 @@ class ContentLocaleCopyCommand extends ContainerAwareCommand
     public function configure()
     {
         $this->setName('sulu:content:locale-copy');
-        $this->setDescription('Copy nodes from one locale to another');
+        $this->setDescription('Copy content nodes from one locale to another');
         $this->setHelp(
             <<<EOT
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>

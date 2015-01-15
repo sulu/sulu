@@ -11,8 +11,9 @@
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
 class RequestAnalyzerResolverTest extends ProphecyTestCase
@@ -73,6 +74,12 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
 
+        $portal = new Portal();
+        $locale = new Localization();
+        $locale->setLanguage('de');
+        $locale->setDefault(true);
+        $portal->addLocalization($locale);
+
         $localization = new Localization();
         $localization->setLanguage('de');
         $localization->setCountry('at');
@@ -85,6 +92,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $requestAnalyzer->getCurrentResourceLocator()->willReturn('/search');
         $requestAnalyzer->getCurrentGetParameter()->willReturn(array('p' => 1));
         $requestAnalyzer->getCurrentPostParameter()->willReturn(array());
+        $requestAnalyzer->getCurrentPortal()->willReturn($portal);
+        $requestAnalyzer->getCurrentAnalyticsKey()->willReturn('analyticsKey');
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
@@ -92,11 +101,13 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                 'request' => array(
                     'webspaceKey' => 'sulu_io',
                     'locale' => 'de_at',
+                    'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
                     'get' => array('p' => 1),
-                    'post' => array()
+                    'post' => array(),
+                    'analyticsKey' => 'analyticsKey'
                 )
             ),
             $result
@@ -113,6 +124,7 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                 'request' => array(
                     'webspaceKey' => 'sulu_io',
                     'locale' => 'de',
+                    'defaultLocale' => 'de',
                     'portalUrl' => 'sulu.io/de',
                     'resourceLocatorPrefix' => '',
                     'resourceLocator' => '',

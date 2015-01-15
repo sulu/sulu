@@ -15,6 +15,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -24,6 +25,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class CreateUserCommand extends ContainerAwareCommand
 {
@@ -41,8 +44,8 @@ class CreateUserCommand extends ContainerAwareCommand
                     new InputArgument('lastName', InputArgument::REQUIRED, 'The LastName'),
                     new InputArgument('email', InputArgument::REQUIRED, 'The email'),
                     new InputArgument('locale', InputArgument::REQUIRED, 'The locale'),
+                    new InputArgument('role', InputArgument::REQUIRED, 'The role'),
                     new InputArgument('password', InputArgument::REQUIRED, 'The password'),
-                    new InputOption('god', null, InputOption::VALUE_NONE, 'Set the user as God')
                 )
             );
     }
@@ -52,13 +55,20 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $localizations = $this->getContainer()->get('sulu.core.localization_manager')->getLocalizations();
+        $locales = array();
+
+        foreach ($localizations as $localization) {
+            $locales[] = $localization->getLocalization();
+        }
+
         $username = $input->getArgument('username');
         $firstName = $input->getArgument('firstName');
         $lastName = $input->getArgument('lastName');
         $emailText = $input->getArgument('email');
         $locale = $input->getArgument('locale');
+        $roleName = $input->getArgument('role');
         $password = $input->getArgument('password');
-        $god = $input->getOption('god');
 
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
@@ -98,20 +108,20 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
-        $role = $this->getRole($doctrine, $now, $em);
+        $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array('name' => $roleName));
 
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setUser($user);
-        $userRole->setLocale('[]'); // set all locales
+        $userRole->setLocale(json_encode($locales)); // set all locales
         $em->persist($userRole);
-
-        // TODO God Mode
 
         $em->persist($user);
         $em->flush();
 
-        $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
+        $output->writeln(
+            sprintf('Created user <comment>%s</comment> in role <comment>%s</comment>', $username, $roleName)
+        );
     }
 
     /**
@@ -119,94 +129,132 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
+        $helper = $this->getHelper('question');
+        $doctrine = $this->getContainer()->get('doctrine');
+
         if (!$input->getArgument('username')) {
-            $username = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Please choose a username: ',
-                function ($username) {
+            $question = new Question('Please choose a username: ');
+            $question->setValidator(
+                function ($username) use ($doctrine) {
                     if (empty($username)) {
-                        throw new \Exception('Username can not be empty');
+                        throw new \InvalidArgumentException('Username can not be empty');
+                    }
+
+                    $users = $doctrine->getRepository('SuluSecurityBundle:User')->findBy(
+                        array('username' => $username)
+                    );
+                    if (count($users) > 0) {
+                        throw new \InvalidArgumentException(sprintf('Username "%s" is not unique', $username));
                     }
 
                     return $username;
                 }
             );
-            $input->setArgument('username', $username);
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('username', $value);
         }
 
         if (!$input->getArgument('firstName')) {
-            $result = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Please choose a FirstName: ',
-                function ($username) {
-                    if (empty($username)) {
-                        throw new \Exception('FirstName can not be empty');
+            $question = new Question('Please choose a FirstName: ');
+            $question->setValidator(
+                function ($firstName) use ($doctrine) {
+                    if (empty($firstName)) {
+                        throw new \InvalidArgumentException('FirstName can not be empty');
                     }
 
-                    return $username;
+                    return $firstName;
                 }
             );
-            $input->setArgument('firstName', $result);
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('firstName', $value);
         }
 
         if (!$input->getArgument('lastName')) {
-            $result = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Please choose a LastName: ',
-                function ($username) {
-                    if (empty($username)) {
-                        throw new \Exception('LastName can not be empty');
+            $question = new Question('Please choose a LastName: ');
+            $question->setValidator(
+                function ($lastName) use ($doctrine) {
+                    if (empty($lastName)) {
+                        throw new \InvalidArgumentException('LastName can not be empty');
                     }
 
-                    return $username;
+                    return $lastName;
                 }
             );
-            $input->setArgument('lastName', $result);
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('lastName', $value);
         }
 
         if (!$input->getArgument('email')) {
-            $email = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Please choose an email: ',
-                function ($email) {
+            $question = new Question('Please choose a Email: ');
+            $question->setValidator(
+                function ($email) use ($doctrine) {
                     if (empty($email)) {
-                        throw new \Exception('Email can not be empty');
+                        throw new \InvalidArgumentException('Email can not be empty');
                     }
 
                     return $email;
                 }
             );
-            $input->setArgument('email', $email);
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('email', $value);
         }
 
         if (!$input->getArgument('locale')) {
-            $email = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Please choose an locale: ',
-                function ($email) {
-                    if (empty($email)) {
-                        throw new \Exception('Locale can not be empty');
+            $question = new Question('Please choose a locale: ');
+            $question->setValidator(
+                function ($locale) use ($doctrine) {
+                    if (empty($locale)) {
+                        throw new \InvalidArgumentException('Locale can not be empty');
                     }
 
-                    return $email;
+                    return $locale;
                 }
             );
-            $input->setArgument('locale', $email);
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('locale', $value);
+        }
+
+        if (!$input->getArgument('role')) {
+            $query = $doctrine->getRepository('SuluSecurityBundle:Role')
+                ->createQueryBuilder('role')
+                ->select('role.name')
+                ->getQuery();
+
+            $roles = array();
+            foreach ($query->getArrayResult() as $roleEntity) {
+                $roles[] = $roleEntity['name'];
+            }
+
+            $question = new ChoiceQuestion(
+                'Please choose a role: ',
+                $roles,
+                0
+            );
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('role', $value);
         }
 
         if (!$input->getArgument('password')) {
-            $password = $this->getHelper('dialog')->askHiddenResponseAndValidate(
-                $output,
-                'Please choose a password: ',
-                function ($password) {
+            $question = new Question('Please choose a Password: ');
+            $question->setHidden(true);
+            $question->setValidator(
+                function ($password) use ($doctrine) {
                     if (empty($password)) {
-                        throw new \Exception('Password can not be empty');
+                        throw new \InvalidArgumentException('Password can not be empty');
                     }
 
                     return $password;
                 }
             );
-            $input->setArgument('password', $password);
+
+            $value = $helper->ask($input, $output, $question);
+            $input->setArgument('password', $value);
         }
     }
 
@@ -231,29 +279,5 @@ class CreateUserCommand extends ContainerAwareCommand
         $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
-    }
-
-    /**
-     * @param Registry $doctrine
-     * @param DateTime $now
-     * @param ObjectManager $em
-     * @return object|RoleInterface
-     */
-    protected function getRole(Registry $doctrine, DateTime $now, ObjectManager $em)
-    {
-        // find default role or create a new one
-        $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array(), array('id' => 'ASC'), 1);
-        if (!$role) {
-            $role = new Role();
-            $role->setName('User');
-            $role->setSystem('Sulu');
-            $role->setCreated($now);
-            $role->setChanged($now);
-            $em->persist($role);
-
-            return $role;
-        }
-
-        return $role;
     }
 }

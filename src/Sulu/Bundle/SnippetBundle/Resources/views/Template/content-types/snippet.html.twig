@@ -10,6 +10,8 @@
      data-language="{{ languageCode }}"
      data-url-get="{{ path('get_snippet') }}"
      data-url-all="{{ path('get_snippets') }}"
-     data-snippet-type="{{ property.params.snippetType is defined ? property.params.snippetType : params.defaultSnippetType}}"
+     {% if property.params.snippetType is defined %}
+     data-snippet-type="{{ property.params.snippetType }}"
+     {% endif %}
      >
  </div>

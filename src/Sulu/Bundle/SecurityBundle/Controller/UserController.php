@@ -25,6 +25,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -36,7 +37,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
  * Makes the users accessible through a rest api
  * @package Sulu\Bundle\SecurityBundle\Controller
  */
-class UserController extends RestController implements ClassResourceInterface
+class UserController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluSecurityBundle:User';
 
@@ -784,5 +785,13 @@ class UserController extends RestController implements ClassResourceInterface
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.security.users';
     }
 }

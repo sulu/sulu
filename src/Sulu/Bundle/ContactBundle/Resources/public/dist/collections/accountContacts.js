@@ -1,0 +1,1 @@
+define(["mvc/collection","sulucontact/model/contact"],function(a,b){"use strict";return new a({model:b,accountId:null,setAccountId:function(a){this.accountId=a},parse:function(a){return a._embedded?a._embedded.contacts:a},initialize:function(a){this.setAccountId(a.accountId)},url:function(){return"/admin/api/accounts/"+this.accountId+"/contacts"}})});

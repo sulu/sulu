@@ -19,6 +19,9 @@ use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Webspace;
 
 /**
  * @group functional
@@ -31,15 +34,49 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
      */
     private $repository;
 
+    /**
+     * @var Webspace
+     */
+    private $webspace;
+
     protected function setUp()
     {
         $this->prepareMapper();
         $this->prepareResourceLocatorRepository();
     }
 
+    /**
+     * prepares webspace manager
+     */
+    protected function prepareWebspaceManager()
+    {
+        if ($this->webspaceManager === null) {
+            $this->webspaceManager = $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+
+            $this->webspace = new Webspace();
+            $locale = new Localization();
+            $locale->setLanguage('de');
+            $locale->setDefault(true);
+            $this->webspace->addLocalization($locale);
+            $portal = new Portal();
+            $portal->addLocalization($locale);
+            $this->webspace->addPortal($portal);
+
+            $this->webspaceManager->expects($this->any())->method('findWebspaceByKey')->will(
+                $this->returnValue($this->webspace)
+            );
+        }
+    }
+
     private function prepareResourceLocatorRepository()
     {
-        $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), new PathCleanup());
+        $strategy = new TreeStrategy(
+            new PhpcrMapper($this->sessionManager, '/cmf/routes'),
+            new PathCleanup(),
+            $this->structureManager,
+            $this->contentTypeManager,
+            $this->nodeHelper
+        );
         $this->repository = new ResourceLocatorRepository(
             $strategy,
             $this->structureManager,

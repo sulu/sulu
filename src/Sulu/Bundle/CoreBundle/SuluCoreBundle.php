@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\CoreBundle;
 
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterLocalizationProvidersPass;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RequestAnalyzerCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RegisterContentTypesCompilerPass;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\StructureExtensionCompilerPass;
@@ -25,5 +27,7 @@ class SuluCoreBundle extends Bundle
         $container->addCompilerPass(new RequestAnalyzerCompilerPass());
         $container->addCompilerPass(new StructureExtensionCompilerPass());
         $container->addCompilerPass(new RegisterContentTypesCompilerPass());
+        $container->addCompilerPass(new RegisterLocalizationProvidersPass());
+        $container->addCompilerPass(new RemoveForeignContextServicesPass());
     }
 }

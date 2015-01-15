@@ -964,5 +964,4 @@ abstract class AbstractContactController extends RestController implements Class
 
       return null;
     }
-
 }

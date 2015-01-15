@@ -56,21 +56,6 @@ class SmartContent extends ComplexContentType
      */
     private $stopwatch;
 
-    /**
-     * @var array
-     */
-    private $contentData;
-
-    /**
-     * @var boolean
-     */
-    private $hasNextPage;
-
-    /**
-     * @var int
-     */
-    private $page;
-
     public function __construct(
         ContentQueryExecutorInterface $contentQuery,
         ContentQueryBuilderInterface $contentQueryBuilder,
@@ -109,32 +94,12 @@ class SmartContent extends ComplexContentType
     /**
      * @param $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @param bool $preview
      */
     protected function setData(
         $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey,
-        $preview = false
+        PropertyInterface $property
     ) {
-        $smartContent = new SmartContentContainer(
-            $this->contentQuery,
-            $this->contentQueryBuilder,
-            $this->tagManager,
-            array_merge($this->getDefaultParams(), $property->getParams()),
-            $webspaceKey,
-            $languageCode,
-            $segmentKey,
-            $preview,
-            $this->stopwatch
-        );
-        $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
-        $property->setValue($smartContent);
+        $property->setValue($data);
     }
 
     /**
@@ -142,7 +107,10 @@ class SmartContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = $node->getPropertyValueWithDefault($property->getName(), '{}');
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
 
         if (!empty($data['tags'])) {
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
@@ -224,14 +192,9 @@ class SmartContent extends ComplexContentType
     public function getViewData(PropertyInterface $property)
     {
         $this->getContentData($property);
+        $config = $property->getValue();
 
-        return array_merge(
-            $property->getValue()->getConfig(),
-            array(
-                'page' => $this->page,
-                'hasNextPage' => $this->hasNextPage
-            )
-        );
+        return $config;
     }
 
     /**
@@ -239,24 +202,32 @@ class SmartContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        if ($this->contentData !== null) {
-            return $this->contentData;
-        }
-
         $params = array_merge(
             $this->getDefaultParams(),
             $property->getParams()
         );
 
-        $value = $property->getValue();
-        // paginate
-        if ($value instanceof SmartContentContainer) {
-            $this->contentData = $this->loadData($value, $property, $params);
-        } else {
-            $this->contentData = array();
-        }
+        $data = $property->getValue();
 
-        return $this->contentData;
+        $container = new SmartContentContainer(
+            $this->contentQuery,
+            $this->contentQueryBuilder,
+            $this->tagManager,
+            array_merge($this->getDefaultParams(), $property->getParams()),
+            $property->getStructure()->getWebspaceKey(),
+            $property->getStructure()->getLanguageCode(),
+            // TODO segmentkey
+            null,
+            $this->stopwatch
+        );
+        $container->setConfig($data === null || !is_array($data) ? array() : $data);
+        $pages = $this->loadData($container, $property, $params);
+
+        $data['page'] = $container->getPage();
+        $data['hasNextPage'] = $container->getHasNextPage();
+        $property->setValue($data);
+
+        return $pages;
     }
 
     /**
@@ -266,18 +237,18 @@ class SmartContent extends ComplexContentType
     {
         if (isset($params['max_per_page'])) {
             // determine current page
-            $this->page = $this->getCurrentPage($params['page_parameter']);
+            $container->setPage($this->getCurrentPage($params['page_parameter']));
 
             $contentData = $this->getPagedContentData(
                 $container,
-                $this->page,
+                $container->getPage(),
                 intval($params['max_per_page']),
                 $property->getStructure()->getUuid()
             );
         } else {
             // set default values
-            $this->page = 1;
-            $this->hasNextPage = false;
+            $container->setPage(1);
+            $container->setHasNextPage(false);
 
             $contentData = $this->getNotPagedContentData(
                 $container,
@@ -322,15 +293,17 @@ class SmartContent extends ComplexContentType
         }
 
         if ($limit < 0) {
+            $container->setHasNextPage(false);
             return array();
         }
 
         $data = $container->getData(array($excludeUuid), $loadLimit, $offset);
 
-        $this->hasNextPage = false;
         if (sizeof($data) > $limit) {
-            $this->hasNextPage = true;
+            $container->setHasNextPage(true);
             $data = array_splice($data, 0, $limit);
+        } else {
+            $container->setHasNextPage(false);
         }
 
         return $data;

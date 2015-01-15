@@ -14,9 +14,9 @@
         $localization{{ count - 1 }}->addChild($localization{{ count }});
 {% endmacro %}
 <?php
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Environment;
@@ -59,6 +59,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization0->setLanguage('{{ localization.language }}');
         $localization0->setCountry('{{ localization.country }}');
         $localization0->setShadow('{{ (localization.shadow) }}');
+        $localization0->setDefault('{{ localization.default }}');
 {% for childLocalization in localization.children %}
 {{ _self.create_localizations(childLocalization, 1, 0, webspace) }}
 {% endfor %}
@@ -99,6 +100,7 @@ class {{ cache_class }} extends {{ base_class }}
         $localization = new Localization();
         $localization->setLanguage('{{ localization.language }}');
         $localization->setCountry('{{ localization.country }}');
+        $localization->setDefault('{{ localization.default }}');
         $portal->addLocalization($localization);
 {% endfor %}
 
@@ -116,6 +118,7 @@ class {{ cache_class }} extends {{ base_class }}
         $url->setCountry('{{ url.country }}');
         $url->setSegment('{{ url.segment }}');
         $url->setRedirect('{{ url.redirect }}');
+        $url->setAnalyticsKey('{{ url.analyticsKey }}');
         $environment->addUrl($url);
 {% endfor %}
 
@@ -152,7 +155,12 @@ class {{ cache_class }} extends {{ base_class }}
             null,
 {% endif %}
 {% if portalInformation.redirect %}
-            '{{ portalInformation.redirect }}'
+            '{{ portalInformation.redirect }}',
+{% else %}
+            null,
+{% endif %}
+{% if portalInformation.analyticsKey %}
+            '{{ portalInformation.analyticsKey }}'
 {% else %}
             null
 {% endif %}
@@ -186,6 +194,7 @@ class {{ cache_class }} extends {{ base_class }}
     $localization{{ count }}->setCountry('{{ localization.country }}');
     $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
     $localization{{ count }}->setParent($localization{{ parent }});
+    $localization{{ count }}->setDefault('{{ localization.default }}');
 
     $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization{{ count }};
 

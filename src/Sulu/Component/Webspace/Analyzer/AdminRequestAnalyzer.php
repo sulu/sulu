@@ -10,8 +10,7 @@
 
 namespace Sulu\Component\Webspace\Analyzer;
 
-use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Segment;
@@ -183,5 +182,14 @@ class AdminRequestAnalyzer implements RequestAnalyzerInterface
     public function getCurrentGetParameter()
     {
         return null;
+    }
+
+    /**
+     * Returns the analytics key
+     * @return string
+     */
+    public function getCurrentAnalyticsKey()
+    {
+        return '';
     }
 }

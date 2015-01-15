@@ -151,13 +151,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test'
         );
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
 
         $params = http_build_query($params);
 
@@ -207,13 +201,7 @@ class NodeControllerTest extends SuluTestCase
             'article' => 'Test'
         );
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data1);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
@@ -278,13 +266,7 @@ class NodeControllerTest extends SuluTestCase
 
         $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'de', 1);
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
 
         for ($i = 0; $i < count($data); $i++) {
             $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[$i]);
@@ -296,13 +278,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testGet()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->beforeTestGet();
 
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
@@ -319,13 +295,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->beforeTestGet();
 
         $client->request('DELETE', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
@@ -337,13 +307,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testPut()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->beforeTestGet();
 
         $data[0]['title'] = 'test123';
@@ -379,8 +343,8 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
         $this->assertEquals(2, sizeof($response->_embedded->nodes));
 
-        $this->assertEquals($data[1]['title'], $response->_embedded->nodes[0]->title);
-        $this->assertEquals($data[0]['title'], $response->_embedded->nodes[1]->title);
+        $this->assertEquals($data[0]['title'], $response->_embedded->nodes[0]->title);
+        $this->assertEquals($data[1]['title'], $response->_embedded->nodes[1]->title);
     }
 
     private function buildTree()
@@ -450,13 +414,7 @@ class NodeControllerTest extends SuluTestCase
             )
         );
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = (array) json_decode($client->getResponse()->getContent(), true);
 
@@ -517,13 +475,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testTreeGet()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         // get child nodes from root
@@ -563,13 +515,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testGetFlat()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         // get child nodes from root
@@ -643,13 +589,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testGetTree()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         // get child nodes from root
@@ -809,13 +749,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testBreadcrumb()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
         $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
         $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'en', 1);
@@ -837,13 +771,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testSmallResponse()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->beforeTestGet();
 
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
@@ -856,20 +784,14 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('tags', $response);
         $this->assertArrayNotHasKey('ext', $response);
         $this->assertArrayNotHasKey('enabledShadowLanguage', $response);
-        $this->assertArrayNotHasKey('concreteLanguages', $response);
+        $this->assertArrayHasKey('concreteLanguages', $response);
         $this->assertArrayNotHasKey('shadowOn', $response);
         $this->assertArrayNotHasKey('shadowBaseLanguage', $response);
     }
 
     public function testCgetAction()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         // get child nodes from root
@@ -903,13 +825,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testHistory()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = array(
             'title' => 'news',
             'tags' => array(
@@ -958,13 +874,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testMove()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         $client->request(
@@ -983,13 +893,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testMoveNonExistingSource()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         $client->request(
@@ -1001,13 +905,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testMoveNonExistingDestination()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         $client->request(
@@ -1019,13 +917,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testCopy()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         $client->request(
@@ -1062,13 +954,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testCopyNonExistingSource()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         $client->request(
@@ -1080,13 +966,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testCopyNonExistingDestination()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = $this->buildTree();
 
         $client->request(
@@ -1117,13 +997,7 @@ class NodeControllerTest extends SuluTestCase
             )
         );
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = json_decode($client->getResponse()->getContent(), true);
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[1]);
@@ -1181,13 +1055,7 @@ class NodeControllerTest extends SuluTestCase
             )
         );
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = json_decode($client->getResponse()->getContent(), true);
 
@@ -1207,13 +1075,7 @@ class NodeControllerTest extends SuluTestCase
             )
         );
 
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[0]);
         $data[0] = json_decode($client->getResponse()->getContent(), true);
 
@@ -1226,13 +1088,7 @@ class NodeControllerTest extends SuluTestCase
 
     public function testNavContexts()
     {
-        $client = $this->createClient(
-            array(),
-            array(
-                'PHP_AUTH_USER' => 'test',
-                'PHP_AUTH_PW' => 'test',
-            )
-        );
+        $client = $this->createAuthenticatedClient();
         $data = array(
             'title' => 'test1',
             'tags' => array(
@@ -1274,4 +1130,72 @@ class NodeControllerTest extends SuluTestCase
         $this->assertArrayHasKey('_links', $items[0]);
     }
 
+    public function testCopyLocale()
+    {
+        $client = $this->createAuthenticatedClient();
+        $data = array(
+            'title' => 'test1',
+            'url' => '/test1',
+            'article' => 'Test'
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&language=en&dest=de'
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/nodes/' . $data['id'] . '?webspace=sulu_io&language=de'
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+    }
+
+    public function testCopyMultipleLocales()
+    {
+        $client = $this->createAuthenticatedClient();
+        $data = array(
+            'title' => 'test1',
+            'url' => '/test1',
+            'article' => 'Test'
+        );
+        $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data);
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $client->request(
+            'POST',
+            '/api/nodes/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&language=en&dest=de,de_at'
+        );
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $client->request(
+            'GET',
+            '/api/nodes/' . $data['id'] . '?webspace=sulu_io&language=de'
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+
+        $client->request(
+            'GET',
+            '/api/nodes/' . $data['id'] . '?webspace=sulu_io&language=de_at'
+        );
+        $result = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+    }
 }

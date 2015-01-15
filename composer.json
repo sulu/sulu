@@ -7,7 +7,6 @@
         "core",
         "sulu"
     ],
-    "version": "dev-develop",
     "authors": [
         {
             "name": "Sulu Community",
@@ -17,8 +16,8 @@
     "require": {
         "cboden/ratchet": "0.3.*",
         "doctrine/orm": "2.4.*",
-        "doctrine/phpcr-bundle": "1.1.*",
-        "doctrine/phpcr-odm": "1.1.*",
+        "doctrine/phpcr-bundle": "~1.2.0",
+        "doctrine/phpcr-odm": "~1.2.0",
         "friendsofsymfony/http-cache": "1.0.*",
         "friendsofsymfony/rest-bundle": "~1.4",
         "guzzle/http": "3.*",
@@ -26,7 +25,7 @@
         "imagine/imagine": "~0.6.1",
         "jackalope/jackalope-jackrabbit": "1.1.*",
         "liip/theme-bundle": "1.1.*",
-        "massive/search-bundle": "~0.3.1",
+        "massive/search-bundle": "~0.4",
         "php": ">=5.4",
         "phpspec/prophecy-phpunit": "~1.0",
         "sensio/framework-extra-bundle": "3.0.*",
@@ -38,6 +37,7 @@
         "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
+        "phpcr/phpcr-shell": "~1.0.0@alpha",
         "doctrine/doctrine-bundle": "1.2.*",
         "doctrine/doctrine-fixtures-bundle": "2.2.*",
         "doctrine/orm": "~2.2,>=2.2.3",

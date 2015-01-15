@@ -146,7 +146,7 @@ abstract class RestController extends FOSRestController
      * @param Request $request
      * @return mixed
      */
-    protected function getLocale($request)
+    public function getLocale(Request $request)
     {
         $lang = $request->get('locale');
         if (!$lang) {

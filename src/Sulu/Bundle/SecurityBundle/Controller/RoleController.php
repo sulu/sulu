@@ -19,6 +19,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -26,12 +27,15 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
+use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
 
 /**
  * Makes the roles accessible through a REST-API
  * @package Sulu\Bundle\SecurityBundle\Controller
  */
-class RoleController extends RestController implements ClassResourceInterface
+class RoleController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluSecurityBundle:Role';
 
@@ -41,9 +45,9 @@ class RoleController extends RestController implements ClassResourceInterface
 
     protected $fieldsDefault = array('name');
     protected $fieldsExcluded = array();
-    protected $fieldsHidden = array('changed','created');
+    protected $fieldsHidden = array('changed', 'created');
     protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0=>'id',1=>'name');
+    protected $fieldsSortOrder = array(0 => 'id', 1 => 'name');
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'security.roles.';
 
@@ -193,7 +197,14 @@ class RoleController extends RestController implements ClassResourceInterface
         $name = $request->get('name');
         $system = $request->get('system');
 
-        if ($name != null && $system != null) {
+        try {
+            if ($name === null) {
+                throw new InvalidArgumentException('Role', 'name');
+            }
+            if ($system === null) {
+                throw new InvalidArgumentException('Role', 'name');
+            }
+
             $em = $this->getDoctrine()->getManager();
 
             $role = new Role();
@@ -215,12 +226,16 @@ class RoleController extends RestController implements ClassResourceInterface
                 $this->setSecurityType($role, $securityTypeData);
             }
 
-            $em->persist($role);
-            $em->flush();
+            try {
+                $em->persist($role);
+                $em->flush();
 
-            $view = $this->view($this->convertRole($role), 200);
-        } else {
-            $view = $this->view(null, 400);
+                $view = $this->view($this->convertRole($role), 200);
+            } catch (DoctrineUniqueConstraintViolationException $ex) {
+                throw new SuluUniqueConstraintViolationException('name', 'SuluSecurityBudle:Role');
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -409,7 +424,7 @@ class RoleController extends RestController implements ClassResourceInterface
                     'context' => $permission->getContext(),
                     'module' => $permission->getModule(),
                     'permissions' => $this->get('sulu_security.mask_converter')
-                            ->convertPermissionsToArray($permission->getPermissions())
+                        ->convertPermissionsToArray($permission->getPermissions())
                 );
             }
         }
@@ -451,5 +466,13 @@ class RoleController extends RestController implements ClassResourceInterface
             throw new EntityNotFoundException('SuluSecurityBundle:SecurityType', $securityTypeData['id']);
         }
         $role->setSecurityType($securityType);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.security.roles';
     }
 }

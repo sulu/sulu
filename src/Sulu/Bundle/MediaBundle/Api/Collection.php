@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -18,12 +18,28 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\UserInterface;
+use Hateoas\Configuration\Annotation\Relation;
+use Hateoas\Configuration\Annotation\Route;
 
 /**
  * Class Collection
  * The Collection RestObject is the api entity for the CollectionController.
- * @package Sulu\Bundle\MediaBundle\Media\RestObject
  * @ExclusionPolicy("all")
+ * FIXME Remove limit = 9999 after create cget without pagination
+ * @Relation(
+ *      "all",
+ *      href = @Route(
+ *          "cget_media",
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999  }
+ *      )
+ * )
+ * @Relation(
+ *      "filterByTypes",
+ *      href = @Route(
+ *          "cget_media",
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "types" = "{types}" }
+ *      )
+ * )
  */
 class Collection extends ApiWrapper
 {
@@ -37,7 +53,7 @@ class Collection extends ApiWrapper
      */
     protected $properties = array();
 
-    public function __construct(Entity $collection, $locale)
+    public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
         $this->locale = $locale;
@@ -346,7 +362,7 @@ class Collection extends ApiWrapper
      */
     public function setCreator($creator)
     {
-        $this->entity->setChanger($creator);
+        $this->entity->setCreator($creator);
 
         return $this;
     }

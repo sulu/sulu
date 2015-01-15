@@ -40,15 +40,21 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     public function resolve(RequestAnalyzerInterface $requestAnalyzer)
     {
+        // determine default locale (if one exists)
+        $defaultLocalization = $requestAnalyzer->getCurrentPortal()->getDefaultLocalization();
+        $defaultLocale = $defaultLocalization ? $defaultLocalization->getLocalization() : null;
+
         return array(
             'request' => array(
                 'webspaceKey' => $requestAnalyzer->getCurrentWebspace()->getKey(),
+                'defaultLocale' => $defaultLocale,
                 'locale' => $requestAnalyzer->getCurrentLocalization()->getLocalization(),
                 'portalUrl' => $requestAnalyzer->getCurrentPortalUrl(),
                 'resourceLocatorPrefix' => $requestAnalyzer->getCurrentResourceLocatorPrefix(),
                 'resourceLocator' => $requestAnalyzer->getCurrentResourceLocator(),
                 'get' => $requestAnalyzer->getCurrentGetParameter(),
-                'post' => $requestAnalyzer->getCurrentPostParameter()
+                'post' => $requestAnalyzer->getCurrentPostParameter(),
+                'analyticsKey' => $requestAnalyzer->getCurrentAnalyticsKey(),
             )
         );
     }
@@ -66,6 +72,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
             'request' => array(
                 'webspaceKey' => $webspaceKey,
                 'locale' => $locale,
+                'defaultLocale' => $locale,
                 'portalUrl' => $portalUrl,
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',

@@ -11,7 +11,14 @@ define(['app-config'], function(AppConfig) {
 
     'use strict';
 
-    var setHeaderToolbar = function() {
+    var constants = {
+            localizationsUrl: '/admin/api/localizations',
+            localizationConnector: '-',
+            permissionGridId: '#permissions-grid',
+            permissionLoaderClass: '.permission-loader'
+        },
+
+        setHeaderToolbar = function() {
         var toolbarItems = [
             {
                 id: 'save-button',
@@ -99,7 +106,6 @@ define(['app-config'], function(AppConfig) {
             this.render();
             this.initializeRoles();
 
-            this.bindDOMEvents();
             this.bindCustomEvents();
 
             this.initializeHeaderbar();
@@ -224,8 +230,7 @@ define(['app-config'], function(AppConfig) {
             ]);
         },
 
-        bindDOMEvents: function() {
-
+        bindRoleTableEvents: function() {
             this.sandbox.dom.on('#rolesTable', 'click', function(event) {
                 var id = this.sandbox.dom.attr(event.currentTarget, 'id');
                 if (id === 'selectAll') {
@@ -237,7 +242,6 @@ define(['app-config'], function(AppConfig) {
         },
 
         selectAll: function(checkbox) {
-
             var $checkboxes = this.sandbox.dom.find('tr td:first-child() input[type="checkbox"]', '#rolesTable'),
                 roleId;
 
@@ -274,7 +278,6 @@ define(['app-config'], function(AppConfig) {
         },
 
         selectItem: function($element) {
-
             var roleId = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.sandbox.dom.parent($element))), 'id'),
                 index = this.selectedRoles.indexOf(roleId);
 
@@ -294,9 +297,7 @@ define(['app-config'], function(AppConfig) {
                 this.selectedRoles.push(roleId);
 
                 this.sandbox.logger.log(roleId, "role selected");
-
             }
-
         },
 
         bindCustomEvents: function() {
@@ -406,22 +407,35 @@ define(['app-config'], function(AppConfig) {
         // Grid with roles and permissions
 
         initializeRoles: function() {
+            var $container = this.sandbox.dom.createElement('<div class="' + constants.permissionLoaderClass + '"/>');
+            this.sandbox.dom.append(this.$find(constants.permissionGridId), $container);
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $container,
+                        size: '100px',
+                        color: '#e4e4e4'
+                    }
+                }
+            ]);
 
+            this.sandbox.util.load(constants.localizationsUrl, null, 'json').then(this.renderRoles.bind(this));
+        },
+
+        renderRoles: function (localizations) {
             this.getSelectRolesOfUser();
 
-            var $permissionsContainer = this.sandbox.dom.$('#permissions-grid'),
+            var $permissionsContainer = this.sandbox.dom.$(constants.permissionGridId),
                 $table = this.sandbox.dom.createElement('<table/>', {class: 'table matrix', id: 'rolesTable'}),
                 $tableHeader = this.prepareTableHeader(),
                 $tableContent = this.prepareTableContent(),
-                $tmp = this.sandbox.dom.append($table, $tableHeader),
-                rows;
+                $tmp = this.sandbox.dom.append($table, $tableHeader);
 
             $tmp = this.sandbox.dom.append($tmp, $tableContent);
             this.sandbox.dom.html($permissionsContainer, $tmp);
 
-            rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
-
-            // TODO get elements for dropdown from portal
+            var rows = this.sandbox.dom.find('tbody tr', '#rolesTable');
 
             this.sandbox.util.each(rows, function(index, value) {
                 var id = this.sandbox.dom.data(value, 'id'),
@@ -437,12 +451,21 @@ define(['app-config'], function(AppConfig) {
                             defaultLabel: this.sandbox.translate('security.permission.role.chooseLanguage'),
                             checkedAllLabel: this.sandbox.translate('security.permission.role.allLanguages'),
                             value: 'name',
-                            data: ["Deutsch", "English", "Espanol", "Italiano"],
+                            data: localizations.map(function (localization) {
+                                return {
+                                    id: localization.localization,
+                                    name: localization.localization
+                                };
+                            }),
                             preSelectedElements: preSelectedValues
                         }
                     }
                 ]);
+
+                this.sandbox.stop(this.$find(constants.permissionLoaderClass));
             }.bind(this));
+
+            this.bindRoleTableEvents();
         },
 
         getUserRoleLocalesWithRoleId: function(id) {

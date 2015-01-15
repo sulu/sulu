@@ -164,9 +164,9 @@ class AccountManager extends AbstractContactManager
      * @param $locale
      * @return array
      */
-    public function findContactByAccountId($id, $locale)
+    public function findContactsByAccountId($id, $locale, $onlyFetchMainAccounts = false)
     {
-        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false);
+        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false, $onlyFetchMainAccounts);
         $contacts = [];
         if ($contactsEntities) {
             foreach ($contactsEntities as $contact) {
@@ -182,11 +182,16 @@ class AccountManager extends AbstractContactManager
     /**
      * Returns all accounts
      * @param $locale
+     * @param $filter
      * @return null
      */
-    public function findAll($locale)
+    public function findAll($locale, $filter = null)
     {
-        $accountEntities = $this->em->getRepository($this->accountEntity)->findAll();
+        if ($filter) {
+            $accountEntities = $this->em->getRepository($this->accountEntity)->findByFilter($filter);
+        } else {
+            $accountEntities = $this->em->getRepository($this->accountEntity)->findAll();
+        }
         $accounts = [];
         if ($accountEntities) {
             foreach ($accountEntities as $account) {
@@ -195,6 +200,7 @@ class AccountManager extends AbstractContactManager
         } else {
             return null;
         }
+        return $accounts;
     }
 
     /**

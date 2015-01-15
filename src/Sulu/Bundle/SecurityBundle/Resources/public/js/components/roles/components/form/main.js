@@ -15,19 +15,13 @@ define([], function() {
             {value: 'view', icon: 'eye'},
             {value: 'add', icon: 'plus-circle'},
             {value: 'edit', icon: 'pencil'},
-            {value: 'delete', icon: 'trash-o'},
-            {value: 'archive', icon: 'archive'},
-            {value: 'live', icon: 'signal'},
-            {value: 'security', icon: 'unlock-alt'}
+            {value: 'delete', icon: 'trash-o'}
         ],
         permissionTitles = [
             'security.permissions.view',
             'security.permissions.add',
             'security.permissions.edit',
-            'security.permissions.delete',
-            'security.permissions.archive',
-            'security.permissions.live',
-            'security.permissions.security'
+            'security.permissions.delete'
         ],
         permissionData,
         matrixContainerSelector = '#matrix-container',
@@ -135,44 +129,43 @@ define([], function() {
             // load all the contexts from the selected module
             this.sandbox.util.ajax({
                 url: '/admin/contexts?system=' + system
-            })
-                .done(function(data) {
-                    for (var module in data) {
-                        if (data.hasOwnProperty(module)) {
-                            // create a matrix for every module
+            }).done(function(data) {
+                for (var module in data) {
+                    if (data.hasOwnProperty(module)) {
+                        // create a matrix for every module
 
-                            contextHeadlines = [];
-                            matrixData = [];
+                        contextHeadlines = [];
+                        matrixData = [];
 
-                            data[module].forEach(createMatrixData);
+                        data[module].forEach(createMatrixData);
 
-                            this.sandbox.start([
-                                {
-                                    name: 'matrix@husky',
-                                    options: {
-                                        el: matrixSelector,
-                                        captions: {
-                                            general: module,
-                                            type: this.sandbox.translate('security.roles.section'),
-                                            horizontal: this.sandbox.translate('security.roles.permissions'),
-                                            all: this.sandbox.translate('security.roles.all'),
-                                            none: this.sandbox.translate('security.roles.none'),
-                                            vertical: contextHeadlines
-                                        },
-                                        values: {
-                                            vertical: data[module],
-                                            horizontal: permissions,
-                                            titles: this.sandbox.translateArray(permissionTitles)
-                                        },
-                                        data: matrixData
-                                    }
+                        this.sandbox.start([
+                            {
+                                name: 'matrix@husky',
+                                options: {
+                                    el: matrixSelector,
+                                    captions: {
+                                        general: module,
+                                        type: this.sandbox.translate('security.roles.section'),
+                                        horizontal: this.sandbox.translate('security.roles.permissions'),
+                                        all: this.sandbox.translate('security.roles.all'),
+                                        none: this.sandbox.translate('security.roles.none'),
+                                        vertical: contextHeadlines
+                                    },
+                                    values: {
+                                        vertical: data[module],
+                                        horizontal: permissions,
+                                        titles: this.sandbox.translateArray(permissionTitles)
+                                    },
+                                    data: matrixData
                                 }
-                            ]);
+                            }
+                        ]);
 
-                            this.sandbox.dom.removeClass($matrix, 'loading');
-                        }
+                        this.sandbox.dom.removeClass($matrix, 'loading');
                     }
-                }.bind(this));
+                }
+            }.bind(this));
         },
 
         setGod: function() {
@@ -194,7 +187,7 @@ define([], function() {
 
             if (!data.activated) {
                 // unset god status as soon as one permission is removed
-                this.sandbox.dom.attr('#god', { checked: false });
+                this.sandbox.dom.attr('#god', {checked: false});
             }
         },
 
@@ -265,7 +258,7 @@ define([], function() {
             ];
             if (!!this.options.data && !!this.options.data.name) {
                 breadcrumb.push({
-                   title: this.options.data.name
+                    title: this.options.data.name
                 });
             } else {
                 breadcrumb.push({

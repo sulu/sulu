@@ -13,23 +13,35 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
+use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SuluMediaAdmin extends Admin
 {
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
 
-    public function __construct($title)
+    public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
+        $this->securityChecker = $securityChecker;
+
         $rootNavigationItem = new NavigationItem($title);
         $section = new NavigationItem('');
 
         $media = new NavigationItem('navigation.media');
         $media->setIcon('image');
 
-        $products = new NavigationItem('navigation.media.collections', $media);
-        $products->setAction('media/collections');
+        if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
+            $collections = new NavigationItem('navigation.media.collections', $media);
+            $collections->setAction('media/collections');
+        }
 
-        $section->addChild($media);
-        $rootNavigationItem->addChild($section);
+        if ($media->hasChildren()) {
+            $section->addChild($media);
+            $rootNavigationItem->addChild($section);
+        }
 
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
@@ -48,5 +60,17 @@ class SuluMediaAdmin extends Admin
     public function getJsBundleName()
     {
         return 'sulumedia';
+    }
+
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Media' => array(
+                    'sulu.media.collections',
+                    'sulu.media.files',
+                )
+            )
+        );
     }
 }

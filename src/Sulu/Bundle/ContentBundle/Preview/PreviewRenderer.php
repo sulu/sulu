@@ -11,9 +11,10 @@
 namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Liip\ThemeBundle\ActiveTheme;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
@@ -34,20 +35,30 @@ class PreviewRenderer
      */
     private $controllerResolver;
 
-    public function __construct(ActiveTheme $activeTheme, ControllerResolverInterface $controllerResolver, WebspaceManagerInterface $webspaceManager)
-    {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(
+        ActiveTheme $activeTheme,
+        ControllerResolverInterface $controllerResolver,
+        WebspaceManagerInterface $webspaceManager,
+        RequestStack $requestStack
+    ) {
         $this->activeTheme = $activeTheme;
         $this->controllerResolver = $controllerResolver;
         $this->webspaceManager = $webspaceManager;
+        $this->requestStack = $requestStack;
     }
 
     /**
      * renders content with the real website controller
-     * @param StructureInterface $content
+     * @param Page $content
      * @param bool $partial
      * @return string
      */
-    public function render(StructureInterface $content, $partial = false)
+    public function render(Page $content, $partial = false)
     {
         // set active theme
         $webspace = $this->webspaceManager->findWebspaceByKey($content->getWebspaceKey());
@@ -58,8 +69,10 @@ class PreviewRenderer
         $request->attributes->set('_controller', $content->getController());
         $controller = $this->controllerResolver->getController($request);
 
+        $this->requestStack->push($request);
         /** @var Response $response */
         $response = $controller[0]->{$controller[1]}($content, true, $partial);
+        $this->requestStack->pop();
 
         return $response->getContent();
     }

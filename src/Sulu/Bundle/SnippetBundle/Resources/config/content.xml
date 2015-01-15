@@ -12,7 +12,6 @@
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_website.resolver.structure" />
             <argument>%sulu_snippet.content-type.template%</argument>
-            <argument>%sulu.content.structure.default_type.snippet%</argument>
 
             <tag name="sulu.content.type" alias="snippet"/>
         </service>

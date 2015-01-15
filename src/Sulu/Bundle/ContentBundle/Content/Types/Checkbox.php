@@ -35,6 +35,18 @@ class Checkbox extends SimpleContentType
     /**
      * {@inheritdoc}
      */
+    public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        if ($data !== null && $data !== false && $data !== 'false' && $data !== '') {
+            $property->setValue(true);
+        } else {
+            $property->setValue(false);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function write(
         NodeInterface $node,
         PropertyInterface $property,
@@ -44,7 +56,8 @@ class Checkbox extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        if ($value !== null && $value !== false && $value !== '') {
+
+        if ($value !== null && $value !== false && $value !== 'false' && $value !== '') {
             $node->setProperty($property->getName(), true);
         } else {
             $node->setProperty($property->getName(), false);

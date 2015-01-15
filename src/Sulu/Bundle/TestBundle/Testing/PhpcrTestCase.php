@@ -16,6 +16,8 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
+use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
+use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Component\Content\Block\BlockContentType;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -34,6 +36,7 @@ use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
@@ -132,6 +135,11 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $templateResolver;
 
     /**
+     * @var SuluNodeHelper
+     */
+    protected $nodeHelper;
+
+    /**
      * The default language for the content mapper
      * @var string
      */
@@ -186,14 +194,24 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->prepareLocalizationFinder();
 
             $this->templateResolver = new TemplateResolver();
-            $nodeHelper = new SuluNodeHelper('i18n', array(
-                'base' => 'cmf',
-                'content' => 'contents',
-                'route' => 'routes',
-                'snippet' => 'snippets',
-            ));
+            $this->nodeHelper = new SuluNodeHelper(
+                $this->sessionManager->getSession(),
+                'i18n', 
+                array(
+                    'base' => 'cmf',
+                    'content' => 'contents',
+                    'route' => 'routes',
+                    'snippet' => 'snippets',
+                )
+            );
             $cleaner = new PathCleanup();
-            $strategy = new TreeStrategy(new PhpcrMapper($this->sessionManager, '/cmf/routes'), $cleaner);
+            $strategy = new TreeStrategy(
+                new PhpcrMapper($this->sessionManager, '/cmf/routes'),
+                $cleaner,
+                $this->structureManager,
+                $this->contentTypeManager,
+                $this->nodeHelper
+            );
 
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
@@ -204,12 +222,20 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $cleaner,
                 $this->webspaceManager,
                 $this->templateResolver,
-                $nodeHelper,
+                $this->nodeHelper,
                 $strategy,
                 $this->language,
                 $this->defaultTemplates,
                 $this->languageNamespace,
                 $this->internalPrefix
+            );
+
+            $structureResolver = new StructureResolver($this->contentTypeManager, $this->structureManager);
+
+            $snippet = new SnippetContent(
+                $this->mapper,
+                $structureResolver,
+                'not in use'
             );
 
             $resourceLocator = new ResourceLocator($strategy, 'not in use');
@@ -221,6 +247,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
+                    'sulu_snippet.content.snippet' => $snippet,
                     'sulu.content.type.block' => new BlockContentType(
                             $this->contentTypeManager,
                             'not in use',
@@ -240,6 +267,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->contentTypeManager->mapAliasToServiceId('text_area', 'sulu.content.type.text_area');
             $this->contentTypeManager->mapAliasToServiceId('resource_locator', 'sulu.content.type.resource_locator');
             $this->contentTypeManager->mapAliasToServiceId('block', 'sulu.content.type.block');
+            $this->contentTypeManager->mapAliasToServiceId('snippet', 'sulu_snippet.content.snippet');
         }
     }
 
@@ -365,7 +393,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                     'base' => 'cmf',
                     'route' => 'routes',
                     'content' => 'contents',
-                    'temp' => 'temp'
+                    'snippet' => 'snippets',
                 )
             );
         }
@@ -433,6 +461,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PathNodeType(), true);
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new ContentNodeType(), true);
             $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new PageNodeType(), true);
+            $this->session->getWorkspace()->getNodeTypeManager()->registerNodeType(new SnippetNodeType(), true);
 
             NodeHelper::purgeWorkspace($this->session);
             $this->session->save();
@@ -440,6 +469,9 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $cmf = $this->session->getRootNode()->addNode('cmf');
             $cmf->addMixin('mix:referenceable');
             $this->session->save();
+
+            $snippetsNode = $cmf->addNode('snippets');
+            $snippetsNode->addNode('default_snippet');
 
             $default = $cmf->addNode('default');
             $default->addMixin('mix:referenceable');
@@ -485,9 +517,6 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $en_usPath->setProperty('sulu:content', $this->contents);
             $en_usPath->addMixin('sulu:path');
             $this->languageRoutes['en_us'] = $en_usPath;
-            $this->session->save();
-
-            $this->routes = $default->addNode('temp');
             $this->session->save();
         }
     }

@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
         $this->getHttpCacheConfiguration($children);
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
+        $this->getCacheConfiguration($children);
         $children->end();
 
         return $treeBuilder;
@@ -62,9 +63,6 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('request_analyzer')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('enabled')
-                            ->defaultValue(true)
-                        ->end()
                         ->scalarNode('priority')
                             ->defaultValue(300)
                         ->end()
@@ -172,9 +170,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('route')
                             ->defaultValue('routes')
                         ->end()
-                        ->scalarNode('temp')
-                            ->defaultValue('temp')
-                        ->end()
                         ->scalarNode('snippet')
                             ->defaultValue('snippets')
                         ->end()
@@ -255,6 +250,21 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+    }
+
+    private function getCacheConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('cache')
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('memoize')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('default_lifetime')->defaultValue(1)->end()
                     ->end()
                 ->end()
             ->end()

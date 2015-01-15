@@ -10,14 +10,16 @@
 
 namespace Sulu\Component\Content;
 
+use JMS\Serializer\Annotation\Type;
+
 /**
  * holds localized metadata
- * @package Sulu\Component\Content
  */
 class Metadata
 {
     /**
      * @var array
+     * @Type("array")
      */
     private $data;
 

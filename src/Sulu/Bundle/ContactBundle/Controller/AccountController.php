@@ -187,7 +187,7 @@ class AccountController extends AbstractContactController
         } else {
             $contactManager = $this->getContactManager();
             $locale = $this->getUser()->getLocale();
-            $contacts = $contactManager->findContactByAccountId($id, $locale);
+            $contacts = $contactManager->findContactsByAccountId($id, $locale, false);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
         }
         $view = $this->view($list, 200);
@@ -371,6 +371,17 @@ class AccountController extends AbstractContactController
     {
         $type = $request->get('type');
 
+        // define filters
+        $filter = array();
+        $ids = $request->get('ids');
+        if ($ids) {
+            if (is_array($ids)) {
+                $filter['id'] = $ids;
+            } else {
+                $filter['id'] = explode(',', $ids);
+            }
+        }
+
         if ($request->get('flat') == 'true') {
 
             /** @var RestHelperInterface $restHelper */
@@ -385,6 +396,14 @@ class AccountController extends AbstractContactController
                 $listBuilder->where($this->fieldDescriptors['type'], $type);
             }
 
+            foreach ($filter as $key => $value) {
+                if (is_array($value)) {
+                    $listBuilder->in($this->fieldDescriptors[$key], $value);
+                } else {
+                    $listBuilder->where($this->fieldDescriptors[$key], $value);
+                }
+            }
+
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
             $list = new ListRepresentation(
@@ -396,14 +415,18 @@ class AccountController extends AbstractContactController
                 $listBuilder->getLimit(),
                 $listBuilder->count()
             );
+            $view = $this->view($list, 200);
         } else {
             $accountManager = $this->getContactManager();
             $locale = $this->getUser()->getLocale();
-            $accounts = $accountManager->findAll($locale);
+            $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
+            $view = $this->view($list, 200);
+//          // FIXME: add serialization context for collection
+//            $view->setSerializationContext(
+//                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+//            );
         }
-
-        $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }

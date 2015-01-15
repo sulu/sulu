@@ -44,7 +44,19 @@ class MediaSelectionContentType extends ComplexContentType
     public function getDefaultParams()
     {
         return array(
-            'types' => null
+            'types' => null,
+            'defaultDisplayOption' => 'top',
+            'displayOptions' => array(
+                'leftTop' => true,
+                'top' => true,
+                'rightTop' => true,
+                'left' => true,
+                'middle' => false,
+                'right' => true,
+                'leftBottom' => true,
+                'bottom' => true,
+                'rightBottom' => true
+            )
         );
     }
 
@@ -104,22 +116,7 @@ class MediaSelectionContentType extends ComplexContentType
      */
     private function setData($data, PropertyInterface $property, $languageCode)
     {
-        if ($data instanceof MediaSelectionContainer) {
-            $container = $data;
-        } else {
-            $params = $this->getParams($property->getParams());
-            $types = $params['types'];
-            $container = new MediaSelectionContainer(
-                isset($data['config']) ?  $data['config'] : array(),
-                isset($data['displayOption']) ? $data['displayOption'] : '',
-                isset($data['ids']) ? $data['ids'] : array(),
-                $languageCode,
-                $types,
-                $this->mediaManager
-            );
-        }
-
-        $property->setValue($container);
+        $property->setValue($data);
     }
 
     /**
@@ -157,7 +154,9 @@ class MediaSelectionContentType extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->getProperty($property->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**
@@ -173,7 +172,21 @@ class MediaSelectionContentType extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        return $property->getValue()->getData();
+        $data = $property->getValue();
+
+        $params = $this->getParams($property->getParams());
+        $types = $params['types'];
+
+        $container = new MediaSelectionContainer(
+            isset($data['config']) ?  $data['config'] : array(),
+            isset($data['displayOption']) ? $data['displayOption'] : '',
+            isset($data['ids']) ? $data['ids'] : array(),
+            $property->getStructure()->getLanguageCode(),
+            $types,
+            $this->mediaManager
+        );
+
+        return $container->getData();
     }
 
     /**
@@ -181,6 +194,6 @@ class MediaSelectionContentType extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        return $property->getValue()->toArray();
+        return $property->getValue();
     }
 }

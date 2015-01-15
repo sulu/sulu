@@ -26,7 +26,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
@@ -70,6 +70,10 @@ class ContentMapperTest extends PhpcrTestCase
             return $this->getPageMock(7, false);
         } elseif ($structureKey == 'external-link') {
             return $this->getPageMock(8, false);
+        } elseif ($structureKey == 'with_snipplet') {
+            return $this->getPageMock(9);
+        } elseif ($structureKey == 'default_snippet') {
+            return $this->getPageMock(10, false);
         }
 
         return null;
@@ -91,10 +95,17 @@ class ContentMapperTest extends PhpcrTestCase
             'overview'
         );
 
-        $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
-            array($name[$type], 'asdf', 'asdf', 2400)
-        );
+        if ($type == 10) {
+            $structureMock = $this->getMockForAbstractClass(
+                '\Sulu\Component\Content\Structure\Snippet',
+                array($name[$type], 'asdf', 'asdf', 2400)
+            );
+        } else {
+            $structureMock = $this->getMockForAbstractClass(
+                '\Sulu\Component\Content\Structure\Page',
+                array($name[$type], 'asdf', 'asdf', 2400)
+            );
+        }
 
         $method = new ReflectionMethod(
             get_class($structureMock), 'addChild'
@@ -232,6 +243,24 @@ class ContentMapperTest extends PhpcrTestCase
                     )
                 )
             );
+        } elseif ($type == 9) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property(
+                        'internal', // same as internal link to test content type switch
+                        '',
+                        'snippet'
+                    )
+                )
+            );
+        } elseif ($type == 10) {
+            $method->invokeArgs(
+                $structureMock,
+                array(
+                    new Property('article', '', 'text_area', false, true)
+                )
+            );
         }
 
         return $structureMock;
@@ -328,7 +357,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->eventDispatcher->expects($this->at(1))
             ->method('dispatch')
             ->with(
-                $this->equalTo(ContentEvents::NODE_SAVE),
+                $this->equalTo(ContentEvents::NODE_POST_SAVE),
                 $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
             );
 
@@ -1411,6 +1440,18 @@ class ContentMapperTest extends PhpcrTestCase
         $child = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $root->getUuid());
         $subChild = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $child->getUuid());
 
+        $this->eventDispatcher->expects($this->at(0))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_PRE_DELETE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
+            );
+        $this->eventDispatcher->expects($this->at(1))
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(ContentEvents::NODE_POST_DELETE),
+                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
+            );
         // delete /news/test-2/test-1
         $this->mapper->delete($child->getUuid(), 'default');
 
@@ -2218,6 +2259,23 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1', $result->url);
     }
 
+    public function testMultipleLanguagesCopy()
+    {
+        $data = $this->prepareSinglePageTestData();
+
+        $this->mapper->copyLanguage($data->getUuid(), 1, 'default', 'de', array('en', 'de_at'));
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'en');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+
+        $result = $this->mapper->load($data->getUuid(), 'default', 'de_at');
+
+        $this->assertEquals('Page-1', $result->title);
+        $this->assertEquals('/page-1', $result->url);
+    }
+
     private function checkTreeResult($result)
     {
         // layer 0
@@ -2764,6 +2822,22 @@ class ContentMapperTest extends PhpcrTestCase
             array(
                 'title' => 'SubPage',
                 'url' => '/page-2/subpage'
+            ),
+            array(
+                'title' => 'SubSubPage',
+                'url' => '/page-2/subpage/subpage'
+            ),
+            array(
+                'title' => 'SubSubSubPage',
+                'url' => '/page-2/subpage/subpage/subpage'
+            ),
+            array(
+                'title' => 'SubPage',
+                'url' => '/page-2/sub-1/subpage'
+            ),
+            array(
+                'title' => 'SubSubPage',
+                'url' => '/page-2/sub-1/subpage/subpage'
             )
         );
 
@@ -2777,6 +2851,10 @@ class ContentMapperTest extends PhpcrTestCase
         $data[4] = $this->mapper->save($data[4], 'overview', 'default', 'de', 1, true, null, $data[3]->getUuid());
         $data[5] = $this->mapper->save($data[5], 'overview', 'default', 'de', 1, true, null, $data[3]->getUuid());
         $data[6] = $this->mapper->save($data[6], 'overview', 'default', 'de', 1, true, null, $data[3]->getUuid());
+        $data[7] = $this->mapper->save($data[7], 'overview', 'default', 'de', 1, true, null, $data[6]->getUuid());
+        $data[8] = $this->mapper->save($data[8], 'overview', 'default', 'de', 1, true, null, $data[7]->getUuid());
+        $data[9] = $this->mapper->save($data[9], 'overview', 'default', 'de', 1, true, null, $data[5]->getUuid());
+        $data[10] = $this->mapper->save($data[10], 'overview', 'default', 'de', 1, true, null, $data[9]->getUuid());
 
         return $data;
     }
@@ -2785,21 +2863,89 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = $this->prepareCopyMoveTestData();
 
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/subpage', $page2Sub->url);
+        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
+
         $result = $this->mapper->move($data[6]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
 
         $this->assertEquals($data[6]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/subpage', $result->getPath());
+        $this->assertEquals('/page-1/subpage', $result->url);
         $this->assertEquals(2, $result->getChanger());
 
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[6]->getUuid(), 'default', 'de', 4, false);
+        $this->assertEquals(1, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[7]->getUuid(), 'default', 'de', 4, false);
+        $this->assertEquals(1, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
+
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-1/subpage', $page2Sub->url);
+        $this->assertEquals('/page-1/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-1/subpage/subpage/subpage', $page2SubSubSub->url);
+    }
+
+    public function testRenameRlp()
+    {
+        $data = $this->prepareCopyMoveTestData();
+
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/subpage', $page2Sub->url);
+        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
+
+        $uuid = $data[6]->getUuid();
+        $data[6] = array(
+            'title' => 'SubPage',
+            'url' => '/page-2/test'
+        );
+        $result = $data[6] = $this->mapper->save($data[6], 'overview', 'default', 'de', 2, true, $uuid);
+
+        $this->assertEquals($data[6]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-2/subpage', $result->getPath());
+        $this->assertEquals('/page-2/test', $result->url);
+        $this->assertEquals(2, $result->getChanger());
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
+        $this->assertEquals(2, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[6]->getUuid(), 'default', 'de', 4, false);
+        $this->assertEquals(1, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[7]->getUuid(), 'default', 'de', 4, false);
+        $this->assertEquals(1, sizeof($test));
+
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
+        $this->assertEquals(3, sizeof($test));
+
+        $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
+        $this->assertEquals('/page-2/test', $test->getResourceLocator());
+        $this->assertEquals(2, $test->getChanger());
+
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/test', $page2Sub->url);
+        $this->assertEquals('/page-2/test/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/test/subpage/subpage', $page2SubSubSub->url);
     }
 
     public function testChangeSnippetTemplate()
@@ -2812,10 +2958,10 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1/subpage', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
@@ -2833,10 +2979,10 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1/sub-2', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
@@ -2862,10 +3008,10 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de', $result->getType()->getValue());
 
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
@@ -2877,16 +3023,28 @@ class ContentMapperTest extends PhpcrTestCase
     {
         $data = $this->prepareCopyMoveTestData();
 
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/subpage', $page2Sub->url);
+        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
+
         $result = $this->mapper->copy($data[6]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
 
         $this->assertNotEquals($data[6]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/subpage', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($result->getUuid(), 'default', 'de', 2);
+        $this->assertCount(2, $test);
+        $this->assertEquals('/page-1/subpage/subsubpage', $test[0]->url);
+        $this->assertEquals('/page-1/subpage/subsubpage/subsubsubpage', $test[1]->url);
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
         $test = $this->mapper->load($data[6]->getUuid(), 'default', 'de', 4);
@@ -2896,22 +3054,42 @@ class ContentMapperTest extends PhpcrTestCase
         $test = $this->mapper->load($result->getUuid(), 'default', 'de', 4);
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
+
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/subpage', $page2Sub->url);
+        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
     }
 
     public function testCopyExistingName()
     {
         $data = $this->prepareCopyMoveTestData();
 
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/subpage', $page2Sub->url);
+        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
+
         $result = $this->mapper->copy($data[5]->getUuid(), $data[0]->getUuid(), 2, 'default', 'de');
 
         $this->assertNotEquals($data[5]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/sub-1-1', $result->url);
         $this->assertEquals('/page-1/sub-2', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
-        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($result->getUuid(), 'default', 'de', 2);
+        $this->assertCount(2, $test);
+        $this->assertEquals('/page-1/sub-1-1/subpage', $test[0]->url);
+        $this->assertEquals('/page-1/sub-1-1/subpage/subsubpage', $test[1]->url);
+
+        $test = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4);
+        $test = $this->mapper->loadByParent($data[3]->getUuid(), 'default', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
         $test = $this->mapper->load($data[5]->getUuid(), 'default', 'de', 4);
@@ -2921,6 +3099,13 @@ class ContentMapperTest extends PhpcrTestCase
         $test = $this->mapper->load($result->getUuid(), 'default', 'de', 4);
         $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
+
+        $page2Sub = $this->mapper->load($data[6]->getUuid(), 'default', 'de');
+        $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'default', 'de');
+        $page2SubSubSub = $this->mapper->load($data[8]->getUuid(), 'default', 'de');
+        $this->assertEquals('/page-2/subpage', $page2Sub->url);
+        $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
+        $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
     }
 
     public function testOrderBefore()
@@ -3095,6 +3280,126 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/my-your-nice-test', $result->getPath());
         $this->assertEquals('/my-your-nice-test', $result->getPropertyValue('url'));
         $this->assertEquals('My / Your nice test', $result->getPropertyValue('title'));
+    }
+
+    public function testGetResourceLocators()
+    {
+        $data = array(
+            array('title' => 'Beschreibung', 'url' => '/beschreibung'),
+            array('title' => 'Description', 'url' => '/description'),
+        );
+
+        $data[0] = $this->mapper->save(
+            $data[0],
+            'overview',
+            'default',
+            'de',
+            1,
+            true,
+            null,
+            null,
+            Structure::STATE_PUBLISHED
+        );
+        $urls = $data[0]->getUrls();
+
+        $this->assertArrayNotHasKey('en', $urls);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+
+        $data[0] = $this->mapper->load($data[0]->getUuid(), 'default', 'de');
+        $urls = $data[0]->getUrls();
+
+        $this->assertArrayNotHasKey('en', $urls);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+
+        $data[0] = $this->mapper->load($data[0]->getUuid(), 'default', 'en', true);
+        $urls = $data[0]->getUrls();
+
+        $this->assertArrayNotHasKey('en', $urls);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1, true, $data[0]->getUuid(), null, Structure::STATE_PUBLISHED);
+        $urls = $data[1]->getUrls();
+
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+
+        $data[1] = $this->mapper->load($data[1]->getUuid(), 'default', 'en');
+        $urls = $data[1]->getUrls();
+
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+
+        $data[1] = $this->mapper->load($data[1]->getUuid(), 'default', 'de', true);
+        $urls = $data[1]->getUrls();
+
+        $this->assertEquals('/description', $urls['en']);
+        $this->assertArrayNotHasKey('en_us', $urls);
+        $this->assertEquals('/beschreibung', $urls['de']);
+        $this->assertArrayNotHasKey('de_at', $urls);
+        $this->assertArrayNotHasKey('es', $urls);
+    }
+
+    public function testContentTypeSwitch()
+    {
+        try {
+            // REF
+            $internalLinkData = array(
+                'title' => 'Test',
+                'url' => '/test/test',
+                'blog' => 'Thats a good test'
+            );
+            $internalLink = $this->mapper->save($internalLinkData, 'extension', 'default', 'en', 1);
+
+            // REF
+            $snippetData = array(
+                'title' => 'Test',
+                'url' => '/test/test',
+                'blog' => 'Thats a good test'
+            );
+            $snippet = $this->mapper->save($snippetData, 'default_snippet', 'default', 'en', 1, true, null, null,null,null,null, Structure::TYPE_SNIPPET);
+
+
+            // Internal Link with String Type
+            $testSiteData = array(
+                'title' => 'Test',
+                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'internal' => $internalLink->getUuid()
+            );
+            $testSiteStructure = $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1);
+
+            $uuid = $testSiteStructure->getUuid();
+
+            // Change to Snippet Array
+            $testSiteData['internal'] = array(
+                $snippet->getUuid(),
+                $snippet->getUuid()
+            );
+            $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
+
+            $this->mapper->save($testSiteData, 'with_snipplet', 'default', 'en', 1, true, $uuid);
+
+            // Change to Internal Link String
+            $testSiteData['internal'] = $internalLink->getUuid();
+            $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
+            $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1, true, $uuid);
+        } catch (\Exception $e) {
+            $this->fail('Exception thrown(' . get_class($e) . '): ' . $e->getMessage() . PHP_EOL . $e->getFile() . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString());
+        }
     }
 }
 

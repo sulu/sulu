@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace\Loader;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidPortalDefaultLocalizationException;
@@ -18,7 +19,6 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentExcept
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
-use Sulu\Component\Webspace\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
@@ -372,6 +372,7 @@ class XmlFileLoader extends FileLoader
             $url->setCountry($this->getOptionalNodeAttribute($urlNode, 'country'));
             $url->setSegment($this->getOptionalNodeAttribute($urlNode, 'segment'));
             $url->setRedirect($this->getOptionalNodeAttribute($urlNode, 'redirect'));
+            $url->setAnalyticsKey($this->getOptionalNodeAttribute($urlNode, 'analytics-key'));
 
             $environment->addUrl($url);
         }

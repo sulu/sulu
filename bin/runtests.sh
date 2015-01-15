@@ -3,32 +3,46 @@
 DB=mysql
 OCWD=`pwd`
 BUNDLE=""
+SULU_ORM=${SULU_ORM:-mysql}
+SULU_PHPCR=${SULU_PHPCR:-doctrine_dbal}
 
 function header {
     echo ""
-    echo -e "\e[32m======================================================\e[0m"
+    echo -e "\x1b[32m======================================================\x1b[0m"
     echo $1
-    echo -e "\e[32m======================================================\e[0m"
+    echo -e "\x1b[32m======================================================\x1b[0m"
+    echo ""
+}
+
+function info {
+    echo -e "\x1b[32m"$1"\x1b[0m"
+
     echo ""
 }
 
 function comment {
-    echo -e "\e[33m"$1"\e[0m"
+    echo -e "\x1b[33m"$1"\x1b[0m"
     echo ""
 }
 
 function error {
     echo ""
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo $1
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo ""
 }
 
 function init_database {
     comment "Initializing database"
 
-    ./src/Sulu/Bundle/TestBundle/Resources/bin/travis.sh &> /dev/null
+    init_dbal
+
+    if [[ $SULU_PHPCR == 'doctrine_dbal' ]]; then
+        init_phpcr_dbal
+    fi
+
+    php vendor/symfony-cmf/testing/bin/console sulu:phpcr:init
 }
 
 function show_help {
@@ -47,6 +61,37 @@ function show_help {
     exit 0
 }
 
+function init_dbal {
+    info "Creating database"
+    php vendor/symfony-cmf/testing/bin/console doctrine:database:create &> /dev/null
+
+    if [[ $? != 0 ]]; then
+        comment "Database already exists"
+    else
+        echo "Creating schema"
+        php vendor/symfony-cmf/testing/bin/console doctrine:schema:create
+    fi
+
+}
+
+function init_phpcr_dbal {
+    echo "Initialzing PHPCR (including doctrine-dbal, this may fail)"
+    php vendor/symfony-cmf/testing/bin/console doctrine:phpcr:init:dbal &> /dev/null
+}
+
+cat <<EOT
+   _____       _        _____ __  __ ______ 
+  / ____|     | |      / ____|  \/  |  ____|
+ | (___  _   _| |_   _| |    | \  / | |__   
+  \___ \| | | | | | | | |    | |\/| |  __|  
+  ____) | |_| | | |_| | |____| |  | | |     
+ |_____/ \__,_|_|\__,_|\_____|_|  |_|_|     
+                                            
+EOT
+
+header "Sulu CMF Test Suite"
+comment "ORM: "$SULU_ORM
+comment "PHPCR: "$SULU_PHPCR
 
 while getopts ":ait:" OPT; do
     case $OPT in
@@ -64,18 +109,6 @@ done
 if [[ -z $1 ]]; then
     show_help
 fi
-
-cat <<EOT
-   _____       _        _____ __  __ ______ 
-  / ____|     | |      / ____|  \/  |  ____|
- | (___  _   _| |_   _| |    | \  / | |__   
-  \___ \| | | | | | | | |    | |\/| |  __|  
-  ____) | |_| | | |_| | |____| |  | | |     
- |_____/ \__,_|_|\__,_|\_____|_|  |_|_|     
-                                            
-EOT
-
-header "Sulu CMF Test Suite"
 
 if [ -e /tmp/failed.tests ]; then
     rm /tmp/failed.tests
@@ -122,7 +155,7 @@ for BUNDLE in $BUNDLES; do
     cd -
     comment "Running tests"
 
-    phpunit --configuration phpunit.travis.xml.dist --stop-on-failure --stop-on-error $BUNDLE_DIR/Tests
+    phpunit --configuration phpunit.travis.xml.dist $BUNDLE_DIR/Tests
 
     if [ $? -ne 0 ]; then
         echo $BUNDLE_NAME >> /tmp/failed.tests
@@ -136,13 +169,13 @@ if [[ ! -s /tmp/failed.tests ]]; then
 else
     # There were failures
     echo ""
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo "Oh no, "`cat /tmp/failed.tests | wc -l`" Component(s) failed:"
     echo ""
     for line in `cat /tmp/failed.tests`; do
         comment " - "$line
     done
-    echo -e "\e[31m======================================================\e[0m"
+    echo -e "\x1b[31m======================================================\x1b[0m"
     echo ""
     exit 1
 fi

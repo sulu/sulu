@@ -14,6 +14,8 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Metadata;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * This structure represents a page in the CMS
@@ -23,54 +25,62 @@ abstract class Page extends Structure
     /**
      * template to render content
      * @var string
+     * @Type("string")
      */
     private $view;
 
     /**
      * controller to render content
      * @var string
+     * @Type("string")
      */
     private $controller;
 
     /**
      * time to cache content
      * @var int
+     * @Type("integer")
      */
     private $cacheLifeTime;
 
     /**
      * defines in which navigation context assigned
      * @var string[]
+     * @Type("array")
      */
     private $navContexts;
 
     /**
      * state of node
      * @var int
+     * @Type("integer")
      */
     private $nodeState;
 
     /**
      * @var array
+     * @Type("array")
      */
     private $ext = array();
 
     /**
      * @var string
+     * @Type("string")
      */
     private $originTemplate;
 
     /**
      * content node that holds the internal link
      * @var StructureInterface
+     * @Exclude()
      */
     private $internalLinkContent;
 
     /**
-     * absolute path of node
-     * @var string
+     * @var string[]
+     * @Type("array")
      */
-    private $path;
+    private $urls;
 
     /**
      * @param $key string
@@ -78,7 +88,6 @@ abstract class Page extends Structure
      * @param $controller string
      * @param int $cacheLifeTime
      * @param array $metaData
-     * @return \Sulu\Component\Content\Structure
      */
     public function __construct($key, $view, $controller, $cacheLifeTime = 604800, $metaData = array())
     {
@@ -195,6 +204,22 @@ abstract class Page extends Structure
     }
 
     /**
+     * @return string[]
+     */
+    public function getUrls()
+    {
+        return $this->urls;
+    }
+
+    /**
+     * @param string[] $resourceLocators
+     */
+    public function setUrls($resourceLocators)
+    {
+        $this->urls = $resourceLocators;
+    }
+
+    /**
      * returns an array of property value pairs
      * @param bool $complete True if result should be representation of full node
      * @return array
@@ -266,20 +291,18 @@ abstract class Page extends Structure
         $this->ext = $ext;
     }
 
-    /**
-     * returns absolute path of node
-     * @return string
-     */
-    public function getPath()
+    public function copyFrom(StructureInterface $structure)
     {
-        return $this->path;
-    }
+        if ($structure instanceof Page) {
+            $this->setNodeState($structure->getNodeState());
+            $this->setUrls($structure->getUrls());
+            $this->setExt($structure->getExt());
+            $this->setOriginTemplate($structure->getOriginTemplate());
+            $this->setIsShadow($structure->getIsShadow());
+            $this->setShadowBaseLanguage($structure->getShadowBaseLanguage());
+            $this->setConcreteLanguages($structure->getConcreteLanguages());
+        }
 
-    /**
-     * @param string $path
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
+        parent::copyFrom($structure);
     }
 }

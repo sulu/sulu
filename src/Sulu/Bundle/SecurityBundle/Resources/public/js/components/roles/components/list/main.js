@@ -63,7 +63,7 @@ define(function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/role/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'rolesFields', '/admin/api/roles/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'roles', '/admin/api/roles/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'roles',

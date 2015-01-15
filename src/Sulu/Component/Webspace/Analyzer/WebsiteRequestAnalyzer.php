@@ -11,7 +11,7 @@
 namespace Sulu\Component\Webspace\Analyzer;
 
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -100,6 +100,12 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      */
     private $postParameter;
 
+    /**
+     * Analytics key of request
+     * @var string
+     */
+    private $analyticsKey;
+
     public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
     {
         $this->webspaceManager = $webspaceManager;
@@ -125,6 +131,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         if ($portalInformation != null) {
             $this->setCurrentMatchType($portalInformation->getType());
             $this->setCurrentRedirect($portalInformation->getRedirect());
+            $this->analyticsKey = $portalInformation->getAnalyticsKey();
             if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
                 $this->setCurrentPortalUrl($portalInformation->getUrl());
                 $this->setCurrentWebspace($portalInformation->getWebspace());
@@ -268,7 +275,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
 
     /**
      * Sets the current localization
-     * @param \Sulu\Component\Webspace\Localization $localization
+     * @param Localization $localization
      */
     protected function setCurrentLocalization($localization)
     {
@@ -364,5 +371,14 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         );
 
         return array($resourceLocator, $formatResult);
+    }
+
+    /**
+     * Returns the analytics key
+     * @return string
+     */
+    public function getCurrentAnalyticsKey()
+    {
+        return $this->analyticsKey;
     }
 }

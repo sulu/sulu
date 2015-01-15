@@ -55,6 +55,37 @@ define(function() {
                     '<div id="child-table"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
+            },
+
+            openGhost: function() {
+                return [
+                    '<div class="copy-locale-overlay-content grid">',
+                    '   <div class="grid-row">',
+                    '       <p class="info">',
+                                this.sandbox.translate('content.contents.settings.copy-locale.info'),
+                    '       </p>',
+                    '   </div>',
+                    '   <div class="grid-row">',
+                    '       <div class="custom-checkbox">',
+                    '           <input type="radio" name="action" id="copy-locale-new" checked="checked"/>',
+                    '           <span class="icon"></span>',
+                    '       </div>',
+                    '       <label for="copy-locale-new">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.new'),
+                    '       </label>',
+                    '   </div>',
+                    '   <div class="grid-row">',
+                    '       <div class="custom-checkbox">',
+                    '           <input type="radio" name="action" id="copy-locale-copy"/>',
+                    '           <span class="icon"></span>',
+                    '       </div>',
+                    '       <label for="copy-locale-copy">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.copy'),
+                    '       </label>',
+                    '       <div id="copy-locale-overlay-select" />',
+                    '   </div>',
+                    '</div>'
+                ].join('');
             }
         };
 
@@ -95,7 +126,11 @@ define(function() {
 
             this.sandbox.on('husky.column-navigation.node.edit', function(item) {
                 this.setLastSelected(item.id);
-                this.sandbox.emit('sulu.content.contents.load', item);
+                if (!item.type || item.type.name !== 'ghost') {
+                    this.sandbox.emit('sulu.content.contents.load', item);
+                } else {
+                    this.openGhost(item);
+                }
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.selected', function(item) {
@@ -197,7 +232,7 @@ define(function() {
                 this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
 
-            this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation());
+            this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation(), false);
         },
 
         /**
@@ -245,7 +280,7 @@ define(function() {
                 this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
 
-            this.startOverlay('content.contents.settings.order.title', templates.table());
+            this.startOverlay('content.contents.settings.order.title', templates.table(), false);
         },
 
         /**
@@ -279,10 +314,32 @@ define(function() {
          * start a new overlay
          * @param {String} titleKey translation key
          * @param {String} template template for the content
+         * @param {Boolean} okButton
+         * @param {undefined|String} instanceName
+         * @param {undefined|function} okCallback
          */
-        startOverlay: function(titleKey, template) {
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
+        startOverlay: function(titleKey, template, okButton, instanceName, okCallback) {
+            if (!instanceName) {
+                instanceName = 'node';
+            }
+
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+                buttons = [
+                    {
+                        type: 'cancel',
+                        align: 'right'
+                    }
+                ];
             this.sandbox.dom.append(this.$el, $element);
+
+            if (!!okButton) {
+                buttons.push({
+                    type: 'ok',
+                    align: 'left',
+                    text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
+                });
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -292,17 +349,14 @@ define(function() {
                         cssClass: 'node',
                         el: $element,
                         container: this.$el,
-                        instanceName: 'node',
+                        instanceName: instanceName,
                         skin: 'wide',
                         slides: [
                             {
                                 title: this.sandbox.translate(titleKey),
                                 data: template,
-                                buttons: [
-                                    {
-                                        type: 'cancel'
-                                    }
-                                ]
+                                buttons: buttons,
+                                okCallback: okCallback
                             }
                         ]
                     }
@@ -315,7 +369,8 @@ define(function() {
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
-            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&webspace-node=true';
+            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace +
+                '&language=' + this.options.language + '&webspace-node=true';
 
             this.sandbox.start(
                 [
@@ -463,9 +518,13 @@ define(function() {
          */
         getUrl: function() {
             if (this.getLastSelected() !== null) {
-                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             } else {
-                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             }
         },
 
@@ -474,8 +533,10 @@ define(function() {
          */
         render: function() {
             this.bindCustomEvents();
+            var url = 'text!/admin/content/template/content/column/' + this.options.webspace +
+                '/' + this.options.language + '.html';
 
-            require(['text!/admin/content/template/content/column/' + this.options.webspace + '/' + this.options.language + '.html'], function(template) {
+            require([url], function(template) {
                 var defaults = {
                         translate: this.sandbox.translate
                     },
@@ -506,6 +567,46 @@ define(function() {
                         el: '#show-ghost-pages',
                         checked: this.showGhostPages,
                         outline: true
+                    }
+                }
+            ]);
+        },
+
+        openGhost: function(item) {
+            this.startOverlay(
+                'content.contents.settings.copy-locale.title',
+                templates.openGhost.call(this), true, 'copy-locale-overlay',
+                function() {
+                    var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
+                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues'),
+                        dest = this.options.language;
+
+                    if (!!copy) {
+                        if (!src || src.length === 0) {
+                            return false;
+                        }
+
+                        this.sandbox.emit('sulu.content.contents.copy-locale', item.id, src[0], [dest], function() {
+                            this.sandbox.emit('sulu.content.contents.load', item);
+                        }.bind(this));
+                    } else {
+                        this.sandbox.emit('sulu.content.contents.load', item);
+                    }
+                }.bind(this)
+            );
+
+            this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
+                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true)
+            }.bind(this));
+
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#copy-locale-overlay-select',
+                        instanceName: 'copy-locale-to',
+                        defaultLabel: this.sandbox.translate('content.contents.settings.copy-locale.select-default'),
+                        data: item.concreteLanguages
                     }
                 }
             ]);

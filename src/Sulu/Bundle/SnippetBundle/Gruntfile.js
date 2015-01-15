@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                         expand: true, 
                         cwd: 'Resources/public', 
                         src: ['**', '!**/scss/**'], 
-                        dest: '../../../web/bundles/sulusnippet/'
+                        dest: '../../../../../../../web/bundles/sulusnippet/'
                     }
                 ]
             },
@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                         expand: true, 
                         cwd: 'Resources/public_dev', 
                         src: ['**', '!**/scss/**'], 
-                        dest: '../../../web/bundles/sulusnippet/'
+                        dest: '../../../../../../../web/bundles/sulusnippet/'
                     }
                 ]
             }
@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         dot: true,
-                        src: ['../../../web/bundles/sulusnippet/']
+                        src: ['../../../../../../../web/bundles/sulusnippet/']
                     }
                 ]
             }
@@ -62,10 +62,30 @@ module.exports = function (grunt) {
                 tasks: ['publish']
             }
         },
-        uglify: min
+        uglify: min,
+        compass: {
+            dev: {
+                options: {
+                    sassDir: 'Resources/public/scss/',
+                    specify: ['Resources/public/scss/main.scss'],
+                    cssDir: 'Resources/public/css/',
+                    relativeAssets: false
+                }
+            }
+        },
+        cssmin: {
+            // TODO: options: { banner: '<%= meta.banner %>' },
+            compress: {
+                files: {
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                }
+            }
+        }
     });
 
     grunt.registerTask('publish', [
+        'compass:dev',
+        'cssmin',
         'clean:public',
         'copy:public',
         'copy:public_dev'

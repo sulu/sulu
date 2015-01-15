@@ -23,11 +23,11 @@ class BaseTestCase extends SuluTestCase
 
     public function setUp()
     {
-        $fs = new Filesystem();
-        $fs->remove(__DIR__ . '/../Resources/app/data');
+        $this->initPhpcr();
+        $fs = new Filesystem;
+        $fs->remove(__DIR__ . '/../app/data');
+
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->purgeNode('/cmf/sulu_io/routes/de');
-        $this->purgeNode('/cmf/sulu_io/contents');
     }
 
     public function getSearchManager()
@@ -62,19 +62,8 @@ class BaseTestCase extends SuluTestCase
 
         /** @var ContentMapperInterface $mapper */
         $mapper = $this->getContainer()->get('sulu.content.mapper');
-        $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
-    }
+        $structure = $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
 
-    protected function purgeNode($path)
-    {
-        $node = $this->session->getNode($path);
-        foreach ($node->getNodes() as $child) {
-            foreach ($child->getReferences() as $referrer) {
-                $referrer->getParent()->remove();
-            }
-            $child->remove();
-        }
-
-        $this->session->save();
+        return $structure;
     }
 }

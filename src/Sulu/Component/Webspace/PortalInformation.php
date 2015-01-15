@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Webspace;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -55,6 +56,12 @@ class PortalInformation implements ArrayableInterface
     private $url;
 
     /**
+     * The analyticsKey for this portal information
+     * @var string
+     */
+    private $analyticsKey;
+
+    /**
      * @var string The url to redirect to
      */
     private $redirect;
@@ -66,7 +73,8 @@ class PortalInformation implements ArrayableInterface
         Localization $localization = null,
         $url,
         Segment $segment = null,
-        $redirect = null
+        $redirect = null,
+        $analyticsKey = null
     )
     {
         $this->setType($type);
@@ -76,11 +84,12 @@ class PortalInformation implements ArrayableInterface
         $this->setSegment($segment);
         $this->setUrl($url);
         $this->setRedirect($redirect);
+        $this->setAnalyticsKey($analyticsKey);
     }
 
     /**
      * Sets the localization for this PortalInformation
-     * @param \Sulu\Component\Webspace\Localization $localization
+     * @param Localization $localization
      */
     public function setLocalization($localization)
     {
@@ -89,7 +98,7 @@ class PortalInformation implements ArrayableInterface
 
     /**
      * Returns the localization for this PortalInformation
-     * @return \Sulu\Component\Webspace\Localization
+     * @return Localization
      */
     public function getLocalization()
     {
@@ -187,6 +196,24 @@ class PortalInformation implements ArrayableInterface
     }
 
     /**
+     * Sets the analytics key of this Portalinformation
+     * @param string $analyticsKey
+     */
+    public function setAnalyticsKey($analyticsKey)
+    {
+        $this->analyticsKey = $analyticsKey;
+    }
+
+    /**
+     * Returns the analytics key of this Portalinformation
+     * @return string
+     */
+    public function getAnalyticsKey()
+    {
+        return $this->analyticsKey;
+    }
+
+    /**
      * Returns the host including the domain for the PortalInformation
      * @return string
      */
@@ -261,6 +288,11 @@ class PortalInformation implements ArrayableInterface
         $segment = $this->getSegment();
         if ($segment) {
             $res['segment'] = $segment->getKey();
+        }
+
+        $analyticsKey = $this->getAnalyticsKey();
+        if ($analyticsKey) {
+            $res['analyticsKey'] = $analyticsKey;
         }
 
         return $res;

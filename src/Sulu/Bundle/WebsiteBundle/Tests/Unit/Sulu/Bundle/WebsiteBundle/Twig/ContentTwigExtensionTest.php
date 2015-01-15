@@ -15,6 +15,7 @@ use PHPCR\SessionInterface;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Property;
@@ -23,7 +24,7 @@ use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Types\TextLine;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Localization;
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Webspace;
 
 class TestStructure extends Structure

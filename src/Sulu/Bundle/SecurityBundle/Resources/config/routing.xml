@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing
+        http://symfony.com/schema/routing/routing-1.0.xsd">
+    <route id="sulu_security.roles_navigation" path="/navigation/roles">
+        <default key="_controller">SuluSecurityBundle:Navigation:roles</default>
+    </route>
+    <route id="sulu_security.template.role.form" path="/template/role/form.html">
+        <default key="_controller">SuluSecurityBundle:Template:roleForm</default>
+    </route>
+    <route id="sulu_security.template.permission.form" path="/template/permission/form.html">
+        <default key="_controller">SuluSecurityBundle:Template:permissionform</default>
+    </route>
+    <route id="sulu_security.template.role.list" path="/template/role/list.html">
+        <default key="_controller">SuluSecurityBundle:Template:roleList</default>
+    </route>
+    <route id="sulu_security.profile.change_language" path="/profile/change-language">
+        <default key="_controller">SuluSecurityBundle:Profile:changeLanguage</default>
+    </route>
+</routes>

@@ -19,6 +19,8 @@ define(['app-config'], function(AppConfig) {
                     var def = this.sandbox.data.deferred();
                     if (!ajax.initiated) {
                         this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
+                        this.sandbox.dom.on(this.$el, 'change', updateEvent.bind(this),
+                            'input[type="checkbox"].preview-update, input[type="radio"].preview-update');
 
                         ajax.start.call(this, def, template);
                         ajax.initiated = true;
@@ -224,7 +226,7 @@ define(['app-config'], function(AppConfig) {
             update = function(property, value) {
                 if (!!this.initiated) {
                     var changes = {};
-                    if (!!property && !!value) {
+                    if (!!property) {
                         changes[property] = value;
                     } else if (this.sandbox.form.getObject(this.formId)) {
                         changes = this.sandbox.form.getData(this.formId);
@@ -259,9 +261,12 @@ define(['app-config'], function(AppConfig) {
             updateEvent = function(e) {
                 if (!!this.data.id && !!this.initiated) {
                     var $element = $(e.currentTarget),
-                        element = this.sandbox.dom.data($element, 'element');
+                        element = this.sandbox.dom.data($element, 'element'),
+                        sequence = this.getSequence($element);
 
-                    update.call(this, this.getSequence($element), element.getValue());
+                    if (!!sequence) {
+                        update.call(this, sequence, element.getValue());
+                    }
                 }
             },
 
@@ -341,6 +346,10 @@ define(['app-config'], function(AppConfig) {
                     parentProperty;
 
                 while (!$element.data('element')) {
+                    if ($element.length === 0) {
+                        return false;
+                    }
+                    
                     $element = $element.parent();
                 }
 

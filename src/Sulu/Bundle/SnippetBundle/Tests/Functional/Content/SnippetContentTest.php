@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
+use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -73,8 +74,8 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->property->expects($this->once())
             ->method('setValue')
             ->will($this->returnCallback(function ($snippets) use ($me) {
-                foreach ($snippets as $snippet) {
-                    $me->assertInstanceOf('HotelSnippetCache', $snippet);
+                foreach ($snippets['ids'] as $snippet) {
+                    $me->assertTrue(UUIDHelper::isUUID($snippet));
                 }
             }));
 
@@ -115,10 +116,23 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de', 'sulu_io');
         $property = $pageStructure->getProperty('hotels');
-        $data = $this->contentType->getContentData($property, 'sulu_io', 'de', null);
+        $data = $this->contentType->getContentData($property);
         $this->assertCount(2, $data);
         $hotel1 = reset($data);
         $this->assertEquals('Le grande budapest', $hotel1['title']);
+        $hotel2 = next($data);
+        $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
+    }
+
+    public function testGetContentDataShadow()
+    {
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
+        $property = $pageStructure->getProperty('hotels');
+        $data = $this->contentType->getContentData($property);
+        $this->assertCount(2, $data);
+        $hotel1 = reset($data);
+        $this->assertEquals('Le grande budapest (en)', $hotel1['title']);
         $hotel2 = next($data);
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }

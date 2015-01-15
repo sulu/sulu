@@ -57,7 +57,7 @@ class Preview implements PreviewInterface
     public function start($userId, $contentUuid, $webspaceKey, $locale, $data = null, $template = null)
     {
         if ($this->previewCache->contains($userId, $contentUuid, $webspaceKey, $locale)) {
-            $this->previewCache->delete($userId, $webspaceKey);
+            $this->previewCache->delete($userId, $contentUuid, $webspaceKey, $locale);
         }
 
         $result = $this->previewCache->warmUp($userId, $contentUuid, $webspaceKey, $locale);
@@ -79,7 +79,7 @@ class Preview implements PreviewInterface
     public function stop($userId, $contentUuid, $webspaceKey, $locale)
     {
         if ($this->previewCache->contains($userId, $contentUuid, $webspaceKey, $locale)) {
-            $this->previewCache->delete($userId, $webspaceKey);
+            $this->previewCache->delete($userId, $contentUuid, $webspaceKey, $locale);
         }
     }
 
@@ -103,7 +103,7 @@ class Preview implements PreviewInterface
         $render = true
     ) {
         /** @var StructureInterface $content */
-        $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+        $content = $this->previewCache->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
 
         if ($content === false) {
             throw new PreviewNotFoundException($userId, $contentUuid);
@@ -122,7 +122,9 @@ class Preview implements PreviewInterface
                 );
             }
 
-            return $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+            $this->previewCache->saveStructure($content, $userId, $contentUuid, $webspaceKey, $locale);
+
+            return $this->previewCache->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
         }
 
         return false;
@@ -134,7 +136,7 @@ class Preview implements PreviewInterface
     public function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data)
     {
         /** @var StructureInterface $content */
-        $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+        $content = $this->previewCache->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
 
         if ($content === false) {
             throw new PreviewNotFoundException($userId, $contentUuid);
@@ -171,7 +173,13 @@ class Preview implements PreviewInterface
         if ($render === true) {
             $changes = $this->renderStructure($content, true, $property);
             if ($changes !== false) {
-                $this->previewCache->appendChanges(array($property => $changes), $userId, $webspaceKey);
+                $this->previewCache->appendChanges(
+                    array($property => $changes),
+                    $userId,
+                    $content->getUuid(),
+                    $webspaceKey,
+                    $locale
+                );
             }
         }
 
@@ -183,7 +191,7 @@ class Preview implements PreviewInterface
      */
     public function getChanges($userId, $contentUuid, $webspaceKey, $locale)
     {
-        return $this->previewCache->fetchChanges($userId, $webspaceKey);
+        return $this->previewCache->fetchChanges($userId, $contentUuid, $webspaceKey, $locale);
     }
 
     /**
@@ -202,7 +210,7 @@ class Preview implements PreviewInterface
         }
 
         /** @var StructureInterface $content */
-        $content = $this->previewCache->fetchStructure($userId, $webspaceKey, $locale);
+        $content = $this->previewCache->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
 
         return $this->renderStructure($content, $partial, $property);
     }
@@ -233,10 +241,10 @@ class Preview implements PreviewInterface
         if (false !== ($sequence = $this->crawler->getSequence($content, $property))) {
             $tmp = $data;
             $data = $sequence['property']->getValue();
-            $value = & $data;
+            $value = &$data;
             $len = sizeof($sequence['index']);
             for ($i = 0; $i < $len; $i++) {
-                $value = & $value[$sequence['index'][$i]];
+                $value = &$value[$sequence['index'][$i]];
             }
             $value = $tmp;
             $instance = $sequence['property'];

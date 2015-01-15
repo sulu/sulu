@@ -38,6 +38,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 
+            // TODO: Workaround for issue: https://github.com/doctrine/DoctrinePHPCRBundle/issues/178
+            if (!isset($phpcrConfig['backend']['check_login_on_server'])) {
+                $phpcrConfig['backend']['check_login_on_server'] = false;
+            }
+
             foreach ($container->getExtensions() as $name => $extension) {
                 $prependConfig = array();
                 switch ($name) {
@@ -95,6 +100,11 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initHttpCache($config['http_cache'], $container, $loader);
         }
 
+        // Cache
+        if (isset($config['cache'])) {
+            $this->initCache($config['cache'], $container, $loader);
+        }
+
         // Default Fields
         if (isset($config['fields_defaults'])) {
             $this->initFields($config['fields_defaults'], $container);
@@ -102,6 +112,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $loader->load('rest.xml');
         $loader->load('build.xml');
+        $loader->load('localization.xml');
     }
 
     /**
@@ -112,10 +123,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
     private function initWebspace($webspaceConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
-        $container->setParameter(
-            'sulu_core.webspace.request_analyzer.enabled',
-            $webspaceConfig['request_analyzer']['enabled']
-        );
         $container->setParameter(
             'sulu_core.webspace.request_analyzer.priority',
             $webspaceConfig['request_analyzer']['priority']
@@ -165,7 +172,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.node_names.base', $contentConfig['node_names']['base']);
         $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
         $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
-        $container->setParameter('sulu.content.node_names.temp', $contentConfig['node_names']['temp']);
         $container->setParameter('sulu.content.node_names.snippet', $contentConfig['node_names']['snippet']);
 
         // Content Types
@@ -202,5 +208,17 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         $loader->load('content.xml');
+    }
+
+    /**
+     * @param $cache
+     * @param $container
+     * @param $loader
+     */
+    private function initCache($cache, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    {
+        $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
+
+        $loader->load('cache.xml');
     }
 }

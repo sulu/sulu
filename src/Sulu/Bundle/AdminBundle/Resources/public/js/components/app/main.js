@@ -25,7 +25,8 @@ define(function() {
             shrinkIcon: 'fa-chevron-left',
             expandIcon: 'fa-chevron-right',
             noTransitionsClass: 'no-transitions',
-            versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases'
+            versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
+            changeLanguageUrl: '/admin/security/profile/change-language'
         },
 
         templates = {
@@ -119,10 +120,53 @@ define(function() {
             this.sandbox.emit(INITIALIZED.call(this));
 
             this.sandbox.util.ajaxError(function(event, request) {
-                if (request.status == 401) {
-                    window.location.replace('/admin/login');
+                switch (request.status) {
+                    case 401:
+                        window.location.replace('/admin/login');
+                        break;
+                    case 403:
+                        this.sandbox.emit(
+                            'sulu.labels.error.show',
+                            'public.forbidden',
+                            'public.forbidden.description',
+                            ''
+                        );
+                        break;
+                    default:
+                        this.sandbox.emit(
+                            'sulu.labels.error.show',
+                            this.extractErrorMessage(request),
+                            'public.server_error',
+                            ''
+                        );
+                        break;
                 }
-            });
+            }.bind(this));
+        },
+
+        /**
+         * Extract an error message (or messages) from the response
+         *
+         * @param {object} request
+         * @return {string}
+         */
+        extractErrorMessage: function (request) {
+            var message = [request.status];
+
+            // if response is symfony JSON exception
+            if (request.responseJSON !== undefined) {
+                var response = request.responseJSON
+
+                this.sandbox.util.each(response, function (index) {
+                    var exception = response[index];
+
+                    if (exception.message !== undefined) {
+                        message.push(exception.message);
+                    }
+                });
+            }
+
+            return message.join(", ");
         },
 
         /**
@@ -429,8 +473,8 @@ define(function() {
         changeUserLocale: function(locale) {
             //Todo: don't use hardcoded url
             this.sandbox.util.ajax({
-                type: 'PATCH',
-                url: '/admin/api/users/' + this.options.user.id,
+                type: 'POST',
+                url: constants.changeLanguageUrl,
                 contentType: 'application/json', // payload format
                 dataType: 'json', // response format
                 data: JSON.stringify({
@@ -447,8 +491,9 @@ define(function() {
          */
         routeToUserForm: function() {
             //Todo: don't use hardcoded url
-            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.id + '/details', true, false);
-        },
+            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.id + '/details', true, false, false);
+            this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
+         },
 
         /**
          * Takes a postifix and updates the page title

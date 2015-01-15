@@ -8,13 +8,21 @@
  */
 
 require.config({
+    waitSeconds: 0,
     paths: {
+        suluadmin: '../../suluadmin/js',
+
         'app-config': 'components/app-config/main',
+        'config': 'components/config/main',
         'cultures': 'vendor/globalize/cultures',
         'husky': 'vendor/husky/husky',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content-tabs': 'aura_extensions/sulu-content-tabs',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
+        'aura_extensions/iban': 'aura_extensions/iban',
+
+        'vendor/iban-converter':'vendor/iban-converter/iban',
+        'type/iban-input': 'components/input-type/iban-input',
 
         '__component__$app@suluadmin': 'components/app/main',
         '__component__$content-tabs@suluadmin': 'components/content-tabs/main',
@@ -25,11 +33,20 @@ require.config({
         '__component__$grid-group@suluadmin': 'components/grid-group/main',
         '__component__$sidebar@suluadmin': 'components/sidebar/main'
     },
+    shim: {
+        'vendor/iban-converter': {
+            exports: 'IBAN'
+        }
+    },
     include: [
         'app-config',
+        'config',
         'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension',
+        'aura_extensions/iban',
+
+        'vendor/iban-converter',
 
         '__component__$app@suluadmin',
         '__component__$app@suluadmin',
@@ -75,6 +92,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
         app.use('aura_extensions/backbone-relational');
         app.use('aura_extensions/sulu-content');
         app.use('aura_extensions/sulu-extension');
+        app.use('aura_extensions/iban');
 
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
 

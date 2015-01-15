@@ -56,6 +56,12 @@ interface StructureInterface extends \JsonSerializable
     public function setUuid($uuid);
 
     /**
+     * gets user id of creator
+     * @return int
+     */
+    public function getCreator();
+
+    /**
      * sets user id of creator
      * @param $userId int id of creator
      */
@@ -189,6 +195,17 @@ interface StructureInterface extends \JsonSerializable
     public function getType();
 
     /**
+     * return the node path
+     * @return string
+     */
+    public function getPath();
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path);
+
+    /**
      * @param boolean $hasTranslation
      */
     public function setHasTranslation($hasTranslation);
@@ -259,4 +276,10 @@ interface StructureInterface extends \JsonSerializable
      * @return integer
      */
     public function getNodeState();
+
+    /**
+     * Copy static values from another structure
+     * @param StructureInterface $structure
+     */
+    public function copyFrom(StructureInterface $structure);
 }

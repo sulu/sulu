@@ -1,1 +1,1 @@
-define(["mvc/collection","sulumedia/model/collection"],function(a,b){return a({model:b,url:function(){return"/admin/api/collections?depth=0"},parse:function(a){return a._embedded.collections}})});
+define(["mvc/collection","sulumedia/model/collection"],function(a,b){return a({model:b,url:function(){return"/admin/api/collections?limit=99999&depth=0"},fetchSorted:function(a,b){return b=_.defaults(b||{},{url:this.url()+"&sortBy="+a}),this.fetch.call(this,b)},parse:function(a){return a._embedded.collections}})});

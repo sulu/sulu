@@ -11,12 +11,16 @@
 
     <services>
         <service id="sulu_snippet.admin" class="%sulu_snippet.admin.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
 
             <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_snippet.admin.snippet_navigation" class="%sulu_snippet.admin.snippet_navigation.class%"/>
+        <service id="sulu_snippet.admin.snippet_navigation" class="%sulu_snippet.admin.snippet_navigation.class%">
+            <tag name="sulu.context" context="admin"/>
+        </service>
 
         <!-- JsConfig -->
          <service id="sulu_snippet.jsconfig" class="%sulu_snippet.jsconfig.class%">

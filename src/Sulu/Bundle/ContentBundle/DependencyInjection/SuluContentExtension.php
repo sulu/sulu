@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContentBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -20,8 +21,31 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluContentExtension extends Extension
+class SuluContentExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container)
+    {
+        $extensions = $container->getExtensions();
+
+        if (isset($extensions['sulu_core'])) {
+            $prepend = array(
+                'content' => array(
+                    'structure' => array(
+                        'paths' => array(
+                            'sulu_content_bundle' => array(
+                                'path' => __DIR__ . '/../Content/templates',
+                                'type' => 'page',
+                                'internal' => true,
+                            ),
+                        ),
+                    ),
+                ),
+            );
+
+            $container->prependExtensionConfig('sulu_core', $prepend);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

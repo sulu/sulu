@@ -30,8 +30,9 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
+            ->leftJoin('account.mainContact', 'mainContact')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.contactAddresses', 'contactAddresses')
@@ -56,6 +57,7 @@ class ContactRepository extends EntityRepository
             ->addSelect('position')
             ->addSelect('title')
             ->addSelect('accountContacts')
+            ->addSelect('mainContact')
             ->addSelect('account')
             ->addSelect('urls')
             ->addSelect('partial tags.{id,name}')
@@ -100,7 +102,7 @@ class ContactRepository extends EntityRepository
     {
         // create basic query
         $qb = $this->createQueryBuilder('u')
-            ->leftJoin('u.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
+            ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
@@ -221,13 +223,20 @@ class ContactRepository extends EntityRepository
      * @param $accountId
      * @param null $excludeContactId
      * @param bool $arrayResult
+     * @param bool $onlyFetchMainAccounts Defines if only main relations should be returned
      * @return array
      */
-    public function findByAccountId($accountId, $excludeContactId = null, $arrayResult = true)
+    public function findByAccountId($accountId, $excludeContactId = null, $arrayResult = true, $onlyFetchMainAccounts = true)
     {
-        $qb = $this->createQueryBuilder('c')
-            ->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
-            ->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
+        $qb = $this->createQueryBuilder('c');
+
+        // only fetch main accounts
+        if ($onlyFetchMainAccounts) {
+            $qb->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true');
+        } else {
+            $qb->join('c.accountContacts', 'accountContacts');
+        }
+        $qb->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
             ->setParameter('accountId', $accountId);
 
         if (!is_null($excludeContactId)) {

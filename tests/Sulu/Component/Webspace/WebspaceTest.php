@@ -3,6 +3,7 @@
 namespace Sulu\Component\Webspace;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
+use Sulu\Component\Localization\Localization;
 
 class WebspaceTest extends ProphecyTestCase
 {
@@ -44,7 +45,7 @@ class WebspaceTest extends ProphecyTestCase
         $this->webspace = new Webspace();
 
         $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
-        $this->localization = $this->prophesize('Sulu\Component\Webspace\Localization');
+        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
         $this->security = $this->prophesize('Sulu\Component\Webspace\Security');
         $this->segment = $this->prophesize('Sulu\Component\Webspace\Segment');
         $this->theme = $this->prophesize('Sulu\Component\Webspace\Theme');

@@ -13,6 +13,9 @@ namespace Sulu\Component\PHPCR\SessionManager;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 
+/**
+ * Provides interface for session manager
+ */
 interface SessionManagerInterface
 {
     /**
@@ -52,14 +55,6 @@ interface SessionManagerInterface
      * @return string
      */
     public function getContentPath($webspaceKey);
-
-    /**
-     * returns the temp node for given webspace
-     * @param string $webspaceKey
-     * @param string $alias for normal the user id but it could be everything
-     * @return \PHPCR\NodeInterface
-     */
-    public function getTempNode($webspaceKey, $alias);
 
     /**
      * returns the snippet node

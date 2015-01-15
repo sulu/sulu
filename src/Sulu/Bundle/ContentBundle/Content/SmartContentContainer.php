@@ -76,10 +76,16 @@ class SmartContentContainer implements ArrayableInterface
     private $data = null;
 
     /**
-     * true environment is preview
-     * @var bool
+     * contains current page
+     * @var int
      */
-    private $preview;
+    private $page;
+
+    /**
+     * indicates data has next page
+     * @var boolean
+     */
+    private $hasNextPage;
 
     /**
      * @var Stopwatch
@@ -97,7 +103,6 @@ class SmartContentContainer implements ArrayableInterface
         $webspaceKey,
         $languageCode,
         $segmentKey,
-        $preview = false,
         Stopwatch $stopwatch = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
@@ -105,7 +110,6 @@ class SmartContentContainer implements ArrayableInterface
         $this->tagManager = $tagManager;
         $this->webspaceKey = $webspaceKey;
         $this->languageCode = $languageCode;
-        $this->preview = $preview;
         $this->params = $params;
         $this->stopwatch = $stopwatch;
     }
@@ -186,6 +190,42 @@ class SmartContentContainer implements ArrayableInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Returns current page
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    /**
+     * Set current page
+     * @param int $page
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+    }
+
+    /**
+     * Return indicator of next page
+     * @return boolean
+     */
+    public function getHasNextPage()
+    {
+        return $this->hasNextPage;
+    }
+
+    /**
+     * Set next page indicator
+     * @param boolean $hasNextPage
+     */
+    public function setHasNextPage($hasNextPage)
+    {
+        $this->hasNextPage = $hasNextPage;
     }
 
     /**
