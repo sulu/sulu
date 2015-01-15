@@ -28,8 +28,8 @@ class SitemapContentQueryBuilder extends ContentQueryBuilder
                 ISDESCENDANTNODE('/cmf/%s/contents')
                 OR ISSAMENODE('/cmf/%s/contents')
             ) AND (
-                page.[i18n:de-excerpt-hide_in_sitemap] IS NULL
-                OR page.[i18n:de-excerpt-hide_in_sitemap] = false
+                page.[i18n:de-seo-hideInSitemap] IS NULL
+                OR page.[i18n:de-seo-hideInSitemap] = false
             )
         )", $webspaceKey, $webspaceKey, $locale);
     }
