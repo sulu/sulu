@@ -46,9 +46,14 @@ class Import
     /**
      * import options
      * @var array
+     * @param {string=;} delimiter Delimiter that is used for csv import
+     * @param {string="} enclosure Enclosure that is used for csv import
      * @param {Boolean=true} importIds defines if ids of import file should be imported
      * @param {Boolean=false} streetNumberSplit defines if street is provided as street- number string and must be splitted
      * @param {Boolean=false|int} fixedAccountType defines if accountType should be set to a fixed type for all imported accounts
+     * @param {Boolean=array} contactComparisonCriteria Array that defines which data should be used to identify if a contact already
+     *          exists in Database. This will only work if contact_id is not provided (then of course id is being used for this purpose)
+     *          parameters can be: firstName, lastName, email and phone
      */
     protected $options = array(
         'importIds' => true,
@@ -56,6 +61,11 @@ class Import
         'fixedAccountType' => false,
         'delimiter' => ';',
         'enclosure' => '"',
+        'contactComparisonCriteria' => array(
+            'firstName',
+            'lastName',
+            'email',
+        )
     );
 
     /**
@@ -422,17 +432,18 @@ class Import
 
         // create contacts
         $this->debug("Create Contacts:\n");
-        $this->processCsvLoop($filename, $createContact);
+        $this->processCsvLoop($filename, $createContact, true);
     }
 
     /**
      * Loads the CSV Files and the Entities for the import
      * @param string $filename path to file
      * @param callable $function will be called for each row in file
+     * @param bool $flushOnEveryRow If defined flush will be executed on every data row
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    protected function processCsvLoop($filename, $function)
+    protected function processCsvLoop($filename, $function, $flushOnEveryRow = false)
     {
         // initialize default values
         $this->initDefaults();
@@ -464,9 +475,15 @@ class Import
                     // get associativeData
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
 
-                    $entity = $function($associativeData, $row);
-                    if ($row % 20 === 0) {
+                    $function($associativeData, $row);
+
+                    if ($flushOnEveryRow) {
                         $this->em->flush();
+                    }
+                    if ($row % 20 === 0) {
+                        if (!$flushOnEveryRow) {
+                            $this->em->flush();
+                        }
                         $this->em->clear();
                         gc_collect_cycles();
                         // reinitialize defaults (lost with call of clear)
@@ -502,6 +519,21 @@ class Import
     }
 
     /**
+     * creates a new account Entity
+     * @param null $externalId
+     * @return Account
+     */
+    protected function createNewAccount($externalId = null) {
+        $account = new Account();
+        if ($externalId) {
+            $account->setExternalId($externalId);
+        }
+        $this->em->persist($account);
+
+        return $account;
+    }
+
+    /**
      * creates an account for given row data
      * @param $data
      * @param $row
@@ -510,10 +542,6 @@ class Import
      */
     protected function createAccount($data, $row)
     {
-        // check if account already exists
-        $account = new Account();
-        $persistAccount = true;
-
         // check if id mapping is defined
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
@@ -522,19 +550,20 @@ class Import
             }
             $externalId = $data[$this->idMappings['account_id']];
 
-            $accountFromDb = $this->getAccountByKey($externalId);
-            if ($accountFromDb !== null) {
-                $account = $accountFromDb;
-                $persistAccount = false;
+            // check if account with external-id exists
+            $account = $this->getAccountByKey($externalId);
+            if (!$account) {
+                // if not, create new one
+                $account = $this->createNewAccount($externalId);
             } else {
-                $account->setExternalId($externalId);
+                // clear all relations
+                $this->getAccountManager()->deleteAllRelations($account);
             }
+            $this->accountExternalIds[] = $externalId;
         }
-        $this->accountExternalIds[] = $externalId;
-
-        // clear notes
-        if (!$account->getNotes()->isEmpty()) {
-            $account->getNotes()->clear();
+        // otherwise just create a new account
+        else {
+            $account = $this->createNewAccount();
         }
 
         $account->setChanged(new \DateTime());
@@ -594,10 +623,6 @@ class Import
 
         // add bank accounts
         $this->addBankAccounts($data, $account);
-
-        if ($persistAccount) {
-            $this->em->persist($account);
-        }
 
         return $account;
     }
@@ -1231,21 +1256,23 @@ class Import
                     $accountContact = $this->em
                         ->getRepository($this->accountContactEntityName)
                         ->findOneBy(array(
-                            $account => $account,
-                            $contact => $contact
+                            'account' => $account,
+                            'contact' => $contact
                             )
                         );
                 }
 
-                if (!$accountContact) {
-                    // account contact relation
-                    $accountContact = new AccountContact();
-                    $accountContact->setContact($contact);
-                    $accountContact->setAccount($account);
-                    $contact->addAccountContact($accountContact);
-                    $account->addAccountContact($accountContact);
-                    $this->em->persist($accountContact);
+                if ($accountContact) {
+                    return;
                 }
+
+                // account contact relation
+                $accountContact = new AccountContact();
+                $accountContact->setContact($contact);
+                $accountContact->setAccount($account);
+                $contact->addAccountContact($accountContact);
+                $account->addAccountContact($accountContact);
+                $this->em->persist($accountContact);
 
                 // check if relation should be set to main
                 $main = false;
@@ -1274,7 +1301,6 @@ class Import
      */
     protected function getContactByData($data)
     {
-
         $criteria = array();
         $email = null;
         $phone = null;
@@ -1284,14 +1310,22 @@ class Import
         } else {
             // TODO:
             // check if contacts already exists
-            if ($this->checkData('contact_firstname', $data)) {
-                $criteria['firstName'] = $data['contact_firstname'];
+            if (array_search('firstName', $this->options['contactComparisonCriteria']) !== false) {
+                if ($this->checkData('contact_firstname', $data)) {
+                    $criteria['firstName'] = $data['contact_firstname'];
+                }
             }
-            if ($this->checkData('contact_lastname', $data)) {
-                $criteria['lastName'] = $data['contact_lastname'];
+            if (array_search('lastName', $this->options['contactComparisonCriteria']) !== false) {
+                if ($this->checkData('contact_lastname', $data)) {
+                    $criteria['lastName'] = $data['contact_lastname'];
+                }
             }
-            $email = $this->getFirstOf('email', $data);
-            $phone = $this->getFirstOf('phone', $data);
+            if (array_search('email', $this->options['contactComparisonCriteria']) !== false) {
+                $email = $this->getFirstOf('email', $data);
+            }
+            if (array_search('phone', $this->options['contactComparisonCriteria']) !== false) {
+                $phone = $this->getFirstOf('phone', $data);
+            }
         }
 
         /** @var ContactRepository $repo */

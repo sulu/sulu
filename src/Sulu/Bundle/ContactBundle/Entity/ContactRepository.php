@@ -332,7 +332,7 @@ class ContactRepository extends EntityRepository
             $qb->join('contact.emails', 'emails', 'WITH', 'emails.email = :email');
             $qb->setParameter('email', $email);
         }
-        if (!is_null($email)) {
+        if (!is_null($phone)) {
             $qb->join('contact.phones', 'phones', 'WITH', 'phones.phone = :phone');
             $qb->setParameter('phone', $phone);
         }
