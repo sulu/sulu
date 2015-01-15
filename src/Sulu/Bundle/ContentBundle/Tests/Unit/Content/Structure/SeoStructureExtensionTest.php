@@ -64,7 +64,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'keywords' => 'Test, Test1',
             'canonicalUrl' => 'http://www.google.at',
             'noIndex' => true,
-            'noFollow' => true
+            'noFollow' => true,
+            'hideInSitemap' => true
         );
         $this->extension->setLanguageCode('de', 'i18n', null);
         $this->extension->save($this->nodeMock, $data, 'default', 'de');
@@ -76,7 +77,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-keywords' => $data['keywords'],
                 'i18n:de-seo-canonicalUrl' => $data['canonicalUrl'],
                 'i18n:de-seo-noIndex' => $data['noIndex'],
-                'i18n:de-seo-noFollow' => $data['noFollow']
+                'i18n:de-seo-noFollow' => $data['noFollow'],
+                'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
             ),
             $content
         );
