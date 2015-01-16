@@ -109,18 +109,20 @@ class Select extends ComplexContentType
         $valueName = $params['valueName'];
 
         $propertyValues = array();
-        foreach ($data as $value) {
-            $propertyValue = array();
-            $actualPropertyValue = $this->getSelectedPropertyValue($property->getValues(), $valueParam, $value);
-            $propertyValue[$valueName] = null;
-            if ($actualPropertyValue) {
-                $propertyValue = array_merge(
-                    $actualPropertyValue->getAttributes(),
-                    $actualPropertyValue->getMeta()->getLanguageMeta($languageCode)
-                );
+        if (is_array($data)) {
+            foreach ($data as $value) {
+                $propertyValue = array();
+                $actualPropertyValue = $this->getSelectedPropertyValue($property->getValues(), $valueParam, $value);
+                $propertyValue[$valueName] = null;
+                if ($actualPropertyValue) {
+                    $propertyValue = array_merge(
+                        $actualPropertyValue->getAttributes(),
+                        $actualPropertyValue->getMeta()->getLanguageMeta($languageCode)
+                    );
+                }
+                $propertyValue[$valueParam] = $value;
+                $propertyValues[] = $propertyValue;
             }
-            $propertyValue[$valueParam] = $value;
-            $propertyValues[] = $propertyValue;
         }
 
         return $propertyValues;
