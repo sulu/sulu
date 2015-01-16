@@ -55,7 +55,17 @@ class MediaControllerTest extends SuluTestCase
      * @var MediaType
      */
     private $videoType;
-    
+
+    /**
+     * @var string
+     */
+    protected $mediaDefaultTitle = 'photo';
+
+    /**
+     * @var string
+     */
+    protected $mediaDefaultDescription = 'description';
+
     protected function setUp()
     {
         parent::setUp();
@@ -160,8 +170,8 @@ class MediaControllerTest extends SuluTestCase
         // create meta
         $fileVersionMeta = new FileVersionMeta();
         $fileVersionMeta->setLocale('en-gb');
-        $fileVersionMeta->setTitle($name);
-        $fileVersionMeta->setDescription('description');
+        $fileVersionMeta->setTitle($this->mediaDefaultTitle);
+        $fileVersionMeta->setDescription($this->mediaDefaultDescription);
         $fileVersionMeta->setFileVersion($fileVersion);
 
         $fileVersion->addMeta($fileVersionMeta);
@@ -264,9 +274,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotNull($response->type->id);
         $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
-        $this->assertEquals('photo', $response->title);
+        $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals('2', $response->downloadCounter);
-        $this->assertEquals('description', $response->description);
+        $this->assertEquals($this->mediaDefaultDescription, $response->description);
     }
 
     /**
@@ -562,7 +572,7 @@ class MediaControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('photo', $response->title);
+        $this->assertEquals($this->mediaDefaultTitle, $response->title);
 
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertNotNull($response->id);
@@ -705,7 +715,9 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals($media->getId(), $response->id);
+        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($this->mediaDefaultTitle, $response->title);
+        $this->assertEquals($this->mediaDefaultDescription, $response->description);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
     }
@@ -809,9 +821,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotNull($response->type->id);
         $this->assertEquals('image', $response->type->name);
         $this->assertEquals('photo.jpeg', $response->name);
-        $this->assertEquals('photo', $response->title);
+        $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals('3', $response->downloadCounter);
-        $this->assertEquals('description', $response->description);
+        $this->assertEquals($this->mediaDefaultDescription, $response->description);
     }
 
     /**
