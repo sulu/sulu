@@ -420,7 +420,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("type")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getType()
     {
