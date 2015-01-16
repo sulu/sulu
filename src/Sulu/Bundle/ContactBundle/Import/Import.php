@@ -383,9 +383,6 @@ class Import
                 if (array_key_exists('defaults', $mappings)) {
                     $this->defaults = $mappings['defaults'];
                 }
-                if (array_key_exists('mainContactTypes', $mappings)) {
-                    $this->defaults = $mappings['mainContactTypes'];
-                }
 
                 return $mappings;
             }
@@ -1050,10 +1047,11 @@ class Import
     {
         // TODO handle one or more bank accounts
         for ($i = 0, $len = 10; ++$i < $len;) {
+            $bankIndex = 'bank' . $i;
+            $prefix = $bankIndex . '_';
+
             // if iban is set, then add bank account
-            if ($this->checkData('bank' . $i, $data)) {
-                $bankIndex = 'bank' . $i;
-                $prefix = $bankIndex . '_';
+            if ($this->checkData($prefix . 'iban', $data)) {
 
                 $bank = new BankAccount();
                 if ($this->checkData($prefix . 'iban', $data)) {
