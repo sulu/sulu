@@ -206,7 +206,6 @@ class Select extends ComplexContentType
             }
         }
 
-        $node->getProperty($property->getName())->remove(); // content type changes
         $node->setProperty($property->getName(), $saveValue);
     }
 
@@ -220,7 +219,9 @@ class Select extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->getProperty($property->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**
