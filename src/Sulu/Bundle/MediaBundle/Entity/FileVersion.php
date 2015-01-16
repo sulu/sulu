@@ -520,26 +520,46 @@ class FileVersion
     {
         if ($this->id) {
             $this->id = null;
+            /** @var FileVersionMeta[] $newMetaList */
+            $newMetaList = array();
 
-            /**
-             * @var FileVersionMeta $meta
-             */
+            /** @var FileVersionContentLanguage[] $newContentLanguageList */
+            $newContentLanguageList = array();
+
+            /** @var FileVersionPublishLanguage[] $newPublishLanguageList */
+            $newPublishLanguageList = array();
+
+            /** @var FileVersionMeta $meta */
             foreach ($this->meta as $meta) {
-                $meta->setId(null);
+                $newMetaList[] = clone $meta;
             }
 
-            /**
-             * @var FileVersionContentLanguage $meta
-             */
+            $this->meta->clear();
+            foreach ($newMetaList as $newMeta) {
+                $newMeta->setFileVersion($this);
+                $this->addMeta($newMeta);
+            }
+
+            /** @var FileVersionContentLanguage $contentLanguage */
             foreach ($this->contentLanguages as $contentLanguage) {
-                $contentLanguage->setId(null);
+                $newContentLanguageList[] = clone $contentLanguage;
             }
 
-            /**
-             * @var FileVersionPublishLanguage $meta
-             */
+            $this->contentLanguages->clear();
+            foreach ($newContentLanguageList as $newContentLanguage) {
+                $newContentLanguage->setFileVersion($this);
+                $this->addContentLanguage($newContentLanguage);
+            }
+
+            /** @var FileVersionPublishLanguage $publishLanguage */
             foreach ($this->publishLanguages as $publishLanguage) {
-                $publishLanguage->setId(null);
+                $newPublishLanguageList[] = clone $publishLanguage;
+            }
+
+            $this->publishLanguages->clear();
+            foreach ($newPublishLanguageList as $newPublishLanguage) {
+                $newPublishLanguage->setFileVersion($this);
+                $this->addPublishLanguage($newPublishLanguage);
             }
         }
     }
