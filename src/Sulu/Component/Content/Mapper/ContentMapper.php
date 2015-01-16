@@ -497,7 +497,7 @@ class ContentMapper implements ContentMapperInterface
             /** @var PropertyInterface $property */
             foreach ($structure->getProperties(true) as $property) {
 
-                $property->loadValues($this->propertyvaluemanager);
+                // $property->loadValues($this->propertyvaluemanager);
 
                 // allow null values in data
                 if (isset($data[$property->getName()])) {
