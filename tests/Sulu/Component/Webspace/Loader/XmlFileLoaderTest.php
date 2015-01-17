@@ -76,8 +76,9 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
 
         $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
-        $this->assertEquals(1, count($environmentDev->getUrls()));
+        $this->assertEquals(2, count($environmentDev->getUrls()));
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
+        $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
 
         $webspace = $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/massiveart.xml'
