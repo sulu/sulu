@@ -483,13 +483,13 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
     public function testUrlWithTrailingSlash()
     {
         $webspace = $this->loader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/valid/sulu.io_url_with_slash.xml'
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/url-with-trailing-slash/sulu.io_url_with_slash.xml'
         );
 
         $environmentDev = $webspace->getPortals()[0]->getEnvironment('dev');
         $this->assertEquals('dev', $environmentDev->getType());
         $this->assertEquals(2, count($environmentDev->getUrls()));
-        $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
+        $this->assertEquals('sulu-without-slash.lo', $environmentDev->getUrls()[0]->getUrl());
         $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
     }
 }
