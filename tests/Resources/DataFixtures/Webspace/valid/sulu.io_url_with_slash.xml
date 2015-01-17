@@ -61,6 +61,7 @@
                 <environment type="dev">
                     <urls>
                         <url language="de" country="at">sulu.lo</url>
+                        <url language="de" country="at">sulu-with-slash.lo/</url>
                     </urls>
                 </environment>
             </environments>
