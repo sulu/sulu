@@ -10,6 +10,7 @@ CHANGELOG for Sulu
                                          images inside the overlay; Store media assignement display options in user settings
     * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
     * BUGFIX      #1089 [Media/Search]   Do not set image URL for non-images in the search results
+    * BUGFIX      #725  [Webspace]       Fixed trailing slash in defining url in webspace config
 
 * 0.18.2 (2015-05-18)
     * HOTFIX      #1094 [MediaBundle]    Fixed media overlay version tab appearance
