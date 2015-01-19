@@ -113,7 +113,7 @@ define(function() {
             this.render();
             this.bindCustomEvents();
             this.bindDomEvents();
-            //this.initializeUnsavedChangesHandler();
+            this.initializeUnsavedChangesHandler();
 
             if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
                 this.selectNavigationItem(this.sandbox.mvc.history.fragment);
@@ -146,53 +146,58 @@ define(function() {
             }.bind(this));
         },
 
-        ///**
-        // * Initializes the handler for unsaved changes
-        // */
-        //initializeUnsavedChangesHandler: function(){
-        //    this.unsavedChanges = false;
-        //    this.bindCustomEventsForUnsavedChangesHandler();
-        //},
-        //
-        ///**
-        // * Listen for changes regarding the save button
-        // */
-        //bindCustomEventsForUnsavedChangesHandler: function(){
-        //    this.sandbox.on('husky.toolbar.header.item.enable', function(button) {
-        //        if (button === constants.saveButtonKey) {
-        //            this.unsavedChanges = true;
-        //        }
-        //    }.bind(this));
-        //    this.sandbox.on('husky.toolbar.header.item.disable', function(button) {
-        //        if (button === constants.saveButtonKey) {
-        //            this.unsavedChanges = false;
-        //        }
-        //    }.bind(this));
-        //},
-        //
-        ///**
-        // * Checks if there are unsaved changes and shows a message box
-        // * @return {Object} returns a promise when navigation should take place
-        // */
-        //showUnsavedChangesWarning: function() {
-        //    var dfd = this.sandbox.data.deferred(),
-        //        title = 'labels.warning',
-        //        message = 'sulu.overlay.unsaved-changes',
-        //        cancelCallback = function() {
-        //            this.unsavedChanges = false;
-        //            dfd.resolve();
-        //        }.bind(this),
-        //        okCallback = function() {
-        //            this.unsavedChanges = false;
-        //            this.sandbox.emit('sulu.header.toolbar.save');
-        //            dfd.resolve();
-        //        }.bind(this),
-        //        options = {};
-        //
-        //        this.sandbox.emit('sulu.overlay.show-warning', title, message, cancelCallback, okCallback, options);
-        //
-        //    return dfd.promise();
-        //},
+        /**
+        * Initializes the handler for unsaved changes
+        */
+        initializeUnsavedChangesHandler: function(){
+            this.unsavedChanges = false;
+            this.bindCustomEventsForUnsavedChangesHandler();
+        },
+
+        /**
+        * Listen for changes regarding the save button
+        */
+        bindCustomEventsForUnsavedChangesHandler: function(){
+            this.sandbox.on('husky.toolbar.header.item.enable', function(button) {
+                if (button === constants.saveButtonKey) {
+                    this.unsavedChanges = true;
+                }
+            }.bind(this));
+            this.sandbox.on('husky.toolbar.header.item.disable', function(button) {
+                if (button === constants.saveButtonKey) {
+                    this.unsavedChanges = false;
+                }
+            }.bind(this));
+        },
+
+        /**
+        * Checks if there are unsaved changes and shows a message box
+        * @return {Object} returns a promise when navigation should take place
+        */
+        showUnsavedChangesWarning: function() {
+            var dfd = this.sandbox.data.deferred(),
+                title = this.sandbox.translate('sulu.overlay.unsaved-changes.header'),
+                message = 'sulu.overlay.unsaved-changes.text',
+                cancelCallback = function() {
+                    this.unsavedChanges = false;
+                    dfd.resolve();
+                }.bind(this),
+                okCallback = function() {
+                    this.unsavedChanges = false;
+                    this.sandbox.emit('sulu.header.toolbar.save');
+                    dfd.resolve();
+                }.bind(this),
+                options = {
+                    closeIcon: 'times',
+                    cancelDefaultText: this.sandbox.translate('sulu.overlay.unsaved-changes.cancel'),
+                    okDefaultText: this.sandbox.translate('sulu.overlay.unsaved-changes.save'),
+                    skin: 'medium'
+                };
+
+                this.sandbox.emit('sulu.overlay.show-warning', title, message, cancelCallback, okCallback, options);
+
+            return dfd.promise();
+        },
 
         /**
          * Extract an error message (or messages) from the response
@@ -341,18 +346,16 @@ define(function() {
          */
         bindCustomEvents: function() {
             // navigate
-            //this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader, forceReload) {
-            //    if (!!this.unsavedChanges) {
-            //        var dfdSavedChanges = this.showUnsavedChangesWarning();
-            //        this.sandbox.data.when(dfdSavedChanges).then(function() {
-            //            this.navigate(route, trigger, noLoader, forceReload);
-            //        }.bind(this));
-            //    } else {
-            //        this.navigate(route, trigger, noLoader, forceReload);
-            //    }
-            //}.bind(this));
-
-            this.sandbox.on('sulu.router.navigate', this.navigate.bind(this));
+            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader, forceReload) {
+                if (!!this.unsavedChanges) {
+                    var dfdSavedChanges = this.showUnsavedChangesWarning();
+                    this.sandbox.data.when(dfdSavedChanges).then(function() {
+                        this.navigate(route, trigger, noLoader, forceReload);
+                    }.bind(this));
+                } else {
+                    this.navigate(route, trigger, noLoader, forceReload);
+                }
+            }.bind(this));
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
