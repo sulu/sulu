@@ -64,7 +64,7 @@ class Select extends ComplexContentType
         $data = $node->getPropertyValueWithDefault($property->getName(), null);
         $this->setData($data, $property, $webspaceKey, $languageCode);
 
-        $property->getValues();
+        return $property->getValues();
     }
 
     /**
@@ -81,7 +81,7 @@ class Select extends ComplexContentType
             $data = $data->toArray();
         }
 
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        return $this->setData($data, $property, $webspaceKey, $languageCode);
     }
 
     /**
@@ -90,10 +90,13 @@ class Select extends ComplexContentType
      * @param PropertyInterface $property
      * @param string $webspaceKey
      * @param string $languageCode
+     * @return mixed
      */
     private function setData($data, PropertyInterface $property, $webspaceKey, $languageCode)
     {
-        $property->setValue($this->getDataPropertyValues($data, $languageCode, $property));
+        $value = $this->getDataPropertyValues($data, $languageCode, $property);
+        $property->setValue($value);
+        return $value;
     }
 
     /**

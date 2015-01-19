@@ -30,5 +30,5 @@ interface ContentTypeValuesInterface
      * @param ContainerAware $container
      * @return PropertyValueInterface[]
      */
-    public function getValues(ContainerAware $container = null);
+    public function loadValues(ContainerAware $container = null);
 } 
