@@ -1,5 +1,10 @@
 # Upgrade
 
+## 0.14.0
+* Role name is now unique
+  * check roles and give them unique names
+* Apply all permissions correctly, otherwise users won't be able to work on snippets, categories or tags anymore
+
 ## 0.13.0
 * Remove `/cmf/<webspace>/temp` from repository
   * run `app/console doctrine:phpcr:node:remove /cmf/<webspace>/temp` foreach webspace
@@ -14,4 +19,3 @@
 * Snippet content type defaults to all snippet types available instead of the
   default one
   * Explicitly define a snippet type in the parameters if this is not desired
-

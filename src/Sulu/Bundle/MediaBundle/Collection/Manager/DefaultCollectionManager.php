@@ -58,7 +58,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * @var ObjectManager
      */
-    private $em;
+    protected $em;
 
     /**
      * @var int
@@ -167,7 +167,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
                     self::$entityCollectionType,
                     self::$entityName . '.type'
                 )
-            )
+            ),
+            true,
+            false
         );
         $this->fieldDescriptors['title'] = new DoctrineFieldDescriptor(
             'title',
@@ -180,9 +182,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
                     self::$entityName . '.meta'
                 )
             ),
-            true,
             false,
-            '',
+            true,
+            'title',
             '50px'
         );
         $this->fieldDescriptors['description'] = new DoctrineFieldDescriptor(
@@ -195,7 +197,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
                     self::$entityCollectionMeta,
                     self::$entityName . '.meta'
                 )
-            )
+            ),
+            true,
+            false,
+            'description'
         );
         $this->fieldDescriptors['changer'] = new DoctrineFieldDescriptor(
             'firstname',
@@ -211,7 +216,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
                     self::$entityContact,
                     self::$entityUser . '.contact'
                 )
-            )
+            ),
+            true,
+            false
         );
         $this->fieldDescriptors['creator'] = new DoctrineFieldDescriptor(
             'firstname',
@@ -227,7 +234,29 @@ class DefaultCollectionManager implements CollectionManagerInterface
                     self::$entityContact,
                     self::$entityUser . '.contact'
                 )
-            )
+            ),
+            true,
+            false
+        );
+        $this->fieldDescriptors['thumbnails'] = new DoctrineFieldDescriptor(
+            'thumbnails',
+            'thumbnails',
+            self::$entityName,
+            'thumbnails',
+            array(),
+            false,
+            true,
+            'thumbnails'
+        );
+        $this->fieldDescriptors['mediaNumber'] = new DoctrineFieldDescriptor(
+            'mediaNumber',
+            'mediaNumber',
+            self::$entityName,
+            'mediaNumber',
+            array(),
+            false,
+            true,
+            'count'
         );
 
         return $this->fieldDescriptors;

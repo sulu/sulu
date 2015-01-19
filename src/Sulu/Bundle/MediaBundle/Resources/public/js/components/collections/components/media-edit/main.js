@@ -319,11 +319,14 @@ define(function () {
          * Toggles the descriptions in the multiple-edit element
          */
         toggleDescriptions: function () {
-            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked');
+            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.descriptionCheckboxSelector, this.$multiple), ':checked'),
+                $elements = this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple);
             if (checked === true) {
-                this.sandbox.dom.show(this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple));
+                this.sandbox.dom.show($elements);
+                this.sandbox.dom.removeClass($elements, 'hidden');
             } else {
-                this.sandbox.dom.hide(this.sandbox.dom.find(constants.multipleEditDescSelector, this.$multiple));
+                this.sandbox.dom.hide($elements);
+                this.sandbox.dom.addClass($elements, 'hidden');
             }
             this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
         },
@@ -332,11 +335,14 @@ define(function () {
          * Toggles the tag-components in the multiple-edit element
          */
         toggleTags: function() {
-            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked');
+            var checked = this.sandbox.dom.is(this.sandbox.dom.find(constants.tagsCheckboxSelector, this.$multiple), ':checked'),
+                $elements = this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple);
             if (checked === true) {
-                this.sandbox.dom.show(this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple));
+                this.sandbox.dom.show($elements);
+                this.sandbox.dom.removeClass($elements, 'hidden');
             } else {
-                this.sandbox.dom.hide(this.sandbox.dom.find(constants.multipleEditTagsSelector, this.$multiple));
+                this.sandbox.dom.hide($elements);
+                this.sandbox.dom.addClass($elements, 'hidden');
             }
             this.sandbox.emit('husky.overlay.media-multiple-edit.set-position');
         },

@@ -132,6 +132,7 @@ class SuluSecurityListenerTest extends ProphecyTestCase
             array('POST', 'postAction', 'add'),
             array('POST', 'postMergeAction', 'edit'),
             array('PUT', 'putAction', 'edit'),
+            array('PATCH', 'patchAction', 'edit'),
             array('DELETE', 'deleteAction', 'delete'),
         );
     }

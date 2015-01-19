@@ -835,6 +835,7 @@ define([
             this.previewWindow = window.open(this.previewUrl);
             this.previewWindow.onload = function() {
                 this.previewWindow.onunload = function() {
+                    this.sandbox.emit('sulu.sidebar.show');
                     this.sandbox.emit('sulu.app.toggle-shrinker', true);
                     this.sandbox.emit('sulu.sidebar.change-width', 'max');
                 }.bind(this);

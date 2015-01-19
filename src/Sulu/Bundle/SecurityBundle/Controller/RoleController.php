@@ -27,6 +27,9 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
+use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
+use Sulu\Component\Rest\Exception\InvalidArgumentException;
 
 /**
  * Makes the roles accessible through a REST-API
@@ -42,9 +45,9 @@ class RoleController extends RestController implements ClassResourceInterface, S
 
     protected $fieldsDefault = array('name');
     protected $fieldsExcluded = array();
-    protected $fieldsHidden = array('changed','created');
+    protected $fieldsHidden = array('changed', 'created');
     protected $fieldsRelations = array();
-    protected $fieldsSortOrder = array(0=>'id',1=>'name');
+    protected $fieldsSortOrder = array(0 => 'id', 1 => 'name');
     protected $fieldsTranslationKeys = array();
     protected $bundlePrefix = 'security.roles.';
 
@@ -194,7 +197,14 @@ class RoleController extends RestController implements ClassResourceInterface, S
         $name = $request->get('name');
         $system = $request->get('system');
 
-        if ($name != null && $system != null) {
+        try {
+            if ($name === null) {
+                throw new InvalidArgumentException('Role', 'name');
+            }
+            if ($system === null) {
+                throw new InvalidArgumentException('Role', 'name');
+            }
+
             $em = $this->getDoctrine()->getManager();
 
             $role = new Role();
@@ -216,12 +226,16 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 $this->setSecurityType($role, $securityTypeData);
             }
 
-            $em->persist($role);
-            $em->flush();
+            try {
+                $em->persist($role);
+                $em->flush();
 
-            $view = $this->view($this->convertRole($role), 200);
-        } else {
-            $view = $this->view(null, 400);
+                $view = $this->view($this->convertRole($role), 200);
+            } catch (DoctrineUniqueConstraintViolationException $ex) {
+                throw new SuluUniqueConstraintViolationException('name', 'SuluSecurityBudle:Role');
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -410,7 +424,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
                     'context' => $permission->getContext(),
                     'module' => $permission->getModule(),
                     'permissions' => $this->get('sulu_security.mask_converter')
-                            ->convertPermissionsToArray($permission->getPermissions())
+                        ->convertPermissionsToArray($permission->getPermissions())
                 );
             }
         }

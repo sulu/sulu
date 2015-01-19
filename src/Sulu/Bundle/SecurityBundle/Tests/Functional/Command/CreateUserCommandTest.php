@@ -14,6 +14,7 @@ use Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
 
 class CreateUserCommandTest extends SuluTestCase
 {
@@ -34,6 +35,19 @@ class CreateUserCommandTest extends SuluTestCase
         $createUserCommand = new CreateUserCommand();
         $createUserCommand->setApplication($application);
         $this->tester = new CommandTester($createUserCommand);
+
+        $doctrine = $this->getContainer()->get('doctrine');
+        $em = $doctrine->getManager();
+        $now = new \Datetime();
+
+        $role = new Role();
+        $role->setName('test');
+        $role->setSystem('Sulu');
+        $role->setCreated($now);
+        $role->setChanged($now);
+
+        $em->persist($role);
+        $em->flush();
     }
 
     public function testExecute()
@@ -45,11 +59,12 @@ class CreateUserCommandTest extends SuluTestCase
                 'lastName' => 'Hikaru',
                 'email' => 'sulu.hikaru@startrek.com',
                 'locale' => 'en',
+                'role' => 'test',
                 'password' => 'sulu'
             ),
             array('interactive' => false)
         );
 
-        $this->assertEquals("Created user sulu\n", $this->tester->getDisplay());
+        $this->assertEquals("Created user sulu in role test\n", $this->tester->getDisplay());
     }
 }

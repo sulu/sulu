@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Sulu\Bundle\MediaBundle\Entity\Collection as Entity;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
@@ -53,7 +53,7 @@ class Collection extends ApiWrapper
      */
     protected $properties = array();
 
-    public function __construct(Entity $collection, $locale)
+    public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
         $this->locale = $locale;
@@ -362,7 +362,7 @@ class Collection extends ApiWrapper
      */
     public function setCreator($creator)
     {
-        $this->entity->setChanger($creator);
+        $this->entity->setCreator($creator);
 
         return $this;
     }

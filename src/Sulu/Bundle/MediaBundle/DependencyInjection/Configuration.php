@@ -43,22 +43,22 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->arrayNode('format_manager')
                 ->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('response_headers')->prototype('scalar')->end()
+                ->children()
+                    ->arrayNode('response_headers')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('default_imagine_options')
+                        ->prototype('scalar')->end()
                     ->end()
                 ->end()
             ->end()
             ->arrayNode('format_cache')
                 ->addDefaultsIfNotSet()
-                    ->children()
-                        ->scalarNode('public_folder')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER)->end()
-                    ->end()
+                ->children()
+                    ->scalarNode('public_folder')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER)->end()
                 ->end()
             ->end();
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
         return $treeBuilder;
     }
 }

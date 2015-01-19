@@ -624,7 +624,9 @@ define([
                             el: this.editFieldsData[i].$dropdown,
                             instanceName: this.editFieldsData[i].dropdownId,
                             data: this.editFieldsData[i].dropdownData,
-                            preSelectedElements: [this.editFieldsData[i].type.id]
+                            preSelectedElements: [this.editFieldsData[i].type.id],
+                            isNative: true,
+                            deselectField: this.sandbox.translate('select.no-choice')
                         }
                     }
                 ]);
@@ -899,8 +901,10 @@ define([
                         singleSelect: true,
                         data: this.dropdownDataArray,
                         defaultLabels: this.sandbox.translate('public.please-choose'),
+                        deselectField: this.sandbox.translate('select.no-choice'),
                         instanceName: 'add-fields',
-                        container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
+                        container: ['#' + constants.fieldId, '#' + constants.fieldTypeId],
+                        isNative: true
                     }
                 }
             ]);

@@ -13,6 +13,7 @@ require.config({
         suluadmin: '../../suluadmin/js',
 
         'app-config': 'components/app-config/main',
+        'config': 'components/config/main',
         'cultures': 'vendor/globalize/cultures',
         'husky': 'vendor/husky/husky',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
@@ -39,6 +40,7 @@ require.config({
     },
     include: [
         'app-config',
+        'config',
         'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension',
