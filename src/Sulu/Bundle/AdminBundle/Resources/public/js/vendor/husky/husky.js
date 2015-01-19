@@ -29483,10 +29483,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param record {Object} the record
          * @param prepend {Boolean} if true row gets prepended
          */
-        renderBodyRow: function (record, prepend) {
+        renderBodyRow: function(record, prepend) {
             this.removeNewRecordRow();
 
-            if (!this.table.rows[record.id] || !this.table.rows[record.id].isRendered) {
+            if (!this.table.rows[record.id]) {
                 var $row = this.sandbox.dom.createElement(templates.row),
                     $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
@@ -29501,7 +29501,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }
 
                 this.table.rows[record.id] = {
-                    isRendered: false,
                     $el: $row,
                     cells: {},
                     childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
@@ -29515,7 +29514,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.renderRowRemoveItem(record.id);
 
                 this.insertBodyRow(record, $overrideElement, prepend);
-                this.table.rows[record.id].isRendered = true; // prevents multiple rendering / overriding of parent rows
                 this.executeRowPostRenderActions(record);
             }
         },
