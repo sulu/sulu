@@ -20,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Component\Security\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -124,6 +125,11 @@ class CreateUserCommand extends ContainerAwareCommand
         );
     }
 
+    /**
+     * Returns a new instance of the user.
+     * Can be overwritten to use a different implementation.
+     * @return UserInterface
+     */
     protected function getUser()
     {
         return new User();

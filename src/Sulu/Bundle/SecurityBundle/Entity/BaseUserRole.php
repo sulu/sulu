@@ -26,24 +26,24 @@ abstract class BaseUserRole extends ApiEntity
      * @var integer
      * @Expose
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      * @Expose
      */
-    private $locale;
+    protected $locale;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
      */
-    private $user;
+    protected $user;
 
     /**
      * @var \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
      * @Expose
      */
-    private $role;
+    protected $role;
 
     /**
      * Get id
