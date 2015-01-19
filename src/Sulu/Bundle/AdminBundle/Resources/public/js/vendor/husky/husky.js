@@ -29442,7 +29442,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.table.rows = {};
             if (this.data.embedded.length > 0) {
                 this.sandbox.util.foreach(this.data.embedded, function(record) {
-                    this.renderBodyRow(record);
+                    this.renderBodyRow(record, false);
                 }.bind(this));
             } else {
                 this.renderEmptyIndicator();
@@ -29485,34 +29485,43 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          */
         renderBodyRow: function (record, prepend) {
             this.removeNewRecordRow();
-            var $row = this.sandbox.dom.createElement(templates.row),
-                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
-            this.sandbox.dom.data($row, 'id', record.id);
+            if (!this.table.rows[record.id] || !this.table.rows[record.id].isRendered) {
+                var $row = this.sandbox.dom.createElement(templates.row),
+                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            if (!!record.parent) {
-                this.table.rows[record.parent].childrenLoaded = true;
+                record.id = (!!record.id) ? record.id : constants.newRecordId;
+                this.sandbox.dom.data($row, 'id', record.id);
+
+                if (!!record.parent) {
+                    if (!this.table.rows[record.parent]) {
+                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
+                    }
+                    this.table.rows[record.parent].childrenLoaded = true;
+                }
+
+                this.table.rows[record.id] = {
+                    isRendered: false,
+                    $el: $row,
+                    cells: {},
+                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
+                    childrenExpanded: false,
+                    parent: !!(record.parent) ? record.parent : null,
+                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                    level: 1
+                };
+                this.renderRowSelectItem(record.id);
+                this.renderBodyCellsForRow(record);
+                this.renderRowRemoveItem(record.id);
+
+                this.insertBodyRow(record, $overrideElement, prepend);
+                this.table.rows[record.id].isRendered = true; // prevents multiple rendering / overriding of parent rows
+                this.executeRowPostRenderActions(record);
             }
-
-            this.table.rows[record.id] = {
-                $el: $row,
-                cells: {},
-                childrenLoaded: false,
-                childrenExpanded: false,
-                parent: !!(record.parent) ? record.parent : null,
-                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                level: 1
-            };
-            this.renderRowSelectItem(record.id);
-            this.renderBodyCellsForRow(record);
-            this.renderRowRemoveItem(record.id);
-            this.insertBodyRow(record, $overrideElement, prepend);
-            this.executeRowPostRenderActions(record);
         },
 
         /**
-         * Inserts a body row into the dom. Looks if a row needs to be overriden, or if a parent exists etc.
+         * Inserts a body row into the dom. Looks if a row needs to be overridden, or if a parent exists etc.
          * @param record {Object} the data object of the record
          * @param $overrideElement {Object}
          * @param prepend {Boolean} true to prepend
@@ -29598,7 +29607,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
             }
-            if (!!this.options.selectItem && !!this.options.selectItem.inFirstCell === true && index === 0) {
+            if (!!this.options.selectItem && this.options.selectItem.inFirstCell === true && index === 0) {
                 this.sandbox.dom.attr($cell, 'colspan', 2);
                 selectItem = this.renderRowSelectItem(record.id, true);
                 if (typeof content === 'string') {
