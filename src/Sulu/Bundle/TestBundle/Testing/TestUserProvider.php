@@ -105,7 +105,10 @@ class TestUserProvider implements UserProviderInterface
         return $class === 'Sulu\Bundle\CoreBundle\Entity\TestUser';
     }
 
-    public function setCredentials()
+    /**
+     * Sets the standard credentials for the user
+     */
+    private function setCredentials()
     {
         $this->user->setUsername('test');
         $this->user->setPassword('test');
