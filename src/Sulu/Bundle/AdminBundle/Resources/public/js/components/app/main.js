@@ -179,7 +179,7 @@ define(function() {
                 title = this.sandbox.translate('sulu.overlay.unsaved-changes.header'),
                 message = 'sulu.overlay.unsaved-changes.text',
                 cancelCallback = function(el) {
-                    if(el.className.indexOf('close')){
+                    if(el.className.indexOf('close') > -1){
                         dfd.reject();
                     } else {
                         this.unsavedChanges = false;
