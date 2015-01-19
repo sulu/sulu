@@ -40360,7 +40360,7 @@ define('__component__$overlay@husky',[], function() {
                 this.sandbox.dom.preventDefault(event);
                 this.sandbox.dom.stopPropagation(event);
             }
-            if (this.executeCallback(cancelCallback) !== false) {
+            if (this.executeCallback(cancelCallback, event.currentTarget) !== false) {
                 this.closeOverlay();
             }
         },

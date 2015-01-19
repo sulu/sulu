@@ -178,9 +178,13 @@ define(function() {
             var dfd = this.sandbox.data.deferred(),
                 title = this.sandbox.translate('sulu.overlay.unsaved-changes.header'),
                 message = 'sulu.overlay.unsaved-changes.text',
-                cancelCallback = function() {
-                    this.unsavedChanges = false;
-                    dfd.resolve();
+                cancelCallback = function(el) {
+                    if(el.className.indexOf('close')){
+                        dfd.reject();
+                    } else {
+                        this.unsavedChanges = false;
+                        dfd.resolve();
+                    }
                 }.bind(this),
                 okCallback = function() {
                     this.unsavedChanges = false;
