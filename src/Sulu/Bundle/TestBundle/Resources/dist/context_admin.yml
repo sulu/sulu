@@ -6,7 +6,7 @@ security:
         strategy: affirmative
 
     encoders:
-        Sulu\Bundle\TestBundle\Entity\TestUser: plaintext
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
 
     providers:
         testprovider:

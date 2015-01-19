@@ -71,7 +71,7 @@ abstract class SuluTestCase extends BaseTestCase
      */
     protected function getTestUserId()
     {
-        $user = $this->em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')
+        $user = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
             ->findOneByUsername('test');
 
         return $user->getId();
