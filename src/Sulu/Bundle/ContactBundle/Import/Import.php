@@ -674,8 +674,6 @@ class Import
             $account = $this->createNewAccount();
         }
 
-        $account->setChanged(new \DateTime());
-        $account->setCreated(new \DateTime());
 
         if ($this->checkData('account_name', $data)) {
             $account->setName($data['account_name']);
@@ -1007,8 +1005,6 @@ class Import
         } else {
             $tag = new Tag();
             $tag->setName($tagName);
-            $tag->setCreated(new \DateTime());
-            $tag->setChanged(new \DateTime());
             $this->em->persist($tag);
             $this->tags[$tag->getName()] = $tag;
         }
@@ -1378,9 +1374,6 @@ class Import
         if ($this->checkData('contact_disabled', $data)) {
             $contact->setDisabled($this->getBoolValue($data['contact_disabled']));
         }
-
-        $contact->setChanged(new \DateTime());
-        $contact->setCreated(new \DateTime());
 
         // check company
         $this->em->persist($contact);

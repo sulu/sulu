@@ -614,8 +614,6 @@ class ContactController extends AbstractContactController
                 $contact->setBirthday(new DateTime($birthday));
             }
 
-            $contact->setCreated(new DateTime());
-            $contact->setChanged(new DateTime());
 
             $contact->setFormOfAddress($formOfAddress['id']);
 
@@ -695,7 +693,6 @@ class ContactController extends AbstractContactController
                 // Set title relation on contact
                 $this->setTitleOnContact($contact, $request->get('title'));
 
-                $contact->setChanged(new DateTime());
 
                 $this->getContactManager()->setMainAccount($contact, $request->request->all());
 

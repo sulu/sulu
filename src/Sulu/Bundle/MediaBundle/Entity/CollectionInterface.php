@@ -11,11 +11,12 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * CollectionInterface
  */
-interface CollectionInterface
+interface CollectionInterface extends AuditableInterface
 {
     /**
      * Get id
@@ -115,27 +116,11 @@ interface CollectionInterface
     public function getDepth();
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return CollectionInterface
-     */
-    public function setCreated($created);
-
-    /**
      * Get created
      *
      * @return \DateTime
      */
     public function getCreated();
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return CollectionInterface
-     */
-    public function setChanged($changed);
 
     /**
      * Get changed

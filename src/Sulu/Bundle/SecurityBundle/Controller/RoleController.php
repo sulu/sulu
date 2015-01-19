@@ -211,8 +211,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $role->setName($name);
             $role->setSystem($system);
 
-            $role->setCreated(new \DateTime());
-            $role->setChanged(new \DateTime());
 
             $permissions = $request->get('permissions');
             if (!empty($permissions)) {
@@ -265,7 +263,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 $role->setName($name);
                 $role->setSystem($request->get('system'));
 
-                $role->setChanged(new \DateTime());
 
                 if (!$this->processPermissions($role, $request->get('permissions', array()))) {
                     throw new RestException("Could not update dependencies!");

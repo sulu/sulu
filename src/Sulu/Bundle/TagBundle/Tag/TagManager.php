@@ -157,11 +157,9 @@ class TagManager implements TagManagerInterface
 
             // update data
             $tag->setName($name);
-            $tag->setChanged(new \DateTime());
             $tag->setChanger($user);
 
             if (!$id) {
-                $tag->setCreated(new \DateTime());
                 $tag->setCreator($user);
                 $this->em->persist($tag);
             }

@@ -10,11 +10,13 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use Sulu\Component\Persistence\Model\AuditableInterface;
+
 /**
  * File
  */
-class File
-{
+class File implements AuditableInterface
+{ 
     /**
      * @var \DateTime
      */
@@ -64,19 +66,6 @@ class File
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return File
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -84,19 +73,6 @@ class File
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return File
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
