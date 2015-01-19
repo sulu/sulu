@@ -1429,6 +1429,10 @@
                 <source>labels.successfully-saved</source>
                 <target>Daten wurden erfolgreich gespeichert.</target>
             </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a4e" resname="sulu.overlay.unsaved-changes">
+                <source>sulu.overlay.unsaved-changes</source>
+                <target>Sei vorsichtig. Die geänderten Daten sind nicht gespeichert. Möchtest Du vorher speichern?</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
