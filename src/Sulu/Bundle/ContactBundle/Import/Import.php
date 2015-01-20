@@ -61,12 +61,21 @@ class Import
         'fixedAccountType' => false,
         'delimiter' => ';',
         'enclosure' => '"',
+        'enclosure' => '"',
         'contactComparisonCriteria' => array(
             'firstName',
             'lastName',
             'email',
-        )
+        ),
+        'acquireAccountNumbers' => true,
     );
+
+    /**
+     * defines which columns should be excluded,
+     *  - either with simple key value (e.g. 'column_exclude' => 'true')
+     * @var array
+     */
+    protected $excludeConditions = array();
 
     /**
      * defaults that are set for a specific key (if not set in data) e.g.: address1_label = 'mobile'
@@ -226,10 +235,9 @@ class Import
      * @var array
      */
     protected $accountTypeMappings = array(
-        Account::TYPE_BASIC => '',
-        Account::TYPE_LEAD => 'lead',
-        Account::TYPE_CUSTOMER => 'customer',
-        Account::TYPE_SUPPLIER => 'supplier',
+        '' => Account::TYPE_BASIC,
+        'lead' => Account::TYPE_LEAD,
+        'customer' => Account::TYPE_CUSTOMER,
     );
 
     /**
@@ -471,8 +479,12 @@ class Import
 
                     // get associativeData
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
-
-                    $function($associativeData, $row);
+                    
+                    // check if row contains data that should be excluded
+                    if (!$this->rowContainsExlcudeData($associativeData)) {
+                        // call callback function
+                        $function($associativeData, $row);
+                    }
 
                     if ($flushOnEveryRow) {
                         $this->em->flush();
@@ -513,6 +525,38 @@ class Import
 
         $this->debug("\n");
         fclose($handle);
+    }
+
+    /**
+     * checks if data row contains a value that is defined as exclude criteria (for a specific column)
+     * ( see excludeConditions)
+     * @param $data
+     * @return bool
+     */
+    protected function rowContainsExlcudeData($data)
+    {
+        if (count($this->excludeConditions) > 0) {
+            // iterate through all defined exclude conditions
+            foreach($this->excludeConditions as $key => $value) {
+                if (isset($data[$key])) {
+                    // if condition is an array - compare with every value
+                    if (is_array($data[$key])) {
+                        foreach($data[$key] as $childValue) {
+                            if ($data[$key] === $childValue) {
+                                return true;
+                            }
+                        }
+                    // else if simple value - just compare
+                    } else {
+                        // if match
+                        if ($data[$key] === $value) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -579,9 +623,9 @@ class Import
             $account->setDisabled($this->getBoolValue($data['account_disabled']));
         }
         if ($this->checkData('account_uid', $data)) {
-            $account->setUid($data['account_uid']);
+            $account->setUid($this->removeWhiteSpaces($data['account_uid']));
         }
-        if ($this->checkData('account_number', $data)) {
+        if ($this->options['acquireAccountNumbers'] && $this->checkData('account_number', $data)) {
             $account->setNumber($data['account_number']);
         }
         if ($this->checkData('account_registerNumber', $data)) {
@@ -639,6 +683,16 @@ class Import
         }
 
         return false;
+    }
+
+    /**
+     * removes all white-spaces from a string
+     * @param $string
+     * @return mixed
+     */
+    protected function removeWhiteSpaces($string)
+    {
+        return preg_replace('/\s+/', '', $string);
     }
 
     /**
@@ -1078,34 +1132,44 @@ class Import
             }
 
             // create comments for old bank addresses
-            if ($this->checkData('blz' . $i, $data)) {
-                $noteTxt = '';
-                // check if note already exists, or create a new one
-                if (sizeof($notes = $entity->getNotes()) > 0) {
-                    $note = $notes[0];
-                    $noteTxt = $note->getValue() . "\n";
-                } else {
-                    $note = new Note();
-                    $this->em->persist($note);
-                    $entity->addNote($note);
-                }
-
-                $noteTxt .= 'Old Bank Account: ';
+            if ($this->checkData($prefix . 'blz', $data)) {
+                $noteTxt = 'Old Bank Account: ';
                 $noteTxt .= 'BLZ: ';
-                $noteTxt .= $data['blz' . $i];
+                $noteTxt .= $data[$prefix . 'blz' . $i];
 
-                if ($this->checkData('accountNumber' . $i, $data)) {
+                if ($this->checkData($prefix . 'number', $data)) {
                     $noteTxt .= '; Account-Number: ';
-                    $noteTxt .= $data['accountNumber' . $i];
+                    $noteTxt .= $data[$prefix . 'number'];
                 }
-                if ($this->checkData('bank' . $i, $data)) {
+                if ($this->checkData($bankIndex, $data)) {
                     $noteTxt .= '; Bank-Name: ';
-                    $noteTxt .= $data['bank' . $i];
+                    $noteTxt .= $data[$bankIndex];
                 }
 
-                $note->setValue($noteTxt);
+                $this->appendToNote($entity, $noteTxt);
             }
         }
+    }
+
+    /**
+     * function either appends a text to the existing note, or creates a new one
+     * @param $entity The entity containing the note
+     * @param $text Text to append
+     * @internal param $data
+     */
+    protected function appendToNote($entity, $text)
+    {
+        $noteTxt = '';
+        if (sizeof($notes = $entity->getNotes()) > 0) {
+            $note = $notes[0];
+            $noteTxt = $note->getValue() . "\n";
+        } else {
+            $note = new Note();
+            $this->em->persist($note);
+            $entity->addNote($note);
+        }
+        $noteTxt .= $text;
+        $note->setValue($noteTxt);
     }
 
     /**
@@ -1490,8 +1554,8 @@ class Import
      */
     protected function mapAccountType($typeString)
     {
-        if ($mappingIndex = array_search($typeString, $this->accountTypeMappings)) {
-            return $mappingIndex;
+        if (array_key_exists($typeString, $this->accountTypeMappings)) {
+            return $this->accountTypeMappings[$typeString];
         } else {
             return Account::TYPE_BASIC;
         }
