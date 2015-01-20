@@ -982,6 +982,9 @@ class Import
                     $street = trim($result[1]);
                 }
             }
+            if (!$street) {
+                $street = '';
+            }
             $address->setStreet($street);
             $addAddress = true;
         }
