@@ -239,6 +239,7 @@ class Import
         '' => Account::TYPE_BASIC,
         'lead' => Account::TYPE_LEAD,
         'customer' => Account::TYPE_CUSTOMER,
+        'supplier' => Account::TYPE_SUPPLIER,
     );
 
     /**
