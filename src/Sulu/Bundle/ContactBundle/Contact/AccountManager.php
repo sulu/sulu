@@ -217,4 +217,19 @@ class AccountManager extends AbstractContactManager
             return null;
         }
     }
+
+    public function deleteAllRelations($entity)
+    {
+        parent::deleteAllRelations($entity);
+        // add bank-accounts for accounts
+        $this->deleteBankAccounts($entity);
+    }
+    
+    public function deleteBankAccounts($entity)
+    {
+        /** @var Account $entity */
+        if ($entity->getBankAccounts()) {
+            $this->deleteAllEntitiesOfCollection($entity->getBankAccounts());
+        }
+    }
 }

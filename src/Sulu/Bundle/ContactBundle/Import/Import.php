@@ -212,6 +212,7 @@ class Import
     protected $columnMappings = array();
 
     /**
+     * // TODO: replace by mapping account_id
      * defines mappings of ids in import file
      * @var array
      */
@@ -975,7 +976,7 @@ class Import
                 preg_match('/(*UTF8)([^\d]+)\s?(.+)/iu', $street, $result); // UTF8 is to ensure correct utf8 encoding
 
                 // check if number is given, else do not apply preg match
-                if (array_key_exists(2, $result) && is_numeric($result[2])) {
+                if (array_key_exists(2, $result)) {
                     $number = trim($result[2]);
                     $street = trim($result[1]);
                 }
@@ -986,6 +987,9 @@ class Import
         // number
         if (isset($number) || $this->checkData($prefix . 'number', $data)) {
             $number = isset($number) ? $number : $data[$prefix . 'number'];
+            if (!$number) {
+                $number = '';
+            }
             $address->setNumber($number);
         }
         // zip
@@ -1135,7 +1139,7 @@ class Import
             if ($this->checkData($prefix . 'blz', $data)) {
                 $noteTxt = 'Old Bank Account: ';
                 $noteTxt .= 'BLZ: ';
-                $noteTxt .= $data[$prefix . 'blz' . $i];
+                $noteTxt .= $data[$prefix . 'blz'];
 
                 if ($this->checkData($prefix . 'number', $data)) {
                     $noteTxt .= '; Account-Number: ';
