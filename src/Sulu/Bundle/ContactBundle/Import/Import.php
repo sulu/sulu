@@ -484,6 +484,8 @@ class Import
                     if (!$this->rowContainsExlcudeData($associativeData)) {
                         // call callback function
                         $function($associativeData, $row);
+                    } else {
+                        $this->debug(sprintf("Exclude data row %d due to exclude condition \n", $row));
                     }
 
                     if ($flushOnEveryRow) {
@@ -629,9 +631,11 @@ class Import
         if ($this->checkData('account_name', $data)) {
             $account->setName($data['account_name']);
         } else {
+            $this->em->detach($account);
             throw new \Exception('ERROR: account name not set');
         }
         if (!$account->getName()) {
+            $this->em->detach($account);
             throw new \Exception('ERROR: account name not set');
         }
 
