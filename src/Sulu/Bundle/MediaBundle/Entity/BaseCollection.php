@@ -20,57 +20,57 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * @var string
      */
-    private $style;
+    protected $style;
 
     /**
      * @var integer
      * @Exclude
      */
-    private $lft;
+    protected $lft;
 
     /**
      * @var integer
      * @Exclude
      */
-    private $rgt;
+    protected $rgt;
 
     /**
      * @var integer
      * @Exclude
      */
-    private $depth;
+    protected $depth;
 
     /**
      * @var \DateTime
      */
-    private $created;
+    protected $created;
 
     /**
      * @var \DateTime
      */
-    private $changed;
+    protected $changed;
 
     /**
      * @var integer
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */
-    private $type;
+    protected $type;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
      * @Exclude
      */
-    private $changer;
+    protected $changer;
 
     /**
      * @var \Sulu\Component\Security\UserInterface
      * @Exclude
      */
-    private $creator;
+    protected $creator;
 
     /**
      * Set changer
