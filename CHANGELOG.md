@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #798 [All]             Updated Symfony version to 2.6
+    * BUGFIX      #736 [WebsiteBundle]   Redirect with port didn't work
     * ENHANCEMENT #735 [CategoryBundle]  Use parameters instead of FCQN of entities in service config
     * ENHANCEMENT #735 [MediaBundle]     Use parameters instead of FCQN of entities in service config
     * ENHANCEMENT #735 [TagBundle]       Use parameters instead of FCQN of entities in service config
