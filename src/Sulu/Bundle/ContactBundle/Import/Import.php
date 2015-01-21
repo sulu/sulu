@@ -542,14 +542,14 @@ class Import
                     // if condition is an array - compare with every value
                     if (is_array($data[$key])) {
                         foreach($data[$key] as $childValue) {
-                            if ($data[$key] === $childValue) {
+                            if ($this->compareStrings($value, $data[$key])) {
                                 return true;
                             }
                         }
                     // else if simple value - just compare
                     } else {
                         // if match
-                        if ($data[$key] === $value) {
+                        if ($this->compareStrings($value, $data[$key])) {
                             return true;
                         }
                     }
@@ -557,6 +557,21 @@ class Import
             }
         }
         return false;
+    }
+
+    /**
+     * compares two string, by default it checks only if the string begins with the same value
+     * @param $needle
+     * @param $haystack
+     * @param bool $strict
+     * @return bool
+     */
+    private function compareStrings($needle, $haystack, $strict = false)
+    {
+        if ($strict) {
+            return $needle === $haystack;
+        }
+        return strpos($haystack, $needle) === 0;
     }
 
     /**
