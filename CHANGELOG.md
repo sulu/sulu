@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #737 [MediaBundle]    Changed BaseCollection properties to be protected for inheritance
+
 * 0.14.0 (2015-01-15)
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
     * FEATURE     #634 [AdminBundle]    Created new configuration component, added new configuration for autocomplete
