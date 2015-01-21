@@ -234,7 +234,7 @@ class Import
      * @var array
      */
     protected $accountTypeMappings = array(
-        '' => Account::TYPE_BASIC,
+        'basic' => Account::TYPE_BASIC,
         'lead' => Account::TYPE_LEAD,
         'customer' => Account::TYPE_CUSTOMER,
         'supplier' => Account::TYPE_SUPPLIER,
@@ -528,8 +528,9 @@ class Import
     }
 
     /**
-     * checks if data row contains a value that is defined as exclude criteria (for a specific column)
-     * ( see excludeConditions)
+     * Checks if data row contains a value that is defined as exclude criteria (for a specific column)
+     * (see excludeConditions)
+     *
      * @param $data
      * @return bool
      */
@@ -1180,17 +1181,17 @@ class Import
      */
     protected function appendToNote($entity, $text)
     {
-        $noteTxt = '';
+        $noteText = '';
         if (sizeof($notes = $entity->getNotes()) > 0) {
-            $note = $notes[0];
-            $noteTxt = $note->getValue() . "\n";
+            $note = reset($notes);
+            $noteText = $note->getValue() . "\n";
         } else {
             $note = new Note();
             $this->em->persist($note);
             $entity->addNote($note);
         }
-        $noteTxt .= $text;
-        $note->setValue($noteTxt);
+        $noteText .= $text;
+        $note->setValue($noteText);
     }
 
     /**
