@@ -147,16 +147,16 @@ define(function() {
         },
 
         /**
-        * Initializes the handler for unsaved changes
-        */
+         * Initializes the handler for unsaved changes
+         */
         initializeUnsavedChangesHandler: function() {
             this.unsavedChanges = false;
             this.bindCustomEventsForUnsavedChangesHandler();
         },
 
         /**
-        * Listen for changes regarding the save button
-        */
+         * Listen for changes regarding the save button
+         */
         bindCustomEventsForUnsavedChangesHandler: function() {
             this.sandbox.on('husky.toolbar.header.item.enable', function(button) {
                 if (button === constants.saveButtonKey) {
@@ -164,21 +164,19 @@ define(function() {
                 }
             }.bind(this));
 
-            // use this listener instead of husky.toolbar.header.item.disable because
-            // it fixes problem (timing issue) with new entities redirect
-            this.sandbox.on('husky.toolbar.header.item.loading', function(button){
+            // use this listener/event name instead of husky.toolbar.header.item.disable because
+            // it fixes problem timing issue) with the redirect after saving new entities
+            this.sandbox.on('husky.toolbar.header.item.loading', function(button) {
                 if (button === constants.saveButtonKey) {
                     this.unsavedChanges = false;
                 }
             }.bind(this));
         },
 
-        // TODO extract constants and review
-
         /**
-        * Checks if there are unsaved changes and shows a message box
-        * @return {Object} returns a promise when navigation should take place
-        */
+         * Checks if there are unsaved changes and shows a message box
+         * @return {Object} returns a promise when navigation should take place
+         */
         showUnsavedChangesWarning: function() {
             var dfd = this.sandbox.data.deferred(),
                 title = this.sandbox.translate('sulu.overlay.unsaved-changes.header'),
@@ -193,9 +191,10 @@ define(function() {
                 }.bind(this),
                 okCallback = function() {
                     this.unsavedChanges = false;
-                    this.sandbox.on('husky.toolbar.header.item.disable', function(name){
-                        if(name === 'save-button'){
+                    this.sandbox.on('husky.toolbar.header.item.disable', function(name) {
+                        if (name === 'save-button') {
                             dfd.resolve();
+                            // remove event listener after use to prevent side effects
                             this.sandbox.off('husky.toolbar.header.item.disable');
                         }
                     }.bind(this));
@@ -371,6 +370,7 @@ define(function() {
                 }
             }.bind(this));
 
+            // navigate when tab element of header is clicked
             this.sandbox.on('husky.tabs.header.item.preselect', function(event) {
                 if (!!this.unsavedChanges) {
                     var dfdSavedChanges = this.showUnsavedChangesWarning();
