@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #731 [TestBundle]     Removed test user
     * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
     * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
+    * BUGFIX      #697 [CoreBundle]     Do not try and set the theme when the portal has not been found
 
 * 0.14.1 (2015-01-21)
     * HOTFIX      #737 [MediaBundle]    Changed BaseCollection properties to be protected for inheritance
