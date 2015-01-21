@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 0.14.1 (2015-01-21)
     * HOTFIX      #737 [MediaBundle]    Changed BaseCollection properties to be protected for inheritance
 
 * 0.14.0 (2015-01-15)
