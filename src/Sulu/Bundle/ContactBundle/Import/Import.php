@@ -1183,7 +1183,7 @@ class Import
     {
         $noteText = '';
         if (sizeof($notes = $entity->getNotes()) > 0) {
-            $note = reset($notes);
+            $note = $notes[0];
             $noteText = $note->getValue() . "\n";
         } else {
             $note = new Note();
