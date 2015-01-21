@@ -245,9 +245,9 @@ class Import
      * @var array
      */
     protected $contactLabelMappings = array(
-        'work' => '.work',
-        'home' => '.home',
-        'mobile' => '.mobile',
+        'work' => 'work',
+        'home' => 'home',
+        'mobile' => 'mobile',
     );
 
     /**
@@ -728,7 +728,7 @@ class Import
 
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'email.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getEmailTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['emailType'];
@@ -760,7 +760,7 @@ class Import
 
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'phone.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getPhoneTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['phoneType'];
@@ -792,7 +792,7 @@ class Import
                 $fax->setFax($data[$faxIndex]);
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'fax.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getFaxTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['faxType'];
@@ -824,7 +824,7 @@ class Import
                 $url->setUrl($data[$urlIndex]);
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'url.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getUrlTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['urlType'];
@@ -1084,7 +1084,7 @@ class Import
         // only add address if part of it is defined
         if ($addAddress) {
             if ($this->checkData($prefix . 'label', $data)) {
-                $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                $contactLabel = 'address.' . $this->mapContactLabels($data[$prefix . 'label']);
                 $addressType = $this->getContactManager()->getAddressTypeByName($contactLabel);
             } else {
                 $addressType = $this->defaultTypes['addressType'];
