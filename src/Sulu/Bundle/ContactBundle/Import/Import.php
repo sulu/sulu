@@ -58,16 +58,14 @@ class Import
     protected $options = array(
         'importIds' => true,
         'streetNumberSplit' => false,
-        'fixedAccountType' => false,
         'delimiter' => ';',
-        'enclosure' => '"',
         'enclosure' => '"',
         'contactComparisonCriteria' => array(
             'firstName',
             'lastName',
             'email',
         ),
-        'acquireAccountNumbers' => true,
+        'fixedAccountType' => false,
     );
 
     /**
@@ -627,7 +625,7 @@ class Import
         if ($this->checkData('account_uid', $data)) {
             $account->setUid($this->removeWhiteSpaces($data['account_uid']));
         }
-        if ($this->options['acquireAccountNumbers'] && $this->checkData('account_number', $data)) {
+        if ($this->checkData('account_number', $data)) {
             $account->setNumber($data['account_number']);
         }
         if ($this->checkData('account_registerNumber', $data)) {
