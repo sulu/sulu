@@ -149,7 +149,7 @@ define(function() {
         /**
         * Initializes the handler for unsaved changes
         */
-        initializeUnsavedChangesHandler: function(){
+        initializeUnsavedChangesHandler: function() {
             this.unsavedChanges = false;
             this.bindCustomEventsForUnsavedChangesHandler();
         },
@@ -157,18 +157,23 @@ define(function() {
         /**
         * Listen for changes regarding the save button
         */
-        bindCustomEventsForUnsavedChangesHandler: function(){
+        bindCustomEventsForUnsavedChangesHandler: function() {
             this.sandbox.on('husky.toolbar.header.item.enable', function(button) {
                 if (button === constants.saveButtonKey) {
                     this.unsavedChanges = true;
                 }
             }.bind(this));
-            this.sandbox.on('husky.toolbar.header.item.disable', function(button) {
+
+            // use this listener instead of husky.toolbar.header.item.disable because
+            // it fixes problem (timing issue) with new entities redirect
+            this.sandbox.on('husky.toolbar.header.item.loading', function(button){
                 if (button === constants.saveButtonKey) {
                     this.unsavedChanges = false;
                 }
             }.bind(this));
         },
+
+        // TODO extract constants and review
 
         /**
         * Checks if there are unsaved changes and shows a message box
@@ -179,7 +184,7 @@ define(function() {
                 title = this.sandbox.translate('sulu.overlay.unsaved-changes.header'),
                 message = 'sulu.overlay.unsaved-changes.text',
                 cancelCallback = function(el) {
-                    if(el.className.indexOf('close') > -1){
+                    if (el.className.indexOf('close') > -1) {
                         dfd.reject();
                     } else {
                         this.unsavedChanges = false;
@@ -188,8 +193,13 @@ define(function() {
                 }.bind(this),
                 okCallback = function() {
                     this.unsavedChanges = false;
+                    this.sandbox.on('husky.toolbar.header.item.disable', function(name){
+                        if(name === 'save-button'){
+                            dfd.resolve();
+                            this.sandbox.off('husky.toolbar.header.item.disable');
+                        }
+                    }.bind(this));
                     this.sandbox.emit('sulu.header.toolbar.save');
-                    dfd.resolve();
                 }.bind(this),
                 options = {
                     closeIcon: 'times',
@@ -198,7 +208,7 @@ define(function() {
                     skin: 'medium'
                 };
 
-                this.sandbox.emit('sulu.overlay.show-warning', title, message, cancelCallback, okCallback, options);
+            this.sandbox.emit('sulu.overlay.show-warning', title, message, cancelCallback, okCallback, options);
 
             return dfd.promise();
         },
@@ -358,6 +368,17 @@ define(function() {
                     }.bind(this));
                 } else {
                     this.navigate(route, trigger, noLoader, forceReload);
+                }
+            }.bind(this));
+
+            this.sandbox.on('husky.tabs.header.item.preselect', function(event) {
+                if (!!this.unsavedChanges) {
+                    var dfdSavedChanges = this.showUnsavedChangesWarning();
+                    this.sandbox.data.when(dfdSavedChanges).then(function() {
+                        this.sandbox.emit('husky.tabs.header.item.clicked', event);
+                    }.bind(this));
+                } else {
+                    this.sandbox.emit('husky.tabs.header.item.clicked', event);
                 }
             }.bind(this));
 
