@@ -33715,6 +33715,8 @@ define('__component__$search@husky',[], function() {
  *          - title: compares items title against whats defined in options.preselect
  *      - forceReload - defines if tabs are forcing page to reload
  *      - forceSelect - forces tabs to select first item, if no selected item has been found
+ *      - preSelectItem.enabled - when enabled triggers the item pre select event
+ *      - preSelectItem.triggerSelectItem - when previous options and this options is enabled it triggers the item select event right after the preselect
  *  Provides Events
  *      - husky.tabs.<<instanceName>>.getSelected [callback(item)] - returns item with callback
  *  Triggers Events
@@ -33740,7 +33742,11 @@ define('__component__$tabs@husky',[],function() {
             forceReload: false,
             callback: null,
             forceSelect: true,
-            skin: ''
+            skin: '',
+            preSelectItem: {
+                enabled: false,
+                triggerSelectItem: true
+            }
         },
 
         /**
@@ -33787,6 +33793,23 @@ define('__component__$tabs@husky',[],function() {
         },
 
         /**
+         * used before selecting a certain item
+         * @event husky.tabs.item.preselect
+         */
+        ITEM_PRE_SELECT = function () {
+            return this.createEventName('item.preselect');
+        },
+
+        /**
+         * used to select a certain item manually
+         * @event husky.tabs.item.clicked
+         * @param {Object} event object
+         */
+        ITEM_CLICKED = function () {
+            return this.createEventName('item.clicked');
+        },
+
+        /**
          * used to get selected items
          * @event husky.tabs.item.getSelected
          */
@@ -33802,21 +33825,38 @@ define('__component__$tabs@husky',[],function() {
             return this.createEventName('initialized');
         },
 
+        /**
+         * Triggered when a tab is clicked and it is enabled in the options
+         * Lets you handle the click event before the tab gets changed
+         * Will trigger selectItem when enabled otherwise you have to trigger ITEM_CLICKED to trigger it
+         * @param event
+         */
+        preSelectItem = function(event){
+            event.preventDefault();
+            this.sandbox.emit(ITEM_PRE_SELECT.call(this), event);
+
+            if(!!this.options.preSelectItem.triggerSelectItem) {
+                selectItem.call(this, event);
+            }
+        },
+
         selectItem = function(event) {
             event.preventDefault();
             if (this.active === true && this.sandbox.dom.hasClass(event.currentTarget, 'is-selected') !== true) {
                 var item = this.items[this.sandbox.dom.data(event.currentTarget, 'id')];
 
-                this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
-                this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
+                if (!!item) {
+                    this.sandbox.dom.removeClass(this.sandbox.dom.find('.is-selected', this.$el), 'is-selected');
+                    this.sandbox.dom.addClass(event.currentTarget, 'is-selected');
 
-                // callback
-                if (item.hasOwnProperty('callback') && typeof item.callback === 'function') {
-                    item.callback.call(this, item);
-                } else if (!!this.options.callback && typeof this.options.callback === 'function') {
-                    this.options.callback.call(this, item);
-                } else {
-                    triggerSelectEvent.call(this, item);
+                    // callback
+                    if (item.hasOwnProperty('callback') && typeof item.callback === 'function') {
+                        item.callback.call(this, item);
+                    } else if (!!this.options.callback && typeof this.options.callback === 'function') {
+                        this.options.callback.call(this, item);
+                    } else {
+                        triggerSelectEvent.call(this, item);
+                    }
                 }
             } else {
                 return false;
@@ -33824,7 +33864,6 @@ define('__component__$tabs@husky',[],function() {
         },
 
         triggerSelectEvent = function(item) {
-
             item.forceReload = (item.forceReload && typeof item.forceReload !== "undefined") ? item.forceReload : this.options.forceReload;
             this.sandbox.emit(ITEM_SELECT.call(this), item);
         },
@@ -33838,7 +33877,11 @@ define('__component__$tabs@husky',[],function() {
         },
 
         bindDOMEvents = function() {
-            this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
+            if(!!this.options.preSelectItem.enabled){
+                this.sandbox.dom.on(this.$el, 'click', preSelectItem.bind(this), 'li');
+            } else {
+                this.sandbox.dom.on(this.$el, 'click', selectItem.bind(this), 'li');
+            }
         },
 
         bindCustomEvents = function() {
@@ -33854,6 +33897,8 @@ define('__component__$tabs@husky',[],function() {
             this.sandbox.on(ITEM_SHOW.call(this), showItem.bind(this));
 
             this.sandbox.on(ITEM_HIDE.call(this), hideItem.bind(this));
+
+            this.sandbox.on(ITEM_CLICKED.call(this), selectItem.bind(this));
         };
 
     return {
