@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
     * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
+    * BUGFIX      #697 [CoreBundle]     Do not try and set the theme when the portal has not been found
 
 * 0.14.0 (2015-01-15)
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available

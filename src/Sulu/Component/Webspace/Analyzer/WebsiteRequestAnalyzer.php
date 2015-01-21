@@ -128,45 +128,47 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         $this->getParameter = $request->query->all();
         $this->postParameter = $request->request->all();
 
-        if ($portalInformation != null) {
-            $this->setCurrentMatchType($portalInformation->getType());
-            $this->setCurrentRedirect($portalInformation->getRedirect());
-            $this->analyticsKey = $portalInformation->getAnalyticsKey();
-            if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
-                $this->setCurrentPortalUrl($portalInformation->getUrl());
-                $this->setCurrentWebspace($portalInformation->getWebspace());
-            } else {
-                $this->setCurrentPortalUrl($portalInformation->getUrl());
-                $this->setCurrentLocalization($portalInformation->getLocalization());
-                $this->setCurrentPortal($portalInformation->getPortal());
-                $this->setCurrentWebspace($portalInformation->getWebspace());
-
-                $this->setCurrentSegment($portalInformation->getSegment());
-                $request->setLocale($portalInformation->getLocalization()->getLocalization());
-
-                list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
-                    $portalInformation,
-                    $request
-                );
-
-                // get the path and set it on the request
-                $this->setCurrentResourceLocator($resourceLocator);
-
-                if ($format) {
-                    $request->setRequestFormat($format);
-                }
-
-                // get the resource locator prefix and set it
-                $this->setCurrentResourceLocatorPrefix(
-                    substr(
-                        $portalInformation->getUrl(),
-                        strlen($request->getHost())
-                    )
-                );
-            }
-        } else {
+        if ($portalInformation === null) {
             throw new UrlMatchNotFoundException($request->getUri());
         }
+
+        $this->setCurrentMatchType($portalInformation->getType());
+        $this->setCurrentRedirect($portalInformation->getRedirect());
+        $this->analyticsKey = $portalInformation->getAnalyticsKey();
+
+        if ($portalInformation->getType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT) {
+            $this->setCurrentPortalUrl($portalInformation->getUrl());
+            $this->setCurrentWebspace($portalInformation->getWebspace());
+            return;
+        }
+
+        $this->setCurrentPortalUrl($portalInformation->getUrl());
+        $this->setCurrentLocalization($portalInformation->getLocalization());
+        $this->setCurrentPortal($portalInformation->getPortal());
+        $this->setCurrentWebspace($portalInformation->getWebspace());
+        $this->setCurrentSegment($portalInformation->getSegment());
+
+        $request->setLocale($portalInformation->getLocalization()->getLocalization());
+
+        list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
+            $portalInformation,
+            $request
+        );
+
+        // get the path and set it on the request
+        $this->setCurrentResourceLocator($resourceLocator);
+
+        if ($format) {
+            $request->setRequestFormat($format);
+        }
+
+        // get the resource locator prefix and set it
+        $this->setCurrentResourceLocatorPrefix(
+            substr(
+                $portalInformation->getUrl(),
+                strlen($request->getHost())
+            )
+        );
     }
 
     public function getCurrentMatchType()
