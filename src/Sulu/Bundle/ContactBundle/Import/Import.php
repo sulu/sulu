@@ -631,6 +631,9 @@ class Import
         } else {
             throw new \Exception('ERROR: account name not set');
         }
+        if (!$account->getName()) {
+            throw new \Exception('ERROR: account name not set');
+        }
 
         if ($this->checkData('account_corporation', $data)) {
             $account->setCorporation($data['account_corporation']);
