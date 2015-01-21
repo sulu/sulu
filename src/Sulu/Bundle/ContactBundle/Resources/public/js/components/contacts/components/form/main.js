@@ -281,6 +281,7 @@ define(['config'], function(Config) {
                     this.initContactData();
                     this.setFormData(data);
                     this.setHeaderBar(true);
+                    this.setTitle();
                 }, this);
 
                 // contact save
