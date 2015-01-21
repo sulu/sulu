@@ -168,7 +168,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, count($response->_embedded->users));
+        $this->assertEquals(3, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
@@ -654,7 +654,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(2, count($response->_embedded->users));
+        $this->assertEquals(3, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);

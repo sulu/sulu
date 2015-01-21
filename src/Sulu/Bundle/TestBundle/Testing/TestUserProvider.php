@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Entity\TestContact;
 use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -25,27 +27,32 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TestUserProvider implements UserProviderInterface
 {
     /**
-     * @var TestUser
+     * @var UserInterface
      */
     private $user;
 
     public function __construct(ObjectManager $em)
     {
-        $this->user = $em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')->findOneByUsername('test');
+        $this->user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
         if (!$this->user) {
-            $contact = new TestContact();
+            $contact = new Contact();
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
+            $contact->setCreated(new \DateTime());
+            $contact->setChanged(new \DateTime());
             $em->persist($contact);
-            $this->user = new TestUser();
-            $this->user->setPassword('test');
-            $this->user->setUsername('test');
+
+            $this->user = new User();
+            $this->setCredentials();
+            $this->user->setSalt('');
             $this->user->setLocale('en');
             $this->user->setContact($contact);
-
             $em->persist($this->user);
-            $em->flush($this->user);
+        } else {
+            $this->setCredentials();
         }
+
+        $em->flush();
     }
 
     /**
@@ -96,5 +103,15 @@ class TestUserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return $class === 'Sulu\Bundle\CoreBundle\Entity\TestUser';
+    }
+
+    /**
+     * Sets the standard credentials for the user
+     */
+    private function setCredentials()
+    {
+        $this->user->setUsername('test');
+        $this->user->setPassword('test');
+        $this->user->setSalt('');
     }
 }
