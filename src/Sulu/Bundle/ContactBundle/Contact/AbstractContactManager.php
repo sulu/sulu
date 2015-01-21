@@ -229,66 +229,61 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * return address type by name
      * @param $name
-     * @param bool $strict defines if only part of string needs to be matched
      * @return mixed
      */
-    public function getAddressTypeByName($name, $strict = false)
+    public function getAddressTypeByName($name)
     {
         return $this->em
             ->getRepository(self::$addressTypeEntityName)
-            ->findOneByName($name, $strict);
+            ->findOneByName($name);
     }
 
     /**
      * return url type by name
      * @param $name
-     * @param bool $strict defines if only part of string needs to be matched
      * @return mixed
      */
-    public function getUrlTypeByName($name, $strict = false)
+    public function getUrlTypeByName($name)
     {
         return $this->em
             ->getRepository(self::$urlTypeEntityName)
-            ->findOneByName($name, $strict);
+            ->findOneByName($name);
     }
 
     /**
      * return phone type by name
      * @param $name
-     * @param bool $strict defines if only part of string needs to be matched
      * @return mixed
      */
-    public function getPhoneTypeByName($name, $strict = false)
+    public function getPhoneTypeByName($name)
     {
         return $this->em
             ->getRepository(self::$phoneTypeEntityName)
-            ->findOneByName($name, $strict);
+            ->findOneByName($name);
     }
 
     /**
      * return fax type by name
      * @param $name
-     * @param bool $strict defines if only part of string needs to be matched
      * @return mixed
      */
-    public function getFaxTypeByName($name, $strict = false)
+    public function getFaxTypeByName($name)
     {
         return $this->em
             ->getRepository(self::$faxTypeEntityName)
-            ->findOneByName($name, $strict);
+            ->findOneByName($name);
     }
 
     /**
      * return email type by name
      * @param $name
-     * @param bool $strict defines if only part of string needs to be matched
      * @return mixed
      */
-    public function getEmailTypeByName($name, $strict = false)
+    public function getEmailTypeByName($name)
     {
         return $this->em
             ->getRepository(self::$emailTypeEntityName)
-            ->findOneByName($name, $strict);
+            ->findOneByName($name);
     }
 
     /**
