@@ -481,11 +481,11 @@ class Import
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
                     
                     // check if row contains data that should be excluded
-                    if (!$this->rowContainsExlcudeData($associativeData)) {
+                    if (!$this->rowContainsExlcudeData($associativeData, $key, $value)) {
                         // call callback function
                         $function($associativeData, $row);
                     } else {
-                        $this->debug(sprintf("Exclude data row %d due to exclude condition \n", $row));
+                        $this->debug(sprintf("Exclude data row %d due to exclude condition %s = %s \n", $row, $key, $value));
                     }
 
                     if ($flushOnEveryRow) {
@@ -536,16 +536,18 @@ class Import
      * @param $data
      * @return bool
      */
-    protected function rowContainsExlcudeData($data)
+    protected function rowContainsExlcudeData($data, &$conditionKey = null, &$conditionValue = null)
     {
         if (count($this->excludeConditions) > 0) {
             // iterate through all defined exclude conditions
             foreach($this->excludeConditions as $key => $value) {
                 if (isset($data[$key])) {
                     // if condition is an array - compare with every value
-                    if (is_array($data[$key])) {
-                        foreach($data[$key] as $childValue) {
-                            if ($this->compareStrings($value, $data[$key])) {
+                    if (is_array($value)) {
+                        foreach($value as $childValue) {
+                            if ($this->compareStrings($childValue, $data[$key])) {
+                                $conditionKey = $key;
+                                $conditionValue = $value;
                                 return true;
                             }
                         }
@@ -553,6 +555,8 @@ class Import
                     } else {
                         // if match
                         if ($this->compareStrings($value, $data[$key])) {
+                            $conditionKey = $key;
+                            $conditionValue = $value;
                             return true;
                         }
                     }
