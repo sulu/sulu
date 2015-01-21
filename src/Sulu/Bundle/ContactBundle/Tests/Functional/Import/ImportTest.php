@@ -208,7 +208,7 @@ class ImportTest extends SuluTestCase
         $this->assertEquals('Test Company 1', $account->getName());
         $this->assertEquals('Office', $account->getCorporation());
         $this->assertEquals(Account::TYPE_SUPPLIER, $account->getType());
-        $this->assertEquals('ATU 1234 5678', $account->getUid());
+        $this->assertEquals('ATU12345678', $account->getUid());
         $this->assertNull($account->getParent());
         $this->assertEquals(false, $account->getDisabled());
 
@@ -253,7 +253,7 @@ class ImportTest extends SuluTestCase
         $this->assertEquals('Child Customer', $account->getName());
         $this->assertEquals(null, $account->getCorporation());
         $this->assertEquals(Account::TYPE_CUSTOMER, $account->getType());
-        $this->assertEquals('DEU 5678 1234', $account->getUid());
+        $this->assertEquals('DEU56781234', $account->getUid());
         $this->assertNotNull($account->getParent());
         $this->assertEquals(false, $account->getDisabled());
 

@@ -4,10 +4,10 @@
         "importIds": "true"
     },
     "accountTypes" : {
-        "0" : "",
-        "1" : "lea",
-        "2" : "cus",
-        "3" : "sup"
+        "" : 0, 
+        "lea" : 1,
+        "cus" : 2,
+        "sup" : 3
     },
     "countries":
     {
