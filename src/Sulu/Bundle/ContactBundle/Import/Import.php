@@ -871,11 +871,25 @@ class Import
         }
         // concat all notes to one single note
         if (sizeof($noteValues) > 0) {
+            $noteText = implode("\n", $noteValues);
+            $noteText = $this->replaceInvalidNewLineCharacters($noteText);
+            
             $note = new Note();
-            $note->setValue(implode("\n", $noteValues));
+            $note->setValue($noteText);
             $this->em->persist($note);
             $entity->addNote($note);
         }
+    }
+
+    /**
+     * replaces wrong new line characters with real ones (utf8)
+     * @param $text
+     * @return mixed
+     */
+    protected function replaceInvalidNewLineCharacters($text)
+    {
+        $text = str_replace("¶", "\n", $text);
+        return $text;
     }
 
     /**
@@ -1056,7 +1070,9 @@ class Import
         }
         // note
         if ($this->checkData($prefix . 'note', $data)) {
-            $address->setNote($data[$prefix . 'note']);
+            $address->setNote(
+                $this->replaceInvalidNewLineCharacters($data[$prefix . 'note'])
+            );
             $addAddress = true;
         }
         // billing address
@@ -1201,6 +1217,7 @@ class Import
             $this->em->persist($note);
             $entity->addNote($note);
         }
+        $text = $this->replaceInvalidNewLineCharacters($text);
         $noteText .= $text;
         $note->setValue($noteText);
     }
