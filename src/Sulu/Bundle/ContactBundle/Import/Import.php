@@ -287,6 +287,13 @@ class Import
     protected $positions = array();
 
     /**
+     * defines possible new-line characters that should be replaced.
+     * e.g. '¶'
+     * @var array
+     */
+    protected $invalidNewLineCharacters = array();
+
+    /**
      * @param EntityManager $em
      * @param $accountManager
      * @param $contactManager
@@ -294,7 +301,14 @@ class Import
      * @param $configAccountTypes
      * @param $configFormOfAddress
      */
-    public function __construct(EntityManager $em, $accountManager, $contactManager, $configDefaults, $configAccountTypes, $configFormOfAddress)
+    public function __construct(
+        EntityManager $em,
+        $accountManager,
+        $contactManager,
+        $configDefaults,
+        $configAccountTypes,
+        $configFormOfAddress
+    )
     {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
@@ -888,7 +902,11 @@ class Import
      */
     protected function replaceInvalidNewLineCharacters($text)
     {
-        $text = str_replace("¶", "\n", $text);
+        if (count($this->invalidNewLineCharacters) > 0) {
+            foreach($this->invalidNewLineCharacters as $character) {
+                $text = str_replace($character, "\n", $text);
+            }
+        }
         return $text;
     }
 
@@ -1817,9 +1835,11 @@ class Import
      * prints messages if debug is set to true
      * @param $message
      */
-    protected function debug($message)
+    protected function debug($message, $addToLog = true)
     {
-        $this->log[] = $message;
+        if ($addToLog) {
+            $this->log[] = $message;
+        }
         if (self::DEBUG) {
             print($message);
         }
