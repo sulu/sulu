@@ -1,5 +1,6 @@
 CHANGELOG for Sulu
 ==================
+    * HOTFIX      #741 [ContentBundle]  Fix Resourcelocater Content Type call move without editing
 
 * 0.14.0 (2015-01-15)
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
