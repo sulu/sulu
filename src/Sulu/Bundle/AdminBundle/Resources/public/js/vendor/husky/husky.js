@@ -28982,6 +28982,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.removeIcon] icon to use for the remove-row item
  * @param {Number} [options.croppedMaxLength] the length to which croppable cells will be cropped on overflow
  * @param {Boolean} [options.stickyHeader] true to make the table header sticky
+ * @param {Boolean} [options.openPathToSelectedChildren] true to show path to selected children
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -29014,7 +29015,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         stickyHeader: false,
         icons: [],
         removeIcon: 'trash-o',
-        croppedMaxLength: 35
+        croppedMaxLength: 35,
+        openPathToSelectedChildren: false
     },
 
     constants = {
@@ -29190,6 +29192,25 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
+
+            if(!!this.options.openPathToSelectedChildren){
+                var eventName = '';
+                if(!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
+                } else {
+                    eventName = 'husky.datagrid.view.rendered';
+                }
+                this.sandbox.on(eventName, this.openPathToSelectedChildren.bind(this));
+            }
+        },
+
+        /**
+         * Opens path to all selected children
+         */
+        openPathToSelectedChildren: function(){
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
+                this.openParents(id);
+            }.bind(this));
         },
 
         /**
@@ -29421,7 +29442,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.table.rows = {};
             if (this.data.embedded.length > 0) {
                 this.sandbox.util.foreach(this.data.embedded, function(record) {
-                    this.renderBodyRow(record);
+                    this.renderBodyRow(record, false);
                 }.bind(this));
             } else {
                 this.renderEmptyIndicator();
@@ -29462,36 +29483,43 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param record {Object} the record
          * @param prepend {Boolean} if true row gets prepended
          */
-        renderBodyRow: function (record, prepend) {
+        renderBodyRow: function(record, prepend) {
             this.removeNewRecordRow();
-            var $row = this.sandbox.dom.createElement(templates.row),
-                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
-            this.sandbox.dom.data($row, 'id', record.id);
+            if (!this.table.rows[record.id]) {
+                var $row = this.sandbox.dom.createElement(templates.row),
+                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            if (!!record.parent) {
-                this.table.rows[record.parent].childrenLoaded = true;
+                record.id = (!!record.id) ? record.id : constants.newRecordId;
+                this.sandbox.dom.data($row, 'id', record.id);
+
+                if (!!record.parent) {
+                    if (!this.table.rows[record.parent]) {
+                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
+                    }
+                    this.table.rows[record.parent].childrenLoaded = true;
+                }
+
+                this.table.rows[record.id] = {
+                    $el: $row,
+                    cells: {},
+                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
+                    childrenExpanded: false,
+                    parent: !!(record.parent) ? record.parent : null,
+                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                    level: 1
+                };
+                this.renderRowSelectItem(record.id);
+                this.renderBodyCellsForRow(record);
+                this.renderRowRemoveItem(record.id);
+
+                this.insertBodyRow(record, $overrideElement, prepend);
+                this.executeRowPostRenderActions(record);
             }
-
-            this.table.rows[record.id] = {
-                $el: $row,
-                cells: {},
-                childrenLoaded: false,
-                childrenExpanded: false,
-                parent: !!(record.parent) ? record.parent : null,
-                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                level: 1
-            };
-            this.renderRowSelectItem(record.id);
-            this.renderBodyCellsForRow(record);
-            this.renderRowRemoveItem(record.id);
-            this.insertBodyRow(record, $overrideElement, prepend);
-            this.executeRowPostRenderActions(record);
         },
 
         /**
-         * Inserts a body row into the dom. Looks if a row needs to be overriden, or if a parent exists etc.
+         * Inserts a body row into the dom. Looks if a row needs to be overridden, or if a parent exists etc.
          * @param record {Object} the data object of the record
          * @param $overrideElement {Object}
          * @param prepend {Boolean} true to prepend
@@ -29577,7 +29605,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
             }
-            if (!!this.options.selectItem && !!this.options.selectItem.inFirstCell === true && index === 0) {
+            if (!!this.options.selectItem && this.options.selectItem.inFirstCell === true && index === 0) {
                 this.sandbox.dom.attr($cell, 'colspan', 2);
                 selectItem = this.renderRowSelectItem(record.id, true);
                 if (typeof content === 'string') {
@@ -30306,7 +30334,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record
          */
         openParents: function(recordId) {
-            if (!!this.table.rows[recordId]) {
+            if (!!this.table && !!this.table.rows[recordId]) {
                 var parentId = this.table.rows[recordId].parent;
                 if (!!parentId) {
                     if (!!this.table.rows[parentId].parent) {
@@ -32811,7 +32839,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         template = this.sandbox.uritemplate.parse(this.data.links.sortable.href);
                         url = this.sandbox.uritemplate.expand(template, {sortBy: attribute, sortOrder: direction});
 
-                        this.sandbox.emit(DATA_SORT.call(this));
+                        this.sandbox.emit(DATA_SORT.call(this), {attribute: attribute, direction: direction});
 
                         this.load({
                             url: url,
@@ -40197,7 +40225,7 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * Su
+         * Support for key down events
          * @param event
          */
         keyHandler: function(event) {
@@ -40205,6 +40233,10 @@ define('__component__$overlay@husky',[], function() {
             if (event.keyCode === 27) {
                 this.closeHandler();
             } else if (event.keyCode === 13) {
+                // when enter is pressed in textarea overlay should not be closed
+                if(event.target.tagName === 'TEXTAREA'){
+                   return;
+                }
                 this.okHandler();
             }
         },
@@ -46639,12 +46671,13 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 app.sandbox.translate = function(key) {
+                    var translation;
                     if (!app.config.culture || !app.config.culture.name) {
                         return key;
                     }
 
                     try {
-                        var translation = Globalize.localize(key, app.config.culture.name);
+                        translation = Globalize.localize(key, app.config.culture.name);
                     } catch (e) {
                         app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
                         return key;
@@ -46657,6 +46690,7 @@ define("datepicker-zh-TW", function(){});
                     /**
                      * returns formatted date string
                      * @param {string|Date} date
+                     * @param {Boolean} returnDateOnly
                      * @returns {string}
                      */
                     format: function(date, returnDateOnly) {
@@ -46763,7 +46797,7 @@ define("datepicker-zh-TW", function(){});
                     app.sandbox.globalize.addCultureInfo(cultureName, messages);
                 };
 
-                if (app.config.culture.name !== 'en') {
+                if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
                     return require(['cultures/globalize.culture.' + app.config.culture.name]);
                 }
             },

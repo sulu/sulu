@@ -42,6 +42,14 @@
                 <source>contact.accounts.add-new-contact-to-account</source>
                 <target>Kontakt erstellen und hinzufügen</target>
             </trans-unit>
+            <trans-unit id="10" resname="contacttype.home">
+                <source>contacttype.home</source>
+                <target>Privat</target>
+            </trans-unit>
+            <trans-unit id="11" resname="contacttype.work">
+                <source>contacttype.work</source>
+                <target>Arbeit</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
