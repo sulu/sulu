@@ -302,7 +302,6 @@ class ContactRepository extends EntityRepository
             $and->add($qb->expr()->eq($prefix . $k, "'" . $v . "'"));
         }
         $qb->where($and);
-        $qb->setParameters($parameters);
 
         return $qb;
     }
