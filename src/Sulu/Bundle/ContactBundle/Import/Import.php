@@ -1545,6 +1545,9 @@ class Import
             if ($index >= sizeof($headerData)) {
                 break;
             }
+            if (empty($value)) {
+                continue;
+            }
             // search index in mapping config
             if (sizeof($resultArray = array_keys($this->columnMappings, $headerData[$index])) > 0) {
                 foreach ($resultArray as $key) {
