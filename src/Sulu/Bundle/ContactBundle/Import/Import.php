@@ -589,9 +589,10 @@ class Import
      */
     private function compareStrings($needle, $haystack, $strict = false)
     {
-        if ($strict) {
+        if ($strict || empty($needle)) {
             return $needle === $haystack;
         }
+
         return strpos($haystack, $needle) === 0;
     }
 
