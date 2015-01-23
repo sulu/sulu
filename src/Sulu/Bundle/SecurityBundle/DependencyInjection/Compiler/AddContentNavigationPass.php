@@ -13,17 +13,13 @@ namespace Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\ContentNavigationPass;
 
 /**
- * Add all services with the tag "sulu.contact.content_navigation" to the content navigation
- *
- * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
+ * Add all services with the tag "sulu.security.admin.roles_navigation" to the content navigation
  */
 class AddContentNavigationPass extends ContentNavigationPass
 {
-
     public function __construct()
     {
         $this->tag = 'sulu.security.admin.roles_navigation';
         $this->serviceName = 'sulu_security.admin.roles_navigation';
     }
-
 }
