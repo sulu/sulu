@@ -72,7 +72,7 @@ abstract class WebsiteController extends Controller
 
             // if not preview enable cache handling
             if (!$preview) {
-                if ($this->getRequest()->getMethod() != 'GET') {
+                if (!$this->getRequest()->isMethod('GET')) {
                     $response->setPrivate();
                 } else {
                     // mark the response as either public or private
