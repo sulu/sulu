@@ -42,7 +42,7 @@ class HitListener
         $document = $event->getHit()->getDocument();
         $url = sprintf(
             '%s/%s',
-            rtrim($this->requestAnalyzer->getCurrentResourceLocatorPrefix(), '/'),
+            rtrim($this->requestAnalyzer->getResourceLocatorPrefix(), '/'),
             ltrim($document->getUrl(), '/')
         );
         $document->setUrl($url);

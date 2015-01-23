@@ -64,9 +64,9 @@ class MetaTwigExtension extends \Twig_Extension
     public function getAlternateLinks($urls)
     {
         // determine default and current values
-        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $currentLocale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
-        $currentPortal = $this->requestAnalyzer->getCurrentPortal();
+        $currentPortal = $this->requestAnalyzer->getPortal();
         $defaultLocale = null;
         if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
             $defaultLocale = $defaultLocale->getLocalization();

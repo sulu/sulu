@@ -74,7 +74,7 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     {
         $contentStructure = $this->contentMapper->load(
             $uuid,
-            $this->requestAnalyzer->getCurrentWebspace()->getKey(),
+            $this->requestAnalyzer->getWebspace()->getKey(),
             $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
         );
 
@@ -87,7 +87,7 @@ class ContentTwigExtension extends \Twig_Extension implements ContentTwigExtensi
     public function loadParent($uuid)
     {
         $session = $this->sessionManager->getSession();
-        $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getCurrentWebspace()->getKey());
+        $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getWebspace()->getKey());
         $node = $session->getNodeByIdentifier($uuid);
 
         if ($node->getDepth() <= $contentsNode->getDepth()) {

@@ -117,7 +117,7 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         $locale->setCountry('us');
         $locale->setLanguage('en');
 
-        $this->requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
+        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
 
         $this->contentTypeManager->get('text_line')->willReturn(new TextLine(''));

@@ -55,25 +55,25 @@ interface RequestAnalyzerInterface
      * Returns the current match type for this request
      * @return int
      */
-    public function getCurrentMatchType();
+    public function getMatchType();
 
     /**
      * Returns the current webspace for this request
      * @return Webspace
      */
-    public function getCurrentWebspace();
+    public function getWebspace();
 
     /**
      * Returns the current portal for this request
      * @return Portal
      */
-    public function getCurrentPortal();
+    public function getPortal();
 
     /**
      * Returns the current segment for this request
      * @return Segment
      */
-    public function getCurrentSegment();
+    public function getSegment();
 
     /**
      * Returns the current localization for this Request
@@ -85,42 +85,42 @@ interface RequestAnalyzerInterface
      * Returns the redirect url
      * @return string
      */
-    public function getCurrentRedirect();
+    public function getRedirect();
 
     /**
      * Returns the url of the current portal
      * @return string
      */
-    public function getCurrentPortalUrl();
+    public function getPortalUrl();
 
     /**
      * Returns the path of the current request, which is the url without host, language and so on
      * @return string
      */
-    public function getCurrentResourceLocator();
+    public function getResourceLocator();
 
     /**
      * Returns the prefix required before the resource locator
      * @return string
      */
-    public function getCurrentResourceLocatorPrefix();
+    public function getResourceLocatorPrefix();
 
     /**
      * Returns the post parameters
      * @return array
      */
-    public function getCurrentPostParameter();
+    public function getPostParameters();
 
     /**
      * Returns the get parameters
      * @return array
      */
-    public function getCurrentGetParameter();
+    public function getGetParameters();
 
 
     /**
      * Returns the analytics key
      * @return string
      */
-    public function getCurrentAnalyticsKey();
+    public function getAnalyticsKey();
 }
