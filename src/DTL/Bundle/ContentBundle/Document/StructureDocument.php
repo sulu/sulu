@@ -21,7 +21,7 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
  *     translator="attribute"
  * )
  */
-class Structure
+class StructureDocument
 {
     /**
      * @PHPCR\Locale()

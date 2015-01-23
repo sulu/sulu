@@ -7,18 +7,32 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use DTL\Component\Content\Form\ContentTypeInterface;
+use DTL\Component\Content\Form\ContentView;
+use Doctrine\ODM\PHPCR\DocumentManager;
 
-class SmartContentType extends AbstractType
+class SmartContentType implements ContentTypeInterface
 {
     /**
-     * {@inheritdoc}
+     * @var ContentViewResolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    private $viewResolver;
+
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @param ContentViewResolver $viewResolver
+     */
+    public function __construct(ContentViewResolver $viewResolver, DocumentManager $manager)
     {
-        $resolver->setDefaults(array(
-            'max_per_page' => 10,
-            'limit_result' => null,
-        ));
+        $this->viewResolver = $viewResolver;
+    }
+    
+    public function setDefaultOptions(OptionsResolverInterface $optionsResolver)
+    {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -48,7 +62,23 @@ class SmartContentType extends AbstractType
     /**
      * {@inheritdoc}
      */
+    public function buildContentView(ContentView $view, $data, array $options)
+    {
+        $documents = $this->documentManager->findBy(array());
+        $view->setChildren($this->viewResolver->createIterator($documents));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function finishView(FormView $view, FormInterface $form, array $options)
     {
     }
 

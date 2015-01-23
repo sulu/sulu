@@ -19,7 +19,7 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
  *     nodeType="sulu:snippet"
  * )
  */
-class Snippet extends Structure
+class SnippetDocument extends Structure
 {
 }
 

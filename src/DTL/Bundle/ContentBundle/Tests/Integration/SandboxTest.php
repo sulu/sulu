@@ -12,7 +12,7 @@ class SandboxTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('doctrine_phpcr.odm.document_manager');
         $parent = $this->documentManager->find(null, '/cmf/sulu_io/contents');
 
-        $page1 = new Page();
+        $page1 = new PageDocument();
         $page1->setName('page');
         $page1->setParent($parent);
         $page1->setTitle('Gastronomy');

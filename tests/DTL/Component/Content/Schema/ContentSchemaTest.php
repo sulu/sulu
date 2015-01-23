@@ -18,7 +18,6 @@ class ContentSchemaTest extends \PHPUnit_Framework_TestCase
             ->addExtension(new SuluTypeExtension())
             ->addExtension(new ValidatorExtension($validator))
             ->getFormFactory();
-
         $builder = $factory->createBuilder('form');
         $builder->add('some_number', 'text', array(
             'required' => true
