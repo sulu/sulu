@@ -574,6 +574,10 @@ class Import
                             return true;
                         }
                     }
+                } else if ($value === null) {
+                    $conditionKey = $key;
+                    $conditionValue = $value;
+                    return true;
                 }
             }
         }
@@ -1544,6 +1548,9 @@ class Import
         foreach ($data as $index => $value) {
             if ($index >= sizeof($headerData)) {
                 break;
+            }
+            if (empty($value)) {
+                continue;
             }
             // search index in mapping config
             if (sizeof($resultArray = array_keys($this->columnMappings, $headerData[$index])) > 0) {
