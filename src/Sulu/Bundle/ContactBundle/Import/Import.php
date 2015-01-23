@@ -574,10 +574,6 @@ class Import
                             return true;
                         }
                     }
-                } else if ($value === null) {
-                    $conditionKey = $key;
-                    $conditionValue = $value;
-                    return true;
                 }
             }
         }
