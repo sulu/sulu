@@ -299,9 +299,11 @@ class ContactRepository extends EntityRepository
         $prefix = $prefix !== '' ? $prefix . '.' : '';
         $and = $qb->expr()->andX();
         foreach ($where as $k => $v) {
-            $and->add($qb->expr()->eq($prefix . $k, "'" . $v . "'"));
+            $and->add($qb->expr()->eq($prefix . $k, "':" . $v . "'"));
+            $parameters[$v] =$v;
         }
         $qb->where($and);
+        $qb->setParameters($parameters);
 
         return $qb;
     }
@@ -324,9 +326,13 @@ class ContactRepository extends EntityRepository
             ->addSelect('accountContacts')
             ->addSelect('account');
 
-        // if needed add where statements
-        if (is_array($where) && sizeof($where) > 0) {
-            $qb = $this->addWhere($qb, $where, 'contact');
+        if (isset($where['firstName'])) {
+            $qb->andWhere('contact.firstName = :firstName');
+            $qb->setParameter('firstName', $where['firstName']);
+        }
+        if (isset($where['lastName'])) {
+            $qb->andWhere('contact.lastName= :lastName');
+            $qb->setParameter('lastName', $where['lastName']);
         }
         if (!is_null($email)) {
             $qb->join('contact.emails', 'emails', 'WITH', 'emails.email = :email');
