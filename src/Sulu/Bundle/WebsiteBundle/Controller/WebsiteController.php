@@ -16,6 +16,7 @@ use Sulu\Component\HttpCache\HttpCache;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -72,18 +73,22 @@ abstract class WebsiteController extends Controller
 
             // if not preview enable cache handling
             if (!$preview) {
-                // mark the response as either public or private
-                $response->setPublic();
+                if ($this->getRequest()->getMethod() != 'GET') {
+                    $response->setPrivate();
+                } else {
+                    // mark the response as either public or private
+                    $response->setPublic();
 
-                // set the private and shared max age
-                $response->setMaxAge(240);
-                $response->setSharedMaxAge(960);
+                    // set the private and shared max age
+                    $response->setMaxAge(240);
+                    $response->setSharedMaxAge(960);
 
-                // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...)
-                $response->headers->set(
-                    HttpCache::HEADER_REVERSE_PROXY_TTL,
-                    $response->getAge() + intval($structure->getCacheLifeTime())
-                );
+                    // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...)
+                    $response->headers->set(
+                        HttpCache::HEADER_REVERSE_PROXY_TTL,
+                        $response->getAge() + intval($structure->getCacheLifeTime())
+                    );
+                }
             }
 
             return $response;
