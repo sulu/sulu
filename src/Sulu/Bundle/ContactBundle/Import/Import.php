@@ -1474,10 +1474,10 @@ class Import
                 }
             }
             if (array_search('email', $this->options['contactComparisonCriteria']) !== false) {
-                $email = ($this->getFirstOf('email', $data));
+                $email = $this->getFirstOf('email', $data);
             }
             if (array_search('phone', $this->options['contactComparisonCriteria']) !== false) {
-                $phone = ($this->getFirstOf('phone', $data));
+                $phone = $this->getFirstOf('phone', $data);
             }
         }
 

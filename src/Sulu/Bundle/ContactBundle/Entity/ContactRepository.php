@@ -299,8 +299,7 @@ class ContactRepository extends EntityRepository
         $prefix = $prefix !== '' ? $prefix . '.' : '';
         $and = $qb->expr()->andX();
         foreach ($where as $k => $v) {
-            $and->add($qb->expr()->eq($prefix . $k, "':" . $v . "'"));
-            $parameters[$v] =$v;
+            $and->add($qb->expr()->eq($prefix . $k, "'" . $v . "'"));
         }
         $qb->where($and);
         $qb->setParameters($parameters);
