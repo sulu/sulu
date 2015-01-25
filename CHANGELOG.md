@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #746 [WebsiteBUndle]  Fixed none caching for post request
     * ENHANCEMENT #692 [SecurityBundle] Made user extendable
     * ENHANCEMENT #731 [TestBundle]     Removed test user
     * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
