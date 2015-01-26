@@ -10,8 +10,8 @@
         <parameter key="sulu_content.preview.cache_provider.class">Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider</parameter>
         <parameter key="sulu_content.preview.cache_provider.doctrine_cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
         <parameter key="sulu_content.preview.crawler.class">Sulu\Bundle\ContentBundle\Preview\RdfaCrawler</parameter>
-        <parameter key="sulu_content.preview.renderer.class">Sulu\Bundle\ContentBundle\Preview\PreviewRenderer
-        </parameter>
+        <parameter key="sulu_content.preview.renderer.class">Sulu\Bundle\ContentBundle\Preview\PreviewRenderer</parameter>
+        <parameter key="sulu_content.jsconfig.preview.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
     <services>
         <!-- preview -->
@@ -54,6 +54,16 @@
             <argument type="service" id="templating" />
             <argument type="string">%sulu.content.preview.error_template%</argument>
             <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" />
+        </service>
+
+        <service id="sulu_content.jsconfig.preview" class="%sulu_content.jsconfig.preview.class%">
+            <argument type="string">sulu.content.preview</argument>
+            <argument type="collection">
+                <argument key="mode" type="string">%sulu.content.preview.mode%</argument>
+                <argument key="wesocket" type="string">%sulu.content.preview.websocket%</argument>
+            </argument>
+
+            <tag name="sulu.js_config"/>
         </service>
     </services>
 </container>

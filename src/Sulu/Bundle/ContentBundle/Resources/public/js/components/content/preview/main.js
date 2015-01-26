@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager) {
+define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config, WebsocketManager) {
 
     'use strict';
 
@@ -141,7 +141,9 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                 this.options = options;
                 this.$el = $el;
 
-                this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME);
+                this.config = Config.get('sulu.content.preview');
+
+                this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME, this.config.websocket);
             },
 
             start: function(data, options) {

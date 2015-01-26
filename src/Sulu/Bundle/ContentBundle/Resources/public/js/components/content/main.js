@@ -9,8 +9,9 @@
 
 define([
     'sulucontent/model/content',
-    'sulucontent/components/content/preview/main'
-], function(Content, Preview) {
+    'sulucontent/components/content/preview/main',
+    'config'
+], function(Content, Preview, Config) {
 
     'use strict';
 
@@ -145,6 +146,8 @@ define([
             this.previewWindow = null;
             this.$preview = null;
             this.contentChanged = false;
+
+            this.previewMode = Config.get('sulu.content.preview').mode;
 
             this.preview = new Preview();
             this.preview.initialize(this.sandbox, this.options, this.$el);
@@ -688,6 +691,12 @@ define([
                     this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
 
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
+                        if (this.previewMode === 'auto') {
+                            this.sandbox.emit('sulu.preview.initialize.force', data, restart);
+                        }
+                    }.bind(this));
+
+                    this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!this.preview.initiated) {
                             this.preview.start(data, this.options);
