@@ -690,6 +690,7 @@ define([
                     if (!!data.id) {
                         this.sandbox.emit('sulu.contacts.accounts.saved', model);
                     } else {
+                        this.sandbox.emit('sulu.content.saved');
                         this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + model.id + '/details');
                     }
                 }.bind(this),

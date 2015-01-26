@@ -375,15 +375,13 @@ define([
                 emailSelector;
 
             // prevents error when form is not existent in dom anymore
-            if (this.sandbox.dom.find(this.form).length > 0) {
-                // TODO: set required to first email field
-                if (data.indexOf('email') !== -1) {
-                    emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
-                    this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});
+            // TODO: set required to first email field
+            if (data.indexOf('email') !== -1) {
+                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
+                this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});
 //                this.sandbox.dom.attr(emailSelector + ' *[data-type=husky-input]', 'data-validation-required','true');
-                    this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
-                    this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
-                }
+                this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
+                this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
             }
         },
 
@@ -916,11 +914,9 @@ define([
          * Crops all labels, gets called at the beginning
          */
         cropAllLabels = function() {
-            if(this.sandbox.dom.find(this.form) > 0){
-                var elements = this.sandbox.dom.find('label.hidden', '#contact-edit-form'), i, length;
-                for (i = -1, length = elements.length; ++i < length;) {
-                    cropLabelOfElement.call(this, this.sandbox.dom.parent(elements[i]));
-                }
+            var elements = this.sandbox.dom.find('label.hidden', '#contact-edit-form'), i, length;
+            for (i = -1, length = elements.length; ++i < length;) {
+                cropLabelOfElement.call(this, this.sandbox.dom.parent(elements[i]));
             }
         },
 
