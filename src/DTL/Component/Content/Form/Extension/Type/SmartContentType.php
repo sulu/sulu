@@ -62,10 +62,13 @@ class SmartContentType implements ContentTypeInterface
     /**
      * {@inheritdoc}
      */
-    public function buildContentView(ContentView $view, $data, array $options)
+    public function buildContentView(ContentView $view)
     {
         $documents = $this->documentManager->findBy(array());
-        $view->setChildren($this->viewResolver->createIterator($documents));
+
+        $view->setValue(
+            $this->viewResolver->createIterator($documents)
+        );
     }
 
     /**

@@ -57,11 +57,8 @@ class ContentView implements \ArrayAccess, \IteratorAggregate, \Countable
 
     public function __toString()
     {
-        if (is_scalar($this->value)) {
-            throw new \RuntimeException(sprintf(
-                'Cannot call resolve value of type "%s" to a string value',
-                is_object($this->value) ? get_class($this->value) : gettype($this->value)
-            ));
+        if (!is_scalar($this->value)) {
+            return '';
         }
 
         return (string) $this->value;
@@ -104,17 +101,28 @@ class ContentView implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function setAttribute($name, $value)
     {
-        $this->attribute[$name] = $value;
+        $this->attributes[$name] = $value;
     }
 
     /**
      * Set the iteratable / array accessible children for this node
      *
-     * @param mixed $children
+     * @param array|itreator $children
      */
     public function setChildren($children)
     {
         $this->children = $children;
+    }
+
+    /**
+     * Return the children collection for this view. Each
+     * child should be an instance of ContentView
+     *
+     * @return array|iterator
+     */
+    public function getChildren() 
+    {
+        return $this->children;
     }
 
     /**
@@ -156,7 +164,7 @@ class ContentView implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function offsetSet($name, $value)
     {
-        throw new BadMethodCallException('Not supported');
+        throw new BadMethodCallException('Cannot set a child directly, use setChildren()');
     }
 
     /**

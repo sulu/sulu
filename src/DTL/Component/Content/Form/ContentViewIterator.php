@@ -13,43 +13,59 @@ namespace DTL\Component\Content\Form;
 use Symfony\Component\Form\Exception\BadMethodCallException;
 
 /**
- * @author Daniel Leech <daniel@dantleech.com>
+ * The content view iterator is used to iterate over a collection of views.
+ *
+ * An example of this is given by the smart content content type which aggregates
+ * a number of structure documents and allows the user to iterate over them.
+ *
+ * By creating a content view iterator the developer will ensure that views are
+ * lazy-loaded.
  */
-class ContentViewIterator implements \ArrayAccess, \Iterator, \Countable
+class ContentViewIterator implements \Iterator, \Countable
 {
+    /**
+     * @var ContentViewResolver
+     */
     private $viewResolver;
-    private $documents;
-    private $index = 0;
 
+    /**
+     * @var StructureDocument[]
+     */
+    private $documents;
+
+    /**
+     * @param ContentViewResolver $viewResolver
+     * @param StructureDocument[] $documents
+     */
     public function __construct(ContentViewResolver $viewResolver, $documents)
     {
         $this->viewResolver = $viewResolver;
-        $this->documents = $documents;
+        $this->documents = new \ArrayIterator($documents);
     }
 
     public function rewind()
     {
-        reset($this->documents);
+        $this->documents->rewind();
     }
 
     public function current()
     {
-        return $this->resolveView(current($this->documents));
+        return $this->viewResolver->resolve($this->documents->current());
     }
 
     public function next()
     {
-        next($this->documents);
+        $this->documents->next();
     }
 
     public function key()
     {
-        return key($this->documents);
+        return $this->documents->key();
     }
 
     public function valid()
     {
-        return current($this->documents);
+        return $this->documents->valid();
     }
 
     /**
@@ -59,6 +75,6 @@ class ContentViewIterator implements \ArrayAccess, \Iterator, \Countable
      */
     public function count()
     {
-        return count($this->children);
+        return $this->documents->count();
     }
 }
