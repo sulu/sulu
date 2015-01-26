@@ -27,7 +27,7 @@ class DefaultFileValidator implements FileValidatorInterface
     /**
      * @var int
      */
-    protected $maxFileSize = 0;
+    protected $maxFileSize;
 
     /**
      * @param UploadedFile $file
@@ -57,7 +57,7 @@ class DefaultFileValidator implements FileValidatorInterface
             throw new InvalidFileTypeException('The file type was blocked');
         }
 
-        if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && $file->getSize() <= $this->maxFileSize) {
+        if (in_array(self::VALIDATOR_MAX_FILE_SIZE, $methods) && $this->maxFileSize !== null && $file->getSize() >= $this->maxFileSize) {
             throw new MaxFileSizeExceededException('The file is to big');
         }
     }
