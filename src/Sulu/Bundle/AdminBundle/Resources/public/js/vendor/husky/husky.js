@@ -18842,7 +18842,7 @@ define('validator/required',[
                         if ('object' === typeof val) {
                             for (i in val) {
                                 if (val.hasOwnProperty(i)) {
-                                    if (this.validate(val[i], true)) {
+                                    if (this.validate(val[i]), true) {
                                         return true;
                                     }
                                 }
@@ -28982,7 +28982,6 @@ define('__component__$column-options@husky',[],function() {
  * @param {String} [options.removeIcon] icon to use for the remove-row item
  * @param {Number} [options.croppedMaxLength] the length to which croppable cells will be cropped on overflow
  * @param {Boolean} [options.stickyHeader] true to make the table header sticky
- * @param {Boolean} [options.openPathToSelectedChildren] true to show path to selected children
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -29015,8 +29014,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         stickyHeader: false,
         icons: [],
         removeIcon: 'trash-o',
-        croppedMaxLength: 35,
-        openPathToSelectedChildren: false
+        croppedMaxLength: 35
     },
 
     constants = {
@@ -29192,25 +29190,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
-
-            if(!!this.options.openPathToSelectedChildren){
-                var eventName = '';
-                if(!!this.datagrid.options.instanceName) {
-                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
-                } else {
-                    eventName = 'husky.datagrid.view.rendered';
-                }
-                this.sandbox.on(eventName, this.openPathToSelectedChildren.bind(this));
-            }
-        },
-
-        /**
-         * Opens path to all selected children
-         */
-        openPathToSelectedChildren: function(){
-            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
-                this.openParents(id);
-            }.bind(this));
         },
 
         /**
@@ -29247,8 +29226,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Destroys the view
          */
         destroy: function() {
-            this.sandbox.stop(this.sandbox.dom.find('*', this.$el));
             this.sandbox.dom.remove(this.$el);
+            this.sandbox.stop(this.sandbox.dom.find('*', this.$el));
             this.setVariables();
         },
 
@@ -29553,7 +29532,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param record {Object} the data of the record
          */
         executeRowPostRenderActions: function(record) {
-            if (!!this.datagrid.itemIsSelected.call(this.datagrid, record.id)) {
+            if (record.selected === true) {
                 this.toggleSelectRecord(record.id, true);
             } else {
                 this.toggleSelectAllItem(false);
@@ -29920,7 +29899,6 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         iconClickHandler: function(event) {
-            event.stopPropagation();
             var icon = this.options.icons[this.sandbox.dom.data(event.currentTarget, 'icon-index')],
                 recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
             if (typeof recordId !== 'undefined' && !!icon && typeof icon.callback === 'function') {
@@ -30334,7 +30312,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record
          */
         openParents: function(recordId) {
-            if (!!this.table && !!this.table.rows[recordId]) {
+            if (!!this.table.rows[recordId]) {
                 var parentId = this.table.rows[recordId].parent;
                 if (!!parentId) {
                     if (!!this.table.rows[parentId].parent) {
@@ -30541,10 +30519,10 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                     title: this.sandbox.util.cropMiddle(title, 24),
                     description: this.sandbox.util.cropMiddle(description, 32),
                     styleClass: (this.options.large === true) ? constants.largeClass : constants.smallClass,
-                    checked: !!this.datagrid.itemIsSelected.call(this.datagrid, record.id)
+                    checked: !!record.selected
                 })
             );
-            if (this.datagrid.itemIsSelected.call(this.datagrid, record.id)) {
+            if (record.selected === true) {
                 this.selectItem(id, true);
             }
             this.sandbox.dom.data(this.$thumbnails[id], 'id', id);
@@ -30932,9 +30910,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
     
 
-    var defaults = {
+     var defaults = {
             showElementsSteps: [10, 20, 50, 100, 500],
-            limit: 20
+            limit: 10
         },
 
         constants = {
@@ -30958,24 +30936,24 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             ].join(''),
 
             pageChanger: [
-                '<div class="', constants.nextClass, ' pagination-prev pull-right pointer"></div>',
-                '<div class="', constants.pageChangeClass, ' pagination-main pull-right pointer">',
-                '<span class="inline-block"><%= label %></span>',
-                '<span class="dropdown-toggle inline-block"></span>',
+                '<div class="', constants.nextClass , ' pagination-prev pull-right pointer"></div>',
+                '<div class="', constants.pageChangeClass , ' pagination-main pull-right pointer">',
+                    '<span class="inline-block"><%= label %></span>',
+                    '<span class="dropdown-toggle inline-block"></span>',
                 '</div>',
                 '<div class="' + constants.prevClass + ' pagination-next pull-right pointer"></div>'
             ].join(''),
 
             loader: [
-                '<div class="', constants.loaderClass, '"></div>'
+                '<div class="', constants.loaderClass ,'"></div>'
             ].join(''),
 
             showElements: [
                 '<div class="show-elements">',
-                '<div class="' + constants.sizeChangeClass + ' dropdown-trigger">',
-                '<%= desc %>',
-                '<span class="dropdown-toggle"></span>',
-                '</div>',
+                    '<div class="' + constants.sizeChangeClass + ' dropdown-trigger">',
+                        '<%= desc %>',
+                        '<span class="dropdown-toggle"></span>',
+                    '</div>',
                 '</div>'
             ].join('')
         },
@@ -31159,8 +31137,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             // if first defined step is bigger than the number of all elements don't display show-elements dropdown
             if (this.data.total > this.options.showElementsSteps[0]) {
                 description = this.sandbox.translate(translations.show) +
-                ' <strong>' + this.data.embedded.length + '</strong> ' +
-                this.sandbox.translate(translations.elementsOf) + ' ' + this.data.total;
+                    ' <strong>' + this.data.embedded.length + '</strong> ' +
+                    this.sandbox.translate(translations.elementsOf) + ' ' + this.data.total;
                 $showElements = this.sandbox.dom.createElement(this.sandbox.util.template(templates.showElements)({
                     'desc': description
                 }));
@@ -31229,6 +31207,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             var i, length, data = [];
 
             for (i = -1, length = this.options.showElementsSteps.length; ++i < length;) {
+                if (this.options.showElementsSteps[i] > this.data.total) {
+                    break;
+                }
                 data.push({
                     id: this.options.showElementsSteps[i],
                     name: '<strong>' + this.options.showElementsSteps[i] + '</strong> ' + this.sandbox.translate(translations.elementsPerPage)
@@ -31557,7 +31538,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             return this.createEventName('data.changed');
         },
 
-        /* PROVIDED EVENTS */
+    /* PROVIDED EVENTS */
 
         /**
          * raised when husky.datagrid.data.get is triggered
@@ -31624,15 +31605,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
         },
 
         /**
-         * raised when limit of request changed
-         * @event husky.datagrid.page-size.changed
-         * @param {Integer} pageSize new size
-         */
-        PAGE_SIZE_CHANGED = function() {
-            return this.createEventName('page-size.changed');
-        },
-
-        /**
          * used to trigger an update of the data
          * @event husky.datagrid.update
          */
@@ -31682,6 +31654,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
          */
         ITEMS_GET_SELECTED = function() {
             return this.createEventName('items.get-selected');
+        },
+
+        /**
+         * triggers husky.datagrid.items.selected event, which returns all selected item data
+         * @event husky.datagrid.data.get-selected
+         * @param  {Function} callback function receives array of selected items
+         */
+        DATA_GET_SELECTED = function() {
+            return this.createEventName('data.get-selected');
         },
 
         /**
@@ -31745,7 +31726,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                 this.matchings = [];
                 this.requestFields = [];
-                this.selectedItems = [];
 
                 // make a copy of the decorators for each datagrid instance
                 // if you directly access the decorators variable the datagrid-context in the decorators will be overwritten
@@ -31761,13 +31741,11 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
 
                 this.$loader = null;
                 this.isLoading = false;
-                this.initialLoaded = false;
 
                 // append datagrid to html element
                 this.$element = this.sandbox.dom.$('<div class="husky-datagrid"/>');
+                this.elId = this.sandbox.dom.attr(this.$el, 'id');
                 this.$el.append(this.$element);
-
-                this.dataGridWindowResize = null;
 
                 this.sort = {
                     attribute: null,
@@ -31780,11 +31758,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.bindCustomEvents();
 
                 this.sandbox.emit(INITIALIZED.call(this));
-            },
-
-            remove: function() {
-                this.unbindWindowResize();
-                this.destroy();
             },
 
             /**
@@ -31805,7 +31778,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.load({
                         url: url
                     });
+
                 } else if (!!this.options.data) {
+
                     this.sandbox.logger.log('load data from array');
                     this.data = {};
                     if (!!this.options.resultKey && !!this.options.data[this.options.resultKey]) {
@@ -31891,7 +31866,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                             } else if (key === 'name') {
                                 matchingObject.attribute = matching.name;
                             } else if (key === 'sortable') {
-                                matchingObject.sortable = matching.sortable;
+                                matchingObject.sortable = matching.sortable
                                 if (typeof matching.sortable === 'string') {
                                     matchingObject.sortable = JSON.parse(matching.sortable);
                                 }
@@ -31913,10 +31888,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Renders the data of the datagrid
              */
             render: function() {
-                if (!this.initialLoaded) {
-                    this.preSelectItems();
-                    this.initialLoaded = true;
-                }
+                this.preSelectItems();
 
                 this.renderView();
                 if (!!this.paginations[this.paginationId]) {
@@ -32309,13 +32281,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             bindDOMEvents: function() {
                 if (this.options.resizeListeners === true) {
-                    this.dataGridWindowResize = this.windowResizeListener.bind(this);
-                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
+                    this.sandbox.dom.on(this.sandbox.dom.$window, 'resize', this.windowResizeListener.bind(this));
                 }
-            },
-
-            unbindWindowResize: function() {
-                this.sandbox.dom.off(this.sandbox.dom.$window, 'resize', this.dataGridWindowResize);
             },
 
             /**
@@ -32347,6 +32314,11 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 // trigger selectedItems
                 this.sandbox.on(ITEMS_GET_SELECTED.call(this), function(callback) {
                     callback(this.getSelectedItemIds());
+                }.bind(this));
+
+                // trigger selectedItems
+                this.sandbox.on(DATA_GET_SELECTED.call(this), function(callback) {
+                    callback(this.getSelectedItemData());
                 }.bind(this));
 
                 // add a single data record
@@ -32467,21 +32439,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Handles the row remove event
              */
             removeRecordHandler: function(recordId) {
-                if (!!this.gridViews[this.viewId].removeRecord && !!recordId) {
+                if (!!this.gridViews[this.viewId].removeRecord) {
                     this.gridViews[this.viewId].removeRecord(recordId);
-                    this.removeRecordFromSelected(recordId);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
-                }
-            },
-
-            /**
-             * Removes a record from the selected items
-             * @param recordId
-             */
-            removeRecordFromSelected: function(recordId){
-                var index = this.selectedItems.indexOf(recordId);
-                if (index > -1) {
-                    this.selectedItems.splice(index, 1);
                 }
             },
 
@@ -32531,7 +32491,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Sets all data records unselected
              */
             deselectAllItems: function() {
-                this.selectedItems = [];
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    this.data.embedded[i].selected = false;
+                }
                 // emit events with selected data
                 this.sandbox.emit(ALL_DESELECT.call(this));
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), 0);
@@ -32542,13 +32504,16 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * Sets all data records selected
              */
             selectAllItems: function() {
-                var i, length;
+                var ids = [], i, length;
                 for (i = -1, length = this.data.embedded.length; ++i < length;) {
-                    this.setItemSelected(this.data.embedded[i].id);
+                    if (this.selectingAllowed(this.data.embedded[i].id)) {
+                        this.data.embedded[i].selected = true;
+                        ids.push(this.data.embedded[i].id);
+                    }
                 }
                 // emit events with selected data
-                this.sandbox.emit(ALL_SELECT.call(this), this.selectedItems);
-                this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.selectedItems.length);
+                this.sandbox.emit(ALL_SELECT.call(this), ids);
+                this.sandbox.emit(NUMBER_SELECTIONS.call(this), ids.length);
                 this.setSelectedItemsToData();
             },
 
@@ -32557,7 +32522,36 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Array} array with all ids
              */
             getSelectedItemIds: function() {
-                return this.selectedItems;
+                var data = [];
+                this.iterateSelectedItems(function(item) {
+                    data.push(item.id);
+                });
+                return data;
+            },
+
+            /**
+             * Returns the data of all selected items
+             * @return {Array} array of objects containing the selected data
+             */
+            getSelectedItemData: function() {
+                var data = [];
+                this.iterateSelectedItems(function(item) {
+                    data.push(item);
+                });
+                return data;
+            },
+
+            /**
+             * function which iterates through data. on every selected item a callback is called
+             * @param callback Selected item is passed
+             */
+            iterateSelectedItems: function(callback) {
+                var i, length;
+                for (i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (this.data.embedded[i].selected === true) {
+                        callback(this.data.embedded[i]);
+                    }
+                }
             },
 
             /**
@@ -32566,13 +32560,13 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @param items {Array} array with all items that should be selected
              */
             setSelectedItems: function(items) {
-                var count = 0, i, length, position;
-                for (i = -1, length = items.length; ++i < length;) {
-                    if (this.selectedItems.indexOf(items[i]) === -1 && this.selectingAllowed(items[i])) {
-                        this.selectedItems.push(items[i]);
+                var count = 0, i, length;
+                for (i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (items.indexOf(this.data.embedded[i].id) !== -1 && this.selectingAllowed(this.data.embedded[i].id)) {
+                        this.data.embedded[i].selected = true;
                         count++;
-                    } else if ((position = this.selectedItems.indexOf(items[i])) !== -1) {
-                        this.selectedItems.splice(position, 1);
+                    } else {
+                        this.data.embedded[i].selected = false;
                     }
                 }
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), count);
@@ -32584,7 +32578,12 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {Boolean} returns true if item is selected
              */
             itemIsSelected: function(id) {
-                return this.selectedItems.indexOf(id) !== -1;
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (this.data.embedded[i].id === id) {
+                        return this.data.embedded[i].selected;
+                    }
+                }
+                return false;
             },
 
             /**
@@ -32593,8 +32592,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Boolean} true of operation was successfull
              */
             setItemSelected: function(id) {
-                if (this.selectedItems.indexOf(id) === -1) {
-                    this.selectedItems.push(id);
+                var itemIndex = this.getRecordIndexById(id);
+                if (itemIndex !== null && this.selectingAllowed(id)) {
+                    this.data.embedded[itemIndex].selected = true;
                     // emit events with selected data
                     this.sandbox.emit(ITEM_SELECT.call(this), id);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
@@ -32610,10 +32610,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @return {Boolean} true of operation was succesfull
              */
             setItemUnselected: function(id) {
-                var position;
-
-                if ((position = this.selectedItems.indexOf(id)) !== -1) {
-                    this.selectedItems.splice(position, 1);
+                var itemIndex = this.getRecordIndexById(id);
+                if (itemIndex !== null) {
+                    this.data.embedded[itemIndex].selected = false;
                     // emit events with selected data
                     this.sandbox.emit(ITEM_DESELECT.call(this), id);
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
@@ -32698,15 +32697,11 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @returns {boolean} true if record got successfully deleted
              */
             removeRecord: function(recordId) {
-                if (!!recordId) {
-                    var i, length;
-                    for (i = -1, length = this.data.embedded.length; ++i < length;) {
-                        if (recordId === this.data.embedded[i].id) {
-                            this.removeRecordFromSelected(recordId);
-                            this.data.embedded.splice(i, 1);
-                            this.rerenderPagination();
-                            return true;
-                        }
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (recordId === this.data.embedded[i].id) {
+                        this.data.embedded.splice(i, 1);
+                        this.rerenderPagination();
+                        return true;
                     }
                 }
                 return false;
@@ -32759,8 +32754,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         // if no limit is passed keep current limit
                         if (!limit) {
                             limit = this.data.limit;
-                        } else if (this.data.limit !== limit) {
-                            this.sandbox.emit(PAGE_SIZE_CHANGED.call(this), limit);
                         }
 
                         // generate uri for loading
@@ -32772,8 +32765,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.load({url: url,
                         success: function() {
                             this.sandbox.emit(UPDATED.call(this), 'changed page');
-                        }.bind(this)
-                    });
+                        }.bind(this)});
                 }
             },
 
@@ -32839,7 +32831,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         template = this.sandbox.uritemplate.parse(this.data.links.sortable.href);
                         url = this.sandbox.uritemplate.expand(template, {sortBy: attribute, sortOrder: direction});
 
-                        this.sandbox.emit(DATA_SORT.call(this), {attribute: attribute, direction: direction});
+                        this.sandbox.emit(DATA_SORT.call(this));
 
                         this.load({
                             url: url,
@@ -35166,7 +35158,6 @@ define('__component__$toolbar@husky',[],function() {
  * @param {Function} [options.selectCallback] function which will be called when element is selected
  * @param {Array} [options.fields] A list of the fields to show inside the dropdown
  * @param {String} [options.dropdownSizeClass] The styling class for the dropdown. Defined inside the autocomplete stylesheet
- * @param {String} [options.footerContent] Could be a template or just text
  */
 
 define('__component__$auto-complete@husky',[], function() {
@@ -35195,8 +35186,7 @@ define('__component__$auto-complete@husky',[], function() {
         excludes: [],
         selectCallback: null,
         fields: [],
-        dropdownSizeClass: '',
-        footerContent: ''
+        dropdownSizeClass: ''
     },
 
     templates = {
@@ -35287,14 +35277,6 @@ define('__component__$auto-complete@husky',[], function() {
         return createEventName.call(this, 'is-matched');
     },
 
-    /**
-     * raised after autocomplete footer was clicked
-     * @event husky.auto-complete.footer.clicked
-     */
-    FOOTER_CLICKED = function() {
-        return createEventName.call(this, 'footer.clicked');
-    },
-
     /** returns normalized event names */
     createEventName = function(postFix) {
         return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -35333,17 +35315,17 @@ define('__component__$auto-complete@husky',[], function() {
             // extend default options
             this.options = this.sandbox.util.extend({}, defaults, this.options);
 
-            this.suggestionTpl = null;
-            this.footerTpl = null;
+            this._template = null;
             this.data = null;
             this.matched = true;
             this.matches = [];
+            this.executeBlurHandler = true;
             this.excludes = this.parseExcludes(this.options.excludes);
             this.localData = {};
             this.localData._embedded = {};
             this.localData._embedded[this.options.resultKey] = this.options.localData;
 
-            this.setTemplates();
+            this.setTemplate();
 
             this.render();
             this.bindDomEvents();
@@ -35353,17 +35335,16 @@ define('__component__$auto-complete@husky',[], function() {
         },
 
         /**
-         * Initializes the templates
+         * Initializes the template for a suggestion element
          */
-        setTemplates: function() {
+        setTemplate: function() {
             var iconHTML = '';
             if (this.options.suggestionIcon !== '') {
                 iconHTML = '<span class="fa-' + this.options.suggestionIcon + ' icon"></span>';
             }
 
-            // suggestions
             if (this.options.fields.length) {
-                this.suggestionTpl = this.sandbox.util.template('' +
+                this._template = this.sandbox.util.template('' +
                     '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
                     '   <div class="border">' +
                     '       <div class="text">' +
@@ -35374,7 +35355,7 @@ define('__component__$auto-complete@husky',[], function() {
                     '   </div>' +
                     '</div>');
             } else {
-                this.suggestionTpl = this.sandbox.util.template('' +
+                this._template = this.sandbox.util.template('' +
                     '<div class="' + this.options.suggestionClass + '" data-id="<%= context[\'id \']%>">' +
                     '   <div class="border">' +
                             iconHTML +
@@ -35382,24 +35363,16 @@ define('__component__$auto-complete@husky',[], function() {
                     '   </div>' +
                     '</div>');
             }
-
-            if (!!this.options.footerContent) {
-                this.footerTpl = this.sandbox.util.template(
-                    '<div class="auto-complete-footer">' +
-                        this.options.footerContent +
-                    '</div>'
-                );
-            }
         },
 
         /**
          * @param context {object} context for template - id, name
          * @returns {String} html of suggestion element
          */
-        buildSuggestionTemplate: function(context) {
+        buildTemplate: function(context) {
             var domObj;
-            if (this.suggestionTpl !== null) {
-                domObj = this.sandbox.dom.createElement(this.suggestionTpl({ context: context, fields: this.options.fields }));
+            if (this._template !== null) {
+                domObj = this.sandbox.dom.createElement(this._template({ context: context, fields: this.options.fields }));
                 if (this.isExcluded(context)) {
                     this.sandbox.dom.addClass(domObj, 'disabled');
                 }
@@ -35464,14 +35437,7 @@ define('__component__$auto-complete@husky',[], function() {
                             //saves the fact that the current input has matches
                             this.matches.push(context);
                             this.matched = true;
-                            return this.buildSuggestionTemplate(context);
-                        }.bind(this),
-
-                        footer: function() {
-                            if (!!this.footerTpl) {
-                                return this.footerTpl();
-                            }
-                            return null;
+                            return this.buildTemplate(context);
                         }.bind(this)
                     }
                 };
@@ -35600,24 +35566,29 @@ define('__component__$auto-complete@husky',[], function() {
                 }
             }.bind(this));
 
+            //ensures that the blur callback does not get called
+            this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'mousedown', function() {
+                this.executeBlurHandler = false;
+            }.bind(this));
+
             this.sandbox.dom.on(this.sandbox.dom.find('.tt-dropdown-menu', this.$el), 'click', function() {
                 return false;
             }.bind(this), '.disabled');
 
             this.sandbox.dom.on(this.$valueField, 'blur', function() {
-                //don't do anything if the dropdown is clicked on
-                if (this.options.emptyOnBlur === false) {
-                    this.handleBlur();
-                } else {
-                    this.clearValueFieldValue();
-                }
-            }.bind(this));
 
-            this.sandbox.dom.on(this.$el, 'click', function() {
-                this.sandbox.dom.blur(this.$valueField);
-                this.clearValueFieldValue();
-                this.sandbox.emit(FOOTER_CLICKED.call(this));
-            }.bind(this), '.auto-complete-footer');
+                //don't do anything if the dropdown is clicked on
+                if (this.executeBlurHandler === true) {
+                    if (this.options.emptyOnBlur === false) {
+                        this.handleBlur();
+                    } else {
+                        this.clearValueFieldValue();
+                    }
+                } else {
+                    this.executeBlurHandler = true;
+                }
+
+            }.bind(this));
 
             // clear data attribute when input is empty
             this.sandbox.dom.on(this.$valueField, 'focusout', function() {
@@ -35836,7 +35807,6 @@ define('__component__$auto-complete@husky',[], function() {
  * @param {String} [options.suggestionIcon] Icon Class-suffix for autocomplete-suggestion-icon
  * @param {Array} [options.delimiters] Array of key-codes which trigger a tag input
  * @param {Boolean} [options.noNewTags] If true only auto-completed tags are accepted
- * @param {String} [options.footerContent] Could be a template or just text
  */
 define('__component__$auto-complete-list@husky',[], function() {
 
@@ -36122,8 +36092,7 @@ define('__component__$auto-complete-list@husky',[], function() {
                                 getParameter: this.options.getParameter,
                                 suggestionIcon: this.options.suggestionIcon,
                                 autoCompleteIcon: this.options.autoCompleteIcon,
-                                resultKey: this.options.resultKey,
-                                footerContent: this.options.footerContent
+                                resultKey: this.options.resultKey
                             },
                             this.options.autocompleteOptions
                         )
@@ -36562,9 +36531,7 @@ define('__component__$dependent-select@husky',[],function() {
             preselect: null,
             defaultLabels: 'Please choose',
             selectOptions: [],
-            container: null,
-            isNative: false,
-            deselectField: false
+            container: null
         },
         constants = {
             childContainerClass: 'dependent-select-container',
@@ -36637,8 +36604,6 @@ define('__component__$dependent-select@husky',[],function() {
                             singleSelect: true,
                             instanceName: i,
                             data: [],
-                            isNative: this.options.isNative,
-                            deselectField: this.options.deselectField,
                             defaultLabel: this.sandbox.dom.isArray(this.options.defaultLabels) ? this.options.defaultLabels[depth] : this.options.defaultLabels
                         }
                     }
@@ -36736,7 +36701,6 @@ define('__component__$dependent-select@husky',[],function() {
             if (!!this.options.selectOptions[depth]) {
                 options = this.options.selectOptions[depth];
             }
-
             options = this.sandbox.util.extend(true, {}, {
                 el: $child,
                 singleSelect: true,
@@ -36744,9 +36708,7 @@ define('__component__$dependent-select@husky',[],function() {
                 data: data,
                 selectCallback: selectionCallback,
                 deselectCallback: deselectionCallback,
-                isNative: this.options.isNative,
                 preSelectedElements: !!preselect ? [preselect] : [],
-                deselectField: this.options.deselectField,
                 defaultLabel: this.sandbox.dom.isArray(this.options.defaultLabels) ? this.options.defaultLabels[depth] : this.options.defaultLabels
             }, options);
 
@@ -36757,6 +36719,9 @@ define('__component__$dependent-select@husky',[],function() {
                     options: options
                 }
             ]);
+        },
+
+        bindCustomEvents = function() {
         };
 
     return {
@@ -36764,6 +36729,8 @@ define('__component__$dependent-select@husky',[],function() {
         initialize: function() {
 
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+            bindCustomEvents.call(this);
 
             // load data and call render
             if (!!this.options.url) {
@@ -36830,7 +36797,6 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {String} [options.direction] 'bottom', 'top', or 'auto' pop up direction of the drop down.
  * @param {String} [options.resultKey] key in result set - default is empty and the _embedded property of the result set will be taken
  * @param {String} [options.url] url to load data from
- * @param {Boolean} [options.isNative] should use native select 
  */
 
 define('__component__$select@husky',[], function() {
@@ -36864,8 +36830,7 @@ define('__component__$select@husky',[], function() {
             editable: false,
             direction: 'auto',
             resultKey: '',
-            translations: translations,
-            isNative: false
+            translations: translations
         },
 
         constants = {
@@ -37121,12 +37086,7 @@ define('__component__$select@husky',[], function() {
 
             var $originalElement = this.sandbox.dom.$(this.options.el),
                 button = this.sandbox.dom.createElement(
-                    this.sandbox.util.template(
-                        this.template.basicStructure.call(this, this.options.defaultLabel, this.options.icon),
-                        {
-                            isNative: this.options.isNative
-                        }
-                    )
+                    this.template.basicStructure.call(this, this.options.defaultLabel, this.options.icon)
                 );
             this.sandbox.dom.append($originalElement, button);
 
@@ -37214,47 +37174,33 @@ define('__component__$select@husky',[], function() {
         addDropdownElement: function(id, value, disabled, callback, updateLabel, checkboxVisible) {
             checkboxVisible = checkboxVisible !== false;
             var $item,
-                template = (this.options.isNative) ? this.template.optionElement : this.template.menuElement,
                 idString = (id !== null && typeof id !== 'undefined') ? id.toString() : this.sandbox.util.uniqueId();
 
             if (this.options.preSelectedElements.indexOf(idString) >= 0 ||
                 this.options.preSelectedElements.indexOf(value) >= 0) {
-                $item = this.sandbox.dom.createElement(this.sandbox.util.template(
-                    template.call(
-                        this,
-                        idString,
-                        value,
-                        'checked',
-                        updateLabel,
-                        true
-                    ),
-                    {
-                        checked: true
-                    }
-                ));
+                $item = this.sandbox.dom.createElement(this.template.menuElement.call(
+                    this,
+                    idString,
+                    value,
+                    'checked',
+                    updateLabel,
+                    true));
 
                 this.selectedElements.push(idString);
                 this.selectedElementsValues.push(value);
-
                 if (this.options.emitValues === true) {
                     this.triggerPreSelect(idString);
                 } else {
                     this.triggerPreSelect(value);
                 }
             } else {
-                $item = this.sandbox.dom.createElement(
-                    this.sandbox.util.template(
-                        template.call(
-                            this,
-                            idString,
-                            value,
-                            '',
-                            updateLabel,
-                            checkboxVisible
-                        ),
-                        {
-                            checked: false
-                        }
+                $item = this.sandbox.dom.createElement(this.template.menuElement.call(
+                        this,
+                        idString,
+                        value,
+                        '',
+                        updateLabel,
+                        checkboxVisible
                     )
                 );
             }
@@ -37266,10 +37212,6 @@ define('__component__$select@husky',[], function() {
 
             if (!!disabled && disabled === true) {
                 this.sandbox.dom.addClass($item, 'disabled');
-
-                if (this.options.isNative) {
-                    this.sandbox.dom.attr($item, 'disabled', 'disabled');
-                }
             }
 
             this.sandbox.dom.append(this.$list, $item);
@@ -37331,9 +37273,6 @@ define('__component__$select@husky',[], function() {
 
             this.sandbox.dom.on(this.$el, EVENT_DATA_CHANGED.call(this), this.dataChanged.bind(this));
 
-            if (this.options.isNative) {
-                this.sandbox.dom.on(this.$list, 'change', this.onSelectChange.bind(this));
-            }
         },
 
         bindCustomEvents: function() {
@@ -37345,33 +37284,6 @@ define('__component__$select@husky',[], function() {
             this.sandbox.on(EVENT_GET_CHECKED.call(this), this.getChecked.bind(this));
             this.sandbox.on(EVENT_UPDATE.call(this), this.updateDropdown.bind(this));
             this.sandbox.on(EVENT_REVERT.call(this), this.revert.bind(this));
-        },
-
-        onSelectChange: function(event) {
-            var selectedId = this.sandbox.dom.val(event.currentTarget),
-                $selectedOption = this.sandbox.dom.find('option[value="' + selectedId + '"]', this.$list),
-                callback = this.sandbox.dom.data($selectedOption, 'selectCallback'),
-                selectedValue = this.sandbox.dom.text($selectedOption);
-
-            this.selectedElements = [selectedId];
-            this.selectedElementsValues = [selectedValue];
-
-            if (selectedId === constants.deselectFieldKey) {
-                this.selectedElements = [];
-                this.selectedElementsValues = [];
-            }
-
-            // update data attribute
-            this.updateSelectionAttribute();
-
-            // change label
-            this.changeLabel();
-            
-            if (!this.selectedElements.length) {
-                this.triggerDeselect(selectedId);
-            } else {
-                this.triggerSelect(selectedId);
-            }
         },
 
         /**
@@ -37414,6 +37326,7 @@ define('__component__$select@husky',[], function() {
 
             this.changeLabel();
             this.updateSelectionAttribute();
+
         },
 
         /**
@@ -37771,6 +37684,7 @@ define('__component__$select@husky',[], function() {
 
         // trigger event with clicked item
         clickItem: function(event) {
+
             var key, value, $checkbox, index, callback, updateLabel;
 
             key = this.sandbox.dom.data(event.currentTarget, 'id').toString();
@@ -37786,6 +37700,7 @@ define('__component__$select@husky',[], function() {
             }
 
             if (updateLabel !== 'false') {
+
                 // if single select then uncheck all results
                 if (this.options.multipleSelect === false) {
                     // if deselect was selected
@@ -37926,10 +37841,6 @@ define('__component__$select@husky',[], function() {
 
         // make dropDown visible
         showDropDown: function() {
-            if (this.options.isNative) {
-                return;
-            }
-
             this.sandbox.logger.log('show dropdown ' + this.options.instanceName);
             this.sandbox.dom.removeClass(this.$dropdownContainer, 'hidden');
             this.sandbox.dom.on(this.sandbox.dom.window, 'click.dropdown.' + this.options.instanceName, this.hideDropDown.bind(this));
@@ -37986,21 +37897,16 @@ define('__component__$select@husky',[], function() {
                 }
                 return [
                     '<div class="husky-select-container">',
-                    '   <div class="dropdown-label pointer">',
-                    '       <% if (isNative) { %>',
-                    '           <select class="' + constants.listClass + '"></select>',
-                    '       <% } %>',
+                    '    <div class="dropdown-label pointer">',
                     '       <div class="checkbox">',
-                                iconSpan,
-                    '           <span class="' + constants.labelClass + '">', defaultLabel, '</span>',
+                    iconSpan,
+                        '           <span class="' + constants.labelClass + '">', defaultLabel, '</span>',
                     '       </div>',
-                    '       <span class="fa-caret-down toggle-icon" style="' + dropdownStyle + '"></span>',
+                        '       <span class="fa-caret-down toggle-icon" style="' + dropdownStyle + '"></span>',
                     '   </div>',
-                    '   <% if (!isNative) { %>',
-                    '   <div class="grid-row dropdown-list dropdown-shadow hidden ' + constants.dropdownContainerClass + '">',
-                    '       <ul class="' + constants.listClass + '"></ul>',
+                        '   <div class="grid-row dropdown-list dropdown-shadow hidden ' + constants.dropdownContainerClass + '">',
+                        '       <ul class="' + constants.listClass + '"></ul>',
                     '   </div>',
-                    '   <% } %>',
                     '</div>'
                 ].join('');
             },
@@ -38028,13 +37934,6 @@ define('__component__$select@husky',[], function() {
                     '        <div class="item-value">', value, '</div>',
                     '    </div>',
                     '</li>'
-                ].join('');
-            },
-            optionElement: function(index, value, checked, updateLabel, checkboxVisible) {
-                return [
-                    '<option <% if (checked) { print("selected "); } %>value="' + index + '">',
-                        value,
-                    '</option>'
                 ].join('');
             }
         }
@@ -39452,7 +39351,6 @@ define('__component__$ckeditor@husky',[], function() {
  *
  * @params {Array} [options.slides] array of slide objects, will be rendered in a row and can slided with events
  * @params {String} [options.slides[].title] the title of the overlay
- * @params {String} [options.slides[].subTitle] the sub-title of the overlay
  * @params {String|Boolean} [options.slides[].closeIcon] icon class for the close button. If false no close icon will be displayed
  * @params {Function} [options.slides[].closeCallback] @deprecated Use 'cancelCallback' instead
  * @params {Function} [options.slides[].cancelCallback] callback which gets executed after the overlay gets canceled
@@ -39507,7 +39405,6 @@ define('__component__$overlay@husky',[], function() {
         slideDefaults = {
             index: -1,
             title: '',
-            subTitle: null,
             closeIcon: 'times',
             message: '',
             closeCallback: null,
@@ -39613,9 +39510,8 @@ define('__component__$overlay@husky',[], function() {
             ].join(''),
             slideSkeleton: [
                 '<div class="slide slide-<%= index %> <%= cssClass %>">',
-                '   <div class="overlay-header<% if(subTitle) { %> with-sub-title<% } %>">',
+                '   <div class="overlay-header">',
                 '       <span class="title"><%= title %></span>',
-                '       <% if(subTitle) { %><div class="sub-title"><%= subTitle %></div><% } %>',
                 '       <% if (!!closeIcon) { %><a class="fa-<%= closeIcon %> close-button" href="#"></a><% } %>',
                 '   </div>',
                 '   <div class="overlay-content"></div>',
@@ -40091,12 +39987,10 @@ define('__component__$overlay@husky',[], function() {
 
             var slide, $el;
             for (slide in this.slides) {
-                if (this.slides.hasOwnProperty(slide)) {
-                    $el = this.initSlideSkeleton(slide);
-                    this.initButtons(slide);
-                    this.setContent(slide);
-                    this.sandbox.dom.append(this.overlay.$slides, $el);
-                }
+                $el = this.initSlideSkeleton(slide);
+                this.initButtons(slide);
+                this.setContent(slide);
+                this.sandbox.dom.append(this.overlay.$slides, $el);
             }
         },
 
@@ -40106,7 +40000,6 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.slides[slide].$el = this.sandbox.dom.createElement(
                 this.sandbox.util.template(templates.slideSkeleton, {
                     title: this.sandbox.util.cropMiddle(this.slides[slide].title, 38),
-                    subTitle: !!this.slides[slide].subTitle ? this.slides[slide].subTitle : null,
                     closeIcon: this.slides[slide].closeIcon,
                     index: this.slides[slide].index,
                     cssClass: this.slides[slide].cssClass
@@ -40270,7 +40163,7 @@ define('__component__$overlay@husky',[], function() {
         },
 
         /**
-         * Support for key down events
+         * Su
          * @param event
          */
         keyHandler: function(event) {
@@ -40278,10 +40171,6 @@ define('__component__$overlay@husky',[], function() {
             if (event.keyCode === 27) {
                 this.closeHandler();
             } else if (event.keyCode === 13) {
-                // when enter is pressed in textarea overlay should not be closed
-                if(event.target.tagName === 'TEXTAREA'){
-                   return;
-                }
                 this.okHandler();
             }
         },
@@ -42383,8 +42272,7 @@ define('__component__$input@husky',[], function() {
             datepickerOptions: {
                 orientation: 'auto',
                 startDate: -Infinity,
-                endDate: Infinity,
-                todayHighlight: true
+                endDate: Infinity
             },
             colorPickerOptions: {},
             frontIcon: null,
@@ -46704,6 +46592,18 @@ define("datepicker-zh-TW", function(){});
                         });
                     },
 
+                    culture: function(cultureName) {
+                        var setLanguage = function() {
+                            Globalize.culture(cultureName);
+                        };
+
+                        if (cultureName !== 'en') {
+                            require(['cultures/globalize.culture.' + cultureName], setLanguage.bind(this));
+                        } else {
+                            setLanguage();
+                        }
+                    },
+
                     getLocale: function() {
                         return Globalize.culture().name;
                     },
@@ -46716,13 +46616,12 @@ define("datepicker-zh-TW", function(){});
                 };
 
                 app.sandbox.translate = function(key) {
-                    var translation;
                     if (!app.config.culture || !app.config.culture.name) {
                         return key;
                     }
 
                     try {
-                        translation = Globalize.localize(key, app.config.culture.name);
+                        var translation = Globalize.localize(key, app.config.culture.name);
                     } catch (e) {
                         app.logger.warn('Globalize threw an error when translating key "' + key + '", failling back to key. Error: ' + e);
                         return key;
@@ -46735,19 +46634,16 @@ define("datepicker-zh-TW", function(){});
                     /**
                      * returns formatted date string
                      * @param {string|Date} date
-                     * @param {Boolean} returnDateOnly
                      * @returns {string}
                      */
-                    format: function(date, returnDateOnly) {
+                    format: function(date) {
                         var returnDate, returnTime;
                         if(typeof date === 'string'){
                             date = this.parse(date);
                         }
 
                         returnDate = Globalize.format(date, Globalize.culture().calendar.patterns.d);
-                        if (returnDateOnly === true) {
-                            returnTime = Globalize.format(date, Globalize.culture().calendar.patterns.t);
-                        }
+                        returnTime = Globalize.format(date, Globalize.culture().calendar.patterns.t);
 
                         return ( (!!returnDate) ? returnDate : '' ) +
                                ( (!!returnDate && !!returnTime) ? ' ': '' ) +
@@ -46838,21 +46734,23 @@ define("datepicker-zh-TW", function(){});
                  * @param messages
                  */
                 app.setLanguage = function(cultureName, messages) {
-                    Globalize.culture(cultureName);
-                    app.sandbox.globalize.addCultureInfo(cultureName, messages);
+                    var setLanguage = function() {
+                        Globalize.culture(cultureName);
+                        app.sandbox.globalize.addCultureInfo(cultureName, messages);
+                    };
+                    if (cultureName !== 'en') {
+                        require(['cultures/globalize.culture.' + cultureName], setLanguage.bind(this));
+                    } else {
+                        setLanguage();
+                    }
                 };
-
-                if (!!app.config.culture && !!app.config.culture.name && app.config.culture.name !== 'en') {
-                    return require(['cultures/globalize.culture.' + app.config.culture.name]);
-                }
             },
 
             afterAppStart: function(app) {
                 if (!!app.config.culture && !!app.config.culture) {
                     if (!app.config.culture.messages) {
-                        app.config.culture.messages = {};
+                        app.config.culture.messages = { };
                     }
-
                     app.setLanguage(app.config.culture.name, app.config.culture.messages);
                 }
             }
@@ -47279,12 +47177,8 @@ define("datepicker-zh-TW", function(){});
                 }
             };
 
-            app.core.dom.off = function(selector, event, handler, filter) {
-                if (!!filter) {
-                    $(selector).off(event, filter, handler);
-                } else {
-                    $(selector).off(event, handler);
-                }
+            app.core.dom.off = function(selector, event, filter, handler) {
+                $(selector).off(event, filter, handler);
             };
 
             app.core.dom.trigger = function(selector, eventType, params) {
@@ -47797,7 +47691,7 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
                 },
 
                 setValue: function(selector, value) {
-                    return app.core.dom.$(selector).typeahead('val', value);
+                    return app.core.dom.$(selector).typeahead('setQuery', value);
                 }
             };
         }

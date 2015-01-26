@@ -366,6 +366,7 @@ define([], function () {
                         position: 30,
                         items: [
                             {
+                                id: "delete-button",
                                 title: this.sandbox.translate('toolbar.delete'),
                                 callback: function () {
                                     this.sandbox.emit('sulu.header.toolbar.delete');

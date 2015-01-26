@@ -3,10 +3,15 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #730 [AdminBundle]    Unsaved changes handling
+    * FEATURE     #569 [All]            Behat integration - behat features for bundles
     * ENHANCEMENT #692 [SecurityBundle] Made user extendable
     * ENHANCEMENT #731 [TestBundle]     Removed test user
     * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
     * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
+    * BUGFIX      #697 [CoreBundle]     Do not try and set the theme when the portal has not been found
+
+* 0.14.1 (2015-01-21)
+    * HOTFIX      #737 [MediaBundle]    Changed BaseCollection properties to be protected for inheritance
 
 * 0.14.0 (2015-01-15)
     * ENHANCEMENT #695 [ContentBundle]  Hide textblock sort option when there is only 1 textblock available
