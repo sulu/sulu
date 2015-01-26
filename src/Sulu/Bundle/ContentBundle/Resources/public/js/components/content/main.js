@@ -54,6 +54,9 @@ define([
                 '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer">',
                 '           <span class="fa-external-link"></span>',
                 '       </div>',
+                '       <div id="preview-toolbar-refresh" class="refresh pull-right pointer">',
+                '           <span class="fa-refresh"></span>',
+                '       </div>',
                 '       <div id="preview-toolbar-resolutions" class="resolutions pull-right pointer">',
                 '           <label class="drop-down-trigger">',
                 '               <span class="dropdown-label"><%= resolution %></span>',
@@ -740,7 +743,7 @@ define([
                     uuid: data.id
                 });
                 this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
-                    resolution: this.sandbox.translate('content.preview.resolutions'),
+                    resolution: this.sandbox.translate(constants.resolutionDropdownData[0].name),
                     url: this.previewUrl
                 }));
                 this.bindPreviewDomEvents();
@@ -753,6 +756,8 @@ define([
          * Starts the resolution dropdown for the preview
          */
         startPreviewResolutionDropdown: function() {
+            var instanceName = 'resolutionsDropdown';
+
             this.sandbox.start([
                 {
                     name: 'dropdown@husky',
@@ -760,7 +765,7 @@ define([
                         el: this.sandbox.dom.find('#preview-toolbar-resolutions', this.$preview),
                         trigger: '.drop-down-trigger',
                         setParentDropDown: true,
-                        instanceName: 'resolutionsDropdown',
+                        instanceName: instanceName,
                         alignment: 'left',
                         data: constants.resolutionDropdownData
                     }
@@ -774,6 +779,8 @@ define([
         bindPreviewDomEvents: function() {
             this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-new-window', this.$preview),
                 'click', this.openPreviewInNewWindow.bind(this));
+            this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-refresh', this.$preview),
+                'click', this.refreshPreview.bind(this));
         },
 
         /**
@@ -839,6 +846,10 @@ define([
                     this.sandbox.emit('sulu.sidebar.change-width', 'max');
                 }.bind(this);
             }.bind(this);
+        },
+
+        refreshPreview: function() {
+            this.getPreviewDocument().location.reload();
         },
 
         /**
