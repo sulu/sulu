@@ -184,8 +184,7 @@ define(function() {
                     }
                 }.bind(this),
                 okCallback = function() {
-                    this.unsavedChanges = false;
-                    this.sandbox.on('sulu.content.saved', function() {
+                    this.sandbox.once('sulu.content.saved', function() {
                         this.unsavedChanges = false;
                         dfd.resolve();
                     }.bind(this));
@@ -322,6 +321,9 @@ define(function() {
             // navigate
             router.navigate(route, {trigger: trigger});
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
+
+            // ensure that variable is reset after navigation
+            this.unsavedChanges = false;
         },
 
         /**
