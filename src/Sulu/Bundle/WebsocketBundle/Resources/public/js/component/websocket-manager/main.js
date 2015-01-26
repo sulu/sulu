@@ -23,6 +23,8 @@ define([
     return {
         apps: {},
 
+        clients: {},
+
         config: {},
 
         url: null,
@@ -54,12 +56,15 @@ define([
         },
 
         getClient: function(appName) {
-            // TODO cache client by name
             // TODO fallback detection
             //  - check if websocket exists
             //  - onerror create fallback client
             //  - onopen create websocket client
-            return new WebsocketClient(this.apps[appName], this.getSocket(appName))
+            if (!this.clients[appName]) {
+                this.clients[appName] = new WebsocketClient(this.apps[appName], this.getSocket(appName));
+            }
+
+            return this.clients[appName];
         }
     };
 });
