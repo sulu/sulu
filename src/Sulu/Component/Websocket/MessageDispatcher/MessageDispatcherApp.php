@@ -50,7 +50,11 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         $msg = json_decode($msg, true);
 
         try {
-            $this->dispatch($from, $context, $msg);
+            $result = $this->dispatch($from, $context, $msg);
+
+            if($result !== null){
+                $from->send($result);
+            }
         } catch (\Exception $e) {
             // send fail message
             $from->send(
@@ -83,7 +87,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
             throw new MissingParameterException('message');
         }
 
-        $this->messageDispatcher->dispatch(
+        return $this->messageDispatcher->dispatch(
             $conn,
             $msg['handler'],
             $msg['message'],

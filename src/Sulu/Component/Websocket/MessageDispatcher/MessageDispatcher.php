@@ -34,22 +34,24 @@ class MessageDispatcher implements MessageDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch(ConnectionInterface $conn, $name, array $message, array $options, ConnectionContextInterface $context)
-    {
+    public function dispatch(
+        ConnectionInterface $conn,
+        $name,
+        array $message,
+        array $options,
+        ConnectionContextInterface $context
+    ) {
         if (!array_key_exists($name, $this->handler)) {
             throw new HandlerNotFoundException($name);
         }
 
         $result = $this->handler[$name]->handle($conn, $message, $context);
 
-        $conn->send(
-            json_encode(
-                array(
-                    'handler' => $name,
-                    'message' => $result,
-                    'options' => $options
-                )
-            )
-        );
+        return $result !== null ?
+            array(
+                'handler' => $name,
+                'message' => $result,
+                'options' => $options
+            ) : null;
     }
 }
