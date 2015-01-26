@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                             ->example('ClientWebsiteBundle:Preview:error.html.twig')
                         ->end()
                         ->scalarNode('mode')
-                            ->isRequired()
+                            ->defaultValue('auto')
                             ->validate()
                                 ->ifNotInArray(array('auto', 'off'))
                                 ->thenInvalid('Invalid preview mode "%s"')
