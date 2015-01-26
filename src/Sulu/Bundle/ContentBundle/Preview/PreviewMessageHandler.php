@@ -205,7 +205,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
         }
 
         // get user id
-        $user = $$context->has('user');
+        $user = $context->get('user');
 
         // get session vars
         $contentUuid = $context->get('content');
