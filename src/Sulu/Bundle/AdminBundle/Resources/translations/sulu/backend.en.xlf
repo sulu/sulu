@@ -1434,6 +1434,22 @@
                 <source>labels.successfully-saved</source>
                 <target>Data has been successfully saved.</target>
             </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a6f" resname="sulu.overlay.unsaved-changes.header">
+                <source>sulu.overlay.unsaved-changes.header</source>
+                <target>Unsaved changes</target>
+            </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a7f" resname="sulu.overlay.unsaved-changes.text">
+                <source>sulu.overlay.unsaved-changes.text</source>
+                <target>When leaving a tab unsaved changes will be lost. Do you want to save your changes?</target>
+            </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a8f" resname="sulu.overlay.unsaved-changes.cancel">
+                <source>sulu.overlay.unsaved-changes.cancel</source>
+                <target>Leave tab without saving</target>
+            </trans-unit>
+            <trans-unit id="a504f522de1456524142c0b4820e29a9f" resname="sulu.overlay.unsaved-changes.save">
+                <source>sulu.overlay.unsaved-changes.save</source>
+                <target>Save &amp; leave tab</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

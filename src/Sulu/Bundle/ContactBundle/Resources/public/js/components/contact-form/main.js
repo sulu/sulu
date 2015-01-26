@@ -374,8 +374,8 @@ define([
                 tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
                 emailSelector;
 
+            // prevents error when form is not existent in dom anymore
             // TODO: set required to first email field
-
             if (data.indexOf('email') !== -1) {
                 emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
                 this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});

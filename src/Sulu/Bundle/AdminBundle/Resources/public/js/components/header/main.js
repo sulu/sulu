@@ -54,7 +54,12 @@ define([], function () {
             contentEl: null,
             toolbarOptions: {},
             toolbarLanguageChanger: true,
-            tabsOptions: {},
+            tabsOptions: {
+                preSelectEvent: {
+                    enabled: true,
+                    triggerSelectItem: false
+                }
+            },
             tabsFullControl: false,
             breadcrumb: null,
             toolbarDisabled: false,

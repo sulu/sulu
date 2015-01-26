@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #730 [AdminBundle]    Unsaved changes handling
     * FEATURE     #569 [All]            Behat integration - behat features for bundles
     * ENHANCEMENT #692 [SecurityBundle] Made user extendable
     * ENHANCEMENT #731 [TestBundle]     Removed test user

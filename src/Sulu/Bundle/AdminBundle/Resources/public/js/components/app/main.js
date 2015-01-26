@@ -26,7 +26,8 @@ define(function() {
             expandIcon: 'fa-chevron-right',
             noTransitionsClass: 'no-transitions',
             versionHistoryUrl: 'https://github.com/sulu-cmf/sulu-standard/releases',
-            changeLanguageUrl: '/admin/security/profile/change-language'
+            changeLanguageUrl: '/admin/security/profile/change-language',
+            saveButtonKey: 'save-button'
         },
 
         templates = {
@@ -112,6 +113,7 @@ define(function() {
             this.render();
             this.bindCustomEvents();
             this.bindDomEvents();
+            this.initializeUnsavedChangesHandler();
 
             if (!!this.sandbox.mvc.history.fragment && this.sandbox.mvc.history.fragment.length > 0) {
                 this.selectNavigationItem(this.sandbox.mvc.history.fragment);
@@ -142,6 +144,62 @@ define(function() {
                         break;
                 }
             }.bind(this));
+        },
+
+        /**
+         * Initializes the handler for unsaved changes
+         */
+        initializeUnsavedChangesHandler: function() {
+            this.unsavedChanges = false;
+            this.bindCustomEventsForUnsavedChangesHandler();
+        },
+
+        /**
+         * Listen for changes regarding the save button
+         */
+        bindCustomEventsForUnsavedChangesHandler: function() {
+            this.sandbox.on('sulu.content.changed', function() {
+                this.unsavedChanges = true;
+            }.bind(this));
+
+            this.sandbox.on('sulu.content.saved', function() {
+                this.unsavedChanges = false;
+            }.bind(this));
+        },
+
+        /**
+         * Checks if there are unsaved changes and shows a message box
+         * @return {Object} returns a promise when navigation should take place
+         */
+        showUnsavedChangesWarning: function() {
+            var dfd = this.sandbox.data.deferred(),
+                title = this.sandbox.translate('sulu.overlay.unsaved-changes.header'),
+                message = 'sulu.overlay.unsaved-changes.text',
+                cancelCallback = function(el) {
+                    if (el.className.indexOf('close') > -1) {
+                        dfd.reject();
+                    } else {
+                        this.unsavedChanges = false;
+                        dfd.resolve();
+                    }
+                }.bind(this),
+                okCallback = function() {
+                    this.sandbox.once('sulu.content.saved', function() {
+                        this.unsavedChanges = false;
+                        dfd.resolve();
+                    }.bind(this));
+                    this.sandbox.emit('sulu.header.toolbar.save');
+                }.bind(this),
+                options = {
+                    closeIcon: 'times',
+                    cancelDefaultText: this.sandbox.translate('sulu.overlay.unsaved-changes.cancel'),
+                    okDefaultText: this.sandbox.translate('sulu.overlay.unsaved-changes.save'),
+                    skin: 'medium'
+                };
+
+            this.sandbox.emit('sulu.overlay.show-warning', title, message, cancelCallback, okCallback, options);
+
+            return dfd.promise();
         },
 
         /**
@@ -251,7 +309,6 @@ define(function() {
         navigate: function(route, trigger, noLoader, forceReload) {
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
-
             forceReload = forceReload === true ? true : false;
 
             if (forceReload) {
@@ -264,6 +321,9 @@ define(function() {
             // navigate
             router.navigate(route, {trigger: trigger});
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
+
+            // ensure that variable is reset after navigation
+            this.unsavedChanges = false;
         },
 
         /**
@@ -285,11 +345,47 @@ define(function() {
         },
 
         /**
+         * Will be called before navigation
+         * @param route
+         * @param trigger
+         * @param noLoader
+         * @param forceReload
+         */
+        preNavigate: function(route, trigger, noLoader, forceReload) {
+            if (!!this.unsavedChanges) {
+                var dfdSavedChanges = this.showUnsavedChangesWarning();
+                this.sandbox.data.when(dfdSavedChanges).then(function() {
+                    this.navigate(route, trigger, noLoader, forceReload);
+                }.bind(this));
+            } else {
+                this.navigate(route, trigger, noLoader, forceReload);
+            }
+        },
+
+        /**
+         * Will be called before switching to another tab
+         * @param event
+         */
+        preSelectTab : function(event){
+            if (!!this.unsavedChanges) {
+                var dfdSavedChanges = this.showUnsavedChangesWarning();
+                this.sandbox.data.when(dfdSavedChanges).then(function() {
+                    this.sandbox.emit('husky.tabs.header.item.clicked', event);
+                }.bind(this));
+            } else {
+                this.sandbox.emit('husky.tabs.header.item.clicked', event);
+            }
+        },
+
+        /**
          * Bind component-related events
          */
         bindCustomEvents: function() {
             // navigate
-            this.sandbox.on('sulu.router.navigate', this.navigate.bind(this));
+            this.sandbox.on('sulu.router.navigate', this.preNavigate.bind(this));
+
+            // navigate when tab element of header is clicked
+            this.sandbox.on('husky.tabs.header.item.preselect', this.preSelectTab.bind(this));
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {
