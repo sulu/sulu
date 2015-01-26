@@ -137,9 +137,9 @@ define(['app-config'], function(AppConfig) {
             if (saved !== this.saved) {
                 var type = (!!this.options.data && !!this.options.data.id) ? 'edit' : 'add';
                 this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
+                this.propagateState(saved);
             }
             this.saved = saved;
-            this.propagateState();
         },
 
         /**
@@ -147,8 +147,8 @@ define(['app-config'], function(AppConfig) {
          *  sulu.content.saved when the content has been saved
          *  sulu.content.changed when the content has been changed
          */
-        propagateState: function() {
-            if (!!this.saved) {
+        propagateState: function(saved) {
+            if (!!saved) {
                 this.sandbox.emit('sulu.content.saved');
             } else {
                 this.sandbox.emit('sulu.content.changed');
