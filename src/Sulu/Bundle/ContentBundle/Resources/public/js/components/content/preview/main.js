@@ -11,219 +11,44 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
 
     'use strict';
 
+    var WEBSOCKET_APP_NAME = 'admin',
+        MESSAGE_HANDLER_NAME = 'sulu_content.preview';
+
     return function() {
-        var ajax = {
-                initiated: false,
-
-                init: function(template) {
-                    var def = this.sandbox.data.deferred();
-                    if (!ajax.initiated) {
-                        this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
-                        this.sandbox.dom.on(this.$el, 'change', updateEvent.bind(this),
-                            'input[type="checkbox"].preview-update, input[type="radio"].preview-update');
-
-                        ajax.start.call(this, def, template);
-                        ajax.initiated = true;
-                    }
-                    return def;
-                },
-
-                update: function(data) {
-                    var updateUrl = '/admin/content/preview/' + this.data.id + '/update?webspace=' + this.options.webspace + '&language=' + this.options.language;
-
-                    this.sandbox.util.ajax({
-                        url: updateUrl,
-                        type: 'POST',
-
-                        data: {
-                            changes: data
-                        }
-                    });
-                },
-
-                start: function(def, template) {
-                    var url = '/admin/content/preview/' + this.data.id + '/start?webspace=' + this.options.webspace + '&language=' + this.options.language;
-
-                    this.sandbox.util.ajax({
-                        url: url,
-                        type: 'POST',
-
-                        data: {data: this.data, template: template},
-
-                        success: function() {
-                            def.resolve();
-                        }
-                    });
-                },
-
-                stop: function(def) {
-                    var url = '/admin/content/preview/' + this.data.id + '/stop?webspace=' + this.options.webspace + '&language=' + this.options.language;
-
-                    this.sandbox.util.ajax({
-                        url: url,
-                        type: 'GET',
-
-                        success: function() {
-                            def.resolve();
-                        }
-                    });
-                }
-            },
-            ws = {
-                /**
-                 * returns true if there is a websocket
-                 * @returns {boolean}
-                 */
-                detection: function() {
-                    var support = "MozWebSocket" in window ? 'MozWebSocket' : ("WebSocket" in window ? 'WebSocket' : null);
-                    // no support
-                    if (support === null) {
-                        this.sandbox.logger.log("Your browser doesn't support Websockets.");
-                        return false;
-                    }
-                    // let's invite Firefox to the party.
-                    if (window.MozWebSocket) {
-                        window.WebSocket = window.MozWebSocket;
-                    }
-                    // support exists
-                    return true;
-                },
-
-                init: function(template) {
-                    var def = this.sandbox.data.deferred();
-
-                    this.sandbox.logger.log('Connect to url: ' + url);
-                    ws.socket = WebsocketManager.getClient('sulu_content.preview');
-
-                    ws.socket.onopen = function() {
-                        this.sandbox.logger.log('Connection established!');
-                        this.opened = true;
-
-                        this.sandbox.dom.on(this.formId, 'keyup change', updateEvent.bind(this), '.preview-update');
-
-                        // write start message
-                        ws.start.call(this, def, template);
-
-                        def.resolve();
-                    }.bind(this);
-
-                    ws.socket.onclose = function() {
-                        if (!this.opened) {
-                            // no connection can be opened use fallback (safari)
-                            this.method = 'ajax';
-                            ajax.init.call(this, template).then(function() {
-                                def.resolve();
-                            }.bind(this));
-                        }
-                    }.bind(this);
-
-                    ws.socket.onmessage = function(e) {
-                        var data = JSON.parse(e.data);
-                        this.sandbox.logger.log('Message:', data);
-
-                        if (data.command === 'start' && data.message === 'OK' && !!this.def) {
-                            this.def.resolve();
-                            this.def = null;
-                        }
-                    }.bind(this);
-
-                    ws.socket.onerror = function(e) {
-                        this.sandbox.logger.warn(e);
-
-                        // no connection can be opened use fallback
-                        this.method = 'ajax';
-                        ajax.init.call(this, template).then(function() {
-                            def.resolve();
-                        }.bind(this));
-                    }.bind(this);
-
-                    return def;
-                },
-
-                update: function(changes) {
-                    if (this.method === 'ws' && ws.socket.readyState === ws.socket.OPEN) {
-                        var message = {
-                            command: 'update',
-                            content: this.data.id,
-                            type: 'form',
-                            user: AppConfig.getUser().id,
-                            webspaceKey: this.options.webspace,
-                            languageCode: this.options.language,
-                            changes: changes
-                        };
-                        ws.socket.send(JSON.stringify(message));
-                    }
-                },
-
-                start: function(def, template) {
-                    if (this.method === 'ws') {
-                        this.def = def;
-                        // send start command
-                        var message = {
-                            command: 'start',
-                            content: this.data.id,
-                            type: 'form',
-                            user: AppConfig.getUser().id,
-                            webspaceKey: this.options.webspace,
-                            languageCode: this.options.language,
-                            data: this.data,
-                            template: template
-                        };
-                        ws.socket.send(JSON.stringify(message));
-                    }
-                },
-
-                stop: function(def) {
-                    if (this.method === 'ws') {
-                        // send start command
-                        var message = {
-                            command: 'stop',
-                            content: this.data.id,
-                            type: 'form',
-                            user: AppConfig.getUser().id,
-                            webspaceKey: this.options.webspace,
-                            languageCode: this.options.language
-                        };
-                        ws.socket.send(JSON.stringify(message));
-                        def.resolve();
-                    }
-                }
-            },
-
-            /**
-             * initialize preview with ajax or websocket
-             */
-            start = function(template) {
-                var def;
+        var start = function(template) {
                 if (!!this.initiated) {
                     return;
                 }
 
-                if (ws.detection()) {
-                    def = ws.init.call(this, template);
-                } else {
-                    def = ajax.init.call(this, template);
-                }
+                var def = this.client.send(MESSAGE_HANDLER_NAME, {
+                    command: 'start',
+                    content: this.options.id,
+                    locale: this.options.language,
+                    webspaceKey: this.options.webspace,
+                    template: template,
+                    data: this.data,
+                    user: AppConfig.getUser().id
+                });
                 this.initiated = true;
 
                 return def.promise();
             },
 
             stop = function() {
-                var def = this.sandbox.data.deferred();
+                var def;
                 if (!!this.initiated) {
-                    if (this.method === 'ws') {
-                        ws.stop.call(this, def);
-                    } else {
-                        ajax.stop.call(this, def);
-                    }
+                    def = this.client.send(MESSAGE_HANDLER_NAME, {
+                        command: 'stop',
+                        user: AppConfig.getUser().id
+                    });
+                    this.initiated = false;
                 }
-                return def;
+                return def.promise();
             },
 
             update = function(property, value) {
                 if (!!this.initiated) {
-                    var changes = {};
+                    var changes = {}, def;
                     if (!!property) {
                         changes[property] = value;
                     } else if (this.sandbox.form.getObject(this.formId)) {
@@ -232,11 +57,14 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                         return;
                     }
 
-                    if (this.method === 'ws') {
-                        ws.update.call(this, changes);
-                    } else {
-                        ajax.update.call(this, changes);
-                    }
+                    def = this.client.send(MESSAGE_HANDLER_NAME, {
+                        command: 'update',
+                        data: changes
+                    });
+
+                    def.then(updateIframe.bind(this));
+
+                    return def.promise();
                 }
             },
 
@@ -244,12 +72,16 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                 if (!!this.initiated) {
                     var changes = {};
 
-                    if (this.method === 'ws') {
-                        ws.update.call(this, changes);
-                    } else {
-                        ajax.update.call(this, changes);
-                    }
+                    return this.client.send(MESSAGE_HANDLER_NAME, {
+                        command: 'update',
+                        data: changes
+                    });
                 }
+            },
+
+            updateIframe = function(handler, message) {
+                this.sandbox.logger.log(handler);
+                this.sandbox.logger.log(message);
             },
 
             /**
@@ -285,17 +117,23 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                         }
                     }
                 }, this);
+
+                if (this.client.getType() === 'WEBSOCKET') {
+                    this.sandbox.dom.on(this.formId, 'keyup change', updateEvent.bind(this), '.preview-update');
+                } else {
+                    this.sandbox.dom.on(this.$el, 'focusout', updateEvent.bind(this), '.preview-update');
+                    this.sandbox.dom.on(this.$el, 'change', updateEvent.bind(this),
+                        'input[type="checkbox"].preview-update, input[type="radio"].preview-update');
+                }
             };
 
-        return{
+        return {
             sandbox: null,
             options: null,
             data: null,
             $el: null,
 
             initiated: false,
-            opened: false,
-            method: 'ws',
 
             formId: '#content-form',
 
@@ -303,6 +141,8 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                 this.sandbox = sandbox;
                 this.options = options;
                 this.$el = $el;
+
+                this.client = WebsocketManager.getClient(WEBSOCKET_APP_NAME);
             },
 
             start: function(data, options) {
@@ -318,14 +158,6 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
             restart: function(data, options, template) {
                 this.options = options;
                 stop.call(this).then(function() {
-                    this.data = data;
-
-                    this.initiated = false;
-                    this.opened = false;
-                    this.method = 'ws';
-
-                    ajax.initiated = false;
-
                     start.call(this, template).then(function() {
                         this.sandbox.emit('sulu.preview.initiated');
                     }.bind(this));
@@ -347,7 +179,7 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                     if ($element.length === 0) {
                         return false;
                     }
-                    
+
                     $element = $element.parent();
                 }
 
