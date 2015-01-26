@@ -317,10 +317,8 @@ define(function() {
          * @param forceReload {Boolean} force page to reload
          */
         navigate: function(route, trigger, noLoader, forceReload) {
-
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
-
             forceReload = forceReload === true ? true : false;
 
             if (forceReload) {
@@ -333,7 +331,6 @@ define(function() {
             // navigate
             router.navigate(route, {trigger: trigger});
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
-
         },
 
         /**
@@ -355,32 +352,47 @@ define(function() {
         },
 
         /**
+         * Will be called before navigation
+         * @param route
+         * @param trigger
+         * @param noLoader
+         * @param forceReload
+         */
+        preNavigate: function(route, trigger, noLoader, forceReload) {
+            if (!!this.unsavedChanges) {
+                var dfdSavedChanges = this.showUnsavedChangesWarning();
+                this.sandbox.data.when(dfdSavedChanges).then(function() {
+                    this.navigate(route, trigger, noLoader, forceReload);
+                }.bind(this));
+            } else {
+                this.navigate(route, trigger, noLoader, forceReload);
+            }
+        },
+
+        /**
+         * Will be called before switching to another tab
+         * @param event
+         */
+        preSelectTab : function(event){
+            if (!!this.unsavedChanges) {
+                var dfdSavedChanges = this.showUnsavedChangesWarning();
+                this.sandbox.data.when(dfdSavedChanges).then(function() {
+                    this.sandbox.emit('husky.tabs.header.item.clicked', event);
+                }.bind(this));
+            } else {
+                this.sandbox.emit('husky.tabs.header.item.clicked', event);
+            }
+        },
+
+        /**
          * Bind component-related events
          */
         bindCustomEvents: function() {
             // navigate
-            this.sandbox.on('sulu.router.navigate', function(route, trigger, noLoader, forceReload) {
-                if (!!this.unsavedChanges) {
-                    var dfdSavedChanges = this.showUnsavedChangesWarning();
-                    this.sandbox.data.when(dfdSavedChanges).then(function() {
-                        this.navigate(route, trigger, noLoader, forceReload);
-                    }.bind(this));
-                } else {
-                    this.navigate(route, trigger, noLoader, forceReload);
-                }
-            }.bind(this));
+            this.sandbox.on('sulu.router.navigate', this.preNavigate.bind(this));
 
             // navigate when tab element of header is clicked
-            this.sandbox.on('husky.tabs.header.item.preselect', function(event) {
-                if (!!this.unsavedChanges) {
-                    var dfdSavedChanges = this.showUnsavedChangesWarning();
-                    this.sandbox.data.when(dfdSavedChanges).then(function() {
-                        this.sandbox.emit('husky.tabs.header.item.clicked', event);
-                    }.bind(this));
-                } else {
-                    this.sandbox.emit('husky.tabs.header.item.clicked', event);
-                }
-            }.bind(this));
+            this.sandbox.on('husky.tabs.header.item.preselect', this.preSelectTab.bind(this));
 
             // navigation event
             this.sandbox.on('husky.navigation.item.select', function(event) {

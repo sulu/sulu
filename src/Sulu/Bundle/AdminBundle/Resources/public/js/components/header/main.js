@@ -55,7 +55,7 @@ define([], function () {
             toolbarOptions: {},
             toolbarLanguageChanger: true,
             tabsOptions: {
-                preSelectItem: {
+                preSelectEvent: {
                     enabled: true,
                     triggerSelectItem: false
                 }
