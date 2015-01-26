@@ -30,8 +30,8 @@ interface MessageDispatcherInterface
      * @param ConnectionInterface $conn
      * @param string $name Message name
      * @param array $message
+     * @param array $options
      * @param ConnectionContextInterface $context
-     * @return
      */
-    public function dispatch(ConnectionInterface $conn, $name, array $message, ConnectionContextInterface $context);
+    public function dispatch(ConnectionInterface $conn, $name, array $message, array $options, ConnectionContextInterface $context);
 }

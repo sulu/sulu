@@ -79,7 +79,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         if (!array_key_exists('handler', $msg)) {
             throw new MissingParameterException('handler');
         }
-        if(!array_key_exists('message', $msg)){
+        if (!array_key_exists('message', $msg)) {
             throw new MissingParameterException('message');
         }
 
@@ -87,6 +87,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
             $conn,
             $msg['handler'],
             $msg['message'],
+            $msg['options'] ?: array(),
             $this->createMessageHandlerContext($context, $msg['handler'])
         );
     }
