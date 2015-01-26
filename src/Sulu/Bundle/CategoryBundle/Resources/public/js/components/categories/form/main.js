@@ -92,6 +92,7 @@ define(function () {
                 if (this.saved === true) {
                     this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
                     this.saved = false;
+                    this.sandbox.emit('sulu.content.changed');
                 }
             }.bind(this));
         },
@@ -151,6 +152,7 @@ define(function () {
             if (success === true) {
                 this.setHeaderInfos();
                 this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true);
+                this.sandbox.emit('sulu.content.saved');
                 this.saved = true;
                 if (toEdit === true) {
                     this.sandbox.emit('sulu.category.categories.form', result.id);
