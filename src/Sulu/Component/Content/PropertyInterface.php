@@ -148,6 +148,11 @@ interface PropertyInterface extends ArrayableInterface
     public function getValues();
 
     /**
+     * @return mixed
+     */
+    public function loadValues();
+
+    /**
      * set the property values
      * @param PropertyValueInterface[] $values
      */
