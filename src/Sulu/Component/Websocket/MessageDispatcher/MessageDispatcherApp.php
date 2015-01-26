@@ -9,6 +9,7 @@
  */
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Doctrine\Common\Cache\Cache;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use Sulu\Component\Websocket\AbstractWebsocketApp;
@@ -30,9 +31,9 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
      */
     protected $messageDispatcher;
 
-    public function __construct($appName, MessageDispatcherInterface $messageDispatcher)
+    public function __construct($appName, MessageDispatcherInterface $messageDispatcher, Cache $contextsCache)
     {
-        parent::__construct();
+        parent::__construct($contextsCache);
 
         $this->name = $appName;
         $this->messageDispatcher = $messageDispatcher;
@@ -52,7 +53,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
         try {
             $result = $this->dispatch($from, $context, $msg);
 
-            if($result !== null){
+            if ($result !== null) {
                 $from->send($result);
             }
         } catch (\Exception $e) {
@@ -69,6 +70,8 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
                 )
             );
         }
+
+        $this->saveContext($from, $context);
     }
 
     /**

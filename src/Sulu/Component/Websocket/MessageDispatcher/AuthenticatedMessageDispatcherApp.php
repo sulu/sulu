@@ -9,6 +9,7 @@
  */
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
+use Doctrine\Common\Cache\Cache;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\AuthenticatedConnectionContext;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
@@ -23,9 +24,13 @@ class AuthenticatedMessageDispatcherApp extends MessageDispatcherApp
      */
     private $firewall;
 
-    public function __construct($appName, MessageDispatcherInterface $messageDispatcher, $firewall)
-    {
-        parent::__construct($appName, $messageDispatcher);
+    public function __construct(
+        $appName,
+        MessageDispatcherInterface $messageDispatcher,
+        $firewall,
+        Cache $contextsCache
+    ) {
+        parent::__construct($appName, $messageDispatcher, $contextsCache);
 
         $this->firewall = $firewall;
     }

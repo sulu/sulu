@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Websocket;
 
+use Doctrine\Common\Cache\Cache;
 use Ratchet\ConnectionInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
@@ -31,17 +32,18 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     private $contexts;
 
     /**
-     * @var string
+     * @var Cache
      */
     protected $name;
 
     /**
      * initialize clients container
+     * @param Cache $contextsCache
      */
-    public function __construct()
+    public function __construct(Cache $contextsCache)
     {
         $this->clients = new \SplObjectStorage();
-        $this->contexts = array();
+        $this->contexts = $contextsCache;
     }
 
     /**
@@ -87,11 +89,22 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
      */
     protected function getContext(ConnectionInterface $conn)
     {
-        if (!array_key_exists($conn->resourceId, $this->contexts)) {
-            $this->contexts[$conn->resourceId] = $this->createContext($conn);
+        if (!$this->contexts->contains($conn->resourceId)) {
+            $this->contexts->save($conn->resourceId, $this->createContext($conn));
         }
 
-        return $this->contexts[$conn->resourceId];
+        return $this->contexts->fetch($conn->resourceId);
+    }
+
+
+    /**
+     * Saves websocket context
+     * @param ConnectionInterface $conn
+     * @param ConnectionContextInterface $context
+     */
+    protected function saveContext(ConnectionInterface$conn, ConnectionContextInterface $context)
+    {
+        $this->contexts->save($conn->resourceId, $context);
     }
 
     /**
