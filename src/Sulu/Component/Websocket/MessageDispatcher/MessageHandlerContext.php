@@ -38,7 +38,12 @@ class MessageHandlerContext implements ConnectionContextInterface
         $this->context = $context;
         $this->handlerName = $handlerName;
 
-        $this->parameters = new ParameterBag();
+        $parameterName = 'parameters.' . $handlerName;
+        if (!$this->context->has($parameterName)) {
+            $this->context->set($parameterName, new ParameterBag());
+        }
+
+        $this->parameters = $this->context->get($parameterName);
     }
 
     /**
@@ -111,6 +116,14 @@ class MessageHandlerContext implements ConnectionContextInterface
     public function has($name)
     {
         return $this->parameters->has($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function all()
+    {
+        return $this->parameters->all();
     }
 
     /**

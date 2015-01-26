@@ -45,6 +45,7 @@ class MessageDispatcher implements MessageDispatcherInterface
         $conn->send(
             json_encode(
                 array(
+                    'handler' => $name,
                     'message' => $result,
                     'options' => $options
                 )

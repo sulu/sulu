@@ -81,7 +81,13 @@ interface ConnectionContextInterface
     public function has($name);
 
     /**
-     * Get parameter with given name
+     * Returns all parameters
+     * @return array
+     */
+    public function all();
+
+    /**
+     * Set parameter with given name
      * @param string $name
      * @param mixed $value
      */

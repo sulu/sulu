@@ -167,4 +167,13 @@ class ConnectionContext implements ConnectionContextInterface
     {
         $this->parameters->clear();
     }
+
+    /**
+     * Returns all parameters
+     * @return array
+     */
+    public function all()
+    {
+        return $this->parameters->all();
+    }
 }
