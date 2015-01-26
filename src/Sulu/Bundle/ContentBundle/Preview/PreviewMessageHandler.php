@@ -70,7 +70,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
         $this->reconnect();
 
         try {
-            $this->execute($conn, $context, $message);
+            return $this->execute($conn, $context, $message);
         } catch (\Exception $e) {
             // send fail message
             $conn->send(
@@ -91,6 +91,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * @param ConnectionInterface $conn
      * @param MessageHandlerContext $context
      * @param array $msg
+     * @return mixed|null
      * @throws ContextParametersNotFoundException
      * @throws MissingParameterException
      */
@@ -100,18 +101,21 @@ class PreviewMessageHandler implements MessageHandlerInterface
             throw new MissingParameterException('command');
         }
         $command = $msg['command'];
+        $result = null;
 
         switch ($command) {
             case 'start':
-                $this->start($conn, $context, $msg);
+                $result = $this->start($conn, $context, $msg);
                 break;
             case 'stop':
-                $this->stop($conn, $context);
+                $result = $this->stop($conn, $context);
                 break;
             case 'update':
-                $this->update($conn, $context, $msg);
+                $result = $this->update($conn, $context, $msg);
                 break;
         }
+
+        return $result;
     }
 
     /**
@@ -138,6 +142,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * @param ConnectionInterface $conn
      * @param MessageHandlerContext $context
      * @param array $msg
+     * @return array
      * @throws MissingParameterException
      */
     private function start(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
@@ -164,8 +169,12 @@ class PreviewMessageHandler implements MessageHandlerInterface
         $webspaceKey = $msg['webspaceKey'];
         $context->set('webspaceKey', $webspaceKey);
 
-        // get user id
-        $user = $context->getFirewallUser()->getId();
+        // user id
+        if (!array_key_exists('user', $msg)) {
+            throw new MissingParameterException('user');
+        }
+        $user = $msg['user'];
+        $context->set('user', $user);
 
         // init message vars
         $template = array_key_exists('template', $msg) ? $msg['template'] : null;
@@ -174,15 +183,10 @@ class PreviewMessageHandler implements MessageHandlerInterface
         // start preview
         $this->preview->start($user, $contentUuid, $webspaceKey, $locale, $data, $template);
 
-        // send ok message
-        $conn->send(
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $contentUuid,
-                    'msg' => 'OK'
-                )
-            )
+        return array(
+            'command' => 'start',
+            'content' => $contentUuid,
+            'msg' => 'OK'
         );
     }
 
@@ -190,11 +194,18 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * Stop preview session
      * @param ConnectionInterface $from
      * @param MessageHandlerContext $context
+     * @return array
+     * @throws ContextParametersNotFoundException
      */
     private function stop(ConnectionInterface $from, MessageHandlerContext $context)
     {
+        // check context parameters
+        if (!$context->has('user')) {
+            throw new ContextParametersNotFoundException();
+        }
+
         // get user id
-        $user = $context->getFirewallUser()->getId();
+        $user = $$context->has('user');
 
         // get session vars
         $contentUuid = $context->get('content');
@@ -206,15 +217,10 @@ class PreviewMessageHandler implements MessageHandlerInterface
 
         $context->clear();
 
-        // send ok message
-        $from->send(
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $contentUuid,
-                    'msg' => 'OK'
-                )
-            )
+        return array(
+            'command' => 'start',
+            'content' => $contentUuid,
+            'msg' => 'OK'
         );
     }
 
@@ -223,6 +229,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * @param ConnectionInterface $from
      * @param MessageHandlerContext $context
      * @param array $msg
+     * @return array
      * @throws ContextParametersNotFoundException
      * @throws MissingParameterException
      */
@@ -232,13 +239,14 @@ class PreviewMessageHandler implements MessageHandlerInterface
         if (
             !$context->has('content') &&
             !$context->has('locale') &&
-            !$context->has('webspaceKey')
+            !$context->has('webspaceKey') &&
+            !$context->has('user')
         ) {
             throw new ContextParametersNotFoundException();
         }
 
         // get user id
-        $user = $context->getFirewallUser()->getId();
+        $user = $context->get('user');
 
         // get session vars
         $contentUuid = $context->get('content');
@@ -266,19 +274,14 @@ class PreviewMessageHandler implements MessageHandlerInterface
             );
         }
 
-        // send ok message
-        $from->send(
-            json_encode(
-                array(
-                    'command' => 'update',
-                    'content' => $contentUuid,
-                    'data' => $this->preview->getChanges(
-                        $user,
-                        $contentUuid,
-                        $webspaceKey,
-                        $locale
-                    )
-                )
+        return array(
+            'command' => 'update',
+            'content' => $contentUuid,
+            'data' => $this->preview->getChanges(
+                $user,
+                $contentUuid,
+                $webspaceKey,
+                $locale
             )
         );
     }
