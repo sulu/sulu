@@ -80,8 +80,7 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
             },
 
             updateIframe = function(handler, message) {
-                this.sandbox.logger.log(handler);
-                this.sandbox.logger.log(message);
+                this.sandbox.emit('sulu.preview.changes', message.data);
             },
 
             /**
@@ -195,6 +194,11 @@ define(['app-config', 'websocket-manager'], function(AppConfig, WebsocketManager
                     ];
                 }
                 return sequence;
+            },
+
+            setContext: function(document, location) {
+                this.document = document;
+                this.location = location;
             }
         };
     };

@@ -682,6 +682,8 @@ define([
                         this.renderPreview(data);
                     }.bind(this));
 
+                    this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
+
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!this.preview.initiated) {
@@ -830,6 +832,8 @@ define([
             this.previewWindow = window.open(this.previewUrl);
             this.previewWindow.onload = function() {
                 this.previewWindow.onunload = function() {
+                    this.previewWindow = null;
+
                     this.sandbox.emit('sulu.sidebar.show');
                     this.sandbox.emit('sulu.app.toggle-shrinker', true);
                     this.sandbox.emit('sulu.sidebar.change-width', 'max');
@@ -1030,6 +1034,93 @@ define([
                     }
                 }
             ]);
+        },
+
+        getPreviewDocument: function() {
+            if (!!this.previewWindow) {
+                return this.previewWindow.document;
+            } else {
+                return this.sandbox.dom.find('iframe', this.$preview).contents()[0];
+            }
+        },
+
+        handleChanges: function(changes) {
+            if (!!changes.reload) {
+                this.getPreviewDocument().location.reload();
+            } else {
+                // foreach property which was changed
+                for (var propertyName in changes) {
+                    if (changes.hasOwnProperty(propertyName)) {
+                        if (-1 !== propertyName.indexOf(',')) {
+                            this.handleSequence(propertyName, changes[propertyName]);
+                        } else {
+                            this.handleSingle(propertyName, changes[propertyName]);
+                        }
+                    }
+                }
+            }
+        },
+
+        handleSequence: function(propertyName, content) {
+            var sequence = propertyName.split(','),
+                filter = '',
+                elements,
+                nodeArray,
+                i, item, before = 0;
+            for (item in sequence) {
+                // check of integer
+                if (!/^\+?(0|[1-9]\d*)$/.test(sequence[item])) {
+                    before = sequence[item];
+                    filter += ' *[property="' + sequence[item] + '"]';
+                } else {
+                    filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                }
+            }
+            // find rdfa node
+            elements = this.getPreviewDocument().querySelectorAll(filter);
+            i = 0;
+            // foreach node
+            nodeArray = [].slice.call(elements);
+            nodeArray.forEach(function(element) {
+                // set content and highlight class
+                if (typeof content[i] !== 'undefined') {
+                    element.innerHTML = content[i];
+                } else {
+                    element.innerHTML = '';
+                }
+                // FIXME jump to element jump in from to: element.scrollIntoView();
+                i++;
+            });
+        },
+
+        handleSingle: function(propertyName, content) {
+            // not is not supported ...
+            // check if one parent is a property
+            var filter = '*[property="' + propertyName + '"]',
+                cur,
+            // find rdfa node
+                elements = this.getPreviewDocument().querySelectorAll(filter),
+            // foreach node
+                nodeArray = [].slice.call(elements),
+                i = 0;
+            nodeArray.forEach(function(element) {
+                // no parent have property
+                cur = element.parentNode;
+                while (null !== cur.parentNode) {
+                    if (cur.hasAttribute('property')) {
+                        return;
+                    }
+                    cur = cur.parentNode;
+                }
+                // set content and highlight class
+                if (typeof content[i] !== 'undefined') {
+                    element.innerHTML = content[i];
+                } else {
+                    element.innerHTML = '';
+                }
+                // FIXME jump to element jump in from to: element.scrollIntoView();
+                i++;
+            });
         },
 
         header: function() {
