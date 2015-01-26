@@ -155,6 +155,7 @@ define(function () {
                 this.sandbox.emit('sulu.content.saved');
                 this.saved = true;
                 if (toEdit === true) {
+                    this.sandbox.emit('sulu.content.saved');
                     this.sandbox.emit('sulu.category.categories.form', result.id);
                 }
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.category-save-desc', 'labels.success');
