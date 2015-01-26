@@ -98,7 +98,11 @@ class SessionManager implements SessionManagerInterface
             $nodePath = $snippetPath;
         }
 
-        $node = $this->getSession()->getNode($nodePath);
+        try {
+            $node = $this->getSession()->getNode($nodePath);
+        } catch (\PHPCR\PathNotFoundException $e) {
+            $node = $this->getSession()->getNode($snippetPath)->addNode($templateKey);
+        }
 
         return $node;
     }
