@@ -14,6 +14,8 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewMessageHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
+use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 
@@ -49,31 +51,9 @@ class PreviewMessageHandlerTest extends SuluTestCase
 
     private function createContext($conn)
     {
-        $context = $this->getMockBuilder('Sulu\Bundle\ContentBundle\Preview\PreviewConnectionContext')
-            ->setConstructorArgs(array($conn))
-            ->setMethods(array('getAdminUser'))
-            ->getMock();
+        $connectionContext = new ConnectionContext($conn);
 
-        $user = $this->getMockBuilder('Sulu\Component\Security\UserInterface')
-            ->disableOriginalConstructor()
-            ->setMethods(
-                array(
-                    'getId',
-                    'getLocale',
-                    'getRoles',
-                    'getPassword',
-                    'getSalt',
-                    'getUsername',
-                    'eraseCredentials'
-                )
-            )
-            ->getMock();
-
-        $user->expects($this->any())->method('getId')->willReturn(1);
-
-        $context->expects($this->any())->method('getAdminUser')->willReturn($user);
-
-        return $context;
+        return new MessageHandlerContext($connectionContext, 'test-handler');
     }
 
     /**
@@ -155,94 +135,76 @@ class PreviewMessageHandlerTest extends SuluTestCase
         $data = $this->prepareData();
 
         $client = $this->prepareClient(
-            function ($string) use ($data) {
-                $decoded = json_decode($string);
-                $this->assertEquals($decoded->msg, 'OK');
-                $this->assertEquals($decoded->content, $data[0]->getUuid());
+            function ($string) {
             },
-            $this->exactly(1)
+            $this->exactly(0)
         );
 
-        $this->component->handle(
+        $result = $this->component->handle(
             $client,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[0]->getUuid(),
-                    'locale' => 'de',
-                    'webspaceKey' => 'sulu_io',
-                )
+            array(
+                'command' => 'start',
+                'content' => $data[0]->getUuid(),
+                'locale' => 'de',
+                'webspaceKey' => 'sulu_io',
+                'user' => 1
             ),
             $this->createContext($client)
         );
+
+        $this->assertEquals($result['msg'], 'OK');
+        $this->assertEquals($result['content'], $data[0]->getUuid());
     }
 
     public function testUpdate()
     {
         $data = $this->prepareData();
 
-        $i = 0;
         $client = $this->prepareClient(
-            function ($string) use (&$i, $data) {
-                $decoded = json_decode($string, true);
-
-                if ($i == 0 && $decoded['command'] == 'start') {
-                    $this->assertEquals('OK', $decoded['msg']);
-                    $i++;
-                } elseif ($i == 1 && $decoded['command'] == 'update') {
-                    $this->assertEquals($data[0]->getUuid(), $decoded['content']);
-                    $this->assertEquals(array('Hello Hikaru Sulu'), $decoded['data']['title']);
-                    $i++;
-                } elseif ($i == 2 && $decoded['command'] == 'update') {
-                    $this->assertEquals($data[0]->getUuid(), $decoded['content']);
-                    $this->assertEquals(array('This is a fabulous test case!'), $decoded['data']['content']);
-                    $i++;
-                } else {
-                    $this->assertTrue(false);
-                }
+            function ($string) {
             },
-            $this->exactly(3)
+            $this->exactly(0)
         );
+        $context = $this->createContext($client);
 
-        $this->component->handle(
+        $result = $this->component->handle(
             $client,
-            json_encode(
-                array(
-                    'command' => 'start',
-                    'content' => $data[0]->getUuid(),
-                    'templateKey' => 'overview',
-                    'locale' => 'de',
-                    'webspaceKey' => 'sulu_io'
+            array(
+                'command' => 'start',
+                'content' => $data[0]->getUuid(),
+                'templateKey' => 'overview',
+                'locale' => 'de',
+                'webspaceKey' => 'sulu_io',
+                'user' => 1
+            ),
+            $context
+        );
+        $this->assertEquals('OK', $result['msg']);
+
+        $result = $this->component->handle(
+            $client,
+            array(
+                'command' => 'update',
+                'data' => array(
+                    'title' => 'asdf'
                 )
             ),
-            $this->createContext($client)
+            $context
         );
+        $this->assertEquals($data[0]->getUuid(), $result['content']);
+        $this->assertEquals(array('Hello Hikaru Sulu'), $result['data']['title']);
 
-        $this->component->handle(
+        $result = $this->component->handle(
             $client,
-            json_encode(
-                array(
-                    'command' => 'update',
-                    'data' => array(
-                        'title' => 'asdf'
-                    )
-
+            array(
+                'command' => 'update',
+                'data' => array(
+                    'content' => 'qwertz'
                 )
             ),
-            $this->createContext($client)
+            $context
         );
-
-        $this->component->handle(
-            $client,
-            json_encode(
-                array(
-                    'command' => 'update',
-                    'data' => array(
-                        'content' => 'qwertz'
-                    )
-                )
-            ),
-            $this->createContext($client)
-        );
+        $this->assertEquals($data[0]->getUuid(), $result['content']);
+        $this->assertEquals(array('This is a fabulous test case!'), $result['data']['content']);
     }
 }
