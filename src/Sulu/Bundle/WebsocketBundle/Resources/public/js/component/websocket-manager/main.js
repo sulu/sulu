@@ -55,8 +55,9 @@ define([
             return new WebSocket(this.getUrl(appName))
         },
 
-        getClient: function(appName) {
+        getClient: function(appName, websocket) {
             // TODO fallback detection
+            //  - check websocket flag
             //  - check if websocket exists
             //  - onerror create fallback client
             //  - onopen create websocket client
