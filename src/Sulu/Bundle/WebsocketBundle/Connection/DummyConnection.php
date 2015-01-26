@@ -16,8 +16,22 @@ use Ratchet\ConnectionInterface;
  */
 class DummyConnection implements ConnectionInterface
 {
-
+    /**
+     * Container for send data
+     * @var mixed
+     */
     private $data;
+
+    /**
+     * Id of connection
+     * @var string
+     */
+    public $resourceId;
+
+    function __construct($resourceId)
+    {
+        $this->resourceId = $resourceId;
+    }
 
     /**
      * {@inheritdoc}

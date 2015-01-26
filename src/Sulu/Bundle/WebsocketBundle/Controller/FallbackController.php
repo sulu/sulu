@@ -39,9 +39,10 @@ class FallbackController
     public function send($appName, Request $request)
     {
         $message = $request->get('message');
+        $id = $request->get('id');
 
         $app = $this->appManager->getApp($appName);
-        $connection = new DummyConnection();
+        $connection = new DummyConnection($id);
 
         $app->onMessage($connection, $message);
 
