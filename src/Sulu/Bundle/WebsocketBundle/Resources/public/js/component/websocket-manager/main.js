@@ -14,7 +14,7 @@ define([
     'websocket/abstract',
     'websocket/client',
     'websocket/fallback'
-], function(AbstractClient, WebsocketClient, WebsocketFallback) {
+], function(AbstractClient, WebsocketClient, FallbackClient) {
 
     'use strict';
 
@@ -56,16 +56,23 @@ define([
         },
 
         getClient: function(appName, websocket) {
-            // TODO fallback detection
-            //  - check websocket flag
-            //  - check if websocket exists
-            //  - onerror create fallback client
-            //  - onopen create websocket client
             if (!this.clients[appName]) {
-                this.clients[appName] = new WebsocketClient(this.apps[appName], this.getSocket(appName));
+                this.clients[appName] = this.createClient(appName, websocket);
             }
 
             return this.clients[appName];
+        },
+
+        createClient: function(appName, websocket) {
+            // TODO fallback detection
+            //  - check if websocket exists
+            //  - onerror create fallback client
+            //  - onopen create websocket client
+            if (!!websocket) {
+                return new WebsocketClient(this.apps[appName], this.getSocket(appName));
+            } else {
+                return new FallbackClient(this.apps[appName])
+            }
         }
     };
 });
