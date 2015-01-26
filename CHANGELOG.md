@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #753 [MediaBundle]    Fix 0 bytes file upload
     * FEATURE     #569 [All]            Behat integration - behat features for bundles
     * ENHANCEMENT #692 [SecurityBundle] Made user extendable
     * ENHANCEMENT #731 [TestBundle]     Removed test user
