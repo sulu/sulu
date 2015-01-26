@@ -185,8 +185,8 @@ define(['config'], function(Config) {
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
-
-                    if(!!startForm){
+                    // prevents emitting events when form is not there anymore
+                    if (!!startForm) {
                         this.sandbox.start(form);
                     } else {
                         this.sandbox.start('#contact-fields');
@@ -280,8 +280,8 @@ define(['config'], function(Config) {
                     this.options.data = data;
                     this.initContactData();
                     this.setFormData(data);
-                    this.setHeaderBar(true);
                     this.setTitle();
+                    this.setHeaderBar(true);
                 }, this);
 
                 // contact save
@@ -417,6 +417,20 @@ define(['config'], function(Config) {
                     this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, true);
                 }
                 this.saved = saved;
+                this.propagateState();
+            },
+
+            /**
+             * Propagates the state of the content with an event
+             *  sulu.content.saved when the content has been saved
+             *  sulu.content.changed when the content has been changed
+             */
+            propagateState: function() {
+                if (!!this.saved) {
+                    this.sandbox.emit('sulu.content.saved');
+                } else {
+                    this.sandbox.emit('sulu.content.changed');
+                }
             },
 
             /**

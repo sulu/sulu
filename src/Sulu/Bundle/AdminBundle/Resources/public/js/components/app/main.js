@@ -158,18 +158,12 @@ define(function() {
          * Listen for changes regarding the save button
          */
         bindCustomEventsForUnsavedChangesHandler: function() {
-            this.sandbox.on('husky.toolbar.header.item.enable', function(button) {
-                if (button === constants.saveButtonKey) {
-                    this.unsavedChanges = true;
-                }
+            this.sandbox.on('sulu.content.changed', function() {
+                this.unsavedChanges = true;
             }.bind(this));
 
-            // use this listener/event name instead of husky.toolbar.header.item.disable because
-            // it fixes problem timing issue) with the redirect after saving new entities
-            this.sandbox.on('husky.toolbar.header.item.loading', function(button) {
-                if (button === constants.saveButtonKey) {
-                    this.unsavedChanges = false;
-                }
+            this.sandbox.on('sulu.content.saved', function() {
+                this.unsavedChanges = false;
             }.bind(this));
         },
 
@@ -191,12 +185,9 @@ define(function() {
                 }.bind(this),
                 okCallback = function() {
                     this.unsavedChanges = false;
-                    this.sandbox.on('husky.toolbar.header.item.disable', function(name) {
-                        if (name === 'save-button') {
-                            dfd.resolve();
-                            // remove event listener after use to prevent side effects
-                            this.sandbox.off('husky.toolbar.header.item.disable');
-                        }
+                    this.sandbox.on('sulu.content.saved', function() {
+                        this.unsavedChanges = false;
+                        dfd.resolve();
                     }.bind(this));
                     this.sandbox.emit('sulu.header.toolbar.save');
                 }.bind(this),
