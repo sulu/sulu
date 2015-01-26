@@ -10,6 +10,7 @@
         <parameter key="sulu_websocket.jsconfig.class">Sulu\Bundle\WebsocketBundle\Admin\AppJsConfig</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.app.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcherApp</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher</parameter>
+        <parameter key="sulu_websocket.fallback_controller.class">Sulu\Bundle\WebsocketBundle\Controller\FallbackController</parameter>
     </parameters>
 
     <services>
@@ -51,6 +52,10 @@
 
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.app" route="/admin" />
+        </service>
+
+        <service id="sulu_websocket.fallback_controller" class="%sulu_websocket.fallback_controller.class%">
+            <argument type="service" id="sulu_websocket.manager"/>
         </service>
     </services>
 </container>

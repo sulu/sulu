@@ -10,12 +10,12 @@
 
 namespace Sulu\Component\Websocket;
 
-use Ratchet\ComponentInterface;
+use Ratchet\MessageComponentInterface;
 
 /**
  * Interface for a websocket app
  */
-interface WebsocketAppInterface extends ComponentInterface
+interface WebsocketAppInterface extends MessageComponentInterface
 {
     /**
      * Returns name of app

@@ -37,6 +37,13 @@ interface AppManagerInterface
     public function getApps();
 
     /**
+     * Return websocket app
+     * @param string $name
+     * @return WebsocketAppInterface
+     */
+    public function getApp($name);
+
+    /**
      * Returns port to listen on
      * @return int
      */

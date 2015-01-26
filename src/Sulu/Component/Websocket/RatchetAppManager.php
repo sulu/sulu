@@ -11,7 +11,6 @@
 namespace Sulu\Component\Websocket;
 
 use Ratchet\App;
-use Ratchet\Session\SessionProvider;
 use React\EventLoop\LoopInterface;
 
 /**
@@ -67,8 +66,13 @@ class RatchetAppManager implements AppManagerInterface
      * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
      * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you.
      */
-    function __construct($port, \SessionHandlerInterface $sessionHandler, $httpHost = 'localhost', $ipAddress = '127.0.0.1', LoopInterface $loop = null)
-    {
+    function __construct(
+        $port,
+        \SessionHandlerInterface $sessionHandler,
+        $httpHost = 'localhost',
+        $ipAddress = '127.0.0.1',
+        LoopInterface $loop = null
+    ) {
         $this->port = $port;
         $this->httpHost = $httpHost;
         $this->ipAddress = $ipAddress;
@@ -86,7 +90,7 @@ class RatchetAppManager implements AppManagerInterface
             'app' => $app,
             'name' => $app->getName(),
             'allowedOrigins' => $allowedOrigins,
-            'httpHost' => $httpHost?:$this->getHttpHost()
+            'httpHost' => $httpHost ?: $this->getHttpHost()
         );
     }
 
@@ -111,6 +115,14 @@ class RatchetAppManager implements AppManagerInterface
     public function getApps()
     {
         return $this->apps;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApp($name)
+    {
+        return $this->apps[$name]['app'];
     }
 
     /**
