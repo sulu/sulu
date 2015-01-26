@@ -9,6 +9,7 @@
         <parameter key="sulu_websocket.admin.class">Sulu\Bundle\WebsocketBundle\Admin\SuluWebsocketAdmin</parameter>
         <parameter key="sulu_websocket.jsconfig.class">Sulu\Bundle\WebsocketBundle\Admin\AppJsConfig</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.app.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcherApp</parameter>
+        <parameter key="sulu_websocket.admin.message_dispatcher.app.cache.class">Doctrine\Common\Cache\FilesystemCache</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher</parameter>
         <parameter key="sulu_websocket.fallback_controller.class">Sulu\Bundle\WebsocketBundle\Controller\FallbackController</parameter>
     </parameters>
@@ -41,6 +42,9 @@
             <tag name="sulu.js_config"/>
         </service>
 
+        <service id="sulu_websocket.admin.message_dispatcher.app.cache" class="%sulu_websocket.admin.message_dispatcher.app.cache.class%" public="false">
+            <argument type="string">%sulu.cache_dir%/preview/context</argument>
+        </service>
         <service id="sulu_websocket.admin.message_dispatcher" class="%sulu_websocket.admin.message_dispatcher.class%" public="false">
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.message.dispatcher" alias="admin"/>
@@ -48,7 +52,7 @@
         <service id="sulu_websocket.admin.message_dispatcher.app" class="%sulu_websocket.admin.message_dispatcher.app.class%">
             <argument type="string">admin</argument>
             <argument type="service" id="sulu_websocket.admin.message_dispatcher"/>
-            <argument type="string">admin</argument>
+            <argument type="service" id="sulu_websocket.admin.message_dispatcher.app.cache"/>
 
             <tag name="sulu.context" context="admin"/>
             <tag name="sulu.websocket.app" route="/admin" />
