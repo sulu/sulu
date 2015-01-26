@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['jquery'], function($) {
     /**
      * Prototype for websocket-abstract-client which provides an abstraction layer
      *
@@ -24,17 +24,39 @@ define(function() {
          * @type {string}
          */
         this.type = 'NONE';
+
+        // Deferred for events
+        this.onMessage = $.Deferred();
+        this.onError = $.Deferred();
+        this.onClose = $.Deferred();
+
+        /**
+         * Container for handlers
+         * @type {{}}
+         */
+        this.handlers = {}
     };
 
-    Client.prototype.TYPE_WEBSOCKET = 'WEBSOCKET';
-    Client.prototype.TYPE_AJAX = 'AJAX';
+    Client.TYPE_WEBSOCKET = 'WEBSOCKET';
+    Client.TYPE_AJAX = 'AJAX';
+
+    Client.prototype.generateMessage = function(handler, message, options) {
+        return JSON.stringify({handler: handler, message: message, options: options})
+    };
 
     Client.prototype.send = function(handler, message) {
-        // abstract
+        return this.doSend(handler, message);
     };
 
     Client.prototype.getType = function() {
         return this.type;
+    };
+
+    Client.prototype.addHandler = function(name, handler) {
+        if (!this.handlers[name]) {
+            this.handlers[name] = $.Deferred();
+        }
+        this.handlers[name].progress(handler);
     };
 
     return Client;

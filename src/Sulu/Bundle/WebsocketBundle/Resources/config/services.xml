@@ -8,7 +8,7 @@
         <parameter key="sulu_websocket.manager.class">Sulu\Component\Websocket\RatchetAppManager</parameter>
         <parameter key="sulu_websocket.admin.class">Sulu\Bundle\WebsocketBundle\Admin\SuluWebsocketAdmin</parameter>
         <parameter key="sulu_websocket.jsconfig.class">Sulu\Bundle\WebsocketBundle\Admin\AppJsConfig</parameter>
-        <parameter key="sulu_websocket.admin.message_dispatcher.app.class">Sulu\Component\Websocket\MessageDispatcher\AuthenticatedMessageDispatcherApp</parameter>
+        <parameter key="sulu_websocket.admin.message_dispatcher.app.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcherApp</parameter>
         <parameter key="sulu_websocket.admin.message_dispatcher.class">Sulu\Component\Websocket\MessageDispatcher\MessageDispatcher</parameter>
     </parameters>
 
