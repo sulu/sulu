@@ -272,7 +272,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * @description Test GET all Media
      */
-    public function testcGet()
+    public function testCget()
     {
         $media = $this->createMedia('photo');
 
@@ -295,7 +295,7 @@ class MediaControllerTest extends SuluTestCase
     /**
      * @description Test GET all Media
      */
-    public function testcGetCollection()
+    public function testCgetCollection()
     {
         $media = $this->createMedia('photo');
         $client = $this->createAuthenticatedClient();
