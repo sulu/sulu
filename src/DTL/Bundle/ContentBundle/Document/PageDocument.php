@@ -16,7 +16,6 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
  * Page Structure class
  *
  * @PHPCR\Document(
- *     nodeType="sulu:page"
  * )
  */
 class PageDocument extends FormDocument

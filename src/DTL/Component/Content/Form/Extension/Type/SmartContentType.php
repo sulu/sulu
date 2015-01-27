@@ -10,8 +10,11 @@ use Symfony\Component\Form\FormInterface;
 use DTL\Component\Content\Form\TypeInterface;
 use DTL\Component\Content\Form\View;
 use Doctrine\ODM\PHPCR\DocumentManager;
+use DTL\Component\Content\Form\ContentTypeInterface;
+use DTL\Component\Content\Form\ContentViewResolver;
+use DTL\Component\Content\Form\ContentView;
 
-class SmartContentType implements TypeInterface
+class SmartContentType implements ContentTypeInterface
 {
     /**
      * @var ContentViewResolver
@@ -37,32 +40,16 @@ class SmartContentType implements TypeInterface
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        die('asd');
         $builder->add('title', 'text');
-        $builder->add('path', 'text');
         $builder->add('data_source', 'text'); // uuid
-        $builder->add('include_sub_folders', 'checkbox');
-        $builder->add('categories', 'collection', array(
-            'type' => 'integer',
-        ));
-        $builder->add('tags', 'collection', array(
-            'type' => 'integer',
-        ));
-        $builder->add('sort_by', 'collection', array(
-            'type' => 'text',
-        ));
-        $builder->add('sort_method', 'choice', array(
-            'choices' => array(
-                'asc' => 'ASC',
-                'desc' => 'DESC',
-            ),
-        ));
         $builder->add('limit_result', 'number');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildContentView(ContentView $view)
+    public function buildContentView(ContentView $view, FormInterface $form)
     {
         $documents = $this->documentManager->findBy(array());
 

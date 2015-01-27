@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="dtl_content.form.registry" class="%form.registry.class%">
+            <argument type="collection">
+                <argument type="service" id="form.extension" />
+            </argument>
+            <argument type="service" id="form.resolved_type_factory" />
+        </service>
+
+        <!-- FormFactory -->
+        <service id="dtl_content.form.factory" class="%form.factory.class%">
+            <argument type="service" id="form.registry" />
+            <argument type="service" id="dtl_content.form.resolved_type_factory" />
+        </service>
+
+        <service id="dtl_content.form.type.smart_content" class="DTL\Component\Content\Form\Extension\Type\SmartContentType">
+            <argument type="service" id="dtl_content.form.content_view_resolver" />
+            <argument type="service" id="doctrine_phpcr.odm.document_manager" />
+            <tag name="form.type" alias="smart_content" />
+        </service>
+
+        <service id="dtl_content.form.resolved_type_factory" class="DTL\Component\Content\Form\ResolvedFormTypeFactory"/>
+
+        <service id="dtl_content.form.content_view_resolver" class="DTL\Component\Content\Form\ContentViewResolver">
+            <argument type="service" id="dtl_content.form.factory"/>
+        </service>
+
+    </services>
+</container>
+

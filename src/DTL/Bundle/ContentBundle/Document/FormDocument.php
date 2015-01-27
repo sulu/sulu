@@ -39,42 +39,37 @@ class FormDocument
     private $parent;
 
     /**
-     * @PHPCR\Path()
-     */
-    private $path;
-
-    /**
      * @PHPCR\Children()
      */
     private $children;
 
     /**
-     * @PHPCR\String(translated=true, property="sulu:title", translated=true)
+     * @PHPCR\String(translated=true, translated=true)
      */
     private $title;
 
     /**
-     * @PHPCR\String(translated=true, property="sulu:formType", translated=true)
+     * @PHPCR\String(translated=true, translated=true)
      */
     private $formType;
 
     /**
-     * @PHPCR\Long(property="sulu:creator")
+     * @PHPCR\Long(nullable=true)
      */
     private $creator;
 
     /**
-     * @PHPCR\Long(property="sulu:changer")
+     * @PHPCR\Long(nullable=true)
      */
     private $changer;
 
     /**
-     * @PHPCR\Date(property="sulu:created")
+     * @PHPCR\Date(nullable=true)
      */
     private $created;
 
     /**
-     * @PHPCR\Date(property="sulu:updated")
+     * @PHPCR\Date(nullable=true)
      */
     private $updated;
 

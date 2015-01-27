@@ -30,6 +30,7 @@ class ContentExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('phpcr_odm.xml');
         $loader->load('serializer.xml');
+        $loader->load('form.xml');
     }
 }
 

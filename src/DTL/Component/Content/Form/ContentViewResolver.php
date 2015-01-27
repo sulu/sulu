@@ -4,25 +4,25 @@ namespace DTL\Component\Content\Form;
 
 use DTL\Component\Content\Form\ContentView;
 use DTL\Bundle\ContentBundle\Document\FormDocument;
-use DTL\Component\Content\Form\ContentFormLoaderInterface;
 use DTL\Component\Content\Form\ContentTypeInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\FormInterface;
 use DTL\Component\Content\Form\ContentResolvedTypeInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Class responsible for resolving structure documents to view objects
  */
 class ContentViewResolver
 {
-    private $loader;
+    private $factory;
 
     /**
-     * @param ContentFormLoaderInterface $loader
+     * @param ContentFormFactoryInterface $factory
      */
-    public function __construct(ContentFormLoaderInterface $loader)
+    public function __construct(FormFactoryInterface $factory)
     {
-        $this->loader = $loader;
+        $this->factory = $factory;
     }
 
     /**
@@ -41,7 +41,7 @@ class ContentViewResolver
             ));
         }
 
-        $form = $this->loader->load($formType);
+        $form = $this->factory->create($formType);
         $form->setData($document->getContentData());
 
         $contentView = new ContentView();

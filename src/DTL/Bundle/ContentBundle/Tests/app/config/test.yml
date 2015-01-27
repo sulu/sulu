@@ -1,3 +1,7 @@
+framework:
+    form:
+        enabled: true
+
 doctrine_phpcr:
     odm:
         auto_mapping: true

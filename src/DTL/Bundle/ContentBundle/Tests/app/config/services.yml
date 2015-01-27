@@ -1,0 +1,5 @@
+services:
+    overview_page:
+        class: DTL\Bundle\ContentBundle\Tests\Resources\Types\OverviewType
+        tags: 
+            - { name: form.type, alias: overview }

@@ -12,7 +12,6 @@ namespace DTL\Component\Content\Form;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use DTL\Component\Content\Form\ContentViewResolver;
-use DTL\Component\Content\Form\ContentFormLoaderInterface;
 use Symfony\Component\Form\Test\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Prophecy\Argument;
@@ -25,9 +24,9 @@ class ContentViewResolverTest extends ProphecyTestCase
     private $resolver;
 
     /**
-     * @var ContentFormLoaderInterface
+     * @var ContentFormFactoryInterface
      */
-    private $loader;
+    private $factory;
 
     /**
      * @var FormInterface
@@ -45,7 +44,7 @@ class ContentViewResolverTest extends ProphecyTestCase
     {
         parent::setUp();
 
-        $this->loader = $this->prophesize('DTL\Component\Content\Form\ContentFormLoaderInterface');
+        $this->factory = $this->prophesize('Symfony\Component\Form\FormFactoryInterface');
         $this->document1 = $this->prophesize('DTL\Bundle\ContentBundle\Document\FormDocument');
         $this->form = $this->prophesize('Symfony\Component\Form\FormInterface');
 
@@ -67,7 +66,7 @@ class ContentViewResolverTest extends ProphecyTestCase
         $this->formChildrenProphets = $prodigies;
         $this->formChildren = $children;
 
-        $this->resolver = new ContentViewResolver($this->loader->reveal());
+        $this->resolver = new ContentViewResolver($this->factory->reveal());
     }
 
     public function provideResolve()
@@ -90,7 +89,7 @@ class ContentViewResolverTest extends ProphecyTestCase
     {
         $this->document1->getFormType()->willReturn($formName);
         $this->document1->getContentData()->willReturn($data);
-        $this->loader->load($formName)->willReturn($this->form);
+        $this->factory->create($formName)->willReturn($this->form);
         $this->form->setData($data)->shouldBeCalled();
         $this->form->all()->willReturn($this->formChildren);
 
