@@ -19,7 +19,7 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
  *     nodeType="sulu:page"
  * )
  */
-class PageDocument extends StructureDocument
+class PageDocument extends FormDocument
 {
     /**
      * Published state

@@ -21,7 +21,7 @@ use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
  *     translator="attribute"
  * )
  */
-class StructureDocument
+class FormDocument
 {
     /**
      * @PHPCR\Locale()
@@ -39,6 +39,11 @@ class StructureDocument
     private $parent;
 
     /**
+     * @PHPCR\Path()
+     */
+    private $path;
+
+    /**
      * @PHPCR\Children()
      */
     private $children;
@@ -49,9 +54,9 @@ class StructureDocument
     private $title;
 
     /**
-     * @PHPCR\String(translated=true, property="sulu:template", translated=true)
+     * @PHPCR\String(translated=true, property="sulu:formType", translated=true)
      */
-    private $template;
+    private $formType;
 
     /**
      * @PHPCR\Long(property="sulu:creator")
@@ -111,14 +116,14 @@ class StructureDocument
         $this->title = $title;
     }
 
-    public function getTemplate() 
+    public function getFormType() 
     {
-        return $this->template;
+        return $this->formType;
     }
     
-    public function setTemplate($template)
+    public function setFormType($formType)
     {
-        $this->template = $template;
+        $this->formType = $formType;
     }
 
     public function getCreator() 
@@ -180,4 +185,10 @@ class StructureDocument
     {
         $this->name = $name;
     }
+
+    public function getPath() 
+    {
+        return $this->path;
+    }
+    
 }
