@@ -5,7 +5,6 @@ namespace DTL\Component\Content\Form;
 use Symfony\Component\Form\FormTypeInterface;
 use DTL\Component\Content\Form\ContentView;
 use Symfony\Component\Form\FormInterface;
-use Sulu\Component\Content\ContentTypeInterface;
 
 /**
  * Form types implementing this interface become valid Sulu
@@ -26,5 +25,5 @@ interface ContentTypeInterface extends FormTypeInterface
      * @param ContentView $view
      * @param mixed $data
      */
-    public function buildContentView(ContentView $view, ContentTypeInterface $contentType);
+    public function buildContentView(ContentView $view, FormInterface $form);
 }

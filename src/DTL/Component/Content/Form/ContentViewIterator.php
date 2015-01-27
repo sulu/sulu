@@ -29,13 +29,13 @@ class ContentViewIterator implements \Iterator, \Countable
     private $viewResolver;
 
     /**
-     * @var StructureDocument[]
+     * @var FormDocument[]
      */
     private $documents;
 
     /**
      * @param ContentViewResolver $viewResolver
-     * @param StructureDocument[] $documents
+     * @param FormDocument[] $documents
      */
     public function __construct(ContentViewResolver $viewResolver, $documents)
     {

@@ -7,11 +7,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use DTL\Component\Content\Form\ContentTypeInterface;
-use DTL\Component\Content\Form\ContentView;
+use DTL\Component\Content\Form\TypeInterface;
+use DTL\Component\Content\Form\View;
 use Doctrine\ODM\PHPCR\DocumentManager;
 
-class SmartContentType implements ContentTypeInterface
+class SmartContentType implements TypeInterface
 {
     /**
      * @var ContentViewResolver

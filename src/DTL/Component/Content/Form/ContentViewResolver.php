@@ -3,10 +3,12 @@
 namespace DTL\Component\Content\Form;
 
 use DTL\Component\Content\Form\ContentView;
-use DTL\Bundle\ContentBundle\Document\StructureDocument;
+use DTL\Bundle\ContentBundle\Document\FormDocument;
 use DTL\Component\Content\Form\ContentFormLoaderInterface;
 use DTL\Component\Content\Form\ContentTypeInterface;
 use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\FormInterface;
+use DTL\Component\Content\Form\ContentResolvedTypeInterface;
 
 /**
  * Class responsible for resolving structure documents to view objects
@@ -26,19 +28,32 @@ class ContentViewResolver
     /**
      * Resolve the given structure document into a content view
      *
-     * @param StructureDocument $documnet
+     * @param FormDocument $documnet
      */
-    public function resolve(StructureDocument $document)
+    public function resolve(FormDocument $document)
     {
-        $form = $this->loader->load($document->getFormType());
+        $formType = $document->getFormType();
+
+        if (!$formType) {
+            throw new \RuntimeException(sprintf(
+                'Form document at path "%s" does not have an associated form type',
+                $document->getPath()
+            ));
+        }
+
+        $form = $this->loader->load($formType);
         $form->setData($document->getContentData());
 
         $contentView = new ContentView();
 
-        foreach ($form as $childName => $childForm) {
+        $children = array();
+        foreach ($form->all() as $childName => $childForm) {
             $childContentView = new ContentView();
-            $contentView[$childName] = $this->buildContentView($childContentView, $childForm);
+            $this->buildContentView($childContentView, $childForm);
+            $children[$childName] = $childContentView;
         }
+
+        $contentView->setChildren($children);
 
         return $contentView;
     }
@@ -46,7 +61,7 @@ class ContentViewResolver
     /**
      * Create a view iterator for the given content documents
      *
-     * @param StructureDocument[] $documents
+     * @param FormDocument[] $documents
      */
     public function createIterator($documents)
     {
@@ -63,7 +78,7 @@ class ContentViewResolver
 
         // if this is a Sulu content type then use it to build
         // the its own content view
-        if ($formType instanceof ContentTypeInterface) {
+        if ($formType instanceof ContentResolvedTypeInterface) {
             $formType->buildContentView($contentView, $form);
             return;
         }
