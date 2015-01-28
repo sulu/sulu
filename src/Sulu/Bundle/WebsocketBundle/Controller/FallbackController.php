@@ -14,6 +14,7 @@ use Sulu\Bundle\WebsocketBundle\Connection\DummyConnection;
 use Sulu\Component\Websocket\AppManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides fallback interface for websocket apps
@@ -48,6 +49,6 @@ class FallbackController
 
         $app->onMessage($connection, $message);
 
-        return new JsonResponse($connection->getData());
+        return new Response($connection->getData(), 200, array('Content-Type' => 'application/json'));
     }
 }

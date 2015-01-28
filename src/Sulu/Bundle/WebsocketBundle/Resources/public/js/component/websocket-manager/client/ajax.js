@@ -35,8 +35,6 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
             type: 'POST',
             data: {message: this.generateMessage(handler, message, {})}
         }).then(function(data) {
-            data = JSON.parse(data);
-
             this._onMessage.notify(data);
             def.resolve(data.handler, data.message);
         }.bind(this));
