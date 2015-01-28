@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #684 [ContentBundle]  Refactored preview to use new websocket component and only one socket for form
+                                        and preview
+    * FEATURE     #684                  Implemented Websocket Component
     * BUGFIX      #753 [MediaBundle]    Fix 0 bytes file upload
     * FEATURE     #714 [ContentBundle]  Add Option to hide page in sidemap
     * ENHANCEMENT #740 [SecurityBundle] Made role content navigation extendable
