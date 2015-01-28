@@ -397,7 +397,7 @@ class AccountController extends AbstractContactController
             }
 
             if (json_decode($request->get('hasNoParent', null))) {
-                $listBuilder->where($this->fieldDescriptors['noParent'], null);
+                $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
             }
 
             foreach ($filter as $key => $value) {
@@ -433,6 +433,26 @@ class AccountController extends AbstractContactController
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns fielddescriptor used for checking if account has no parent
+     * Will result in an error when added to the array of fielddescriptors
+     * because its just for checking if parent exists or not and does not
+     * point to a property of the parent
+     * @return DoctrineFieldDescriptor
+     */
+    protected function getFieldDescriptorForNoParent()
+    {
+        return new DoctrineFieldDescriptor(
+            'parent',
+            'parent',
+            self::$entityName,
+            'contact.accounts.company',
+            array(),
+            true,
+            false
+        );
     }
 
     /**
@@ -1495,16 +1515,6 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
-        );
-
-        $this->fieldDescriptors['noParent'] = new DoctrineFieldDescriptor(
-            'parent',
-            'parent',
-            self::$entityName,
-            'contact.accounts.company',
-            array(),
-            true,
-            false
         );
     }
 }
