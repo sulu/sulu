@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('mode')
                             ->defaultValue('auto')
                             ->validate()
-                                ->ifNotInArray(array('auto', 'off'))
+                                ->ifNotInArray(array('auto', 'on_request', 'off'))
                                 ->thenInvalid('Invalid preview mode "%s"')
                             ->end()
                         ->end()

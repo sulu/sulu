@@ -68,6 +68,17 @@ define([
                 '</div>'
             ].join(''),
 
+            previewOnRequest: [
+                '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
+                '<div id="preview-toolbar" class="sulu-preview-toolbar">',
+                '    <div id="preview-toolbar-right" class="right">',
+                '       <div id="preview-start" class="play pull-right pointer">',
+                '           <span class="fa-play"></span>',
+                '       </div>',
+                '   </div>',
+                '</div>'
+            ].join(''),
+
             previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>',
 
             copyLocales: function(item) {
@@ -692,7 +703,11 @@ define([
 
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
                         if (this.previewMode === 'auto') {
+                            // if mode is auto init immediately
                             this.sandbox.emit('sulu.preview.initialize.force', data, restart);
+                        } else if (this.previewMode === 'on_request') {
+                            // if mode is auto init immediately
+                            this.renderPreviewOnRequest(restart);
                         }
                     }.bind(this));
 
@@ -702,8 +717,8 @@ define([
                             this.preview.start(data, this.options);
                         } else if (!!restart) {
                             // force reload
-                            this.$preview = null;
                             this.sandbox.dom.remove(this.$preview);
+                            this.$preview = null;
                             this.preview.restart(data, this.options, this.template);
                         }
                     }.bind(this));
@@ -735,6 +750,26 @@ define([
 
                 this.setHeaderBar(true);
             }.bind(this));
+        },
+
+        renderPreviewOnRequest: function(restart) {
+            this.sandbox.emit('sulu.sidebar.change-width', 'max');
+            this.$preview = this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.previewOnRequest, {})
+            );
+            this.sandbox.dom.on(this.sandbox.dom.find('#preview-start', this.$preview), 'click', function() {
+                // reload preview container
+                this.sandbox.dom.remove(this.$preview);
+                this.$preview = null;
+
+                // get current data
+                var data = this.sandbox.form.getData('#content-form-container');
+
+                // initialize preview
+                this.sandbox.emit('sulu.preview.initialize.force', data, restart);
+            }.bind(this));
+
+            this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
         },
 
         /**
