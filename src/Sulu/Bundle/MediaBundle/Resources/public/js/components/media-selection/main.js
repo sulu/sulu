@@ -144,24 +144,24 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             skeleton: function(options, positionClass) {
                 return [
                     '<div class="white-box form-element" id="', options.ids.container, '">',
-                    '   <div class="header">',
-                    '       <span class="fa-plus-circle icon left action" id="', options.ids.addButton, '"></span>',
-                    '       <div class="position ', positionClass, '">',
-                    '<div class="husky-position" id="', options.ids.displayOption , '">',
-                    '    <div class="top left ', (!options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
-                    '    <div class="top middle ', (!options.displayOptions.top ? 'inactive' : ''), '" data-position="top"></div>',
-                    '    <div class="top right ', (!options.displayOptions.rightTop ? 'inactive' : ''), '" data-position="rightTop"></div>',
-                    '    <div class="middle left ', (!options.displayOptions.left ? 'inactive' : ''), '" data-position="left"></div>',
-                    '    <div class="middle middle ', (!options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
-                    '    <div class="middle right ', (!options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
-                    '    <div class="bottom left ', (!options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
-                    '    <div class="bottom middle ', (!options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
-                    '    <div class="bottom right ', (!options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
-                    '</div>',
-                    '       </div>',
-                    '       <span class="fa-cog icon right border" id="', options.ids.configButton, '" style="display:none"></span>',
-                    '   </div>',
-                    '   <div class="content" id="', options.ids.content, '"></div>',
+                    '    <div class="header">',
+                    '        <span class="fa-plus-circle icon left action" id="', options.ids.addButton, '"></span>',
+                    '        <div class="position ', positionClass, '">',
+                    '            <div class="husky-position" id="', options.ids.displayOption , '">',
+                    '                <div class="top left ', (!options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
+                    '                <div class="top middle ', (!options.displayOptions.top ? 'inactive' : ''), '" data-position="top"></div>',
+                    '                <div class="top right ', (!options.displayOptions.rightTop ? 'inactive' : ''), '" data-position="rightTop"></div>',
+                    '                <div class="middle left ', (!options.displayOptions.left ? 'inactive' : ''), '" data-position="left"></div>',
+                    '                <div class="middle middle ', (!options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
+                    '                <div class="middle right ', (!options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
+                    '                <div class="bottom left ', (!options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
+                    '                <div class="bottom middle ', (!options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
+                    '                <div class="bottom right ', (!options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
+                    '            </div>',
+                    '        </div>',
+                    '        <span class="fa-cog icon right border" id="', options.ids.configButton, '" style="display:none"></span>',
+                    '    </div>',
+                    '    <div class="content" id="', options.ids.content, '"></div>',
                     '</div>'
                 ].join('');
             },
@@ -204,6 +204,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             contentItem: function(id, num, value, imageUrl) {
                 return [
                     '<li data-id="', id, '">',
+                    '   <span class="fa-ellipsis-v icon move"></span>',
                     '   <span class="num">', num, '</span>',
                     '   <img src="', imageUrl, '"/>',
                     '   <span class="value">', value, '</span>',
@@ -655,23 +656,54 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }
 
             if (this.items.length !== 0) {
-                var ul = this.sandbox.dom.createElement('<ul class="items-list"/>'),
+                var ul = this.sandbox.dom.createElement('<ul class="items-list sortable"/>'),
                     i = -1,
                     length = this.items.length,
-                    url;
+                    url,
+                    sortable;
 
-                //loop stops if no more items are left or if number of rendered items matches itemsVisible
+                // loop stops if no more items are left or if number of rendered items matches itemsVisible
                 for (; ++i < length && i < this.itemsVisible;) {
                     url = this.items[i][this.options.thumbnailKey][this.options.thumbnailSize];
                     this.sandbox.dom.append(ul, templates.contentItem(this.items[i][this.options.idKey], i + 1, this.items[i][this.options.titleKey], url));
                 }
 
                 this.sandbox.dom.html(this.$content, ul);
+                initSortable.call(this);
                 renderFooter.call(this);
             } else {
                 renderStartContent.call(this);
                 detachFooter.call(this);
             }
+        },
+
+        initSortable = function() {
+            var $sortable = this.sandbox.dom.find('.sortable', this.$el),
+                sortable;
+
+            this.sandbox.dom.sortable($sortable, 'destroy');
+
+            // activate sorting
+            sortable = this.sandbox.dom.sortable('.sortable', {
+                handle: '.move',
+                forcePlaceholderSize: true
+            });
+
+            this.sandbox.dom.unbind(sortable, 'unbind');
+
+            sortable.bind('sortupdate', function() {
+                var ids = [],
+                    $elements = this.sandbox.dom.find('li', $sortable);
+
+                this.sandbox.util.foreach($elements, function($element, index) {
+                    var $number = this.sandbox.dom.find('.num', $element);
+                    $number.html(index + 1);
+                    ids.push(this.sandbox.dom.data($element, 'id'));
+                }.bind(this));
+
+                setData.call(this, {ids: ids});
+                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
+            }.bind(this));
         },
 
         /**

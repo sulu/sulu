@@ -16,25 +16,45 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
  * Listener which applies the configured theme
- *
- * @package Sulu\Bundle\WebsiteBundle\EventListener
  */
 class SetThemeEventListener
 {
+    /**
+     * @var RequestAnalyzerInterface
+     */
+    private $requestAnalyzer;
+
+    /**
+     * @var ActiveTheme
+     */
+    private $activeTheme;
+
+    /**
+     * @param RequestAnalyzerInterface
+     * @param ActiveTheme
+     */
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,
         ActiveTheme $activeTheme
-    )
-    {
+    ) {
         $this->requestAnalyzer = $requestAnalyzer;
         $this->activeTheme = $activeTheme;
     }
 
+    /**
+     * Set the active theme if there is a portal
+     * 
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $portal = $this->requestAnalyzer->getCurrentPortal();
-        $themeKey = $portal->getWebspace()->getTheme()->getKey();
 
+        if (null === $portal) {
+            return;
+        }
+
+        $themeKey = $portal->getWebspace()->getTheme()->getKey();
         $this->activeTheme->setName($themeKey);
     }
 }

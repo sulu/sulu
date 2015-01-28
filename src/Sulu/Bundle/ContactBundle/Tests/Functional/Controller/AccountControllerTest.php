@@ -1321,12 +1321,12 @@ class AccountControllerTest extends SuluTestCase
                 'removeContacts' => 'false'
             )
         );
-        // check if contacts are still there
         $this->assertEquals('204', $client->getResponse()->getStatusCode());
 
+        // check if contacts are still there
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
     }
 
     public function testDeleteByIdAndDeleteContacts()
@@ -1363,8 +1363,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(0, $response->total);
-
+        $this->assertEquals(1, $response->total);
     }
 
     public function testDeleteByIdNotExisting()

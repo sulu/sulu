@@ -12,12 +12,12 @@
         <field name="created" type="datetime" column="created"/>
         <field name="changed" type="datetime" column="changed"/>
 
-        <many-to-one field="changer" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
+        <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Bundle\SecurityBundle\Entity\User">
+        <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
             <join-columns>
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>

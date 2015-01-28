@@ -89,7 +89,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
 
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $user = $em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')->findOneByUsername('test');
+        $user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
 
         $this->tag1 = new Tag();
         $this->tag1->setName('test1');
