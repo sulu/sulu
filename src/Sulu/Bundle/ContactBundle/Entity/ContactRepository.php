@@ -324,6 +324,10 @@ class ContactRepository extends EntityRepository
             ->addSelect('accountContacts')
             ->addSelect('account');
 
+        if (isset($where['id'])) {
+            $qb->andWhere('contact.id = :id');
+            $qb->setParameter('id', $where['id']);
+        }
         if (isset($where['firstName'])) {
             $qb->andWhere('contact.firstName = :firstName');
             $qb->setParameter('firstName', $where['firstName']);
