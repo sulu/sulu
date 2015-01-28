@@ -105,9 +105,8 @@ define([
     };
 
     AjaxClient.prototype.connectFallback = function() {
-        this.initialized.resolve();
-
         this.client = new FallbackClient(this.app, this.id);
+        this.initialized.resolve();
 
         // redirect on message event
         this.client.onMessage(function(message) {
