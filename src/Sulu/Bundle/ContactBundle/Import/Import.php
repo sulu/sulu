@@ -287,6 +287,13 @@ class Import
     protected $positions = array();
 
     /**
+     * defines possible new-line characters that should be replaced.
+     * e.g. '¶'
+     * @var array
+     */
+    protected $invalidNewLineCharacters = array();
+
+    /**
      * @param EntityManager $em
      * @param $accountManager
      * @param $contactManager
@@ -294,7 +301,14 @@ class Import
      * @param $configAccountTypes
      * @param $configFormOfAddress
      */
-    public function __construct(EntityManager $em, $accountManager, $contactManager, $configDefaults, $configAccountTypes, $configFormOfAddress)
+    public function __construct(
+        EntityManager $em,
+        $accountManager,
+        $contactManager,
+        $configDefaults,
+        $configAccountTypes,
+        $configFormOfAddress
+    )
     {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
@@ -432,24 +446,39 @@ class Import
     protected function processContactFile($filename)
     {
         $createContact = function ($data, $row) {
-            $this->createContact($data, $row);
+            return $this->createContact($data, $row);
+        };
+        $postFlushContact = function($data, $row, $result) {
+            return call_user_func(array($this, 'postFlushCreateContact'), $data, $row, $result);
         };
 
         // create contacts
         $this->debug("Create Contacts:\n");
-        $this->processCsvLoop($filename, $createContact, true);
+        $this->processCsvLoop($filename, $createContact, $postFlushContact, true);
     }
 
+    /**
+     * this function will be called after a contact was created (after flush)
+     */
+    protected function postFlushCreateContact($data, $row, $contact)
+    {
+    }
+    
     /**
      * Loads the CSV Files and the Entities for the import
      * @param string $filename path to file
      * @param callable $function will be called for each row in file
+     * @param callable $postFlushCallback will be called after every flush
      * @param bool $flushOnEveryRow If defined flush will be executed on every data row
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    protected function processCsvLoop($filename, $function, $flushOnEveryRow = false)
-    {
+    protected function processCsvLoop(
+        $filename,
+        callable $callback,
+        callable $postFlushCallback = null,
+        $flushOnEveryRow = false
+    ) {
         // initialize default values
         $this->initDefaults();
 
@@ -481,19 +510,26 @@ class Import
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
                     
                     // check if row contains data that should be excluded
-                    if (!$this->rowContainsExlcudeData($associativeData, $key, $value)) {
+                    $exclude = $this->rowContainsExlcudeData($associativeData, $key, $value);
+                    if (!$exclude) {
                         // call callback function
-                        $function($associativeData, $row);
+                        $result = $callback($associativeData, $row);
                     } else {
                         $this->debug(sprintf("Exclude data row %d due to exclude condition %s = %s \n", $row, $key, $value));
                     }
 
                     if ($flushOnEveryRow) {
                         $this->em->flush();
+                        if (!$exclude && !is_null($postFlushCallback)) {
+                            $postFlushCallback($associativeData, $row, $result);
+                        }
                     }
                     if ($row % 20 === 0) {
                         if (!$flushOnEveryRow) {
                             $this->em->flush();
+                            if (!$exclude && !is_null($postFlushCallback)) {
+                                $postFlushCallback($associativeData, $row, $result);
+                            }
                         }
                         $this->em->clear();
                         gc_collect_cycles();
@@ -575,9 +611,10 @@ class Import
      */
     private function compareStrings($needle, $haystack, $strict = false)
     {
-        if ($strict) {
+        if ($strict || empty($needle)) {
             return $needle === $haystack;
         }
+
         return strpos($haystack, $needle) === 0;
     }
 
@@ -871,11 +908,29 @@ class Import
         }
         // concat all notes to one single note
         if (sizeof($noteValues) > 0) {
+            $noteText = implode("\n", $noteValues);
+            $noteText = $this->replaceInvalidNewLineCharacters($noteText);
+            
             $note = new Note();
-            $note->setValue(implode("\n", $noteValues));
+            $note->setValue($noteText);
             $this->em->persist($note);
             $entity->addNote($note);
         }
+    }
+
+    /**
+     * replaces wrong new line characters with real ones (utf8)
+     * @param $text
+     * @return mixed
+     */
+    protected function replaceInvalidNewLineCharacters($text)
+    {
+        if (count($this->invalidNewLineCharacters) > 0) {
+            foreach($this->invalidNewLineCharacters as $character) {
+                $text = str_replace($character, "\n", $text);
+            }
+        }
+        return $text;
     }
 
     /**
@@ -1056,7 +1111,9 @@ class Import
         }
         // note
         if ($this->checkData($prefix . 'note', $data)) {
-            $address->setNote($data[$prefix . 'note']);
+            $address->setNote(
+                $this->replaceInvalidNewLineCharacters($data[$prefix . 'note'])
+            );
             $addAddress = true;
         }
         // billing address
@@ -1201,6 +1258,7 @@ class Import
             $this->em->persist($note);
             $entity->addNote($note);
         }
+        $text = $this->replaceInvalidNewLineCharacters($text);
         $noteText .= $text;
         $note->setValue($noteText);
     }
@@ -1509,6 +1567,9 @@ class Import
             if ($index >= sizeof($headerData)) {
                 break;
             }
+            if (empty($value)) {
+                continue;
+            }
             // search index in mapping config
             if (sizeof($resultArray = array_keys($this->columnMappings, $headerData[$index])) > 0) {
                 foreach ($resultArray as $key) {
@@ -1800,9 +1861,11 @@ class Import
      * prints messages if debug is set to true
      * @param $message
      */
-    protected function debug($message)
+    protected function debug($message, $addToLog = true)
     {
-        $this->log[] = $message;
+        if ($addToLog) {
+            $this->log[] = $message;
+        }
         if (self::DEBUG) {
             print($message);
         }
