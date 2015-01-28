@@ -77,7 +77,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
                 'get' => array(),
-                'post' => array()
+                'post' => array(),
+                'analyticsKey' => '',
             )
         );
     }
