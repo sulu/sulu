@@ -630,7 +630,7 @@ class ActivityControllerTest extends SuluTestCase
 
         $client->request(
             'DELETE',
-            'api/activities/100'
+            'api/activities/666'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -645,5 +645,4 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(2, count($response->_embedded->activities));
     }
-
 }
