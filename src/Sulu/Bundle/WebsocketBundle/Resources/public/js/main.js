@@ -13,7 +13,8 @@ require.config({
         'websocket-manager': '../../suluwebsocket/js/component/websocket-manager/main',
         'websocket/abstract': '../../suluwebsocket/js/component/websocket-manager/client/client',
         'websocket/client': '../../suluwebsocket/js/component/websocket-manager/client/websocket',
-        'websocket/fallback': '../../suluwebsocket/js/component/websocket-manager/client/ajax'
+        'websocket/fallback': '../../suluwebsocket/js/component/websocket-manager/client/ajax',
+        'websocket/wrapper': '../../suluwebsocket/js/component/websocket-manager/client/wrapper'
     }
 });
 

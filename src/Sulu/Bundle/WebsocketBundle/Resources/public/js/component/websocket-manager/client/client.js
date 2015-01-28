@@ -13,7 +13,7 @@ define(['jquery'], function($) {
      *
      * @constructor
      */
-    var Client = function(app) {
+    var Client = function(app, id) {
         /**
          * @type {Object}
          */
@@ -25,10 +25,12 @@ define(['jquery'], function($) {
          */
         this.type = 'NONE';
 
-        // Deferred for events
-        this.onMessage = $.Deferred();
-        this.onError = $.Deferred();
-        this.onClose = $.Deferred();
+        /**
+         * Deferred called progress callbacks with each message
+         * @type {Deferred}
+         * @private
+         */
+        this._onMessage = $.Deferred();
 
         /**
          * Container for handlers
@@ -36,11 +38,16 @@ define(['jquery'], function($) {
          */
         this.handlers = {};
 
+        // if id is not passed generate unique id
+        if (!id) {
+            id = this.generateUuid();
+        }
+
         /**
          * Uuid if current connection
          * @type {string}
          */
-        this.id = this.generateUuid();
+        this.id = id;
     };
 
     Client.TYPE_WEBSOCKET = 'WEBSOCKET';
@@ -63,6 +70,10 @@ define(['jquery'], function($) {
             this.handlers[name] = $.Deferred();
         }
         this.handlers[name].progress(handler);
+    };
+
+    Client.prototype.onMessage = function(handler) {
+        this._onMessage.progress(handler);
     };
 
     /**

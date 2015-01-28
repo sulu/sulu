@@ -110,16 +110,20 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                         sequence = this.getSequence($element);
 
                     if (!!sequence) {
-                        if (this.timers[sequence]) {
-                            window.clearTimeout(this.timers[sequence]);
-                        }
-
-                        this.timers[sequence] = window.setTimeout(function() {
-                            this.timers[sequence] = null;
-                            update.call(this, sequence, element.getValue());
-                        }.bind(this), this.config.delay);
+                        updateDelayed.call(this, sequence, element.getValue());
                     }
                 }
+            },
+
+            updateDelayed = function(sequence, value) {
+                if (this.timers[sequence]) {
+                    window.clearTimeout(this.timers[sequence]);
+                }
+
+                this.timers[sequence] = window.setTimeout(function() {
+                    this.timers[sequence] = null;
+                    update.call(this, sequence, value);
+                }.bind(this), this.config.delay);
             },
 
             bindCustomEvents = function() {
@@ -134,17 +138,15 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
                     if (!!this.data.id) {
                         var property = this.getSequence($el);
-                        if (this.method === 'ws' || !changeOnKey) {
-                            update.call(this, property, value);
-                        }
+                        updateDelayed.call(this, property, value);
                     }
                 }, this);
 
                 var changeFilter = 'input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update',
-                    keyupFilter = '.preview-update';
+                    keyupFilter = '.preview-update:not(' + changeFilter + ')';
 
                 this.sandbox.dom.on(this.formId, 'keyup', delayedUpdateEvent.bind(this), keyupFilter);
-                this.sandbox.dom.on(this.$el, 'change', updateEvent.bind(this), changeFilter);
+                this.sandbox.dom.on(this.formId, 'change', updateEvent.bind(this), changeFilter);
             };
 
         return {

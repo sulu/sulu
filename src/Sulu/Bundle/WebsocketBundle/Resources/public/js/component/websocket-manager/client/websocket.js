@@ -14,9 +14,9 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
      *
      * @constructor
      */
-    var WebsocketClient = function(app, socket) {
+    var WebsocketClient = function(app, socket, id) {
             // parent constructor
-            Client.call(this, app);
+            Client.call(this, app, id);
 
             /**
              * Type of websocket-client
@@ -40,6 +40,8 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
             this.socket.onmessage = function(e) {
                 var data = JSON.parse(e.data);
 
+                this._onMessage.notify(data);
+
                 if (!!data.options && !!data.options.id && !!this.messages[data.options.id]) {
                     this.messages[data.options.id].resolve(data.handler, data.message);
 
@@ -47,8 +49,6 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
                     this.messages[data.options.id] = null;
                 } else if (!!data.handler && !!this.handlers[data.handler]) {
                     this.handlers[data.handler].notify(data.message);
-                } else {
-                    this.onMessage.notify(data.handler, data.message);
                 }
             }.bind(this);
         };

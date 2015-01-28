@@ -14,9 +14,9 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
      *
      * @constructor
      */
-    var AjaxClient = function(app) {
+    var AjaxClient = function(app, id) {
         // parent constructor
-        Client.call(this, app);
+        Client.call(this, app, id);
 
         /**
          * Type of websocket-client
@@ -31,12 +31,15 @@ define(['websocket/abstract', 'jquery'], function(Client, $) {
         var def = $.Deferred();
 
         $.ajax({
-            url: '/admin/websocket/' + this.app.name + '?id=' + this.id,
+            url: '/admin/websocket/' + this.app.name,
             type: 'POST',
             data: {message: this.generateMessage(handler, message, {})}
         }).then(function(data) {
+            data = JSON.parse(data);
+
+            this._onMessage.notify(data);
             def.resolve(data.handler, data.message);
-        });
+        }.bind(this));
 
         return def.promise();
     };
