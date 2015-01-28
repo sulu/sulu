@@ -38,6 +38,17 @@ class AccountControllerTest extends SuluTestCase
      */
     private $account;
 
+    /**
+     * @var Account
+     */
+    private $childAccount;
+
+    /**
+     * @var Account
+     */
+    private $parentAccount;
+
+
     public function setUp()
     {
         $this->purgeDatabase();
@@ -55,7 +66,26 @@ class AccountControllerTest extends SuluTestCase
         $account->setChanged(new DateTime());
         $account->setPlaceOfJurisdiction('Feldkirch');
 
+        $parentAccount = new Account();
+        $parentAccount->setName('Parent');
+        $parentAccount->setType(Account::TYPE_BASIC);
+        $parentAccount->setDisabled(0);
+        $parentAccount->setCreated(new DateTime());
+        $parentAccount->setChanged(new DateTime());
+        $parentAccount->setPlaceOfJurisdiction('Feldkirch');
+
+        $childAccount = new Account();
+        $childAccount->setName('Child');
+        $childAccount->setType(Account::TYPE_BASIC);
+        $childAccount->setDisabled(0);
+        $childAccount->setCreated(new DateTime());
+        $childAccount->setChanged(new DateTime());
+        $childAccount->setPlaceOfJurisdiction('Feldkirch');
+        $childAccount->setParent($parentAccount);
+
         $this->account = $account;
+        $this->childAccount = $childAccount;
+        $this->parentAccount = $parentAccount;
 
         $urlType = new UrlType();
         $urlType->setName('Private');
@@ -154,6 +184,8 @@ class AccountControllerTest extends SuluTestCase
         $account->addNote($note);
 
         $this->em->persist($account);
+        $this->em->persist($childAccount);
+        $this->em->persist($parentAccount);
         $this->em->persist($urlType);
         $this->em->persist($url);
         $this->em->persist($this->emailType);
@@ -892,7 +924,7 @@ class AccountControllerTest extends SuluTestCase
         $client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(3, $response->total);
 
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
@@ -1375,7 +1407,7 @@ class AccountControllerTest extends SuluTestCase
 
         $client->request('GET', '/api/accounts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(3, $response->total);
     }
 
     /*
@@ -2089,5 +2121,18 @@ class AccountControllerTest extends SuluTestCase
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testGetAccountsWithNoParent(){
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/accounts?flat=true&hasNoParent=true'
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(2, $response->total);
     }
 }
