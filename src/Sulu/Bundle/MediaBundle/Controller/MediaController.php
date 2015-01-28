@@ -96,21 +96,23 @@ class MediaController extends RestController implements ClassResourceInterface, 
             $offset = ($request->get('page', 1) - 1) * $limit;
             $ids = $request->get('ids');
             $search = $request->get('search');
-            if ($ids !== null) {
-                $ids = explode(',', $ids);
-            }
             $types = $request->get('types');
             if ($types !== null) {
                 $types = explode(',', $types);
             }
 
             $mediaManager = $this->getMediaManager();
-            $media = $mediaManager->get($this->getLocale($request), array(
-                'collection' => $collection,
-                'ids' => $ids,
-                'types' => $types,
-                'search' => $search
-            ), $limit, $offset);
+
+            if ($ids !== null) {
+                $ids = explode(',', $ids);
+                $media = $mediaManager->getByIds($ids, $this->getLocale($request));
+            } else {
+                $media = $mediaManager->get($this->getLocale($request), array(
+                    'collection' => $collection,
+                    'types' => $types,
+                    'search' => $search
+                ), $limit, $offset);
+            }
 
             $all = $mediaManager->getCount();
 

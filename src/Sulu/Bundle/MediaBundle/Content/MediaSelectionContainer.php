@@ -90,7 +90,7 @@ class MediaSelectionContainer implements ArrayableInterface
     private function loadData($locale)
     {
         if (!empty($this->ids)) {
-            return $this->mediaManager->get($locale, array('ids' => $this->ids, 'paginator' => false));
+            return $this->mediaManager->getByIds($this->ids, $locale);
         } else {
             return array();
         }
