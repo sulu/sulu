@@ -60,6 +60,8 @@ define([], function() {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
+                this.sandbox.dom.removeClass('.preview-update', 'preview-update');
+
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.createForm(this.initData(data));
                 this.listenForChange();

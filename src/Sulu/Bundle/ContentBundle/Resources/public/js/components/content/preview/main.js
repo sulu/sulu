@@ -141,7 +141,9 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                         updateDelayed.call(this, property, value);
                     }
                 }, this);
+            },
 
+            bindDomEvents = function() {
                 var changeFilter = 'input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update',
                     keyupFilter = '.preview-update:not(' + changeFilter + ')';
 
@@ -175,6 +177,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 this.data = data;
                 this.options = options;
                 start.call(this).then(function() {
+                    bindDomEvents.call(this);
                     bindCustomEvents.call(this);
 
                     this.sandbox.emit('sulu.preview.initiated');
@@ -185,6 +188,8 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 this.options = options;
                 stop.call(this).then(function() {
                     start.call(this, template).then(function() {
+                        bindDomEvents.call(this);
+
                         this.sandbox.emit('sulu.preview.initiated');
                     }.bind(this));
                 }.bind(this));
