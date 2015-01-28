@@ -396,6 +396,10 @@ class AccountController extends AbstractContactController
                 $listBuilder->where($this->fieldDescriptors['type'], $type);
             }
 
+            if (json_decode($request->get('hasNoParent', null))) {
+                $listBuilder->where($this->fieldDescriptors['noParent'], null);
+            }
+
             foreach ($filter as $key => $value) {
                 if (is_array($value)) {
                     $listBuilder->in($this->fieldDescriptors[$key], $value);
@@ -1491,6 +1495,16 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
+        );
+
+        $this->fieldDescriptors['noParent'] = new DoctrineFieldDescriptor(
+            'parent',
+            'parent',
+            self::$entityName,
+            'contact.accounts.company',
+            array(),
+            true,
+            false
         );
     }
 }
