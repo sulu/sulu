@@ -192,3 +192,19 @@
 .hidden .sulu-preview-toolbar {
     display: none;
 }
+
+.v-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 101;
+    height: 40px;
+    width: 180px;
+
+    .btn {
+        margin-left: -90px;
+        margin-right: 90px;
+
+        overflow: hidden;
+    }
+}

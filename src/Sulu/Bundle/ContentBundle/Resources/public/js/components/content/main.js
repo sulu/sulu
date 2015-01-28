@@ -69,12 +69,10 @@ define([
             ].join(''),
 
             previewOnRequest: [
-                '<div class="sulu-content-preview ' + constants.resolutionDropdownData[0].cssClass + '">',
-                '<div id="preview-toolbar" class="sulu-preview-toolbar">',
-                '    <div id="preview-toolbar-right" class="right">',
-                '       <div id="preview-start" class="play pull-right pointer">',
-                '           <span class="fa-play"></span>',
-                '       </div>',
+                '<div class="v-center">',
+                '   <div id="preview-start" class="btn action large">',
+                '       <span class="fa-play"></span>',
+                '       <span class="text"><%= startLabel %></span>',
                 '   </div>',
                 '</div>'
             ].join(''),
@@ -755,7 +753,7 @@ define([
         renderPreviewOnRequest: function(restart) {
             this.sandbox.emit('sulu.sidebar.change-width', 'max');
             this.$preview = this.sandbox.dom.createElement(
-                this.sandbox.util.template(templates.previewOnRequest, {})
+                this.sandbox.util.template(templates.previewOnRequest, {startLabel: this.sandbox.translate('content.contents.start-preview')})
             );
             this.sandbox.dom.on(this.sandbox.dom.find('#preview-start', this.$preview), 'click', function() {
                 // reload preview container

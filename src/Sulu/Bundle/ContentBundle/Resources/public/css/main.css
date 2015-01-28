@@ -204,6 +204,22 @@
   display: none;
 }
 
+/* line 196, ../scss/modules/preview.scss */
+.v-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 101;
+  height: 40px;
+  width: 180px;
+}
+/* line 204, ../scss/modules/preview.scss */
+.v-center .btn {
+  margin-left: -90px;
+  margin-right: 90px;
+  overflow: hidden;
+}
+
 /* line 1, ../scss/modules/general.scss */
 #language-selector {
   width: 95px;
