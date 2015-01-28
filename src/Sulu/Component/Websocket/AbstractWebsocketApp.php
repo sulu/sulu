@@ -89,22 +89,22 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
      */
     protected function getContext(ConnectionInterface $conn)
     {
-        if (!$this->contexts->contains($conn->resourceId)) {
-            $this->contexts->save($conn->resourceId, $this->createContext($conn));
+        $id = ConnectionContext::getIdFromConnection($conn);
+        if (!$this->contexts->contains($id)) {
+            $this->saveContext($this->createContext($conn));
         }
 
-        return $this->contexts->fetch($conn->resourceId);
+        return $this->contexts->fetch($id);
     }
 
 
     /**
      * Saves websocket context
-     * @param ConnectionInterface $conn
      * @param ConnectionContextInterface $context
      */
-    protected function saveContext(ConnectionInterface$conn, ConnectionContextInterface $context)
+    protected function saveContext(ConnectionContextInterface $context)
     {
-        $this->contexts->save($conn->resourceId, $context);
+        $this->contexts->save($context->getId(), $context);
     }
 
     /**

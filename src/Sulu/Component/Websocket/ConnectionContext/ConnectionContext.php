@@ -14,6 +14,7 @@ use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
 use Ratchet\ConnectionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -21,6 +22,18 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ConnectionContext implements ConnectionContextInterface
 {
+    /**
+     * Return id of connection context for connection
+     * @param ConnectionInterface $conn
+     * @return string
+     */
+    public static function getIdFromConnection(ConnectionInterface $conn)
+    {
+        $dummy = new ConnectionContext($conn);
+
+        return $dummy->getId();
+    }
+
     /**
      * @var RequestInterface
      */
@@ -57,7 +70,11 @@ class ConnectionContext implements ConnectionContextInterface
             $this->session = $conn->Session;
         }
 
-        if (isset($conn->resourceId)) {
+        $sessionName = ini_get('session.name');
+
+        if (isset($this->request) && isset($this->request->getCookies()[$sessionName])) {
+            $this->id = $this->request->getCookies()[$sessionName];
+        } elseif (isset($conn->resourceId)) {
             $this->id = $conn->resourceId;
         }
 

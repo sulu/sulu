@@ -48,10 +48,15 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
     function onMessage(ConnectionInterface $from, $msg)
     {
         $context = $this->getContext($from);
+
         $msg = json_decode($msg, true);
 
         try {
             $result = $this->dispatch($from, $context, $msg);
+
+            if (!is_string($result)) {
+                $result = json_encode($result);
+            }
 
             if ($result !== null) {
                 $from->send($result);
@@ -71,7 +76,7 @@ class MessageDispatcherApp extends AbstractWebsocketApp implements MessageCompon
             );
         }
 
-        $this->saveContext($from, $context);
+        $this->saveContext($context);
     }
 
     /**
