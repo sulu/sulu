@@ -371,8 +371,6 @@ class AccountController extends AbstractContactController
     {
         $type = $request->get('type');
         $hasNoParent = $request->get('hasNoParent');
-        // TODO find good name
-        $testParam = $request->get('testParam');
 
         // define filters
         $filter = array();
@@ -402,10 +400,6 @@ class AccountController extends AbstractContactController
             if ($hasNoParent && $hasNoParent == 'true') {
                 $listBuilder->where($this->fieldDescriptors['noParent'], null);
             }
-
-//            if ($testParam && $testParam == 'true') {
-//                $listBuilder->where($this->fieldDescriptors['testParam'], null);
-//            }
 
             foreach ($filter as $key => $value) {
                 if (is_array($value)) {
@@ -1513,32 +1507,5 @@ class AccountController extends AbstractContactController
             true,
             false
         );
-
-//        $this->fieldDescriptors['testParam'] = new DoctrineFieldDescriptor(
-//            'id',
-//            'testParam',
-//            self::$entityName . 'Main',
-//            'contact.accounts.testParam',
-//            array(
-//                self::$contactEntityKey => new DoctrineJoinDescriptor(
-//                    self::$contactEntityKey,
-//                    self::$entityName . '.mainContact'
-//                ),
-//
-//                self::$accountContactEntityName => new DoctrineJoinDescriptor(
-//                    self::$accountContactEntityName,
-//                    self::$contactEntityKey . '.accountContacts',
-//                    self::$accountContactEntityName . '.main = true'
-//                ),
-//
-//                self::$entityName . 'Main' => new DoctrineJoinDescriptor(
-//                    self::$entityName,
-//                    self::$accountContactEntityName . '.account',
-//                    self::$entityName . 'Main' . '.id = ' . self::$entityName . '.id'
-//                )
-//            ),
-//            true,
-//            false
-//        );
     }
 }
