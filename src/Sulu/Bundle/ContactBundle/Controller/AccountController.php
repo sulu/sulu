@@ -370,7 +370,6 @@ class AccountController extends AbstractContactController
     public function cgetAction(Request $request)
     {
         $type = $request->get('type');
-        $hasNoParent = json_decode($request->get('hasNoParent', null));
 
         // define filters
         $filter = array();
@@ -397,7 +396,7 @@ class AccountController extends AbstractContactController
                 $listBuilder->where($this->fieldDescriptors['type'], $type);
             }
 
-            if ($hasNoParent === true || $hasNoParent === 1) {
+            if (json_decode($request->get('hasNoParent', null))) {
                 $listBuilder->where($this->fieldDescriptors['noParent'], null);
             }
 
