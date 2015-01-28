@@ -38,8 +38,10 @@ class FallbackController
      */
     public function send($appName, Request $request)
     {
+        $sessionName = ini_get('session.name');
+
         $message = $request->get('message');
-        $id = $request->get('id');
+        $id = $request->cookies->get($sessionName);
 
         $app = $this->appManager->getApp($appName);
         $connection = new DummyConnection($id);
