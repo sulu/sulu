@@ -39,7 +39,7 @@ define(['config'], function(Config) {
                 fields: [
                     {
                         id: 'id',
-                        width: '60px'
+                        width: '40px'
                     },
                     {
                         id: 'fullName'
@@ -48,7 +48,7 @@ define(['config'], function(Config) {
             });
 
             Config.set('sulucontact.components.autocomplete.default.account', {
-                remoteUrl: '/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name',
+                remoteUrl: '/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name,corporation',
                 resultKey: 'accounts',
                 getParameter: 'search',
                 valueKey: 'name',
@@ -61,7 +61,12 @@ define(['config'], function(Config) {
                         width: '60px'
                     },
                     {
-                        id: 'name'
+                        id: 'name',
+                        width: '220px'
+                    },
+                    {
+                        id: 'corporation',
+                        width: '220px'
                     }
                 ]
             });
