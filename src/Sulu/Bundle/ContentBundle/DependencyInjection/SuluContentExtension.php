@@ -56,6 +56,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
         $container->setParameter('sulu.content.preview.mode', $config['preview']['mode']);
         $container->setParameter('sulu.content.preview.websocket', $config['preview']['websocket']);
+        $container->setParameter('sulu.content.preview.delay', $config['preview']['delay']);
 
         $errorTemplate = null;
         if (isset($config['preview']['error_template'])) {

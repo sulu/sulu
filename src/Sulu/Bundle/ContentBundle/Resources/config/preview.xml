@@ -45,6 +45,7 @@
             <argument type="service" id="sulu_content.preview"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="doctrine"/>
+            <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="logger"/>
 
             <tag name="sulu.websocket.message.handler" dispatcher="admin" alias="sulu_content.preview" />
@@ -60,7 +61,8 @@
             <argument type="string">sulu.content.preview</argument>
             <argument type="collection">
                 <argument key="mode" type="string">%sulu.content.preview.mode%</argument>
-                <argument key="wesocket" type="string">%sulu.content.preview.websocket%</argument>
+                <argument key="websocket" type="string">%sulu.content.preview.websocket%</argument>
+                <argument key="delay" type="string">%sulu.content.preview.delay%</argument>
             </argument>
 
             <tag name="sulu.js_config"/>

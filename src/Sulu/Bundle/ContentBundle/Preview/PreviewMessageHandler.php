@@ -16,6 +16,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Ratchet\ConnectionInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Websocket\Exception\MissingParameterException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
@@ -45,6 +46,11 @@ class PreviewMessageHandler implements MessageHandlerInterface
     private $registry;
 
     /**
+     * @var ContentMapperInterface
+     */
+    private $contentMapper;
+
+    /**
      * {@inheritdoc}
      */
     protected $name = 'sulu_content.preview';
@@ -53,12 +59,14 @@ class PreviewMessageHandler implements MessageHandlerInterface
         PreviewInterface $preview,
         AdminRequestAnalyzer $requestAnalyzer,
         Registry $registry,
+        ContentMapperInterface $contentMapper,
         LoggerInterface $logger
     ) {
         $this->preview = $preview;
         $this->logger = $logger;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->registry = $registry;
+        $this->contentMapper = $contentMapper;
     }
 
     /**
@@ -148,12 +156,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
     private function start(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
     {
         // init session
-        // content uuid
-        if (!array_key_exists('content', $msg)) {
-            throw new MissingParameterException('content');
-        }
-        $contentUuid = $msg['content'];
-        $context->set('content', $contentUuid);
 
         // locale
         if (!array_key_exists('locale', $msg)) {
@@ -175,6 +177,18 @@ class PreviewMessageHandler implements MessageHandlerInterface
         }
         $user = $msg['user'];
         $context->set('user', $user);
+
+        // content uuid
+        if (!array_key_exists('content', $msg)) {
+            throw new MissingParameterException('content');
+        }
+        $contentUuid = $msg['content'];
+        // filter index page
+        if ($contentUuid === 'index') {
+            $startPage = $this->contentMapper->loadStartPage($webspaceKey, $locale);
+            $contentUuid = $startPage->getUuid();
+        }
+        $context->set('content', $contentUuid);
 
         // init message vars
         $template = array_key_exists('template', $msg) ? $msg['template'] : null;
