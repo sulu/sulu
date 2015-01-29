@@ -241,6 +241,12 @@ class CreateUserCommand extends ContainerAwareCommand
                 $roles[] = $roleEntity['name'];
             }
 
+            if (! count($roles)) {
+                throw new \InvalidArgumentException(
+                    'Did not find any roles. Have you created any?'
+                );
+            }
+
             $question = new ChoiceQuestion(
                 'Please choose a role: ',
                 $roles,
