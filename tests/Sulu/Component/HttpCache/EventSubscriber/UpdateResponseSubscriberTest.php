@@ -118,6 +118,7 @@ class UpdateResponseSubscriberTest extends ProphecyTestCase
 
         $this->getResponseEvent->getRequest()->willReturn($this->request);
         $this->filterResponseEvent->getResponse()->willReturn($this->response);
+        $this->filterResponseEvent->getRequest()->willReturn($this->request);
 
         $invalidateProphecy = $this->handler->updateResponse($this->response, Argument::any());
 

@@ -95,6 +95,12 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $request = $event->getRequest();
+
+        if (!$request->isMethodSafe()) {
+            return;
+        }
+
         $this->handler->updateResponse($event->getResponse(), $this->structure);
     }
 }
