@@ -1,3 +1,18 @@
+{% macro create_localizations(localization, count, parent, webspace) %}
+        // parent id {{ parent }}
+        $localization{{ count }} = new Localization();
+        $localization{{ count }}->setLanguage('{{ localization.language }}');
+        $localization{{ count }}->setCountry('{{ localization.country }}');
+        $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
+        $localization{{ count }}->setParent($localization{{ parent }});
+
+        $localizationRefs['{{ webspace.key }}_{{ localization.localization }}'] = $localization{{ count }};
+
+{% for childLocalization in localization.children %}
+    {{ _self.create_localizations(childLocalization, count + 1, count) }}
+{% endfor %}
+        $localization{{ count - 1 }}->addChild($localization{{ count }});
+{% endmacro %}
 <?php
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;

@@ -234,7 +234,7 @@
 /* block add-button */
 /* line 48, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
-  background-color: #cccccc;
+  background-color: #ccc;
   cursor: default;
 }
 
@@ -312,7 +312,7 @@
 .resource-locator-history li::after {
   clear: both;
 }
-/* line 37, ../scss/modules/resource-locator.scss */
+/* line 34, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date,
 .resource-locator-history .options-restore,
@@ -322,7 +322,7 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
-/* line 45, ../scss/modules/resource-locator.scss */
+/* line 44, ../scss/modules/resource-locator.scss */
 .resource-locator-history .url,
 .resource-locator-history .date {
   float: left;
@@ -382,7 +382,7 @@
 /* line 34, ../scss/modules/smart-content.scss */
 .smart-overlay-content .desc {
   font-size: 14px;
-  color: #999999;
+  color: #999;
   padding-bottom: 5px;
   display: block;
 }
@@ -393,13 +393,13 @@
 }
 /* line 44, ../scss/modules/smart-content.scss */
 .smart-overlay-content label {
-  color: black;
+  color: #000;
   font-size: 12px;
 }
 /* line 48, ../scss/modules/smart-content.scss */
 .smart-overlay-content .sublabel {
   font-size: 10px;
-  color: #999999;
+  color: #999;
 }
 /* line 52, ../scss/modules/smart-content.scss */
 .smart-overlay-content .item-half {
@@ -434,7 +434,7 @@
 .smart-overlay-content .sortMethod {
   margin-top: 25px;
 }
-/* line 78, ../scss/modules/smart-content.scss */
+/* line 77, ../scss/modules/smart-content.scss */
 .smart-overlay-content input.limit-to,
 .smart-overlay-content input.data-source {
   padding-left: 10px;
@@ -504,7 +504,7 @@
 .order-table li::after {
   clear: both;
 }
-/* line 16, ../scss/modules/order-table.scss */
+/* line 15, ../scss/modules/order-table.scss */
 .order-table .node-name,
 .order-table .options-select {
   display: block;

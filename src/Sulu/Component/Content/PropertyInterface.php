@@ -136,6 +136,29 @@ interface PropertyInterface extends ArrayableInterface
     public function getPlaceholder($languageCode);
 
     /**
+     * returns the property values
+     * @return ContentTypeValuesInterface[]
+     */
+    public function getContentTypeValues();
+
+    /**
+     * returns the property values
+     * @return PropertyValueInterface[]
+     */
+    public function getValues();
+
+    /**
+     * @return mixed
+     */
+    public function loadValues();
+
+    /**
+     * set the property values
+     * @param PropertyValueInterface[] $values
+     */
+    public function setValues($values);
+
+    /**
      * returns structure
      * @return StructureInterface
      */

@@ -496,6 +496,7 @@ class ContentMapper implements ContentMapperInterface
             // go through every property in the template
             /** @var PropertyInterface $property */
             foreach ($structure->getProperties(true) as $property) {
+
                 // allow null values in data
                 if (isset($data[$property->getName()])) {
                     $type = $this->getContentType($property->getContentTypeName());

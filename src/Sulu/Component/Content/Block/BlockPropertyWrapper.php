@@ -10,8 +10,10 @@
 
 namespace Sulu\Component\Content\Block;
 
+use Sulu\Component\Content\ContentTypeValuesInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\PropertyValueInterface;
 
 class BlockPropertyWrapper implements PropertyInterface
 {
@@ -273,5 +275,34 @@ class BlockPropertyWrapper implements PropertyInterface
     public function setStructure($structure)
     {
         $this->property->setStructure($structure);
+    }
+
+    /**
+     * returns the property values
+     * @return ContentTypeValuesInterface[]
+     */
+    public function getContentTypeValues()
+    {
+        return $this->property->getValues();
+    }
+
+    /**
+     * returns the property values
+     * @return PropertyValueInterface[]
+     */
+    public function getValues()
+    {
+        return $this->property->getValues();
+    }
+
+    /**
+     * set the property values
+     * @param PropertyValueInterface[] $values
+     * @return $this
+     */
+    public function setValues($values)
+    {
+        $this->property->setValues($values);
+        return $this;
     }
 }

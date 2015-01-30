@@ -115,6 +115,18 @@ class Property implements PropertyInterface, \JsonSerializable
     private $value;
 
     /**
+     * content type values
+     * @var ContentTypeValuesInterface[]
+     */
+    private $contentTypeValues = array();
+
+    /**
+     * property values
+     * @var PropertyValueInterface[]
+     */
+    private $values = array();
+
+    /**
      * @var StructureInterface
      * @Exclude
      */
@@ -133,8 +145,11 @@ class Property implements PropertyInterface, \JsonSerializable
         $minOccurs = 1,
         $params = array(),
         $tags = array(),
-        $col = null
-    ) {
+        $col = null,
+        $contentTypeValues = array(),
+        $values = array()
+    )
+    {
         $this->contentTypeName = $contentTypeName;
         $this->mandatory = $mandatory;
         $this->maxOccurs = $maxOccurs;
@@ -145,6 +160,8 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags = $tags;
         $this->col = $col;
+        $this->contentTypeValues = $contentTypeValues;
+        $this->values = $values;
     }
 
     /**
@@ -232,6 +249,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * add a property tag
      * @param PropertyTag $tag
+     * @return PropertyTag
      */
     public function addTag(PropertyTag $tag)
     {
@@ -240,6 +258,7 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * return true if a tag with the given name exists
+     * @param string $tagName
      * @return boolean
      */
     public function hasTag($tagName)
@@ -346,6 +365,34 @@ class Property implements PropertyInterface, \JsonSerializable
     public function getMetadata()
     {
         return $this->metadata;
+    }
+
+    /**
+     * @return ContentTypeValuesInterface[]
+     */
+    public function getContentTypeValues()
+    {
+        return $this->contentTypeValues;
+    }
+
+    /**
+     * returns the property values
+     * @return PropertyValueInterface[]
+     */
+    public function getValues()
+    {
+        return $this->values;
+    }
+
+    /**
+     * set the property values
+     * @param PropertyValueInterface[] $values
+     * @return $this
+     */
+    public function setValues($values)
+    {
+        $this->values = $values;
+        return $this;
     }
 
     /**

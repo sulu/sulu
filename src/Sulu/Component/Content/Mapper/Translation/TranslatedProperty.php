@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
+use Sulu\Component\Content\ContentTypeValuesInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
 
@@ -125,7 +126,7 @@ class TranslatedProperty implements PropertyInterface
 
     /**
      * parameter of property
-     * @return array
+     * @return $this
      */
     public function getParams()
     {
@@ -268,6 +269,32 @@ class TranslatedProperty implements PropertyInterface
     public function toArray($depth = null)
     {
         return $this->property->toArray($depth);
+    }
+
+    /**
+     * returns the property values
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->property->getValues();
+    }
+
+    /**
+     * returns the property values
+     * @return array
+     */
+    public function setValues($values)
+    {
+        $this->property->setValues($values);
+        return $this;
+    }
+
+    /**
+     * @return \Sulu\Component\Content\ContentTypeValuesInterface[]
+     */
+    public function getContentTypeValues() {
+        return $this->property->getContentTypeValues();
     }
 
     /**

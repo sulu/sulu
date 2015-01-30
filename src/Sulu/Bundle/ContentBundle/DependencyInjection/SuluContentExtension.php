@@ -111,6 +111,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             'sulu.content.type.checkbox.template',
             $config['types']['checkbox']['template']
         );
+        $container->setParameter(
+            'sulu.content.type.select.template',
+            $config['types']['select']['template']
+        );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
