@@ -96,8 +96,7 @@ class ImportTest extends SuluTestCase
         $this->em->flush();
 
         // TODO: use fixtures
-        $this->import = new Import(
-            $this->em,
+        $this->import = new Import($this->em,
             new AccountManager($this->em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
             new ContactManager($this->em, $this->createClient()->getContainer()->get('sulu_tag.tag_manager')),
             array(
@@ -292,10 +291,7 @@ class ImportTest extends SuluTestCase
     {
         /** @var Contact $contact */
         $contacts = $this->em->getRepository('SuluContactBundle:Contact')->findAll();
-
-        // TODO: check if it's the expected result to get just one contact since
-        // the file provided to the importer contains two entries.
-        $this->assertEquals(1, sizeof($contacts));
+        $this->assertEquals(2, sizeof($contacts));
 
         $contact = $contacts[0];
 
@@ -329,6 +325,40 @@ class ImportTest extends SuluTestCase
         // emails
         $this->assertEquals(1, sizeof($contact->getEmails()));
         $this->assertEquals('john@doe.com', $contact->getEmails()->get(0)->getEmail());
+        $this->assertEquals('Business', $contact->getEmails()->get(0)->getEmailType()->getName());
+
+        $contact = $contacts[1];
+
+        $this->assertNotNull($contact->getId());
+        $this->assertEquals('Nicole', $contact->getFirstName());
+        $this->assertEquals('Exemplary', $contact->getLastName());
+        $this->assertEquals('CEO', $contact->getPosition()->getPosition());
+        $this->assertEquals('Master', $contact->getTitle()->getTitle());
+        $this->assertNotNull($contact->getAccountContacts()[0]->getAccount()->getId());
+
+        // addresss
+        /** @var Address $address */
+        $this->assertEquals(1, sizeof($contact->getContactAddresses()));
+        $address = $contact->getContactAddresses()->get(0)->getAddress();
+        $this->assertEquals('New Street', $address->getStreet());
+        $this->assertEquals('5', $address->getNumber());
+        $this->assertEquals('DE', $address->getCountry()->getCode());
+        $this->assertEquals('89087', $address->getZip());
+        $this->assertEquals('Berlin', $address->getCity());
+
+        // phones
+        $this->assertEquals(1, sizeof($contact->getPhones()));
+        $this->assertEquals('+43 (123) 654', $contact->getPhones()->get(0)->getPhone());
+        $this->assertEquals('Business', $contact->getPhones()->get(0)->getPhoneType()->getName());
+        // notes
+        $this->assertEquals(0, sizeof($contact->getNotes()));
+        // faxes
+        $this->assertEquals(1, sizeof($contact->getFaxes()));
+        $this->assertEquals('+43 (123) 654-87', $contact->getFaxes()->get(0)->getFax());
+        $this->assertEquals('Business', $contact->getFaxes()->get(0)->getFaxType()->getName());
+        // emails
+        $this->assertEquals(1, sizeof($contact->getEmails()));
+        $this->assertEquals('nicole@exemplary.com', $contact->getEmails()->get(0)->getEmail());
         $this->assertEquals('Business', $contact->getEmails()->get(0)->getEmailType()->getName());
     }
 }
