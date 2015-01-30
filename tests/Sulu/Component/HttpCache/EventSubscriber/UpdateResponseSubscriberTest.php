@@ -55,8 +55,7 @@ class UpdateResponseSubscriberTest extends ProphecyTestCase
         $this->filterResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
         $this->postResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\PostResponseEvent');
         $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
-        $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerInterface')
-            ->willImplement('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
+        $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
 
         $this->response = new Response();

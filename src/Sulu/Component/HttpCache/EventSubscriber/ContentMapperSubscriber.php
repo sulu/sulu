@@ -13,7 +13,6 @@ namespace Sulu\Component\HttpCache\EventSubscriber;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\HttpCache\StructureCacheHandlerInterface;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
@@ -24,7 +23,7 @@ use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 class ContentMapperSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Sulu\Component\HttpCache\StructureCacheHandlerInterface
+     * @var Sulu\Component\HttpCache\HandlerInvalidateStructureInterface
      */
     private $handler;
 
@@ -46,7 +45,7 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param StructureCacheHandlerInterface $handler
+     * @param HandlerInvalidateStructureInterface $handler
      */
     public function __construct(HandlerInvalidateStructureInterface $handler)
     {

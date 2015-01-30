@@ -13,7 +13,6 @@ namespace Sulu\Component\HttpCache\Handler;
 use FOS\HttpCache\ProxyClient;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\HttpCache\StructureCacheHandlerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;

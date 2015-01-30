@@ -12,7 +12,6 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\HttpCache\StructureCacheHandlerInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Sulu\Component\Content\PageInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;

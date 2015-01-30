@@ -17,6 +17,7 @@ use Psr\Log\NullLogger;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
+use Sulu\Component\HttpCache\HandlerInterface;
 
 /**
  * This cache handler aggregates and delegates to other
@@ -28,7 +29,7 @@ class AggregateHandler implements
     HandlerInvalidateStructureInterface
 {
     /**
-     * @var StructureCacheHandlerInterface[]
+     * @var HandlerInterface[]
      */
     private $handlers;
 
@@ -38,7 +39,7 @@ class AggregateHandler implements
     private $logger;
 
     /**
-     * @param StructureCacheHandlerInterface[] $handlers
+     * @param HandlerInterface[] $handlers
      */
     public function __construct($handlers = array(), LoggerInterface $logger = null)
     {

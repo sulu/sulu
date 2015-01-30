@@ -32,8 +32,7 @@ class FlushSubscriberTest extends ProphecyTestCase
         parent::setUp();
 
         $this->postResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\PostResponseEvent');
-        $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerInterface')
-            ->willImplement('Sulu\Component\HttpCache\HandlerFlushInterface');
+        $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerFlushInterface');
 
         $this->subscriber = new FlushSubscriber(
             $this->handler->reveal()

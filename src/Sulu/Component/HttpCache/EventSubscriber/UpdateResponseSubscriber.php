@@ -12,7 +12,6 @@ namespace Sulu\Component\HttpCache\EventSubscriber;
 
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\HttpCache\StructureCacheHandlerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Sulu\Component\HttpCache\HandlerInterface;
@@ -25,7 +24,7 @@ use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 class UpdateResponseSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var StructureCacheHandlerInterface
+     * @var HandlerUpdateResponseInterface
      */
     private $handler;
 
@@ -46,7 +45,7 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param StructureCacheHandlerInterface $handler
+     * @param HandlerUpdateResponseInterface $handler
      */
     public function __construct(HandlerUpdateResponseInterface $handler)
     {

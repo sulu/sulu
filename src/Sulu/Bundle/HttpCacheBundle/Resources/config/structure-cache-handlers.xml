@@ -16,7 +16,6 @@
         <service id="sulu_http_cache.handler.aggregate" class="%sulu_http_cache.handler.aggregate.class%">
             <argument type="collection" />
             <argument type="service" id="logger" />
-            <tag name="sulu_http_cache.handler" alias="aggregate" />
         </service>
 
         <service id="sulu_http_cache.handler.tags" class="%sulu_http_cache.handler.tags.class%">

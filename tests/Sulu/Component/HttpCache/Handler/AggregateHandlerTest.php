@@ -49,12 +49,10 @@ class AggregateHandlerTest extends ProphecyTestCase
         $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
 
-        $this->handler1 = $this->prophesize('Sulu\Component\HttpCache\HandlerInterface')
-            ->willImplement('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
+        $this->handler1 = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerFlushInterface');
-        $this->handler2 = $this->prophesize('Sulu\Component\HttpCache\HandlerInterface')
-            ->willImplement('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
+        $this->handler2 = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerFlushInterface');
 
