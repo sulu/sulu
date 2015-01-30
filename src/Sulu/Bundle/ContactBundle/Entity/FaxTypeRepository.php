@@ -10,6 +10,6 @@ use Doctrine\ORM\Query;
  * Class AddressTypeRepository
  * @package Sulu\Bundle\ContactBundle\Entity
  */
-class FaxTypeRepository extends BaseTypeRepository
+class FaxTypeRepository extends EntityRepository
 {
 }

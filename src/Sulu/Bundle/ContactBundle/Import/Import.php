@@ -58,15 +58,22 @@ class Import
     protected $options = array(
         'importIds' => true,
         'streetNumberSplit' => false,
-        'fixedAccountType' => false,
         'delimiter' => ';',
         'enclosure' => '"',
         'contactComparisonCriteria' => array(
             'firstName',
             'lastName',
             'email',
-        )
+        ),
+        'fixedAccountType' => false,
     );
+
+    /**
+     * defines which columns should be excluded,
+     *  - either with simple key value (e.g. 'column_exclude' => 'true')
+     * @var array
+     */
+    protected $excludeConditions = array();
 
     /**
      * defaults that are set for a specific key (if not set in data) e.g.: address1_label = 'mobile'
@@ -203,6 +210,7 @@ class Import
     protected $columnMappings = array();
 
     /**
+     * // TODO: replace by mapping account_id
      * defines mappings of ids in import file
      * @var array
      */
@@ -226,10 +234,10 @@ class Import
      * @var array
      */
     protected $accountTypeMappings = array(
-        Account::TYPE_BASIC => '',
-        Account::TYPE_LEAD => 'lead',
-        Account::TYPE_CUSTOMER => 'customer',
-        Account::TYPE_SUPPLIER => 'supplier',
+        'basic' => Account::TYPE_BASIC,
+        'lead' => Account::TYPE_LEAD,
+        'customer' => Account::TYPE_CUSTOMER,
+        'supplier' => Account::TYPE_SUPPLIER,
     );
 
     /**
@@ -237,9 +245,9 @@ class Import
      * @var array
      */
     protected $contactLabelMappings = array(
-        'work' => '.work',
-        'home' => '.home',
-        'mobile' => '.mobile',
+        'work' => 'work',
+        'home' => 'home',
+        'mobile' => 'mobile',
     );
 
     /**
@@ -279,6 +287,13 @@ class Import
     protected $positions = array();
 
     /**
+     * defines possible new-line characters that should be replaced.
+     * e.g. '¶'
+     * @var array
+     */
+    protected $invalidNewLineCharacters = array();
+
+    /**
      * @param EntityManager $em
      * @param $accountManager
      * @param $contactManager
@@ -286,7 +301,14 @@ class Import
      * @param $configAccountTypes
      * @param $configFormOfAddress
      */
-    public function __construct(EntityManager $em, $accountManager, $contactManager, $configDefaults, $configAccountTypes, $configFormOfAddress)
+    public function __construct(
+        EntityManager $em,
+        $accountManager,
+        $contactManager,
+        $configDefaults,
+        $configAccountTypes,
+        $configFormOfAddress
+    )
     {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
@@ -471,8 +493,14 @@ class Import
 
                     // get associativeData
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
-
-                    $function($associativeData, $row);
+                    
+                    // check if row contains data that should be excluded
+                    if (!$this->rowContainsExlcudeData($associativeData, $key, $value)) {
+                        // call callback function
+                        $function($associativeData, $row);
+                    } else {
+                        $this->debug(sprintf("Exclude data row %d due to exclude condition %s = %s \n", $row, $key, $value));
+                    }
 
                     if ($flushOnEveryRow) {
                         $this->em->flush();
@@ -513,6 +541,58 @@ class Import
 
         $this->debug("\n");
         fclose($handle);
+    }
+
+    /**
+     * Checks if data row contains a value that is defined as exclude criteria (for a specific column)
+     * (see excludeConditions)
+     *
+     * @param $data
+     * @return bool
+     */
+    protected function rowContainsExlcudeData($data, &$conditionKey = null, &$conditionValue = null)
+    {
+        if (count($this->excludeConditions) > 0) {
+            // iterate through all defined exclude conditions
+            foreach($this->excludeConditions as $key => $value) {
+                if (isset($data[$key])) {
+                    // if condition is an array - compare with every value
+                    if (is_array($value)) {
+                        foreach($value as $childValue) {
+                            if ($this->compareStrings($childValue, $data[$key])) {
+                                $conditionKey = $key;
+                                $conditionValue = $value;
+                                return true;
+                            }
+                        }
+                    // else if simple value - just compare
+                    } else {
+                        // if match
+                        if ($this->compareStrings($value, $data[$key])) {
+                            $conditionKey = $key;
+                            $conditionValue = $value;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * compares two string, by default it checks only if the string begins with the same value
+     * @param $needle
+     * @param $haystack
+     * @param bool $strict
+     * @return bool
+     */
+    private function compareStrings($needle, $haystack, $strict = false)
+    {
+        if ($strict) {
+            return $needle === $haystack;
+        }
+        return strpos($haystack, $needle) === 0;
     }
 
     /**
@@ -569,6 +649,11 @@ class Import
         if ($this->checkData('account_name', $data)) {
             $account->setName($data['account_name']);
         } else {
+            $this->em->detach($account);
+            throw new \Exception('ERROR: account name not set');
+        }
+        if (!$account->getName()) {
+            $this->em->detach($account);
             throw new \Exception('ERROR: account name not set');
         }
 
@@ -579,7 +664,7 @@ class Import
             $account->setDisabled($this->getBoolValue($data['account_disabled']));
         }
         if ($this->checkData('account_uid', $data)) {
-            $account->setUid($data['account_uid']);
+            $account->setUid($this->removeWhiteSpaces($data['account_uid']));
         }
         if ($this->checkData('account_number', $data)) {
             $account->setNumber($data['account_number']);
@@ -642,6 +727,16 @@ class Import
     }
 
     /**
+     * removes all white-spaces from a string
+     * @param $string
+     * @return mixed
+     */
+    protected function removeWhiteSpaces($string)
+    {
+        return preg_replace('/\s+/', '', $string);
+    }
+
+    /**
      * adds emails to the entity
      * @param $data
      * @param $entity
@@ -659,7 +754,7 @@ class Import
 
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'email.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getEmailTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['emailType'];
@@ -691,7 +786,7 @@ class Import
 
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'phone.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getPhoneTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['phoneType'];
@@ -723,7 +818,7 @@ class Import
                 $fax->setFax($data[$faxIndex]);
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'fax.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getFaxTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['faxType'];
@@ -755,7 +850,7 @@ class Import
                 $url->setUrl($data[$urlIndex]);
                 // set label
                 if ($this->checkData($prefix . 'label', $data)) {
-                    $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                    $contactLabel = 'url.' . $this->mapContactLabels($data[$prefix . 'label']);
                     $type = $this->getContactManager()->getUrlTypeByName($contactLabel);
                 } else {
                     $type = $this->defaultTypes['urlType'];
@@ -790,11 +885,29 @@ class Import
         }
         // concat all notes to one single note
         if (sizeof($noteValues) > 0) {
+            $noteText = implode("\n", $noteValues);
+            $noteText = $this->replaceInvalidNewLineCharacters($noteText);
+            
             $note = new Note();
-            $note->setValue(implode("\n", $noteValues));
+            $note->setValue($noteText);
             $this->em->persist($note);
             $entity->addNote($note);
         }
+    }
+
+    /**
+     * replaces wrong new line characters with real ones (utf8)
+     * @param $text
+     * @return mixed
+     */
+    protected function replaceInvalidNewLineCharacters($text)
+    {
+        if (count($this->invalidNewLineCharacters) > 0) {
+            foreach($this->invalidNewLineCharacters as $character) {
+                $text = str_replace($character, "\n", $text);
+            }
+        }
+        return $text;
     }
 
     /**
@@ -921,10 +1034,13 @@ class Import
                 preg_match('/(*UTF8)([^\d]+)\s?(.+)/iu', $street, $result); // UTF8 is to ensure correct utf8 encoding
 
                 // check if number is given, else do not apply preg match
-                if (array_key_exists(2, $result) && is_numeric($result[2])) {
+                if (array_key_exists(2, $result)) {
                     $number = trim($result[2]);
                     $street = trim($result[1]);
                 }
+            }
+            if (!$street) {
+                $street = '';
             }
             $address->setStreet($street);
             $addAddress = true;
@@ -932,6 +1048,9 @@ class Import
         // number
         if (isset($number) || $this->checkData($prefix . 'number', $data)) {
             $number = isset($number) ? $number : $data[$prefix . 'number'];
+            if (!$number) {
+                $number = '';
+            }
             $address->setNumber($number);
         }
         // zip
@@ -969,7 +1088,9 @@ class Import
         }
         // note
         if ($this->checkData($prefix . 'note', $data)) {
-            $address->setNote($data[$prefix . 'note']);
+            $address->setNote(
+                $this->replaceInvalidNewLineCharacters($data[$prefix . 'note'])
+            );
             $addAddress = true;
         }
         // billing address
@@ -1009,7 +1130,7 @@ class Import
         // only add address if part of it is defined
         if ($addAddress) {
             if ($this->checkData($prefix . 'label', $data)) {
-                $contactLabel = $this->mapContactLabels($data[$prefix . 'label']);
+                $contactLabel = 'address.' . $this->mapContactLabels($data[$prefix . 'label']);
                 $addressType = $this->getContactManager()->getAddressTypeByName($contactLabel);
             } else {
                 $addressType = $this->defaultTypes['addressType'];
@@ -1078,34 +1199,45 @@ class Import
             }
 
             // create comments for old bank addresses
-            if ($this->checkData('blz' . $i, $data)) {
-                $noteTxt = '';
-                // check if note already exists, or create a new one
-                if (sizeof($notes = $entity->getNotes()) > 0) {
-                    $note = $notes[0];
-                    $noteTxt = $note->getValue() . "\n";
-                } else {
-                    $note = new Note();
-                    $this->em->persist($note);
-                    $entity->addNote($note);
-                }
-
-                $noteTxt .= 'Old Bank Account: ';
+            if ($this->checkData($prefix . 'blz', $data)) {
+                $noteTxt = 'Old Bank Account: ';
                 $noteTxt .= 'BLZ: ';
-                $noteTxt .= $data['blz' . $i];
+                $noteTxt .= $data[$prefix . 'blz'];
 
-                if ($this->checkData('accountNumber' . $i, $data)) {
+                if ($this->checkData($prefix . 'number', $data)) {
                     $noteTxt .= '; Account-Number: ';
-                    $noteTxt .= $data['accountNumber' . $i];
+                    $noteTxt .= $data[$prefix . 'number'];
                 }
-                if ($this->checkData('bank' . $i, $data)) {
+                if ($this->checkData($bankIndex, $data)) {
                     $noteTxt .= '; Bank-Name: ';
-                    $noteTxt .= $data['bank' . $i];
+                    $noteTxt .= $data[$bankIndex];
                 }
 
-                $note->setValue($noteTxt);
+                $this->appendToNote($entity, $noteTxt);
             }
         }
+    }
+
+    /**
+     * function either appends a text to the existing note, or creates a new one
+     * @param $entity The entity containing the note
+     * @param $text Text to append
+     * @internal param $data
+     */
+    protected function appendToNote($entity, $text)
+    {
+        $noteText = '';
+        if (sizeof($notes = $entity->getNotes()) > 0) {
+            $note = $notes[0];
+            $noteText = $note->getValue() . "\n";
+        } else {
+            $note = new Note();
+            $this->em->persist($note);
+            $entity->addNote($note);
+        }
+        $text = $this->replaceInvalidNewLineCharacters($text);
+        $noteText .= $text;
+        $note->setValue($noteText);
     }
 
     /**
@@ -1490,8 +1622,8 @@ class Import
      */
     protected function mapAccountType($typeString)
     {
-        if ($mappingIndex = array_search($typeString, $this->accountTypeMappings)) {
-            return $mappingIndex;
+        if (array_key_exists($typeString, $this->accountTypeMappings)) {
+            return $this->accountTypeMappings[$typeString];
         } else {
             return Account::TYPE_BASIC;
         }
@@ -1703,9 +1835,11 @@ class Import
      * prints messages if debug is set to true
      * @param $message
      */
-    protected function debug($message)
+    protected function debug($message, $addToLog = true)
     {
-        $this->log[] = $message;
+        if ($addToLog) {
+            $this->log[] = $message;
+        }
         if (self::DEBUG) {
             print($message);
         }

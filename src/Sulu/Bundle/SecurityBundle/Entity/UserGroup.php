@@ -30,7 +30,7 @@ class UserGroup extends ApiEntity
     private $id;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $user;
 
@@ -86,7 +86,7 @@ class UserGroup extends ApiEntity
     /**
      * Set user
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $user
+     * @param \Sulu\Component\Security\UserInterface $user
      * @return UserGroup
      */
     public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user = null)
@@ -99,7 +99,7 @@ class UserGroup extends ApiEntity
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getUser()
     {

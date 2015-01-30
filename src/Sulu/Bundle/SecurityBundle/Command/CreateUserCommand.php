@@ -20,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Sulu\Component\Security\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -102,7 +103,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->persist($contact);
         $em->flush();
 
-        $user = new User();
+        $user = $this->getUser();
         $user->setContact($contact);
         $user->setUsername($username);
         $user->setSalt($this->generateSalt());
@@ -122,6 +123,16 @@ class CreateUserCommand extends ContainerAwareCommand
         $output->writeln(
             sprintf('Created user <comment>%s</comment> in role <comment>%s</comment>', $username, $roleName)
         );
+    }
+
+    /**
+     * Returns a new instance of the user.
+     * Can be overwritten to use a different implementation.
+     * @return UserInterface
+     */
+    protected function getUser()
+    {
+        return new User();
     }
 
     /**
