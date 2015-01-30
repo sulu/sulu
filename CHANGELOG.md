@@ -1,5 +1,6 @@
 CHANGELOG for Sulu
 ==================
+    * HOTFIX      #741 [ContentBundle]  Fix Resourcelocater Content Type call move without editing
 
 * 0.14.1 (2015-01-21)
     * HOTFIX      #737 [MediaBundle]    Changed BaseCollection properties to be protected for inheritance
