@@ -614,7 +614,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param SymfonyFile $file
-     * @return int
+     * @return integer
      */
     protected function getMediaType(SymfonyFile $file)
     {
