@@ -31,6 +31,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 array(
                     'service1', 'service2', 'service3',
                 ),
+                'Sulu\Component\HttpCache\HandlerInterface'
             ),
             array(
                 array(
@@ -44,6 +45,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 array(
                     'service1', 'service3',
                 ),
+                'Sulu\Component\HttpCache\HandlerInterface'
             ),
             array(
                 array(
@@ -54,6 +56,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 ),
                 array(
                 ),
+                'Sulu\Component\HttpCache\HandlerInterface',
                 'Could not find the following cache handlers: "foo", "baz"',
             ),
             array(
@@ -65,6 +68,7 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 ),
                 array(
                 ),
+                'Sulu\Component\HttpCache\HandlerInterface',
                 'Cache handler with alias "ball" has already been registered',
             ),
             array(
@@ -74,6 +78,18 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
                 ),
                 array(
                 ),
+                'Sulu\Component\HttpCache\HandlerInterface'
+            ),
+            array(
+                array(
+                    array('service' => 'service3', 'alias' => 'ball'),
+                ),
+                array(
+                ),
+                array(
+                ),
+                'stdClass',
+                'Service ID "service3" was tagged as a cache handler, but it does not implement the "HandlerInterface"',
             ),
         );
     }
@@ -81,14 +97,14 @@ class HandlerPassTest extends AbstractCompilerPassTestCase
     /**
      * @dataProvider provideHandlerServices
      */
-    public function testHandlerPass($services, $handlerAliases, $expectedHandlerIds, $exception = null)
+    public function testHandlerPass($services, $handlerAliases, $expectedHandlerIds, $handlerClass, $exception = null)
     {
         if ($exception) {
             $this->setExpectedException('InvalidArgumentException', $exception);
         }
 
         foreach ($services as $service) {
-            $definition = new Definition();
+            $definition = new Definition($this->getMock($handlerClass));
             $definition->addTag('sulu_http_cache.handler', array('alias' => $service['alias']));
             $this->setDefinition($service['service'], $definition);
         }

@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  * should also be used to do time sensative operations such as sending invalidation
  * requests to the proxy server.
  */
-interface HandlerFlushInterface
+interface HandlerFlushInterface extends HandlerInterface
 {
     /**
      * Flush the underlying cache mechanism

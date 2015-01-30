@@ -20,7 +20,7 @@ use Sulu\Component\Content\StructureInterface;
  * interfaces method should normally be to record references to the structures
  * which should later be invalidated in the `flush` interface.
  */
-interface HandlerInvalidateStructureInterface
+interface HandlerInvalidateStructureInterface extends HandlerInterface
 {
     /**
      * Invalidate the given structure

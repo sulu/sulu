@@ -13,6 +13,7 @@ namespace Sulu\Bundle\HttpCacheBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Add tagged cache handler definitions to the aggregate cache handler
@@ -51,6 +52,9 @@ class HandlerPass implements CompilerPassInterface
                     $alias
                 ));
             }
+
+            $this->validateHandler($container, $id);
+
             $knownHandlers[$alias] = $id;
         }
 
@@ -71,5 +75,25 @@ class HandlerPass implements CompilerPassInterface
         }
 
         $aggregateHandler->replaceArgument(0, array_values($handlers));
+    }
+
+    /**
+     * Ensure that the handler implements the HandlerInterface
+     * (if it does not then someone has added a tag in the wrong place)
+     *
+     * @param ContainerBuilder $container
+     * @param mixed $id
+     */
+    private function validateHandler(ContainerBuilder $container, $id)
+    {
+        /** @var Definition */
+        $definition = $container->getDefinition($id);
+        $reflection = new \ReflectionClass($definition->getClass());
+
+        if (!$reflection->implementsInterface('Sulu\Component\HttpCache\HandlerInterface')) {
+            throw new \InvalidArgumentException(sprintf(
+                'Service ID "%s" was tagged as a cache handler, but it does not implement the "HandlerInterface"'
+            , $id));
+        }
     }
 }

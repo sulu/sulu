@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Update the response given by the website with headers that
  * will pass caching details to the proxy caching server.
  */
-interface HandlerUpdateResponseInterface
+interface HandlerUpdateResponseInterface extends HandlerInterface
 {
     /**
      * Update the response based on the given structure
