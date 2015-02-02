@@ -82,6 +82,6 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
 
         $filesystem = new Filesystem();
         $filesystem->dumpFile(sprintf('%s/%s.xml', $siteMapFolder, $webspaceKey), $sitemap);
-        $output->writeln('<done>Done: Generated in '. (microtime(true) - $time) .' seconds!</done>');
+        $output->writeln(sprintf('<done>Done: Generated "%s" in '. (microtime(true) - $time) .' seconds!</done>', $webspaceKey));
     }
 }
