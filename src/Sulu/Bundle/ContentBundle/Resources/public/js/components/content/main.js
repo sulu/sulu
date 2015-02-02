@@ -10,7 +10,7 @@
 define([
     'sulucontent/model/content',
     'sulucontent/components/content/preview/main'
-], function(Content, Preview) {
+], function (Content, Preview) {
 
     'use strict';
 
@@ -20,7 +20,7 @@ define([
          * node type constant for content
          * @type {number}
          */
-        TYPE_CONTENT = 1,
+            TYPE_CONTENT = 1,
 
         localizations,
 
@@ -28,7 +28,7 @@ define([
          * Helper var to determine complete loaded data
          * @type {number}
          */
-        remainingData = 2,
+            remainingData = 2,
 
         constants = {
             resolutionDropdownData: [
@@ -66,7 +66,7 @@ define([
 
             previewUrl: '<%= url %><%= uuid %>/render?webspace=<%= webspace %>&language=<%= language %>',
 
-            copyLocales: function(item) {
+            copyLocales: function (item) {
                 var template = [
                     '<div class="copy-locales-overlay-content">',
                     '   <label>',
@@ -86,7 +86,7 @@ define([
                     '<div class="copy-locales-to-container m-bottom-20 grid">'
                 ], i = 0;
 
-                this.sandbox.util.foreach(localizations, function(locale) {
+                this.sandbox.util.foreach(localizations, function (locale) {
                     if (i % 2 === 0) {
                         template.push((i > 0 ? '</div>' : '') + '<div class="grid-row">');
                     }
@@ -100,7 +100,7 @@ define([
                 return template.join('');
             },
 
-            copyLocalesCheckbox: function(locale, item) {
+            copyLocalesCheckbox: function (locale, item) {
                 var concreteLanguages = [],
                     currentLocale;
 
@@ -112,9 +112,9 @@ define([
                 }
 
                 currentLocale = (
-                locale === this.options.language &&
-                concreteLanguages.indexOf(locale) >= 0
-                );
+                    locale === this.options.language &&
+                        concreteLanguages.indexOf(locale) >= 0
+                    );
 
                 return [
                     '<div class="grid-col-3">',
@@ -135,7 +135,7 @@ define([
 
     return {
 
-        initialize: function() {
+        initialize: function () {
             // init vars
             this.saved = true;
             this.previewUrl = null;
@@ -151,7 +151,7 @@ define([
 
             if (this.options.display === 'column') {
                 remainingData = 1;
-                this.loadDataDeferred.then(function() {
+                this.loadDataDeferred.then(function () {
                     this.renderColumn();
                 }.bind(this));
             } else {
@@ -160,7 +160,7 @@ define([
             this.bindCustomEvents();
         },
 
-        renderColumn: function() {
+        renderColumn: function () {
             var $column = this.sandbox.dom.createElement('<div id="content-column-container"/>');
             this.html($column);
             this.sandbox.start([
@@ -175,10 +175,10 @@ define([
             ]);
         },
 
-        loadLocalizations: function() {
+        loadLocalizations: function () {
             this.sandbox.util.load(constants.localizationUrl + '?webspace=' + this.options.webspace)
-                .then(function(data) {
-                    localizations = data._embedded.localizations.map(function(localization) {
+                .then(function (data) {
+                    localizations = data._embedded.localizations.map(function (localization) {
                         return {
                             id: localization.localization,
                             title: localization.localization
@@ -192,7 +192,7 @@ define([
                 }.bind(this));
         },
 
-        loadData: function() {
+        loadData: function () {
             if (!this.content) {
                 this.content = new Content({id: this.options.id});
             }
@@ -203,7 +203,7 @@ define([
                     this.options.language,
                     true,
                     {
-                        success: function(content) {
+                        success: function (content) {
                             this.render(content.toJSON());
                             remainingData--;
 
@@ -223,14 +223,14 @@ define([
             }
         },
 
-        bindCustomEvents: function() {
+        bindCustomEvents: function () {
             // back button
-            this.sandbox.on('sulu.header.back', function() {
+            this.sandbox.on('sulu.header.back', function () {
                 this.sandbox.emit('sulu.content.contents.list');
             }.bind(this));
 
             // load column view
-            this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+            this.sandbox.on('sulu.content.contents.list', function (webspace, language) {
                 var route = 'content/contents/' +
                     (!webspace ? this.options.webspace : webspace) + '/' +
                     (!language ? this.options.language : language);
@@ -239,25 +239,25 @@ define([
             }, this);
 
             // getter for content data
-            this.sandbox.on('sulu.content.contents.get-data', function(callback) {
-                this.loadDataDeferred.then(function() {
+            this.sandbox.on('sulu.content.contents.get-data', function (callback) {
+                this.loadDataDeferred.then(function () {
                     // deep copy of object
                     callback(JSON.parse(JSON.stringify(this.data)));
                 }.bind(this));
             }.bind(this));
 
             // setter for header bar buttons
-            this.sandbox.on('sulu.content.contents.set-header-bar', function(saved) {
+            this.sandbox.on('sulu.content.contents.set-header-bar', function (saved) {
                 this.setHeaderBar(saved);
             }.bind(this));
 
             // setter for state bar buttons
-            this.sandbox.on('sulu.content.contents.set-state', function(data) {
+            this.sandbox.on('sulu.content.contents.set-state', function (data) {
                 this.setState(data);
             }.bind(this));
 
             // change language
-            this.sandbox.on('sulu.header.toolbar.language-changed', function(item) {
+            this.sandbox.on('sulu.header.toolbar.language-changed', function (item) {
                 this.sandbox.sulu.saveUserSetting(CONTENT_LANGUAGE, item.id);
                 if (this.options.display !== 'column') {
                     var data = this.content.toJSON();
@@ -273,19 +273,19 @@ define([
                 }
             }, this);
 
-            this.sandbox.on('husky.tabs.header.item.select', function(item) {
+            this.sandbox.on('husky.tabs.header.item.select', function (item) {
                 if (item.id === 'tab-excerpt') {
                     this.template = this.data.originTemplate;
                 }
             }.bind(this));
 
             // change template
-            this.sandbox.on('sulu.dropdown.template.item-clicked', function() {
+            this.sandbox.on('sulu.dropdown.template.item-clicked', function () {
                 this.setHeaderBar(false);
             }.bind(this));
 
             // content saved
-            this.sandbox.on('sulu.content.contents.saved', function(id, data) {
+            this.sandbox.on('sulu.content.contents.saved', function (id, data) {
                 this.highlightSaveButton = true;
 
                 this.data = data;
@@ -299,18 +299,18 @@ define([
             }, this);
 
             // content save-error
-            this.sandbox.on('sulu.content.contents.save-error', function() {
+            this.sandbox.on('sulu.content.contents.save-error', function () {
                 this.sandbox.emit('sulu.labels.error.show', 'labels.error.content-save-desc', 'labels.error');
                 this.setHeaderBar(false);
             }, this);
 
             // content delete
-            this.sandbox.on('sulu.preview.delete', function() {
+            this.sandbox.on('sulu.preview.delete', function () {
                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
             }, this);
 
             // set default template
-            this.sandbox.on('sulu.content.contents.default-template', function(name) {
+            this.sandbox.on('sulu.content.contents.default-template', function (name) {
                 this.template = name;
                 if (this.data.nodeType !== TYPE_CONTENT) {
                     this.sandbox.emit('sulu.header.toolbar.item.change', 'template', name);
@@ -322,7 +322,7 @@ define([
             }, this);
 
             // expand navigation if navigation item is clicked
-            this.sandbox.on('husky.navigation.item.select', function(event) {
+            this.sandbox.on('husky.navigation.item.select', function (event) {
                 // when navigation item is already opended do nothing - relevant for homepage
                 if (event.id !== this.options.id) {
                     this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
@@ -330,7 +330,7 @@ define([
             }.bind(this));
 
             // get changed state
-            this.sandbox.on('sulu.dropdown.state.item-clicked', function(state) {
+            this.sandbox.on('sulu.dropdown.state.item-clicked', function (state) {
                 if (this.state !== state) {
                     this.state = state;
                     this.setHeaderBar(false);
@@ -347,31 +347,31 @@ define([
             this.bindModelEvents();
         },
 
-        bindModelEvents: function() {
+        bindModelEvents: function () {
             // delete content
-            this.sandbox.on('sulu.content.content.delete', function(id) {
+            this.sandbox.on('sulu.content.content.delete', function (id) {
                 this.del(id);
             }, this);
 
             // save the current package
-            this.sandbox.on('sulu.content.contents.save', function(data) {
-                this.save(data).then(function() {
+            this.sandbox.on('sulu.content.contents.save', function (data) {
+                this.save(data).then(function () {
                     this.loadData();
                 }.bind(this));
             }, this);
 
             // wait for navigation events
-            this.sandbox.on('sulu.content.contents.load', function(item, webspace, language) {
+            this.sandbox.on('sulu.content.contents.load', function (item, webspace, language) {
                 this.load(item, webspace, language);
             }, this);
 
             // add new content
-            this.sandbox.on('sulu.content.contents.new', function(parent) {
+            this.sandbox.on('sulu.content.contents.new', function (parent) {
                 this.add(parent);
             }, this);
 
             // delete selected content
-            this.sandbox.on('sulu.content.contents.delete', function(ids) {
+            this.sandbox.on('sulu.content.contents.delete', function (ids) {
                 this.delContents(ids);
             }, this);
 
@@ -388,12 +388,12 @@ define([
             this.sandbox.on('sulu.content.contents.order', this.order, this);
 
             // get resource locator
-            this.sandbox.once('sulu.content.contents.get-rl', function(title, callback) {
+            this.sandbox.once('sulu.content.contents.get-rl', function (title, callback) {
                 this.getResourceLocator(title, this.template, callback);
             }, this);
 
             // load list view
-            this.sandbox.on('sulu.content.contents.list', function(webspace, language) {
+            this.sandbox.on('sulu.content.contents.list', function (webspace, language) {
                 var route = 'content/contents/' +
                     (!webspace ? this.options.webspace : webspace) + '/' +
                     (!language ? this.options.language : language);
@@ -402,7 +402,7 @@ define([
             }, this);
         },
 
-        getResourceLocator: function(parts, template, callback) {
+        getResourceLocator: function (parts, template, callback) {
             var url = '/admin/api/nodes/resourcelocators/generates?' +
                 (!!this.options.parent ? 'parent=' + this.options.parent + '&' : '') +
                 (!!this.options.id ? 'uuid=' + this.options.id + '&' : '') +
@@ -411,89 +411,89 @@ define([
                 '&template=' + template;
 
             this.sandbox.util.save(url, 'POST', {parts: parts})
-                .then(function(data) {
+                .then(function (data) {
                     callback(data.resourceLocator);
                 });
         },
 
-        move: function(id, parentId, successCallback, errorCallback) {
+        move: function (id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
                 '&language=', this.options.language, '&action=move&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
-                .then(function(data) {
+                .then(function (data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
                     }
                 }.bind(this))
-                .fail(function(jqXHR, textStatus, error) {
+                .fail(function (jqXHR, textStatus, error) {
                     if (!!errorCallback && typeof errorCallback === 'function') {
                         errorCallback(error);
                     }
                 }.bind(this));
         },
 
-        copy: function(id, parentId, successCallback, errorCallback) {
+        copy: function (id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
                 '&language=', this.options.language, '&action=copy&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
-                .then(function(data) {
+                .then(function (data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
                     }
                 }.bind(this))
-                .fail(function(jqXHR, textStatus, error) {
+                .fail(function (jqXHR, textStatus, error) {
                     if (!!errorCallback && typeof errorCallback === 'function') {
                         errorCallback(error);
                     }
                 }.bind(this));
         },
 
-        copyLocale: function(id, src, dest, successCallback, errorCallback) {
+        copyLocale: function (id, src, dest, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
                 '&language=', src, '&dest=', dest.join(','), '&action=copy-locale'
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
-                .then(function(data) {
+                .then(function (data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
                     }
                 }.bind(this))
-                .fail(function(jqXHR, textStatus, error) {
+                .fail(function (jqXHR, textStatus, error) {
                     if (!!errorCallback && typeof errorCallback === 'function') {
                         errorCallback(error);
                     }
                 }.bind(this));
         },
 
-        order: function(id, parentId, successCallback, errorCallback) {
+        order: function (id, parentId, successCallback, errorCallback) {
             var url = [
                 '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
                 '&language=', this.options.language, '&action=order&destination=', parentId
             ].join('');
 
             this.sandbox.util.save(url, 'POST', {})
-                .then(function(data) {
+                .then(function (data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
                     }
                 }.bind(this))
-                .fail(function(jqXHR, textStatus, error) {
+                .fail(function (jqXHR, textStatus, error) {
                     if (!!errorCallback && typeof errorCallback === 'function') {
                         errorCallback(error);
                     }
                 }.bind(this));
         },
 
-        del: function(id) {
-            this.showConfirmSingleDeleteDialog(function(wasConfirmed) {
+        del: function (id) {
+            this.showConfirmSingleDeleteDialog(function (wasConfirmed) {
                 if (wasConfirmed) {
                     this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
                     if (!this.content || id !== this.content.get('id')) {
@@ -501,7 +501,7 @@ define([
                         content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
 
-                            success: function() {
+                            success: function () {
                                 var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
                                 this.sandbox.emit('sulu.router.navigate', route);
                                 this.sandbox.emit('sulu.preview.deleted', id);
@@ -511,7 +511,7 @@ define([
                         this.content.fullDestroy(this.options.webspace, this.options.language, {
                             processData: true,
 
-                            success: function() {
+                            success: function () {
                                 var route = 'content/contents/' + this.options.webspace + '/' + this.options.language;
                                 this.sandbox.emit('sulu.app.ui.reset', {navigation: 'auto', content: 'auto'});
 
@@ -525,17 +525,17 @@ define([
             }.bind(this), this.options.id);
         },
 
-        delContents: function(ids) {
-            this.confirmDeleteDialog(function(wasConfirmed) {
+        delContents: function (ids) {
+            this.confirmDeleteDialog(function (wasConfirmed) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
-                    ids.forEach(function(id) {
+                    ids.forEach(function (id) {
                         var content = new Content({id: id});
                         content.fullDestroy(this.options.webspace, this.options.language, {
-                            success: function() {
+                            success: function () {
                                 this.sandbox.emit('husky.datagrid.record.remove', id);
                             }.bind(this),
-                            error: function() {
+                            error: function () {
                                 // TODO error message
                             }
                         });
@@ -544,7 +544,7 @@ define([
             }.bind(this));
         },
 
-        showConfirmSingleDeleteDialog: function(callbackFunction) {
+        showConfirmSingleDeleteDialog: function (callbackFunction) {
             // check if callback is a function
             if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
                 throw 'callback is not a function';
@@ -555,30 +555,30 @@ define([
                 'sulu.overlay.be-careful',
                 'sulu.overlay.delete-desc',
 
-                function() {
+                function () {
                     // cancel callback
                     callbackFunction(false);
                 }.bind(this),
 
-                function() {
+                function () {
                     // ok callback
                     callbackFunction(true);
                 }.bind(this)
             );
         },
 
-        changeState: function(state) {
+        changeState: function (state) {
             this.sandbox.emit('sulu.content.contents.state.change');
 
             this.content.stateSave(this.options.webspace, this.options.language, state, null, {
-                success: function() {
+                success: function () {
                     this.sandbox.emit('sulu.content.contents.state.changed', state);
                     this.sandbox.emit('sulu.labels.success.show',
                         'labels.state-changed.success-desc',
                         'labels.success',
                         'sulu.content.contents.state.label');
                 }.bind(this),
-                error: function() {
+                error: function () {
                     this.sandbox.emit('sulu.content.contents.state.changeFailed');
                     this.sandbox.emit('sulu.labels.error.show',
                         'labels.state-changed.error-desc',
@@ -589,7 +589,7 @@ define([
             });
         },
 
-        save: function(data) {
+        save: function (data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             var def = this.sandbox.data.deferred();
@@ -610,20 +610,20 @@ define([
                 this.state,
                 null, {
                     // on success save contents id
-                    success: function(response) {
+                    success: function (response) {
                         var model = response.toJSON(), route;
                         if (!!this.options.id) {
                             this.sandbox.emit('sulu.content.contents.saved', model.id, model);
                         } else {
                             route = 'content/contents/' + this.options.webspace + '/' +
-                            this.options.language + '/edit:' + model.id + '/content';
+                                this.options.language + '/edit:' + model.id + '/content';
 
                             this.sandbox.sulu.viewStates.justSaved = true;
                             this.sandbox.emit('sulu.router.navigate', route);
                         }
                         def.resolve();
                     }.bind(this),
-                    error: function() {
+                    error: function () {
                         this.sandbox.logger.log("error while saving profile");
                         this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
                         this.sandbox.emit('sulu.content.contents.save-error');
@@ -633,29 +633,29 @@ define([
             return def;
         },
 
-        load: function(item, webspace, language, forceReload) {
+        load: function (item, webspace, language, forceReload) {
             var action = 'content';
             if (
                 (!!item.nodeType && item.nodeType !== TYPE_CONTENT) ||
-                (!!item.type && !!item.type.name && item.type.name === 'shadow')
-            ) {
+                    (!!item.type && !!item.type.name && item.type.name === 'shadow')
+                ) {
                 action = 'settings';
             }
 
             this.sandbox.emit(
                 'sulu.router.navigate',
                 'content/contents/' + (!webspace ? this.options.webspace : webspace) +
-                '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
+                    '/' + (!language ? this.options.language : language) + '/edit:' + item.id + '/' + action,
                 undefined, undefined, forceReload
             );
         },
 
-        add: function(parent) {
+        add: function (parent) {
             if (!!parent) {
                 this.sandbox.emit(
                     'sulu.router.navigate',
                     'content/contents/' + this.options.webspace +
-                    '/' + this.options.language + '/add:' + parent.id + '/content'
+                        '/' + this.options.language + '/add:' + parent.id + '/content'
                 );
             } else {
                 this.sandbox.emit(
@@ -665,29 +665,24 @@ define([
             }
         },
 
-        render: function(data) {
+        render: function (data) {
             this.data = data;
-            this.headerInitialized.then(function() {
+            this.headerInitialized.then(function () {
                 this.setTitle(data);
                 this.setBreadcrumb(data);
                 this.setTemplate(data);
                 this.setState(data);
 
-                // disable remove for homepage
-                if (this.options.id === 'index') {
-                    this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
-                }
-
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
-                    this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
+                    this.sandbox.util.each(['content', 'excerpt', 'seo'], function (i, tabName) {
                         this.sandbox.emit('husky.tabs.header.item.show', 'tab-' + tabName);
                     }.bind(this));
 
-                    this.sandbox.on('sulu.preview.initiated', function() {
+                    this.sandbox.on('sulu.preview.initiated', function () {
                         this.renderPreview(data);
                     }.bind(this));
 
-                    this.sandbox.on('sulu.preview.initialize', function(data, restart) {
+                    this.sandbox.on('sulu.preview.initialize', function (data, restart) {
                         data = this.sandbox.util.extend(true, {}, this.data, data);
                         if (!this.preview.initiated) {
                             this.preview.start(data, this.options);
@@ -706,7 +701,7 @@ define([
                 if (!!this.options.id) {
                     // disable content tab
                     if (this.data.shadowOn === true || this.data.nodeType !== TYPE_CONTENT) {
-                        this.sandbox.util.each(['content'], function(i, tabName) {
+                        this.sandbox.util.each(['content'], function (i, tabName) {
                             this.sandbox.emit('husky.tabs.header.item.hide', 'tab-' + tabName);
                         }.bind(this));
                     }
@@ -714,12 +709,12 @@ define([
                     // route to settings
                     if (
                         (this.options.content !== 'settings' && this.data.shadowOn === true) ||
-                        (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
-                    ) {
+                            (this.options.content === 'content' && this.data.nodeType !== TYPE_CONTENT)
+                        ) {
                         this.sandbox.emit(
                             'sulu.router.navigate',
                             'content/contents/' + this.options.webspace +
-                            '/' + this.options.language + '/edit:' + data.id + '/settings'
+                                '/' + this.options.language + '/edit:' + data.id + '/settings'
                         );
                     }
                 }
@@ -732,7 +727,7 @@ define([
          * Render preview for loaded content node
          * @param data
          */
-        renderPreview: function(data) {
+        renderPreview: function (data) {
             this.sandbox.emit('sulu.app.toggle-shrinker', true);
             this.sandbox.emit('sulu.sidebar.change-width', 'max');
             if (this.$preview === null) {
@@ -755,7 +750,7 @@ define([
         /**
          * Starts the resolution dropdown for the preview
          */
-        startPreviewResolutionDropdown: function() {
+        startPreviewResolutionDropdown: function () {
             this.sandbox.start([
                 {
                     name: 'dropdown@husky',
@@ -774,7 +769,7 @@ define([
         /**
          * Binds Dom-related events on the preview
          */
-        bindPreviewDomEvents: function() {
+        bindPreviewDomEvents: function () {
             this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-new-window', this.$preview),
                 'click', this.openPreviewInNewWindow.bind(this));
         },
@@ -783,7 +778,7 @@ define([
          * Changes the url of the preview
          * @param params {Object} object with parameteres like webspace language etc.
          */
-        changePreviewUrl: function(params) {
+        changePreviewUrl: function (params) {
             if (this.$preview !== null && !!this.content) {
                 var $iframe,
                     content = this.content.toJSON(),
@@ -808,12 +803,12 @@ define([
          * Changes the style of the the preview. E.g. from desktop to smartphone
          * @param newStyle {Object} the new style object. Has to have a cssClass property
          */
-        changePreviewStyle: function(newStyle) {
+        changePreviewStyle: function (newStyle) {
             if (this.$preview !== null) {
                 var $container = this.$preview[0],
                     $toolbar = this.$preview[1];
                 // remove all styles
-                this.sandbox.util.foreach(constants.resolutionDropdownData, function(style) {
+                this.sandbox.util.foreach(constants.resolutionDropdownData, function (style) {
                     this.sandbox.dom.removeClass($container, style.cssClass);
                 }.bind(this));
                 this.sandbox.dom.addClass($container, newStyle.cssClass);
@@ -827,14 +822,14 @@ define([
         /**
          * Hides the sidebar and opens a new window with the preview in it
          */
-        openPreviewInNewWindow: function() {
+        openPreviewInNewWindow: function () {
             this.sandbox.emit('sulu.app.toggle-shrinker', false);
             this.sandbox.emit('sulu.app.change-width', 'fixed');
             this.sandbox.emit('husky.navigation.show');
             this.sandbox.emit('sulu.sidebar.hide');
             this.previewWindow = window.open(this.previewUrl);
-            this.previewWindow.onload = function() {
-                this.previewWindow.onunload = function() {
+            this.previewWindow.onload = function () {
+                this.previewWindow.onunload = function () {
                     this.sandbox.emit('sulu.sidebar.show');
                     this.sandbox.emit('sulu.app.toggle-shrinker', true);
                     this.sandbox.emit('sulu.sidebar.change-width', 'max');
@@ -846,15 +841,15 @@ define([
          * Sets template to header
          * @param {Object} data
          */
-        setTemplate: function(data) {
+        setTemplate: function (data) {
             this.template = data.originTemplate;
 
             if (
                 this.data.nodeType === TYPE_CONTENT &&
-                this.template !== '' &&
-                this.template !== undefined &&
-                this.template !== null
-            ) {
+                    this.template !== '' &&
+                    this.template !== undefined &&
+                    this.template !== null
+                ) {
                 this.sandbox.emit('sulu.header.toolbar.item.change', 'template', this.template);
                 this.sandbox.emit('sulu.header.toolbar.item.show', 'template');
             }
@@ -864,7 +859,7 @@ define([
          * Sets state to header
          * @param {Object} data
          */
-        setState: function(data) {
+        setState: function (data) {
             this.state = data.nodeState;
 
             if (this.state !== '' && this.state !== undefined && this.state !== null) {
@@ -876,7 +871,7 @@ define([
          * Sets the title of the page and if in edit mode calls a method to set the breadcrumb
          * @param {Object} data
          */
-        setTitle: function(data) {
+        setTitle: function (data) {
             if (!!this.options.id && data.title !== '') {
                 this.sandbox.emit('sulu.header.set-title', this.sandbox.util.cropMiddle(data.title, 40));
             } else {
@@ -888,7 +883,7 @@ define([
          * Sets the breadcrump of the selected node
          * @param data
          */
-        setBreadcrumb: function(data) {
+        setBreadcrumb: function (data) {
             if (!!data.breadcrumb) {
                 var breadcrumb = [
                     {
@@ -914,7 +909,7 @@ define([
          * @param uuid {string} uuid to replace the current one with
          * @returns {string} the route for the breadcrumb
          */
-        getBreadcrumbRoute: function(uuid) {
+        getBreadcrumbRoute: function (uuid) {
             return this.sandbox.mvc.history.fragment.replace(this.options.id, uuid);
         },
 
@@ -922,7 +917,7 @@ define([
          * Sets header bar
          * @param {Boolean} saved
          */
-        setHeaderBar: function(saved) {
+        setHeaderBar: function (saved) {
             if (saved !== this.saved) {
                 var type = (!!this.data && !!this.data.id) ? 'edit' : 'add';
                 this.sandbox.emit('sulu.header.toolbar.state.change', type, saved, this.highlightSaveButton);
@@ -934,18 +929,18 @@ define([
             }
         },
 
-        startCopyLocalesOverlay: function() {
+        startCopyLocalesOverlay: function () {
             var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
                 languages = [],
                 currentLocaleText = this.sandbox.translate('content.contents.settings.copy-locales.current-language'),
-                deselectHandler = function(item) {
+                deselectHandler = function (item) {
                     var id = 'copy-locales-to-' + item;
 
                     // enable checkbox and label
                     this.sandbox.dom.prop('#' + id, 'disabled', '');
                     this.sandbox.dom.removeClass('label[for="' + id + '"]', 'disabled');
                 }.bind(this),
-                selectHandler = function(item) {
+                selectHandler = function (item) {
                     var id = 'copy-locales-to-' + item;
 
                     // disable checkbox and label
@@ -955,7 +950,7 @@ define([
 
             this.sandbox.dom.append(this.$el, $element);
 
-            this.sandbox.util.foreach(this.data.concreteLanguages, function(locale) {
+            this.sandbox.util.foreach(this.data.concreteLanguages, function (locale) {
                 languages.push({
                     id: locale,
                     name: locale + (locale === this.options.language ? ' (' + currentLocaleText + ')' : '')
@@ -990,14 +985,14 @@ define([
                                         align: 'left'
                                     }
                                 ],
-                                okCallback: function() {
+                                okCallback: function () {
                                     var src = this.sandbox.dom.data('#copy-locales-select', 'selection'),
                                         $dest = this.sandbox.dom.find(
                                             '.copy-locales-to-container input:checked:not(input[disabled="disabled"])'
                                         ),
                                         dest = [];
 
-                                    this.sandbox.util.foreach($dest, function($item) {
+                                    this.sandbox.util.foreach($dest, function ($item) {
                                         dest.push(this.sandbox.dom.val($item));
                                     }.bind(this));
 
@@ -1009,7 +1004,13 @@ define([
                                     this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler);
                                     this.copyLocale(this.data.id, src[0], dest);
 
-                                    this.load(this.data, this.options.webspace, this.options.language, true);
+                                    // define data and overwrite data.id if startpage (index) - for correct redirect
+                                    var data = this.data;
+                                    if (this.options.id === 'index') {
+                                        data.id = this.options.id;
+                                    }
+
+                                    this.load(data, this.options.webspace, this.options.language, true);
                                 }.bind(this)
                             }
                         ]
@@ -1031,12 +1032,12 @@ define([
             ]);
         },
 
-        header: function() {
+        header: function () {
             // because it is called first
             this.headerInitialized = this.sandbox.data.deferred();
             this.loadDataDeferred = this.sandbox.data.deferred();
 
-            this.sandbox.once('sulu.header.initialized', function() {
+            this.sandbox.once('sulu.header.initialized', function () {
                 this.headerInitialized.resolve();
             }.bind(this));
 
@@ -1044,7 +1045,7 @@ define([
                 length, concreteLanguages = [],
                 def = this.sandbox.data.deferred();
 
-            this.loadDataDeferred.then(function() {
+            this.loadDataDeferred.then(function () {
                 var header, dropdownLocalizations = [], url;
 
                 if (this.options.display === 'column') {
@@ -1107,7 +1108,7 @@ define([
                                     position: 1,
                                     group: 'left',
                                     disabled: true,
-                                    callback: function() {
+                                    callback: function () {
                                         this.sandbox.emit('sulu.header.toolbar.save');
                                     }.bind(this)
                                 },
@@ -1126,7 +1127,7 @@ define([
                                         idAttribute: 'template',
                                         translate: false,
                                         markable: true,
-                                        callback: function(item) {
+                                        callback: function (item) {
                                             this.template = item.template;
                                             this.sandbox.emit('sulu.dropdown.template.item-clicked', item);
                                         }.bind(this)
@@ -1141,13 +1142,14 @@ define([
                                     items: [
                                         {
                                             title: this.sandbox.translate('toolbar.delete'),
-                                            callback: function() {
+                                            disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
+                                            callback: function () {
                                                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
                                             }.bind(this)
                                         },
                                         {
                                             title: this.sandbox.translate('toolbar.copy-locale'),
-                                            callback: function() {
+                                            callback: function () {
                                                 this.startCopyLocalesOverlay();
                                             }.bind(this)
                                         }
@@ -1166,7 +1168,7 @@ define([
                                             id: 2,
                                             title: this.sandbox.translate('toolbar.state-publish'),
                                             icon: 'husky-publish',
-                                            callback: function() {
+                                            callback: function () {
                                                 this.sandbox.emit('sulu.dropdown.state.item-clicked', 2);
                                             }.bind(this)
                                         },
@@ -1174,7 +1176,7 @@ define([
                                             id: 1,
                                             title: this.sandbox.translate('toolbar.state-test'),
                                             icon: 'husky-test',
-                                            callback: function() {
+                                            callback: function () {
                                                 this.sandbox.emit('sulu.dropdown.state.item-clicked', 1);
                                             }.bind(this)
                                         }
@@ -1191,7 +1193,7 @@ define([
             return def;
         },
 
-        layout: function() {
+        layout: function () {
             if (this.options.display === 'column') {
                 return {
                     content: {
