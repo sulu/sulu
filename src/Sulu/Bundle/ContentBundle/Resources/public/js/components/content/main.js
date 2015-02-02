@@ -673,11 +673,6 @@ define([
                 this.setTemplate(data);
                 this.setState(data);
 
-                // disable remove for homepage
-                if (this.options.id === 'index') {
-                    this.sandbox.emit('husky.toolbar.header.item.disable', 'options-button', false);
-                }
-
                 if (!!this.options.preview && this.data.nodeType === TYPE_CONTENT && !this.data.shadowOn) {
                     this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
                         this.sandbox.emit('husky.tabs.header.item.show', 'tab-' + tabName);
@@ -1009,7 +1004,13 @@ define([
                                     this.sandbox.off('husky.select.copy-locale-to.selected.item', selectHandler);
                                     this.copyLocale(this.data.id, src[0], dest);
 
-                                    this.load(this.data, this.options.webspace, this.options.language, true);
+                                    // define data and overwrite data.id if startpage (index) - for correct redirect
+                                    var data = this.data;
+                                    if (this.options.id === 'index') {
+                                        data.id = this.options.id;
+                                    }
+
+                                    this.load(data, this.options.webspace, this.options.language, true);
                                 }.bind(this)
                             }
                         ]
@@ -1141,6 +1142,7 @@ define([
                                     items: [
                                         {
                                             title: this.sandbox.translate('toolbar.delete'),
+                                            disabled: (this.options.id === 'index'), // disable delete button if startpage (index)
                                             callback: function() {
                                                 this.sandbox.emit('sulu.content.content.delete', this.data.id);
                                             }.bind(this)
