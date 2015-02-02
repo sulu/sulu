@@ -122,6 +122,7 @@ class Symfony implements ProxyClientInterface, PurgeInterface
         $allRequests = array();
 
         foreach ($requests as $request) {
+            syslog(LOG_INFO, $request->getUrl());
             /** @var RequestInterface $request */
             $proxyRequest = $this->client->createRequest(
                 $request->getMethod(),
