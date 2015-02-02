@@ -86,7 +86,7 @@ class PreviewController extends Controller
     /**
      * @return PreviewInterface
      */
-    private function getP
+    private function getPreview()
     {
         return $this->get(self::PREVIEW_ID);
     }
