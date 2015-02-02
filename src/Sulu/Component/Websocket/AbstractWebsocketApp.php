@@ -27,12 +27,12 @@ abstract class AbstractWebsocketApp implements WebsocketAppInterface
     private $clients;
 
     /**
-     * @var array
+     * @var Cache
      */
     private $contexts;
 
     /**
-     * @var Cache
+     * @var string
      */
     protected $name;
 

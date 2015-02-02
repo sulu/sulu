@@ -10,13 +10,14 @@
 
 namespace Sulu\Component\Websocket;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Prophecy\PhpUnit\ProphecyTestCase;
 
 class AbstractWebsocketAppTest extends ProphecyTestCase
 {
     public function testOpen()
     {
-        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp');
+        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp', array(new ArrayCache()));
 
         $reflectionClass = new \ReflectionClass('Sulu\Component\Websocket\AbstractWebsocketApp');
         $reflectionProperty = $reflectionClass->getProperty('clients');
@@ -35,7 +36,7 @@ class AbstractWebsocketAppTest extends ProphecyTestCase
 
     public function testClose()
     {
-        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp');
+        $app = $this->getMockForAbstractClass('Sulu\Component\Websocket\AbstractWebsocketApp', array(new ArrayCache()));
         $reflectionClass = new \ReflectionClass('Sulu\Component\Websocket\AbstractWebsocketApp');
         $reflectionProperty = $reflectionClass->getProperty('clients');
         $reflectionProperty->setAccessible(true);
