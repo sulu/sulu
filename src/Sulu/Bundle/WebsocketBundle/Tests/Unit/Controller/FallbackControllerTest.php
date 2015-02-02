@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsocketBundle\Tests\Unit\Controller;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsocketBundle\Controller\FallbackController;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class FallbackControllerTest extends ProphecyTestCase
 {
@@ -28,16 +29,20 @@ class FallbackControllerTest extends ProphecyTestCase
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
 
         $request->get('message')->willReturn(array('test' => 1));
+        $request->reveal()->cookies = new ParameterBag(array('PHPSESSID' => '123-123-123'));
 
         $appManager->getApp('test')->willReturn($app->reveal());
 
-        $app->onMessage(Argument::type('Ratchet\ConnectionInterface'), array('test' => 1))->willReturn(
-            array('test' => 2)
+        $app->onMessage(Argument::type('Ratchet\ConnectionInterface'), array('test' => 1))->will(
+            function ($args) {
+                $return = array('test' => $args[1]['test'] + 1);
+                $args[0]->send(json_encode($return));
+            }
         );
 
         $controller = new FallbackController($appManager->reveal());
         $response = $controller->send('test', $request->reveal());
 
-        $this->assertEquals(array(), json_decode($response->getContent(), true));
+        $this->assertEquals(array('test' => 2), json_decode($response->getContent(), true));
     }
 }
