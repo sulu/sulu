@@ -81,7 +81,12 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
         $siteMapFolder = $this->getContainer()->getParameter('sulu_website.sitemap.cache.folder');
 
         $filesystem = new Filesystem();
-        $filesystem->dumpFile(sprintf('%s/%s.xml', $siteMapFolder, $webspaceKey), $sitemap);
-        $output->writeln(sprintf('<done>Done: Generated "%s" in '. (microtime(true) - $time) .' seconds!</done>', $webspaceKey));
+        $filePath = sprintf('%s/%s.xml', $siteMapFolder, $webspaceKey);
+        $filesystem->dumpFile($filePath, $sitemap);
+        if (file_exists($filePath)) {
+            $output->writeln(sprintf('<done>Done: Generated "%s" in %s seconds!</done>', $webspaceKey, (microtime(true) - $time)));
+        } else {
+            $output->writeln(sprintf('<error>Error: Generating "%s" sitemap!</error>', $webspaceKey));
+        }
     }
 }
