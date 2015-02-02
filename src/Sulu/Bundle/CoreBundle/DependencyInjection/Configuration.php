@@ -33,7 +33,6 @@ class Configuration implements ConfigurationInterface
         $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getWebspaceConfiguration($children);
-        $this->getHttpCacheConfiguration($children);
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
         $this->getCacheConfiguration($children);
@@ -67,17 +66,6 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(300)
                         ->end()
                     ->end()
-                ->end()
-            ->end()
-        ->end();
-    }
-
-    private function getHttpCacheConfiguration(NodeBuilder $rootNode)
-    {
-        $rootNode->arrayNode('http_cache')
-            ->children()
-                ->scalarNode('type')
-                    ->defaultValue('SymfonyHttpCache')
                 ->end()
             ->end()
         ->end();

@@ -95,11 +95,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initWebspace($config['webspace'], $container, $loader);
         }
 
-        // Http Cache
-        if (isset($config['http_cache'])) {
-            $this->initHttpCache($config['http_cache'], $container, $loader);
-        }
-
         // Cache
         if (isset($config['cache'])) {
             $this->initCache($config['cache'], $container, $loader);
@@ -128,12 +123,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $webspaceConfig['request_analyzer']['priority']
         );
         $loader->load('webspace.xml');
-    }
-
-    private function initHttpCache($httpCacheConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
-    {
-        $container->setParameter('sulu_core.http_cache.type', $httpCacheConfig['type']);
-        $loader->load('http-cache.xml');
     }
 
     /**

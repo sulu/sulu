@@ -16,11 +16,12 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
+use Sulu\Component\Content\PageInterface;
 
 /**
  * This structure represents a page in the CMS
  */
-abstract class Page extends Structure
+abstract class Page extends Structure implements PageInterface
 {
     /**
      * template to render content

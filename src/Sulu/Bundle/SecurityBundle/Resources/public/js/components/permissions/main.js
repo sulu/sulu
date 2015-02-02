@@ -118,6 +118,7 @@ define([
             }.bind(this));
 
             this.user.save(null, {
+                global: false,
                 success: function(model) {
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
                 }.bind(this),

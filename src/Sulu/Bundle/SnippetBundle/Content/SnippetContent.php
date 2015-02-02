@@ -193,7 +193,8 @@ class SnippetContent extends ComplexContentType
         $refs = $property->getValue();
         $contentData = array();
 
-        $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids']:array();
+        $ids = $this->getUuids($refs);
+
         foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
             $contentData[] = $snippet['view'];
         }
@@ -216,7 +217,7 @@ class SnippetContent extends ComplexContentType
         }
 
         $refs = $property->getValue();
-        $ids = is_array($refs) && array_key_exists('ids', $refs) ? $refs['ids'] : array();
+        $ids = $this->getUuids($refs);
 
         $contentData = array();
         foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
@@ -250,5 +251,24 @@ class SnippetContent extends ComplexContentType
         }
 
         return $snippets;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $data = $property->getValue();
+
+        return $this->getUuids($data);
+    }
+
+    /**
+     * The data is not always normalized, so we normalize the data here.
+     */
+    private function getUuids($data)
+    {
+        $ids = is_array($data) && array_key_exists('ids', $data) ? $data['ids'] : array();
+        return $ids;
     }
 }

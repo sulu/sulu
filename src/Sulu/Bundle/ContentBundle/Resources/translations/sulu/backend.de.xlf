@@ -246,6 +246,14 @@
                 <source>sulu.content.seo.robots.no-follow</source>
                 <target>no-follow (Links auf der Seite wird von Suchmaschinen nicht gefolgt)</target>
             </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22253" resname="sulu.content.seo.sitemap">
+                <source>sulu.content.seo.sitemap</source>
+                <target>Sitemap</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22255" resname="sulu.content.seo.sitemap.hide">
+                <source>sulu.content.seo.sitemap.hide</source>
+                <target>In Sitemap ausblenden</target>
+            </trans-unit>
             <trans-unit id="142cd92f1c29c9e456a5ce2178d22192" resname="sulu.content.excerpt.title">
                 <source>sulu.content.excerpt.title</source>
                 <target>Titel</target>
