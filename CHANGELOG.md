@@ -1,6 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
+* 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change
     * HOTFIX      #741 [ContentBundle]  Fix Resourcelocater Content Type call move without editing
 
