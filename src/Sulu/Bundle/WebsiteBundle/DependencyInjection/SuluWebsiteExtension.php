@@ -32,6 +32,11 @@ class SuluWebsiteExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
+            'sulu_website.preview_defaults.analyticsKey',
+            $config['preview_defaults']['analyticsKey']
+        );
+
+        $container->setParameter(
             'sulu_website.navigation.cache.lifetime',
             $config['twig']['navigation']['cache_lifetime']
         );

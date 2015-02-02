@@ -29,6 +29,12 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('sulu_website');
 
         $rootNode->children()
+            ->arrayNode('preview_defaults')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('analyticsKey')->defaultValue('UA-SULU-PREVIEW-KEY')->end()
+                ->end()
+            ->end()
             ->arrayNode('twig')
                 ->addDefaultsIfNotSet()
                 ->children()
