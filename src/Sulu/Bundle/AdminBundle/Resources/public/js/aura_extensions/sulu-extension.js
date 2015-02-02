@@ -325,7 +325,11 @@
                 // country
                 if (!!address.country) {
                     addressString = prefixIfNotFirst(addressString, ', ');
-                    addressString += address.country.name;
+                    if (typeof address.country === 'string') {
+                        addressString += address.country;
+                    } else {
+                        addressString += address.country.name;
+                    }
                 }
 
                 return addressString;
