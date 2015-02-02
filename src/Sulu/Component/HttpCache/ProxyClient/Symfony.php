@@ -28,7 +28,6 @@ use Guzzle\Http\Message\RequestInterface;
  */
 class Symfony implements ProxyClientInterface, PurgeInterface
 {
-
     const HTTP_METHOD_PURGE = 'PURGE';
 
     /**

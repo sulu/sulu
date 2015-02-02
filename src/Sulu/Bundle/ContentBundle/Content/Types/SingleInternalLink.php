@@ -42,12 +42,22 @@ class SingleInternalLink extends SimpleContentType
     )
     {
         $value = $property->getValue();
-        if ($value !== $node->getIdentifier()) {
-            parent::write($node, $property, $userId, $webspaceKey, $languageCode,$segmentKey);
-        } else {
-            // FIXME validation and an own exception in sulu/sulu
-            throw new \Exception();
+
+        if ($value === $node->getIdentifier()) {
+            throw new \InvalidArgumentException('Internal link node cannot reference itself');
         }
+
+        parent::write($node, $property, $userId, $webspaceKey, $languageCode,$segmentKey);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $uuid = $property->getValue();
+
+        return $uuid ? array($uuid) : array();
     }
 
     /**

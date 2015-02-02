@@ -67,26 +67,7 @@ abstract class WebsiteController extends Controller
                 ob_clean();
             }
 
-            $response = new Response();
-            $response->setContent($content);
-
-            // if not preview enable cache handling
-            if (!$preview) {
-                // mark the response as either public or private
-                $response->setPublic();
-
-                // set the private and shared max age
-                $response->setMaxAge(240);
-                $response->setSharedMaxAge(960);
-
-                // set reverse-proxy TTL (Symfony HttpCache, Varnish, ...)
-                $response->headers->set(
-                    HttpCache::HEADER_REVERSE_PROXY_TTL,
-                    $response->getAge() + intval($structure->getCacheLifeTime())
-                );
-            }
-
-            return $response;
+            return new Response($content);
         } catch (InvalidArgumentException $e) {
             // template not found
             throw new HttpException(406, 'Error encountered when rendering content', $e);
