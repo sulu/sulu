@@ -66,16 +66,6 @@ class MediaControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
-    /**
-     * @var string
-     */
-    protected $mediaDefaultTitle = 'photo';
-
-    /**
-     * @var string
-     */
-    protected $mediaDefaultDescription = 'description';
-
     protected function setUp()
     {
         parent::setUp();
@@ -725,7 +715,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals($this->media->getId(), $response->id);
+        $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
         $this->assertEquals($this->collection->getId(), $response->collection);
