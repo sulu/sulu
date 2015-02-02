@@ -88,7 +88,7 @@ class HandlerPass implements CompilerPassInterface
     {
         /** @var Definition */
         $definition = $container->getDefinition($id);
-        $reflection = new \ReflectionClass($definition->getClass());
+        $reflection = new \ReflectionClass($container->getParameterBag()->resolveValue($definition->getClass()));
 
         if (!$reflection->implementsInterface('Sulu\Component\HttpCache\HandlerInterface')) {
             throw new \InvalidArgumentException(sprintf(
