@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Command;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Component\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CreateSitemapCommandTest extends SuluTestCase
@@ -34,7 +34,7 @@ class CreateSitemapCommandTest extends SuluTestCase
     {
         $this->tester->execute(
             array(
-                'sulu_io'
+                'webspace' => 'sulu_io'
             )
         );
 
