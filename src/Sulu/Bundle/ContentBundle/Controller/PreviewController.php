@@ -14,7 +14,6 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -73,6 +72,10 @@ class PreviewController extends Controller
             $contentMapper = $this->get('sulu.content.mapper');
             $startPage = $contentMapper->loadStartPage($webspaceKey, $locale);
             $contentUuid = $startPage->getUuid();
+        }
+
+        if (!$preview->started($uid, $contentUuid, $webspaceKey, $locale)) {
+            $preview->start($uid, $contentUuid, $webspaceKey, $locale);
         }
 
         $content = $preview->render($uid, $contentUuid, $webspaceKey, $locale);

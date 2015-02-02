@@ -45,6 +45,7 @@ class PreviewMessageHandlerTest extends SuluTestCase
             $this->getContainer()->get('sulu_content.preview'),
             $this->getContainer()->get('sulu_core.webspace.request_analyzer.admin'),
             $this->getContainer()->get('doctrine'),
+            $this->mapper,
             new NullLogger()
         );
     }
