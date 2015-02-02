@@ -370,6 +370,23 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getByIds(array $ids, $locale)
+    {
+        $media = array();
+        $mediaEntities = $this->mediaRepository->findMedia(array('pagination' => false, 'ids' => $ids));
+        $this->count = count($mediaEntities);
+        foreach ($mediaEntities as $mediaEntity) {
+            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        }
+
+        ksort($media);
+
+        return $media;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function get($locale, $filter = array(), $limit = null, $offset = null)
     {
         $media = array();
@@ -597,7 +614,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param SymfonyFile $file
-     * @return int
+     * @return integer
      */
     protected function getMediaType(SymfonyFile $file)
     {

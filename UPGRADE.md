@@ -1,15 +1,37 @@
 # Upgrade
 
+## dev-master
+
+### HTTP Cache
+
+The HTTP cache integration has been refactored. The following configuration
+must be **removed**:
+
+````yaml
+sulu_core:
+    # ...
+    http_cache:
+        type: symfonyHttpCache
+````
+
+The Symfony HTTP cache is enabled by default now, so there is no need to do
+anything else. See the [HTTP cache
+documentation](http://sulu.readthedocs.org/en/latest/reference/bundles/http_cache.html)
+for more information.
+
 ## 0.14.0
+
 * Role name is now unique
   * check roles and give them unique names
 * Apply all permissions correctly, otherwise users won't be able to work on snippets, categories or tags anymore
 
 ## 0.13.0
+
 * Remove `/cmf/<webspace>/temp` from repository
   * run `app/console doctrine:phpcr:node:remove /cmf/<webspace>/temp` foreach webspace
 
 ## 0.12.0
+
 * Permissions have to be correct now, because they are applied
   * otherwise add a permission value of 120 for `sulu.security.roles`,
     `sulu.security.groups` and `sulu.security.users` to one user to change

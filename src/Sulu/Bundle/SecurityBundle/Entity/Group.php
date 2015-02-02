@@ -73,12 +73,12 @@ class Group extends ApiEntity
     private $roles;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var \Sulu\Component\Security\UserInterface
      */
     private $creator;
 
@@ -365,7 +365,7 @@ class Group extends ApiEntity
     /**
      * Set changer
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @param \Sulu\Component\Security\UserInterface $changer
      * @return Group
      */
     public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
@@ -378,7 +378,7 @@ class Group extends ApiEntity
     /**
      * Get changer
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getChanger()
     {
@@ -388,10 +388,10 @@ class Group extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @param \Sulu\Component\Security\UserInterface $creator
      * @return Group
      */
-    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -401,7 +401,7 @@ class Group extends ApiEntity
     /**
      * Get creator
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return \Sulu\Component\Security\UserInterface
      */
     public function getCreator()
     {

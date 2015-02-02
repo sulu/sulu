@@ -57,9 +57,32 @@ interface ContactManagerInterface
 
 //    public function addAccountContact($account, $contact);
 
+    /**
+     * sets main email, based on emails that are set on entity
+     * @param $entity
+     * @return mixed
+     */
     public function setMainEmail($entity);
+
+    /**
+     * sets main fax, based on faxes that are set on entity
+     * @param $entity
+     * @return mixed
+     */
     public function setMainFax($entity);
+
+    /**
+     * sets main url, based on urls that are set on entity
+     * @param $entity
+     * @return mixed
+     */
     public function setMainUrl($entity);
+
+    /**
+     * sets main phone, based on phones that are set on entity
+     * @param $entity
+     * @return mixed
+     */
     public function setMainPhone($entity);
 
     /**

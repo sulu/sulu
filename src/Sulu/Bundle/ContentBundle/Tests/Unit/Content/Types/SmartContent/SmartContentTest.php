@@ -393,44 +393,28 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetContentData()
     {
-        $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
-            array(),
-            '',
-            true,
-            true,
-            true,
-            array('getValue', 'getParams')
-        );
-        $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
-        );
-
-        $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue(array('dataSource' => '123-123-123')));
-
-        $property->expects($this->exactly(2))->method('getParams')
-            ->will($this->returnValue(array()));
-
-        $property->expects($this->exactly(3))->method('getStructure')
-            ->will($this->returnValue($structure));
-
-        $this->contentQuery->expects($this->once())->method('execute')
-            ->with(
-                $this->equalTo(null),
-                $this->equalTo(array(null)),
-                $this->equalTo($this->contentQueryBuilder),
-                $this->equalTo(true),
-                $this->equalTo(-1),
-                $this->equalTo(null),
-                $this->equalTo(null)
-            )->will($this->returnValue(array(1, 2, 3, 4, 5, 6)));
-
-        $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
-
+        $property = $this->getContentDataProperty();
         $contentData = $this->smartContent->getContentData($property);
 
-        $this->assertEquals(array(1, 2, 3, 4, 5, 6), $contentData);
+        $this->assertEquals(
+            array(
+                array('uuid' => 1),
+                array('uuid' => 2),
+                array('uuid' => 3),
+                array('uuid' => 4),
+                array('uuid' => 5),
+                array('uuid' => 6),
+            ), 
+            $contentData
+        );
+    }
+
+    public function testGetReferencedUuids()
+    {
+        $property = $this->getContentDataProperty();
+        $uuids = $this->smartContent->getReferencedUuids($property);
+
+        $this->assertEquals(array(1, 2, 3, 4, 5, 6), $uuids);
     }
 
     public function testGetContentDataPaged()
@@ -588,5 +572,52 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $viewData = $this->smartContent->getViewData($property);
         $this->assertEquals(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)), $viewData);
+    }
+
+    private function getContentDataProperty()
+    {
+        $property = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\PropertyInterface',
+            array(),
+            '',
+            true,
+            true,
+            true,
+            array('getValue', 'getParams')
+        );
+        $structure = $this->getMockForAbstractClass(
+            'Sulu\Component\Content\StructureInterface'
+        );
+
+        $property->expects($this->exactly(1))->method('getValue')
+            ->will($this->returnValue(array('dataSource' => '123-123-123')));
+
+        $property->expects($this->exactly(2))->method('getParams')
+            ->will($this->returnValue(array()));
+
+        $property->expects($this->exactly(3))->method('getStructure')
+            ->will($this->returnValue($structure));
+
+        $this->contentQuery->expects($this->once())->method('execute')
+            ->with(
+                $this->equalTo(null),
+                $this->equalTo(array(null)),
+                $this->equalTo($this->contentQueryBuilder),
+                $this->equalTo(true),
+                $this->equalTo(-1),
+                $this->equalTo(null),
+                $this->equalTo(null)
+            )->will($this->returnValue(array(
+                array('uuid' => 1),
+                array('uuid' => 2),
+                array('uuid' => 3),
+                array('uuid' => 4),
+                array('uuid' => 5),
+                array('uuid' => 6),
+            )));
+
+        $structure->expects($this->any())->method('getUuid')->will($this->returnValue('123-123-123'));
+
+        return $property;
     }
 }
