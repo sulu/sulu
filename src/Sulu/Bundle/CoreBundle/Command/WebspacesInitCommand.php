@@ -163,7 +163,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             // set title
             $node->setProperty($this->properties->getName('title'), 'Sulu CMF');
         }
-        
+
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
             foreach ($localization->getChildren() as $local) {
                 $this->setBasicLocalizationProperties($local, $node, $template, $userId);
