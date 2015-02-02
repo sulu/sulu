@@ -3,11 +3,14 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #689 [WebsiteBundle]  Add Command to generate sitemap.xml
+    * ENHANCEMENT #740 [SecurityBundle] Made role content navigation extendable
+    * FEATURE     #569 [All]            Behat integration - behat features for bundles
     * ENHANCEMENT #692 [SecurityBundle] Made user extendable
     * ENHANCEMENT #731 [TestBundle]     Removed test user
     * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
     * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
     * BUGFIX      #697 [CoreBundle]     Do not try and set the theme when the portal has not been found
+    * FEATURE     #697 [HttpCacheBundle]Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
 
 * 0.14.1 (2015-01-21)
     * HOTFIX      #737 [MediaBundle]    Changed BaseCollection properties to be protected for inheritance

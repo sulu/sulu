@@ -1,0 +1,90 @@
+<?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
+
+use Prophecy\PhpUnit\ProphecyTestCase;
+use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
+use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
+use Sulu\Component\Content\PropertyInterface;
+use Psr\Log\LoggerInterface;
+
+class InternalLinksTest extends ProphecyTestCase
+{
+    /**
+     * @var ContentQueryExecutorInterface
+     */
+    private $contentQueryExecutor;
+
+    /**
+     * @var ContentQueryBuilderInterface
+     */
+    private $contentQueryBuilder;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var PropertyInterface
+     */
+    private $property;
+
+    /**
+     * @var InternalLinks
+     */
+    private $type;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->contentQueryExecutor = $this->prophesize('Sulu\Component\Content\Query\ContentQueryExecutorInterface');
+        $this->contentQueryBuilder = $this->prophesize('Sulu\Component\Content\Query\ContentQueryBuilderInterface');
+        $this->logger = $this->prophesize('Psr\Log\LoggerInterface');
+        $this->property = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+
+        $this->type = new InternalLinks(
+            $this->contentQueryExecutor->reveal(),
+            $this->contentQueryBuilder->reveal(),
+            $this->logger->reveal(),
+            'some_template.html.twig'
+        );
+    }
+
+    public function provideGetReferencedUuids()
+    {
+        return array(
+            array(
+                array('ids' => array('4234-2345-2345-3245', '4321-4321-4321-4321')),
+                array('4234-2345-2345-3245', '4321-4321-4321-4321'),
+            ),
+            array(
+                array(array('someotherkey' => '4234-2345-2345-3245', '4321-4321-4321-4321')),
+                array(),
+            ),
+            array(
+                array(),
+                array(),
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider provideGetReferencedUuids
+     */
+    public function testGetReferencedUuids($propertyValue, $expected)
+    {
+        $this->property->getValue()->willReturn($propertyValue);
+        $uuids = $this->type->getReferencedUuids($this->property->reveal());
+        $this->assertEquals($expected, $uuids);
+    }
+}

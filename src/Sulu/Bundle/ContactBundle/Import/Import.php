@@ -446,24 +446,39 @@ class Import
     protected function processContactFile($filename)
     {
         $createContact = function ($data, $row) {
-            $this->createContact($data, $row);
+            return $this->createContact($data, $row);
+        };
+        $postFlushContact = function($data, $row, $result) {
+            return call_user_func(array($this, 'postFlushCreateContact'), $data, $row, $result);
         };
 
         // create contacts
         $this->debug("Create Contacts:\n");
-        $this->processCsvLoop($filename, $createContact, true);
+        $this->processCsvLoop($filename, $createContact, $postFlushContact, true);
     }
 
+    /**
+     * this function will be called after a contact was created (after flush)
+     */
+    protected function postFlushCreateContact($data, $row, $contact)
+    {
+    }
+    
     /**
      * Loads the CSV Files and the Entities for the import
      * @param string $filename path to file
      * @param callable $function will be called for each row in file
+     * @param callable $postFlushCallback will be called after every flush
      * @param bool $flushOnEveryRow If defined flush will be executed on every data row
      * @throws \Doctrine\DBAL\DBALException
      * @throws \Exception
      */
-    protected function processCsvLoop($filename, $function, $flushOnEveryRow = false)
-    {
+    protected function processCsvLoop(
+        $filename,
+        callable $callback,
+        callable $postFlushCallback = null,
+        $flushOnEveryRow = false
+    ) {
         // initialize default values
         $this->initDefaults();
 
@@ -495,19 +510,26 @@ class Import
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
                     
                     // check if row contains data that should be excluded
-                    if (!$this->rowContainsExlcudeData($associativeData, $key, $value)) {
+                    $exclude = $this->rowContainsExlcudeData($associativeData, $key, $value);
+                    if (!$exclude) {
                         // call callback function
-                        $function($associativeData, $row);
+                        $result = $callback($associativeData, $row);
                     } else {
                         $this->debug(sprintf("Exclude data row %d due to exclude condition %s = %s \n", $row, $key, $value));
                     }
 
                     if ($flushOnEveryRow) {
                         $this->em->flush();
+                        if (!$exclude && !is_null($postFlushCallback)) {
+                            $postFlushCallback($associativeData, $row, $result);
+                        }
                     }
                     if ($row % 20 === 0) {
                         if (!$flushOnEveryRow) {
                             $this->em->flush();
+                            if (!$exclude && !is_null($postFlushCallback)) {
+                                $postFlushCallback($associativeData, $row, $result);
+                            }
                         }
                         $this->em->clear();
                         gc_collect_cycles();
@@ -589,9 +611,10 @@ class Import
      */
     private function compareStrings($needle, $haystack, $strict = false)
     {
-        if ($strict) {
+        if ($strict || empty($needle)) {
             return $needle === $haystack;
         }
+
         return strpos($haystack, $needle) === 0;
     }
 
@@ -1543,6 +1566,9 @@ class Import
         foreach ($data as $index => $value) {
             if ($index >= sizeof($headerData)) {
                 break;
+            }
+            if (empty($value)) {
+                continue;
             }
             // search index in mapping config
             if (sizeof($resultArray = array_keys($this->columnMappings, $headerData[$index])) > 0) {

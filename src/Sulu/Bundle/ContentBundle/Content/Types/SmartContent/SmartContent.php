@@ -231,6 +231,21 @@ class SmartContent extends ComplexContentType
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $content = $this->getContentData($property);
+        $uuids = array();
+
+        foreach ($content as $page) {
+            $uuids[] = $page['uuid'];
+        }
+
+        return $uuids;
+    }
+
+    /**
      * load data from container
      */
     private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
