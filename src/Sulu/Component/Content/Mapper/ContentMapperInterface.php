@@ -82,11 +82,10 @@ interface ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param bool $isShadow
+     * @param string $shadowBaseLanguage
      *
-     * @throws \PHPCR\ItemExistsException if new title already exists
-     * @throws \Exception
-     *
-     * @return StructureInterface
+     * @return StructureInterface if new title already exists
      */
     public function saveStartPage(
         $data,
@@ -94,7 +93,9 @@ interface ContentMapperInterface
         $webspaceKey,
         $languageCode,
         $userId,
-        $partialUpdate = true
+        $partialUpdate = true,
+        $isShadow = null,
+        $shadowBaseLanguage = null
     );
 
     /**

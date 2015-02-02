@@ -360,9 +360,6 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
 
-        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
-        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
-
         $state = $this->getRequestParameter($request, 'state');
         $type = $request->query->get('type') ? : 'page';
 
@@ -400,6 +397,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
+        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
+
         $data = $request->request->all();
 
         try {
@@ -412,7 +412,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 $template,
                 $webspace,
                 $language,
-                $this->getUser()->getId()
+                $this->getUser()->getId(),
+                $isShadow,
+                $shadowBaseLanguage
             );
             $view = $this->view($result);
         } catch (RestException $ex) {
