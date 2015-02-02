@@ -218,6 +218,8 @@
   margin-left: -90px;
   margin-right: 90px;
   overflow: hidden;
+  text-align: center;
+  color: #000000;
 }
 
 /* line 1, ../scss/modules/general.scss */

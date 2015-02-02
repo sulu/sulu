@@ -70,7 +70,7 @@ define([
 
             previewOnRequest: [
                 '<div class="v-center">',
-                '   <div id="preview-start" class="btn action large">',
+                '   <div id="preview-start" class="btn grey large">',
                 '       <span class="fa-play"></span>',
                 '       <span class="text"><%= startLabel %></span>',
                 '   </div>',
