@@ -160,7 +160,7 @@ class ResourceLocator extends ComplexContentType implements ResourceLocatorInter
         // or the tree value does not exist
         if ($treeValue === null) {
             $this->getStrategy()->save($node, $value, $userId, $webspaceKey, $languageCode, $segmentKey);
-        } elseif ($propertyValue === $treeValue) {
+        } elseif ($propertyValue === $treeValue && $propertyValue != $value) {
             $this->getStrategy()->move(
                 $treeValue,
                 $value,

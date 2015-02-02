@@ -562,7 +562,7 @@ class Media extends ApiWrapper
      */
     public function setCreator($creator)
     {
-        $this->entity->setChanger($creator);
+        $this->entity->setCreator($creator);
 
         return $this;
     }

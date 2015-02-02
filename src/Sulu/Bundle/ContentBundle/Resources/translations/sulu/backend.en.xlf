@@ -246,6 +246,14 @@
                 <source>sulu.content.seo.robots.no-follow</source>
                 <target>no-follow (links on this page will not be followed by the search engine)</target>
             </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22253" resname="sulu.content.seo.sitemap">
+                <source>sulu.content.seo.sitemap</source>
+                <target>Sitemap</target>
+            </trans-unit>
+            <trans-unit id="445d99ff2f64652633a5ca2169f22255" resname="sulu.content.seo.sitemap.hide">
+                <source>sulu.content.seo.sitemap.hide</source>
+                <target>Hide in sitemap</target>
+            </trans-unit>
             <trans-unit id="142cd92f1c29c9e456a5ce2178d22192" resname="sulu.content.excerpt.title">
                 <source>sulu.content.excerpt.title</source>
                 <target>Title</target>
