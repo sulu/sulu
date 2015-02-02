@@ -25,7 +25,7 @@
 
         <!-- content node event listener -->
         <service id="sulu.http_cache.event_listener.content_node" class="%sulu.http_cache.event_listener.content_node.class%">
-            <tag name="kernel.event_listener" event="sulu.content.node.save" method="onContentNodeSave"/>
+            <tag name="kernel.event_listener" event="sulu.content.node.post_save" method="onContentNodeSave"/>
             <argument type="service" id="sulu.http_cache.http_cache_manager"/>
             <argument>%kernel.environment%</argument>
         </service>
