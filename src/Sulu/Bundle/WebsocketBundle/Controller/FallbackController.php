@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\WebsocketBundle\Controller;
 
-use Sulu\Bundle\WebsocketBundle\Connection\DummyConnection;
+use Sulu\Bundle\WebsocketBundle\Connection\FallbackConnection;
 use Sulu\Component\Websocket\AppManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +45,7 @@ class FallbackController
         $id = $request->cookies->get($sessionName);
 
         $app = $this->appManager->getApp($appName);
-        $connection = new DummyConnection($id);
+        $connection = new FallbackConnection($id);
 
         $app->onMessage($connection, $message);
 

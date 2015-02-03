@@ -13,7 +13,7 @@ namespace Sulu\Component\Websocket\ConnectionContext;
 /**
  * Websocket context which implies logged in user in a specific firewall
  */
-interface AuthenticatedConnectionContextInterface
+interface AuthenticatedConnectionContextInterface extends ConnectionContextInterface
 {
     /**
      * Returns user for the current firewall

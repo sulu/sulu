@@ -12,9 +12,9 @@ namespace Sulu\Bundle\WebsocketBundle\Connection;
 use Ratchet\ConnectionInterface;
 
 /**
- * Dummy connection for fallback
+ * Fall connection to use same interface as websockets
  */
-class DummyConnection implements ConnectionInterface
+class FallbackConnection implements ConnectionInterface
 {
     /**
      * Container for send data
