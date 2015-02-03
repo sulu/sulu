@@ -1,8 +1,10 @@
 # Upgrade
 
 ## dev-develop
-* Websocket start command changed to `app/console sulu:websocket:run`
-  * if you use xdebug on your server please start websocket with `app/console sulu:websocket:run -e prod`
+
+### Websocket Component
+Websocket start command changed to `app/console sulu:websocket:run`. If you use xdebug on your server please start
+websockets with `app/console sulu:websocket:run -e prod`
 
 ### HTTP Cache
 

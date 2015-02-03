@@ -2,21 +2,21 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #684 [ContentBundle]  Refactored preview to use new websocket component and only one socket for form
-                                        and preview
-    * FEATURE     #684                  Implemented Websocket Component
-    * BUGFIX      #753 [MediaBundle]    Fix 0 bytes file upload
-    * FEATURE     #714 [ContentBundle]  Add Option to hide page in sidemap
-    * ENHANCEMENT #740 [SecurityBundle] Made role content navigation extendable
-    * FEATURE     #569 [All]            Behat integration - behat features for bundles
-    * ENHANCEMENT #692 [SecurityBundle] Made user extendable
-    * ENHANCEMENT #731 [TestBundle]     Removed test user
-    * BUGFIX      #671 [MediaBundle]    Fixed fileversion update with meta data
-    * FEATURE     #702 [AdminBundle]    Added sortings to user settings and changed default url for activities
-    * BUGFIX      #697 [ContactBundle]  Set VAT number field optional
-    * BUGFIX      #697 [CoreBundle]     Do not try and set the theme when the portal has not been found
-    * FEATURE     #697 [HttpCacheBundle]Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
-    * ENHANCEMENT #777 [ContentBundle]  Enable "copy language" on startpage
+    * FEATURE     #684 [ContentBundle]   Refactored preview to use new websocket component and only one socket for form
+                                         and preview
+    * FEATURE     #684 [WebsocketBundle] Implemented Websocket Component to standardize Websocket implementations
+    * BUGFIX      #753 [MediaBundle]     Fix 0 bytes file upload
+    * FEATURE     #714 [ContentBundle]   Add Option to hide page in sidemap
+    * ENHANCEMENT #740 [SecurityBundle]  Made role content navigation extendable
+    * FEATURE     #569 [All]             Behat integration - behat features for bundles
+    * ENHANCEMENT #692 [SecurityBundle]  Made user extendable
+    * ENHANCEMENT #731 [TestBundle]      Removed test user
+    * BUGFIX      #671 [MediaBundle]     Fixed fileversion update with meta data
+    * FEATURE     #702 [AdminBundle]     Added sortings to user settings and changed default url for activities
+    * BUGFIX      #697 [ContactBundle]   Set VAT number field optional
+    * BUGFIX      #697 [CoreBundle]      Do not try and set the theme when the portal has not been found
+    * FEATURE     #697 [HttpCacheBundle] Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
+    * ENHANCEMENT #777 [ContentBundle]   Enable "copy language" on startpage
 
 * 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change
@@ -47,7 +47,6 @@ CHANGELOG for Sulu
                                         This is important when template uses ESI
     * BUGFIX      #661 [WebsiteBundle]  Added published date to resolver
     * BUGFIX      #655 [ContentBundle]  Fixed checkbox read for preview
-    * FEATURE     #684 [ALL]            Implemented Websocket Component to standardize Websocket implementations
 
 * 0.13.2 (2014-12-12)
     * HOTFIX      #--- [AdminBundle]    Fixed globalize loading issue
