@@ -17,9 +17,8 @@ class RatchetAppManagerTest extends ProphecyTestCase
     public function testConstructor()
     {
         $loop = $this->prophesize('React\EventLoop\LoopInterface');
-        $sessionHandler = $this->prophesize('SessionHandlerInterface');
 
-        $manager = new RatchetAppManager(9876, $sessionHandler->reveal(), 'sulu.io', '192.168.0.1', $loop->reveal());
+        $manager = new RatchetAppManager(9876, 'sulu.io', '192.168.0.1', $loop->reveal());
 
         $this->assertEquals(9876, $manager->getPort());
         $this->assertEquals('sulu.io', $manager->getHttpHost());
@@ -30,10 +29,9 @@ class RatchetAppManagerTest extends ProphecyTestCase
     public function testAdd()
     {
         $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
-        $sessionHandler = $this->prophesize('SessionHandlerInterface');
         $app->getName()->willReturn('test');
 
-        $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
+        $manager = new RatchetAppManager(9876);
 
         $manager->add('/content', $app->reveal());
 
@@ -53,11 +51,10 @@ class RatchetAppManagerTest extends ProphecyTestCase
 
     public function testAddAllowedOrigins()
     {
-        $sessionHandler = $this->prophesize('SessionHandlerInterface');
         $app = $this->prophesize('Sulu\Component\Websocket\WebsocketAppInterface');
         $app->getName()->willReturn('test');
 
-        $manager = new RatchetAppManager(9876, $sessionHandler->reveal());
+        $manager = new RatchetAppManager(9876);
 
         $manager->add('/content', $app->reveal(), array('test'));
 
