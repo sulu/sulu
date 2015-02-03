@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('preview_defaults')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('analyticsKey')->defaultValue('UA-SULU-PREVIEW-KEY')->end()
+                    ->scalarNode('analytics_key')->defaultValue('UA-SULU-PREVIEW-KEY')->end()
                 ->end()
             ->end()
             ->arrayNode('twig')

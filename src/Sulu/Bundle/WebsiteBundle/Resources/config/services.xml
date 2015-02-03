@@ -147,7 +147,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
             <argument type="collection">
-                <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analyticsKey%</argument>
+                <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analytics_key%</argument>
             </argument>
         </service>
 
