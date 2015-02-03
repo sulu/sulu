@@ -55,20 +55,13 @@ class RatchetAppManager implements AppManagerInterface
     private $apps = array();
 
     /**
-     * @var \SessionHandlerInterface
-     */
-    private $sessionHandler;
-
-    /**
      * @param int $port Port to listen on. If 80, assuming production, Flash on 843 otherwise expecting Flash to be proxied through 8843
-     * @param \SessionHandlerInterface $sessionHandler Handler for http sessions
      * @param string $httpHost HTTP hostname clients intend to connect to. MUST match JS `new WebSocket('ws://$httpHost');`
      * @param string $ipAddress IP address to bind to. Default is localhost/proxy only. '0.0.0.0' for any machine.
      * @param LoopInterface $loop Specific React\EventLoop to bind the application to. null will create one for you.
      */
     function __construct(
         $port,
-        \SessionHandlerInterface $sessionHandler,
         $httpHost = 'localhost',
         $ipAddress = '127.0.0.1',
         LoopInterface $loop = null
@@ -77,7 +70,6 @@ class RatchetAppManager implements AppManagerInterface
         $this->httpHost = $httpHost;
         $this->ipAddress = $ipAddress;
         $this->loop = $loop;
-        $this->sessionHandler = $sessionHandler;
     }
 
     /**

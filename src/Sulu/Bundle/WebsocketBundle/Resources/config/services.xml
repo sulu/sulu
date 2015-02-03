@@ -17,7 +17,6 @@
     <services>
         <service id="sulu_websocket.manager" class="%sulu_websocket.manager.class%">
             <argument type="string">%sulu_websocket.server.port%</argument>
-            <argument type="service" id="session.handler"/>
             <argument type="string">%sulu_websocket.server.http_host%</argument>
             <argument type="string">%sulu_websocket.server.ip_address%</argument>
         </service>
