@@ -62,7 +62,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                         data: changes
                     });
 
-                    def.then(updateIframe.bind(this));
+                    def.then(applyChanges.bind(this));
 
                     return def.promise();
                 }
@@ -79,8 +79,10 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 }
             },
 
-            updateIframe = function(handler, message) {
-                this.sandbox.emit('sulu.preview.changes', message.data);
+            applyChanges = function(handler, message) {
+                if(!!message.data) {
+                    this.sandbox.emit('sulu.preview.changes', message.data);
+                }
             },
 
             /**
@@ -226,11 +228,6 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                     ];
                 }
                 return sequence;
-            },
-
-            setContext: function(document, location) {
-                this.document = document;
-                this.location = location;
             }
         };
     };
