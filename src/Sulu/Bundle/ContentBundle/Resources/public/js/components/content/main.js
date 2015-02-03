@@ -1139,14 +1139,11 @@ define([
         },
 
         handleSingle: function(propertyName, content) {
-            // not is not supported ...
-            // check if one parent is a property
-            var filter = '*[property="' + propertyName + '"]',
-            // find rdfa node
-                elements = this.getPreviewDocument().querySelectorAll(filter);
+            var filter = '*[property="' + propertyName + '"]';
 
             this.handle(content, filter, function(element) {
-                // no parent have property
+                // check all parents if they has not the attribute property
+                // thats currently not supported by the api
                 var cur = element.parentNode;
                 while (null !== cur.parentNode) {
                     if (cur.hasAttribute('property')) {
