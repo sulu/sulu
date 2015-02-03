@@ -704,7 +704,7 @@ define([
                             // if mode is auto init immediately
                             this.sandbox.emit('sulu.preview.initialize.force', data, restart);
                         } else if (this.previewMode === 'on_request') {
-                            // if mode is auto init immediately
+                            // if mode is on_request render the "start preview" button
                             this.renderPreviewOnRequest(restart);
                         }
                     }.bind(this));
