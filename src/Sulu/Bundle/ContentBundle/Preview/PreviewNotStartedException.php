@@ -14,8 +14,13 @@ namespace Sulu\Bundle\ContentBundle\Preview;
  */
 class PreviewNotStartedException extends \Exception
 {
+    /**
+     * Code that is used for this exception
+     */
+    const EXCEPTION_CODE = 3001;
+
     function __construct()
     {
-        parent::__construct(sprintf('Preview not started.'), 3001);
+        parent::__construct('Preview not started.', self::EXCEPTION_CODE);
     }
 }
