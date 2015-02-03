@@ -80,7 +80,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
             },
 
             applyChanges = function(handler, message) {
-                if(!!message.data) {
+                if (!!message.data) {
                     this.sandbox.emit('sulu.preview.changes', message.data);
                 }
             },
@@ -112,20 +112,9 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                         sequence = this.getSequence($element);
 
                     if (!!sequence) {
-                        updateDelayed.call(this, sequence, element.getValue());
+                        update.call(this, sequence, element.getValue());
                     }
                 }
-            },
-
-            updateDelayed = function(sequence, value) {
-                if (this.timers[sequence]) {
-                    window.clearTimeout(this.timers[sequence]);
-                }
-
-                this.timers[sequence] = window.setTimeout(function() {
-                    this.timers[sequence] = null;
-                    update.call(this, sequence, value);
-                }.bind(this), this.config.delay);
             },
 
             bindCustomEvents = function() {
@@ -137,25 +126,23 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                     updateOnly.call(this);
                 }.bind(this));
 
-                this.sandbox.on('sulu.preview.update', function($el, value, changeOnKey) {
+                this.sandbox.on('sulu.preview.update', _.debounce(function($el, value) {
                     if (!!this.data.id) {
                         var property = this.getSequence($el);
-                        updateDelayed.call(this, property, value);
+                        update.call(this, property, value);
                     }
-                }, this);
+                }, this.config.delay), this);
             },
 
             bindDomEvents = function() {
                 var changeFilter = 'input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update',
                     keyupFilter = '.preview-update:not(' + changeFilter + ')';
 
-                this.sandbox.dom.on(this.formId, 'keyup', delayedUpdateEvent.bind(this), keyupFilter);
+                this.sandbox.dom.on(this.formId, 'keyup', _.debounce(delayedUpdateEvent.bind(this), this.config.delay), keyupFilter);
                 this.sandbox.dom.on(this.formId, 'change', updateEvent.bind(this), changeFilter);
             };
 
         return {
-            timers: {},
-
             sandbox: null,
             options: null,
             data: null,
