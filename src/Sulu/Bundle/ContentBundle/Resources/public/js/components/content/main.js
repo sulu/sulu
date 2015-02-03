@@ -710,15 +710,7 @@ define([
                     }.bind(this));
 
                     this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
-                        data = this.sandbox.util.extend(true, {}, this.data, data);
-                        if (!this.preview.initiated) {
-                            this.preview.start(data, this.options);
-                        } else if (!!restart) {
-                            // force reload
-                            this.sandbox.dom.remove(this.$preview);
-                            this.$preview = null;
-                            this.preview.restart(data, this.options, this.template);
-                        }
+                        this.previewInitialize(data, restart);
                     }.bind(this));
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
@@ -748,6 +740,18 @@ define([
 
                 this.setHeaderBar(true);
             }.bind(this));
+        },
+
+        previewInitialize: function(data, restart) {
+            data = this.sandbox.util.extend(true, {}, this.data, data);
+            if (!this.preview.initiated) {
+                this.preview.start(data, this.options);
+            } else if (!!restart) {
+                // force reload
+                this.sandbox.dom.remove(this.$preview);
+                this.$preview = null;
+                this.preview.restart(data, this.options, this.template);
+            }
         },
 
         renderPreviewOnRequest: function(restart) {
@@ -798,8 +802,6 @@ define([
          * Starts the resolution dropdown for the preview
          */
         startPreviewResolutionDropdown: function() {
-            var instanceName = 'resolutionsDropdown';
-
             this.sandbox.start([
                 {
                     name: 'dropdown@husky',
@@ -807,7 +809,7 @@ define([
                         el: this.sandbox.dom.find('#preview-toolbar-resolutions', this.$preview),
                         trigger: '.drop-down-trigger',
                         setParentDropDown: true,
-                        instanceName: instanceName,
+                        instanceName: 'resolutionsDropdown',
                         alignment: 'left',
                         data: constants.resolutionDropdownData
                     }
@@ -1117,9 +1119,8 @@ define([
         handleSequence: function(propertyName, content) {
             var sequence = propertyName.split(','),
                 filter = '',
-                elements,
-                nodeArray,
-                i, item, before = 0;
+                item, before = 0;
+
             for (item in sequence) {
                 // check of integer
                 if (!/^\+?(0|[1-9]\d*)$/.test(sequence[item])) {
@@ -1129,20 +1130,9 @@ define([
                     filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
                 }
             }
-            // find rdfa node
-            elements = this.getPreviewDocument().querySelectorAll(filter);
-            i = 0;
-            // foreach node
-            nodeArray = [].slice.call(elements);
-            nodeArray.forEach(function(element) {
-                // set content and highlight class
-                if (typeof content[i] !== 'undefined') {
-                    element.innerHTML = content[i];
-                } else {
-                    element.innerHTML = '';
-                }
-                // FIXME jump to element jump in from to: element.scrollIntoView();
-                i++;
+
+            this.handle(content, filter, function() {
+                return true;
             });
         },
 
@@ -1150,28 +1140,40 @@ define([
             // not is not supported ...
             // check if one parent is a property
             var filter = '*[property="' + propertyName + '"]',
-                cur,
             // find rdfa node
-                elements = this.getPreviewDocument().querySelectorAll(filter),
-            // foreach node
-                nodeArray = [].slice.call(elements),
-                i = 0;
-            nodeArray.forEach(function(element) {
+                elements = this.getPreviewDocument().querySelectorAll(filter);
+
+            this.handle(content, filter, function(element) {
                 // no parent have property
-                cur = element.parentNode;
+                var cur = element.parentNode;
                 while (null !== cur.parentNode) {
                     if (cur.hasAttribute('property')) {
-                        return;
+                        return false;
                     }
                     cur = cur.parentNode;
                 }
+
+                return true;
+            });
+        },
+
+        handle: function(content, selector, validate) {
+            var i = 0,
+                elements = this.getPreviewDocument().querySelectorAll(selector),
+                nodeArray = [].slice.call(elements);
+
+            nodeArray.forEach(function(element) {
+                if (!validate(element)) {
+                    return;
+                }
+
                 // set content and highlight class
                 if (typeof content[i] !== 'undefined') {
                     element.innerHTML = content[i];
                 } else {
                     element.innerHTML = '';
                 }
-                // FIXME jump to element jump in from to: element.scrollIntoView();
+                // FIXME jump to element: element.scrollIntoView();
                 i++;
             });
         },
