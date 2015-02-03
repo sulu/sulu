@@ -3,8 +3,21 @@
 ## dev-develop
 
 ### Websocket Component
+
 Websocket start command changed to `app/console sulu:websocket:run`. If you use xdebug on your server please start
-websockets with `app/console sulu:websocket:run -e prod`
+websockets with `app/console sulu:websocket:run -e prod`.
+
+Default behavior is that websocket turned of for preview, if you want to use it turn it on in the
+`app/config/admin/config.yml` under:
+
+```yml
+ sulu_content:
+     preview:
+         mode: auto       # possibilities [auto, on_request, off]
+         websocket: false # use websockets for preview, if true it tries to connect to websocket server,
+                          # if that fails it uses ajax as a fallback
+         delay: 300       # used for the delayed send of changes, lesser delay are more request but less latency
+```
 
 ### HTTP Cache
 
