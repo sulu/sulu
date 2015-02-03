@@ -101,22 +101,6 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 }
             },
 
-            /**
-             * dom event wait for pause to redirect changes
-             * @param {Object} e
-             */
-            delayedUpdateEvent = function(e) {
-                if (!!this.data.id && !!this.initiated) {
-                    var $element = $(e.currentTarget),
-                        element = this.sandbox.dom.data($element, 'element'),
-                        sequence = this.getSequence($element);
-
-                    if (!!sequence) {
-                        update.call(this, sequence, element.getValue());
-                    }
-                }
-            },
-
             bindCustomEvents = function() {
                 this.sandbox.on('sulu.preview.update-property', function(property, value) {
                     update.call(this, property, value);
@@ -138,7 +122,7 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                 var changeFilter = 'input[type="checkbox"].preview-update, input[type="radio"].preview-update, select.preview-update',
                     keyupFilter = '.preview-update:not(' + changeFilter + ')';
 
-                this.sandbox.dom.on(this.formId, 'keyup', _.debounce(delayedUpdateEvent.bind(this), this.config.delay), keyupFilter);
+                this.sandbox.dom.on(this.formId, 'keyup', _.debounce(updateEvent.bind(this), this.config.delay), keyupFilter);
                 this.sandbox.dom.on(this.formId, 'change', updateEvent.bind(this), changeFilter);
             };
 
