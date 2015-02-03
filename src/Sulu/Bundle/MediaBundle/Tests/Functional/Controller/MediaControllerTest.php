@@ -30,17 +30,17 @@ class MediaControllerTest extends SuluTestCase
      * @var EntityManager
      */
     private $em;
-    
+
     /**
      * @var CollectionType
      */
     private $collectionType;
-    
+
     /**
      * @var Collection
      */
     private $collection;
-    
+
     /**
      * @var MediaType
      */
@@ -136,7 +136,7 @@ class MediaControllerTest extends SuluTestCase
 
         $this->em->flush();
     }
-    
+
     protected function createMedia($name)
     {
         $media = new Media();
@@ -236,7 +236,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test Media DownloadCounter
+     * Test Media DownloadCounter
      */
     public function testResponseHeader()
     {
@@ -254,7 +254,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test Media GET by ID
+     * Test Media GET by ID
      */
     public function testGetById()
     {
@@ -280,7 +280,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testCget()
     {
@@ -303,7 +303,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testCgetCollection()
     {
@@ -327,7 +327,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testcGetCollectionTypes()
     {
@@ -352,7 +352,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testcGetCollectionTypesNotExisting()
     {
@@ -373,7 +373,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testcGetCollectionTypesMultiple()
     {
@@ -398,7 +398,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testcGetIds()
     {
@@ -446,7 +446,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET all Media
+     * Test GET all Media
      */
     public function testcGetNotExistingIds()
     {
@@ -467,7 +467,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test GET for non existing Resource (404)
+     * Test GET for non existing Resource (404)
      */
     public function testGetByIdNotExisting()
     {
@@ -486,7 +486,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test POST to create a new Media with details
+     * Test POST to create a new Media with details
      */
     public function testPost()
     {
@@ -545,7 +545,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test POST to create a new Media without details
+     * Test POST to create a new Media without details
      * @group postWithoutDetails
      */
     public function testPostWithoutDetails()
@@ -579,7 +579,41 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test PUT to create a new FileVersion
+     * Test POST to create a new Media without details
+     * @group postWithoutDetails
+     */
+    public function testPostWithSmallFile()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $filePath = $this->getFilePath();
+        $this->assertTrue(file_exists($filePath));
+        $photo = new UploadedFile($filePath, 'small.txt', 'text/plain', 0);
+
+        $client->request(
+            'POST',
+            '/api/media',
+            array(
+                'collection' => $this->collection->getId(),
+            ),
+            array(
+                'fileVersion' => $photo
+            )
+        );
+
+        $this->assertEquals(1, count($client->getRequest()->files->all()));
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals('small', $response->title);
+
+        $this->assertEquals('small.txt', $response->name);
+        $this->assertNotNull($response->id);
+    }
+
+    /**
+     * Test PUT to create a new FileVersion
      */
     public function testFileVersionUpdate()
     {
@@ -637,7 +671,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test PUT to create a new FileVersion
+     * Test PUT to create a new FileVersion
      */
     public function testPutWithoutFile()
     {
@@ -686,7 +720,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test PUT to create a new FileVersion
+     * Test PUT to create a new FileVersion
      */
     public function testFileVersionUpdateWithoutDetails()
     {
@@ -723,7 +757,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test DELETE
+     * Test DELETE
      */
     public function testDeleteById()
     {
@@ -749,7 +783,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test DELETE Collection
+     * Test DELETE Collection
      */
     public function testDeleteCollection()
     {
@@ -775,7 +809,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test DELETE on none existing Object
+     * Test DELETE on none existing Object
      */
     public function testDeleteByIdNotExisting()
     {
@@ -791,7 +825,7 @@ class MediaControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test Media DownloadCounter
+     * Test Media DownloadCounter
      */
     public function testDownloadCounter()
     {
@@ -832,5 +866,13 @@ class MediaControllerTest extends SuluTestCase
     private function getImagePath()
     {
         return __DIR__ . '/../../app/Resources/images/photo.jpeg';
+    }
+
+    /**
+     * @return string
+     */
+    private function getFilePath()
+    {
+        return __DIR__ . '/../../app/Resources/files/small.txt';
     }
 }
