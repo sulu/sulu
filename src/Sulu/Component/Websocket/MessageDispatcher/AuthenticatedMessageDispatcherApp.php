@@ -22,17 +22,17 @@ class AuthenticatedMessageDispatcherApp extends MessageDispatcherApp
     /**
      * @var string
      */
-    private $firewall;
+    private $firewallName;
 
     public function __construct(
         $appName,
         MessageDispatcherInterface $messageDispatcher,
-        $firewall,
+        $firewallName,
         Cache $contextsCache
     ) {
         parent::__construct($appName, $messageDispatcher, $contextsCache);
 
-        $this->firewall = $firewall;
+        $this->firewallName = $firewallName;
     }
 
     /**
@@ -40,7 +40,7 @@ class AuthenticatedMessageDispatcherApp extends MessageDispatcherApp
      */
     protected function createContext(ConnectionInterface $conn)
     {
-        return new AuthenticatedConnectionContext($this->firewall, $conn);
+        return new AuthenticatedConnectionContext($this->firewallName, $conn);
     }
 
     /**

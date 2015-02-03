@@ -7,8 +7,8 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Sulu\Component\Websocket\ConnectionContext;
 
+namespace Sulu\Component\Websocket\ConnectionContext;
 
 /**
  * Websocket context which implies logged in user in a specific firewall

@@ -23,18 +23,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class ConnectionContext implements ConnectionContextInterface
 {
     /**
-     * Return id of connection context for connection
-     * @param ConnectionInterface $conn
-     * @return string
-     */
-    public static function getIdFromConnection(ConnectionInterface $conn)
-    {
-        $dummy = new ConnectionContext($conn);
-
-        return $dummy->getId();
-    }
-
-    /**
      * @var RequestInterface
      */
     private $request = null;
@@ -192,5 +180,17 @@ class ConnectionContext implements ConnectionContextInterface
     public function all()
     {
         return $this->parameters->all();
+    }
+
+    /**
+     * Return id of connection context for connection
+     * @param ConnectionInterface $conn
+     * @return string
+     */
+    public static function getIdFromConnection(ConnectionInterface $conn)
+    {
+        $context = new ConnectionContext($conn);
+
+        return $context->getId();
     }
 }

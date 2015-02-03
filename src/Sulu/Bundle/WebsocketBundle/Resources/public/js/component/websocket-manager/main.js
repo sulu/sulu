@@ -42,7 +42,7 @@ define([
                     port = this.getConfig('port'),
                     ssl = this.getConfig('ssl');
 
-                this.url = (ssl ? 'wss://' : 'ws://') + host + ':' + port;
+                this.url = [(ssl ? 'wss://' : 'ws://'), host, ':', port].join('');
             }
 
             // TODO generate route with params

@@ -18,7 +18,6 @@ use Sulu\Component\Websocket\ConnectionContext\ConnectionContextInterface;
  */
 interface MessageDispatcherInterface
 {
-
     /**
      * @param string $name Message name
      * @param MessageHandlerInterface $handler Handler which process messages with given name

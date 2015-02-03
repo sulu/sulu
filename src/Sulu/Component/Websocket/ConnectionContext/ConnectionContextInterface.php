@@ -21,7 +21,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  */
 interface ConnectionContextInterface
 {
-
     /**
      * Returns query of the upgrade request
      * @return QueryString
