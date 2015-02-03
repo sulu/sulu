@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Message handler connection context
+ *
+ * It holds detail information about the upgrade request of the websocket connection, the handler name and the user can
+ * put his own session variables into a parameter bag.
  */
 class MessageHandlerContext implements ConnectionContextInterface
 {
