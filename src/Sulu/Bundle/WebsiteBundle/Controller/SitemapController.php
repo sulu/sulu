@@ -34,7 +34,6 @@ class SitemapController extends WebsiteController
         $webspace = $requestAnalyzer->getCurrentWebspace();
 
         $siteMapRoot = $this->container->getParameter('kernel.root_dir') . '/data/sitemaps';
-        $siteMapPath = $siteMapRoot . '/' . $webspace->getKey() . '.xml';
 
         // remove empty first line
         // FIXME empty line in website kernel
