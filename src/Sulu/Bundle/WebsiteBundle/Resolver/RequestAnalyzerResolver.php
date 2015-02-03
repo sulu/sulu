@@ -30,7 +30,7 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
     private $environment;
 
     /**
-     * @var
+     * @var array
      */
     private $previewDefaults;
 
