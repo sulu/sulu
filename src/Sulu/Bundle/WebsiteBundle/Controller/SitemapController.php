@@ -30,46 +30,28 @@ class SitemapController extends WebsiteController
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->get('sulu_website.sitemap');
+        /** @var SitemapDumper $sitemapGenerator */
+        $sitemapDumper = $this->get('sulu_website.sitemap.dumper');
 
         $webspace = $requestAnalyzer->getCurrentWebspace();
+        $portal = $requestAnalyzer->getCurrentPortal();
 
-        $siteMapRoot = $this->container->getParameter('kernel.root_dir') . '/data/sitemaps';
-
-        // remove empty first line
-        // FIXME empty line in website kernel
-        if (ob_get_length()) {
-            ob_end_clean();
-        }
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 
-        $siteMapPath = $this->container->getParameter('sulu_website.sitemap.cache.folder') . '/' . $webspace->getKey() . '.xml';
+        $siteMapPath = $this->container->getParameter('sulu_website.sitemap.cache.folder') . '/' . $webspace->getKey() . '_' . $portal->getKey() . '.xml';
 
-        if (file_exists($siteMapPath)) {
+        if ($sitemapDumper->sitemapExists($webspace->getKey(), $portal->getKey())) {
             $sitemap = file_get_contents($siteMapPath);
             $response->setContent($sitemap);
         } else {
-            $currentPortal = $requestAnalyzer->getCurrentPortal();
-            $defaultLocale = null;
-            if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
-                $defaultLocale = $defaultLocale->getLocalization();
-            }
+            /** @var $webspaceManager WebspaceManagerInterface */
+            $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+            $defaultLocale = $webspaceManager->findPortalByKey($portal->getKey())->getDefaultLocalization();
+            $sitemapPages = $sitemapGenerator->generateForPortal($webspace->getKey(), $portal->getKey());
+            $sitemap = $sitemapDumper->dump($sitemapPages, $defaultLocale, $webspace->getKey(), $portal->getKey());
 
-            $localizations = array();
-            foreach ($requestAnalyzer->getCurrentPortal()->getLocalizations() as $localization) {
-                $localizations[] = $localization->getLocalization();
-            }
-
-            $response = $this->render(
-                'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-                array(
-                    'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
-                    'locales' => $localizations,
-                    'defaultLocale' => $defaultLocale,
-                    'webspaceKey' => $webspace->getKey()
-                ),
-                $response
-            );
+            $response = new Response($sitemap);
         }
 
         return $response;

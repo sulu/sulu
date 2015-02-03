@@ -10,7 +10,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Command;
 
+use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapDumper;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,6 +29,7 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:website:sitemap:generate')
             ->addArgument('webspace')
+            ->addArgument('portal')
             ->setDescription('Generate Sitemap!')
             ->setHelp('The <info>%command.name%</info> command generate the a sitemap for a webspace' . PHP_EOL .
                 '%command.full_name% <options> <arguments>' . PHP_EOL .
@@ -43,6 +47,7 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
     {
         $time = microtime(true);
         $webspaceKey = $input->getArgument('webspace');
+        $portalKey = $input->getArgument('portal');
         $style2 = new OutputFormatterStyle('green');
         $output->getFormatter()->setStyle('done', $style2);
 
@@ -50,40 +55,26 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
         $output->writeln('Process can take some seconds');
 
         if (empty($webspaceKey)) {
-            $output->writeln('<error>Error: WebspaceKey needed! e.g: "sulu:website:sitemap:generate sulu_io"</error>');
+            $output->writeln('<error>Error: WebspaceKey needed! e.g: "sulu:website:sitemap:generate sulu_io sulu_io"</error>');
+            return 1;
+        }
+        if (empty($portalKey)) {
+            $output->writeln('<error>Error: PortalKey needed! e.g: "sulu:website:sitemap:generate sulu_io sulu_io"</error>');
             return 1;
         }
 
+        /** @var $webspaceManager WebspaceManagerInterface */
+        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->getContainer()->get('sulu_website.sitemap');
+        /** @var SitemapDumper $sitemapGenerator */
+        $sitemapDumper = $this->getContainer()->get('sulu_website.sitemap.dumper');
 
-        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
-        $localizations = $webspaceManager->findWebspaceByKey($webspaceKey)->getAllLocalizations();
+        $defaultLocale = $webspaceManager->findPortalByKey($portalKey)->getDefaultLocalization();
+        $sitemapPages = $sitemapGenerator->generateForPortal($webspaceKey, $portalKey, true);
+        $sitemapDumper->dump($sitemapPages, $defaultLocale, $webspaceKey, $portalKey);
 
-        $localizationCodes = array();
-        foreach ($localizations as $localization) {
-            $localizationCodes[] = $localization->getLocalization();
-        }
-
-        $sitemapPages = $sitemapGenerator->generateAllLocals($webspaceKey, true);
-        $output->writeln('Page Count: ' . count($sitemapPages));
-
-        $sitemap = $this->getContainer()->get('templating')->render(
-            'SuluWebsiteBundle:Sitemap:sitemap.xml.twig',
-            array(
-                'sitemap' => $sitemapPages,
-                'locales' => $localizationCodes,
-                'defaultLocale' => $localizations,
-                'webspaceKey' => $webspaceKey
-            )
-        );
-
-        $siteMapFolder = $this->getContainer()->getParameter('sulu_website.sitemap.cache.folder');
-
-        $filesystem = new Filesystem();
-        $filePath = sprintf('%s/%s.xml', $siteMapFolder, $webspaceKey);
-        $filesystem->dumpFile($filePath, $sitemap);
-        if (file_exists($filePath)) {
+        if ($sitemapDumper->sitemapExists($webspaceKey, $portalKey)) {
             $output->writeln(sprintf('<done>Done: Generated "%s" in %s seconds!</done>', $webspaceKey, (microtime(true) - $time)));
         } else {
             $output->writeln(sprintf('<error>Error: Generating "%s" sitemap!</error>', $webspaceKey));
