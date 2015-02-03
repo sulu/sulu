@@ -379,7 +379,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
     }
 
-
     /**
      * Returns the billing address of an account/contact
      * @param Account|Contact $entity
