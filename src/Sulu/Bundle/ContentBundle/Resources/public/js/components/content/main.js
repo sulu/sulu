@@ -1119,11 +1119,13 @@ define([
         handleSequence: function(propertyName, content) {
             var sequence = propertyName.split(','),
                 filter = '',
-                item, before = 0;
+                item, before = 0,
+                // regex for integer
+                isInt = /^\d*$/;
 
             for (item in sequence) {
                 // check of integer
-                if (!/^\+?(0|[1-9]\d*)$/.test(sequence[item])) {
+                if (!isInt.test(sequence[item])) {
                     before = sequence[item];
                     filter += ' *[property="' + sequence[item] + '"]';
                 } else {

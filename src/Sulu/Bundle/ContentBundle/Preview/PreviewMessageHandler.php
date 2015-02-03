@@ -128,6 +128,9 @@ class PreviewMessageHandler implements MessageHandlerInterface
             case 'update':
                 $result = $this->update($conn, $context, $msg);
                 break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Command "%s" not known', $command));
+                break;
         }
 
         return $result;
