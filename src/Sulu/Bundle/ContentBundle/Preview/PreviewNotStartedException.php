@@ -12,10 +12,10 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 /**
  * Represents a not started preview
  */
-class ContextParametersNotFoundException extends \Exception
+class PreviewNotStartedException extends \Exception
 {
     function __construct()
     {
-        parent::__construct(sprintf('Context parameters not found. For example preview is not started.'), 5001);
+        parent::__construct(sprintf('Preview not started.'), 3001);
     }
 }

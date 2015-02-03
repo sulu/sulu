@@ -23,6 +23,13 @@ use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
+/**
+ * Handles messages for preview.
+ *
+ * @example {cmd: start, locale: de, webspaceKey: sulu_io, user: 1, content: 123-123-123}
+ *
+ * The example starts the preview and init the session in the cache.
+ */
 class PreviewMessageHandler implements MessageHandlerInterface
 {
     /**
@@ -100,7 +107,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * @param MessageHandlerContext $context
      * @param array $msg
      * @return mixed|null
-     * @throws ContextParametersNotFoundException
+     * @throws PreviewNotStartedException
      * @throws MissingParameterException
      */
     private function execute(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
@@ -155,8 +162,6 @@ class PreviewMessageHandler implements MessageHandlerInterface
      */
     private function start(ConnectionInterface $conn, MessageHandlerContext $context, $msg)
     {
-        // init session
-
         // locale
         if (!array_key_exists('locale', $msg)) {
             throw new MissingParameterException('locale');
@@ -209,13 +214,13 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * @param ConnectionInterface $from
      * @param MessageHandlerContext $context
      * @return array
-     * @throws ContextParametersNotFoundException
+     * @throws PreviewNotStartedException
      */
     private function stop(ConnectionInterface $from, MessageHandlerContext $context)
     {
         // check context parameters
         if (!$context->has('user')) {
-            throw new ContextParametersNotFoundException();
+            throw new PreviewNotStartedException();
         }
 
         // get user id
@@ -244,7 +249,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
      * @param MessageHandlerContext $context
      * @param array $msg
      * @return array
-     * @throws ContextParametersNotFoundException
+     * @throws PreviewNotStartedException
      * @throws MissingParameterException
      */
     private function update(ConnectionInterface $from, MessageHandlerContext $context, $msg)
@@ -256,7 +261,7 @@ class PreviewMessageHandler implements MessageHandlerInterface
             !$context->has('webspaceKey') &&
             !$context->has('user')
         ) {
-            throw new ContextParametersNotFoundException();
+            throw new PreviewNotStartedException();
         }
 
         // get user id

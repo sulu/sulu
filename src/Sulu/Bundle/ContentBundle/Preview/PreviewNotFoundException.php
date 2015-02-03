@@ -32,7 +32,7 @@ class PreviewNotFoundException extends RestException
 
     public function __construct($userId, $contentUuid)
     {
-        parent::__construct(sprintf('Preview of user %s and content %s not found', $userId, $contentUuid));
+        parent::__construct(sprintf('Preview of user %s and content %s not found', $userId, $contentUuid), 3001);
 
         $this->contentUuid = $contentUuid;
         $this->userId = $userId;

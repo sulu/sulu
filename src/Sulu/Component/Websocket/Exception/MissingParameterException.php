@@ -21,7 +21,7 @@ class MissingParameterException extends \Exception
 
     function __construct($name)
     {
-        parent::__construct(sprintf('Parameter "%s" missing for preview', $name), 5002);
+        parent::__construct(sprintf('Parameter "%s" missing for preview', $name));
 
         $this->name = $name;
     }
