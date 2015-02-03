@@ -30,26 +30,6 @@ class PreviewController extends Controller
     use RequestParametersTrait;
 
     /**
-     * returns language code from request
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return string
-     */
-    private function getLanguageCode(Request $request)
-    {
-        return $this->getRequestParameter($request, 'language', true);
-    }
-
-    /**
-     * returns webspace key from request
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return string
-     */
-    private function getWebspaceKey(Request $request)
-    {
-        return $this->getRequestParameter($request, 'webspace', true);
-    }
-
-    /**
      * render content for logged in user with data from FORM
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string $contentUuid
@@ -99,4 +79,23 @@ class PreviewController extends Controller
         return $this->getUser()->getId();
     }
 
+    /**
+     * returns language code from request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return string
+     */
+    private function getLanguageCode(Request $request)
+    {
+        return $this->getRequestParameter($request, 'language', true);
+    }
+
+    /**
+     * returns webspace key from request
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return string
+     */
+    private function getWebspaceKey(Request $request)
+    {
+        return $this->getRequestParameter($request, 'webspace', true);
+    }
 }
