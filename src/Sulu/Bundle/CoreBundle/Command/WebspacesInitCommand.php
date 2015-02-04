@@ -159,7 +159,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT);
         }
 
-        if (!$node->hasProperty($this->properties->getName('nodeType'))) {
+        if (!$node->hasProperty($this->properties->getName('title'))) {
             // set title
             $node->setProperty($this->properties->getName('title'), 'Sulu CMF');
         }
