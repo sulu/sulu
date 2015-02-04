@@ -34,7 +34,8 @@ class CreateSitemapCommandTest extends SuluTestCase
     {
         $this->tester->execute(
             array(
-                'webspace' => 'sulu_io'
+                'webspace' => 'sulu_io',
+                'portal' => 'sulu_io',
             )
         );
 
