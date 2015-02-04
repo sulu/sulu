@@ -26,7 +26,7 @@
  * @params {Integer} [options.preSelectedSortBy] array with id of the preselected sort-possibility
  * @params {String} [options.preSelectedSortMethod] Sort-method to begin with (asc or desc)
  * @params {Array} [options.presentAs] array of presentation-possibilities with id and name property
- * @params {Integer} [options.preSelectedPresentAs] array with id presentation-possibility to begin with
+ * @params {Integer} [options.preSelectedPresentAs] id presentation-possibility to begin with
  * @params {Integer} [options.limitResult] maximum number of items returned on the request
  * @params {String} [options.instanceName] name of the component instance
  * @params {String} [options.url] url for requesting the items
@@ -53,7 +53,6 @@
  * @params {Boolean} [options.hideCategories] if true categories hidden
  * @params {Boolean} [options.hideTags] if true tags hidden
  * @params {Boolean} [options.hideSortBy] if true sort by hidden
- * @params {Boolean} [options.hidePresentAs] if true present as hidden
  * @params {Boolean} [options.hideLimit] if true limit hidden
  *
  * @params {Object} [options.translations] object that gets merged with the default translation-keys
@@ -129,7 +128,6 @@ define([], function() {
             hideCategories: false,
             hideTags: false,
             hideSortBy: false,
-            hidePresentAs: false,
             hideLimit: false,
             title: 'Smart-Content'
         },
@@ -218,34 +216,34 @@ define([], function() {
                 categories: [
                     '<div class="item full">',
                     '<span class="desc"><%= filterByCatStr %></span>',
-                        '<div class="' + constants.categoryDDClass + '"></div>',
+                    '<div class="' + constants.categoryDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 tagList: [
                     '<div class="item full tags<%= disabled %>">',
                     '<span class="desc"><%= filterByTagsStr %></span>',
-                        '<div class="' + constants.tagListClass + '"></div>',
+                    '<div class="' + constants.tagListClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 sortBy: [
                     '<div class="item-half left">',
                     '<span class="desc"><%= sortByStr %></span>',
-                        '<div class="' + constants.sortByDDClass + '"></div>',
+                    '<div class="' + constants.sortByDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
                 sortMethod: [
                     '<div class="item-half">',
-                        '<div class="' + constants.sortMethodDDClass + ' sortMethod"></div>',
+                    '<div class="' + constants.sortMethodDDClass + ' sortMethod"></div>',
                     '</div>'
                 ].join(''),
 
                 presentAs: [
                     '<div class="item-half left">',
                     '<span class="desc"><%= presentAsStr %></span>',
-                        '<div class="' + constants.presentAsDDClass + '"></div>',
+                    '<div class="' + constants.presentAsDDClass + '"></div>',
                     '</div>'
                 ].join(''),
 
@@ -575,8 +573,8 @@ define([], function() {
 
             this.sandbox.dom.html(this.$footer, [
                 '<span>',
-                    '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.translations.of) , ' ',
-                    '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.translations.visible),
+                '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.translations.of), ' ',
+                '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.translations.visible),
                 '</span>'
             ].join(''));
 
@@ -592,12 +590,12 @@ define([], function() {
             if (this.itemsVisible < this.items.length) {
                 this.sandbox.dom.append(
                     this.$footer,
-                        '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewAll) + ')</span>'
+                    '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewAll) + ')</span>'
                 );
             } else if (this.items.length > this.options.visibleItems) {
                 this.sandbox.dom.append(
                     this.$footer,
-                        '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewLess) + ')</span>'
+                    '<span class="' + constants.viewTogglerClass + '">(' + this.sandbox.translate(this.translations.viewLess) + ')</span>'
                 );
             }
         },
@@ -762,7 +760,7 @@ define([], function() {
             }.bind(this));
 
             // activate button OK when a page is selected
-            this.sandbox.on('husky.column-navigation.smart-content'+ this.options.instanceName +'.action', function(item) {
+            this.sandbox.on('husky.column-navigation.smart-content' + this.options.instanceName +'.action', function(item) {
                 this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
 
                 var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
@@ -845,7 +843,8 @@ define([], function() {
             }
             this.$overlayContent.append('<div class="clear"></div>');
 
-            if (!this.options.hidePresentAs) {
+            // only if data exists
+            if (!!this.options.presentAs && this.options.presentAs.length > 0) {
                 this.$overlayContent.append(_.template(templates.overlayContent.presentAs)({
                     presentAsStr: this.sandbox.translate(this.translations.presentAs)
                 }));
@@ -1039,7 +1038,11 @@ define([], function() {
             //present as
             this.sandbox.emit('husky.select.' + this.options.instanceName + constants.presentAsDDClass + '.get-checked',
                 function(presentAs) {
-                    this.overlayData.presentAs = presentAs;
+                    if (presentAs.length === 1) {
+                        this.overlayData.presentAs = presentAs[0];
+                    } else {
+                        this.overlayData.presentAs = null;
+                    }
                     presentAsDef.resolve();
                 }.bind(this));
 
