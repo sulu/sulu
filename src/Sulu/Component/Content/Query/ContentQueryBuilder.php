@@ -121,7 +121,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
             if ($this->published) {
                 $where .= sprintf(
-                    "%s ((page.[%s] = %s OR page.[%s] = %s)",
+                    '%s ((page.[%s] = %s OR page.[%s] = %s)',
                     $where !== '' ? 'OR ' : '',
                     $this->getPropertyName('state'),
                     Structure::STATE_PUBLISHED,
