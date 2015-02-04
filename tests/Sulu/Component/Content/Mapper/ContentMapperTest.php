@@ -143,7 +143,7 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('tags', '', 'text_line', false, true, 2, 10)
+                    new Property('tags', '', 'text_line', false, true, 10, 2)
                 )
             );
 
@@ -162,7 +162,7 @@ class ContentMapperTest extends PhpcrTestCase
                 )
             );
         } elseif ($type == 3) {
-            $blockProperty = new BlockProperty('block1', '', 'default', false, true, 2, 10);
+            $blockProperty = new BlockProperty('block1', '', 'default', false, true, 10, 2);
             $type = new BlockPropertyType('default', '');
             $type->addChild(new Property('title', '', 'text_line', false, true));
             $type->addChild(new Property('article', '', 'text_area', false, true));

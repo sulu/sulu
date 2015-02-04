@@ -9,8 +9,9 @@
 
 define([
     'sulucontent/model/content',
-    'sulucontent/components/content/preview/main'
-], function(Content, Preview) {
+    'sulucontent/components/content/preview/main',
+    'config'
+], function(Content, Preview, Config) {
 
     'use strict';
 
@@ -54,12 +55,24 @@ define([
                 '       <div id="preview-toolbar-new-window" class="new-window pull-right pointer">',
                 '           <span class="fa-external-link"></span>',
                 '       </div>',
+                '       <div id="preview-toolbar-refresh" class="refresh pull-right pointer">',
+                '           <span class="fa-refresh"></span>',
+                '       </div>',
                 '       <div id="preview-toolbar-resolutions" class="resolutions pull-right pointer">',
                 '           <label class="drop-down-trigger">',
                 '               <span class="dropdown-label"><%= resolution %></span>',
                 '               <span class="dropdown-toggle"></span>',
                 '           </label>',
                 '       </div>',
+                '   </div>',
+                '</div>'
+            ].join(''),
+
+            previewOnRequest: [
+                '<div class="v-center">',
+                '   <div id="preview-start" class="btn grey large">',
+                '       <span class="fa-play"></span>',
+                '       <span class="text"><%= startLabel %></span>',
                 '   </div>',
                 '</div>'
             ].join(''),
@@ -142,6 +155,8 @@ define([
             this.previewWindow = null;
             this.$preview = null;
             this.contentChanged = false;
+
+            this.previewMode = Config.get('sulu.content.preview').mode;
 
             this.preview = new Preview();
             this.preview.initialize(this.sandbox, this.options, this.$el);
@@ -682,16 +697,20 @@ define([
                         this.renderPreview(data);
                     }.bind(this));
 
+                    this.sandbox.on('sulu.preview.changes', this.handleChanges.bind(this));
+
                     this.sandbox.on('sulu.preview.initialize', function(data, restart) {
-                        data = this.sandbox.util.extend(true, {}, this.data, data);
-                        if (!this.preview.initiated) {
-                            this.preview.start(data, this.options);
-                        } else if (!!restart) {
-                            // force reload
-                            this.$preview = null;
-                            this.sandbox.dom.remove(this.$preview);
-                            this.preview.restart(data, this.options, this.template);
+                        if (this.previewMode === 'auto') {
+                            // if mode is auto init immediately
+                            this.sandbox.emit('sulu.preview.initialize.force', data, restart);
+                        } else if (this.previewMode === 'on_request') {
+                            // if mode is on_request render the "start preview" button
+                            this.renderPreviewOnRequest(restart);
                         }
+                    }.bind(this));
+
+                    this.sandbox.on('sulu.preview.initialize.force', function(data, restart) {
+                        this.previewInitialize(data, restart);
                     }.bind(this));
                 } else {
                     this.sandbox.emit('sulu.sidebar.hide');
@@ -723,6 +742,38 @@ define([
             }.bind(this));
         },
 
+        previewInitialize: function(data, restart) {
+            data = this.sandbox.util.extend(true, {}, this.data, data);
+            if (!this.preview.initiated) {
+                this.preview.start(data, this.options);
+            } else if (!!restart) {
+                // force reload
+                this.sandbox.dom.remove(this.$preview);
+                this.$preview = null;
+                this.preview.restart(data, this.options, this.template);
+            }
+        },
+
+        renderPreviewOnRequest: function(restart) {
+            this.sandbox.emit('sulu.sidebar.change-width', 'max');
+            this.$preview = this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.previewOnRequest, {startLabel: this.sandbox.translate('content.contents.start-preview')})
+            );
+            this.sandbox.dom.on(this.sandbox.dom.find('#preview-start', this.$preview), 'click', function() {
+                // reload preview container
+                this.sandbox.dom.remove(this.$preview);
+                this.$preview = null;
+
+                // get current data
+                var data = this.sandbox.form.getData('#content-form-container');
+
+                // initialize preview
+                this.sandbox.emit('sulu.preview.initialize.force', data, restart);
+            }.bind(this));
+
+            this.sandbox.emit('sulu.sidebar.set-widget', null, this.$preview);
+        },
+
         /**
          * Render preview for loaded content node
          * @param data
@@ -738,7 +789,7 @@ define([
                     uuid: data.id
                 });
                 this.$preview = this.sandbox.dom.createElement(this.sandbox.util.template(templates.preview, {
-                    resolution: this.sandbox.translate('content.preview.resolutions'),
+                    resolution: this.sandbox.translate(constants.resolutionDropdownData[0].name),
                     url: this.previewUrl
                 }));
                 this.bindPreviewDomEvents();
@@ -772,6 +823,8 @@ define([
         bindPreviewDomEvents: function() {
             this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-new-window', this.$preview),
                 'click', this.openPreviewInNewWindow.bind(this));
+            this.sandbox.dom.on(this.sandbox.dom.find('#preview-toolbar-refresh', this.$preview),
+                'click', this.refreshPreview.bind(this));
         },
 
         /**
@@ -830,11 +883,17 @@ define([
             this.previewWindow = window.open(this.previewUrl);
             this.previewWindow.onload = function() {
                 this.previewWindow.onunload = function() {
+                    this.previewWindow = null;
+
                     this.sandbox.emit('sulu.sidebar.show');
                     this.sandbox.emit('sulu.app.toggle-shrinker', true);
                     this.sandbox.emit('sulu.sidebar.change-width', 'max');
                 }.bind(this);
             }.bind(this);
+        },
+
+        refreshPreview: function() {
+            this.getPreviewDocument().location.reload();
         },
 
         /**
@@ -1030,6 +1089,92 @@ define([
                     }
                 }
             ]);
+        },
+
+        getPreviewDocument: function() {
+            if (!!this.previewWindow) {
+                return this.previewWindow.document;
+            } else {
+                return this.sandbox.dom.find('iframe', this.$preview).contents()[0];
+            }
+        },
+
+        handleChanges: function(changes) {
+            if (!!changes.reload) {
+                this.getPreviewDocument().location.reload();
+            } else {
+                // foreach property which was changed
+                for (var propertyName in changes) {
+                    if (changes.hasOwnProperty(propertyName)) {
+                        if (-1 !== propertyName.indexOf(',')) {
+                            this.handleSequence(propertyName, changes[propertyName]);
+                        } else {
+                            this.handleSingle(propertyName, changes[propertyName]);
+                        }
+                    }
+                }
+            }
+        },
+
+        handleSequence: function(propertyName, content) {
+            var sequence = propertyName.split(','),
+                filter = '',
+                item, before = 0,
+                // regex for integer
+                isInt = /^\d*$/;
+
+            for (item in sequence) {
+                // check of integer
+                if (!isInt.test(sequence[item])) {
+                    before = sequence[item];
+                    filter += ' *[property="' + sequence[item] + '"]';
+                } else {
+                    filter += ' *[rel="' + before + '"]:nth-child(' + (parseInt(sequence[item]) + 1) + ')';
+                }
+            }
+
+            this.handle(content, filter, function() {
+                return true;
+            });
+        },
+
+        handleSingle: function(propertyName, content) {
+            var filter = '*[property="' + propertyName + '"]';
+
+            this.handle(content, filter, function(element) {
+                // check all parents if they has not the attribute property
+                // thats currently not supported by the api
+                var cur = element.parentNode;
+                while (null !== cur.parentNode) {
+                    if (cur.hasAttribute('property')) {
+                        return false;
+                    }
+                    cur = cur.parentNode;
+                }
+
+                return true;
+            });
+        },
+
+        handle: function(content, selector, validate) {
+            var i = 0,
+                elements = this.getPreviewDocument().querySelectorAll(selector),
+                nodeArray = [].slice.call(elements);
+
+            nodeArray.forEach(function(element) {
+                if (!validate(element)) {
+                    return;
+                }
+
+                // set content and highlight class
+                if (typeof content[i] !== 'undefined') {
+                    element.innerHTML = content[i];
+                } else {
+                    element.innerHTML = '';
+                }
+                // FIXME jump to element: element.scrollIntoView();
+                i++;
+            });
         },
 
         header: function() {

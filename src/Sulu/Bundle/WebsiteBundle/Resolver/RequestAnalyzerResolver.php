@@ -29,10 +29,17 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
      */
     private $environment;
 
-    public function __construct(WebspaceManagerInterface $webspaceManager, $environment)
+    /**
+     * @var array
+     */
+    private $previewDefaults;
+
+    public function __construct(WebspaceManagerInterface $webspaceManager, $environment, $previewDefaults = array())
     {
         $this->environment = $environment;
         $this->webspaceManager = $webspaceManager;
+
+        $this->previewDefaults = array_merge(array('analyticsKey' => ''), $previewDefaults);
     }
 
     /**
@@ -77,7 +84,8 @@ class RequestAnalyzerResolver implements RequestAnalyzerResolverInterface
                 'resourceLocatorPrefix' => '',
                 'resourceLocator' => '',
                 'get' => array(),
-                'post' => array()
+                'post' => array(),
+                'analyticsKey' => $this->previewDefaults['analyticsKey'],
             )
         );
     }

@@ -34,7 +34,11 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
 
         $this->prepareWebspaceManager();
 
-        $this->resolver = new RequestAnalyzerResolver($this->webspaceManager->reveal(), 'dev');
+        $this->resolver = new RequestAnalyzerResolver(
+            $this->webspaceManager->reveal(),
+            'dev',
+            array('analyticsKey' => 'UA-SULU-Test')
+        );
     }
 
     protected function prepareWebspaceManager()
@@ -129,7 +133,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                     'resourceLocatorPrefix' => '',
                     'resourceLocator' => '',
                     'get' => array(),
-                    'post' => array()
+                    'post' => array(),
+                    'analyticsKey' => 'UA-SULU-Test'
                 )
             ),
             $result
