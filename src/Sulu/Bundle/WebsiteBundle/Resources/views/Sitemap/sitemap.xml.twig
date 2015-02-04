@@ -2,21 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 {% for site in sitemap %}
-{% if site.nodeType == 1 %}
-{% set siteLocale = site.locale %}
-{% set url = sitemap_url(site.url, site.locale, site.webspaceKey) %}
-{% if url != false %}
+    {% if site.nodeType == 1 %}
+        {% set siteLocale = site.locale %}
+        {% set url = sitemap_url(site.url, site.locale, site.webspaceKey) %}
+        {% if url != false %}
     <url>
         <loc>{{ url }}</loc>
         <lastmod>{{ site.changed|date("Y-m-d") }}</lastmod>
-{% for locale, url in site.urls %}
+            {% for locale, url in site.urls %}
         <xhtml:link rel="alternate" hreflang="{{ locale }}" href="{{ content_path(url, site.webspaceKey, locale) }}"/>
-{% if defaultLocale == locale %}
+                {% if defaultLocale == locale %}
         <xhtml:link rel="alternate" hreflang="x-default" href="{{ content_path(url, site.webspaceKey, locale) }}"/>
-{% endif %}
-{% endfor %}
+                {% endif %}
+            {% endfor %}
     </url>
-{% endif %}
-{% endif %}
+        {% endif %}
+    {% endif %}
 {% endfor %}
 </urlset>
