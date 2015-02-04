@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config', 'sulucontact/model/contact'], function(AppConfig, Contact) {
 
     'use strict';
 
@@ -204,6 +204,8 @@ define(['app-config'], function(AppConfig) {
 
                 this.updateTabVisibilityForShadowCheckbox(true);
 
+                this.updateChangelog(data);
+
                 this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
         },
@@ -214,6 +216,46 @@ define(['app-config'], function(AppConfig) {
             for (var i = 0, len = navContexts.length; i < len; i++) {
                 this.allNavContexts[navContexts[i].id] = navContexts[i].name;
             }
+        },
+
+        updateChangelog: function(data) {
+            var setCreator = function(model) {
+                    this.sandbox.dom.text('#created .name', model.get('fullName'));
+                },
+                setChanger = function(model) {
+                    this.sandbox.dom.text('#changed .name', model.get('fullName'));
+                },
+                creator,
+                changer;
+
+            if (data.creator === data.changer) {
+                creator = new Contact({id: data.creator});
+
+                creator.fetch({
+                    success: function(model) {
+                        setChanger.call(this, model);
+                        setCreator.call(this, model);
+                    }.bind(this)
+                });
+            } else {
+                creator = new Contact({id: data.creator});
+                changer = new Contact({id: data.changer});
+
+                creator.fetch({
+                    success: function(model) {
+                        setCreator.call(this, model);
+                    }.bind(this)
+                });
+
+                changer.fetch({
+                    success: function(model) {
+                        setChanger.call(this, model);
+                    }.bind(this)
+                });
+            }
+
+            this.sandbox.dom.text('#created .date', this.sandbox.date.format(data.created, true));
+            this.sandbox.dom.text('#changed .date', this.sandbox.date.format(data.changed, true));
         },
 
         setData: function(data) {
