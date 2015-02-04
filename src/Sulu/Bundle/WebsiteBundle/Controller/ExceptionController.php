@@ -59,7 +59,8 @@ class ExceptionController extends BaseExceptionController
                                 'resourceLocatorPrefix' => $this->requestAnalyzer->getCurrentResourceLocatorPrefix(),
                                 'resourceLocator' => $this->requestAnalyzer->getCurrentResourceLocator(),
                                 'get' => $this->requestAnalyzer->getCurrentGetParameter(),
-                                'post' => $this->requestAnalyzer->getCurrentPostParameter()
+                                'post' => $this->requestAnalyzer->getCurrentPostParameter(),
+                                'analyticsKey' => $this->requestAnalyzer->getCurrentAnalyticsKey(),
                             ),
                             'path' => $request->getPathInfo()
                         )
