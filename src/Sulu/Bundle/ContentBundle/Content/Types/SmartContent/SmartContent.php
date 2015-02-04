@@ -182,6 +182,8 @@ class SmartContent extends ComplexContentType
         $params = parent::getDefaultParams();
         $params['page_parameter'] = 'p';
         $params['properties'] = array();
+        // TODO translations
+        $params['presentAs'] = array();
 
         return $params;
     }
