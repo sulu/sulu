@@ -53,7 +53,7 @@ class SitemapController extends WebsiteController
             $sitemapPages = $sitemapGenerator->generateForPortal($webspace->getKey(), $portal->getKey(), true);
             $sitemap = $sitemapDumper->dump($sitemapPages, $defaultLocale, $webspace->getKey(), $portal->getKey());
 
-            $response = new Response($sitemap);
+            $response->setContent($sitemap);
         }
 
         return $response;
