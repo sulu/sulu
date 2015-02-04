@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #788 [ContentBundle]  Fixed bug with empty selection with single internal link
+
 * 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change
 
