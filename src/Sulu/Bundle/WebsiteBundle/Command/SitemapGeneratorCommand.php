@@ -63,16 +63,16 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
             return 1;
         }
 
-        /** @var $webspaceManager WebspaceManagerInterface */
+        /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->getContainer()->get('sulu_website.sitemap');
-        /** @var SitemapDumper $sitemapGenerator */
+        /** @var SitemapDumper $sitemapDumper */
         $sitemapDumper = $this->getContainer()->get('sulu_website.sitemap.dumper');
 
         $defaultLocale = $webspaceManager->findPortalByKey($portalKey)->getDefaultLocalization();
         $sitemapPages = $sitemapGenerator->generateForPortal($webspaceKey, $portalKey, true);
-        $sitemapDumper->dump($sitemapPages, $defaultLocale, $webspaceKey, $portalKey);
+        $sitemapDumper->dump($sitemapPages, $defaultLocale, $webspaceKey, $portalKey, true);
 
         if ($sitemapDumper->sitemapExists($webspaceKey, $portalKey)) {
             $output->writeln(sprintf('<done>Done: Generated "%s" in %s seconds!</done>', $webspaceKey, (microtime(true) - $time)));

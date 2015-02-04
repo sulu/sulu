@@ -41,10 +41,7 @@ class SitemapController extends WebsiteController
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml');
 
-        $siteMapPath = $this->container->getParameter('sulu_website.sitemap.cache.folder') . '/' . $webspace->getKey() . '_' . $portal->getKey() . '.xml';
-
-        if ($sitemapDumper->sitemapExists($webspace->getKey(), $portal->getKey())) {
-            $sitemap = file_get_contents($siteMapPath);
+        if ($sitemap = $sitemapDumper->get($webspace->getKey(), $portal->getKey())) {
             $response->setContent($sitemap);
         } else {
             /** @var WebspaceManagerInterface $webspaceManager */

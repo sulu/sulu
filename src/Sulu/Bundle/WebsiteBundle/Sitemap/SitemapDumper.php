@@ -71,12 +71,25 @@ class SitemapDumper
     /**
      * @param $webspaceKey
      * @param $portalKey
+     * @return string
+     */
+    public function get($webspaceKey, $portalKey)
+    {
+        if ($path = $this->sitemapExists($webspaceKey, $portalKey)) {
+            return file_get_contents($path);
+        }
+    }
+
+    /**
+     * @param $webspaceKey
+     * @param $portalKey
      * @return bool
      */
     public function sitemapExists($webspaceKey, $portalKey)
     {
-        if (file_exists($this->getSitemapPath($webspaceKey, $portalKey))) {
-            return true;
+        $path = $this->getSitemapPath($webspaceKey, $portalKey);
+        if (file_exists($path)) {
+            return $path;
         }
         return false;
     }
