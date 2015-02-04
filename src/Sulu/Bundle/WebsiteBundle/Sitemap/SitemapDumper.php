@@ -10,14 +10,13 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Class SitemapDumper
  */
-class SitemapDumper
+class SitemapDumper implements SitemapDumperInterface
 {
     /**
      * @var EngineInterface
