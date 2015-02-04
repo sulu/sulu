@@ -1,0 +1,30 @@
+{% if data is defined and data is not null %}
+    {% for account in data %}
+        <div class="grid-row m-bottom-30">
+            {% if account.main == true %}
+                <h5 class="label"><%=translate('contacts.sidebar.mainCompany')%></h5>
+            {% else %}
+                <h5 class="label"><%=translate('contacts.sidebar.company')%></h5>
+            {% endif %}
+            <h4 class="m-top-0 m-bottom-0 action" data-id="{{ account.id }}" id="main-account">{{ account.name }}</h4>
+
+            {% if account.phone is not empty %}
+                <span class="block grey">(<%=translate('public.phone')%>) {{ account.phone }}</span>
+            {% endif %}
+
+            <span class="block">
+             <a class="action" href="mailto:{{ account.email }}">
+                 {{ account.email }}
+             </a>
+         </span>
+
+            {% if account.url is not empty %}
+                <span class="block">
+             <a class="action" href="http://{{ account.url }}" target="_blank">
+                 {{ account.url }}
+             </a>
+         </span>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}

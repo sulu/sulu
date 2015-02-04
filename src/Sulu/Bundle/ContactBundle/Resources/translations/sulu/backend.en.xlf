@@ -50,6 +50,10 @@
                 <source>contacttype.work</source>
                 <target>Work</target>
             </trans-unit>
+            <trans-unit id="12" resname="contacts.sidebar.company">
+                <source>contacts.sidebar.company</source>
+                <target>Company</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

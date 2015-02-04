@@ -18,6 +18,8 @@ parameters:
     sulu_contact.contact.widgets.account_info.class: Sulu\Bundle\ContactBundle\Widgets\AccountInfo
     sulu_contact.contact.widgets.account_main_contact.class: Sulu\Bundle\ContactBundle\Widgets\MainContact
 
+    sulu_contact.contact.widgets.contact_accounts.class: Sulu\Bundle\ContactBundle\Widgets\ContactAccounts
+
     sulu_contact.contact.widgets.contact_info.class: Sulu\Bundle\ContactBundle\Widgets\ContactInfo
     sulu_contact.contact.widgets.contact_main_account.class: Sulu\Bundle\ContactBundle\Widgets\MainAccount
 
@@ -83,6 +85,13 @@ services:
          class: %sulu_contact.contact.widgets.contact_main_account.class%
          tags:
              - {name: sulu.widget, alias: sulu-contact-main-account}
+         arguments:
+             - @doctrine.orm.entity_manager
+
+    sulu_contact.contact.widgets.contact_accounts:
+         class: %sulu_contact.contact.widgets.contact_accounts.class%
+         tags:
+             - {name: sulu.widget, alias: sulu-contact-accounts}
          arguments:
              - @doctrine.orm.entity_manager
 
