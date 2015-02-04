@@ -39,14 +39,19 @@ class SingleInternalLink extends SimpleContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $value = $property->getValue();
+<<<<<<< Updated upstream
         if ($value !== $node->getIdentifier()) {
             parent::write($node, $property, $userId, $webspaceKey, $languageCode,$segmentKey);
         } else {
             // FIXME validation and an own exception in sulu/sulu
             throw new \Exception();
+=======
+
+        if ($node->getIdentifier() !== null && $value === $node->getIdentifier()) {
+            throw new \InvalidArgumentException('Internal link node cannot reference itself');
+>>>>>>> Stashed changes
         }
     }
 
