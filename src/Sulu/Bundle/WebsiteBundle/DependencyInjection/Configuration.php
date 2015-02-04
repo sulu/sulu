@@ -48,6 +48,7 @@ class Configuration implements ConfigurationInterface
                         ->addDefaultsIfNotSet()
                         ->children()
                             ->scalarNode('cache_lifetime')->defaultValue(1)->end()
+                            ->scalarNode('cache_folder')->defaultValue('%kernel.root_dir%/data/sitemaps')->end()
                         ->end()
                     ->end()
                 ->end()

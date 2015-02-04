@@ -41,7 +41,11 @@ class SuluWebsiteExtension extends Extension
         );
         $container->setParameter(
             'sulu_website.sitemap.cache.lifetime',
-            $config['twig']['content']['cache_lifetime']
+            $config['twig']['sitemap']['cache_lifetime']
+        );
+        $container->setParameter(
+            'sulu_website.sitemap.cache.folder',
+            $config['twig']['sitemap']['cache_folder']
         );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

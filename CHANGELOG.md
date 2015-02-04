@@ -4,6 +4,7 @@ CHANGELOG for Sulu
 * dev-develop
     * BUGFIX      #753 [MediaBundle]    Fix 0 bytes file upload
     * FEATURE     #714 [ContentBundle]  Add Option to hide page in sidemap
+    * FEATURE     #689 [WebsiteBundle]  Add Command to generate sitemap.xml
     * ENHANCEMENT #740 [SecurityBundle] Made role content navigation extendable
     * FEATURE     #569 [All]            Behat integration - behat features for bundles
     * ENHANCEMENT #692 [SecurityBundle] Made user extendable
