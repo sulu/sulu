@@ -11,16 +11,17 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
 
 
 /**
- * Class SitemapDumper
+ * Interface for Sitemap Dumper
  */
 interface SitemapDumperInterface
 {
     /**
      * @param $sitemapPages
-     * @param $defaultLocale
-     * @param $webspaceKey
-     * @param $portalKey
+     * @param string $defaultLocale
+     * @param string $webspaceKey
+     * @param string $portalKey
      * @param bool $dumpFile
+     * @param string $format
      * @return string
      */
     public function dump($sitemapPages, $defaultLocale, $webspaceKey, $portalKey, $dumpFile = false, $format = 'xml');
@@ -37,5 +38,5 @@ interface SitemapDumperInterface
      * @param $portalKey
      * @return bool
      */
-    public function sitemapExists($webspaceKey, $portalKey);
+    public function getPath($webspaceKey, $portalKey);
 }

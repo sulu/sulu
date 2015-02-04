@@ -14,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * Class SitemapDumper
+ * Load/Write Sitemap from/to the FileSystem in specific format
  */
 class SitemapDumper implements SitemapDumperInterface
 {
@@ -42,12 +42,7 @@ class SitemapDumper implements SitemapDumperInterface
     }
 
     /**
-     * @param $sitemapPages
-     * @param $defaultLocale
-     * @param $webspaceKey
-     * @param $portalKey
-     * @param bool $dumpFile
-     * @return string
+     * {@inheritdoc}
      */
     public function dump($sitemapPages, $defaultLocale, $webspaceKey, $portalKey, $dumpFile = false, $format = 'xml')
     {
@@ -68,23 +63,19 @@ class SitemapDumper implements SitemapDumperInterface
     }
 
     /**
-     * @param $webspaceKey
-     * @param $portalKey
-     * @return string
+     * {@inheritdoc}
      */
     public function get($webspaceKey, $portalKey)
     {
-        if ($path = $this->sitemapExists($webspaceKey, $portalKey)) {
+        if ($path = $this->getPath($webspaceKey, $portalKey)) {
             return file_get_contents($path);
         }
     }
 
     /**
-     * @param $webspaceKey
-     * @param $portalKey
-     * @return bool
+     * {@inheritdoc}
      */
-    public function sitemapExists($webspaceKey, $portalKey)
+    public function getPath($webspaceKey, $portalKey)
     {
         $path = $this->getSitemapPath($webspaceKey, $portalKey);
         if (file_exists($path)) {

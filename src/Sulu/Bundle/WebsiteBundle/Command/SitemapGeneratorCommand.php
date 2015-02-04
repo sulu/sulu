@@ -74,7 +74,7 @@ class SitemapGeneratorCommand extends ContainerAwareCommand
         $sitemapPages = $sitemapGenerator->generateForPortal($webspaceKey, $portalKey, true);
         $sitemapDumper->dump($sitemapPages, $defaultLocale, $webspaceKey, $portalKey, true);
 
-        if ($sitemapDumper->sitemapExists($webspaceKey, $portalKey)) {
+        if ($sitemapDumper->getPath($webspaceKey, $portalKey)) {
             $output->writeln(sprintf('<done>Done: Generated "%s" in %s seconds!</done>', $webspaceKey, (microtime(true) - $time)));
         } else {
             $output->writeln(sprintf('<error>Error: Generating "%s" sitemap!</error>', $webspaceKey));
