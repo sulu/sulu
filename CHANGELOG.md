@@ -42,6 +42,8 @@ CHANGELOG for Sulu
     * BUGFIX      #778 [ContentBundle]   Fixed shadow page with internal link and smart-content
     * BUGFIX      #790 [WebsiteBundle]   Fixed twig variables for 404 page
     * FEATURE     #791 [ContentBundle]   Added Changelog to settings tab
+    * FEATURE     #789 [ContentBundle]   Added present as to smart content config
+    * FEATURE     #789 [ContentBundle]   Enabled property parameters to have metadata for localization
     * FEATURE     #684 [ContentBundle]   Refactored preview to use new websocket component and only one socket for form
                                          and preview
     * FEATURE     #684 [WebsocketBundle] Implemented Websocket Component to standardize Websocket implementations
