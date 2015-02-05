@@ -360,7 +360,7 @@ class ContactRepository extends EntityRepository
      * @param $id
      * @return mixed|null
      */
-    public function findAccountsByContactId($id)
+    public function findContactWithAccountsById($id)
     {
         // create basic query
         $qb = $this->createQueryBuilder('c')

@@ -70,7 +70,7 @@ class ContactAccounts implements WidgetInterface
             !empty($options['contact'])
         ) {
             $id = $options['contact'];
-            $contact = $this->em->getRepository($this->contactEntityName)->findAccountsByContactId($id);
+            $contact = $this->em->getRepository($this->contactEntityName)->findContactWithAccountsById($id);
 
             if (!$contact) {
                 throw new WidgetEntityNotFoundException(
@@ -98,7 +98,6 @@ class ContactAccounts implements WidgetInterface
      */
     protected function parseAccounts(PersistentCollection $accountsContact)
     {
-        // TODO sort by main account?
         $length = count($accountsContact);
         if($length > 0) {
             $data = [];
