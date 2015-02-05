@@ -55,7 +55,7 @@ class PropertyParameter
      * @param string|bool|array $value
      * @param array $metadata
      */
-    function __construct($name, $type, $value, $metadata)
+    function __construct($name, $type, $value, $metadata = array())
     {
         $this->name = $name;
         $this->value = $value;
