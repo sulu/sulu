@@ -21,6 +21,7 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use Massive\Bundle\SearchBundle\Search\Field;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -65,9 +66,9 @@ class StructureDriver implements DriverInterface
 
         $indexMeta = $this->factory->makeIndexMetadata($class->name);
 
-        $indexMeta->setIndexName('content');
-        $indexMeta->setIdField('uuid');
-        $indexMeta->setLocaleField('languageCode');
+        $indexMeta->setIndexName(new Field('content'));
+        $indexMeta->setIdField(new Field('uuid'));
+        $indexMeta->setLocaleField(new Field('languageCode'));
 
         $allProperties = array();
 
@@ -80,6 +81,7 @@ class StructureDriver implements DriverInterface
                         $this->mapProperty($typeProperty, $propertyMapping);
                     }
                 }
+
                 $indexMeta->addFieldMapping(
                     $property->getName(),
                     array(
@@ -94,17 +96,18 @@ class StructureDriver implements DriverInterface
 
         if ($structure->hasTag('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
-            $indexMeta->setUrlField($prop->getName());
+            $indexMeta->setUrlField(new Field($prop->getName()));
         }
 
         if (!$indexMeta->getTitleField()) {
             $prop = $structure->getProperty('title');
-            $indexMeta->setTitleField($prop->getName());
+            $indexMeta->setTitleField(new Field($prop->getName()));
 
             $indexMeta->addFieldMapping(
                 $prop->getName(),
                 array(
                     'type' => 'string',
+                    'field' => new Field($prop->getName())
                 )
             );
         }
