@@ -155,8 +155,13 @@ class ContentExtension extends \Twig_Extension
     {
         $result = array();
 
-        foreach ($parameters as $parameter) {
-            $result[$parameter->getName()] = $parameter->getValue();
+        if (is_array($parameters)) {
+            foreach ($parameters as $parameter) {
+                $result[$parameter->getName()] = $parameter->getValue();
+
+            }
+        } else {
+            return $parameters;
         }
 
         return $result;

@@ -15,6 +15,7 @@ use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -44,25 +45,29 @@ class MediaSelectionContentType extends ComplexContentType
     public function getDefaultParams()
     {
         return array(
-            'types' => null,
-            'defaultDisplayOption' => 'top',
-            'displayOptions' => array(
-                'leftTop' => true,
-                'top' => true,
-                'rightTop' => true,
-                'left' => true,
-                'middle' => false,
-                'right' => true,
-                'leftBottom' => true,
-                'bottom' => true,
-                'rightBottom' => true
+            'types' => new PropertyParameter('types', 'string', null),
+            'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'string', 'top'),
+            'displayOptions' => new PropertyParameter(
+                'displayOptions',
+                'collection',
+                array(
+                    'leftTop' => new PropertyParameter('leftTop', 'string', true),
+                    'top' => new PropertyParameter('top', 'string', true),
+                    'rightTop' => new PropertyParameter('rightTop', 'string', true),
+                    'left' => new PropertyParameter('left', 'string', true),
+                    'middle' => new PropertyParameter('middle', 'string', false),
+                    'right' => new PropertyParameter('right', 'string', true),
+                    'leftBottom' => new PropertyParameter('leftBottom', 'string', true),
+                    'bottom' => new PropertyParameter('bottom', 'string', true),
+                    'rightBottom' => new PropertyParameter('rightBottom', 'string', true)
+                )
             )
         );
     }
 
     /**
      * @param $params
-     * @return array
+     * @return PropertyParameter[]
      */
     public function getParams($params)
     {
@@ -175,10 +180,10 @@ class MediaSelectionContentType extends ComplexContentType
         $data = $property->getValue();
 
         $params = $this->getParams($property->getParams());
-        $types = $params['types'];
+        $types = $params['types']->getValue();
 
         $container = new MediaSelectionContainer(
-            isset($data['config']) ?  $data['config'] : array(),
+            isset($data['config']) ? $data['config'] : array(),
             isset($data['displayOption']) ? $data['displayOption'] : '',
             isset($data['ids']) ? $data['ids'] : array(),
             $property->getStructure()->getLanguageCode(),
