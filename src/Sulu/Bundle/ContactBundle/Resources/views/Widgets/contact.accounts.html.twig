@@ -1,7 +1,7 @@
 {% if data is defined and data is not null %}
     {% for account in data %}
             {% if loop.first %}
-            <div class="grid-row m-bottom-15">
+            <div class="grid-row m-bottom-30">
                 <h5 class="label"><%=translate('contacts.sidebar.mainCompany')%></h5>
             {% elseif loop.index0 == 1 %}
             <div class="grid-row m-bottom-15 m-top-15">
