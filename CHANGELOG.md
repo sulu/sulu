@@ -3,7 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
-    * ENHANCEMENT #776 [CoreBundle]     Added set title to index page for init webspaces
+    * ENHANCEMENT #776 [CoreBundle]      Added set title to index page for init webspaces
     * BUGFIX      #774 [ContentBundle]   Enabled save shadow for index pages
     * BUGFIX      #778 [ContentBundle]   Fixed shadow page with internal link and smart-content
     * BUGFIX      #790 [WebsiteBundle]   Fixed twig variables for 404 page
