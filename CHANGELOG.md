@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed due to the symfony 2.6 changes to symlinks
     * FEATURE     #684 [ContentBundle]   Refactored preview to use new websocket component and only one socket for form
                                          and preview
     * FEATURE     #684 [WebsocketBundle] Implemented Websocket Component to standardize Websocket implementations
