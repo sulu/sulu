@@ -26,14 +26,12 @@
         "jackalope/jackalope-jackrabbit": "1.1.*",
         "liip/theme-bundle": "1.1.*",
         "massive/search-bundle": "~0.4",
-        "php": ">=5.4",
+        "php": ">=5.5",
         "phpspec/prophecy-phpunit": "~1.0",
         "sensio/framework-extra-bundle": "3.0.*",
         "stof/doctrine-extensions-bundle": "1.1.*",
         "symfony-cmf/routing-bundle": "1.2.*",
-        "symfony-cmf/testing": "~1.2",
-        "symfony/console": "~2.0",
-        "symfony/framework-bundle": "~2.2",
+        "symfony/symfony": "2.6.*",
         "willdurand/hateoas-bundle": "0.3.*"
     },
     "require-dev": {
@@ -48,10 +46,8 @@
         "phpspec/prophecy-phpunit": "~1.0",
         "phpunit/phpunit": "~4.0.0",
         "sensio/framework-extra-bundle": "~3.0",
-        "symfony-cmf/testing": "~1.1",
-        "symfony/doctrine-bridge": "~2.2",
+        "symfony-cmf/testing": "~1.2",
         "symfony/monolog-bundle": "2.4.*",
-        "symfony/symfony": "2.5.*",
         "twig/twig": "~1.11",
         "zendframework/zend-stdlib": "~2.3",
         "zendframework/zendsearch": "@dev"
@@ -74,7 +70,6 @@
     },
     "suggest": {
         "sensio/framework-extra-bundle": "~3.0",
-        "symfony/symfony": "2.5.*",
         "doctrine/doctrine-bundle": "1.2.*",
         "symfony/monolog-bundle": "2.4.*",
         "phpunit/phpunit": "3.7.*",
