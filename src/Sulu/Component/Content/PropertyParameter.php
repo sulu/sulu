@@ -10,6 +10,15 @@
 
 namespace Sulu\Component\Content;
 
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\HandlerCallback;
+use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Context;
+use JMS\Serializer\JsonDeserializationVisitor;
+use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\Metadata\PropertyMetadata;
+use JMS\Serializer\Metadata\StaticPropertyMetadata;
+
 /**
  * Represents a parameter of a property
  */
@@ -17,21 +26,25 @@ class PropertyParameter
 {
     /**
      * @var string
+     * @Type("string")
      */
     private $name;
 
     /**
      * @var string|bool|array
+     * @Exclude
      */
     private $value;
 
     /**
      * @var string
+     * @Type("string")
      */
     private $type;
 
     /**
      * @var Metadata
+     * @Type("Sulu\Component\Content\Metadata")
      */
     private $metadata;
 
@@ -119,9 +132,67 @@ class PropertyParameter
         } elseif (is_bool($value)) {
             return ($value ? 'true' : 'false');
         } else {
-
+            return '';
         }
     }
 
+    /**
+     * @HandlerCallback("json", direction = "serialization")
+     */
+    public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
+    {
+        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+        $graphNavigator = $context->getNavigator();
 
+        $data = array();
+
+        /**
+         * @var string $propertyName
+         * @var PropertyMetadata $propertyMetadata
+         */
+        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            $context->pushPropertyMetadata($propertyMetadata);
+            $data[$propertyName] = $graphNavigator->accept(
+                $propertyMetadata->getValue($this),
+                $propertyMetadata->type,
+                $context
+            );
+            $context->popPropertyMetadata();
+        }
+
+        $data['value'] = json_encode($this->getValue());
+
+        return $data;
+    }
+
+    /**
+     * @HandlerCallback("json", direction = "deserialization")
+     */
+    public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
+    {
+        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
+        $graphNavigator = $context->getNavigator();
+
+        /**
+         * @var string $propertyName
+         * @var PropertyMetadata $propertyMetadata
+         */
+        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
+            if (!($propertyMetadata instanceof StaticPropertyMetadata)) {
+                $context->pushPropertyMetadata($propertyMetadata);
+                $value = $graphNavigator->accept(
+                    $data[$propertyName],
+                    $propertyMetadata->type,
+                    $context
+                );
+                $context->popPropertyMetadata();
+
+                $propertyMetadata->setValue($this, $value);
+            }
+        }
+
+        $this->value = json_decode($data['value'], true);
+
+        return $data;
+    }
 }
