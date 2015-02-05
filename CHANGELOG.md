@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
+    * FEATURE     #793 [ContactBundle]   Added Repository service for Contact
     * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
     * ENHANCEMENT #776 [CoreBundle]      Added set title to index page for init webspaces
     * BUGFIX      #774 [ContentBundle]   Enabled save shadow for index pages
