@@ -20,7 +20,6 @@ use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * Container for InternalLinks, holds the config for a internal links, and lazy loads the structures
- * @package Sulu\Bundle\ContentBundle\Content
  */
 class InternalLinksContainer implements ArrayableInterface
 {

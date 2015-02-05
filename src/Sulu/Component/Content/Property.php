@@ -89,7 +89,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * parameter of property to merge with parameter of content type
      * @var array
-     * @Type("array<Sulu\Component\Content\PropertyParameter>")
+     * @Type("array<string,Sulu\Component\Content\PropertyParameter>")
      */
     private $params;
 

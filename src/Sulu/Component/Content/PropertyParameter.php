@@ -32,7 +32,7 @@ class PropertyParameter
 
     /**
      * @var string|bool|array
-     * @Exclude
+     * @Type("array<string,Sulu\Component\Content\PropertyParameter>")
      */
     private $value;
 
@@ -152,15 +152,26 @@ class PropertyParameter
          */
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             $context->pushPropertyMetadata($propertyMetadata);
+
+            $type = $propertyMetadata->type;
+            $value = $propertyMetadata->getValue($this);
+            if ($propertyName === 'value') {
+                if (is_string($value)) {
+                    $type = array('name' => 'string', 'params' => array());
+                } elseif (is_bool($value)) {
+                    $type = array('name' => 'boolean', 'params' => array());
+                }
+
+                $data['valueType'] = $type;
+            }
+
             $data[$propertyName] = $graphNavigator->accept(
-                $propertyMetadata->getValue($this),
-                $propertyMetadata->type,
+                $value,
+                $type,
                 $context
             );
             $context->popPropertyMetadata();
         }
-
-        $data['value'] = json_encode($this->getValue());
 
         return $data;
     }
@@ -180,9 +191,15 @@ class PropertyParameter
         foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
             if (!($propertyMetadata instanceof StaticPropertyMetadata)) {
                 $context->pushPropertyMetadata($propertyMetadata);
+
+                $type = $propertyMetadata->type;
+                if ($propertyName === 'value') {
+                    $type = $data['valueType'];
+                }
+
                 $value = $graphNavigator->accept(
                     $data[$propertyName],
-                    $propertyMetadata->type,
+                    $type,
                     $context
                 );
                 $context->popPropertyMetadata();
@@ -190,8 +207,6 @@ class PropertyParameter
                 $propertyMetadata->setValue($this, $value);
             }
         }
-
-        $this->value = json_decode($data['value'], true);
 
         return $data;
     }
