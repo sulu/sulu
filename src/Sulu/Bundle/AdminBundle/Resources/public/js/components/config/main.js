@@ -11,7 +11,9 @@ define(function() {
 
     'use strict';
 
-    var config = {};
+    // TODO load from /admin/config
+    var sulu = JSON.parse(JSON.stringify(SULU)),
+        config = !!sulu.sections ? sulu.sections : {};
 
     return {
 
@@ -35,6 +37,7 @@ define(function() {
         get: function(key) {
             var empty,
                 value = null;
+
             if (!!key && typeof(key) === 'string' && config.hasOwnProperty(key)) {
                 value = config[key];
                 if (typeof value === 'object') {
@@ -42,6 +45,7 @@ define(function() {
                     value = jQuery.extend(true, empty, value);
                 }
             }
+
             return value;
         }
     };

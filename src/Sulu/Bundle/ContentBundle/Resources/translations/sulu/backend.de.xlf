@@ -403,6 +403,10 @@
                 <source>content.contents.settings.copy-locales.default-label</source>
                 <target>Sprache auswählen ...</target>
             </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf028" resname="content.contents.start-preview">
+                <source>content.contents.start-preview</source>
+                <target>Vorschau starten</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
