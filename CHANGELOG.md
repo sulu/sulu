@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #792 [ContactBundle]   added widget to show all companys of contact
     * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
     * ENHANCEMENT #776 [CoreBundle]      Added set title to index page for init webspaces
     * BUGFIX      #774 [ContentBundle]   Enabled save shadow for index pages
