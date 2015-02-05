@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -138,7 +139,7 @@ class InternalLinks extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array('properties' => array());
+        return array('properties' => new PropertyParameter('properties', 'collection', array(), array()));
     }
 
     /**

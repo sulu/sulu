@@ -824,7 +824,7 @@ define([], function() {
             }
             if (!this.options.hideCategories) {
                 this.$overlayContent.append(_.template(templates.overlayContent.categories)({
-                    filterByCatStr: this.sandbox.translate(this.translations.filterByCategory)
+                    filterByCatStr: this.sandbox.translate(this.translations.filterByCasrc/Sulu/Bundle/ContentBundle/Tests/Functional/Content/SmartContentQueryBuilderTest.phptegory)
                 }));
             }
             if (!this.options.hideTags) {
