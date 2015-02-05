@@ -24,6 +24,7 @@
         </field>
         <field name="lastLogin" column="lastLogin" type="datetime" nullable="true" />
         <field name="confirmationKey" column="confirmationKey" type="string" length="128" nullable="true" />
+        <field name="passwordResetToken" column="passwordResetToken" type="string" length="256" nullable="true" />
         <field name="privateKey" type="string" column="privateKey" length="2000" nullable="true"/>
         <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
     </mapped-superclass>
