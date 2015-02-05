@@ -161,7 +161,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         if (!$node->hasProperty($this->properties->getName('title'))) {
             // set title
-            $node->setProperty($this->properties->getName('title'), 'Sulu CMF');
+            $node->setProperty($this->properties->getName('title'), 'Homepage');
         }
 
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
