@@ -10,11 +10,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -22,9 +25,6 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\Structure;
 
 /**
  * handles content nodes
@@ -359,9 +359,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
+        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
 
         $state = $this->getRequestParameter($request, 'state');
-        $type = $request->query->get('type') ? : 'page';
+        $type = $request->query->get('type') ?: 'page';
 
         if ($state !== null) {
             $state = intval($state);
