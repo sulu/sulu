@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -366,8 +367,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getValue')
             ->willReturn(array_merge($config, array('page' => 1, 'hasNextPage' => true)));
 
-        $property->expects($this->exactly(2))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => 5)));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', '5'))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -437,8 +438,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue(array('dataSource' => '123-123-123')));
 
-        $property->expects($this->exactly(2))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => 5)));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', '5'))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -512,8 +513,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         }
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($config));
-        $property->expects($this->exactly(2))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => $pageSize)));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', $pageSize))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -563,8 +564,8 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getValue')
             ->willReturn(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)));
 
-        $property->expects($this->exactly(2))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => $pageSize)));
+        $property->expects($this->exactly(1))->method('getParams')
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', $pageSize))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -592,7 +593,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue(array('dataSource' => '123-123-123')));
 
-        $property->expects($this->exactly(2))->method('getParams')
+        $property->expects($this->exactly(1))->method('getParams')
             ->will($this->returnValue(array()));
 
         $property->expects($this->exactly(3))->method('getStructure')

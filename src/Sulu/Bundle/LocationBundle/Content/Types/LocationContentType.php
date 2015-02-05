@@ -88,7 +88,7 @@ class LocationContentType extends ComplexContentType
                 'string',
                 $this->mapManager->getDefaultProviderName()
             ),
-            'geolocatorName' => new PropertyParameter('geolocatorName', 'collection', $this->geolocatorName),
+            'geolocatorName' => new PropertyParameter('geolocatorName', 'string', $this->geolocatorName),
         );
     }
 
