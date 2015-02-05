@@ -54,7 +54,6 @@ define(['app-config'], function(AppConfig) {
                 existingShadowForCurrentLanguage = this.data.enabledShadowLanguages[this.options.language];
             }
 
-
             // if there are no languages for whatever reason, show
             // an empty, disabled selection (otherwise the select is broken)
             // note that this is an edge case
@@ -104,7 +103,7 @@ define(['app-config'], function(AppConfig) {
                         multipleSelect: false,
                         defaultLabel: this.sandbox.translate('sulu.content.form.settings.shadow.select_base_language'),
                         data: shadowsForSelect,
-                        preSelectedElements: [ selectedLanguage ]
+                        preSelectedElements: [selectedLanguage]
                     }
                 }
             ]);
@@ -160,6 +159,12 @@ define(['app-config'], function(AppConfig) {
             this.sandbox.util.each(['content', 'excerpt', 'seo'], function(i, tabName) {
                 this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
             }.bind(this));
+
+            if (action === 'hide') {
+                this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
+            } else {
+                this.sandbox.emit('husky.toolbar.header.item.enable', 'state', false);
+            }
 
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
                 if (action === 'hide') {
@@ -248,6 +253,7 @@ define(['app-config'], function(AppConfig) {
 
             if (data.shadowOn) {
                 this.sandbox.dom.attr('#shadow_on_checkbox', 'checked', true);
+                this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             }
         },
 
