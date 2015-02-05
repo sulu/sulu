@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
     * BUGFIX      #774 [ContentBundle]   Enabled save shadow for index pages
     * BUGFIX      #790 [WebsiteBundle]   Fixed twig variables for 404 page
     * FEATURE     #684 [ContentBundle]   Refactored preview to use new websocket component and only one socket for form
