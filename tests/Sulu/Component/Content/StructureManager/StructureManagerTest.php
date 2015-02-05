@@ -13,6 +13,8 @@ namespace Sulu\Component\Content\StructureManager;
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Block\BlockProperty;
+use Sulu\Component\Content\Block\BlockPropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
@@ -22,7 +24,6 @@ use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class StructureManagerTest extends \PHPUnit_Framework_TestCase
@@ -63,6 +64,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $this->cacheDir = __DIR__ . '/../../../../Resources/cache';
 
         $this->fs->remove($this->cacheDir);
+        $this->fs->mkdir($this->cacheDir);
 
         $this->loader = new TemplateReader();
         $this->dumper = new PhpTemplateDumper('../Resources/Skeleton', false);
@@ -80,7 +82,8 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
                     )
                 ),
                 'cache_dir' => $this->cacheDir
-            ));
+            )
+        );
     }
 
     public function testGetStructure()
@@ -452,7 +455,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('article1.1.2.1', $article1121->getName());
         $this->assertEquals('text_area', $article1121->getContentTypeName());
         $this->assertEquals(true, $article1121->isMandatory());
-        $this->assertEquals(true , $article1121->isMultilingual());
+        $this->assertEquals(true, $article1121->isMultilingual());
         $this->assertEquals(999, $article1121->getMaxOccurs());
         $this->assertEquals(2, $article1121->getMinOccurs());
         $this->assertEquals(null, $article1121->getValue());
@@ -563,9 +566,38 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             array(
-                'minLinks' => 1,
-                'maxLinks' => 10,
-                'test' => array('t1' => 'v1', 't2' => 'v2', 't3' => 'v3', 't4' => 'v4')
+                'minLinks' => new PropertyParameter('minLinks', 'string', 1, array()),
+                'maxLinks' => new PropertyParameter('maxLinks', 'string', 10, array()),
+                'test' => new PropertyParameter(
+                    'test',
+                    'collection',
+                    array(
+                        't1' => new PropertyParameter('t1', 'string', 'v1', array()),
+                        't2' => new PropertyParameter('t2', 'string', 'v2', array()),
+                        't3' => new PropertyParameter('t3', 'string', 'v3', array()),
+                        't4' => new PropertyParameter('t4', 'string', 'v4', array()),
+                    ),
+                    array()
+                )
+            ),
+            $structure->getProperty('title')->getParams()
+        );
+    }
+
+    public function testMetaParams()
+    {
+        $structure = $this->structureManager->getStructure('template_meta_params');
+
+        $this->assertEquals(
+            array(
+                'min' => new PropertyParameter(
+                    'min',
+                    'string',
+                    1,
+                    array(
+                        'title' => array('de' => 'Mindestens', 'en' => 'Minimum')
+                    )
+                )
             ),
             $structure->getProperty('title')->getParams()
         );
@@ -577,11 +609,11 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
         $params = $structure->getProperty('title')->getParams();
 
-        $this->assertSame(true, $params['test1']);
-        $this->assertSame(true, $params['test2']);
-        $this->assertSame(false, $params['test3']);
-        $this->assertSame(false, $params['test4']);
-        $this->assertSame('test', $params['test5']);
+        $this->assertSame(true, $params['test1']->getValue());
+        $this->assertSame(true, $params['test2']->getValue());
+        $this->assertSame(false, $params['test3']->getValue());
+        $this->assertSame(false, $params['test4']->getValue());
+        $this->assertSame('test', $params['test5']->getValue());
     }
 }
 
