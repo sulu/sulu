@@ -21,7 +21,7 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
-use Massive\Bundle\SearchBundle\Search\Field;
+use Massive\Bundle\SearchBundle\Search\Metadata\Field;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -87,6 +87,7 @@ class StructureDriver implements DriverInterface
                     array(
                         'type' => 'complex',
                         'mapping' => $propertyMapping,
+                        'field' => new Field($property->getName()),
                     )
                 );
             } else {
@@ -113,7 +114,7 @@ class StructureDriver implements DriverInterface
         }
 
         // index the webspace
-        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string'));
+        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string', 'field' => new Field('webspaceKey')));
 
         $this->eventDispatcher->dispatch(
             SuluSearchEvents::STRUCTURE_LOAD_METADATA,
@@ -132,15 +133,15 @@ class StructureDriver implements DriverInterface
             if ($metadata instanceof ClassMetadata && isset($tagAttributes['role'])) {
                 switch ($tagAttributes['role']) {
                     case 'title':
-                        $metadata->setTitleField($property->getName());
-                        $metadata->addFieldMapping($property->getName(), array('type' => 'string'));
+                        $metadata->setTitleField(new Field($property->getName()));
+                        $metadata->addFieldMapping($property->getName(), array('field' => new Field($property->getName()), 'type' => 'string'));
                         break;
                     case 'description':
-                        $metadata->setDescriptionField($property->getName());
-                        $metadata->addFieldMapping($property->getName(), array('type' => 'string'));
+                        $metadata->setDescriptionField(new Field($property->getName()));
+                        $metadata->addFieldMapping($property->getName(), array('field' => new Field($property->getName()), 'type' => 'string'));
                         break;
                     case 'image':
-                        $metadata->setImageUrlField($property->getName());
+                        $metadata->setImageUrlField(new Field($property->getName()));
                         break;
                     default:
                         throw new \InvalidArgumentException(
@@ -156,6 +157,7 @@ class StructureDriver implements DriverInterface
                     $property->getName(),
                     array(
                         'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                        'field' => new Field($property->getName()), 
                     )
                 );
             }
