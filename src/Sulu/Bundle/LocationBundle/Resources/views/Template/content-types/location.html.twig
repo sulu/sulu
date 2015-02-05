@@ -7,8 +7,8 @@
      data-type-instance-name="{{ id|raw }}"
      data-instance-name="{{ id|raw }}"
      data-form="true"
-     data-aura-countries="{{ params.countries|json_encode }}"
-     data-aura-map-providers="{{ params.mapProviders|json_encode }}"
+     data-aura-countries="{{ parameterToKeyValue(params.countries.value)|json_encode }}"
+     data-aura-map-providers="{{ params.mapProviders.value|json_encode }}"
      data-geolocator-url="{{ path('sulu_location_geolocator_query') }}"
      >
  </div>

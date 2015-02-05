@@ -12,9 +12,10 @@ namespace Sulu\Bundle\LocationBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
+use Sulu\Bundle\LocationBundle\Map\MapManager;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Bundle\LocationBundle\Map\MapManager;
+use Sulu\Component\Content\PropertyParameter;
 
 /**
  * ContentType for TextEditor
@@ -41,8 +42,12 @@ class LocationContentType extends ComplexContentType
      */
     private $geolocatorName;
 
-    public function __construct(NodeRepositoryInterface $nodeRepository, $template, MapManager $mapManager, $geolocatorName)
-    {
+    public function __construct(
+        NodeRepositoryInterface $nodeRepository,
+        $template,
+        MapManager $mapManager,
+        $geolocatorName
+    ) {
         $this->nodeRepository = $nodeRepository;
         $this->template = $template;
         $this->mapManager = $mapManager;
@@ -64,14 +69,26 @@ class LocationContentType extends ComplexContentType
     {
         // Need a service to provide countries, see: https://github.com/sulu-cmf/SuluContactBundle/issues/121
         return array(
-            'countries' => array(
-                'at' => 'Austria',
-                'fr' => 'France',
-                'gb' => 'Great Britain'
+            'countries' => new PropertyParameter(
+                'countries',
+                'collection',
+                array(
+                    'at' => new PropertyParameter('at', 'string', 'Austria'),
+                    'fr' => new PropertyParameter('fr', 'string', 'France'),
+                    'gb' => new PropertyParameter('gb', 'string', 'Great Britain'),
+                )
             ),
-            'mapProviders' => $this->mapManager->getProvidersAsArray(),
-            'defaultProvider' => $this->mapManager->getDefaultProviderName(),
-            'geolocatorName' => $this->geolocatorName,
+            'mapProviders' => new PropertyParameter(
+                'mapProviders',
+                'collection',
+                $this->mapManager->getProvidersAsArray()
+            ),
+            'defaultProvider' => new PropertyParameter(
+                'defaultProvider',
+                'string',
+                $this->mapManager->getDefaultProviderName()
+            ),
+            'geolocatorName' => new PropertyParameter('geolocatorName', 'collection', $this->geolocatorName),
         );
     }
 
@@ -98,8 +115,7 @@ class LocationContentType extends ComplexContentType
         $languageCode,
         $segmentKey,
         $preview = false
-    )
-    {
+    ) {
         $property->setValue($data);
     }
 
@@ -130,8 +146,7 @@ class LocationContentType extends ComplexContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $value = $property->getValue();
         $node->setProperty($property->getName(), json_encode($value));
     }

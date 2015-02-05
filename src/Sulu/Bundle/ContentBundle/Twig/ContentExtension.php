@@ -41,7 +41,8 @@ class ContentExtension extends \Twig_Extension
             new \Twig_SimpleFunction('getType', array($this, 'getTypeFunction')),
             new \Twig_SimpleFunction('needsAddButton', array($this, 'needsAddButtonFunction')),
             new \Twig_SimpleFunction('getParams', array($this, 'getParamsFunction')),
-            new \Twig_SimpleFunction('parameterToSelect', array($this, 'convertParameterToSelect'))
+            new \Twig_SimpleFunction('parameterToSelect', array($this, 'convertParameterToSelect')),
+            new \Twig_SimpleFunction('parameterToKeyValue', array($this, 'convertParameterToKeyValue'))
         );
     }
 
@@ -141,6 +142,21 @@ class ContentExtension extends \Twig_Extension
                 'id' => $parameter->getName(),
                 'name' => $parameter->getTitle($locale)
             );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param PropertyParameter[] $parameters
+     * @return array
+     */
+    public function convertParameterToKeyValue($parameters)
+    {
+        $result = array();
+
+        foreach ($parameters as $parameter) {
+            $result[$parameter->getName()] = $parameter->getValue();
         }
 
         return $result;
