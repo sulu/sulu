@@ -14,6 +14,8 @@ parameters:
 
     sulu_contact.account.entity: 'SuluContactBundle:Account'
     sulu_contact.account_repository.class: 'Sulu\Bundle\ContactBundle\Entity\AccountRepository'
+    sulu_contact.contact.entity: 'SuluContactBundle:Contact'
+    sulu_contact.contact_repository.class: 'Sulu\Bundle\ContactBundle\Entity\ContactRepository'
 
     sulu_contact.contact.widgets.account_info.class: Sulu\Bundle\ContactBundle\Widgets\AccountInfo
     sulu_contact.contact.widgets.account_main_contact.class: Sulu\Bundle\ContactBundle\Widgets\MainContact
@@ -55,6 +57,13 @@ services:
         factory_method: getRepository
         arguments: 
           - %sulu_contact.account.entity%
+
+    sulu_contact.contact_repository:
+        class: %sulu_contact.contact_repository.class%
+        factory_service: doctrine
+        factory_method: getRepository
+        arguments:
+          - %sulu_contact.contact.entity%
 
     sulu_contact.js_config:
         class: %sulu_contact.js_config.class%

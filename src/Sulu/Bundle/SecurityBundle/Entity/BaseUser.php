@@ -87,6 +87,11 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     protected $confirmationKey;
 
     /**
+     * @var string
+     */
+    protected $passwordResetToken;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -386,5 +391,28 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getConfirmationKey()
     {
         return $this->confirmationKey;
+    }
+
+    /**
+     * Set passwordResetToken
+     *
+     * @param string $passwordResetToken
+     * @return User
+     */
+    public function setPasswordResetToken($passwordResetToken)
+    {
+        $this->passwordResetToken = $passwordResetToken;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetToken
+     *
+     * @return string
+     */
+    public function getPasswordResetToken()
+    {
+        return $this->passwordResetToken;
     }
 }
