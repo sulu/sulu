@@ -32,8 +32,8 @@ interface ContentMapperInterface
      * @param string $uuid uuid of node if exists
      * @param string $parent uuid or path of parent node
      * @param int $state state of node
-     * @param null $isShadow
-     * @param null $shadowBaseLanguage
+     * @param bool|null $isShadow indicates that this node is a shadow for the base language
+     * @param string|null $shadowBaseLanguage base language for shadow
      *
      * @return StructureInterface
      *
@@ -82,10 +82,12 @@ interface ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param bool|null $isShadow indicates that this node is a shadow for the base language
+     * @param string|null $shadowBaseLanguage base language for shadow
      *
      * @throws \PHPCR\ItemExistsException if new title already exists
-     * @throws \Exception
-     *
+     * @throws \InvalidArgumentException if mandatory data is not valid or not passed
+     * 
      * @return StructureInterface
      */
     public function saveStartPage(
@@ -94,7 +96,9 @@ interface ContentMapperInterface
         $webspaceKey,
         $languageCode,
         $userId,
-        $partialUpdate = true
+        $partialUpdate = true,
+        $isShadow = null,
+        $shadowBaseLanguage = null
     );
 
     /**

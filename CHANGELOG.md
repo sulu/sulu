@@ -2,8 +2,13 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+<<<<<<< HEAD
     * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
     * FEATURE     #793 [ContactBundle]   Added Repository service for Contact
+=======
+    * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
+    * BUGFIX      #774 [ContentBundle]   Enabled save shadow for index pages
+>>>>>>> 6a1f43c5aea5b9ab9c8d80d031fe75a3537586eb
     * BUGFIX      #790 [WebsiteBundle]   Fixed twig variables for 404 page
     * FEATURE     #684 [ContentBundle]   Refactored preview to use new websocket component and only one socket for form
                                          and preview
