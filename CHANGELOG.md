@@ -3,6 +3,8 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #753 [MediaBundle]    Fix 0 bytes file upload
+    * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
+    * FEATURE     #793 [ContactBundle]  Added Repository service for Contact
     * FEATURE     #714 [ContentBundle]  Add Option to hide page in sidemap
     * ENHANCEMENT #740 [SecurityBundle] Made role content navigation extendable
     * FEATURE     #569 [All]            Behat integration - behat features for bundles
