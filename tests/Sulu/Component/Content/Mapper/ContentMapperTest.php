@@ -368,7 +368,7 @@ class ContentMapperTest extends PhpcrTestCase
                 ->setLocale('de')
                 ->setUserId(1)
                 ->setData($data)
-            );
+        );
 
         $this->assertEquals('Testname', $result->getPropertyValue('title'));
         $this->assertEquals(
@@ -545,15 +545,17 @@ class ContentMapperTest extends PhpcrTestCase
         $data = ContentMapperRequest::create('page')
             ->setLocale('de')
             ->setTemplateKey('overview')
-            ->setData(array(
-                'title' => 'Testname',
-                'tags' => array(
-                    'tag1',
-                    'tag2'
-                ),
-                'url' => '/news/test',
-                'article' => 'default'
-            ))
+            ->setData(
+                array(
+                    'title' => 'Testname',
+                    'tags' => array(
+                        'tag1',
+                        'tag2'
+                    ),
+                    'url' => '/news/test',
+                    'article' => 'default'
+                )
+            )
             ->setWebspaceKey('default')
             ->setUserId(1);
 
@@ -1388,6 +1390,27 @@ class ContentMapperTest extends PhpcrTestCase
 
         $startPage = $this->mapper->loadByResourceLocator('/', 'default', 'en');
         $this->assertEquals('new-startpage', $startPage->title);
+        $this->assertEquals('/', $startPage->url);
+    }
+
+    public function testShadowStartPage()
+    {
+        $data = array(
+            'title' => 'startpage',
+            'tags' => array(
+                'tag1',
+                'tag2'
+            ),
+            'url' => '/',
+            'article' => 'article'
+        );
+
+        $this->mapper->saveStartPage($data, 'overview', 'default', 'en', 1, false);
+
+        $this->mapper->saveStartPage(array('title' => 'Startseite'), 'overview', 'default', 'de', 1, false, true, 'en');
+
+        $startPage = $this->mapper->loadStartPage('default', 'de');
+        $this->assertEquals('startpage', $startPage->title);
         $this->assertEquals('/', $startPage->url);
     }
 
@@ -3326,7 +3349,17 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertArrayNotHasKey('de_at', $urls);
         $this->assertArrayNotHasKey('es', $urls);
 
-        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'en', 1, true, $data[0]->getUuid(), null, Structure::STATE_PUBLISHED);
+        $data[1] = $this->mapper->save(
+            $data[1],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            $data[0]->getUuid(),
+            null,
+            Structure::STATE_PUBLISHED
+        );
         $urls = $data[1]->getUrls();
 
         $this->assertEquals('/description', $urls['en']);
@@ -3371,7 +3404,20 @@ class ContentMapperTest extends PhpcrTestCase
                 'url' => '/test/test',
                 'blog' => 'Thats a good test'
             );
-            $snippet = $this->mapper->save($snippetData, 'default_snippet', 'default', 'en', 1, true, null, null,null,null,null, Structure::TYPE_SNIPPET);
+            $snippet = $this->mapper->save(
+                $snippetData,
+                'default_snippet',
+                'default',
+                'en',
+                1,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Structure::TYPE_SNIPPET
+            );
 
 
             // Internal Link with String Type
@@ -3398,7 +3444,10 @@ class ContentMapperTest extends PhpcrTestCase
             $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
             $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1, true, $uuid);
         } catch (\Exception $e) {
-            $this->fail('Exception thrown(' . get_class($e) . '): ' . $e->getMessage() . PHP_EOL . $e->getFile() . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString());
+            $this->fail(
+                'Exception thrown(' . get_class($e) . '): ' . $e->getMessage() . PHP_EOL . $e->getFile(
+                ) . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString()
+            );
         }
     }
 }
