@@ -484,7 +484,7 @@ class DefaultMediaManager implements MediaManagerInterface
                 $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
-            $data['size'] = $uploadedFile->getSize();
+            $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['type'] = array(
                 'id' => $this->getMediaType($uploadedFile)
@@ -644,7 +644,7 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
-            if ($value || ($attribute === 'tags' && $value !== null)) {
+            if ($value || ($attribute === 'tags' && $value !== null) || ($attribute === 'size' && $value !== null)) {
                 switch ($attribute) {
                     case 'size':
                         $media->setSize($value);

@@ -378,4 +378,72 @@ abstract class AbstractContactManager implements ContactManagerInterface
             $this->em->remove($entity);
         }
     }
+
+    /**
+     * Returns the billing address of an account/contact
+     * @param Account|Contact $entity
+     * @param bool $force Forces function to return an address if any address is defined
+     *          if no delivery address is defined it will first return the main address then any
+     * @return mixed
+     */
+    public function getBillingAddress($entity, $force = false)
+    {
+        /** @var Address $address */
+        $conditionCallback = function($address) {
+            return $address->getBillingAddress();
+        };
+        return $this->getAddressByCondition($entity, $conditionCallback, $force);
+    }
+
+    /**
+     * Returns the delivery address
+     * @param Account|Contact $entity
+     * @param bool $force Forces function to return an address if any address is defined
+     *          if no delivery address is defined it will first return the main address then any
+     * @return mixed
+     */
+    public function getDeliveryAddress($entity, $force = false)
+    {
+        /** @var Address $address */
+        $conditionCallback = function($address) {
+            return $address->getDeliveryAddress();
+        };
+        return $this->getAddressByCondition($entity, $conditionCallback, $force);
+    }
+
+    /**
+     * Returns an address by callback-condition
+     * @param Account|Contact $entity
+     * @param bool $force Forces function to return an address if any address is defined
+     *          if no delivery address is defined it will first return the main address then any
+     * @return mixed
+     */
+    public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
+    {
+        $accountAddresses = $entity->getAccountAddresses();
+        $address = null;
+        $main = null;
+
+        if (!is_null($accountAddresses)) {
+            /** @var AccountAddress $accountAddress */
+            foreach ($accountAddresses as $accountAddress) {
+                if ($conditionCallback($accountAddress->getAddress())) {
+                    return $accountAddress->getAddress();
+                }
+                if ($accountAddress->getMain()) {
+                    $main = $accountAddress->getAddress();
+                }
+            }
+            if ($force) {
+                // return main or first address
+                if ($main !== null ) {
+                    return $main;
+                } else {
+                    return $accountAddresses->first()->getAddress();
+                }
+            }
+        }
+
+        return $main;
+    }
 }

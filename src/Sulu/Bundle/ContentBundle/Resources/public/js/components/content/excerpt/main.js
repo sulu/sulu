@@ -60,6 +60,9 @@ define([], function() {
 
                 this.sandbox.dom.html(this.$el, tpl);
 
+                // avoid using this form elements for preview
+                this.sandbox.dom.removeClass('.preview-update', 'preview-update');
+
                 this.dfdListenForChange = this.sandbox.data.deferred();
                 this.createForm(this.initData(data));
                 this.listenForChange();

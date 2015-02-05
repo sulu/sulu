@@ -78,13 +78,13 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function prepareSingleBlockProperty()
     {
-        $this->blockProperty = new BlockProperty('block1', '', 'default', false, true, 1, 999);
+        $this->blockProperty = new BlockProperty('block1', '', 'type1', false, true, 999, 1);
         $type1 = new BlockPropertyType('type1', '');
         $type1->addChild(new Property('title', '', 'text_line', false, true));
         $type1->addChild(new Property('article', '', 'text_area', false, true));
         $this->blockProperty->addType($type1);
 
-        $this->subBlockProperty = new BlockProperty('sub-block', '', 'default', false, true);
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true);
         $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));
@@ -99,13 +99,13 @@ class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 
     protected function prepareMultipleBlockProperty()
     {
-        $this->blockProperty = new BlockProperty('block1', '', 'default', false, true, 1, 10);
+        $this->blockProperty = new BlockProperty('block1', '', 'type1', false, true, 10, 1);
         $type1 = new BlockPropertyType('type1', '');
         $type1->addChild(new Property('title', '', 'text_line', false, true));
         $type1->addChild(new Property('article', '', 'text_area'));
         $this->blockProperty->addType($type1);
 
-        $this->subBlockProperty = new BlockProperty('sub-block', '', 'default', false, true);
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true);
         $subType1 = new BlockPropertyType('subType1', '');
         $subType1->addChild(new Property('title', '', 'text_line', false, true));
         $subType1->addChild(new Property('article', '', 'text_area', false, true));

@@ -146,6 +146,9 @@
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
+            <argument type="collection">
+                <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analytics_key%</argument>
+            </argument>
         </service>
 
     </services>

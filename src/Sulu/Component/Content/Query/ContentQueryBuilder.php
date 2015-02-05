@@ -48,7 +48,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         'creator',
         'created',
         'nodeType',
-        'state'
+        'state',
+        'shadow-on'
     );
 
     /**
@@ -120,10 +121,12 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 
             if ($this->published) {
                 $where .= sprintf(
-                    "%s (page.[%s] = %s ",
+                    '%s ((page.[%s] = %s OR page.[%s] = %s)',
                     $where !== '' ? 'OR ' : '',
                     $this->getPropertyName('state'),
-                    Structure::STATE_PUBLISHED
+                    Structure::STATE_PUBLISHED,
+                    $this->getPropertyName('shadow-on'),
+                    'true'
                 );
             }
 
@@ -131,7 +134,10 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             if ($customWhere !== null && $customWhere !== '') {
                 $where = $where . ($where !== '' ? ' AND ' : '') . $customWhere;
             }
-            $where .= ')';
+
+            if ($this->published) {
+                $where .= ')';
+            }
 
             $customOrder = $this->buildOrder($webspaceKey, $locale);
             if (!empty($customOrder)) {

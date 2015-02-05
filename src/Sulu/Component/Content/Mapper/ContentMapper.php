@@ -877,7 +877,9 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $languageCode,
         $userId,
-        $partialUpdate = true
+        $partialUpdate = true,
+        $isShadow = null,
+        $shadowBaseLanguage = null
     ) {
         $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
 
@@ -890,7 +892,9 @@ class ContentMapper implements ContentMapperInterface
             $partialUpdate,
             $uuid,
             null,
-            StructureInterface::STATE_PUBLISHED
+            StructureInterface::STATE_PUBLISHED,
+            $isShadow,
+            $shadowBaseLanguage
         );
     }
 
