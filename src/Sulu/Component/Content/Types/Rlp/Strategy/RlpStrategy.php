@@ -188,6 +188,11 @@ abstract class RlpStrategy implements RlpStrategyInterface
         foreach ($contentNode->getNodes() as $node) {
             // determine structure
             $templatePropertyName = $this->nodeHelper->getTranslatedPropertyName('template', $languageCode);
+
+            if (!$node->hasProperty($templatePropertyName)) {
+                continue;
+            }
+
             $template = $node->getPropertyValue($templatePropertyName);
             $structure = $this->structureManager->getStructure($template);
 

@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
@@ -18,6 +19,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -25,7 +27,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use \DateTime;
 
 /**
  * Creates default routes in PHPCR for webspaces
@@ -70,7 +71,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
                 'template',
                 'navigation',
                 'published',
-                'nodeType'
+                'nodeType',
+                'title'
             ),
             $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
@@ -140,9 +142,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
         NodeInterface $node,
         $template,
         $userId
-    )
-    {
-        $this->properties->setLanguage(str_replace('-', '_', $localization->getLocalization()));
+    ) {
+        $this->properties->setLanguage($localization->getLocalization());
 
         if (!$node->hasProperty($this->properties->getName('template'))) {
             $node->setProperty($this->properties->getName('template'), $template);
@@ -156,6 +157,11 @@ class WebspacesInitCommand extends ContainerAwareCommand
         }
         if (!$node->hasProperty($this->properties->getName('nodeType'))) {
             $node->setProperty($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT);
+        }
+
+        if (!$node->hasProperty($this->properties->getName('title'))) {
+            // set title
+            $node->setProperty($this->properties->getName('title'), 'Homepage');
         }
 
         if (is_array($localization->getChildren()) && sizeof($localization->getChildren()) > 0) {
@@ -211,8 +217,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         NodeInterface $route,
         NodeInterface $content,
         OutputInterface $output
-    )
-    {
+    ) {
         foreach ($webspace->getAllLocalizations() as $local) {
             if (!$route->hasNode($local->getLocalization())) {
                 $node = $route->addNode($local->getLocalization());
