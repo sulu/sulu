@@ -27,6 +27,9 @@ CHANGELOG for Sulu
     * FEATURE     #697 [HttpCacheBundle] Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
     * ENHANCEMENT #777 [ContentBundle]   Enable "copy language" on startpage
 
+* dev-master
+    * HOTFIX      #788 [ContentBundle]  Fixed bug with empty selection with single internal link
+
 * 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change
 
