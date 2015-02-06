@@ -65,7 +65,7 @@ class StructureDriver implements DriverInterface
 
         $indexMeta = $this->factory->makeIndexMetadata($class->name);
 
-        $indexMeta->setIndexName($this->factory->makeMetadataField('content'));
+        $indexMeta->setIndexName('content');
         $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
 
