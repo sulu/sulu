@@ -41,7 +41,7 @@ class SingleInternalLink extends SimpleContentType
         $segmentKey
     ) {
         $value = $property->getValue();
-        if ($node->getIdentifier() !== null && $value !== $node->getIdentifier()) {
+        if ($node->getIdentifier() === null || $value !== $node->getIdentifier()) {
             parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
         } else {
             // FIXME validation and an own exception in sulu/sulu
