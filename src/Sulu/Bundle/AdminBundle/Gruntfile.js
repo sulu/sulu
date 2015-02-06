@@ -8,11 +8,6 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
-            public: {
-                files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../../web/bundles/suluadmin/'}
-                ]
-            },
             rev: {
                 files: [
                     {
@@ -73,14 +68,6 @@ module.exports = function(grunt) {
         },
         clean: {
             options: { force: true },
-            public: {
-                files: [
-                    {
-                        dot: true,
-                        src: ['../../../../../../../web/bundles/suluadmin/']
-                    }
-                ]
-            },
             dist: {
                 files: [
                     {src: ['Resources/public/dist']}
@@ -205,11 +192,6 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('publish', [
-        'clean:public',
-        'copy:public'
-    ]);
-
     grunt.registerTask('build', [
         'clean:dist',
         'copy:build',
@@ -223,8 +205,7 @@ module.exports = function(grunt) {
         'copy:rev',
         'copy:buildResult',
         'replace:buildResult',
-        'clean:build',
-        'publish'
+        'clean:build'
     ]);
 
     grunt.registerTask('update', [
