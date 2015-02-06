@@ -2,7 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed due to the symfony 2.6 changes to symlinks
+    * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed
+	                                 due to the symfony 2.6 changes to symlinks
     * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
     * FEATURE     #793 [ContactBundle]   Added Repository service for Contact
     * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
