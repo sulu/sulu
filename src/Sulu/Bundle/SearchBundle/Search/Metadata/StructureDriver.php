@@ -21,7 +21,6 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
-use Massive\Bundle\SearchBundle\Search\Metadata\Field;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -66,9 +65,9 @@ class StructureDriver implements DriverInterface
 
         $indexMeta = $this->factory->makeIndexMetadata($class->name);
 
-        $indexMeta->setIndexName(new Field('content'));
-        $indexMeta->setIdField(new Field('uuid'));
-        $indexMeta->setLocaleField(new Field('languageCode'));
+        $indexMeta->setIndexName($this->factory->makeMetadataField('content'));
+        $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
+        $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
 
         $allProperties = array();
 
@@ -87,7 +86,7 @@ class StructureDriver implements DriverInterface
                     array(
                         'type' => 'complex',
                         'mapping' => $propertyMapping,
-                        'field' => new Field($property->getName()),
+                        'field' => $this->factory->makeMetadataField($property->getName()),
                     )
                 );
             } else {
@@ -97,24 +96,24 @@ class StructureDriver implements DriverInterface
 
         if ($structure->hasTag('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
-            $indexMeta->setUrlField(new Field($prop->getName()));
+            $indexMeta->setUrlField($this->factory->makeMetadataField($prop->getName()));
         }
 
         if (!$indexMeta->getTitleField()) {
             $prop = $structure->getProperty('title');
-            $indexMeta->setTitleField(new Field($prop->getName()));
+            $indexMeta->setTitleField($this->factory->makeMetadataField($prop->getName()));
 
             $indexMeta->addFieldMapping(
                 $prop->getName(),
                 array(
                     'type' => 'string',
-                    'field' => new Field($prop->getName())
+                    'field' => $this->factory->makeMetadataField($prop->getName())
                 )
             );
         }
 
         // index the webspace
-        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string', 'field' => new Field('webspaceKey')));
+        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string', 'field' => $this->factory->makeMetadataField('webspaceKey')));
 
         $this->eventDispatcher->dispatch(
             SuluSearchEvents::STRUCTURE_LOAD_METADATA,
@@ -133,15 +132,15 @@ class StructureDriver implements DriverInterface
             if ($metadata instanceof ClassMetadata && isset($tagAttributes['role'])) {
                 switch ($tagAttributes['role']) {
                     case 'title':
-                        $metadata->setTitleField(new Field($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array('field' => new Field($property->getName()), 'type' => 'string'));
+                        $metadata->setTitleField($this->factory->makeMetadataField($property->getName()));
+                        $metadata->addFieldMapping($property->getName(), array('field' => $this->factory->makeMetadataField($property->getName()), 'type' => 'string'));
                         break;
                     case 'description':
-                        $metadata->setDescriptionField(new Field($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array('field' => new Field($property->getName()), 'type' => 'string'));
+                        $metadata->setDescriptionField($this->factory->makeMetadataField($property->getName()));
+                        $metadata->addFieldMapping($property->getName(), array('field' => $this->factory->makeMetadataField($property->getName()), 'type' => 'string'));
                         break;
                     case 'image':
-                        $metadata->setImageUrlField(new Field($property->getName()));
+                        $metadata->setImageUrlField($this->factory->makeMetadataField($property->getName()));
                         break;
                     default:
                         throw new \InvalidArgumentException(
@@ -157,7 +156,7 @@ class StructureDriver implements DriverInterface
                     $property->getName(),
                     array(
                         'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                        'field' => new Field($property->getName()), 
+                        'field' => $this->factory->makeMetadataField($property->getName()), 
                     )
                 );
             }

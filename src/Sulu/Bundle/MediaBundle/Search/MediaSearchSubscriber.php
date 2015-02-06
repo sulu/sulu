@@ -75,6 +75,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $metadata = $e->getMetadata();
         $document = $e->getDocument();
         $subject = $e->getSubject();
+        $evaluator = $e->getFieldEvaluator();
 
         if (false === $metadata->reflection->isSubclassOf('Sulu\Component\Content\Structure')) {
             return;
@@ -84,8 +85,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $accessor = PropertyAccess::createPropertyAccessor();
-        $data = $accessor->getValue($subject, $imageUrlField);
+        $data = $evaluator->getValue($subject, $imageUrlField);
         $locale = $subject->getLanguageCode();
 
         if (!$data) {
