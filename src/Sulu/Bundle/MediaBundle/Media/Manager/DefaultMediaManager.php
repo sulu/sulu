@@ -134,7 +134,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param MediaRepositoryInterface $mediaRepository
-     * @param CollectionRepository $collectionRepository
+     * @param CollectionRepositoryInterface $collectionRepository
      * @param UserRepositoryInterface $userRepository
      * @param ObjectManager $em
      * @param StorageInterface $storage
@@ -370,6 +370,23 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getByIds(array $ids, $locale)
+    {
+        $media = array();
+        $mediaEntities = $this->mediaRepository->findMedia(array('pagination' => false, 'ids' => $ids));
+        $this->count = count($mediaEntities);
+        foreach ($mediaEntities as $mediaEntity) {
+            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        }
+
+        ksort($media);
+
+        return $media;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function get($locale, $filter = array(), $limit = null, $offset = null)
     {
         $media = array();
@@ -467,7 +484,7 @@ class DefaultMediaManager implements MediaManagerInterface
                 $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
-            $data['size'] = $uploadedFile->getSize();
+            $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['type'] = array(
                 'id' => $this->getMediaType($uploadedFile)
@@ -519,10 +536,11 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * Prepares data
-     *
      * @param UploadedFile $uploadedFile
-     * @param Array $data
-     * @param User $user
+     * @param array $data
+     * @param UserInterface $user
+     * @return Media
+     * @throws InvalidFileException
      */
     private function buildData($uploadedFile, $data, $user)
     {
@@ -548,11 +566,9 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * Create a new media
-     * @param UploadedFile $uploadedFile
      * @param $data
-     * @param UserInterface $user
-     * @return MediaEntity
-     * @throws InvalidFileException
+     * @param $user
+     * @return Media
      */
     protected function createMedia($data, $user)
     {
@@ -597,12 +613,13 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param SymfonyFile|null $uploadedFile
-     * @return object
+     * @param SymfonyFile $file
+     * @return integer
      */
     protected function getMediaType(SymfonyFile $file)
     {
         $mimeType = $file->getMimeType();
+        $name = null;
         foreach ($this->mediaTypes as $mediaType) {
             if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $name = $mediaType['type'];
@@ -627,7 +644,7 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
-            if ($value || ($attribute === 'tags' && $value !== null)) {
+            if ($value || ($attribute === 'tags' && $value !== null) || ($attribute === 'size' && $value !== null)) {
                 switch ($attribute) {
                     case 'size':
                         $media->setSize($value);
@@ -678,10 +695,14 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setCreated($value);
                         break;
                     case 'changer':
-                        $media->setChanger($value);
+                        if ($value instanceof UserInterface) {
+                            $media->setChanger($value);
+                        }
                         break;
                     case 'creator':
-                        $media->setCreator($value);
+                        if ($value instanceof UserInterface) {
+                            $media->setCreator($value);
+                        }
                         break;
                     case 'mimeType':
                         $media->setMimeType($value);

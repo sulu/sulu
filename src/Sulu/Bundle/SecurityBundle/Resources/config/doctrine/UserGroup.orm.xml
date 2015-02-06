@@ -9,7 +9,7 @@
 
         <field name="locale" type="string" length="60"/>
 
-        <many-to-one field="user" target-entity="Sulu\Bundle\SecurityBundle\Entity\User" inversed-by="userGroups">
+        <many-to-one field="user" target-entity="Sulu\Component\Security\UserInterface" inversed-by="userGroups">
             <join-column name="idUsers" referenced-column-name="id" on-delete="CASCADE"/>
         </many-to-one>
         <many-to-one field="group" target-entity="Sulu\Bundle\SecurityBundle\Entity\Group" inversed-by="userGroups">

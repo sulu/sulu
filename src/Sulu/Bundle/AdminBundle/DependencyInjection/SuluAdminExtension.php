@@ -34,7 +34,7 @@ class SuluAdminExtension extends Extension
         $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
         $container->setParameter($this->getAlias() . '.widget_groups', $config['widget_groups']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
     }
 }

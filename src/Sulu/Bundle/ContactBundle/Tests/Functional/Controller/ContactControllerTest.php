@@ -768,8 +768,8 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
-        $this->assertEquals(1, count($response->_embedded->contacts));
+        $this->assertEquals(2, $response->total);
+        $this->assertEquals(2, count($response->_embedded->contacts));
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
@@ -1392,7 +1392,7 @@ class ContactControllerTest extends SuluTestCase
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
 
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
         $this->assertEquals('MSc', $response->_embedded->contacts[0]->title);
@@ -1408,7 +1408,7 @@ class ContactControllerTest extends SuluTestCase
         $client->request('GET', '/api/contacts?flat=true&fields=id,fullName');
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
         $this->assertEquals($this->contact->getId(), $response->_embedded->contacts[0]->id);
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
 
@@ -1416,7 +1416,7 @@ class ContactControllerTest extends SuluTestCase
         $client->request('GET', '/api/contacts?flat=true&fields=id,fullName');
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
         $this->assertEquals($this->contact->getId(), $response->_embedded->contacts[0]->id);
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
@@ -1444,7 +1444,7 @@ class ContactControllerTest extends SuluTestCase
         $client->request('GET', '/api/contacts?flat=true');
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(1, $response->total);
+        $this->assertEquals(2, $response->total);
     }
 
     public function testPutRemovedAccount()

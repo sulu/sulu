@@ -26,6 +26,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
     protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $positionEntityName = 'SuluContactBundle:Position';
+    protected static $addressTypeEntityName = 'SuluContactBundle:AddressType';
+    protected static $urlTypeEntityName = 'SuluContactBundle:UrlType';
+    protected static $emailTypeEntityName = 'SuluContactBundle:EmailType';
+    protected static $faxTypeEntityName = 'SuluContactBundle:FaxType';
+    protected static $phoneTypeEntityName = 'SuluContactBundle:PhoneType';
 
     /**
      * @var ObjectManager $em
@@ -219,5 +224,226 @@ abstract class AbstractContactManager implements ContactManagerInterface
         }
 
         return null;
+    }
+
+    /**
+     * return address type by name
+     * @param $name
+     * @return mixed
+     */
+    public function getAddressTypeByName($name)
+    {
+        return $this->em
+            ->getRepository(self::$addressTypeEntityName)
+            ->findOneByName($name);
+    }
+
+    /**
+     * return url type by name
+     * @param $name
+     * @return mixed
+     */
+    public function getUrlTypeByName($name)
+    {
+        return $this->em
+            ->getRepository(self::$urlTypeEntityName)
+            ->findOneByName($name);
+    }
+
+    /**
+     * return phone type by name
+     * @param $name
+     * @return mixed
+     */
+    public function getPhoneTypeByName($name)
+    {
+        return $this->em
+            ->getRepository(self::$phoneTypeEntityName)
+            ->findOneByName($name);
+    }
+
+    /**
+     * return fax type by name
+     * @param $name
+     * @return mixed
+     */
+    public function getFaxTypeByName($name)
+    {
+        return $this->em
+            ->getRepository(self::$faxTypeEntityName)
+            ->findOneByName($name);
+    }
+
+    /**
+     * return email type by name
+     * @param $name
+     * @return mixed
+     */
+    public function getEmailTypeByName($name)
+    {
+        return $this->em
+            ->getRepository(self::$emailTypeEntityName)
+            ->findOneByName($name);
+    }
+
+    /**
+     * clears all relational data from entity and deletes it
+     * @param $entity
+     */
+    public function deleteAllRelations($entity)
+    {
+        $this->deleteNotes($entity);
+        $this->deleteAddresses($entity);
+        $this->deleteEmails($entity);
+        $this->deleteFaxes($entity);
+        $this->deletePhones($entity);
+        $this->deleteUrls($entity);
+    }
+
+    /**
+     * deletes all notes that are assigned to entity
+     * @param $entity
+     */
+    public function deleteNotes($entity)
+    {
+        if ($entity->getNotes()) {
+            $this->deleteAllEntitiesOfCollection($entity->getNotes());
+        }
+    }
+
+    /**
+     * deletes all phones that are assigned to entity
+     * @param $entity
+     */
+    public function deletePhones($entity)
+    {
+        if ($entity->getPhones()) {
+            $this->deleteAllEntitiesOfCollection($entity->getPhones());
+        }
+    }
+
+    /**
+     * deletes all faxes that are assigned to entity
+     * @param $entity
+     */
+    public function deleteFaxes($entity)
+    {
+        if ($entity->getFaxes()) {
+            $this->deleteAllEntitiesOfCollection($entity->getFaxes());
+        }
+    }
+
+    /**
+     * deletes all urls that are assigned to entity
+     * @param $entity
+     */
+    public function deleteUrls($entity)
+    {
+        if ($entity->getUrls()) {
+            $this->deleteAllEntitiesOfCollection($entity->getUrls());
+        }
+    }
+
+    /**
+     * deletes all addresses that are assigned to entity
+     * @param $entity
+     */
+    public function deleteAddresses($entity)
+    {
+        // clear addresses
+        if ($entity->getAccountAddresses()) {
+            foreach ($entity->getAccountAddresses() as $accountAddresses) {
+                $this->em->remove($accountAddresses->getAddress());
+                $this->em->remove($accountAddresses);
+            }
+        }
+    }
+
+    /**
+     * deletes all emails that are assigned to entity
+     * @param $entity
+     */
+    public function deleteEmails($entity)
+    {
+        if ($entity->getEmails()) {
+            $this->deleteAllEntitiesOfCollection($entity->getEmails());
+        }
+    }
+
+    /**
+     * @param $arrayCollection
+     */
+    protected function deleteAllEntitiesOfCollection($arrayCollection) {
+        foreach ($arrayCollection as $entity) {
+            $this->em->remove($entity);
+        }
+    }
+
+    /**
+     * Returns the billing address of an account/contact
+     * @param Account|Contact $entity
+     * @param bool $force Forces function to return an address if any address is defined
+     *          if no delivery address is defined it will first return the main address then any
+     * @return mixed
+     */
+    public function getBillingAddress($entity, $force = false)
+    {
+        /** @var Address $address */
+        $conditionCallback = function($address) {
+            return $address->getBillingAddress();
+        };
+        return $this->getAddressByCondition($entity, $conditionCallback, $force);
+    }
+
+    /**
+     * Returns the delivery address
+     * @param Account|Contact $entity
+     * @param bool $force Forces function to return an address if any address is defined
+     *          if no delivery address is defined it will first return the main address then any
+     * @return mixed
+     */
+    public function getDeliveryAddress($entity, $force = false)
+    {
+        /** @var Address $address */
+        $conditionCallback = function($address) {
+            return $address->getDeliveryAddress();
+        };
+        return $this->getAddressByCondition($entity, $conditionCallback, $force);
+    }
+
+    /**
+     * Returns an address by callback-condition
+     * @param Account|Contact $entity
+     * @param bool $force Forces function to return an address if any address is defined
+     *          if no delivery address is defined it will first return the main address then any
+     * @return mixed
+     */
+    public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
+    {
+        $accountAddresses = $entity->getAccountAddresses();
+        $address = null;
+        $main = null;
+
+        if (!is_null($accountAddresses)) {
+            /** @var AccountAddress $accountAddress */
+            foreach ($accountAddresses as $accountAddress) {
+                if ($conditionCallback($accountAddress->getAddress())) {
+                    return $accountAddress->getAddress();
+                }
+                if ($accountAddress->getMain()) {
+                    $main = $accountAddress->getAddress();
+                }
+            }
+            if ($force) {
+                // return main or first address
+                if ($main !== null ) {
+                    return $main;
+                } else {
+                    return $accountAddresses->first()->getAddress();
+                }
+            }
+        }
+
+        return $main;
     }
 }

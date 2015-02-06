@@ -13,16 +13,28 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AdminController extends Controller
 {
+    /**
+     * ID of user data sevice
+     */
+    const USER_DATA_ID = 'sulu_admin.user_data_service';
+
+    /**
+     * ID of js config service
+     */
+    const JS_CONFIG_ID = 'sulu_admin.jsconfig_pool';
+
+    /**
+     * Renders admin ui
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction()
     {
         // get user data
-        $userDataServiceId = $this->container->getParameter('sulu_admin.user_data_service');
-        $jsconfigServiceId = 'sulu_admin.jsconfig_pool';
+        $userDataServiceId = $this->container->getParameter(self::USER_DATA_ID);
 
         $user = array();
         if ($this->has($userDataServiceId)) {
@@ -33,8 +45,8 @@ class AdminController extends Controller
 
                 // get js config from bundles
                 $jsconfig = array();
-                if ($this->has($jsconfigServiceId)) {
-                    $jsconfig = $this->get($jsconfigServiceId);
+                if ($this->has(self::JS_CONFIG_ID)) {
+                    $jsconfig = $this->get(self::JS_CONFIG_ID);
                     $jsconfig = $jsconfig->getConfigParams();
                 }
 
@@ -62,7 +74,7 @@ class AdminController extends Controller
 
     /**
      * Returns a array of all bundles
-     * @return Response
+     * @return JsonResponse
      */
     public function bundlesAction()
     {
@@ -81,6 +93,10 @@ class AdminController extends Controller
         return new JsonResponse($admins);
     }
 
+    /**
+     * Returns contexts of admin
+     * @return JsonResponse
+     */
     public function contextsAction()
     {
         $contexts = $this->get('sulu_admin.admin_pool')->getSecurityContexts();
@@ -89,5 +105,21 @@ class AdminController extends Controller
         $response = isset($system) ? $contexts[$system] : $contexts;
 
         return new JsonResponse($response);
+    }
+
+    /**
+     * Returns config for admin
+     * @return JsonResponse
+     */
+    public function configAction()
+    {
+        // get js config from bundles
+        $jsconfig = array();
+        if ($this->has(self::JS_CONFIG_ID)) {
+            $jsconfig = $this->get(self::JS_CONFIG_ID);
+            $jsconfig = $jsconfig->getConfigParams();
+        }
+
+        return new JsonResponse($jsconfig);
     }
 }

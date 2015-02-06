@@ -51,7 +51,7 @@ doctrine:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
         resolve_target_entities:
-            Sulu\Component\Security\UserInterface: Sulu\Bundle\TestBundle\Entity\TestUser
+            Sulu\Component\Security\UserInterface: Sulu\Bundle\SecurityBundle\Entity\User
             Sulu\Bundle\ProductBundle\Entity\ProductInterface: Sulu\Bundle\ProductBundle\Entity\Product
             Sulu\Bundle\MediaBundle\Entity\CollectionInterface: Sulu\Bundle\MediaBundle\Entity\Collection
             Sulu\Bundle\SecurityBundle\Entity\RoleInterface: Sulu\Bundle\SecurityBundle\Entity\Role
@@ -72,3 +72,6 @@ parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working
     # schmittjoh/JMSSerializerBundle#270 (comment)
     jms_serializer.cache_naming_strategy.class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+
+sulu_test:
+    enable_test_user_provider: true

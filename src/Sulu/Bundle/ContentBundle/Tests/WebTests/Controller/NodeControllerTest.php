@@ -332,7 +332,7 @@ class NodeControllerTest extends SuluTestCase
 
         $this->assertEquals(2, sizeof((array) $response->ext));
 
-        $this->assertEquals(6, sizeof((array) $response->ext->seo));
+        $this->assertEquals(7, sizeof((array) $response->ext->seo));
         $this->assertEquals(7, sizeof((array) $response->ext->excerpt));
 
         $client->request('GET', '/api/nodes?depth=1&webspace=sulu_io&language=en');

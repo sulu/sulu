@@ -10,15 +10,14 @@
 
 namespace Sulu\Component\Content\Block;
 
+use JMS\Serializer\Annotation\Discriminator;
+use JMS\Serializer\Annotation\HandlerCallback;
+use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\Exclude;
-use JMS\Serializer\Annotation\Discriminator;
-use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * representation of a block node in template xml
@@ -205,6 +204,13 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function getValue()
     {
+        // if size of children smaller than minimum
+        if (count($this->properties) < $this->getMinOccurs()) {
+            for ($i = count($this->properties); $i < $this->getMinOccurs(); $i++) {
+                $this->initProperties($i, $this->getDefaultTypeName());
+            }
+        }
+
         $data = array();
         foreach ($this->properties as $type) {
             $result = array('type' => $type->getName());

@@ -29,17 +29,18 @@ define(['config'], function(Config) {
             var sandbox = app.sandbox;
 
             Config.set('sulucontact.components.autocomplete.default.contact', {
-                remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName',
+                remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName&limit=25',
                 getParameter: 'search',
                 resultKey: 'contacts',
                 valueKey: 'fullName',
                 value: '',
                 instanceName: 'contacts',
                 noNewValues: true,
+                limit: 25,
                 fields: [
                     {
                         id: 'id',
-                        width: '60px'
+                        width: '40px'
                     },
                     {
                         id: 'fullName'
@@ -48,20 +49,26 @@ define(['config'], function(Config) {
             });
 
             Config.set('sulucontact.components.autocomplete.default.account', {
-                remoteUrl: '/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name',
+                remoteUrl: '/admin/api/accounts?searchFields=name,number&flat=true&fields=id,number,name,corporation&limit=25',
                 resultKey: 'accounts',
                 getParameter: 'search',
                 valueKey: 'name',
                 value: '',
                 instanceName: 'accounts',
                 noNewValues: true,
+                limit: 25,
                 fields: [
                     {
                         id: 'number',
                         width: '60px'
                     },
                     {
-                        id: 'name'
+                        id: 'name',
+                        width: '220px'
+                    },
+                    {
+                        id: 'corporation',
+                        width: '220px'
                     }
                 ]
             });

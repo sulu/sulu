@@ -1,0 +1,28 @@
+{
+    "name": "sulu/websocket-bundle",
+    "type": "sulu-bundle",
+    "description": "This bundle integrates websocket component into symfony/sulu infrastructure",
+    "license": "MIT",
+    "keywords": ["sulu", "websocket"],
+    "authors": [
+        {
+            "name": "Sulu Community",
+            "homepage": "https://github.com/sulu-cmf/sulu/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.5.*",
+        "phpunit/phpunit": "3.7.*",
+        "phpspec/prophecy-phpunit": "1.0.*",
+        "sulu/test-bundle": "dev-develop"
+    },
+    "autoload": {
+        "psr-0": {
+            "Sulu\\Bundle\\Websocket": ""
+        }
+    },
+    "target-dir": "Sulu/Bundle/Websocket"
+}
