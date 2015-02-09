@@ -18,51 +18,26 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
     'use strict';
 
     var defaults = {
-            visibleItems: 6,
-            instanceName: null,
-            url: '',
-            idsParameter: 'ids',
-            preselected: {ids: [], displayOption: null, config: {}},
-            idKey: 'id',
-            titleKey: 'title',
+            eventNamespace: 'sulu.media-selection',
             thumbnailKey: 'thumbnails',
             thumbnailSize: '50x50',
             resultKey: 'media',
-            positionSelectedClass: 'selected',
-            hidePositionElement: false,
-            defaultDisplayOption: 'top',
-            displayOptions: {
-                leftTop: true,
-                top: true,
-                rightTop: true,
-                left: true,
-                middle: true,
-                right: true,
-                leftBottom: true,
-                bottom: true,
-                rightBottom: true
+            dataAttribute: 'media-selection',
+            dataDefault: {
+                displayOption: 'top',
+                ids: []
             },
-
+            hideConfigButton: true,
             translations: {
-                noMediaSelected: 'media-selection.nomedia-selected',
+                noContentSelected: 'media-selection.nomedia-selected',
                 addImages: 'media-selection.add-images',
                 choose: 'public.choose',
                 collections: 'media-selection.collections',
-                visible: 'public.visible',
-                of: 'public.of',
                 upload: 'media-selection.upload-new',
                 collection: 'media-selection.upload-to-collection',
                 createNewCollection: 'media-selection.create-new-collection',
-                newCollection: 'media-selection.new-collection',
-                viewall: 'public.view-all',
-                viewless: 'public.view-less'
+                newCollection: 'media-selection.new-collection'
             }
-        },
-
-        dataDefaults = {
-            ids: [],
-            displayOption: null,
-            config: {}
         },
 
         constants = {
@@ -70,49 +45,11 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
-         * namespace for events
-         * @type {string}
-         */
-        eventNamespace = 'sulu.media-selection.',
-
-        /**
          * raised when all overlay components returned their value
          * @event sulu.media-selection.input-retrieved
          */
         INPUT_RETRIEVED = function() {
             return createEventName.call(this, 'input-retrieved');
-        },
-
-        /**
-         * raised when the overlay data has been changed
-         * @event sulu.media-selection.data-changed
-         */
-        DATA_CHANGED = function() {
-            return createEventName.call(this, 'data-changed');
-        },
-
-        /**
-         * raised when selected element has been removed
-         * @event sulu.media-selection.selection-removed
-         */
-        SELECTION_REMOVED = function() {
-            return createEventName.call(this, 'selection-removed');
-        },
-
-        /**
-         * raised before data is requested with AJAX
-         * @event sulu.media-selection.data-request
-         */
-        DATA_REQUEST = function() {
-            return createEventName.call(this, 'data-request');
-        },
-
-        /**
-         * raised when data has returned from the ajax request
-         * @event sulu.media-selection.data-retrieved
-         */
-        DATA_RETRIEVED = function() {
-            return createEventName.call(this, 'data-retrieved');
         },
 
         /**
@@ -137,44 +74,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * returns normalized event names
          */
         createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+            return this.options.eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
         templates = {
-            skeleton: function(options, positionClass) {
-                return [
-                    '<div class="white-box form-element" id="', options.ids.container, '">',
-                    '    <div class="header">',
-                    '        <span class="fa-plus-circle icon left action" id="', options.ids.addButton, '"></span>',
-                    '        <div class="position ', positionClass, '">',
-                    '            <div class="husky-position" id="', options.ids.displayOption , '">',
-                    '                <div class="top left ', (!options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
-                    '                <div class="top middle ', (!options.displayOptions.top ? 'inactive' : ''), '" data-position="top"></div>',
-                    '                <div class="top right ', (!options.displayOptions.rightTop ? 'inactive' : ''), '" data-position="rightTop"></div>',
-                    '                <div class="middle left ', (!options.displayOptions.left ? 'inactive' : ''), '" data-position="left"></div>',
-                    '                <div class="middle middle ', (!options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
-                    '                <div class="middle right ', (!options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
-                    '                <div class="bottom left ', (!options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
-                    '                <div class="bottom middle ', (!options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
-                    '                <div class="bottom right ', (!options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
-                    '            </div>',
-                    '        </div>',
-                    '        <span class="fa-cog icon right border" id="', options.ids.configButton, '" style="display:none"></span>',
-                    '    </div>',
-                    '    <div class="content" id="', options.ids.content, '"></div>',
-                    '</div>'
-                ].join('');
-            },
-
-            noContent: function(noContentString) {
-                return [
-                    '<div class="no-content">',
-                    '   <span class="fa-coffee icon"></span>',
-                    '   <div class="text">', noContentString, '</div>',
-                    '</div>'
-                ].join('');
-            },
-
             addTab: function(options, header) {
                 return [
                     '<div id="', options.ids.chooseTab, '">',
@@ -201,15 +104,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 ].join('')
             },
 
-            contentItem: function(id, num, value, imageUrl) {
+            contentItem: function(title, thumbnails) {
                 return [
-                    '<li data-id="', id, '">',
-                    '   <span class="fa-ellipsis-v icon move"></span>',
-                    '   <span class="num">', num, '</span>',
-                    '   <img src="', imageUrl, '"/>',
-                    '   <span class="value">', value, '</span>',
-                    '   <span class="fa-times remove"></span>',
-                    '</li>'
+                    '   <img src="', thumbnails['50x50'], '"/>',
+                    '   <span class="title">', title, '</span>'
                 ].join('');
             }
         },
@@ -219,93 +117,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          */
         getId = function(type) {
             return '#' + this.options.ids[type];
-        },
-
-        /**
-         * render component
-         */
-        render = function() {
-            // init collection
-            this.collections = new Collections();
-            this.newCollection = new Collection();
-            this.collectionArray = null;
-            this.newCollectionId = null;
-            this.gridGroupDeprecated = false;
-            this.viewAll = false;
-
-            this.options.ids = {
-                container: 'media-selection-' + this.options.instanceName + '-container',
-                addButton: 'media-selection-' + this.options.instanceName + '-add',
-                configButton: 'media-selection-' + this.options.instanceName + '-config',
-                displayOption: 'media-selection-' + this.options.instanceName + '-display-option',
-                content: 'media-selection-' + this.options.instanceName + '-content',
-                chooseTab: 'media-selection-' + this.options.instanceName + '-choose-tab',
-                uploadTab: 'media-selection-' + this.options.instanceName + '-upload-tab',
-                gridGroup: 'media-selection-' + this.options.instanceName + '-grid-group',
-                loader: 'media-selection-' + this.options.instanceName + '-loader',
-                collectionSelect: 'media-selection-' + this.options.instanceName + '-collection-select',
-                dropzone: 'media-selection-' + this.options.instanceName + '-dropzone'
-            };
-
-            if (!!this.options.hidePositionElement) {
-                this.sandbox.dom.html(this.$el, templates.skeleton(this.options, 'hidden'));
-            } else {
-                this.sandbox.dom.html(this.$el, templates.skeleton(this.options, ''));
-            }
-
-            // init container
-            this.$container = this.sandbox.dom.find(getId.call(this, 'container'), this.$el);
-            this.$content = this.sandbox.dom.find(getId.call(this, 'content'), this.$el);
-            this.$addButton = this.sandbox.dom.find(getId.call(this, 'addButton'), this.$el);
-            this.$configButton = this.sandbox.dom.find(getId.call(this, 'configButton'), this.$el);
-            // TODO: footer this.$footer
-
-            // set preselected values
-            if (!!this.sandbox.dom.data(this.$el, 'media-selection')) {
-                var data = this.sandbox.util.extend(true, {}, dataDefaults, this.sandbox.dom.data(this.$el, 'media-selection'));
-                setData.call(this, data);
-            } else {
-                this.options.preselected.displayOption = this.options.defaultDisplayOption;
-                setData.call(this, this.options.preselected);
-            }
-
-            // render no images selected
-            renderStartContent.call(this);
-
-            // sandbox event handling
-            bindCustomEvents.call(this);
-
-            // init vars
-            this.itemsVisible = this.options.visibleItems;
-            this.uploadCollection = null;
-            this.URI = {
-                str: '',
-                hasChanged: false
-            };
-
-            // generate URI for data
-            setURI.call(this);
-
-            // set display-option value
-            setDisplayOption.call(this);
-
-            // init overlays
-            startAddOverlay.call(this);
-
-            // load preselected items
-            loadContent.call(this);
-
-            // handle dom events
-            bindDomEvents.call(this);
-        },
-
-        /**
-         * Renders the content at the beginning
-         * (with no items and before any request)
-         */
-        renderStartContent = function() {
-            var noMedia = this.sandbox.translate(this.options.translations.noMediaSelected);
-            this.sandbox.dom.html(this.$content, templates.noContent(noMedia));
         },
 
         /**
@@ -338,6 +149,15 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * custom event handling
          */
         bindCustomEvents = function() {
+            this.sandbox.on(this.DISPLAY_OPTION_CHANGED(), function(position) {
+                setData.call(this, {displayOption: position}, false);
+                this.sandbox.emit('sulu.content.changed');
+            }, this);
+
+            this.sandbox.on(this.DATA_CHANGED(), function() {
+                this.sandbox.emit('sulu.content.changed');
+            }, this);
+
             this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function() {
                 startOverlayLoader.call(this);
                 this.collections.fetchSorted('title', {
@@ -356,17 +176,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     reloadGridGroup.call(this);
                     this.gridGroupDeprecated = false;
                 }
-            }.bind(this));
-
-            // data from overlay retrieved
-            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
-                setURI.call(this);
-                loadContent.call(this);
-            }.bind(this));
-
-            // data from ajax request retrieved
-            this.sandbox.on(DATA_RETRIEVED.call(this), function() {
-                renderContent.call(this);
             }.bind(this));
 
             // set position of overlay if height of grid-group changes
@@ -409,9 +218,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Refreshes the data in the grid-group
          */
         reloadGridGroup = function() {
+            var data = this.getData();
             this.sandbox.emit('sulu.grid-group.' + this.options.instanceName + '.reload', {
                 data: this.collectionArray,
-                preselected: this.data.ids
+                preselected: data.ids
             });
         },
 
@@ -419,7 +229,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * Starts the grid group
          */
         startGridGroup = function() {
-            var gridUrl, urlParameter = {};
+            var gridUrl, urlParameter = {}, data = this.getData();
 
             if (this.options.types != '') {
                 gridUrl = 'filterByTypes';
@@ -437,7 +247,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         instanceName: this.options.instanceName,
                         gridUrl: gridUrl,
                         urlParameter: urlParameter,
-                        preselected: this.data.ids,
+                        preselected: data.ids,
                         resultKey: this.options.resultKey,
                         dataGridOptions: {
                             view: 'table',
@@ -577,163 +387,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          */
         addUploadedFile = function(media) {
             if (!!media.length) {
+                var data = this.getData();
                 this.sandbox.util.foreach(media, function(singleMedia) {
-                    this.data.ids.push(singleMedia.id);
+                    data.ids.push(singleMedia.id);
                 }.bind(this));
+                this.setData(data);
                 this.sandbox.emit('sulu.labels.success.show', 'labels.success.media-upload-desc', 'labels.success');
                 reloadGridGroup.call(this)
             }
-        },
-
-        /**
-         * handle dom events
-         */
-        bindDomEvents = function() {
-            // chgange display options on click on a positon square
-            this.sandbox.dom.on(getId.call(this, 'displayOption') + ' > div:not(.inactive)', 'click', changeDisplayOptions.bind(this));
-
-            // click on remove icons
-            this.sandbox.dom.on(getId.call(this, 'content'), 'click', removeHandler.bind(this), 'li .remove');
-
-            // view all
-            this.sandbox.dom.on(this.$el, 'click', function() {
-                this.viewAll = true;
-                renderContent.call(this)
-            }.bind(this), '.view-all');
-
-            // view less
-            this.sandbox.dom.on(this.$el, 'click', function() {
-                this.viewAll = false;
-                renderContent.call(this)
-            }.bind(this), '.view-less');
-        },
-
-        /**
-         * Handles the click event on the remove icon
-         * @param event
-         */
-        removeHandler = function(event) {
-            var $item = this.sandbox.dom.parents(event.currentTarget, 'li'),
-                dataId = this.sandbox.dom.data($item, 'id');
-            this.sandbox.dom.remove($item);
-            removeItemWithId.call(this, dataId);
-            this.data.ids.splice(this.data.ids.indexOf(dataId), 1);
-            this.itemsVisible--;
-            detachFooter.call(this);
-            if (this.items.length === 0) {
-                renderStartContent.call(this);
-            } else {
-                renderFooter.call(this);
-            }
-            this.gridGroupDeprecated = true;
-            this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-            this.sandbox.emit(RECORD_DESELECTED.call(this), dataId);
-        },
-
-        /**
-         * Removes an item with a given id
-         * @param id {Number|String} the id of the item to delete
-         * @returns {boolean} returns true if deleted successfully
-         */
-        removeItemWithId = function(id) {
-            for (var i = -1, length = this.items.length; ++i < length;) {
-                if (this.items[i].id === id) {
-                    this.items.splice(i, 1);
-                    return true;
-                }
-            }
-            return false;
-        },
-
-        /**
-         * renders the content decides whether the footer is rendered or not
-         */
-        renderContent = function() {
-            if (this.viewAll === true) {
-                this.itemsVisible = this.items.length;
-            } else {
-                this.itemsVisible = (this.items.length < this.options.visibleItems) ? this.items.length : this.options.visibleItems;
-            }
-
-            if (this.items.length !== 0) {
-                var ul = this.sandbox.dom.createElement('<ul class="items-list sortable"/>'),
-                    i = -1,
-                    length = this.items.length,
-                    url,
-                    sortable;
-
-                // loop stops if no more items are left or if number of rendered items matches itemsVisible
-                for (; ++i < length && i < this.itemsVisible;) {
-                    url = this.items[i][this.options.thumbnailKey][this.options.thumbnailSize];
-                    this.sandbox.dom.append(ul, templates.contentItem(this.items[i][this.options.idKey], i + 1, this.items[i][this.options.titleKey], url));
-                }
-
-                this.sandbox.dom.html(this.$content, ul);
-                initSortable.call(this);
-                renderFooter.call(this);
-            } else {
-                renderStartContent.call(this);
-                detachFooter.call(this);
-            }
-        },
-
-        initSortable = function() {
-            var $sortable = this.sandbox.dom.find('.sortable', this.$el),
-                sortable;
-
-            this.sandbox.dom.sortable($sortable, 'destroy');
-
-            // activate sorting
-            sortable = this.sandbox.dom.sortable('.sortable', {
-                handle: '.move',
-                forcePlaceholderSize: true
-            });
-
-            this.sandbox.dom.unbind(sortable, 'unbind');
-
-            sortable.bind('sortupdate', function() {
-                var ids = [],
-                    $elements = this.sandbox.dom.find('li', $sortable);
-
-                this.sandbox.util.foreach($elements, function($element, index) {
-                    var $number = this.sandbox.dom.find('.num', $element);
-                    $number.html(index + 1);
-                    ids.push(this.sandbox.dom.data($element, 'id'));
-                }.bind(this));
-
-                setData.call(this, {ids: ids});
-                this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-            }.bind(this));
-        },
-
-        /**
-         * renders the footer and calls a method to bind the events for itself
-         */
-        renderFooter = function() {
-            if (this.$footer === null || this.$footer === undefined) {
-                this.$footer = this.sandbox.dom.createElement('<div class="footer"/>');
-            }
-
-            this.sandbox.dom.html(this.$footer, [
-                '<span>',
-                    '<strong>' + this.itemsVisible + ' </strong>', this.sandbox.translate(this.options.translations.of) , ' ',
-                    '<strong>' + this.items.length + ' </strong>', this.sandbox.translate(this.options.translations.visible),
-                '</span>'
-            ].join(''));
-
-            if (this.itemsVisible < this.items.length) {
-                this.sandbox.dom.append(
-                    this.sandbox.dom.find('span', this.$footer),
-                        '<strong class="view-all pointer"> (' + this.sandbox.translate(this.options.translations.viewall) + ')</strong>'
-                );
-            } else if (this.itemsVisible > this.options.visibleItems) {
-                this.sandbox.dom.append(
-                    this.sandbox.dom.find('span', this.$footer),
-                        '<strong class="view-less pointer"> (' + this.sandbox.translate(this.options.translations.viewless) + ')</strong>'
-                );
-            }
-
-            this.sandbox.dom.append(this.$container, this.$footer);
         },
 
         /**
@@ -796,139 +457,93 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
         },
 
-        /**
-         * starts the loader component
-         */
-        startLoader = function() {
-            detachFooter.call(this);
+        setData = function(data, reinitialize) {
+            var oldData = this.getData();
 
-            var $loaderContainer = this.sandbox.dom.createElement('<div class="loader"/>');
-            this.sandbox.dom.html(this.$content, $loaderContainer);
-
-            this.sandbox.start([
-                {
-                    name: 'loader@husky',
-                    options: {
-                        el: $loaderContainer,
-                        size: '100px',
-                        color: '#e4e4e4'
-                    }
-                }
-            ]);
-        },
-
-        /**
-         * removes the footer
-         */
-        detachFooter = function() {
-            if (this.$footer !== null) {
-                this.sandbox.dom.remove(this.$footer);
-            }
-        },
-
-        /**
-         * load content from generated uri
-         */
-        loadContent = function() {
-            //only request if URI has changed
-            if (this.URI.hasChanged === true) {
-                this.sandbox.emit(DATA_REQUEST.call(this));
-                startLoader.call(this);
-
-                // reset item visible
-                this.itemsVisible = this.options.visibleItems;
-
-                if (this.data.ids.length > 0) {
-                    this.sandbox.util.load(this.URI.str)
-                        .then(function(data) {
-                            dataRetrieved.call(this, data._embedded[this.options.resultKey]);
-                        }.bind(this))
-                        .then(function(error) {
-                            this.sandbox.logger.log(error);
-                        }.bind(this));
-                } else {
-                    dataRetrieved.call(this, []);
-                }
-            }
-        },
-
-        dataRetrieved = function(data) {
-            this.items = data;
-
-            this.sandbox.emit(DATA_RETRIEVED.call(this));
-        },
-
-        /**
-         * set data of media-selection
-         */
-        setData = function(data) {
             for (var propertyName in data) {
                 if (data.hasOwnProperty(propertyName)) {
-                    this.data[propertyName] = data[propertyName];
+                    oldData[propertyName] = data[propertyName];
                 }
             }
-            this.sandbox.dom.data(this.$el, 'media-selection', this.data);
-        },
 
-        /**
-         * generates the URI for the request
-         */
-        setURI = function() {
-            var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&',
-                newURI = [
-                    this.options.url,
-                    delimiter, this.options.idsParameter, '=', (this.data.ids || []).join(',')
-                ].join('');
-            // min source must be selected
-            if (newURI !== this.URI.str) {
-                if (this.URI.str !== '') {
-                    this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-                }
-                this.URI.str = newURI;
-                this.URI.hasChanged = true;
-            } else {
-                this.URI.hasChanged = false;
-            }
-        },
-
-        /**
-         * Changes the display option
-         * @param event {Object} the click event
-         */
-        changeDisplayOptions = function(event) {
-            // deselect the current positon element
-            this.sandbox.dom.removeClass(
-                this.sandbox.dom.find('.' + this.options.positionSelectedClass, getId.call(this, 'displayOption')),
-                this.options.positionSelectedClass
-            );
-
-            // select clicked on
-            this.sandbox.dom.addClass(event.currentTarget, this.options.positionSelectedClass);
-
-            setData.call(this, {displayOption: this.sandbox.dom.data(event.currentTarget, 'position')});
-            this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
-        },
-
-        /**
-         * set display option to element
-         */
-        setDisplayOption = function() {
-            var $element = this.$find(getId.call(this, 'displayOption')),
-                $position = this.sandbox.dom.find('[data-position="' + this.data.displayOption + '"]', $element);
-            if (!!$position.length) {
-                this.sandbox.dom.addClass($position, this.options.positionSelectedClass);
-            }
+            this.setData(oldData, reinitialize);
         };
 
     return {
+        type: 'itembox',
+
         historyClosed: true,
 
         initialize: function() {
             // extend default options
-            this.options = this.sandbox.util.extend({}, defaults, this.options);
-            this.data = {};
+            this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            render.call(this);
+            var data = this.getData();
+
+            // init collection
+            this.collections = new Collections();
+            this.newCollection = new Collection();
+            this.collectionArray = null;
+            this.newCollectionId = null;
+            this.gridGroupDeprecated = false;
+
+            this.options.ids = {
+                container: 'media-selection-' + this.options.instanceName + '-container',
+                addButton: 'media-selection-' + this.options.instanceName + '-add',
+                configButton: 'media-selection-' + this.options.instanceName + '-config',
+                displayOption: 'media-selection-' + this.options.instanceName + '-display-option',
+                content: 'media-selection-' + this.options.instanceName + '-content',
+                chooseTab: 'media-selection-' + this.options.instanceName + '-choose-tab',
+                uploadTab: 'media-selection-' + this.options.instanceName + '-upload-tab',
+                gridGroup: 'media-selection-' + this.options.instanceName + '-grid-group',
+                loader: 'media-selection-' + this.options.instanceName + '-loader',
+                collectionSelect: 'media-selection-' + this.options.instanceName + '-collection-select',
+                dropzone: 'media-selection-' + this.options.instanceName + '-dropzone'
+            };
+
+            // init vars
+            this.uploadCollection = null;
+
+            bindCustomEvents.call(this);
+
+            this.render();
+
+            // set display option
+            if (!!data.displayOption) {
+                this.setDisplayOption(data.displayOption);
+            }
+
+            // init overlays
+            startAddOverlay.call(this);
+        },
+
+        getUrl: function(data) {
+            var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&';
+
+            return [
+                this.options.url,
+                delimiter,
+                this.options.idsParameter, '=', (data.ids || []).join(',')
+            ].join('');
+        },
+
+        getItemContent: function(item) {
+            return templates.contentItem(item.title, item.thumbnails);
+        },
+
+        removeHandler: function(id) {
+            var data = this.getData();
+
+            for (var i = -1, length = data.ids.length; ++i < length;) {
+                if (data.ids[i] === id) {
+                    data.ids.splice(data.ids.indexOf(id), 1);
+                    break;
+                }
+            }
+
+            this.setData(data, false);
+
+            this.sandbox.emit('sulu.content.changed');
         }
     };
 });
