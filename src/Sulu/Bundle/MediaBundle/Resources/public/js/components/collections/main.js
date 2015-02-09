@@ -490,16 +490,14 @@ define([
              * @param callback {Function} callback to execute after deleting a media
              */
             moveMedia: function(mediaIds, collection, callback) {
-                var media;
-
                 this.sandbox.util.foreach(mediaIds, function(id) {
                     this.sandbox.util.save('/admin/api/media/' + id + '?action=move&destination=' + collection.id, 'POST')
                         .then(function() {
                             if (typeof callback === 'function') {
                                 callback(id);
-                            } else {
-                                this.sandbox.emit(SINGLE_MEDIA_MOVED.call(this), id);
                             }
+
+                            this.sandbox.emit(SINGLE_MEDIA_MOVED.call(this), id);
                         }.bind(this))
                         .fail(function() {
                             this.sandbox.logger.log('Error while moving a single media');
