@@ -31,17 +31,32 @@ class StructureDriver implements DriverInterface
     /**
      * @var Factory
      */
-    protected $factory;
+    private $factory;
 
     /**
      * @var EventDispatcherInterface
      */
-    protected $eventDispatcher;
+    private $eventDispatcher;
 
-    public function __construct(Factory $factory, EventDispatcherInterface $eventDispatcher)
+    /**
+     * @var string
+     */
+    private $structureIndexName;
+
+    /**
+     * @param Factory $factory
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param mixed $structureIndexName Name of the index to use for the stucture
+     */
+    public function __construct(
+        Factory $factory,
+        EventDispatcherInterface $eventDispatcher,
+        $structureIndexName = 'content'
+    )
     {
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->structureIndexName = $structureIndexName;
     }
 
     /**
@@ -65,11 +80,9 @@ class StructureDriver implements DriverInterface
 
         $indexMeta = $this->factory->makeIndexMetadata($class->name);
 
-        $indexMeta->setIndexName('content');
+        $indexMeta->setIndexName($this->structureIndexName);
         $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
-
-        $allProperties = array();
 
         foreach ($structure->getProperties(true) as $property) {
 

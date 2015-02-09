@@ -2,14 +2,17 @@
 <massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
 
     <mapping class="Sulu\Bundle\ContactBundle\Entity\Account">
-        <index name="account" />
         <id name="id" />
         <title property="name" />
-        <url expr="'/admin/#contacts/accounts/edit:' ~ object.getId() ~ '/details'" />
 
         <fields>
             <field name="name" type="string" />
         </fields>
+
+        <context name="admin">
+            <url expr="'/admin/#contacts/accounts/edit:' ~ object.getId() ~ '/details'" />
+            <index name="admin_account" />
+        </context>
     </mapping>
 
 </massive-search-mapping>

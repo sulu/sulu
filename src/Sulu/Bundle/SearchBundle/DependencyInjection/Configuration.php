@@ -24,17 +24,11 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $treeBuilder->root('sulu_search')
+            ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('adapter_id')->defaultValue('sulu_search.adapter.zend_lucene')->end()
-                ->arrayNode('adapters')
-                    ->addDefaultsifNotSet()
-                    ->children()
-                    ->arrayNode('zend_lucene')
-                        ->addDefaultsifNotSet()
-                        ->children()
-                            ->scalarNode('basepath')->defaultValue('%kernel.root_dir%/data')->end()
-                        ->end()
-                    ->end()
+                ->scalarNode('structure_index_name')
+                    ->info('Name of the search index to use for structures (this should change depending on the sulu context)')
+                    ->defaultValue('content')->end()
                 ->end()
             ->end();
 

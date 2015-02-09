@@ -1,2 +1,5 @@
 massive_search:
     adapter: test
+
+sulu_search:
+    structure_index_name: content_admin
