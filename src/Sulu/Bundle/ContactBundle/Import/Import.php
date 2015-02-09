@@ -167,6 +167,12 @@ class Import
     protected $headerData = array();
 
     /**
+     * current row-number
+     * @var
+     */
+    protected $row;
+
+    /**
      * holds the amount of header variables
      * @var int
      */
@@ -495,6 +501,7 @@ class Import
         }
 
         while (($data = fgetcsv($handle, 0, $this->options['delimiter'], $this->options['enclosure'])) !== false) {
+            $this->row = $row;
             try {
                 // for first row, save headers
                 if ($row === 0) {
@@ -1147,7 +1154,10 @@ class Import
             $address->setCountry($country);
             $addAddress = $addAddress && true;
         } else {
-            $addAddress = false;
+            if ($addAddress) {
+                $this->debug("no country defined at line $this->row");
+            }
+//            $addAddress = false;
         }
 
         // only add address if part of it is defined
