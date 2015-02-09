@@ -3,6 +3,8 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #792 [ContactBundle]   added widget to show all companys of contact
+    * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed
+	                                 due to the symfony 2.6 changes to symlinks
     * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
     * FEATURE     #793 [ContactBundle]   Added Repository service for Contact
     * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
@@ -25,6 +27,9 @@ CHANGELOG for Sulu
     * BUGFIX      #697 [CoreBundle]      Do not try and set the theme when the portal has not been found
     * FEATURE     #697 [HttpCacheBundle] Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
     * ENHANCEMENT #777 [ContentBundle]   Enable "copy language" on startpage
+
+* dev-master
+    * HOTFIX      #788 [ContentBundle]  Fixed bug with empty selection with single internal link
 
 * 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change
