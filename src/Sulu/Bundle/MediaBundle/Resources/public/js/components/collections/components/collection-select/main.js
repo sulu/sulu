@@ -123,7 +123,7 @@ define(function() {
                 {
                     name: 'overlay@husky',
                     options: {
-                        cssClass: 'collection',
+                        cssClass: 'collection-select',
                         el: $element,
                         removeOnClose: false,
                         container: this.$el,
