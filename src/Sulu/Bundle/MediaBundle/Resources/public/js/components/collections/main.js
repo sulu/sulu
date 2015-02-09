@@ -12,8 +12,7 @@ define([
     'sulumedia/collection/medias',
     'sulumedia/model/collection',
     'sulumedia/model/media'
-],
-    function (Collections, Medias, Collection, Media) {
+], function (Collections, Medias, Collection, Media) {
 
         'use strict';
 
@@ -46,6 +45,17 @@ define([
              */
             DELETE_MEDIA = function () {
                 return createEventName.call(this, 'delete-media');
+            },
+
+            /**
+             * listens on and move medias
+             * @event sulu.media.collections.move-media
+             * @param ids {Array} array of ids of the media to delete
+             * @param collection {Object} collection to move media into
+             * @param callback {Function} callback to execute after a media got deleted
+             */
+            MOVE_MEDIA = function () {
+                return createEventName.call(this, 'move-media');
             },
 
             /**
@@ -87,6 +97,16 @@ define([
              */
             SINGLE_MEDIA_DELETED = function () {
                 return createEventName.call(this, 'media-deleted');
+            },
+
+            /**
+             * raised after a media got moved
+             * @event sulu.media.collections.media-moved
+             * @param id {Number|String} the id of the moved media
+             * @param collection {Object} collection moved media into
+             */
+            SINGLE_MEDIA_MOVED = function() {
+                return createEventName.call(this, 'media-moved');
             },
 
             /**
@@ -282,6 +302,9 @@ define([
                 // delete media
                 this.sandbox.on(DELETE_MEDIA.call(this), this.deleteMedia.bind(this));
 
+                // move media
+                this.sandbox.on(MOVE_MEDIA.call(this), this.moveMedia.bind(this));
+
                 // delete collection
                 this.sandbox.on(DELETE_COLLECTION.call(this), this.deleteCollection.bind(this));
 
@@ -458,6 +481,30 @@ define([
                         }
                     }.bind(this));
                 }
+            },
+
+            /**
+             * Moves an array of media
+             * @param mediaIds {Array} array of media ids
+             * @param collection {Object} collection to move media to
+             * @param callback {Function} callback to execute after deleting a media
+             */
+            moveMedia: function(mediaIds, collection, callback) {
+                var media;
+
+                this.sandbox.util.foreach(mediaIds, function(id) {
+                    this.sandbox.util.save('/admin/api/media/' + id + '?action=move&destination=' + collection.id, 'POST')
+                        .then(function() {
+                            if (typeof callback === 'function') {
+                                callback(id);
+                            } else {
+                                this.sandbox.emit(SINGLE_MEDIA_MOVED.call(this), id);
+                            }
+                        }.bind(this))
+                        .fail(function() {
+                            this.sandbox.logger.log('Error while moving a single media');
+                        }.bind(this));
+                }.bind(this));
             },
 
             /**
