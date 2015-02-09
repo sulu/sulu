@@ -26,7 +26,7 @@ class SaveStructureTest extends BaseTestCase
         $this->indexStructure('About Us', '/about-us');
 
         $searchManager = $this->getSearchManager();
-        $res = $searchManager->createSearch('About')->locale('de')->index('content')->execute();
+        $res = $searchManager->createSearch('About')->locale('de')->index('content_admin')->execute();
         $this->assertCount(1, $res);
         $hit = $res[0];
         $document = $hit->getDocument();
@@ -84,7 +84,7 @@ class SaveStructureTest extends BaseTestCase
         );
 
         foreach ($searches as $search => $count) {
-            $res = $searchManager->createSearch($search)->locale('de')->index('content')->execute();
+            $res = $searchManager->createSearch($search)->locale('de')->index('content_admin')->execute();
             $this->assertCount($count, $res, 'Searching for: ' . $search);
         }
     }
@@ -109,7 +109,7 @@ class SaveStructureTest extends BaseTestCase
 
         $searchManager->index($structure);
 
-        $res = $searchManager->createSearch('Giraffe')->locale('de')->index('content')->execute();
+        $res = $searchManager->createSearch('Giraffe')->locale('de')->index('content_admin')->execute();
         $this->assertCount(1, $res);
 
         $structure->getProperty('title')->setValue('Pen and Paper');

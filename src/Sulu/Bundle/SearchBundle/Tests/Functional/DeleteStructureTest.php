@@ -24,11 +24,11 @@ class DeleteStructureTest extends BaseTestCase
         $mapper = $this->getContainer()->get('sulu.content.mapper');
 
         $structure = $this->indexStructure('About Us', '/about-us');
-        $res = $searchManager->createSearch('About')->locale('de')->index('content')->execute();
+        $res = $searchManager->createSearch('About')->locale('de')->index('content_admin')->execute();
         $this->assertCount(1, $res);
 
         $mapper->delete($structure->getUuid(), 'sulu_io');
-        $res = $searchManager->createSearch('About')->locale('de')->index('content')->execute();
+        $res = $searchManager->createSearch('About')->locale('de')->index('content_admin')->execute();
 
         $this->assertCount(0, $res);
     }

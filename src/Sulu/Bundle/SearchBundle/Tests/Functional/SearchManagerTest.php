@@ -20,7 +20,7 @@ class SearchManagerTest extends BaseTestCase
         for ($i = 1; $i <= 2; $i++) {
 
             $this->generateStructureIndex($nbResults);
-            $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content')->execute();
+            $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
 
             $this->assertCount($nbResults, $res);
         }
@@ -30,7 +30,7 @@ class SearchManagerTest extends BaseTestCase
     {
         $this->generateStructureIndex(4, 'webspace_four');
         $this->generateStructureIndex(2, 'webspace_two');
-        $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content')->execute();
+        $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
         $this->assertCount(6, $res);
 
         if (!$this->getContainer()->get('massive_search.adapter') instanceof \Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter) {
@@ -39,7 +39,7 @@ class SearchManagerTest extends BaseTestCase
         }
 
         // TODO: This should should not be here
-        $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('content')->execute();
+        $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('content_admin')->execute();
         $this->assertCount(4, $res);
     }
 }

@@ -21,6 +21,8 @@ class BaseTestCase extends SuluTestCase
 {
     protected $session;
 
+    const INDEX = 'content';
+
     public function setUp()
     {
         $this->initPhpcr();
@@ -49,7 +51,7 @@ class BaseTestCase extends SuluTestCase
             $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
             $structure->setLanguageCode('de');
 
-            $this->getSearchManager()->index($structure);
+            $this->getSearchManager()->index($structure, self::INDEX);
         }
     }
 
