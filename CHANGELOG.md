@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #792 [ContactBundle]   added widget to show all companys of contact
     * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed
 	                                 due to the symfony 2.6 changes to symlinks
     * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
