@@ -248,7 +248,6 @@ define(function () {
                     parentTemplate: 'defaultEditable',
                     template: 'changeable',
                     inHeader: true
-
                 },
                 {
                     el: this.$find(constants.datagridSelector),
