@@ -98,6 +98,14 @@
                 <source>media-selection.nomedia-selected</source>
                 <target>Keine Medien ausgewählt</target>
             </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22255" resname="sulu.media.move">
+                <source>sulu.media.move</source>
+                <target>Medien verschieben</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22256" resname="sulu.media.move.overlay-title">
+                <source>sulu.media.move.overlay-title</source>
+                <target>Neue Kollection wählen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
