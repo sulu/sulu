@@ -106,6 +106,10 @@
                 <source>sulu.media.move.overlay-title</source>
                 <target>Choose new Collection</target>
             </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
+                <source>labels.success.media-move-desc</source>
+                <target>Media successfully moved.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

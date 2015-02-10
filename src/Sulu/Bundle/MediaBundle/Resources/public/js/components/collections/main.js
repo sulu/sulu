@@ -52,7 +52,7 @@ define([
              * @event sulu.media.collections.move-media
              * @param ids {Array} array of ids of the media to delete
              * @param collection {Object} collection to move media into
-             * @param callback {Function} callback to execute after a media got deleted
+             * @param callback {Function} callback to execute after a media got moved
              */
             MOVE_MEDIA = function () {
                 return createEventName.call(this, 'move-media');
@@ -487,7 +487,7 @@ define([
              * Moves an array of media
              * @param mediaIds {Array} array of media ids
              * @param collection {Object} collection to move media to
-             * @param callback {Function} callback to execute after deleting a media
+             * @param callback {Function} callback to execute after moving a media
              */
             moveMedia: function(mediaIds, collection, callback) {
                 this.sandbox.util.foreach(mediaIds, function(id) {
@@ -495,9 +495,9 @@ define([
                         .then(function() {
                             if (typeof callback === 'function') {
                                 callback(id);
+                            } else {
+                                this.sandbox.emit(SINGLE_MEDIA_MOVED.call(this), id);
                             }
-
-                            this.sandbox.emit(SINGLE_MEDIA_MOVED.call(this), id);
                         }.bind(this))
                         .fail(function() {
                             this.sandbox.logger.log('Error while moving a single media');

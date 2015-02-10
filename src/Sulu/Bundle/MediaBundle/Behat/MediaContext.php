@@ -100,7 +100,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     public function iAmEditingTheMediaCollection($name = null)
     {
         if ($name) {
-            $collection = $this->getOrCreateMediaCollection();
+            $collection = $this->getOrCreateMediaCollection($name);
         } else {
             $collection = $this->getLastMediaCollection();
         }
@@ -153,7 +153,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
      * Return the last media collection that was created
      * in this context
      *
-     * @return Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
      */
     private function getLastMediaCollection()
     {
@@ -169,7 +169,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     /**
      * Return the media manager
      *
-     * @return Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface
+     * @return \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface
      */
     private function getMediaManager()
     {
@@ -180,6 +180,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
      * Get or create a collection type
      *
      * @param string $name Name of collection type to get or create
+     * @return CollectionType
      */
     private function getOrCreateCollectionType($name)
     {
@@ -199,6 +200,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
      * Get or create a media type
      *
      * @param string $name Name of media type to created or retrieved
+     * @return MediaType
      */
     private function getOrCreateMediaType($name)
     {
@@ -218,6 +220,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
      * Get or create a media collection
      *
      * @param string $name Name of collection to get or create
+     * @return Collection
      */
     private function getOrCreateMediaCollection($name)
     {
