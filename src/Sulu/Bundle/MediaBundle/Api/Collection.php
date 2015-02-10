@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
+use Hateoas\Configuration\Annotation\Embedded;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
@@ -40,6 +41,13 @@ use Hateoas\Configuration\Annotation\Route;
  *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999, "types" = "{types}" }
  *      )
  * )
+ * @Relation(
+ *     name = "collections",
+ *     embedded = @Embedded(
+ *         "expr(object.getChildren())",
+ *         xmlElementName = "collections"
+ *     )
+ * )
  */
 class Collection extends ApiWrapper
 {
@@ -53,6 +61,11 @@ class Collection extends ApiWrapper
      */
     protected $properties = array();
 
+    /**
+     * @var Collection[]
+     */
+    protected $children = array();
+
     public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
@@ -60,19 +73,21 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("children")
-     * @return array
+     * Set children of resource
+     * @param Collection[] $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    /**
+     * Returns children of resource
+     * @return Collection[]
      */
     public function getChildren()
     {
-        $childIds = array();
-        /** @var Entity $child */
-        foreach ($this->entity->getChildren() as $child) {
-            $childIds[] = $child->getId();
-        }
-
-        return $childIds;
+        return $this->children;
     }
 
     /**
