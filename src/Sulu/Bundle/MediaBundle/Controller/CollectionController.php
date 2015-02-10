@@ -103,7 +103,6 @@ class CollectionController extends RestController implements ClassResourceInterf
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $parent = $request->get('parent');
             $depth = $request->get('depth');
             $limit = $request->get('limit', $listRestHelper->getLimit());
             $offset = ($request->get('page', 1) - 1) * $limit;
@@ -115,7 +114,6 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collections = $collectionManager->get(
                 $this->getLocale($request),
                 array(
-                    'parent' => $parent,
                     'depth' => $depth,
                     'search' => $search,
                 ),
