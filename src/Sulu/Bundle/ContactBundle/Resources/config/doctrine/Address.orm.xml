@@ -36,7 +36,7 @@
 
         <many-to-one field="country" target-entity="Sulu\Bundle\ContactBundle\Entity\Country" inversed-by="addresses">
             <join-columns>
-                <join-column name="idCountries" referenced-column-name="id" nullable="true"/>
+                <join-column name="idCountries" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
     </entity>

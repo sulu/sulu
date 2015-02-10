@@ -1157,7 +1157,7 @@ class Import
             if ($addAddress) {
                 $this->debug("no country defined at line $this->row");
             }
-//            $addAddress = false;
+            $addAddress = false;
         }
 
         // only add address if part of it is defined
@@ -1170,7 +1170,6 @@ class Import
             }
 
             $address->setAddressType($addressType);
-
 
             $this->em->persist($address);
 
