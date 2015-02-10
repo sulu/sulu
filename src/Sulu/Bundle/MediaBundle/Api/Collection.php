@@ -10,17 +10,18 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Hateoas\Configuration\Annotation\Embedded;
-use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
-use JMS\Serializer\Annotation\VirtualProperty;
-use JMS\Serializer\Annotation\SerializedName;
-use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
-use Sulu\Bundle\MediaBundle\Entity\CollectionType;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
+use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Component\Rest\ApiWrapper;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Class Collection
@@ -48,6 +49,13 @@ use Hateoas\Configuration\Annotation\Route;
  *         xmlElementName = "collections"
  *     )
  * )
+ * @Relation(
+ *     name = "parent",
+ *     embedded = @Embedded(
+ *         "expr(object.getParent())",
+ *         xmlElementName = "parent"
+ *     )
+ * )
  */
 class Collection extends ApiWrapper
 {
@@ -66,6 +74,11 @@ class Collection extends ApiWrapper
      */
     protected $children = array();
 
+    /**
+     * @var Collection
+     */
+    protected $parent;
+
     public function __construct(CollectionInterface $collection, $locale)
     {
         $this->entity = $collection;
@@ -78,6 +91,15 @@ class Collection extends ApiWrapper
      */
     public function setChildren($children)
     {
+        $childrenEntities = array();
+
+        foreach ($children as $child) {
+            $childrenEntities[] = $child->getEntity();
+        }
+
+        $this->entity->setChildren(new ArrayCollection($childrenEntities));
+
+        // FIXME cache for children because of the preview images
         $this->children = $children;
     }
 
@@ -87,6 +109,8 @@ class Collection extends ApiWrapper
      */
     public function getChildren()
     {
+        // FIXME remove cache for children because of the preview images
+        //       generate this at the fly
         return $this->children;
     }
 
@@ -133,38 +157,35 @@ class Collection extends ApiWrapper
      */
     public function getMediaNumber()
     {
-        $mediaCount = 0;
-
-        /** @var Entity $child */
-        foreach ($this->entity->getChildren() as $child) {
-            $mediaCount += count($child->getMedia());
-        }
-
-        // set media count
-        $mediaCount += count($this->entity->getMedia());
-
-        return $mediaCount;
+        return count($this->entity->getMedia());
     }
 
     /**
-     * @param Entity $parent
+     * @param Collection $parent
      * @return $this
      */
     public function setParent($parent)
     {
-        $this->entity->setParent($parent);
+        if ($parent !== null) {
+            $this->entity->setParent($parent->getEntity());
+        }else{
+            $this->entity->setParent(null);
+        }
+
+        // FIXME cache for parent because of the preview images
+        $this->parent = $parent;
 
         return $this;
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("parent")
-     * @return int|null
+     * @return Collection
      */
     public function getParent()
     {
-        return ($parent = $this->entity->getParent()) ? $parent->getId() : null;
+        // FIXME cache for parent because of the preview images
+        //       generate it on the fly
+        return $this->parent;
     }
 
     /**

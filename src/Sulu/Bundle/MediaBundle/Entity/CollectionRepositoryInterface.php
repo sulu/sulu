@@ -17,6 +17,14 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 interface CollectionRepositoryInterface
 {
     /**
+     * Finds a collection set starting by given ID and depth
+     * @param int $id
+     * @param int $depth
+     * @return Collection[]
+     */
+    public function findCollectionSet($id, $depth = 0);
+
+    /**
      * Finds the collection with a given id
      * @param int $id
      * @return Collection

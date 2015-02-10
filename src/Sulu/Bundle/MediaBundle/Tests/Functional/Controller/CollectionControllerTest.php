@@ -134,9 +134,9 @@ class CollectionControllerTest extends SuluTestCase
             )
         );
 
+        $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $response = json_decode($client->getResponse()->getContent());
         $this->assertNotEmpty($response->_embedded->collections);
 
         $this->assertCount(1, $response->_embedded->collections);
@@ -313,7 +313,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
-        $this->assertEquals($this->collection1->getId(), $response->parent);
+        $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
         /*
         $this->assertNotEmpty($response->creator);
         $this->assertNotEmpty($response->changer);
@@ -323,7 +323,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/'.$this->collection1->getId() . '?depth=1',
+            '/api/collections/' . $this->collection1->getId() . '?depth=1',
             array(
                 'locale' => 'en-gb'
             )
@@ -333,8 +333,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertNotEmpty($response);
-
-        $this->assertEquals(1, $response->total);
 
         // check if first entity is unchanged
         $this->assertTrue(isset($response->_embedded->collections[0]));
@@ -607,18 +605,17 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             array(
-                'style' =>
-                    array(
-                        'type' => 'circle',
-                        'color' => '#00ccff'
-                    )
-            ,
+                'style' => array(
+                    'type' => 'circle',
+                    'color' => '#00ccff'
+                ),
                 'type' => 1,
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
             )
         );
 
+        $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $client->request(

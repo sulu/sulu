@@ -87,8 +87,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         ObjectManager $em,
         $previewLimit,
         $collectionPreviewFormat
-    )
-    {
+    ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->collectionRepository = $collectionRepository;
@@ -103,14 +102,14 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale)
+    public function getById($id, $locale, $depth = 0)
     {
-        $collection = $this->collectionRepository->findCollectionById($id);
-        if (!$collection) {
+        $collectionSet = $this->collectionRepository->findCollectionSet($id, $depth);
+        if (sizeof($collectionSet) === 0) {
             throw new CollectionNotFoundException($id);
         }
 
-        return $this->getApiEntity($collection, $locale);
+        return $this->getApiEntity($collectionSet[0], $locale, $collectionSet);
     }
 
     /**
@@ -118,13 +117,16 @@ class DefaultCollectionManager implements CollectionManagerInterface
      */
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
+        // TODO perhaps getCollectionSet without id
         $depth = isset($filter['depth']) ? $filter['depth'] : 0;
 
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
-        $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count($collectionEntities);
+        $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count(
+            $collectionEntities
+        );
         $collections = [];
         foreach ($collectionEntities as $entity) {
-            $collections[] = $this->getApiEntity($entity, $locale, $depth);
+            $collections[] = $this->getApiEntity($entity, $locale);
         }
 
         return $collections;
@@ -354,7 +356,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         // set parent
         if (!empty($data['parent'])) {
             $collectionEntity = $this->collectionRepository->findCollectionById($data['parent']);
-            $collection->setParent($collectionEntity); // set parent
+            $collection->setParent($this->getApiEntity($collectionEntity, $data['locale'])); // set parent
         } else {
             $collection->setParent(null); // is collection in root
         }
@@ -504,7 +506,12 @@ class DefaultCollectionManager implements CollectionManagerInterface
             }
         }
 
-        $mediaFormats = $this->formatManager->getFormats($mediaId, $fileVersion->getName(), $fileVersion->getStorageOptions(), $fileVersion->getVersion());
+        $mediaFormats = $this->formatManager->getFormats(
+            $mediaId,
+            $fileVersion->getName(),
+            $fileVersion->getStorageOptions(),
+            $fileVersion->getVersion()
+        );
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
             if ($formatName == $this->collectionPreviewFormat) {
@@ -523,21 +530,26 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * prepare an api entity
      * @param CollectionEntity $entity
      * @param string $locale
-     * @param int $depth default no children
+     * @param CollectionEntity[] $entities nested set
      * @return Collection
      */
-    protected function getApiEntity(CollectionEntity $entity, $locale, $depth = 0)
+    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null)
     {
         $apiEntity = new Collection($entity, $locale);
 
-        if ($depth > 0) {
-            $children = array();
+        $children = array();
 
-            foreach ($entity->getChildren() as $child) {
-                $children[] = $this->getApiEntity($child, $locale, $depth--);
+        if ($entities !== null) {
+            foreach ($entities as $possibleChild) {
+                if (($parent = $possibleChild->getParent()) !== null && $parent->getId() === $entity->getId()) {
+                    $children[] = $this->getApiEntity($possibleChild, $locale, $entities);
+                }
             }
+        }
 
-            $apiEntity->setChildren($children);
+        $apiEntity->setChildren($children);
+        if ($entity->getParent() !== null) {
+            $apiEntity->setParent($this->getApiEntity($entity->getParent(), $locale));
         }
 
         return $this->addPreviews($apiEntity);

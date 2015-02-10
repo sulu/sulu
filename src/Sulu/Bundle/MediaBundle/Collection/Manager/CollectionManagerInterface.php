@@ -24,9 +24,10 @@ interface CollectionManagerInterface
      * Returns a collection with a given id
      * @param int $id the id of the collection
      * @param int $locale the locale which the collection should be return
+     * @param int $depth if depth > 1 children will returned also
      * @return Collection
      */
-    public function getById($id, $locale);
+    public function getById($id, $locale, $depth = 0);
 
     /**
      * Returns collections with a given parent and/or a given depth-level

@@ -74,13 +74,14 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         try {
             $locale = $this->getLocale($request);
+            $depth = $request->get('depth');
             $collectionManager = $this->getCollectionManager();
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager) {
+                function ($id) use ($locale, $collectionManager, $depth) {
                     /** @var CollectionEntity $collectionEntity */
 
-                    return $collectionManager->getById($id, $locale);
+                    return $collectionManager->getById($id, $locale, $depth);
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
