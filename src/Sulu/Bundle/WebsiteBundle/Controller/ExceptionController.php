@@ -53,14 +53,14 @@ class ExceptionController extends BaseExceptionController
                         'ClientWebsiteBundle:views:error404.html.twig',
                         array(
                             'request' => array(
-                                'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
-                                'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization(),
-                                'portalUrl' => $this->requestAnalyzer->getCurrentPortalUrl(),
-                                'resourceLocatorPrefix' => $this->requestAnalyzer->getCurrentResourceLocatorPrefix(),
-                                'resourceLocator' => $this->requestAnalyzer->getCurrentResourceLocator(),
-                                'get' => $this->requestAnalyzer->getCurrentGetParameter(),
-                                'post' => $this->requestAnalyzer->getCurrentPostParameter(),
-                                'analyticsKey' => $this->requestAnalyzer->getCurrentAnalyticsKey(),
+                                'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
+                                'locale' => $this->requestAnalyzer->getCurrentLocalization(),
+                                'portalUrl' => $this->requestAnalyzer->getPortalUrl(),
+                                'resourceLocatorPrefix' => $this->requestAnalyzer->getResourceLocatorPrefix(),
+                                'resourceLocator' => $this->requestAnalyzer->getResourceLocator(),
+                                'get' => $this->requestAnalyzer->getGetParameters(),
+                                'post' => $this->requestAnalyzer->getPostParameters()
+                                'analyticsKey' => $this->requestAnalyzer->getAnalyticsKey(),
                             ),
                             'path' => $request->getPathInfo()
                         )
@@ -80,7 +80,7 @@ class ExceptionController extends BaseExceptionController
                             'exception' => $exception,
                             'currentContent' => $currentContent,
                             'request' => array(
-                                'webspaceKey' => $this->requestAnalyzer->getCurrentWebspace()->getKey(),
+                                'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
                                 'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
                             )
                         )

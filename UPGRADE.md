@@ -36,6 +36,12 @@ anything else. See the [HTTP cache
 documentation](http://sulu.readthedocs.org/en/latest/reference/bundles/http_cache.html)
 for more information.
 
+### Renamed RequestAnalyzerInterface methods
+
+The text "Current" has been removed from all of the request analyzer methods.
+If you used the request analyzer service then you will probably need to update
+your code, see: https://github.com/sulu-cmf/sulu/pull/749/files#diff-23
+
 ## 0.14.0
 
 * Role name is now unique
