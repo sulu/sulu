@@ -1054,7 +1054,6 @@ class Import
         // set address
         $address = new Address();
         $addAddress = false;
-        $isNormalAddress = false;
         $prefix = 'address' . $id . '_';
 
         // street
