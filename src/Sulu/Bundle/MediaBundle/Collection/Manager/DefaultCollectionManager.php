@@ -10,7 +10,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -21,9 +24,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
-use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class DefaultCollectionManager implements CollectionManagerInterface
@@ -110,7 +110,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
             throw new CollectionNotFoundException($id);
         }
 
-        return $this->addPreviews(new Collection($collection, $locale));
+        return $this->getApiEntity($collection, $locale);
     }
 
     /**
@@ -118,11 +118,13 @@ class DefaultCollectionManager implements CollectionManagerInterface
      */
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
+        $depth = isset($filter['depth']) ? $filter['depth'] : 0;
+
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
         $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count($collectionEntities);
         $collections = [];
         foreach ($collectionEntities as $entity) {
-            $collections[] =  $this->addPreviews(new Collection($entity, $locale));
+            $collections[] = $this->getApiEntity($entity, $locale, $depth);
         }
 
         return $collections;
@@ -293,7 +295,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * Modified an exists collection
      * @param $data
      * @param $user
-     * @return object|\Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return Collection
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function modifyCollection($data, $user)
@@ -317,7 +319,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * @param $data
      * @param $user
-     * @return CollectionEntity
+     * @return Collection
      */
     private function createCollection($data, $user)
     {
@@ -327,7 +329,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $data['created'] = new \DateTime();
 
         $collectionEntity = new CollectionEntity();
-        $collection = new Collection($collectionEntity, $data['locale']);
+        $collection = $this->getApiEntity($collectionEntity, $data['locale']);
 
         $collection = $this->setDataToCollection(
             $collection,
@@ -343,9 +345,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
 
     /**
      * Data can be set over by array
-     * @param $collection
-     * @param $data
-     * @return $this
+     * @param Collection $collection
+     * @param array $data
+     * @return Collection
      */
     protected function setDataToCollection(Collection $collection, $data)
     {
@@ -515,5 +517,29 @@ class DefaultCollectionManager implements CollectionManagerInterface
         }
 
         return array();
+    }
+
+    /**
+     * prepare an api entity
+     * @param CollectionEntity $entity
+     * @param string $locale
+     * @param int $depth default no children
+     * @return Collection
+     */
+    protected function getApiEntity(CollectionEntity $entity, $locale, $depth = 0)
+    {
+        $apiEntity = new Collection($entity, $locale);
+
+        if ($depth > 0) {
+            $children = array();
+
+            foreach ($entity->getChildren() as $child) {
+                $children[] = $this->getApiEntity($child, $locale, $depth--);
+            }
+
+            $apiEntity->setChildren($children);
+        }
+
+        return $this->addPreviews($apiEntity);
     }
 }
