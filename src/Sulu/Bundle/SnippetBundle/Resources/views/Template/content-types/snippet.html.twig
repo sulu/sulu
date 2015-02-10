@@ -8,8 +8,7 @@
      data-form="true"
      data-webspace="{{ webspaceKey }}"
      data-language="{{ languageCode }}"
-     data-url-get="{{ path('get_snippet') }}"
-     data-url-all="{{ path('get_snippets') }}"
+     data-url="{{ path('get_snippets') }}?language={{ languageCode }}&type={{ property.params.snippetType }}"
      {% if property.params.snippetType is defined %}
      data-snippet-type="{{ property.params.snippetType }}"
      {% endif %}
