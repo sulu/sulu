@@ -16,7 +16,7 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 interface CollectionManagerInterface
 {
