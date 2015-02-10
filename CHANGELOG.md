@@ -5,6 +5,8 @@ CHANGELOG for Sulu
     * BUGFIX      #829 [ContactBundle]   Account-Contacts: show full-name of contact
     * ENHANCEMENT #828 [ContactBundle]   Changed columns for contact list and made concatenated columns not sortable
     * BUGFIX      #825 [WebsiteBundle]   Fixed syntax error in ExceptionController
+    * FEATURE     #806 [SnippetBundle]   added sorting feature to snippet content type
+    * FEATURE     #806 [ContentBundle]   added sorting feature to internal links content type
     * ENHANCEMENT #798 [All]             Updated Symfony version to 2.6
     * BUGFIX      #826 [All]             Moved locales config from admin-bundle to core-bundle
     * BUGFIX      #736 [WebsiteBundle]   Redirect with port didn't work
@@ -16,7 +18,6 @@ CHANGELOG for Sulu
     * FEATURE     #810 [ContactBundle]   added command line tool for detecting missing country codes in import csv files
                                          that uses google geo api for finding the correct country code
     * BUGFIX      #801 [All]             Removed unused clean task which is deleting the public directory when executed
-                                         due to the symfony 2.6 changes to symlinks
     * FEATURE     #793 [SecurityBundle]  Added field passwordForgetToken to BaseUser-Entity
     * FEATURE     #793 [ContactBundle]   Added Repository service for Contact
     * BUGFIX      #795 [ContentBundle]   Reversed structure paths to enable custom config
