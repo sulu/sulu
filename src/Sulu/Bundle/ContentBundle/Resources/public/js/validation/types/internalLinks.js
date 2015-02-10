@@ -31,14 +31,6 @@ define([
                 },
 
                 setValue: function(value) {
-                    // FIXME: This is a dirty hack. (was a quickfix) This has to be done becuase the internal links data is handled differently within blocks
-                    // In the one case the data is just an array (e.g. ['uuid1', 'uuid2']) in the other case its an object with ids (e.g. {ids: ['uuid1', 'uuid2']}
-                    // The data needs to be handled the same way in blocks and everywhere else. If so the if else if statement above can be removed
-                    if (!value.ids) {
-                        value = {ids: value};
-                    } else if (!!value.ids.ids) {
-                        value = {ids: value.ids.ids};
-                    }
                     App.dom.data($el, 'internal-links', value);
                 },
 
