@@ -472,8 +472,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
     return {
         type: 'itembox',
 
-        historyClosed: true,
-
         initialize: function() {
             // extend default options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
@@ -529,6 +527,15 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
         getItemContent: function(item) {
             return templates.contentItem(item.title, item.thumbnails);
+        },
+
+        sortHandler: function(ids) {
+            var data = this.getData();
+            data.ids = ids;
+
+            this.setData(data, false);
+
+            this.sandbox.emit('sulu.content.changed');
         },
 
         removeHandler: function(id) {
