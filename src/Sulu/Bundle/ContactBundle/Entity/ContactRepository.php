@@ -354,4 +354,33 @@ class ContactRepository extends EntityRepository
 
         return $result;
     }
+
+    /**
+     * find a contact by id
+     * @param $id
+     * @return mixed|null
+     */
+    public function findContactWithAccountsById($id)
+    {
+        // create basic query
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.account', 'account')
+            ->addSelect('accountContacts')
+            ->addSelect('account')
+            ->where('c.id=:id')
+            ->orderBy('accountContacts.main', 'DESC');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('id', $id);
+
+        try {
+            $contact = $query->getSingleResult();
+            return $contact;
+        } catch (NoResultException $nre) {
+            return null;
+        }
+    }
+
 }

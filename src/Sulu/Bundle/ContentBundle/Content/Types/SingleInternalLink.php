@@ -39,11 +39,10 @@ class SingleInternalLink extends SimpleContentType
         $webspaceKey,
         $languageCode,
         $segmentKey
-    )
-    {
+    ) {
         $value = $property->getValue();
 
-        if ($value === $node->getIdentifier()) {
+        if ($node->getIdentifier() !== null && $value === $node->getIdentifier()) {
             throw new \InvalidArgumentException('Internal link node cannot reference itself');
         }
 

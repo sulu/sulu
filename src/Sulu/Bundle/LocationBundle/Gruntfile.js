@@ -17,26 +17,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
-            public: {
-                files: [
-                    {
-                        expand: true, 
-                        cwd: 'Resources/public', 
-                        src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../../web/bundles/sululocation/'
-                    }
-                ]
-            },
-            public_dev: {
-                files: [
-                    {
-                        expand: true, 
-                        cwd: 'Resources/public_dev', 
-                        src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../../web/bundles/sululocation/'
-                    }
-                ]
-            },
             bower: {
                 files: [
                     {
@@ -68,15 +48,7 @@ module.exports = function (grunt) {
             }
         },
         clean: {
-            options: { force: true },
-            public: {
-                files: [
-                    {
-                        dot: true,
-                        src: ['../../../../../../../web/bundles/sululocation/']
-                    }
-                ]
-            }
+            options: { force: true }
         },
         watch: {
             options: {
@@ -124,21 +96,14 @@ module.exports = function (grunt) {
         uglify: min
     });
 
-    grunt.registerTask('publish', [
-        'compass:dev',
-        'cssmin',
-        'clean:public',
-        'copy:bower',
-        'copy:public',
-        'copy:public_dev'
-    ]);
-
     grunt.registerTask('default', [
         'watch'
     ]);
 
     grunt.registerTask('build', [
         'uglify',
-        'publish'
+        'compass:dev',
+        'cssmin',
+        'copy:bower'
     ]);
 };

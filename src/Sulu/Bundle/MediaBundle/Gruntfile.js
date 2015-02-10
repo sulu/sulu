@@ -21,22 +21,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
-            public: {
-                files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../../web/bundles/sulumedia/'}
-                ]
-            }
         },
         clean: {
-            options: { force: true },
-            public: {
-                files: [
-                    {
-                        dot: true,
-                        src: ['../../../../../../../web/bundles/sulumedia/']
-                    }
-                ]
-            }
+            options: { force: true }
         },
         watch: {
             options: {
@@ -89,11 +76,6 @@ module.exports = function (grunt) {
             }
         }
     });
-
-    grunt.registerTask('publish', [
-        'clean:public',
-        'copy:public'
-    ]);
 
     grunt.registerTask('build', [
         'compass:dev',
