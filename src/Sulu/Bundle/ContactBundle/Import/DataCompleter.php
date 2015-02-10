@@ -13,23 +13,33 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
  */
 class DataCompleter
 {
-
+    /**
+     * constants
+     */
     const DEBUG = true;
     const API_CALL_LIMIT_PER_SECOND = 9;
     const API_CALL_SLEEP_TIME = 2;
 
+    /**
+     * geocode API
+     * @var string
+     */
     private static $geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
 
+    /**
+     * options
+     * @var array
+     */
     protected $options = array(
-        'streetNumberSplit' => false,
         'delimiter' => ';',
         'enclosure' => '"',
     );
 
-    protected $defaults = array();
-
-    protected $headerData = array();
-
+    /**
+     * TODO create setter
+     * mappings
+     * @var array
+     */
     protected $columnMappings = array(
         'country' => 'LKZ',
         'street' => 'strasse',
@@ -38,28 +48,82 @@ class DataCompleter
         'city' => 'Ort',
     );
 
+    /**
+     * @var array
+     */
+    protected $headerData = array();
+
+    /**
+     * logfile
+     * @var array
+     */
     protected $log;
+
+    /**
+     * filepath of import file
+     * @var string
+     */
     protected $file;
+
+    /**
+     * limit execution
+     * @var int
+     */
     protected $limit;
+
+    /**
+     * currently processed row
+     * @var int
+     */
     protected $currentRow;
 
+    /**
+     * timestamp of the last api call
+     * @var int
+     */
     protected $lastApiCallTime;
+
+    /**
+     * number of api calls that are made in this sencond
+     * @var
+     */
     protected $lastApiCallCount;
 
+    /**
+     * constructor
+     */
     public function __construct()
     {
         $this->log = array();
     }
 
+    /**
+     * set limit of rows to process
+     *
+     * @param $limit
+     */
     public function setLimit($limit)
     {
         $this->limit = $limit;
     }
+
+    /**
+     * set file to process
+     * @param $file
+     */
     public function setFile($file)
     {
         $this->file = $file;
     }
 
+    /**
+     * appends a string to a path + filename
+     *
+     * @param $oldPath
+     * @param $postfix
+     * @param bool $keepExtension
+     * @return string
+     */
     protected function extendFileName($oldPath, $postfix, $keepExtension = true)
     {
         $parts = pathinfo($oldPath);
@@ -70,6 +134,9 @@ class DataCompleter
         return $filename;
     }
 
+    /**
+     * process csv file
+     */
     public function execute()
     {
         $outputFileName = $this->extendFileName($this->file,'_processed');
@@ -77,9 +144,9 @@ class DataCompleter
 
         $this->processCsvLoop(
             $this->file,
-            function ($data, $row) use ($output) {
+            function ($data) use ($output) {
 
-                $data = $this->completeAddress($data, $row);
+                $data = $this->completeAddress($data);
 
                 fputcsv($output, $data, $this->options['delimiter'], $this->options['enclosure']);
             },
@@ -92,6 +159,13 @@ class DataCompleter
         $this->createLogFile();
     }
 
+    /**
+     * callback loop
+     *
+     * @param $filename
+     * @param callable $callback
+     * @param callable $headerCallback
+     */
     protected function processCsvLoop(
         $filename,
         callable $callback,
@@ -115,14 +189,14 @@ class DataCompleter
                     $this->headerData = $data;
                     $this->headerCount = count($data);
 
-                    $headerCallback($data, $row);
+                    $headerCallback($data);
                 } else {
 
                     if ($this->headerCount !== count($data)) {
                         throw new ImportException('The number of fields does not match the number of header values');
                     }
 
-                    $callback($data, $row);
+                    $callback($data);
 
                 }
             } catch (\Exception $e) {
@@ -145,7 +219,13 @@ class DataCompleter
         fclose($handle);
     }
 
-    protected function completeAddress($data, $row)
+    /**
+     * function checks for missing
+     *
+     * @param $data
+     * @return mixed
+     */
+    protected function completeAddress($data)
     {
         $city = $this->getColumnValue('city', $data);
         $street = $this->getColumnValue('street', $data);
@@ -167,6 +247,14 @@ class DataCompleter
         return $data;
     }
 
+    /**
+     * performs an api call and returns shorcode for a country
+     * @param $street
+     * @param $city
+     * @param $zip
+     * @param $state
+     * @return null|void
+     */
     protected function getCountryByApiCall($street, $city, $zip, $state)
     {
         // limit api calls per second
@@ -180,8 +268,6 @@ class DataCompleter
             $this->lastApiCallCount = 1;
             $this->lastApiCallTime = time();
         }
-
-//        echo $this->lastApiCallCount. ' ';
 
         // remove null values
         $params = array_filter(
@@ -198,8 +284,6 @@ class DataCompleter
         $urlparams = urlencode($params);
 
         $apiResult = json_decode(file_get_contents(static::$geocode_url . $urlparams));
-
-//        $apiResult = json_decode($this->simulateApiCall());
 
         $results = $apiResult->results;
 
@@ -232,6 +316,11 @@ class DataCompleter
         return $country;
     }
 
+    /**
+     * returns country short_name from array
+     * @param $result
+     * @return null
+     */
     protected function getCountryFromApiResult($result)
     {
         foreach($result as $value) {
@@ -258,6 +347,11 @@ class DataCompleter
         }
     }
 
+    /**
+     * gets index of a column
+     * @param $key
+     * @return int
+     */
     protected function getColumnIndex($key)
     {
         // if in column mappings
@@ -269,6 +363,13 @@ class DataCompleter
         return $index;
     }
 
+    /**
+     * returns value of a column
+     *
+     * @param $key
+     * @param $data
+     * @return null|string
+     */
     protected function getColumnValue($key, $data)
     {
         if (($index = $this->getColumnIndex($key)) !== false) {
@@ -277,6 +378,14 @@ class DataCompleter
         return null;
     }
 
+    /**
+     * set value of a column
+     *
+     * @param $key
+     * @param $data
+     * @param $value
+     * @throws \Exception
+     */
     protected function setColumnValue($key, &$data, $value)
     {
         if (($index = $this->getColumnIndex($key)) !== false) {
@@ -294,175 +403,5 @@ class DataCompleter
         $file = fopen($this->extendFileName($this->file, '_log_' . time(), false), 'w');
         fwrite($file, implode("\n", $this->log));
         fclose($file);
-    }
-
-    private function simulateApiCall()
-    {
-        return '
-{
-   "results" : [
-      {
-         "address_components" : [
-            {
-               "long_name" : "Wien",
-               "short_name" : "Wien",
-               "types" : [ "locality", "political" ]
-            },
-            {
-               "long_name" : "Wien",
-               "short_name" : "Wien",
-               "types" : [ "administrative_area_level_1", "political" ]
-            },
-            {
-               "long_name" : "Österreich",
-               "short_name" : "AT",
-               "types" : [ "country", "political" ]
-            }
-         ],
-         "formatted_address" : "Wien, Österreich",
-         "geometry" : {
-            "bounds" : {
-               "northeast" : {
-                  "lat" : 48.3230999,
-                  "lng" : 16.5774999
-               },
-               "southwest" : {
-                  "lat" : 48.1182699,
-                  "lng" : 16.1826199
-               }
-            },
-            "location" : {
-               "lat" : 48.2081743,
-               "lng" : 16.3738189
-            },
-            "location_type" : "APPROXIMATE",
-            "viewport" : {
-               "northeast" : {
-                  "lat" : 48.3230999,
-                  "lng" : 16.5774999
-               },
-               "southwest" : {
-                  "lat" : 48.1182699,
-                  "lng" : 16.1826199
-               }
-            }
-         },
-         "types" : [ "locality", "political" ]
-      },
-      {
-         "address_components" : [
-            {
-               "long_name" : "Vienna",
-               "short_name" : "Vienna",
-               "types" : [ "locality", "political" ]
-            },
-            {
-               "long_name" : "Hunter Mill",
-               "short_name" : "Hunter Mill",
-               "types" : [ "administrative_area_level_3", "political" ]
-            },
-            {
-               "long_name" : "Fairfax County",
-               "short_name" : "Fairfax County",
-               "types" : [ "administrative_area_level_2", "political" ]
-            },
-            {
-               "long_name" : "Virginia",
-               "short_name" : "VA",
-               "types" : [ "administrative_area_level_1", "political" ]
-            },
-            {
-               "long_name" : "USA",
-               "short_name" : "US",
-               "types" : [ "country", "political" ]
-            }
-         ],
-         "formatted_address" : "Vienna, Virginia, USA",
-         "geometry" : {
-            "bounds" : {
-               "northeast" : {
-                  "lat" : 38.92182409999999,
-                  "lng" : -77.24126509999999
-               },
-               "southwest" : {
-                  "lat" : 38.8784939,
-                  "lng" : -77.284763
-               }
-            },
-            "location" : {
-               "lat" : 38.9012225,
-               "lng" : -77.2652604
-            },
-            "location_type" : "APPROXIMATE",
-            "viewport" : {
-               "northeast" : {
-                  "lat" : 38.92182409999999,
-                  "lng" : -77.24126509999999
-               },
-               "southwest" : {
-                  "lat" : 38.8784939,
-                  "lng" : -77.284763
-               }
-            }
-         },
-         "types" : [ "locality", "political" ]
-      },
-      {
-         "address_components" : [
-            {
-               "long_name" : "Vienna",
-               "short_name" : "Vienna",
-               "types" : [ "locality", "political" ]
-            },
-            {
-               "long_name" : "Wood County",
-               "short_name" : "Wood County",
-               "types" : [ "administrative_area_level_2", "political" ]
-            },
-            {
-               "long_name" : "West Virginia",
-               "short_name" : "WV",
-               "types" : [ "administrative_area_level_1", "political" ]
-            },
-            {
-               "long_name" : "USA",
-               "short_name" : "US",
-               "types" : [ "country", "political" ]
-            }
-         ],
-         "formatted_address" : "Vienna, West Virginia, USA",
-         "geometry" : {
-            "bounds" : {
-               "northeast" : {
-                  "lat" : 39.3485379,
-                  "lng" : -81.5074403
-               },
-               "southwest" : {
-                  "lat" : 39.2960208,
-                  "lng" : -81.55644099999999
-               }
-            },
-            "location" : {
-               "lat" : 39.3270191,
-               "lng" : -81.54845779999999
-            },
-            "location_type" : "APPROXIMATE",
-            "viewport" : {
-               "northeast" : {
-                  "lat" : 39.3485379,
-                  "lng" : -81.5074403
-               },
-               "southwest" : {
-                  "lat" : 39.2960208,
-                  "lng" : -81.55644099999999
-               }
-            }
-         },
-         "types" : [ "locality", "political" ]
-      }
-   ],
-   "status" : "OK"
-}
-';
     }
 }
