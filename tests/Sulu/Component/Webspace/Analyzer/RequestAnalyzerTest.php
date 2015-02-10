@@ -190,15 +190,15 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
-        $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
-        $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getCurrentPortalUrl());
-        $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getCurrentRedirect());
-        $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getCurrentResourceLocator());
-        $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getCurrentResourceLocatorPrefix());
-        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getCurrentPostParameter());
-        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getCurrentGetParameter());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
+        $this->assertEquals(null, $this->requestAnalyzer->getSegment());
+        $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getPortalUrl());
+        $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
+        $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getResourceLocator());
+        $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getResourceLocatorPrefix());
+        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getPostParameters());
+        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getGetParameters());
     }
 
     /**
@@ -258,19 +258,19 @@ class RequestAnalyzerTest extends \PHPUnit_Framework_TestCase
         $this->requestAnalyzer->analyze($request);
 
         $this->assertEquals('de_at', $this->requestAnalyzer->getCurrentLocalization()->getLocalization());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentWebspace()->getKey());
-        $this->assertEquals('sulu', $this->requestAnalyzer->getCurrentPortal()->getKey());
-        $this->assertEquals(null, $this->requestAnalyzer->getCurrentSegment());
-        $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getCurrentPortalUrl());
-        $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getCurrentRedirect());
-        $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getCurrentResourceLocator());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getWebspace()->getKey());
+        $this->assertEquals('sulu', $this->requestAnalyzer->getPortal()->getKey());
+        $this->assertEquals(null, $this->requestAnalyzer->getSegment());
+        $this->assertEquals($expected['portal_url'], $this->requestAnalyzer->getPortalUrl());
+        $this->assertEquals($expected['redirect'], $this->requestAnalyzer->getRedirect());
+        $this->assertEquals($expected['resource_locator'], $this->requestAnalyzer->getResourceLocator());
         $this->assertEquals(
             $expected['resource_locator_prefix'],
-            $this->requestAnalyzer->getCurrentResourceLocatorPrefix()
+            $this->requestAnalyzer->getResourceLocatorPrefix()
         );
         $this->assertEquals($expected['format'], $request->getRequestFormat());
-        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getCurrentPostParameter());
-        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getCurrentGetParameter());
+        $this->assertEquals(array('post' => 1), $this->requestAnalyzer->getPostParameters());
+        $this->assertEquals(array('get' => 1), $this->requestAnalyzer->getGetParameters());
     }
 
     /**

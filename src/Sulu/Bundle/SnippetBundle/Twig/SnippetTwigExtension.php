@@ -66,7 +66,7 @@ class SnippetTwigExtension extends \Twig_Extension implements SnippetTwigExtensi
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
         }
 
-        $snippet = $this->contentMapper->load($uuid, $this->requestAnalyzer->getCurrentWebspace()->getKey(), $locale);
+        $snippet = $this->contentMapper->load($uuid, $this->requestAnalyzer->getWebspace()->getKey(), $locale);
 
         return $this->structureResolver->resolve($snippet);
     }

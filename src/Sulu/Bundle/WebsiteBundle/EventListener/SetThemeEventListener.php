@@ -48,7 +48,7 @@ class SetThemeEventListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $portal = $this->requestAnalyzer->getCurrentPortal();
+        $portal = $this->requestAnalyzer->getPortal();
 
         if (null === $portal) {
             return;

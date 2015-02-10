@@ -267,6 +267,8 @@ class Export
                 break;
         }
 
-        $dumper->dump($messageCatalogue, array('path' => $this->getPath()));
+        $dumper->dump($messageCatalogue, array(
+            'path' => $this->getPath(),
+        ));
     }
 }

@@ -171,7 +171,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
         );
     }
 
-    public function getCurrentMatchType()
+    public function getMatchType()
     {
         return $this->matchType;
     }
@@ -180,7 +180,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the current webspace for this request
      * @return Webspace
      */
-    public function getCurrentWebspace()
+    public function getWebspace()
     {
         return $this->webspace;
     }
@@ -189,7 +189,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the current portal for this request
      * @return Portal
      */
-    public function getCurrentPortal()
+    public function getPortal()
     {
         return $this->portal;
     }
@@ -198,7 +198,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the current segment for this request
      * @return Segment
      */
-    public function getCurrentSegment()
+    public function getSegment()
     {
         return $this->segment;
     }
@@ -216,7 +216,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the url of the current Portal
      * @return string
      */
-    public function getCurrentPortalUrl()
+    public function getPortalUrl()
     {
         return $this->portalUrl;
     }
@@ -225,7 +225,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the redirect, null if there is no redirect
      * @return string
      */
-    public function getCurrentRedirect()
+    public function getRedirect()
     {
         return $this->redirect;
     }
@@ -234,7 +234,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the path of the current request, which is the url without host, language and so on
      * @return string
      */
-    public function getCurrentResourceLocator()
+    public function getResourceLocator()
     {
         return $this->resourceLocator;
     }
@@ -243,7 +243,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the prefix required before the resource locator
      * @return string
      */
-    public function getCurrentResourceLocatorPrefix()
+    public function getResourceLocatorPrefix()
     {
         return $this->resourceLocatorPrefix;
     }
@@ -252,7 +252,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the post parameters
      * @return array
      */
-    public function getCurrentPostParameter()
+    public function getPostParameters()
     {
         return $this->postParameter;
     }
@@ -261,7 +261,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the get parameters
      * @return array
      */
-    public function getCurrentGetParameter()
+    public function getGetParameters()
     {
         return $this->getParameter;
     }
@@ -379,7 +379,7 @@ class WebsiteRequestAnalyzer implements RequestAnalyzerInterface
      * Returns the analytics key
      * @return string
      */
-    public function getCurrentAnalyticsKey()
+    public function getAnalyticsKey()
     {
         return $this->analyticsKey;
     }

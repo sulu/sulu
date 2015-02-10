@@ -207,10 +207,10 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.xlf');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.xlf');
 
-        $this->assertEquals($expectedHash, $actualHash);
+        $this->assertSame($expectedHash, $actualHash);
     }
 
     public function testXliffExportLocation()
@@ -223,8 +223,8 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.newsletter.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.newsletter.xlf');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -236,8 +236,8 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.portals.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.portals.xlf');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -253,8 +253,8 @@ class ExportTest extends SuluTestCase
         $this->export->setPath(self::$fixturePath . '/');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.backend.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.backend.xlf');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
 
@@ -267,8 +267,8 @@ class ExportTest extends SuluTestCase
         $this->export->setFilename('sulu');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.frontend.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.frontend.xlf');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -282,8 +282,8 @@ class ExportTest extends SuluTestCase
         $this->export->setFilename('sulu');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.json');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.json');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.json');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.json');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -296,8 +296,8 @@ class ExportTest extends SuluTestCase
         $this->export->setFilename('sulu');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.all.json');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.json');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.all.json');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.json');
 
         $this->assertEquals($expectedHash, $actualHash);
     }
@@ -310,8 +310,8 @@ class ExportTest extends SuluTestCase
         $this->export->setFilename('sulu');
         $this->export->execute();
 
-        $expectedHash = md5_file(self::$fixturePath . '/samples/export.all.xlf');
-        $actualHash = md5_file(self::$fixturePath . '/sulu.en.xlf');
+        $expectedHash = file_get_contents(self::$fixturePath . '/samples/export.all.xlf');
+        $actualHash = file_get_contents(self::$fixturePath . '/sulu.en.xlf');
 
         $this->assertEquals($expectedHash, $actualHash);
     }

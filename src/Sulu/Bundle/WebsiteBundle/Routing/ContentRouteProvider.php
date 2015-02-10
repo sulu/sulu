@@ -62,17 +62,17 @@ class ContentRouteProvider implements RouteProviderInterface
         $collection = new RouteCollection();
 
         $htmlExtension = '.html';
-        $resourceLocator = $this->requestAnalyzer->getCurrentResourceLocator();
+        $resourceLocator = $this->requestAnalyzer->getResourceLocator();
 
-        if ($this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
-            || $this->requestAnalyzer->getCurrentMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
+        if ($this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+            || $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
         ) {
             // redirect by information from webspace config
             $route = new Route(
                 $request->getRequestUri(), array(
                     '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
-                    'url' => $this->requestAnalyzer->getCurrentPortalUrl(),
-                    'redirect' => $this->requestAnalyzer->getCurrentRedirect()
+                    'url' => $this->requestAnalyzer->getPortalUrl(),
+                    'redirect' => $this->requestAnalyzer->getRedirect()
                 )
             );
 
@@ -82,7 +82,7 @@ class ContentRouteProvider implements RouteProviderInterface
             substr($request->getPathInfo(), -strlen($htmlExtension)) === $htmlExtension
         ) {
             $url = rtrim(
-                $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
+                $this->requestAnalyzer->getResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
                 '/'
             );
 
@@ -97,7 +97,7 @@ class ContentRouteProvider implements RouteProviderInterface
             $collection->add('redirect_' . uniqid(), $route);
         } else {
             // just show the page
-            $portal = $this->requestAnalyzer->getCurrentPortal();
+            $portal = $this->requestAnalyzer->getPortal();
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
             try {
@@ -115,7 +115,7 @@ class ContentRouteProvider implements RouteProviderInterface
                     $route = new Route(
                         $request->getRequestUri(), array(
                             '_controller' => 'SuluWebsiteBundle:Default:redirect',
-                            'url' => $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $content->getResourceLocator()
+                            'url' => $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator()
                         )
                     );
 
@@ -139,7 +139,7 @@ class ContentRouteProvider implements RouteProviderInterface
             } catch (ResourceLocatorNotFoundException $exc) {
                 // just do not add any routes to the collection
             } catch (ResourceLocatorMovedException $exc) {
-                $newUrl = $this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $exc->getNewResourceLocator();
+                $newUrl = $this->requestAnalyzer->getResourceLocatorPrefix() . $exc->getNewResourceLocator();
 
                 // redirect to new url
                 $route = new Route(
@@ -208,7 +208,7 @@ class ContentRouteProvider implements RouteProviderInterface
      */
     private function checkResourceLocator()
     {
-        return !($this->requestAnalyzer->getCurrentResourceLocator() === '/'
-            && $this->requestAnalyzer->getCurrentResourceLocatorPrefix());
+        return !($this->requestAnalyzer->getResourceLocator() === '/'
+            && $this->requestAnalyzer->getResourceLocatorPrefix());
     }
 }

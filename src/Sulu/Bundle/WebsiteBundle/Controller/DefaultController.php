@@ -46,12 +46,9 @@ class DefaultController extends WebsiteController
      */
     public function redirectWebspaceAction(Request $request)
     {
-        $url = rtrim(str_replace(
-                $request->get('url'),
-                $request->get('redirect'),
-                $request->getUri()
-            ),
-            '/'
+        $url = $this->resolveRedirectUrl(
+            $request->get('redirect'),
+            $request->getUri()
         );
 
         return new RedirectResponse($url, 301);
@@ -63,5 +60,63 @@ class DefaultController extends WebsiteController
     public function redirectAction(Request $request)
     {
         return new RedirectResponse($request->get('url'), 301);
+    }
+
+    /**
+     * Resolve the redirect URL, appending any additional path data
+     *
+     * @param string $url Original webspace URI
+     * @param string $redirectUrl  Redirect webspace URI
+     * @param string $requestUri The actual incoming request URI
+     *
+     * @return string URL to redirect to
+     */
+    protected function resolveRedirectUrl($redirectUrl, $requestUri)
+    {
+        $redirectInfo = $this->parseUrl($redirectUrl);
+        $requestInfo = $this->parseUrl($requestUri);
+
+        $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
+
+        if (isset($requestInfo['port'])) {
+            $url .= ':' . $requestInfo['port'];
+        }
+
+        if (isset($redirectInfo['path'])) {
+            $url .= $redirectInfo['path'];
+        }
+
+        if (isset($requestInfo['path'])) {
+            $url .= $requestInfo['path'];
+            $url = rtrim($url, '/');
+        }
+
+        if (isset($requestInfo['query'])) {
+            $url .= '?' . $requestInfo['query'];
+        }
+
+        if (isset($requestInfo['fragment'])) {
+            $url .= '#' . $requestInfo['fragment'];
+        }
+
+
+        return $url;
+    }
+
+    /**
+     * Prefix http to the URL if it is missing and
+     * then parse the string using parse_url
+     *
+     * @param string
+     *
+     * @return string
+     */
+    private function parseUrl($url)
+    {
+        if (!preg_match('{^https?://}', $url)) {
+            $url = 'http://' . $url;
+        }
+
+        return parse_url($url);
     }
 }

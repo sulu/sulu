@@ -448,13 +448,13 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     )
     {
         $methods = array(
-            'getCurrentPortal',
+            'getPortal',
             'getCurrentPath',
-            'getCurrentRedirect',
-            'getCurrentPortalUrl',
-            'getCurrentMatchType',
-            'getCurrentResourceLocator',
-            'getCurrentResourceLocatorPrefix'
+            'getRedirect',
+            'getPortalUrl',
+            'getMatchType',
+            'getResourceLocator',
+            'getResourceLocatorPrefix'
         );
 
         if ($language != null) {
@@ -471,15 +471,15 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
             $methods
         );
 
-        $portalManager->expects($this->any())->method('getCurrentPortal')->will($this->returnValue($portal));
+        $portalManager->expects($this->any())->method('getPortal')->will($this->returnValue($portal));
         $portalManager->expects($this->any())->method('getCurrentLocalization')->will($this->returnValue($language));
-        $portalManager->expects($this->any())->method('getCurrentRedirect')->will($this->returnValue($redirect));
-        $portalManager->expects($this->any())->method('getCurrentPortalUrl')->will($this->returnValue($url));
-        $portalManager->expects($this->any())->method('getCurrentMatchType')->will($this->returnValue($matchType));
-        $portalManager->expects($this->any())->method('getCurrentResourceLocator')->will(
+        $portalManager->expects($this->any())->method('getRedirect')->will($this->returnValue($redirect));
+        $portalManager->expects($this->any())->method('getPortalUrl')->will($this->returnValue($url));
+        $portalManager->expects($this->any())->method('getMatchType')->will($this->returnValue($matchType));
+        $portalManager->expects($this->any())->method('getResourceLocator')->will(
             $this->returnValue($resourceLocator)
         );
-        $portalManager->expects($this->any())->method('getCurrentResourceLocatorPrefix')->will(
+        $portalManager->expects($this->any())->method('getResourceLocatorPrefix')->will(
             $this->returnValue($resourceLocatorPrefix)
         );
 
@@ -521,7 +521,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getMock('\Symfony\Component\HttpFoundation\Request', array('getRequestUri'));
         $request->expects($this->any())->method('getRequestUri')->will($this->returnValue($path));
-        $request->expects($this->any())->method('getCurrentResourceLocatorPrefix')->will($this->returnValue($prefix));
+        $request->expects($this->any())->method('getResourceLocatorPrefix')->will($this->returnValue($prefix));
 
         return $request;
     }
