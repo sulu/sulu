@@ -149,11 +149,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         bindCustomEvents = function() {
             this.sandbox.on(this.DISPLAY_OPTION_CHANGED(), function(position) {
                 setData.call(this, {displayOption: position}, false);
-                this.sandbox.emit('sulu.content.changed');
-            }, this);
-
-            this.sandbox.on(this.DATA_CHANGED(), function() {
-                this.sandbox.emit('sulu.content.changed');
             }, this);
 
             this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function() {
@@ -532,8 +527,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             data.ids = ids;
 
             this.setData(data, false);
-
-            this.sandbox.emit('sulu.content.changed');
         },
 
         removeHandler: function(id) {
@@ -547,8 +540,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }
 
             this.setData(data, false);
-
-            this.sandbox.emit('sulu.content.changed');
         }
     };
 });

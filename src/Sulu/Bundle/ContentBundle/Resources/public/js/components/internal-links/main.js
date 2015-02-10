@@ -18,6 +18,7 @@ define([], function() {
     'use strict';
 
     var defaults = {
+            eventNamespace: 'sulu.internal-links',
             resultKey: 'nodes',
             idKey: 'uuid',
             columnNavigationUrl: '',
@@ -56,10 +57,6 @@ define([], function() {
          * custom event handling
          */
         bindCustomEvents = function() {
-            this.sandbox.on(this.DATA_CHANGED(), function() {
-                this.sandbox.emit('sulu.content.changed');
-            }, this);
-
             this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
 
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.edit', selectLink.bind(this));
@@ -181,8 +178,6 @@ define([], function() {
 
         sortHandler: function(ids) {
             this.setData(ids, false);
-
-            this.sandbox.emit('sulu.content.changed');
         },
 
         removeHandler: function(id) {
@@ -196,8 +191,6 @@ define([], function() {
             }
 
             this.setData(data, false);
-
-            this.sandbox.emit('sulu.content.changed');
         }
     };
 });
