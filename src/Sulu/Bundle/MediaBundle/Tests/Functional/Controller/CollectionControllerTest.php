@@ -11,7 +11,6 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use DateTime;
-use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -33,7 +32,7 @@ class CollectionControllerTest extends SuluTestCase
         $collection = new Collection();
 
         $style = array(
-            'type'  => 'circle',
+            'type' => 'circle',
             'color' => '#ffcc00'
         );
 
@@ -92,21 +91,25 @@ class CollectionControllerTest extends SuluTestCase
             )
         );
 
+        $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $response = json_decode($client->getResponse()->getContent());
-
-        $style = json_decode(json_encode(array(
-            'type'  => 'circle',
-            'color' => '#ffcc00'
-        )), false);
+        $style = json_decode(
+            json_encode(
+                array(
+                    'type' => 'circle',
+                    'color' => '#ffcc00'
+                )
+            ),
+            false
+        );
 
         $this->assertEquals($style, $response->style);
         $this->assertEquals('This Description is only for testing', $response->description);
         $this->assertNotNull($response->id);
         $this->assertEquals(0, $response->mediaNumber);
         $this->assertCount(0, $response->thumbnails);
-        $this->assertCount(0, $response->children);
+        $this->assertCount(0, $response->_embedded->collections);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Test Collection', $response->title);
         $this->assertNotNull($response->type->id);
@@ -174,19 +177,19 @@ class CollectionControllerTest extends SuluTestCase
             'POST',
             '/api/collections',
             array(
-                'locale'      => 'en-gb',
+                'locale' => 'en-gb',
                 'style' =>
                     array(
-                        'type'  => 'circle',
+                        'type' => 'circle',
                         'color' => $generateColor
                     )
             ,
-                'type'  => array(
+                'type' => array(
                     'id' => $this->collectionType1->getId(),
                 ),
-                'title'       => 'Test Collection 2',
+                'title' => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
-                'parent'      => null,
+                'parent' => null,
             )
         );
 
@@ -265,6 +268,93 @@ class CollectionControllerTest extends SuluTestCase
     }
 
     /**
+     * @description Test POST to create a new nested Collection
+     */
+    public function testPostNested()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $generateColor = '#ffcc00';
+
+        $this->assertNotEmpty($generateColor);
+        $this->assertEquals(7, strlen($generateColor));
+
+        $client->request(
+            'POST',
+            '/api/collections',
+            array(
+                'locale' => 'en-gb',
+                'style' => array(
+                    'type' => 'circle',
+                    'color' => $generateColor
+                ),
+                'type' => array(
+                    'id' => $this->collectionType1->getId(),
+                ),
+                'title' => 'Test Collection 2',
+                'description' => 'This Description 2 is only for testing',
+                'parent' => $this->collection1->getId(),
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = $generateColor;
+
+        $this->assertEquals('en-gb', $response->locale);
+        $this->assertEquals($style, $response->style);
+        $this->assertNotNull($response->id);
+        $this->assertNotNull($response->type->id);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->created)));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d', strtotime($response->changed)));
+        $this->assertEquals('Test Collection 2', $response->title);
+        $this->assertEquals('This Description 2 is only for testing', $response->description);
+        $this->assertEquals($this->collection1->getId(), $response->parent);
+        /*
+        $this->assertNotEmpty($response->creator);
+        $this->assertNotEmpty($response->changer);
+        */
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'GET',
+            '/api/collections/'.$this->collection1->getId() . '?depth=1',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+
+        $this->assertEquals(1, $response->total);
+
+        // check if first entity is unchanged
+        $this->assertTrue(isset($response->_embedded->collections[0]));
+        $responseFirstEntity = $response->_embedded->collections[0];
+
+        $style = new \stdClass();
+        $style->type = 'circle';
+        $style->color = $generateColor;
+
+        $this->assertNotNull($responseFirstEntity->id);
+        $this->assertEquals('en-gb', $responseFirstEntity->locale);
+        $this->assertEquals($style, $responseFirstEntity->style);
+        $this->assertNotNull($responseFirstEntity->type->id);
+        $this->assertNotEmpty($responseFirstEntity->created);
+        $this->assertNotEmpty($responseFirstEntity->changed);
+        $this->assertEquals('Test Collection 2', $responseFirstEntity->title);
+        $this->assertEquals('This Description 2 is only for testing', $responseFirstEntity->description);
+    }
+
+    /**
      * @description Test POST to create a new Collection
      */
     public function testPostWithoutDetails()
@@ -275,8 +365,8 @@ class CollectionControllerTest extends SuluTestCase
             'POST',
             '/api/collections',
             array(
-                'title'       => 'Test Collection 2',
-                'type'  => array(
+                'title' => 'Test Collection 2',
+                'type' => array(
                     'id' => $this->collectionType1->getId(),
                 ),
             )
@@ -406,16 +496,16 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' =>
                     array(
-                        'type'  => 'circle',
+                        'type' => 'circle',
                         'color' => $generateColor
                     )
-                ,
-                'type'  => array(
+            ,
+                'type' => array(
                     'id' => 91283
                 ),
-                'title'       => 'Test Collection 2',
+                'title' => 'Test Collection 2',
                 'description' => 'This Description 2 is only for testing',
-                'locale'      => 'en-gb'
+                'locale' => 'en-gb'
             )
         );
 
@@ -438,14 +528,14 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' =>
                     array(
-                        'type'  => 'circle',
+                        'type' => 'circle',
                         'color' => '#00ccff'
                     )
-                ,
-                'type'  => $this->collectionType1->getId(),
-                'title'       => 'Test Collection changed',
+            ,
+                'type' => $this->collectionType1->getId(),
+                'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
-                'locale'      => 'en-gb'
+                'locale' => 'en-gb'
             )
         );
 
@@ -455,7 +545,7 @@ class CollectionControllerTest extends SuluTestCase
             'GET',
             '/api/collections/' . $this->collection1->getId(),
             array(
-                'locale'      => 'en-gb'
+                'locale' => 'en-gb'
             )
         );
         $response = json_decode($client->getResponse()->getContent());
@@ -519,12 +609,12 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' =>
                     array(
-                        'type'  => 'circle',
+                        'type' => 'circle',
                         'color' => '#00ccff'
                     )
             ,
-                'type'  => 1,
-                'title'       => 'Test Collection changed',
+                'type' => 1,
+                'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
             )
         );
@@ -605,11 +695,11 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' =>
                     array(
-                        'type'  => 'quader',
+                        'type' => 'quader',
                         'color' => '#00ccff'
                     )
-                ,
-                'type'  => array (
+            ,
+                'type' => array(
                     'id' => $collectionType->getId()
                 )
             )
@@ -646,11 +736,11 @@ class CollectionControllerTest extends SuluTestCase
             array(
                 'style' =>
                     array(
-                        'type'  => 'quader',
+                        'type' => 'quader',
                         'color' => '#00ccff'
                     )
-                ,
-                'type'  => $this->collectionType1->getId(),
+            ,
+                'type' => $this->collectionType1->getId(),
             )
         );
 
