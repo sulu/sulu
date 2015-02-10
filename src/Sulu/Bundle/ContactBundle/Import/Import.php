@@ -170,7 +170,7 @@ class Import
      * current row-number
      * @var
      */
-    protected $row;
+    protected $rowNumber;
 
     /**
      * holds the amount of header variables
@@ -489,6 +489,7 @@ class Import
         $this->initDefaults();
 
         $row = 0;
+        $this->rowNumber = $row;
         $successCount = 0;
         $errorCount = 0;
         $this->headerData = array();
@@ -501,7 +502,6 @@ class Import
         }
 
         while (($data = fgetcsv($handle, 0, $this->options['delimiter'], $this->options['enclosure'])) !== false) {
-            $this->row = $row;
             try {
                 // for first row, save headers
                 if ($row === 0) {
@@ -560,6 +560,7 @@ class Import
                 break;
             }
             $row++;
+            $this->rowNumber = $row;
 
             if (self::DEBUG) {
                 print(sprintf("%d ", $row));
@@ -1103,6 +1104,10 @@ class Import
             $address->setAddition($data[$prefix . 'extension']);
             $addAddress = true;
         }
+
+        // define if this is a normal address or just a postbox address
+        $isNormalAddress = $addAddress;
+        
         // postbox
         if ($this->checkData($prefix . 'postbox', $data)) {
             $address->setPostboxNumber($data[$prefix . 'postbox']);
@@ -1154,8 +1159,8 @@ class Import
             $address->setCountry($country);
             $addAddress = $addAddress && true;
         } else {
-            if ($addAddress) {
-                $this->debug("no country defined at line $this->row");
+            if ($addAddress && $isNormalAddress) {
+                $this->debug("no country defined at line " . $this->rowNumber);
             }
             $addAddress = false;
         }
