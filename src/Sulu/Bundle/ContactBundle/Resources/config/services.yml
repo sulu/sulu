@@ -3,6 +3,7 @@ parameters:
     sulu_contact.admin.content_navigation.class: Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation
     sulu_contact.js_config.class: Sulu\Bundle\AdminBundle\Admin\JsConfig
     sulu_contact.import.class: Sulu\Bundle\ContactBundle\Import\Import
+    sulu_contact.data_completer.class: Sulu\Bundle\ContactBundle\Import\DataCompleter
     sulu_contact.account_listener.class: Sulu\Bundle\ContactBundle\EventListener\AccountListener
 
     sulu_contact.contact_manager.class: Sulu\Bundle\ContactBundle\Contact\ContactManager
@@ -50,6 +51,9 @@ services:
           - %sulu_contact.defaults%
           - %sulu_contact.account_types%
           - %sulu_contact.form_of_address%
+
+    sulu_contact.data_completer:
+        class: %sulu_contact.data_completer.class%
 
     sulu_contact.account_repository:
         class: %sulu_contact.account_repository.class%
