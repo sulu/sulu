@@ -55,7 +55,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * raised when data has returned from the ajax request
          * @event sulu.media-selection.record-selected
-         * @param id {Number|String} id of the record
          */
         RECORD_SELECTED = function() {
             return createEventName.call(this, 'record-selected');
@@ -64,7 +63,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         /**
          * raised when data has returned from the ajax request
          * @event sulu.media-selection.record-deselected
-         * @param id {Number|String} id of the record
          */
         RECORD_DESELECTED = function() {
             return createEventName.call(this, 'record-deselected');
