@@ -15,8 +15,10 @@
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
+        <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\DefaultCollectionManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
+        <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
     </parameters>
     <services>
         <service id="sulu_media.admin" class="%sulu_media.admin.class%">
@@ -32,7 +34,7 @@
                  class="%sulu_media.media_repository.class%"
                  factory-service="doctrine.orm.entity_manager"
                  factory-method="getRepository">
-            <argument>SuluMediaBundle:Media</argument>
+            <argument>%sulu_category.entity.media%</argument>
         </service>
         <service id="sulu_media.collection_repository"
                  class="%sulu_media.collection_repository.class%"
@@ -100,7 +102,7 @@
 
         <service id="sulu_media.type.media_selection" class="%sulu_media.media_selection.class%">
             <argument type="service" id="sulu_media.media_manager"/>
-            <argument type="string">SuluMediaBundle:Template:content-types/media-selection.html.twig</argument>
+            <argument type="string">%sulu_media.media_selection.template%</argument>
             <tag name="sulu.content.type" alias="media_selection"/>
         </service>
 
