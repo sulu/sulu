@@ -57,7 +57,7 @@ define(function() {
 
         /** returns normalized event names */
         createEventName = function(postFix) {
-            return namespace + this.options.instanceName + postFix;
+            return namespace + this.options.instanceName + '.' + postFix;
         };
 
     return {
