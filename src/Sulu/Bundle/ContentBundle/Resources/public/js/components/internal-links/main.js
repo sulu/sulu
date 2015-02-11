@@ -77,7 +77,11 @@ define([], function() {
             if (data.indexOf(item.id) === -1) {
                 data.push(item.id);
 
-                this.setData(data);
+                this.setData(data, false);
+
+                if (!!item.publishedState) {
+                    this.addItem(item);
+                }
             }
         },
 
@@ -98,7 +102,7 @@ define([], function() {
                             editIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
                             showEdit: false,
-                            showStatus: false,
+                            showStatus: true,
                             responsive: false,
                             skin: 'fixed-height-small',
                             markable: true,
