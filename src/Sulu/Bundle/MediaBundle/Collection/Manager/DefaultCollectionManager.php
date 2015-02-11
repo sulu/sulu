@@ -130,6 +130,25 @@ class DefaultCollectionManager implements CollectionManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getTree($locale, $depth = 0)
+    {
+        $collectionSet = $this->collectionRepository->findRootCollectionSet($depth);
+
+        $collections = [];
+        foreach ($collectionSet as $entity) {
+            if($entity->getParent() === null) {
+                $collections[] = $this->getApiEntity($entity, $locale, $collectionSet);
+            }
+        }
+
+        $this->count = sizeof($collections);
+
+        return $collections;
+    }
+
+    /**
      * @return int
      */
     public function getCount()

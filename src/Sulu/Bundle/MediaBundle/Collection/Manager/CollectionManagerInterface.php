@@ -42,6 +42,14 @@ interface CollectionManagerInterface
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array());
 
     /**
+     * Returns collections from root with given depth
+     * @param string $locale the locale which the collection should be return
+     * @param int $depth maximum depth for query
+     * @return Collection[]
+     */
+    public function getTree($locale, $depth = 0);
+
+    /**
      * Returns a collection count
      * @return int
      */
