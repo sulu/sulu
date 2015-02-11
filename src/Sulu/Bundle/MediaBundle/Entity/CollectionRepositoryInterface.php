@@ -25,6 +25,13 @@ interface CollectionRepositoryInterface
     public function findCollectionSet($id, $depth = 0);
 
     /**
+     * Finds a collection set starting with all root nodes
+     * @param int $depth
+     * @return Collection[]
+     */
+    public function findRootCollectionSet($depth = 0);
+
+    /**
      * Finds the collection with a given id
      * @param int $id
      * @return Collection

@@ -73,12 +73,41 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
+    public function findRootCollectionSet($depth = 0)
+    {
+        try {
+            $sql = sprintf(
+                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia
+                 FROM %s AS n
+                        LEFT JOIN n.meta AS collectionMeta
+                        LEFT JOIN n.type AS collectionType
+                        LEFT JOIN n.parent AS collectionParent
+                        LEFT JOIN n.media AS collectionMedia
+                 WHERE n.depth <= :maxDepth',
+                $this->_entityName,
+                $this->_entityName
+            );
+
+            $query = new Query($this->_em);
+            $query->setDQL($sql);
+            $query->setParameter('maxDepth', intval($depth));
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return array();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
         list ($parent, $depth, $search) = array(
-            !empty($filter['parent']) ? $filter['parent'] : null,
-            !empty($filter['depth']) ? $filter['depth'] : null,
-            !empty($filter['search']) ? $filter['search'] : null,
+            isset($filter['parent']) ? $filter['parent'] : null,
+            isset($filter['depth']) ? $filter['depth'] : null,
+            isset($filter['search']) ? $filter['search'] : null,
         );
 
         try {
