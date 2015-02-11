@@ -28,6 +28,15 @@ class CollectionControllerTest extends SuluTestCase
 
     protected function initOrm()
     {
+        $this->collection1 = $this->createCollection(
+            'Default Collection Type',
+            array('en-gb' => 'Test Collection', 'de' => 'Test Kollektion')
+        );
+        $this->collectionType1 = $this->collection1->getType();
+    }
+
+    private function createCollection($typeName, $title = array(), $parent = null)
+    {
         // Collection
         $collection = new Collection();
 
@@ -40,19 +49,17 @@ class CollectionControllerTest extends SuluTestCase
 
         $collection->setCreated(new DateTime());
         $collection->setChanged(new DateTime());
-        $this->collection1 = $collection;
 
         // Create Collection Type
         $collectionType = new CollectionType();
-        $collectionType->setName('Default Collection Type');
+        $collectionType->setName($typeName);
         $collectionType->setDescription('Default Collection Type');
-        $this->collectionType1 = $collectionType;
 
         $collection->setType($collectionType);
 
         // Collection Meta 1
         $collectionMeta = new CollectionMeta();
-        $collectionMeta->setTitle('Test Collection');
+        $collectionMeta->setTitle(isset($title['en-gb']) ? $title['en-gb'] : 'Collection');
         $collectionMeta->setDescription('This Description is only for testing');
         $collectionMeta->setLocale('en-gb');
         $collectionMeta->setCollection($collection);
@@ -61,12 +68,14 @@ class CollectionControllerTest extends SuluTestCase
 
         // Collection Meta 2
         $collectionMeta2 = new CollectionMeta();
-        $collectionMeta2->setTitle('Test Kollektion');
+        $collectionMeta2->setTitle(isset($title['de']) ? $title['de'] : 'Kollection');
         $collectionMeta2->setDescription('Dies ist eine Test Beschreibung');
         $collectionMeta2->setLocale('de');
         $collectionMeta2->setCollection($collection);
 
         $collection->addMeta($collectionMeta2);
+
+        $collection->setParent($parent);
 
         $this->em->persist($collection);
         $this->em->persist($collectionType);
@@ -74,6 +83,8 @@ class CollectionControllerTest extends SuluTestCase
         $this->em->persist($collectionMeta2);
 
         $this->em->flush();
+
+        return $collection;
     }
 
     /**
@@ -218,7 +229,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections',
+            '/api/collections?flat=true',
             array(
                 'locale' => 'en-gb'
             )
@@ -323,7 +334,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections/' . $this->collection1->getId() . '?depth=1',
+            '/api/collections/' . $this->collection1->getId() . '?flat=true&depth=1',
             array(
                 'locale' => 'en-gb'
             )
@@ -353,7 +364,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $client->request(
             'GET',
-            '/api/collections?depth=2',
+            '/api/collections?flat=true&depth=2',
             array(
                 'locale' => 'en-gb'
             )
@@ -795,5 +806,356 @@ class CollectionControllerTest extends SuluTestCase
         $client->request('GET', '/api/collections?flat=true');
         $response = json_decode($client->getResponse()->getContent());
         $this->assertEquals(1, $response->total);
+    }
+
+    private function prepareTree()
+    {
+        $collection1 = $this->collection1;
+        $collection2 = $this->createCollection('My Type 1', array('en-gb' => 'col2'), $collection1);
+        $collection3 = $this->createCollection('My Type 2', array('en-gb' => 'col3'), $collection1);
+        $collection4 = $this->createCollection('My Type 3', array('en-gb' => 'col4'));
+        $collection5 = $this->createCollection('My Type 4', array('en-gb' => 'col5'), $collection4);
+        $collection6 = $this->createCollection('My Type 5', array('en-gb' => 'col6'), $collection4);
+        $collection7 = $this->createCollection('My Type 6', array('en-gb' => 'col7'), $collection6);
+
+        return array(
+            array(
+                'Test Collection',
+                'col2',
+                'col3',
+                'col4',
+                'col5',
+                'col6',
+                'col7'
+            ),
+            array(
+                $collection1->getId(),
+                $collection2->getId(),
+                $collection3->getId(),
+                $collection4->getId(),
+                $collection5->getId(),
+                $collection6->getId(),
+                $collection7->getId(),
+            )
+        );
+    }
+
+    public function testCGetNestedFlat()
+    {
+        list($titles) = $this->prepareTree();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections?flat=true',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(2, $response->total);
+        $this->assertCount(2, $response->_embedded->collections);
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertEquals(null, $items[0]->_embedded->parent);
+        $this->assertEmpty($items[0]->_embedded->collections);
+        $this->assertEquals($titles[3], $items[1]->title);
+        $this->assertEquals(null, $items[1]->_embedded->parent);
+        $this->assertEmpty($items[1]->_embedded->collections);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections?flat=true&depth=1',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(6, $response->total);
+        $this->assertCount(6, $response->_embedded->collections);
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertNull($items[0]->_embedded->parent);
+        $this->assertEmpty($items[0]->_embedded->collections);
+
+        $this->assertEquals($titles[1], $items[1]->title);
+        $this->assertNotNull($items[1]->_embedded->parent);
+        $this->assertEmpty($items[1]->_embedded->collections);
+
+        $this->assertEquals($titles[2], $items[2]->title);
+        $this->assertNotNull($items[2]->_embedded->parent);
+        $this->assertEmpty($items[2]->_embedded->collections);
+
+        $this->assertEquals($titles[3], $items[3]->title);
+        $this->assertNull($items[3]->_embedded->parent);
+        $this->assertEmpty($items[3]->_embedded->collections);
+
+        $this->assertEquals($titles[4], $items[4]->title);
+        $this->assertNotNull($items[4]->_embedded->parent);
+        $this->assertEmpty($items[4]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $items[5]->title);
+        $this->assertNotNull($items[5]->_embedded->parent);
+        $this->assertEmpty($items[5]->_embedded->collections);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections?flat=true&depth=2',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(7, $response->total);
+        $this->assertCount(7, $response->_embedded->collections);
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertNull($items[0]->_embedded->parent);
+        $this->assertEmpty($items[0]->_embedded->collections);
+
+        $this->assertEquals($titles[1], $items[1]->title);
+        $this->assertNotNull($items[1]->_embedded->parent);
+        $this->assertEmpty($items[1]->_embedded->collections);
+
+        $this->assertEquals($titles[2], $items[2]->title);
+        $this->assertNotNull($items[2]->_embedded->parent);
+        $this->assertEmpty($items[2]->_embedded->collections);
+
+        $this->assertEquals($titles[3], $items[3]->title);
+        $this->assertNull($items[3]->_embedded->parent);
+        $this->assertEmpty($items[3]->_embedded->collections);
+
+        $this->assertEquals($titles[4], $items[4]->title);
+        $this->assertNotNull($items[4]->_embedded->parent);
+        $this->assertEmpty($items[4]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $items[5]->title);
+        $this->assertNotNull($items[5]->_embedded->parent);
+        $this->assertEmpty($items[5]->_embedded->collections);
+
+        $this->assertEquals($titles[6], $items[6]->title);
+        $this->assertNotNull($items[6]->_embedded->parent);
+        $this->assertEmpty($items[6]->_embedded->collections);
+    }
+
+    public function testCGetNestedTree()
+    {
+        list($titles) = $this->prepareTree();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertCount(2, $response->_embedded->collections);
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertEquals(null, $items[0]->_embedded->parent);
+        $this->assertEmpty($items[0]->_embedded->collections);
+        $this->assertEquals($titles[3], $items[1]->title);
+        $this->assertEquals(null, $items[1]->_embedded->parent);
+        $this->assertEmpty($items[1]->_embedded->collections);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections?depth=1',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertCount(2, $response->_embedded->collections);
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertNull($items[0]->_embedded->parent);
+        $this->assertNotEmpty($items[0]->_embedded->collections);
+
+        $this->assertEquals($titles[3], $items[1]->title);
+        $this->assertNull($items[1]->_embedded->parent);
+        $this->assertNotEmpty($items[1]->_embedded->collections);
+
+        $subItems = $items[0]->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[1], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[2], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertEmpty($subItems[1]->_embedded->collections);
+
+        $subItems = $items[1]->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[4], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertEmpty($subItems[1]->_embedded->collections);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections?depth=2',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertCount(2, $response->_embedded->collections);
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertNull($items[0]->_embedded->parent);
+        $this->assertNotEmpty($items[0]->_embedded->collections);
+
+        $this->assertEquals($titles[3], $items[1]->title);
+        $this->assertNull($items[1]->_embedded->parent);
+        $this->assertNotEmpty($items[1]->_embedded->collections);
+
+        $subItems = $items[0]->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[1], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[2], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertEmpty($subItems[1]->_embedded->collections);
+
+        $subItems = $items[1]->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[4], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertNotEmpty($subItems[1]->_embedded->collections);
+
+        $subItems = $subItems[1]->_embedded->collections;
+        $this->assertCount(1, $subItems);
+        $this->assertEquals($titles[6], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+    }
+
+    /**
+     * @description Test Collection GET by ID
+     */
+    public function testGetByIdWithDepth()
+    {
+        list($titles, $ids) = $this->prepareTree();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections/' . $ids[3],
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals($titles[3], $response->title);
+        $this->assertNull($response->_embedded->parent);
+        $this->assertEmpty($response->_embedded->collections);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections/' . $ids[3] . '?depth=1',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals($titles[3], $response->title);
+        $this->assertNull($response->_embedded->parent);
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        $subItems = $response->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[4], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertEmpty($subItems[1]->_embedded->collections);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections/' . $ids[3] . '?depth=2',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals($titles[3], $response->title);
+        $this->assertNull($response->_embedded->parent);
+        $this->assertNotEmpty($response->_embedded->collections);
+
+        $subItems = $response->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[4], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertNotEmpty($subItems[1]->_embedded->collections);
+
+        $subItems = $subItems[1]->_embedded->collections;
+        $this->assertCount(1, $subItems);
+        $this->assertEquals($titles[6], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
     }
 }
