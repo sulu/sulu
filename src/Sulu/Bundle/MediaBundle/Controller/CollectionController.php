@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -23,6 +23,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * @var string
      */
@@ -104,7 +107,8 @@ class CollectionController extends RestController implements ClassResourceInterf
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $depth = $request->get('depth');
+            $flat = $this->getBooleanRequestParameter($request, 'flat', false);
+            $depth = $request->get('depth', 0);
             $limit = $request->get('limit', $listRestHelper->getLimit());
             $offset = ($request->get('page', 1) - 1) * $limit;
             $search = $request->get('search');
@@ -112,16 +116,20 @@ class CollectionController extends RestController implements ClassResourceInterf
             $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();
 
-            $collections = $collectionManager->get(
-                $this->getLocale($request),
-                array(
-                    'depth' => $depth,
-                    'search' => $search,
-                ),
-                $limit,
-                $offset,
-                $sortBy !== null ? array($sortBy => $sortOrder) : array()
-            );
+            if ($flat) {
+                $collections = $collectionManager->get(
+                    $this->getLocale($request),
+                    array(
+                        'depth' => $depth,
+                        'search' => $search,
+                    ),
+                    $limit,
+                    $offset,
+                    $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                );
+            } else {
+                $collections = $collectionManager->getTree($this->getLocale($request), $depth);
+            }
 
             $all = $collectionManager->getCount();
 
