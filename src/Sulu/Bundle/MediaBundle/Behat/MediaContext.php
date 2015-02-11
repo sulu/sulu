@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Behat;
 
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -153,7 +154,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
      * Return the last media collection that was created
      * in this context
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return Collection
      */
     private function getLastMediaCollection()
     {
@@ -169,7 +170,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
     /**
      * Return the media manager
      *
-     * @return \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface
+     * @return MediaManagerInterface
      */
     private function getMediaManager()
     {
