@@ -43,6 +43,20 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      )
  * )
  * @Relation(
+ *      "self",
+ *      href = @Route(
+ *          "get_collection",
+ *          parameters = { "id" = "expr(object.getId())" }
+ *      )
+ * )
+ * @Relation(
+ *      "children",
+ *      href = @Route(
+ *          "get_collection",
+ *          parameters = { "id" = "expr(object.getId())", "depth" = 1 }
+ *      )
+ * )
+ * @Relation(
  *     name = "collections",
  *     embedded = @Embedded(
  *         "expr(object.getChildren())",
