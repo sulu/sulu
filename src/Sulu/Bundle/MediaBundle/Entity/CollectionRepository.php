@@ -44,7 +44,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $sql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta
+                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType

@@ -16,6 +16,7 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 interface CollectionManagerInterface
@@ -74,10 +75,11 @@ interface CollectionManagerInterface
      * If you pass parentId = null i moves to the root
      * @param int $id the id of the category to move
      * @param string $locale the locale which the collection should be return
-     * @param int|null $parentId the parent where the collection should be placed
+     * @param int|null $destinationId the parent where the collection should be placed
      * @return Collection
+     * @throws CollectionNotFoundException
      */
-    public function move($id, $locale, $parentId = null);
+    public function move($id, $locale, $destinationId = null);
 
     /**
      * Return the FieldDescriptors

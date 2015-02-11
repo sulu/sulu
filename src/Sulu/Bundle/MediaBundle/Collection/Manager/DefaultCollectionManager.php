@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
@@ -55,7 +56,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     private $userRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
     protected $em;
 
@@ -84,7 +85,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
         MediaRepositoryInterface $mediaRepository,
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
-        ObjectManager $em,
+        EntityManager $em,
         $previewLimit,
         $collectionPreviewFormat
     ) {
@@ -138,7 +139,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
 
         $collections = [];
         foreach ($collectionSet as $entity) {
-            if($entity->getParent() === null) {
+            if ($entity->getParent() === null) {
                 $collections[] = $this->getApiEntity($entity, $locale, $collectionSet);
             }
         }
@@ -453,19 +454,27 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function move($id, $locale, $parentId = null)
+    public function move($id, $locale, $destinationId = null)
     {
-        $collectionEntity = $this->collectionRepository->findCollectionById($id);
+        try {
+            $collectionEntity = $this->collectionRepository->findCollectionById($id);
 
-        $parentEntity = null;
-        if($parentId !== null){
-            $parentEntity = $this->collectionRepository->findCollectionById($parentId);
+            if ($collectionEntity === null) {
+                throw new CollectionNotFoundException($id);
+            }
+
+            $destinationEntity = null;
+            if ($destinationId !== null) {
+                $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
+            }
+
+            $collectionEntity->setParent($destinationEntity);
+            $this->em->flush();
+
+            return $this->getApiEntity($collectionEntity, $locale);
+        } catch (DBALException $ex) {
+            throw new CollectionNotFoundException($destinationId);
         }
-
-        $collectionEntity->setParent($parentEntity);
-        $this->em->flush();
-
-        return $this->getApiEntity($collectionEntity, $locale);
     }
 
     /**

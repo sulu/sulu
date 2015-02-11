@@ -84,8 +84,6 @@ class CollectionController extends RestController implements ClassResourceInterf
             $view = $this->responseGetById(
                 $id,
                 function ($id) use ($locale, $collectionManager, $depth) {
-                    /** @var CollectionEntity $collectionEntity */
-
                     return $collectionManager->getById($id, $locale, $depth);
                 }
             );
@@ -234,8 +232,8 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     protected function moveEntity($id, Request $request)
     {
-        $parentId = $this->getRequestParameter($request, 'parent');
-        $collection = $this->getCollectionManager()->move($id, $this->getLocale($request), $parentId);
+        $destinationId = $this->getRequestParameter($request, 'destination');
+        $collection = $this->getCollectionManager()->move($id, $this->getLocale($request), $destinationId);
         $view = $this->view($collection);
 
         return $this->handleView($view);
