@@ -105,7 +105,7 @@ class InternalLinks extends ComplexContentType
     public function getReferencedUuids(PropertyInterface $property)
     {
         $data = $property->getValue();
-        $uuids = isset($data['ids']) ? $data['ids'] : array();
+        $uuids = isset($data) ? $data : array();
 
         return $uuids;
     }
@@ -144,20 +144,15 @@ class InternalLinks extends ComplexContentType
             $value = $value->toArray();
         }
 
-        // if whole container is pushed
-        if (isset($value['data'])) {
-            unset($value['data']);
-        }
-
-        if (isset($value['ids'])) {
+        if (isset($value)) {
             // remove not existing ids
             $session = $node->getSession();
-            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
+            $selectedNodes = $session->getNodesByIdentifier($value);
             $ids = array();
             foreach ($selectedNodes as $selectedNode) {
                 $ids[] = $selectedNode->getIdentifier();
             }
-            $value['ids'] = $ids;
+            $value = $ids;
         }
 
         // set value to node
@@ -194,7 +189,7 @@ class InternalLinks extends ComplexContentType
     {
         $data = $property->getValue();
         $container = new InternalLinksContainer(
-            isset($data['ids']) ? $data['ids'] : array(),
+            isset($data) ? $data : array(),
             $this->contentQueryExecutor,
             $this->contentQueryBuilder,
             array_merge($this->getDefaultParams(), $property->getParams()),

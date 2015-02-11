@@ -67,15 +67,13 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
     public function testPropertyRead()
     {
-        $me = $this;
-
         $this->property->expects($this->once())
             ->method('getName')->will($this->returnValue('i18n:de-hotels'));
         $this->property->expects($this->once())
             ->method('setValue')
-            ->will($this->returnCallback(function ($snippets) use ($me) {
-                foreach ($snippets['ids'] as $snippet) {
-                    $me->assertTrue(UUIDHelper::isUUID($snippet));
+            ->will($this->returnCallback(function ($snippets) {
+                foreach ($snippets as $snippet) {
+                    $this->assertTrue(UUIDHelper::isUUID($snippet));
                 }
             }));
 

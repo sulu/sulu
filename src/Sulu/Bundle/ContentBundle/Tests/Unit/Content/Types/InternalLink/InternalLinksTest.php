@@ -115,24 +115,18 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->any())->method('getValue')->will(
             $this->returnValue(
                 array(
-                    'ids' => array(
-                        '123-123-123',
-                        '123-456-789',
-                        'not existing'
-                    )
+                    '123-123-123',
+                    '123-456-789',
+                    'not existing'
                 )
             )
         );
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
-            json_encode(
-                array(
-                    'ids' => array(
-                        '123-123-123',
-                        '123-456-789'
-                    )
-                )
+            array(
+                '123-123-123',
+                '123-456-789'
             )
         );
 

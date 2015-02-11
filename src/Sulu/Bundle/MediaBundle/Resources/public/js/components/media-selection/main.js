@@ -508,6 +508,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             startAddOverlay.call(this);
         },
 
+        isDataEmpty: function(data) {
+            return this.sandbox.util.isEmpty(data.ids);
+        },
+
         getUrl: function(data) {
             var delimiter = (this.options.url.indexOf('?') === -1) ? '?' : '&';
 

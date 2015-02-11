@@ -69,9 +69,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
                 array(
                     'title' => 'My new snippet page',
                     'url' => '/snippetpage',
-                    'hotels' => array(
-                        'ids' => array(),
-                    ),
+                    'hotels' => array(),
                 ),
             ),
             array(
@@ -81,9 +79,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
                 array(
                     'title' => 'Another snippet page',
                     'url' => '/anothersnippetpage',
-                    'hotels' => array(
-                        'ids' => array('snippet1'),
-                    ),
+                    'hotels' => array('snippet1'),
                 ),
             ),
         );
@@ -94,7 +90,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
      */
     public function testSaveLoadSnippetPage($webspaceKey, $templateKey, $locale, $data)
     {
-        foreach ($data['hotels']['ids'] as &$varName) {
+        foreach ($data['hotels'] as &$varName) {
             $varName = $this->{$varName}->getUUid();
         }
 
@@ -133,7 +129,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         }
 
         $hotels = $page->getPropertyValue('hotels');
-        $this->assertCount(count($data['hotels']['ids']), $hotels['ids']);
+        $this->assertCount(count($data['hotels']), $hotels);
 
         $this->assertEquals($data['hotels'], $hotels);
     }
