@@ -1078,7 +1078,7 @@ class CollectionControllerTest extends SuluTestCase
     }
 
     /**
-     * @description Test Collection GET by ID
+     * @description Test Collection GET by ID with a depth
      */
     public function testGetByIdWithDepth()
     {
@@ -1151,6 +1151,79 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($titles[5], $subItems[1]->title);
         $this->assertNotNull($subItems[1]->_embedded->parent);
         $this->assertNotEmpty($subItems[1]->_embedded->collections);
+
+        $subItems = $subItems[1]->_embedded->collections;
+        $this->assertCount(1, $subItems);
+        $this->assertEquals($titles[6], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+    }
+
+    /**
+     * @description Test move a Collection
+     */
+    public function testMove()
+    {
+        list($titles, $ids) = $this->prepareTree();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'POST',
+            '/api/collections/' . $ids[3] . '?action=move&parent=' . $ids[0],
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertEquals($ids[0], $response->_embedded->parent->id);
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections?depth=3',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $items = $response->_embedded->collections;
+
+        $this->assertEquals(1, $response->total);
+        $this->assertCount(1, $items);
+
+        $this->assertEquals($titles[0], $items[0]->title);
+        $this->assertNull($items[0]->_embedded->parent);
+        $this->assertNotEmpty($items[0]->_embedded->collections);
+
+        $subItems = $items[0]->_embedded->collections;
+        $this->assertCount(3, $subItems);
+        $this->assertEquals($titles[1], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[2], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertEmpty($subItems[1]->_embedded->collections);
+
+        $this->assertEquals($titles[3], $subItems[2]->title);
+        $this->assertNotNull($subItems[2]->_embedded->parent);
+        $this->assertNotEmpty($subItems[2]->_embedded->collections);
+
+        $subItems = $subItems[2]->_embedded->collections;
+        $this->assertCount(2, $subItems);
+        $this->assertEquals($titles[4], $subItems[0]->title);
+        $this->assertNotNull($subItems[0]->_embedded->parent);
+        $this->assertEmpty($subItems[0]->_embedded->collections);
+
+        $this->assertEquals($titles[5], $subItems[1]->title);
+        $this->assertNotNull($subItems[1]->_embedded->parent);
+        $this->assertNotEmpty($subItems[1]->_embedded->collections);
+
 
         $subItems = $subItems[1]->_embedded->collections;
         $this->assertCount(1, $subItems);

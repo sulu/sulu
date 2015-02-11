@@ -44,12 +44,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $sql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia
+                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
-                        LEFT JOIN n.media AS collectionMedia,
+                        LEFT JOIN n.media AS collectionMedia
+                        LEFT JOIN collectionParent.meta AS parentMeta,
                       %s AS p
                  WHERE n.lft BETWEEN p.lft AND p.rgt
                    AND n.depth <= p.depth + :maxDepth
@@ -77,12 +78,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $sql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia
+                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
                         LEFT JOIN n.media AS collectionMedia
+                        LEFT JOIN collectionParent.meta AS parentMeta
                  WHERE n.depth <= :maxDepth',
                 $this->_entityName,
                 $this->_entityName

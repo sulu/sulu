@@ -70,6 +70,16 @@ interface CollectionManagerInterface
     public function delete($id);
 
     /**
+     * Moves a collection into another collection
+     * If you pass parentId = null i moves to the root
+     * @param int $id the id of the category to move
+     * @param string $locale the locale which the collection should be return
+     * @param int|null $parentId the parent where the collection should be placed
+     * @return Collection
+     */
+    public function move($id, $locale, $parentId = null);
+
+    /**
      * Return the FieldDescriptors
      * @return DoctrineFieldDescriptor[]
      */

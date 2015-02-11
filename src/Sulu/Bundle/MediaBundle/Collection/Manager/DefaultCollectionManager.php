@@ -451,6 +451,24 @@ class DefaultCollectionManager implements CollectionManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function move($id, $locale, $parentId = null)
+    {
+        $collectionEntity = $this->collectionRepository->findCollectionById($id);
+
+        $parentEntity = null;
+        if($parentId !== null){
+            $parentEntity = $this->collectionRepository->findCollectionById($parentId);
+        }
+
+        $collectionEntity->setParent($parentEntity);
+        $this->em->flush();
+
+        return $this->getApiEntity($collectionEntity, $locale);
+    }
+
+    /**
      * Returns a user for a given user-id
      * @param $userId
      * @return \Sulu\Component\Security\Authentication\UserInterface

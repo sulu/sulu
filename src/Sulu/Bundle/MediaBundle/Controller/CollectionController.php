@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use SebastianBergmann\Exporter\Exception;
@@ -27,6 +28,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes collections available through a REST API
@@ -194,6 +196,47 @@ class CollectionController extends RestController implements ClassResourceInterf
         };
 
         $view = $this->responseDelete($id, $delete);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Trigger an action for given media. Action is specified over get-action parameter
+     * @Post("collections/{id}")
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    public function postTriggerAction($id, Request $request)
+    {
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'move':
+                    return $this->moveEntity($id, $request);
+                    break;
+                default:
+                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
+
+            return $this->handleView($view);
+        }
+    }
+
+    /**
+     * Moves an entity into another one
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    protected function moveEntity($id, Request $request)
+    {
+        $parentId = $this->getRequestParameter($request, 'parent');
+        $collection = $this->getCollectionManager()->move($id, $this->getLocale($request), $parentId);
+        $view = $this->view($collection);
 
         return $this->handleView($view);
     }
