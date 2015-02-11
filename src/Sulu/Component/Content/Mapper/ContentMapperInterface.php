@@ -267,6 +267,17 @@ interface ContentMapperInterface
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
 
     /**
+     * brings a node with a given uuid into a given position
+     * @param string $uuid
+     * @param integer $position
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @return StructureInterface
+     */
+    public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
+
+    /**
      * TRUE dont rename pages on save
      * @param boolean $noRenamingFlag
      * @return $this

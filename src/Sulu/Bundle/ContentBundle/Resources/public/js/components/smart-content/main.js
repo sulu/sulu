@@ -762,7 +762,7 @@ define([], function() {
             }.bind(this));
 
             // activate button OK when a page is selected
-            this.sandbox.on('husky.column-navigation.smart-content'+ this.options.instanceName +'.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.smart-content'+ this.options.instanceName +'.action', function(item) {
                 this.sandbox.emit('husky.overlay.smart-content.' + this.options.instanceName + '.slide-left');
 
                 var $element = this.sandbox.dom.find(constants.dataSourceSelector, this.$overlayContent);
@@ -793,8 +793,9 @@ define([], function() {
                             selected: this.overlayData.dataSource,
                             instanceName: 'smart-content' + this.options.instanceName,
                             responsive: false,
-                            editIcon: 'fa-check',
-                            showEdit: false,
+                            actionIcon: 'fa-check',
+                            showOptions: false,
+                            sortable: false,
                             showStatus: false,
                             resultKey: this.options.columnNavigationResultKey
                         }

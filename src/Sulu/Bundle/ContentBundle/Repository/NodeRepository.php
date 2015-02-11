@@ -680,6 +680,23 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
+    public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales)
     {
         try {

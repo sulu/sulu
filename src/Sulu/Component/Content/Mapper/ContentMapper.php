@@ -1723,6 +1723,9 @@ class ContentMapper implements ContentMapperInterface
         return $structure;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode)
     {
         // prepare utility
@@ -1737,16 +1740,11 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $parent = $beforeTargetNode->getParent();
-
-        // reorder
-        $parent->orderBefore($beforeTargetNode->getName(), $subjectNode->getName());
+        $this->executeOrderBefore($parent, $beforeTargetNode, $subjectNode, $languageCode, $userId);
 
         // set changer of node in specific language
         $this->setChanger($beforeTargetNode, $userId, $languageCode);
         $this->setChanger($subjectNode, $userId, $languageCode);
-
-        $event = new ContentOrderBeforeEvent($subjectNode, $beforeTargetNode);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER_BEFORE, $event);
 
         // save session
         $session->save();
@@ -1754,6 +1752,35 @@ class ContentMapper implements ContentMapperInterface
         // session don't recognice a new child order, a refresh fixes that
         $session->refresh(false);
 
+        return $this->load($uuid, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode)
+    {
+        $session = $this->getSession();
+
+        $subject = $session->getNodeByIdentifier($uuid);
+        $parent = $subject->getParent();
+        $siblings = array_values($parent->getNodes()->getArrayCopy()); // get indexed array
+        $countSiblings = count($siblings);
+        $oldPosition = array_search($subject, $siblings) + 1;
+        if ($position === $countSiblings) {
+            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1], $languageCode, $userId);
+            $this->executeOrderBefore($parent, $siblings[$position - 1], $subject, $languageCode, $userId);
+        } else if ($oldPosition < $position) {
+            $this->executeOrderBefore($parent, $subject, $siblings[$position], $languageCode, $userId);
+        } else if ($oldPosition > $position) {
+            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1], $languageCode, $userId);
+        }
+
+        // set changer of node in specific language
+        $this->setChanger($subject, $userId, $languageCode);
+
+        $session->save();
+        $session->refresh(false);
         return $this->load($uuid, $webspaceKey, $languageCode);
     }
 
@@ -1782,6 +1809,24 @@ class ContentMapper implements ContentMapperInterface
         $this->ignoreMandatoryFlag = $ignoreMandatoryFlag;
 
         return $this;
+    }
+
+    /**
+     * Orders a child before another child
+     * @param NodeInterface $parent
+     * @param NodeInterface $childSource
+     * @param NodeInterface $childDest
+     */
+    private function executeOrderBefore(
+        NodeInterface $parent,
+        NodeInterface $childSource,
+        NodeInterface $childDest
+    ) {
+        // reorder
+        $parent->orderBefore($childSource->getName(), $childDest->getName());
+
+        $event = new ContentOrderBeforeEvent($childDest, $childSource);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER_BEFORE, $event);
     }
 
     /**

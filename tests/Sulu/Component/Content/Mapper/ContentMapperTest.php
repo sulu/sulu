@@ -2882,6 +2882,44 @@ class ContentMapperTest extends PhpcrTestCase
         return $data;
     }
 
+    /**
+     * @return StructureInterface[]
+     */
+    private function prepareOrderAtData() {
+        $data = array(
+            array(
+                'title' => 'Page-1',
+                'url' => '/page-1'
+            ),
+            array(
+                'title' => 'Page-1-1',
+                'url' => '/page-1/page-1-1'
+            ),
+            array(
+                'title' => 'Page-1-2',
+                'url' => '/page-1/page-1-2'
+            ),
+            array(
+                'title' => 'Page-1-3',
+                'url' => '/page-1/page-1-3'
+            ),
+            array(
+                'title' => 'Page-1-4',
+                'url' => '/page-1/page-1-4'
+            )
+        );
+
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[2] = $this->mapper->save($data[2], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[3] = $this->mapper->save($data[3], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+        $data[4] = $this->mapper->save($data[4], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+
+        return $data;
+    }
+
     public function testMove()
     {
         $data = $this->prepareCopyMoveTestData();
@@ -3145,6 +3183,36 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-2/subpage', $result[0]->getPath());
         $this->assertEquals('/page-2/sub', $result[1]->getPath());
         $this->assertEquals('/page-2/sub-1', $result[2]->getPath());
+    }
+
+    public function testOrderAt() {
+        $data = $this->prepareOrderAtData();
+
+        $result = $this->mapper->orderAt($data[2]->getUuid(), 3, 17, 'default', 'en');
+        $this->assertEquals($data[2]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/page-1-2', $result->getPath());
+        $this->assertEquals(17, $result->getChanger());
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'en');
+        $this->assertEquals('/page-1/page-1-1', $result[0]->getPath());
+        $this->assertEquals('/page-1/page-1-3', $result[1]->getPath());
+        $this->assertEquals('/page-1/page-1-2', $result[2]->getPath());
+        $this->assertEquals('/page-1/page-1-4', $result[3]->getPath());
+    }
+
+    public function testOrderAtToLast() {
+        $data = $this->prepareOrderAtData();
+
+        $result = $this->mapper->orderAt($data[2]->getUuid(), 4, 1, 'default', 'en');
+        $this->assertEquals($data[2]->getUuid(), $result->getUuid());
+        $this->assertEquals('/page-1/page-1-2', $result->getPath());
+        $this->assertEquals(1, $result->getChanger());
+
+        $result = $this->mapper->loadByParent($data[0]->getUuid(), 'default', 'en');
+        $this->assertEquals('/page-1/page-1-1', $result[0]->getPath());
+        $this->assertEquals('/page-1/page-1-3', $result[1]->getPath());
+        $this->assertEquals('/page-1/page-1-4', $result[2]->getPath());
+        $this->assertEquals('/page-1/page-1-2', $result[3]->getPath());
     }
 
     public function testNewExternalLink()

@@ -853,6 +853,32 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Test2', $nodes[3]['title']);
     }
 
+    public function testOrderAt()
+    {
+        $data = $this->prepareOrderBeforeData();
+
+        $result = $this->nodeRepository->orderAt($data[3]->getUuid(), 2, 'default', 'en', 2);
+        $this->assertEquals('Test4', $result['title']);
+        $this->assertEquals('/test4', $result['path']);
+        $this->assertEquals('/news/test4', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        $result = $this->nodeRepository->orderAt($data[0]->getUuid(), 4, 'default', 'en', 2);
+        $this->assertEquals('Test1', $result['title']);
+        $this->assertEquals('/test1', $result['path']);
+        $this->assertEquals('/news/test1', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        $test = $this->nodeRepository->getNodes(null, 'default', 'en');
+        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $nodes = $test['_embedded']['nodes'];
+
+        $this->assertEquals('Test4', $nodes[0]['title']);
+        $this->assertEquals('Test2', $nodes[1]['title']);
+        $this->assertEquals('Test3', $nodes[2]['title']);
+        $this->assertEquals('Test1', $nodes[3]['title']);
+    }
+
     public function testOrderBeforeNonExistingSource()
     {
         $data = $this->prepareOrderBeforeData();
