@@ -139,7 +139,7 @@ define(function() {
             this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
 
             // selected collection
-            this.sandbox.on('sulu.media.collection-select.selected', this.moveMedia.bind(this));
+            this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
         },
 
         /**
@@ -248,7 +248,8 @@ define(function() {
             this.sandbox.start([{
                 name: 'collections/components/collection-select@sulumedia',
                 options: {
-                    el: this.$find(constants.moveSelector)
+                    el: this.$find(constants.moveSelector),
+                    instanceName: 'move-media'
                 }
             }]);
         },
@@ -259,7 +260,7 @@ define(function() {
         startMoveMediaOverlay: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
                 this.selectedIds = ids;
-                this.sandbox.emit('sulu.media.collection-select.open');
+                this.sandbox.emit('sulu.media.collection-select.move-media.open');
             }.bind(this));
         },
 
@@ -281,7 +282,7 @@ define(function() {
                 }.bind(this)
             );
 
-            this.sandbox.emit('sulu.media.collection-select.close');
+            this.sandbox.emit('sulu.media.collection-select.move-media.close');
         },
 
         /**

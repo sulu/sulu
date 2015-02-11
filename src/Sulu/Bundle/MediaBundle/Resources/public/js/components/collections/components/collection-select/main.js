@@ -57,7 +57,7 @@ define(function() {
 
         /** returns normalized event names */
         createEventName = function(postFix) {
-            return namespace + postFix;
+            return namespace + this.options.instanceName + postFix;
         };
 
     return {
@@ -82,7 +82,6 @@ define(function() {
             }.bind(this));
 
             this.sandbox.on(CLOSE.call(this), function() {
-                // FIXME bug in overlay
                 this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.close');
             }.bind(this));
 
