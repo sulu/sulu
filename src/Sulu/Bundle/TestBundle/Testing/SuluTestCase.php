@@ -2,18 +2,17 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
+use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Sulu\Component\Content\Structure;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
  * Base test case for functional tests in Sulu
