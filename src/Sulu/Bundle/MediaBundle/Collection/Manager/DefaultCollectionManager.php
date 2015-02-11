@@ -117,9 +117,6 @@ class DefaultCollectionManager implements CollectionManagerInterface
      */
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
-        // TODO perhaps getCollectionSet without id
-        $depth = isset($filter['depth']) ? $filter['depth'] : 0;
-
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
         $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count(
             $collectionEntities

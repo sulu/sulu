@@ -350,6 +350,20 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertNotEmpty($responseFirstEntity->changed);
         $this->assertEquals('Test Collection 2', $responseFirstEntity->title);
         $this->assertEquals('This Description 2 is only for testing', $responseFirstEntity->description);
+
+        $client->request(
+            'GET',
+            '/api/collections?depth=2',
+            array(
+                'locale' => 'en-gb'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(2, $response->total);
     }
 
     /**

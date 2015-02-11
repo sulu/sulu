@@ -117,7 +117,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->andWhere('parent.id = :parent');
             }
             if ($depth !== null) {
-                $qb->andWhere('collection.depth = :depth');
+                $qb->andWhere('collection.depth <= :depth');
             }
             if ($search !== null) {
                 $qb->andWhere('collectionMeta.title LIKE :search');
@@ -135,7 +135,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $query->setParameter('parent', $parent);
             }
             if ($depth !== null) {
-                $query->setParameter('depth', $depth);
+                $query->setParameter('depth', intval($depth));
             }
             if ($search !== null) {
                 $query->setParameter('search', '%'.$search.'%');
