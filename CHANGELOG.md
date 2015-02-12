@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #825 [WebsiteBundle]   Fixed syntax error in ExceptionController
     * ENHANCEMENT #798 [All]             Updated Symfony version to 2.6
     * BUGFIX      #736 [WebsiteBundle]   Redirect with port didn't work
     * ENHANCEMENT #735 [CategoryBundle]  Use parameters instead of FCQN of entities in service config
