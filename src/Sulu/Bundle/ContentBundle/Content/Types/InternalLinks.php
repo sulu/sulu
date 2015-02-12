@@ -150,13 +150,16 @@ class InternalLinks extends ComplexContentType
             $selectedNodes = $session->getNodesByIdentifier($value);
             $ids = array();
             foreach ($selectedNodes as $selectedNode) {
+                if ($selectedNode->getIdentifier() === $node->getIdentifier()) {
+                    throw new \InvalidArgumentException('You are not allowed to link a page to itself!');
+                }
                 $ids[] = $selectedNode->getIdentifier();
             }
             $value = $ids;
         }
 
         // set value to node
-        $node->setProperty($property->getName(), $value);
+        $node->setProperty($property->getName(), $value, PropertyType::REFERENCE);
     }
 
     /**
