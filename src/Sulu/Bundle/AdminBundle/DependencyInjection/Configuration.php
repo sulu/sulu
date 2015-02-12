@@ -40,10 +40,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('locales')
-                    ->useAttributeAsKey('locale')
-                    ->prototype('scalar')
-                ->end()
             ->end()
             ->end();
 
