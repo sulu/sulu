@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CoreBundle\Command;
+namespace Sulu\Bundle\ContentBundle\Command;
 
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
