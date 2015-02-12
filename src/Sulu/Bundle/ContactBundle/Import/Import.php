@@ -1612,7 +1612,7 @@ class Import
             if ($index >= sizeof($headerData)) {
                 break;
             }
-            if (empty($value)) {
+            if (empty($value) && $value != "0") {
                 continue;
             }
             // search index in mapping config
