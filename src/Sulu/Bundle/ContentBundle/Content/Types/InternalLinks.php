@@ -117,7 +117,20 @@ class InternalLinks extends ComplexContentType
      */
     private function setData($data, PropertyInterface $property)
     {
-        $property->setValue($data);
+        $refs = isset($data) ? $data : array();
+        $ids = array();
+        if (is_array($refs)) {
+            foreach ($refs as $i => $ref) {
+                // see https://github.com/jackalope/jackalope/issues/248
+                if (UUIDHelper::isUUID($i)) {
+                    $ref = $i;
+                }
+
+                $ids[] = $ref;
+            }
+        }
+
+        $property->setValue($ids);
     }
 
     /**
