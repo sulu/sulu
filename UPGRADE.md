@@ -2,6 +2,16 @@
 
 ## dev-develop
 
+### Sulu Locales
+The Sulu Locales are not hardcoded anymore, but configured in the `app/config/config.yml` file:
+
+```yml
+sulu_core:
+    locales: ["de","en"]
+```
+
+You have to add the locales to your configuration, otherwise Sulu will stop working.
+
 ### Websocket Component
 
 Websocket start command changed to `app/console sulu:websocket:run`. If you use xdebug on your server please start
