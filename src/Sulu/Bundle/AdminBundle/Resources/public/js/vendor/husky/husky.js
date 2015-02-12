@@ -27601,6 +27601,7 @@ define('husky',[
         app.use('./husky_extensions/html5sortable');
         app.use('./husky_extensions/husky-validation');
         app.use('./husky_extensions/util');
+        app.use('./husky_extensions/confirm');
         app.use('./husky_extensions/template');
         app.use('./husky_extensions/globalize');
         app.use('./husky_extensions/uri-template');
@@ -27610,7 +27611,7 @@ define('husky',[
         app.use('./husky_extensions/dropzone');
         app.use('./husky_extensions/colorpicker');
         app.use('./husky_extensions/datepicker');
-
+        app.use('./husky_extensions/itembox');
     }
 
     // subclass extends superclass
@@ -28996,170 +28997,170 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
     
 
     var defaults = {
-            editable: false,
-            fullWidth: false,
-            removeRow: false,
-            selectItem: {
-                type: 'checkbox',
-                inFirstCell: false
-            },
-            noItemsText: 'This list is empty',
-            addRowTop: true,
-            excludeFields: [''],
-            cssClass: '',
-            thumbnailFormat: '50x50',
-            showHead: true,
-            hideChildrenAtBeginning: true,
-            openChildId: null,
-            highlightSelected: false,
-            stickyHeader: false,
-            icons: [],
-            removeIcon: 'trash-o',
-            croppedMaxLength: 35,
-            openPathToSelectedChildren: false
+        editable: false,
+        fullWidth: false,
+        removeItem: false,
+        selectItem: {
+            type: 'checkbox',
+            inFirstCell: false
         },
+        noItemsText: 'This list is empty',
+        addRowTop: true,
+        excludeFields: [''],
+        cssClass: '',
+        thumbnailFormat: '50x50',
+        showHead: true,
+        hideChildrenAtBeginning: true,
+        openChildId: null,
+        highlightSelected: false,
+        stickyHeader: false,
+        icons: [],
+        removeIcon: 'trash-o',
+        croppedMaxLength: 35,
+        openPathToSelectedChildren: false
+    },
 
-        constants = {
-            fullWidthClass: 'fullwidth',
-            stickyHeaderClass: 'sticky-header',
-            selectedRowClass: 'selected',
-            isSelectableClass: 'is-selectable',
-            sortableClass: 'is-sortable',
-            skeletonClass: 'husky-table',
-            containerClass: 'table-container',
-            overflowClass: 'overflow',
-            emptyListElementClass: 'empty-list',
-            rowRemoverClass: 'row-remover',
-            checkboxClass: 'checkbox',
-            radioClass: 'radio',
-            cellFitClass: 'fit',
-            tableClass: 'table',
-            rowClass: 'row',
-            thumbSrcKey: 'url',
-            thumbAltKey: 'alt',
-            headerCellClass: 'header-cell',
-            ascSortedClass: 'sorted-asc',
-            descSortedClass: 'sorted-desc',
-            headerCellLoaderClass: 'header-loader',
-            headerLoadingClass: 'is-loading',
-            editableItemClass: 'editable',
-            editableInputClass: 'editable-input',
-            inputWrapperClass: 'input-wrapper',
-            editedErrorClass: 'server-validation-error',
-            newRecordId: 'newrecord',
-            gridIconClass: 'grid-icon',
-            childWrapperClass: 'child-wrapper',
-            parentClass: 'children-toggler',
-            noChildrenClass: 'no-children',
-            toggleIconClass: 'toggle-icon',
-            collapsedIcon: 'fa-caret-right',
-            expandedIcon: 'fa-caret-down',
-            checkboxCellClass: 'checkbox-cell',
-            textContainerClass: 'cell-content',
-            renderingClass: 'rendering',
-            headerCloneClass: 'header-clone',
-            childIndent: 25 //px
-        },
+    constants = {
+        fullWidthClass: 'fullwidth',
+        stickyHeaderClass: 'sticky-header',
+        selectedRowClass: 'selected',
+        isSelectableClass: 'is-selectable',
+        sortableClass: 'is-sortable',
+        skeletonClass: 'husky-table',
+        containerClass: 'table-container',
+        overflowClass: 'overflow',
+        emptyListElementClass: 'empty-list',
+        rowRemoverClass: 'row-remover',
+        checkboxClass: 'checkbox',
+        radioClass: 'radio',
+        cellFitClass: 'fit',
+        tableClass: 'table',
+        rowClass: 'row',
+        thumbSrcKey: 'url',
+        thumbAltKey: 'alt',
+        headerCellClass: 'header-cell',
+        ascSortedClass: 'sorted-asc',
+        descSortedClass: 'sorted-desc',
+        headerCellLoaderClass: 'header-loader',
+        headerLoadingClass: 'is-loading',
+        editableItemClass: 'editable',
+        editableInputClass: 'editable-input',
+        inputWrapperClass: 'input-wrapper',
+        editedErrorClass: 'server-validation-error',
+        newRecordId: 'newrecord',
+        gridIconClass: 'grid-icon',
+        childWrapperClass: 'child-wrapper',
+        parentClass: 'children-toggler',
+        noChildrenClass: 'no-children',
+        toggleIconClass: 'toggle-icon',
+        collapsedIcon: 'fa-caret-right',
+        expandedIcon: 'fa-caret-down',
+        checkboxCellClass: 'checkbox-cell',
+        textContainerClass: 'cell-content',
+        renderingClass: 'rendering',
+        headerCloneClass: 'header-clone',
+        childIndent: 25 //px
+    },
 
-        selectItems = {
-            CHECKBOX: 'checkbox',
-            RADIO: 'radio'
-        },
+    selectItems = {
+        CHECKBOX: 'checkbox',
+        RADIO: 'radio'
+    },
 
-        /**
-         * Templates used by this class
-         */
-        templates = {
-            skeleton: [
-                '<div class="' + constants.skeletonClass + '">',
-                '   <div class="' + constants.containerClass + '"></div>',
-                '</div>'
-            ].join(''),
-            table: '<table class="' + constants.tableClass + '"></table>',
-            header: '<thead></thead>',
-            body: '<tbody></tbody>',
-            row: '<tr class="' + constants.rowClass + '"></tr>',
-            headerCell: '<th class="' + constants.headerCellClass + '"></th>',
-            cell: '<td></td>',
-            textContainer: '<span class="' + constants.textContainerClass + '"><%= content %></span>',
-            headerCellLoader: '<div class="' + constants.headerCellLoaderClass + '"></div>',
-            removeCellContent: '<span class="fa-<%= icon %> ' + constants.rowRemoverClass + '"></span>',
-            editableCellContent: [
-                '<span class="' + constants.editableItemClass + '"><%= value %></span>',
-                '<div class="' + constants.inputWrapperClass + '">',
-                '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
-                '</div>'
-            ].join(''),
-            img: '<img alt="<%= alt %>" src="<%= src %>"/>',
-            childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
-            toggleIcon: '<span class="' + constants.toggleIconClass + '"></span>',
-            icon: [
-                '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
-                '   <span class="fa-<%= icon %>"></span>',
-                '</span>'
-            ].join(''),
-            checkbox: [
-                '<div class="custom-checkbox">',
-                '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
-                '   <span class="icon"></span>',
-                '</div>'
-            ].join(''),
-            radio: [
-                '<div class="custom-radio">',
-                '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
-                '    <span class="icon"></span>',
-                '</div>'
-            ].join(''),
-            empty: [
-                '<div class="' + constants.emptyListElementClass + '">',
-                '   <div class="fa-coffee icon"></div>',
-                '   <span><%= text %></span>',
-                '</div>'
-            ].join('')
-        },
+    /**
+     * Templates used by this class
+     */
+    templates = {
+        skeleton: [
+            '<div class="'+ constants.skeletonClass +'">',
+            '   <div class="'+ constants.containerClass +'"></div>',
+            '</div>'
+        ].join(''),
+        table: '<table class="'+ constants.tableClass +'"></table>',
+        header: '<thead></thead>',
+        body: '<tbody></tbody>',
+        row: '<tr class="' + constants.rowClass + '"></tr>',
+        headerCell: '<th class="'+ constants.headerCellClass +'"></th>',
+        cell: '<td></td>',
+        textContainer: '<span class="'+ constants.textContainerClass +'"><%= content %></span>',
+        headerCellLoader: '<div class="'+ constants.headerCellLoaderClass +'"></div>',
+        removeCellContent: '<span class="fa-<%= icon %> '+ constants.rowRemoverClass +'"></span>',
+        editableCellContent: [
+            '<span class="'+ constants.editableItemClass +'"><%= value %></span>',
+            '<div class="'+ constants.inputWrapperClass +'">',
+            '   <input type="text" class="form-element husky-validate '+ constants.editableInputClass +'" value="<%= value %>">',
+            '</div>'
+        ].join(''),
+        img: '<img alt="<%= alt %>" src="<%= src %>"/>',
+        childWrapper: '<div class="'+ constants.childWrapperClass +'"></div>',
+        toggleIcon: '<span class="'+ constants.toggleIconClass +'"></span>',
+        icon: [
+            '<span class="'+ constants.gridIconClass +' <%= align %>" data-icon-index="<%= index %>">',
+            '   <span class="fa-<%= icon %>"></span>',
+            '</span>'
+        ].join(''),
+        checkbox: [
+            '<div class="custom-checkbox">',
+            '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
+            '   <span class="icon"></span>',
+            '</div>'
+        ].join(''),
+        radio: [
+            '<div class="custom-radio">',
+            '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
+            '    <span class="icon"></span>',
+            '</div>'
+        ].join(''),
+        empty: [
+            '<div class="'+ constants.emptyListElementClass +'">',
+            '   <div class="fa-coffee icon"></div>',
+            '   <span><%= text %></span>',
+            '</div>'
+        ].join('')
+    },
 
-        /**
-         * used to update the table width and its containers due to responsiveness
-         * @event husky.datagrid.update.table
-         */
-        UPDATE_TABLE = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'update.table');
-        },
+    /**
+     * used to update the table width and its containers due to responsiveness
+     * @event husky.datagrid.update.table
+     */
+    UPDATE_TABLE = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'update.table');
+    },
 
-        /**
-         * used to update the table width and its containers due to responsiveness
-         * @event husky.datagrid.table.open-child
-         * @param {Number|String} id The id of the data-record to open the parents for
-         */
-        OPEN_PARENTS = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
-        },
+    /**
+     * used to update the table width and its containers due to responsiveness
+     * @event husky.datagrid.table.open-child
+     * @param {Number|String} id The id of the data-record to open the parents for
+     */
+    OPEN_PARENTS = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
+    },
 
-        /**
-         * triggered when a radio button inside the datagrid is clicked
-         * @event husky.datagrid.table.open-child
-         * @param {Number|String} id The id of the data-record to open the parents for
-         * @param {String} columnName column name
-         */
-        RADIO_SELECTED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
-        },
+    /**
+     * triggered when a radio button inside the datagrid is clicked
+     * @event husky.datagrid.table.open-child
+     * @param {Number|String} id The id of the data-record to open the parents for
+     * @param {String} columnName column name
+     */
+    RADIO_SELECTED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
+    },
 
-        /**
-         * triggered when children were collapsed
-         * @event husky.datagrid.table.children.collapsed
-         */
-        CHILDREN_COLLAPSED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
-        },
+    /**
+     * triggered when children were collapsed
+     * @event husky.datagrid.table.children.collapsed
+     */
+    CHILDREN_COLLAPSED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
+    },
 
-        /**
-         * triggered when children were expanded
-         * @event husky.datagrid.table.children.expanded
-         */
-        CHILDREN_EXPANDED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
-        };
+    /**
+     * triggered when children were expanded
+     * @event husky.datagrid.table.children.expanded
+     */
+    CHILDREN_EXPANDED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
+    };
 
     return {
 
@@ -29193,10 +29194,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
 
-            if (!!this.options.openPathToSelectedChildren) {
+            if(!!this.options.openPathToSelectedChildren){
                 var eventName = '';
-                if (!!this.datagrid.options.instanceName) {
-                    eventName = 'husky.datagrid.' + this.datagrid.options.instanceName + '.view.rendered';
+                if(!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
                 } else {
                     eventName = 'husky.datagrid.view.rendered';
                 }
@@ -29207,8 +29208,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Opens path to all selected children
          */
-        openPathToSelectedChildren: function() {
-            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id) {
+        openPathToSelectedChildren: function(){
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
                 this.openParents(id);
             }.bind(this));
         },
@@ -29256,7 +29257,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a row to the datagrid
          * @param record {Object} the new record to add
          */
-        addRecord: function(record) {
+        addRecord: function (record) {
             this.removeEmptyIndicator();
             this.renderBodyRow(record, this.options.addRowTop);
         },
@@ -29312,7 +29313,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Adds css classes to the view element
          */
-        addViewClasses: function() {
+        addViewClasses: function () {
             this.sandbox.dom.addClass(this.$el, this.options.cssClass);
             this.sandbox.dom.addClass(this.$el, constants.renderingClass);
             if (this.options.stickyHeader === true) {
@@ -29426,8 +29427,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Renderes an empty remove-row cell into the header
          */
-        renderHeaderRemoveItem: function() {
-            if (this.options.removeRow === true) {
+        renderHeaderRemoveItem: function () {
+            if (this.options.removeItem === true) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
                 this.sandbox.dom.append(this.table.header.$row, $cell);
@@ -29442,7 +29443,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.table.rows = {};
             if (this.data.embedded.length > 0) {
                 this.sandbox.util.foreach(this.data.embedded, function(record) {
-                    this.renderBodyRow(record, false);
+                    this.renderBodyRow(record);
                 }.bind(this));
             } else {
                 this.renderEmptyIndicator();
@@ -29483,43 +29484,36 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param record {Object} the record
          * @param prepend {Boolean} if true row gets prepended
          */
-        renderBodyRow: function(record, prepend) {
+        renderBodyRow: function (record, prepend) {
             this.removeNewRecordRow();
+            var $row = this.sandbox.dom.createElement(templates.row),
+                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            if (!this.table.rows[record.id]) {
-                var $row = this.sandbox.dom.createElement(templates.row),
-                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
+            record.id = (!!record.id) ? record.id : constants.newRecordId;
+            this.sandbox.dom.data($row, 'id', record.id);
 
-                record.id = (!!record.id) ? record.id : constants.newRecordId;
-                this.sandbox.dom.data($row, 'id', record.id);
-
-                if (!!record.parent) {
-                    if (!this.table.rows[record.parent]) {
-                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
-                    }
-                    this.table.rows[record.parent].childrenLoaded = true;
-                }
-
-                this.table.rows[record.id] = {
-                    $el: $row,
-                    cells: {},
-                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
-                    childrenExpanded: false,
-                    parent: !!(record.parent) ? record.parent : null,
-                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                    level: 1
-                };
-                this.renderRowSelectItem(record.id);
-                this.renderBodyCellsForRow(record);
-                this.renderRowRemoveItem(record.id);
-
-                this.insertBodyRow(record, $overrideElement, prepend);
-                this.executeRowPostRenderActions(record);
+            if (!!record.parent) {
+                this.table.rows[record.parent].childrenLoaded = true;
             }
+
+            this.table.rows[record.id] = {
+                $el: $row,
+                cells: {},
+                childrenLoaded: false,
+                childrenExpanded: false,
+                parent: !!(record.parent) ? record.parent : null,
+                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                level: 1
+            };
+            this.renderRowSelectItem(record.id);
+            this.renderBodyCellsForRow(record);
+            this.renderRowRemoveItem(record.id);
+            this.insertBodyRow(record, $overrideElement, prepend);
+            this.executeRowPostRenderActions(record);
         },
 
         /**
-         * Inserts a body row into the dom. Looks if a row needs to be overridden, or if a parent exists etc.
+         * Inserts a body row into the dom. Looks if a row needs to be overriden, or if a parent exists etc.
          * @param record {Object} the data object of the record
          * @param $overrideElement {Object}
          * @param prepend {Boolean} true to prepend
@@ -29581,8 +29575,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Renders the remove item for a row in the tbody
          * @param id {Number|String} the id of the row to add the select-item for
          */
-        renderRowRemoveItem: function(id) {
-            if (this.options.removeRow === true) {
+        renderRowRemoveItem: function (id) {
+            if (this.options.removeItem === true) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.html($cell, this.sandbox.util.template(templates.removeCellContent)({
                     icon: this.options.removeIcon
@@ -29605,7 +29599,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
             }
-            if (!!this.options.selectItem && this.options.selectItem.inFirstCell === true && index === 0) {
+            if (!!this.options.selectItem && !!this.options.selectItem.inFirstCell === true && index === 0) {
                 this.sandbox.dom.attr($cell, 'colspan', 2);
                 selectItem = this.renderRowSelectItem(record.id, true);
                 if (typeof content === 'string') {
@@ -29647,8 +29641,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!column.type && column.type === this.datagrid.types.THUMBNAILS) {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
-                    alt: content[constants.thumbAltKey],
-                    src: content[constants.thumbSrcKey]
+                   alt: content[constants.thumbAltKey],
+                   src: content[constants.thumbSrcKey]
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -29724,9 +29718,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.util.foreach(this.options.icons, function(icon, index) {
                 if (icon.column === column.attribute) {
                     iconStr = this.sandbox.util.template(templates.icon)({
-                        icon: icon.icon,
-                        align: icon.align,
-                        index: index
+                       icon: icon.icon,
+                       align: icon.align,
+                       index: index
                     });
                     if (typeof content === 'object') {
                         this.sandbox.dom.append(content, iconStr);
@@ -29766,10 +29760,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @returns {boolean}
          */
         containerIsOverflown: function() {
-            if (!!this.sandbox.dom.get(this.table.$container, 0)) {
-                return this.sandbox.dom.get(this.table.$container, 0).scrollWidth > this.sandbox.dom.width(this.table.$container);
-            }
-            return false;
+            return this.sandbox.dom.get(this.table.$container, 0).scrollWidth > this.sandbox.dom.width(this.table.$container);
         },
 
         /**
@@ -29834,7 +29825,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Bindes dom related events
          */
-        bindDomEvents: function() {
+        bindDomEvents: function () {
             // select or deselect items if the body recognizes a change event
             this.sandbox.dom.on(
                 this.table.$body, 'click', this.selectItemChangeHandler.bind(this),
@@ -29843,7 +29834,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // handle click on body row
             this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
             // remove row event
-            if (this.options.removeRow === true) {
+            if (this.options.removeItem === true) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.removeItemClickHandler.bind(this), '.' + constants.rowRemoverClass);
             }
             if (!!this.table.header) {
@@ -29879,7 +29870,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 var cloneThs = this.sandbox.dom.find('th', this.table.header.$clone),
                     originalThs = this.sandbox.dom.find('th', this.table.header.$el);
                 this.sandbox.dom.width(this.table.header.$row, this.sandbox.dom.width(
-                    this.sandbox.dom.find('tr', this.table.header.$clone)
+                   this.sandbox.dom.find('tr', this.table.header.$clone)
                 ));
                 this.sandbox.util.foreach(cloneThs, function(cloneTh, index) {
                     // min- and max-width because for table-cells normal width has no effect
@@ -29993,7 +29984,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the focusout of an editable input
          * @param event {Object} the event object
          */
-        editableInputFocusoutHandler: function(event) {
+        editableInputFocusoutHandler: function (event) {
             if (!!this.isFocusoutHandlerEnabled) {
                 this.sandbox.dom.stopPropagation(event);
                 var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
@@ -30008,7 +29999,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         editRow: function(recordId) {
             var modifiedRecord = {};
             // build new record object out of the inputs in the row
-            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
                 if (!!this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el).length) {
                     modifiedRecord[attribute] = this.sandbox.dom.val(
                         this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el)
@@ -30022,7 +30013,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Clears everything up after a row was edited. (hides the input and updates the values)
          * @param record {Object} the changed data record
          */
-        editedSuccessCallback: function(record) {
+        editedSuccessCallback: function (record) {
             var $row;
             if (!!record.id && !!this.table.rows[record.id]) {
                 $row = this.table.rows[record.id].$el;
@@ -30039,7 +30030,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a css class to all inputs in a row, if the editing request returned with an error
          * @param recordId
          */
-        editedErrorCallback: function(recordId) {
+        editedErrorCallback: function (recordId) {
             var $row = this.table.rows[recordId].$el;
             this.sandbox.dom.addClass(
                 this.sandbox.dom.find('.' + constants.inputWrapperClass, $row),
@@ -30054,10 +30045,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param successCallback {Function} gets executed after success
          * @param errorCallback {Function} gets executed after error
          */
-        saveRow: function(recordId, newRecordData, successCallback, errorCallback) {
+        saveRow: function (recordId, newRecordData, successCallback, errorCallback) {
             var hasChanged = false,
                 record;
-            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
                 if (cell.editable === true && cell.originalData !== newRecordData[attribute]) {
                     hasChanged = true;
                 }
@@ -30103,11 +30094,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the click on a body row
          * @param event {Object} the event object
          */
-        bodyRowClickHandler: function(event) {
+        bodyRowClickHandler: function (event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
-            if (!!recordId && !!this.table.rows && !!this.table.rows[recordId]) {
+            if (!!recordId && !!this.table.rows[recordId]) {
                 if (this.options.highlightSelected === true) {
                     this.uniqueHighlightRecord(recordId);
                 }
@@ -30121,14 +30112,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Emits the row clicked event
          * @param event {Object} the original click event
          */
-        emitRowClickedEvent: function(event) {
+        emitRowClickedEvent: function (event) {
             if (this.rowClicked === false) {
                 this.rowClicked = true;
                 var recordId = this.sandbox.dom.data(event.currentTarget, 'id'),
                     parameter = recordId || event;
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, parameter);
                 // delay to prevent multiple emits on double click
-                this.sandbox.util.delay(function() {
+                this.sandbox.util.delay(function () {
                     this.rowClicked = false;
                 }.bind(this), 500);
             }
@@ -30148,7 +30139,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of the select items
          * @param event {Object} the event object
          */
-        selectItemChangeHandler: function(event) {
+        selectItemChangeHandler: function (event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.target, '.' + constants.rowClass), 'id'),
                 isChecked = this.sandbox.dom.is(event.target, ':checked');
@@ -30163,7 +30154,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of a select item in the header
          * @param event {Object} the event object
          */
-        allSelectItemChangeHandler: function(event) {
+        allSelectItemChangeHandler: function (event) {
             this.sandbox.dom.stopPropagation(event);
             var isChecked = this.sandbox.dom.is(event.target, ':checked');
             if (isChecked === true) {
@@ -30177,7 +30168,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Highlights a record an unhighlights all other rows
          * @param id {Number|String} the id of the record to highlight
          */
-        uniqueHighlightRecord: function(id) {
+        uniqueHighlightRecord: function (id) {
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
                 constants.selectedRowClass
@@ -30188,7 +30179,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Selejcts all records
          */
-        selectAllRecords: function() {
+        selectAllRecords: function () {
             this.datagrid.selectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', true);
         },
@@ -30196,7 +30187,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Deselects all records
          */
-        deselectAllRecords: function() {
+        deselectAllRecords: function () {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', false);
         },
@@ -30206,7 +30197,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record to select or deselect
          * @param select {Boolean} true to select false to deselect
          */
-        toggleSelectRecord: function(id, select) {
+        toggleSelectRecord: function (id, select) {
             var areAllSelected;
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
@@ -30232,7 +30223,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects or deselects the select all item
          * @param select {Boolean} true to select false to deselect the select all item
          */
-        toggleSelectAllItem: function(select) {
+        toggleSelectAllItem: function (select) {
             if (!!this.table.header) {
                 this.sandbox.dom.prop(
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.header.$el), 'checked', select
@@ -30244,7 +30235,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects a record and deselects all other records
          * @param id {Number|String} the id of the record to select
          */
-        uniqueSelectRecord: function(id) {
+        uniqueSelectRecord: function (id) {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.datagrid.setItemSelected.call(this.datagrid, id);
         },
@@ -30334,7 +30325,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
         /**
          * Opens all parents of a record
-         * @param recordId {Number|String} the id of the record
+         * @param id {Number|String} the id of the record
          */
         openParents: function(recordId) {
             if (!!this.table && !!this.table.rows[recordId]) {
@@ -30347,7 +30338,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }
             }
         }
-    };
+     };
 });
 
 /**
@@ -33078,7 +33069,9 @@ define('__component__$dropdown@husky',[], function() {
             // on click on list item
             this.sandbox.dom.on(this.$dropDownList, 'click', function(event) {
                 event.stopPropagation();
-                this.clickItem(this.sandbox.dom.data(event.currentTarget, 'id'));
+                if (!this.sandbox.dom.hasClass(event.currentTarget, 'disabled')) {
+                    this.clickItem(this.sandbox.dom.data(event.currentTarget, 'id'));
+                }
             }.bind(this), 'li:not(".divider")');
         },
 
@@ -33086,10 +33079,29 @@ define('__component__$dropdown@husky',[], function() {
             this.sandbox.on(this.getEvent('toggle'), this.triggerClick.bind(this));
             this.sandbox.on(this.getEvent('show'), this.showDropDown.bind(this));
             this.sandbox.on(this.getEvent('hide'), this.hideDropDown.bind(this));
+            this.sandbox.on(this.getEvent('item.enable'), this.itemEnable.bind(this));
+            this.sandbox.on(this.getEvent('item.disable'), this.itemDisable.bind(this));
+            this.sandbox.on(this.getEvent('item.toggle'), this.itemToggle.bind(this));
         },
 
         getEvent: function(append) {
             return 'husky.dropdown.' + this.options.instanceName + '.' + append;
+        },
+
+        itemToggle: function(id, enable) {
+            if (enable === true) {
+                this.itemEnable(id);
+            } else {
+                this.itemDisable(id);
+            }
+        },
+
+        itemEnable: function(id) {
+            this.sandbox.dom.removeClass(this.$find('li[data-id="'+ id +'"]'), 'disabled');
+        },
+
+        itemDisable: function(id) {
+            this.sandbox.dom.addClass(this.$find('li[data-id="'+ id +'"]'), 'disabled');
         },
 
         // trigger event with clicked item
@@ -38198,69 +38210,135 @@ define('__component__$password-fields@husky',[], function() {
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {Number} [options.wrapper.height] height of container in percentage
- * @params {Number} [options.column.width] width of a column in within the navigation in pixels
- * @params {Number} [options.scrollBarWidth] with of scrollbar
  * @params {String} [options.url] url to load data
  * @params {String} [options.selected] id of selected element - needed to restore state
- * @params {String} [options.editIcon] icon class of edit button
+ * @params {String} [options.actionIcon] icon class of action button
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
+ * @params {String}  [options.data[].mode] if 'order' - column gets set in order mode if clicked
+ * @params {Function}  [options.data[].enabler] Gets called each time the options change columns.
+ *                                            Gets an object with a numberItems and a hasSelected property.
+ *                                            If returns false the dropdown item will get disabled, enabled otherwise
  * @params {String} [options.instanceName] name of current instance
  * @params {String} [options.hasSubName] name of hasSub-key
  * @params {String} [options.idName] name of id-key
+ * @params {String} [options.pathName] name of path-key
  * @params {String} [options.linkedName] name of linked-key
  * @params {String} [options.publishedName] name of published-key
- * @params {String} [options.typeName] name of type-key
  * @params {String} [options.titleName] name of title-key
+ * @params {String} [options.noPageDescription] translation key for the "No-Page"-description
  * @params {String} [options.resultKey] The name of the array in the responded _embedded
- * @params {Number} [options.visibleRatio] minimum ratio of how much of a column must be visible to display the navigation
  * @params {Boolean} [options.responsive] If true the resize listener gets initialized. Otherwise the column navigation just takes up 100 % of the height and width
- * @params {Boolean} [options.showEdit] hide or display edit elements
- * @params {Boolean} [options.showEditIcon] hide or display edit icon element
+ * @params {Boolean} [options.showOptions] hide or shows the options
+ * @params {Boolean} [options.showActionIcon] if true the action icon is shown, not shown otherwise
  * @params {Boolean} [options.showStatus] hide or display status of elements
  * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
  * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
- * @params {String} [options.markedClass] The css-class which gets set on the node if node gets marked
  * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
+ * @params {Boolean} [options.orderable] if true component-items can be ordered
+ * @params {Boolean} [options.tooltipTranslations] translation-keys for the tooltips
+ * @params {Boolean} [options.tooltipTranslations.ghost] translation-keys for ghost
+ * @params {Boolean} [options.tooltipTranslations.shadow] translation-keys for shadow
+ * @params {Boolean} [options.tooltipTranslations.unpublished] translation-keys for unpublished
+ * @params {Boolean} [options.tooltipTranslations.internalLink] translation-keys for internal-link
+ * @params {Boolean} [options.tooltipTranslations.externalLink] translation-keys for external-link
  */
 define('__component__$column-navigation@husky',[], function () {
 
     
 
     var defaults = {
-            wrapper: {
-                height: 70
-            },
-            column: {
-                width: 250
-            },
-            paddingLeft: 50,
             url: null,
             selected: null,
             data: null,
             instanceName: '',
             hasSubName: 'hasSub',
-            editIcon: 'fa-pencil',
+            actionIcon: 'fa-pencil',
             idName: 'id',
             pathName: 'path',
             linkedName: 'linked',
             publishedName: 'publishedState',
             titleName: 'title',
             typeName: 'type',
-            minVisibleRatio: 1 / 2,
             noPageDescription: 'public.no-pages',
             skin: '',
             resultKey: 'nodes',
             responsive: true,
-            showEdit: true,
-            showEditIcon: true,
+            showOptions: true,
             showStatus: true,
             premarkedIds: [],
-            markedClass: 'marked',
-            markable: false
+            markable: false,
+            orderable: true,
+            showActionIcon: true,
+            orderConfirmTitle: 'column-navigation.order-title',
+            orderConfirmMessage: 'column-navigation.order-message',
+            tooltipTranslations: {
+                ghost: 'column-navigation.ghost',
+                shadow: 'column-navigation.shadow',
+                unpublished: 'public.unpublished',
+                internalLink: 'public.internal-link',
+                externalLink: 'public.external-link'
+            }
         },
 
-        DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
+        constants = {
+            responsiveHeightRation: 7 / 10,
+            columnWidth: 250,
+            minVisibleRatio: 1 / 2,
+            markedClass: 'marked',
+            displayedcolumns: 2, // number of displayed columns with content
+            wrapperClass: 'column-navigation-wrapper',
+            columnClass: 'column',
+            optionsClass: 'options',
+            componentClass: 'husky-column-navigation',
+            nodeLoaderClass: 'husky-column-navigation-loader',
+            bigLoaderClass: 'column-navigation-loader',
+            columnItemClass: 'column-item',
+            iconsLeftClass: 'icons-left',
+            iconsRightClass: 'icons-right',
+            itemTextClass: 'item-text',
+            orderInputClass: 'orderer',
+            orderErrorClass: 'husky-validate-error',
+            highlightClass: 'highlight-animation',
+            orderModeClass: 'order-mode'
+        },
+
+        templates = {
+            wrapper: ['<div class="' + constants.wrapperClass + '"></div>'].join(''),
+            container: ['<div class="column-navigation"></div>'].join(''),
+
+            column: ['<div data-column="<%= columnNumber %>" class="' + constants.columnClass + '" id="<%= id %>">',
+                     '    <ul></ul>',
+                    '</div>'].join(''),
+
+            noPage: ['<div class="no-page">',
+                     '    <span class="fa-coffee icon"></span>',
+                     '    <div class="text"><%= description %></div>',
+                     '</div>'].join(''),
+
+            optionsContainer: ['<div class="' + constants.optionsClass + ' grid-row"></div>'].join(''),
+
+            optionsAdd: ['<div class="align-center add pointer">',
+                            '<span class="fa-plus-circle"></span>',
+                         '</div>'].join(''),
+
+            optionsSettings: ['<div class="align-center settings pointer drop-down-trigger">',
+                              '   <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
+                              '</div>'].join(''),
+
+            optionsOk: ['<div class="align-center ok pointer">',
+                        '   <span class="fa-check"></span>',
+                        '</div>'].join(''),
+
+            item: ['<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
+                   '    <span class="' + constants.iconsLeftClass + '"></span>',
+                   '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title%></span>',
+                   '    <span class="' + constants.iconsRightClass + '"></span>',
+                   '</li>'].join(''),
+
+            orderInput: ['<span class="' + constants.orderInputClass + '">',
+                        '   <input type="text" class="form-element husky-validate" value="<%= value %>" />',
+                        '</span>'].join('')
+        },
 
         /**
          * namespace for events
@@ -38294,15 +38372,6 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
-         * @event husky.column-navigation.get-selected
-         * @description listens on and passes the selected nodes to a given callback
-         * @param {Function} callback to pass the ids to
-         */
-        GET_SELECTED = function () {
-            return createEventName.call(this, 'get-selected');
-        },
-
-        /**
          * @event husky.column-navigation.settings
          * @description an navigation element has been selected and a item from selected dropdown clicked
          * @param {Object} selected column navigation object
@@ -38322,12 +38391,47 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
-         * @event husky.column-navigation.edit
-         * @description the edit icon has been clicked
-         * @param {Object} clicked object
+         * @event husky.column-navigation.action
+         * @description emitted if the action-icon of an item gets clicked
+         * @param {Object} clicked item
          */
-        EDIT = function () {
-            return createEventName.call(this, 'edit');
+        ACTION = function () {
+            return createEventName.call(this, 'action');
+        },
+
+        /**
+         * @event husky.column-navigation.ordered
+         * @description emited when the position of an item gets changed
+         * @param {String} uuid of the reposition item
+         * @param {Number} the new position of the item
+         */
+        ORDERED = function () {
+            return createEventName.call(this, 'ordered');
+        },
+
+        /**
+         * @event husky.column-navigation.order
+         * @description listens on and sets the column containing an item with a given id in order-mode
+         * @param {String} uuid of the item
+         */
+        ORDER = function () {
+            return createEventName.call(this, 'order');
+        },
+
+        /**
+         * @event husky.column-navigation.order-start
+         * @description emited if a column is set in order-mode
+         */
+        ORDER_START = function () {
+            return createEventName.call(this, 'order-start');
+        },
+
+        /**
+         * @event husky.column-navigation.order-start
+         * @description emited if a column is set in order-mode
+         */
+        ORDER_END = function () {
+            return createEventName.call(this, 'order-end');
         },
 
         /**
@@ -38337,6 +38441,15 @@ define('__component__$column-navigation@husky',[], function () {
          */
         UNMARK = function () {
             return createEventName.call(this, 'unmark');
+        },
+
+        /**
+         * @event husky.column-navigation.highlight
+         * @description listens on and highlights an item with a given uuid
+         * @param {Number|String} the id of the item to highlight
+         */
+        HIGHLIGHT = function () {
+            return createEventName.call(this, 'highlight');
         },
 
         /**
@@ -38367,18 +38480,7 @@ define('__component__$column-navigation@husky',[], function () {
         initialize: function () {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            this.$element = this.sandbox.dom.$(this.options.el);
-            this.$selectedElement = null;
-            this.filledColumns = 0;
-            this.columnLoadStarted = false;
-            this.$loader = null;
-            this.$bigLoader = null;
-
-            this.columns = [];
-            this.selected = [];
-            // array with all marked ids
-            this.marked = this.options.premarkedIds || [];
-
+            this.setProperties();
             this.render();
             this.startBigLoader();
             this.load(this.options.url, 0);
@@ -38389,77 +38491,123 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
+         * Initializes the class properties with their default-values
+         */
+        setProperties: function() {
+            this.$selectedElement = null;
+            this.filledColumns = 0;
+            this.columnLoadStarted = false;
+            this.isOrdering = false; // flag (only one item at a time can be ordered)
+            this.inOrderMode = false; // flag (only one column at a time can be in order-mode)
+            this.optionsLocked = false;
+            this.dom = {
+                $wrapper: null,
+                $container: null,
+                $add: null,
+                $settings: null,
+                $bigLoader: null,
+                $loader: null,
+                $ok: null,
+                $lastClicked: null
+            };
+
+            this.columns = [];
+            this.selected = [];
+            // array with all marked ids
+            this.marked = this.options.premarkedIds || [];
+        },
+
+        /**
          * Renders basic structure (wrapper) of column navigation
          */
-        render: function () {
-            var $add, $settings, $wrapper;
+        render: function() {
+            this.renderWrapper();
+            if (!!this.options.showOptions) { // Options-toolbar with "add" and "settings"
+                this.renderOptions();
+            }
+            if (!!this.options.data) {
+                this.initSettingsDropdown();
+            }
+            if (this.options.responsive === true) {
+                this.setContainerHeight();
+            }
+        },
 
-            this.sandbox.dom.addClass(this.$el, 'husky-column-navigation');
+        /**
+         * Returns the index of a column which contains an item with a given id
+         * @param item - the id of the item
+         * @returns {number} the index of the column if found, a value below 0 otherwise
+         */
+        getColumnForItem: function (item) {
+            for (var i = -1, length = this.columns.length; ++i < length;) {
+                if (!!this.columns[i] && !!this.columns[i][item]) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+
+        /**
+         * Renders the options-buttons. "Add" and "Settings"
+         */
+        renderOptions: function() {
+            this.$optionsContainer = this.sandbox.dom.createElement(templates.optionsContainer);
+            this.dom.$add = this.sandbox.dom.createElement(templates.optionsAdd);
+            this.dom.$settings = this.sandbox.dom.createElement(templates.optionsSettings);
+            this.dom.$ok = this.sandbox.dom.createElement(templates.optionsOk);
+            this.sandbox.dom.hide(this.dom.$ok);
+            this.sandbox.dom.append(this.$optionsContainer, this.dom.$add);
+            this.sandbox.dom.append(this.$optionsContainer, this.dom.$settings);
+            this.sandbox.dom.append(this.$optionsContainer, this.dom.$ok);
+            this.hideOptions();
+            this.sandbox.dom.append(this.dom.$wrapper, this.$optionsContainer);
+        },
+
+        /**
+         * Renders the component wrapper and an additional container
+         */
+        renderWrapper: function() {
+            this.sandbox.dom.addClass(this.$el, constants.componentClass);
             if (!!this.options.skin) {
                 this.sandbox.dom.addClass(this.$el, this.options.skin);
             }
 
-            $wrapper = this.sandbox.dom.$(this.template.wrapper.call(this));
-            this.sandbox.dom.append(this.$element, $wrapper);
+            this.dom.$wrapper = this.sandbox.dom.createElement(templates.wrapper);
+            this.sandbox.dom.append(this.$el, this.dom.$wrapper);
 
             // navigation container
-
-            this.$columnContainer = this.sandbox.dom.$(this.template.columnContainer.call(this));
-            this.sandbox.dom.append($wrapper, this.$columnContainer);
-
-            // options container - add and settings button
-            this.addId = this.options.instanceName + "-column-navigation-add";
-            this.settingsId = this.options.instanceName + "-column-navigation-settings";
-
-            if (!!this.options.showEdit) {
-                this.$optionsContainer = this.sandbox.dom.$(this.template.optionsContainer.call(this, this.options.column.width));
-                $add = this.sandbox.dom.$(this.template.options.add(this.addId));
-                $settings = this.sandbox.dom.$(this.template.options.settings(this.settingsId));
-                this.sandbox.dom.append(this.$optionsContainer, $add);
-                this.sandbox.dom.append(this.$optionsContainer, $settings);
-                this.hideOptions();
-                this.sandbox.dom.append($wrapper, this.$optionsContainer);
-            }
-
-            if (this.options.responsive === true) {
-                this.setContainerHeight();
-            }
-
-            //init dropdown for settings in options container
-            if (!!this.options.data) {
-                this.initSettingsDropdown(this.sandbox.dom.attr($settings, 'id'));
-            }
-
+            this.dom.$container = this.sandbox.dom.createElement(templates.container);
+            this.sandbox.dom.append(this.dom.$wrapper, this.dom.$container);
         },
 
         /**
          * Starts the big loader, before loading content during the initialization
          */
         startBigLoader: function () {
-            if (this.$bigLoader === null) {
-                this.$bigLoader = this.sandbox.dom.createElement('<div class="column-navigation-loader"/>');
-                this.sandbox.dom.hide(this.$bigLoader);
-                this.sandbox.dom.html(this.$columnContainer, this.$bigLoader);
+            if (this.dom.$bigLoader === null) {
+                this.dom.$bigLoader = this.sandbox.dom.createElement('<div class="'+ constants.bigLoaderClass +'"/>');
+                this.sandbox.dom.hide(this.dom.$bigLoader);
+                this.sandbox.dom.html(this.dom.$container, this.dom.$bigLoader);
 
                 this.sandbox.start([
                     {
                         name: 'loader@husky',
                         options: {
-                            el: this.$bigLoader,
+                            el: this.dom.$bigLoader,
                             size: '100px',
                             color: '#e4e4e4'
                         }
                     }
                 ]);
             }
-            this.sandbox.dom.show(this.$bigLoader);
+            this.sandbox.dom.show(this.dom.$bigLoader);
         },
 
         /**
          * Detatches the big loader from the column-navigation
          */
         removeBigLoader: function () {
-            this.sandbox.dom.hide(this.$find('.column-navigation-loader'));
+            this.sandbox.dom.hide(this.dom.$bigLoader);
         },
 
         /**
@@ -38467,27 +38615,19 @@ define('__component__$column-navigation@husky',[], function () {
          */
         setContainerHeight: function () {
             var height = this.sandbox.dom.height(this.sandbox.dom.$window),
-                top = this.sandbox.dom.offset(this.$el).top - (this.sandbox.dom.$window !== this.sandbox.dom.$window ? this.sandbox.dom.offset(this.sandbox.dom.$window).top : 0);
-            top = top < 0 ? 0 : top;
-
-            this.sandbox.dom.height(
-                this.$columnContainer, (height - top) * this.options.wrapper.height / 100
-            );
+                top = this.sandbox.dom.offset(this.$el).top;
+            this.sandbox.dom.height(this.dom.$container, (height - top) * constants.responsiveHeightRation);
         },
 
         /**
          * Instantiats the dropdown component
-         * @param containerId dom id for element to start dropdown
          */
-        initSettingsDropdown: function (containerId) {
-
-            // TODO show dropdown only if item is selected and enable/disable certain elements of the dropdown depending on the selected element
-
+        initSettingsDropdown: function () {
             this.sandbox.start([
                 {
                     name: 'dropdown@husky',
                     options: {
-                        el: '#' + containerId,
+                        el: this.dom.$settings,
                         setParentDropDown: true,
                         instanceName: this.options.instanceName + '.settings.dropdown',
                         alignment: 'left',
@@ -38510,7 +38650,6 @@ define('__component__$column-navigation@husky',[], function () {
                         this.removeBigLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
-                        this.handleLastEmptyColumn();
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
                         this.showOptionsAtLast();
@@ -38547,51 +38686,157 @@ define('__component__$column-navigation@husky',[], function () {
          * @param {Number} columnNumber
          */
         parseData: function (data, columnNumber) {
-            var $column, $list, newColumn, nodeWithSubNodes = null, lastSelected = null;
-
-            if (columnNumber === 0) {  // case 1: no elements in container
-                this.columns[0] = [];
+            // if there is nothing loaded yet, create a "root"-column
+            if (columnNumber === 0) {
+                this.columns[0] = {};
                 this.columns[0][data[this.options.idName]] = data;
-                newColumn = 1;
-            } else { // case 2: columns in container replace level after clicked column and clear following levels
-                newColumn = columnNumber + 1;
             }
+            var newColNumber = columnNumber + 1;
 
-            $column = this.sandbox.dom.$(this.template.column.call(this, newColumn, this.options.column.width));
-            this.sandbox.dom.append(this.$columnContainer, $column);
+            this.renderColumn(newColNumber, data);
+            this.removeLoadingIconForSelected();
+        },
 
-            $list = this.sandbox.dom.find('ul', $column);
+        /**
+         * Renderes a column
+         * @param number - the number of the new column
+         * @param data - the data for the column
+         */
+        renderColumn: function(number,  data) {
+            var $column = this.sandbox.dom.createElement(this.sandbox.util.template(templates.column)({
+                columnNumber: number,
+                id: 'column' + this.options.instanceName + '-' + number
+            }));
+            this.sandbox.dom.append(this.dom.$container, $column);
+            this.filledColumns = number;
+            this.renderItems($column, number, data);
+        },
 
-            this.sandbox.util.each(data._embedded[this.options.resultKey], function (index, value) {
-                this.storeDataItem(newColumn, value);
-                var $element = this.sandbox.dom.$(this.template.item.call(this, this.options.column.width, value));
-                this.sandbox.dom.append($list, $element);
+        /**
+         * Renderes the items for a column
+         * @param $column - the dom-object of the column
+         * @param number - the number of the column to add the items to
+         * @param data - the columns data object
+         */
+        renderItems: function($column, number, data) {
+            var $list = this.sandbox.dom.find('ul', $column), nodeWithSubNodes, lastSelected;
+            this.sandbox.util.each(data._embedded[this.options.resultKey], function (index, itemData) {
+                itemData.order = (index + 1);
+                var $item = this.renderItem(itemData);
+                itemData.$el = $item;
+                this.storeDataItem(number, itemData);
+                this.sandbox.dom.append($list, $item);
+                this.setItemsTextWidth($item);
 
-                this.setItemsTextWidth($element);
-
-                // remember which item has subitems to display a whole tree when column navigation should be restored
-                if (!!value[this.options.hasSubName] && !!value._embedded[this.options.resultKey] && value._embedded[this.options.resultKey].length > 0) {
-                    nodeWithSubNodes = value;
-                    this.setElementSelected($element);
-                    this.selected[newColumn] = value;
+                // if there are sub-nodes for this node loaded (need to be rendered later, so we save a reference)
+                if (!!itemData[this.options.hasSubName] && !!itemData._embedded[this.options.resultKey] && itemData._embedded[this.options.resultKey].length > 0) {
+                    nodeWithSubNodes = itemData;
+                    this.setElementSelected($item);
+                    this.selected[number] = itemData;
                 }
 
-                // needed to select node in last level of nodes
-                if (!!this.options.selected && (this.options.selected === value[this.options.idName] || this.options.selected === value[this.options.pathName])) {
-                    this.setElementSelected($element);
-                    this.selected[newColumn] = value;
-                    lastSelected = value;
+                // if this node is the specified as selected in the options, we select it
+                if (!!this.options.selected && (this.options.selected === itemData[this.options.idName] || this.options.selected === itemData[this.options.pathName])) {
+                    this.setElementSelected($item);
+                    this.selected[number] = itemData;
+                    lastSelected = itemData;
                 }
             }.bind(this));
 
-            this.removeLoadingIconForSelected();
+            // here we come back the the node with the sub-nodes and recursively parse the sub-nodes-column
+            if (!!nodeWithSubNodes) {
+                this.parseData(nodeWithSubNodes, number);
+            // otherwise, if there are no sub-nodes and we have a selected node - we display the "No-Pages"-column
+            } else if (!!lastSelected && !lastSelected[this.options.hasSubName]) {
+                this.insertAddColumn(lastSelected, number);
+            }
+        },
 
-            this.filledColumns = newColumn;
+        /**
+         * Takes the data object and returns a column-item
+         * @param data - the item's data
+         * @returns the items dom-object
+         */
+        renderItem: function(data) {
+            var $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.item)({
+                title: data[this.options.titleName],
+                id: data[this.options.idName]
+            }));
+            if (this.marked.indexOf(data[this.options.idName]) !== -1) { // if is marked
+                this.sandbox.dom.addClass($item, constants.markedClass);
+            }
+            this.renderLeftInfo($item, data);
+            this.renderItemText($item, data);
+            this.renderRightInfo($item, data);
+            return $item;
+        },
 
-            if (!!nodeWithSubNodes) { // parse next column if data exists
-                this.parseData(nodeWithSubNodes, newColumn);
-            } else if (!!lastSelected && !lastSelected[this.options.hasSubName]) { // append add column if no children
-                this.addColumn(lastSelected, newColumn);
+        /**
+         * Renders the left buttons and icons for an item
+         * @param $item - dom object of the item
+         * @param data - the item's data
+         */
+        renderLeftInfo: function($item, data) {
+            var $container = this.sandbox.dom.find('.' + constants.iconsLeftClass, $item);
+            this.sandbox.dom.append($container, '<span class="fa-check pull-left marked-icon"></span>');
+            if (!!this.options.showStatus) {
+                // link
+                if (!!data[this.options.linkedName]) {
+                    if (data[this.options.linkedName] === 'internal') {
+                        this.sandbox.dom.append($container,
+                            '<span class="fa-internal-link col-icon" title="'+ this.sandbox.translate(this.options.tooltipTranslations.internalLink) +'"></span>');
+                    } else if (data[this.options.linkedName] === 'external') {
+                        this.sandbox.dom.append($container,
+                            '<span class="fa-external-link col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.externalLink) +'"></span>');
+                    }
+                }
+                // type (ghost, shadow)
+                if (!!data[this.options.typeName]) {
+                    if (data[this.options.typeName].name === 'ghost') {
+                        this.sandbox.dom.append($container,
+                                '<span class="ghost col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.ghost) +'">'+ data[this.options.typeName].value +'</span>');
+                    } else if (data[this.options.typeName].name === 'shadow') {
+                        this.sandbox.dom.append($container,
+                            '<span class="fa-shadow-node col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.shadow) +'"></span>');
+                    }
+                }
+                // unpublished
+                if (!data[this.options.publishedName]) {
+                    this.sandbox.dom.append($container,
+                        '<span class="not-published col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.unpublished) +'">&bull;</span>');
+                }
+            }
+            if (!!this.options.orderable) {
+                this.sandbox.dom.append($container, this.sandbox.util.template(templates.orderInput)({
+                    value: data.order
+                }));
+            }
+        },
+
+        /**
+         * Renderes the text element of a column-item
+         * @param $item - dom object of the item
+         * @param data - the data for the item
+         */
+        renderItemText: function($item, data) {
+            var $container = this.sandbox.dom.find('.' + constants.itemTextClass, $item);
+            if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
+                this.sandbox.dom.addClass($container, 'inactive');
+            }
+        },
+
+        /**
+         * Renders the right buttons and icons for an item
+         * @param $item - dom object of the item
+         * @param data - the data for the item
+         */
+        renderRightInfo: function($item, data) {
+            var $container = this.sandbox.dom.find('.' + constants.iconsRightClass, $item);
+            if (this.options.showActionIcon === true) {
+                this.sandbox.dom.append($container, '<span class="' + this.options.actionIcon + ' action col-icon"></span>');
+            }
+            if (!!data[this.options.hasSubName]) {
+                this.sandbox.dom.append($container, '<span class="fa-chevron-right arrow inactive col-icon"></span>');
             }
         },
 
@@ -38603,13 +38848,23 @@ define('__component__$column-navigation@husky',[], function () {
             var width, $itemText;
 
             $itemText = this.sandbox.dom.find('.item-text', $item);
-            width = this.options.column.width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-left', $item));
-            width = width - parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', '')) - 2;
-            width = width - parseInt(this.sandbox.dom.css($item, 'padding-left').replace('px', ''));
-            width = width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-right', $item));
-
+            width = constants.columnWidth - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-left', $item));
+            width -= parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', ''));
+            width -= parseInt(this.sandbox.dom.css($item, 'padding-left').replace('px', ''));
+            width -= this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-right', $item));
+            width -= 17; // FIXME: Better solution? (For potential scrollbar)
             this.sandbox.dom.width($itemText, width);
             this.cropItemsText($itemText);
+        },
+
+        /**
+         * Sets the text width of all items in a column
+         * @param column
+         */
+        setColumnTextWidth: function(column) {
+            this.sandbox.util.each(this.columns[column], function (id, item) {
+                this.setItemsTextWidth(item.$el);
+            }.bind(this));
         },
 
         /**
@@ -38624,15 +38879,17 @@ define('__component__$column-navigation@husky',[], function () {
 
             //set the item text to the original title
             this.sandbox.dom.html($itemText, title);
+            this.sandbox.dom.css($itemText, 'font-weight', 'bold');
 
             overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
 
             while (overflow === true) {
-                maxLength = maxLength - 1;
+                maxLength--;
                 croppedTitle = this.sandbox.util.cropMiddle(title, maxLength);
                 this.sandbox.dom.html($itemText, croppedTitle);
                 overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
             }
+            this.sandbox.dom.css($itemText, 'font-weight', '');
         },
 
         /**
@@ -38652,25 +38909,25 @@ define('__component__$column-navigation@husky',[], function () {
         addLoadingIcon: function ($container) {
             this.sandbox.dom.removeClass($container, 'fa-chevron-right inactive');
 
-            if (this.$loader === null) {
-                this.$loader = this.sandbox.dom.createElement('<div class="husky-column-navigation-loader"/>');
-                this.sandbox.dom.hide(this.$loader);
+            if (this.dom.$loader === null) {
+                this.dom.$loader = this.sandbox.dom.createElement('<div class="'+ constants.nodeLoaderClass +'"/>');
+                this.sandbox.dom.hide(this.dom.$loader);
             }
-            if (this.sandbox.dom.is(this.$loader, ':empty')) {
+            if (this.sandbox.dom.is(this.dom.$loader, ':empty')) {
                 this.sandbox.start([
                     {
                         name: 'loader@husky',
                         options: {
-                            el: this.$loader,
+                            el: this.dom.$loader,
                             size: '16px',
                             color: '#666666'
                         }
                     }
                 ]);
             }
-            this.sandbox.dom.detach(this.$loader);
-            this.sandbox.dom.html($container, this.$loader);
-            this.sandbox.dom.show(this.$loader);
+            this.sandbox.dom.detach(this.dom.$loader);
+            this.sandbox.dom.html($container, this.dom.$loader);
+            this.sandbox.dom.show(this.dom.$loader);
         },
 
         /**
@@ -38679,7 +38936,7 @@ define('__component__$column-navigation@husky',[], function () {
         removeLoadingIconForSelected: function () {
             if (!!this.$selectedElement) {
                 var $arrow = this.sandbox.dom.find('.arrow', this.$selectedElement);
-                this.sandbox.dom.hide(this.$loader);
+                this.sandbox.dom.hide(this.dom.$loader);
                 this.sandbox.dom.prependClass($arrow, 'fa-chevron-right');
             }
         },
@@ -38692,10 +38949,9 @@ define('__component__$column-navigation@husky',[], function () {
         storeDataItem: function (columnNumber, item) {
 
             if (!this.columns[columnNumber]) {
-                this.columns[columnNumber] = [];
+                this.columns[columnNumber] = {};
             }
             this.columns[columnNumber][item[this.options.idName]] = item;
-
         },
 
         bindDOMEvents: function () {
@@ -38705,9 +38961,9 @@ define('__component__$column-navigation@husky',[], function () {
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showOptions.bind(this), '.column');
-            this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#' + this.addId);
-            this.sandbox.dom.on(this.$el, 'click', this.editNode.bind(this), '.edit');
-            this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), 'li');
+            this.sandbox.dom.on(this.dom.$add, 'click', this.addNode.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', this.actionClickHandler.bind(this), '.action');
+            this.sandbox.dom.on(this.dom.$container, 'dblclick', this.actionClickHandler.bind(this), 'li');
 
             this.sandbox.dom.on(this.$el, 'click', function (event) {
                 this.sandbox.dom.stopPropagation(event);
@@ -38719,6 +38975,192 @@ define('__component__$column-navigation@husky',[], function () {
                     this.setOverflowClass();
                 }.bind(this));
             }
+
+            if (this.options.orderable) {
+                this.sandbox.dom.on(this.$el, 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                }.bind(this), '.' + constants.orderInputClass);
+
+                this.sandbox.dom.on(this.$el, 'focus', function(event) {
+                    if (this.isOrdering === true) {
+                        this.sandbox.dom.blur(event.currentTarget);
+                        return false;
+                    }
+                    this.sandbox.dom.select(event.currentTarget);
+                }.bind(this), '.' + constants.orderInputClass + ' input');
+
+                // save last clicked element -> used to trigger the default action after the ordering has finished
+                this.sandbox.dom.on(this.dom.$wrapper, 'mousedown', function(event) {
+                    this.lastClicked = this.sandbox.dom.$(event.target);
+                }.bind(this));
+
+                this.sandbox.dom.on(this.dom.$ok, 'click', this.closeOrderMode.bind(this));
+                this.sandbox.dom.on(this.$el, 'keydown', this.orderKeyHandler.bind(this), '.' + constants.orderInputClass + ' input');
+                this.sandbox.dom.on(this.$el, 'focusout', this.orderBlurHandler.bind(this), '.' + constants.orderInputClass);
+            }
+        },
+
+        /**
+         * Handles the key-down event of a order-input
+         * @param event
+         */
+        orderKeyHandler: function(event) {
+            if (event.keyCode === 13) { // blur on enter
+                this.sandbox.dom.blur(event.currentTarget);
+            }
+            if (event.keyCode === 27) { // cancel on esc
+                var column = this.sandbox.dom.attr(this.sandbox.dom.parents(
+                        event.currentTarget, '.' + constants.columnClass), 'data-column'),
+                    item = this.sandbox.dom.attr(this.sandbox.dom.parents(
+                        event.currentTarget, '.' + constants.columnItemClass), 'data-id');
+                this.resetOrderInput(column, item);
+                this.sandbox.dom.blur(event.currentTarget);
+            }
+        },
+
+        /**
+         * Handles the blur event of a order-input
+         * @param event
+         */
+        orderBlurHandler: function(event) {
+            if (this.isOrdering === false) {
+                var column = this.sandbox.dom.attr(this.sandbox.dom.parents(event.currentTarget, '.' + constants.columnClass), 'data-column'),
+                    item = this.sandbox.dom.attr(this.sandbox.dom.parents(event.currentTarget, '.' + constants.columnItemClass), 'data-id'),
+                    $input = this.sandbox.dom.find('input', this.columns[column][item].$el);
+                // if is an integer
+                if (this.sandbox.dom.isNumeric(this.sandbox.dom.val($input)) &&
+                    Math.floor(this.sandbox.dom.val($input)) == this.sandbox.dom.val($input)) {
+                    this.orderPrepare(column, item);
+                } else {
+                    this.orderError(column, item);
+                }
+            }
+        },
+
+        /**
+         * Looks if the position changes and executes the order or resets the inputs
+         * @param column - column in which the item is
+         * @param item - the id of the item
+         */
+        orderPrepare: function(column, item) {
+            var $input = this.sandbox.dom.find('input', this.columns[column][item].$el),
+            position = this.normalizeOrderPosition(column, parseInt(this.sandbox.dom.val($input), 10));
+            this.sandbox.dom.val($input, position);
+            this.sandbox.dom.removeClass(this.columns[column][item].$el, constants.orderErrorClass);
+            if (position !== this.columns[column][item].order) {
+                this.isOrdering = true;
+                this.confirmOrder(
+                    function() { // ok callback
+                        this.order(column, item, position);
+                        this.isOrdering = false;
+                        this.sandbox.dom.click(this.lastClicked);
+                    }.bind(this),
+                    function() { // cancel callback
+                        this.resetOrderInput(column, item);
+                        this.isOrdering = false;
+                        this.sandbox.dom.click(this.lastClicked);
+                    }.bind(this)
+                );
+            }
+        },
+
+        /**
+         * Changes the position of an item and updates the positions of the other items in the column
+         * @param column - the index of the column in which the item is
+         * @param item - the id of the item
+         * @param newPosition - the new position of the item
+         */
+        order: function(column, item, newPosition) {
+            var oldPosition = this.columns[column][item].order;
+            this.sandbox.util.each(this.columns[column], function (itemId) {
+                this.repositionItem(column, itemId, oldPosition, newPosition);
+                this.resetOrderInput(column, itemId);
+            }.bind(this));
+            this.updateItemDomPosition(column, item);
+            this.sandbox.util.delay(this.highlight.bind(this, item), 550);
+            this.sandbox.emit(ORDERED.call(this), item, newPosition);
+            this.isOrdering = false;
+        },
+
+        /**
+         * Determines and resets the position of a single item, given a position-change
+         * @param column - the column in which the item is
+         * @param item - the id of the item
+         * @param oldPosition - the old position of the position-change
+         * @param newPosition - the new position of the position-change
+         */
+        repositionItem: function(column, item, oldPosition, newPosition) {
+            if (this.columns[column][item].order === oldPosition) { // update property to new position
+                this.columns[column][item].order = newPosition;
+            } else { // update the order-position of the other items
+                if (this.columns[column][item].order > oldPosition &&
+                    this.columns[column][item].order <= newPosition) {
+                    this.columns[column][item].order--;
+                } else if (this.columns[column][item].order < oldPosition &&
+                    this.columns[column][item].order >= newPosition) {
+                    this.columns[column][item].order++;
+                }
+            }
+        },
+
+        /**
+         * Brings an item to the position set in the order-position-property
+         * @param column - the column of the item
+         * @param item - the id of the item
+         */
+        updateItemDomPosition: function(column, item) {
+            var $list = this.sandbox.dom.parent(this.columns[column][item].$el);
+            this.sandbox.dom.detach(this.columns[column][item].$el);
+            this.sandbox.dom.insertAt(
+                this.columns[column][item].order - 1, '.' + constants.columnItemClass,
+                $list, this.columns[column][item].$el
+            );
+            this.sandbox.dom.scrollAnimate(
+                this.sandbox.dom.position(this.columns[column][item].$el).top,
+                this.sandbox.dom.parents(this.columns[column][item].$el, '.' + constants.columnClass)
+            );
+        },
+
+        /**
+         * Resets the position input of an item
+         * @param column
+         * @param item
+         */
+        resetOrderInput: function(column, item) {
+            var $input = this.sandbox.dom.find('input', this.columns[column][item].$el);
+            this.sandbox.dom.val($input, this.columns[column][item].order);
+        },
+
+        /**
+         * Normalizes a position used for ordering
+         * @param column - the column for which the position gets normalized
+         * @param position (int) - the position to normalize
+         * @returns int - the normalized position
+         */
+        normalizeOrderPosition: function(column, position) {
+            position = (position < 1) ? 1 : position;
+            return (position > (Object.keys(this.columns[column])).length) ?
+                        Object.keys(this.columns[column]).length : position;
+        },
+
+        /**
+         * Sets css-classes on an item, through which an input error get signalized
+         * @param column - the column in which the item is
+         * @param item - the id of the item
+         */
+        orderError: function(column, item) {
+            this.sandbox.dom.addClass(this.columns[column][item].$el, constants.orderErrorClass);
+        },
+
+        /**
+         * Shows a confirmation-overlay
+         * @param okCallback - callback to execute if clicked on ok
+         * @param closeCallback - callback to execute if clicked on ok
+         */
+        confirmOrder: function(okCallback, closeCallback) {
+            this.sandbox.confirm.warning(this,
+                this.options.orderConfirmTitle, this.options.orderConfirmMessage,
+                okCallback, closeCallback);
         },
 
         /**
@@ -38733,24 +39175,11 @@ define('__component__$column-navigation@husky',[], function () {
             }
         },
 
-        /**
-         * Inserts some markup into the last column if column is empty
-         */
-        handleLastEmptyColumn: function () {
-            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
-
-            this.sandbox.dom.remove(this.sandbox.dom.find('.no-page', this.$columnContainer));
-
-            // if last column is empty insert markup
-            if (this.sandbox.dom.find('li', $lastColumn).length === 0) {
-                this.sandbox.dom.append($lastColumn, this.template.noPage.call(this, this.sandbox.translate(this.options.noPageDescription)));
-            }
-        },
-
         bindCustomEvents: function () {
             this.sandbox.on(BREADCRUMB.call(this), this.getBreadCrumb.bind(this));
-            this.sandbox.on(GET_SELECTED.call(this), this.getSelected.bind(this));
             this.sandbox.on(UNMARK.call(this), this.unmark.bind(this));
+            this.sandbox.on(HIGHLIGHT.call(this), this.highlight.bind(this));
+            this.sandbox.on(ORDER.call(this), this.startOrderModeItem.bind(this));
 
             this.sandbox.on('husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.click', this.dropdownItemClicked.bind(this));
 
@@ -38762,12 +39191,83 @@ define('__component__$column-navigation@husky',[], function () {
             }
         },
 
-        dropdownItemClicked: function (item) {
+        /**
+         * Sets a column containing an item with a given id in order-mode
+         * @param itemId - the id of the item
+         */
+        startOrderModeItem: function(itemId) {
+            var column = this.getColumnForItem(itemId);
+            if (column > 0) {
+                this.startOrderModeColumn(column);
+            }
+        },
+
+
+        /**
+         * Sets a column in order-mode
+         * @param column - the index of the column
+         */
+        startOrderModeColumn: function(column) {
+            if (this.inOrderMode === false && !!this.columns[column] && Object.keys(this.columns[column]).length > 1) {
+                this.inOrderMode = true;
+                var $column = this.$find('.' + constants.columnClass + '[data-column="' + column + '"]');
+                this.lockOptions(column);
+                this.sandbox.dom.addClass($column, constants.orderModeClass);
+                this.sandbox.dom.hide(this.dom.$settings);
+                this.sandbox.dom.hide(this.dom.$add);
+                this.sandbox.dom.show(this.dom.$ok);
+                this.setColumnTextWidth(column);
+                this.sandbox.emit(ORDER_START.call(this));
+            }
+        },
+
+        /**
+         * Closes the order mode
+         */
+        closeOrderMode: function() {
+            if (this.inOrderMode === true) {
+                var $column = this.$find('.' + constants.columnClass + '.' + constants.orderModeClass),
+                    column = this.sandbox.dom.data($column, 'column');
+                this.unlockOptions();
+                this.sandbox.dom.removeClass($column, constants.orderModeClass);
+                this.sandbox.dom.hide(this.dom.$ok);
+                this.sandbox.dom.show(this.dom.$settings);
+                this.sandbox.dom.show(this.dom.$add);
+                this.setColumnTextWidth(column);
+                this.inOrderMode = false;
+                this.sandbox.emit(ORDER_END.call(this));
+            }
+        },
+
+        /**
+         * Highlights an item
+         * @param item - the id of the item
+         */
+        highlight: function(item) {
+            var column = this.getColumnForItem(item);
+            if (column > 0) {
+                this.sandbox.dom.addClass(this.columns[column][item].$el, constants.highlightClass);
+
+                // remove class after effect has finished
+                this.sandbox.dom.on(this.columns[column][item].$el,'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function() {
+                    this.sandbox.dom.removeClass(this.columns[column][item].$el, constants.highlightClass);
+                }.bind(this));
+            }
+        },
+
+        /**
+         * Gets execute after an item in the settings-dropdown has been clicked
+         * @param dropdownItem - the dropdown-item
+         */
+        dropdownItemClicked: function (dropdownItem) {
+            if (!!this.lastHoveredColumn && !!dropdownItem.mode && dropdownItem.mode === 'order') {
+                this.startOrderModeColumn(this.lastHoveredColumn);
+            }
             if (!!this.selected[this.lastHoveredColumn]) {
-                if (!!item.callback) {
-                    item.callback(item, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
+                if (!!dropdownItem.callback) {
+                    dropdownItem.callback(dropdownItem, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
                 } else {
-                    this.sandbox.emit(SETTINGS.call(this), item, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
+                    this.sandbox.emit(SETTINGS.call(this), dropdownItem, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
                 }
             }
         },
@@ -38779,23 +39279,8 @@ define('__component__$column-navigation@husky',[], function () {
         unmark: function (id) {
             var $element = this.$find('li[data-id="' + id + '"]');
             if (!!$element.length) {
-                this.sandbox.dom.removeClass($element, this.options.markedClass);
+                this.sandbox.dom.removeClass($element, constants.markedClass);
                 this.marked.splice(this.marked.indexOf(id), 1);
-            }
-        },
-
-        /**
-         * Passes all selected nodes to a callback
-         * @param callback {Function} the callback to pass the selected nodes to
-         */
-        getSelected: function (callback) {
-            var $checkboxes = this.$find('input[type="checkbox"]:checked'),
-                checkedNodes = [],
-                $column, $node;
-            if ($checkboxes.length !== 0) {
-                this.sandbox.util.foreach($checkboxes, function ($checkbox) {
-                    //TODO: foreach checkbox get the node object and create the checked Nodes array
-                }.bind(this));
             }
         },
 
@@ -38831,7 +39316,7 @@ define('__component__$column-navigation@husky',[], function () {
          * Shows the options at the last available column
          */
         showOptionsAtLast: function () {
-            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
+            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.dom.$container));
             this.showOptions({
                 currentTarget: $lastColumn
             });
@@ -38842,12 +39327,33 @@ define('__component__$column-navigation@husky',[], function () {
          * @param {Object} event
          */
         showOptions: function (event) {
-            var $currentTarget = this.sandbox.dom.$(event.currentTarget);
+            if (this.optionsLocked === false) {
+                var $currentTarget = this.sandbox.dom.$(event.currentTarget);
 
-            this.displayOptions($currentTarget);
+                this.displayOptions($currentTarget);
 
-            this.sandbox.dom.off(this.$columnContainer, 'scroll.column-navigation.' + this.options.instanceName);
-            this.sandbox.dom.on(this.$columnContainer, 'scroll.column-navigation.' + this.options.instanceName, this.displayOptions.bind(this, $currentTarget));
+                this.sandbox.dom.off(this.dom.$container, 'scroll.column-navigation.' + this.options.instanceName);
+                this.sandbox.dom.on(this.dom.$container, 'scroll.column-navigation.' + this.options.instanceName, this.displayOptions.bind(this, $currentTarget));
+            }
+        },
+
+        /**
+         * Shows the options below the passed column and locks them
+         * @param column - the index of the column
+         */
+        lockOptions: function(column) {
+            var $column = this.$find('.'+ constants.columnClass +'[data-column="' + column + '"]');
+            if (!!$column.length) {
+                this.showOptions({currentTarget: $column});
+                this.optionsLocked = true;
+            }
+        },
+
+        /**
+         * Unlocks the options
+         */
+        unlockOptions: function() {
+            this.optionsLocked = false;
         },
 
         /**
@@ -38860,18 +39366,45 @@ define('__component__$column-navigation@husky',[], function () {
             this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
 
             // calculate the ratio of how much of the hovered column is visible
-            if (this.sandbox.dom.position($activeColumn).left + this.sandbox.dom.width($activeColumn) > this.sandbox.dom.width(this.$columnContainer)) {
-                visibleRatio = (this.sandbox.dom.width(this.$columnContainer) - this.sandbox.dom.position($activeColumn).left ) / this.sandbox.dom.width($activeColumn);
+            if (this.sandbox.dom.position($activeColumn).left + this.sandbox.dom.width($activeColumn) > this.sandbox.dom.width(this.dom.$container)) {
+                visibleRatio = (this.sandbox.dom.width(this.dom.$container) - this.sandbox.dom.position($activeColumn).left ) / this.sandbox.dom.width($activeColumn);
             } else {
                 visibleRatio = (this.sandbox.dom.width($activeColumn) + this.sandbox.dom.position($activeColumn).left) / this.sandbox.dom.width($activeColumn);
             }
 
             // display the option only if the column is visible enough
-            if (visibleRatio >= this.options.minVisibleRatio) {
+            if (visibleRatio >= constants.minVisibleRatio) {
                 this.sandbox.dom.css(this.$optionsContainer, {'visibility': 'visible'});
                 this.updateOptionsMargin($activeColumn);
+                this.toggleSettingDropdownItems(this.lastHoveredColumn);
             } else {
                 this.hideOptions();
+            }
+        },
+
+        /**
+         * Calls the enabler for all dropdown-items (if exists) and disables
+         * or enalbes the corresponding item
+         * @param column - the index of the column on which the enalber should check the states of the items
+         */
+        toggleSettingDropdownItems: function(column) {
+            if (!!this.options.data && this.options.data.length > 0) {
+                var context = {
+                    numberItems: 0,
+                    hasSelected: false
+                };
+                if (!!this.columns[column]) {
+                    context.numberItems = Object.keys(this.columns[column]).length;
+                    context.hasSelected = !!this.selected[column];
+                }
+                this.sandbox.util.each(this.options.data, function (index, item) {
+                    if (!!item.enabler && typeof item.enabler === 'function') {
+                        this.sandbox.emit(
+                                'husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.toggle',
+                                item.id, item.enabler(context)
+                        );
+                    }
+                }.bind(this));
             }
         },
 
@@ -38898,6 +39431,7 @@ define('__component__$column-navigation@husky',[], function () {
         itemSelected: function (event) {
             //only do something if no column is loading
             if (this.columnLoadStarted === false) {
+                this.closeOrderMode(); // force closing of possible order mode
                 this.$selectedElement = this.sandbox.dom.$(event.currentTarget);
                 var id = this.sandbox.dom.data(this.$selectedElement, 'id'),
                     column = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)), 'column'),
@@ -38940,20 +39474,26 @@ define('__component__$column-navigation@husky',[], function () {
 
                 // scroll for add column
                 if (!selectedItem.hasSub) {
-                    this.addColumn(selectedItem, column);
-                    this.handleLastEmptyColumn();
+                    this.insertAddColumn(selectedItem, column);
                     this.scrollIfNeeded(column);
                     this.setOverflowClass();
+                    this.toggleSettingDropdownItems(column);
                 }
             }
         },
 
-        addColumn: function (selectedItem, column) {
-            this.sandbox.dom.append(
-                this.$columnContainer,
-                this.sandbox.dom.createElement(this.template.column.call(this, column + 1, this.options.column.width))
-            );
-
+        insertAddColumn: function (selectedItem, column) {
+            var $addColumn = this.sandbox.dom.createElement(this.sandbox.util.template(templates.column)({
+                columnNumber: column + 1,
+                id: 'column' + this.options.instanceName + '-' + (column + 1)
+            }));
+            // fill it with the "No Page"-content
+            this.sandbox.dom.append($addColumn, this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.noPage)({
+                    description: this.sandbox.translate(this.options.noPageDescription)
+                })
+            ));
+            this.sandbox.dom.append(this.dom.$container, $addColumn);
             this.filledColumns++;
         },
 
@@ -38962,8 +39502,8 @@ define('__component__$column-navigation@husky',[], function () {
          * @param column
          */
         scrollIfNeeded: function (column) {
-            if (column > DISPLAYEDCOLUMNS) {
-                this.sandbox.dom.scrollLeft(this.$columnContainer, (column - DISPLAYEDCOLUMNS) * this.options.column.width);
+            if (column > constants.displayedcolumns) {
+                this.sandbox.dom.scrollLeft(this.dom.$container, (column - constants.displayedcolumns) * constants.columnWidth);
             }
         },
 
@@ -38990,13 +39530,13 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
-         * Emits an edit event
+         * Handles the click on action-icons as well as the double click on items
          * @param {Object} event
          */
-        editNode: function (event) {
+        actionClickHandler: function (event) {
             var $listItem, id, item, column;
 
-            if (this.sandbox.dom.hasClass(event.currentTarget, 'edit') === true) {
+            if (this.sandbox.dom.hasClass(event.currentTarget, 'action') === true) {
                 $listItem = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget));
             } else {
                 $listItem = this.sandbox.dom.$(event.currentTarget);
@@ -39006,109 +39546,13 @@ define('__component__$column-navigation@husky',[], function () {
             item = this.columns[column][id];
 
             if (this.options.markable === true) {
-                this.sandbox.dom.addClass($listItem, this.options.markedClass);
+                this.sandbox.dom.addClass($listItem, constants.markedClass);
                 this.marked.push(id);
                 this.setItemsTextWidth($listItem);
             }
 
             this.sandbox.dom.stopPropagation(event);
-            this.sandbox.emit(EDIT.call(this), item);
-        },
-
-        /**
-         * Templates for various parts
-         */
-        template: {
-
-            wrapper: function () {
-                return '<div class="column-navigation-wrapper"></div>';
-            },
-
-            columnContainer: function () {
-                return ['<div class="column-navigation"></div>'].join('');
-            },
-
-            column: function (columnNumber, width) {
-                return ['<div data-column="', columnNumber, '" class="column" id="column' + this.options.instanceName + '-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
-            },
-
-            noPage: function (description) {
-                return ['<div class="no-page">',
-                    '<span class="fa-coffee icon"></span>',
-                    '<div class="text">', description , '</div>',
-                    '</div>'].join('');
-            },
-
-            item: function (width, data) {
-
-                var isMarked = (this.marked.indexOf(data[this.options.idName]) !== -1),
-                    item = ['<li data-id="', data[this.options.idName], '" class="pointer' + ((isMarked === true) ? ' ' + this.options.markedClass : '' ) + '">'];
-
-                // icons left
-                item.push('<span class="icons-left">');
-
-                item.push('<span class="fa-check pull-left markedIcon"></span>');
-
-                if (!!this.options.showStatus) {
-                    // link
-                    if (!!data[this.options.linkedName]) {
-                        if (data[this.options.linkedName] === 'internal') {
-                            item.push('<span class="fa-internal-link pull-left m-right-5"></span>');
-                        } else if (data[this.options.linkedName] === 'external') {
-                            item.push('<span class="fa-external-link pull-left m-right-5"></span>');
-                        }
-                    }
-
-                    // type (ghost, shadow)
-                    if (!!data[this.options.typeName]) {
-                        if (data[this.options.typeName].name === 'ghost') {
-                            item.push('<span class="ghost pull-left m-right-5">', data[this.options.typeName].value, '</span>');
-                        } else if (data[this.options.typeName].name === 'shadow') {
-                            item.push('<span class="fa-shadow-node pull-left m-right-5"></span>');
-                        }
-                    }
-
-                    // published
-                    if (!data[this.options.publishedName]) {
-                        item.push('<span class="not-published pull-left m-right-5">&bull;</span>');
-                    }
-                }
-                item.push('</span>');
-
-                // text center
-                if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
-                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
-                } else {
-                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text pull-left">', data[this.options.titleName], '</span>');
-                }
-
-                // icons right (subpage, edit)
-                item.push('<span class="icons-right">');
-                if (!!this.options.showEditIcon) {
-                    item.push('<span class="' + this.options.editIcon + ' edit pull-left"></span>');
-                }
-                !!data[this.options.hasSubName] ? item.push('<span class="fa-chevron-right arrow inactive pull-left"></span>') : '';
-                item.push('</span></li>');
-                return item.join('');
-            },
-
-            optionsContainer: function (width) {
-                return ['<div class="options grid-row" style="width:', width + 1, 'px"></div>'].join('');
-            },
-
-            options: {
-                add: function (id) {
-                    return ['<div id="', id, '" class="align-center add pointer">',
-                        '<span class="fa-plus-circle"></span>',
-                        '</div>'].join('');
-                },
-
-                settings: function (id) {
-                    return ['<div id="', id, '" class="align-center settings pointer drop-down-trigger">',
-                        '<span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
-                        '</div>'].join('');
-                }
-            }
+            this.sandbox.emit(ACTION.call(this), item);
         }
     };
 });
@@ -39892,12 +40336,6 @@ define('__component__$overlay@husky',[], function() {
          * Removes the component
          */
         removeComponent: function() {
-            // todo fix bug: sometimes overlay-sandbox has own sandbox or parent-sandboxes as child which
-            // couses an endless loop. The bug can be reproduced by starting the component
-            // in a clickhandler with openOnStart-option true
-            // this.sandbox.stop();
-
-            this.sandbox.stop('*');
             this.sandbox.stop();
         },
 
@@ -40418,13 +40856,15 @@ define('__component__$overlay@husky',[], function() {
          */
         closeHandler: function(event) {
             var cancelCallback = this.slides[this.activeSlide].closeCallback ||
-                this.slides[this.activeSlide].cancelCallback;
+                this.slides[this.activeSlide].cancelCallback,
+                element = null;
 
             if (!!event) {
                 this.sandbox.dom.preventDefault(event);
                 this.sandbox.dom.stopPropagation(event);
+                element = event.currentTarget;
             }
-            if (this.executeCallback(cancelCallback, event.currentTarget) !== false) {
+            if (this.executeCallback(cancelCallback, element) !== false) {
                 this.closeOverlay();
             }
         },
@@ -43905,6 +44345,51 @@ define("jquery-minicolors", function(){});
     });
 })();
 
+(function() {
+
+    
+
+    define('husky_extensions/confirm',{
+
+        name: 'Confirm',
+
+        initialize: function(app) {
+
+            app.sandbox.confirm = {
+
+                /**
+                 * Shows a confirmation box
+                 * @param that - the context in which the box gets displayed. Must be an aura-component with a sandbox and an element
+                 * @param title - the title (or translation key) for the box
+                 * @param message - the message (or translation key) for the box
+                 * @param okCallback - callback to execute after box was confirmed
+                 * @param closeCallback - callback to execute on cancel
+                 */
+                warning: function (that, title, message, okCallback, closeCallback) {
+                    var $element = app.core.dom.createElement('<div/>');
+                    app.core.dom.append(that.$el, $element);
+
+                    that.sandbox.start([
+                        {
+                            name: 'overlay@husky',
+                            options: {
+                                el: $element,
+                                title: app.sandbox.translate(title),
+                                message: app.sandbox.translate(message),
+                                closeCallback: closeCallback,
+                                okCallback: okCallback,
+                                type: 'warning'
+                            }
+                        }
+                    ]);
+                }
+            };
+        }
+    });
+})();
+
+
+
 /* =========================================================
  * bootstrap-datepicker.js
  * Repo: https://github.com/eternicode/bootstrap-datepicker/
@@ -47043,6 +47528,625 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/listbox
+ */
+
+/**
+ * Introduces functionality used by multiple components, which are displaying some items in a list
+ */
+define('husky_extensions/itembox',[],function() {
+
+    
+
+    var defaults = {
+            instanceName: null,
+            url: null,
+            eventNamespace: 'husky.itembox',
+            idsParameter: 'ids',
+            resultKey: null,
+            idKey: 'id',
+            visibleItems: 6,
+            dataAttribute: '',
+            dataDefault: {},
+            sortable: true,
+            removable: true,
+            hideAddButton: false,
+            hidePositionElement: false,
+            hideConfigButton: false,
+            defaultDisplayOption: 'top',
+            displayOptions: {
+                leftTop: true,
+                top: true,
+                rightTop: true,
+                left: true,
+                middle: true,
+                right: true,
+                leftBottom: true,
+                bottom: true,
+                rightBottom: true
+            },
+            translations: {
+                noContentSelected: 'listbox.nocontent-selected',
+                viewAll: 'public.view-all',
+                viewLess: 'public.view-less',
+                of: 'public.of',
+                visible: 'public.visible'
+            }
+        },
+
+        constants = {
+            displayOptionSelectedClass: 'selected',
+            itemInvisibleClass: 'invisible-item'
+        },
+
+        /**
+         * returns the normalized event names
+         * @param eventName {string} The name of the concrete event without prefix
+         * @returns {string} Returns the prefixed event name
+         */
+        createEventName = function(eventName) {
+            // TODO extract to extension?
+            return this.options.eventNamespace + '.' + eventName;
+        },
+
+        templates = {
+            skeleton: function() {
+                return [
+                    '<div class="white-box form-element" id="', this.ids.container, '">',
+                    '    <div class="header">',
+                    '        <span class="fa-plus-circle icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <div class="position', !!this.options.hidePositionElement ? ' hidden' : '', '">',
+                    '            <div class="husky-position" id="', this.ids.displayOption, '">',
+                    '                <div class="top left ', (!this.options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
+                    '                <div class="top middle ', (!this.options.displayOptions.top ? 'inactive' : ''), '" data-position="top"></div>',
+                    '                <div class="top right ', (!this.options.displayOptions.rightTop ? 'inactive' : ''), '" data-position="rightTop"></div>',
+                    '                <div class="middle left ', (!this.options.displayOptions.left ? 'inactive' : ''), '" data-position="left"></div>',
+                    '                <div class="middle middle ', (!this.options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
+                    '                <div class="middle right ', (!this.options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
+                    '                <div class="bottom left ', (!this.options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
+                    '                <div class="bottom middle ', (!this.options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
+                    '                <div class="bottom right ', (!this.options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
+                    '            </div>',
+                    '        </div>',
+                    '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
+                    '    </div>',
+                    '    <div class="content" id="', this.ids.content, '"></div>',
+                    '    <div class="footer" id="', this.ids.footer, '"></div>',
+                    '</div>'
+                ].join('');
+            },
+
+            noContent: function() {
+                return [
+                    '<div class="no-content">',
+                    '    <span class="fa-coffee icon"></span>',
+                    '    <div class="text">', this.sandbox.translate(this.options.translations.noContentSelected), '</div>',
+                    '</div>'
+                ].join('');
+            },
+
+            footer: function(length) {
+                return [
+                    '<span>',
+                    '    <strong id="', this.ids.footerCount, '">', (length < this.options.visibleItems) ? length : this.options.visibleItems, '</strong> ', this.sandbox.translate(this.options.translations.of), ' ',
+                    '    <strong id="', this.ids.footerMaxCount, '">', length, '</strong> ', this.sandbox.translate(this.options.translations.visible),
+                    '</span>'
+                ].join('')
+            },
+
+            item: function(id, content) {
+                return [
+                    '<li data-id="', id, '">',
+                    !!this.options.sortable ? '    <span class="fa-ellipsis-v icon move"></span>' : '',
+                    '    <span class="num"></span>',
+                    content,
+                    !!this.options.removable ? '    <span class="fa-times remove"></span>' : '',
+                    '</li>'
+                ].join('');
+            }
+        },
+
+        bindCustomEvents = function() {
+            this.sandbox.on(this.DATA_CHANGED(), this.loadContent.bind(this));
+            this.sandbox.on(this.DATA_RETRIEVED(), this.renderContent.bind(this));
+        },
+
+        bindDomEvents = function() {
+            // change display options on click on a positon square
+            this.sandbox.dom.on(
+                this.getId('displayOption') + ' > div:not(.inactive)',
+                'click',
+                this.changeDisplayOption.bind(this)
+            );
+
+            // toggle between view all and view less
+            this.sandbox.dom.on(this.$el, 'click', this.toggleInvisibleItems.bind(this), this.getId('footerView'));
+
+            // click on the add button
+            this.sandbox.dom.on(this.$addButton, 'click', function() {
+                this.sandbox.emit(this.ADD_BUTTON_CLICKED());
+            }.bind(this));
+
+            // click on the config button
+            this.sandbox.dom.on(this.$configButton, 'click', function() {
+                this.sandbox.emit(this.CONFIG_BUTTON_CLICKED());
+            }.bind(this));
+
+            // remove a row from the itembox
+            this.sandbox.dom.on(this.getId('content'), 'click', this.removeItem.bind(this), 'li .remove');
+        },
+
+        initSortable = function() {
+            var $sortable = this.sandbox.dom.find('.sortable', this.$el),
+                sortable;
+
+            this.sandbox.dom.sortable($sortable, 'destroy');
+
+            sortable = this.sandbox.dom.sortable('.sortable', {
+                handle: '.move',
+                forcePlaceholderSize: true
+            });
+
+            this.sandbox.dom.unbind(sortable, 'unbind');
+
+            sortable.bind('sortupdate', function() {
+                var ids = this.updateOrder();
+
+                this.sortHandler(ids);
+            }.bind(this));
+        },
+
+        createItemList = function() {
+            return this.sandbox.dom.createElement('<ul class="items-list sortable"/>');
+        },
+
+        itembox = {
+            /**
+             * raised when the data changed and the list should be reloaded
+             * @event husky.itembox.data-changed
+             * @return {string}
+             */
+            DATA_CHANGED: function() {
+                return createEventName.call(this, 'data-changed');
+            },
+
+            /**
+             * raised when data has returned from the ajax request
+             * @event husky.itembox.data-retrieved
+             * @return {string}
+             */
+            DATA_RETRIEVED: function() {
+                return createEventName.call(this, 'data-retrieved');
+            },
+
+            /**
+             * raised when the display option has changed
+             * @event husky.itembox.display-position-changed
+             * @return {string}
+             */
+            DISPLAY_OPTION_CHANGED: function() {
+                return createEventName.call(this, 'display-position-changed');
+            },
+
+            /**
+             * raised when the add button was clicked
+             * @event husky.itembox.add-button-clicked
+             * @return {string}
+             */
+            ADD_BUTTON_CLICKED: function() {
+                return createEventName.call(this, 'add-button-clicked');
+            },
+
+            /**
+             * raised when the config button was clicked
+             * @event husky.itembox.config-button-clicked
+             * @return {string}
+             */
+            CONFIG_BUTTON_CLICKED: function() {
+                return createEventName.call(this, 'config-button-clicked');
+            },
+
+            /**
+             * render the itembox
+             */
+            render: function() {
+                var data = this.getData();
+
+                this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+                this.viewAll = true;
+
+                this.ids = {
+                    container: 'listbox-' + this.options.instanceName + '-container',
+                    addButton: 'listbox-' + this.options.instanceName + '-add',
+                    configButton: 'listbox-' + this.options.instanceName + '-config',
+                    displayOption: 'listbox-' + this.options.instanceName + '-display-option',
+                    content: 'listbox-' + this.options.instanceName + '-content',
+                    footer: 'listbox-' + this.options.instanceName + '-footer',
+                    footerView: 'listbox-' + this.options.instanceName + '-footer-view',
+                    footerCount: 'listbox-' + this.options.instanceName + '-footer-count',
+                    footerMaxCount: 'listbox-' + this.options.instanceName + '-footer-max-count'
+                };
+
+                this.sandbox.dom.html(this.$el, templates.skeleton.call(this));
+
+                this.$container = this.sandbox.dom.find(this.getId('container'), this.$el);
+                this.$addButton = this.sandbox.dom.find(this.getId('addButton'), this.$el);
+                this.$configButton = this.sandbox.dom.find(this.getId('configButton'), this.$el);
+                this.$content = this.sandbox.dom.find(this.getId('content'), this.$el);
+                this.$footer = this.sandbox.dom.find(this.getId('footer'), this.$el);
+                this.$list = null;
+
+                this.removeFooter();
+
+                this.renderNoContent();
+
+                if (!this.sandbox.util.isEmpty(data)) {
+                    this.loadContent(data);
+                } else {
+                    this.setData(this.options.dataDefault, false);
+                }
+
+                this.setDisplayOption(this.options.defaultDisplayOption);
+
+                bindCustomEvents.call(this);
+                bindDomEvents.call(this);
+            },
+
+            /**
+             * render the empty presentation into the content area
+             */
+            renderNoContent: function() {
+                this.$list = null;
+                this.sandbox.dom.html(this.$content, templates.noContent.call(this));
+                this.removeFooter();
+            },
+
+            /**
+             * Render the footer for the given data
+             * @param data {object} the data for which the footer should be generated
+             */
+            renderFooter: function(data) {
+                var length = data.length,
+                    translation = (data.length <= length)
+                        ? this.sandbox.translate(this.options.translations.viewAll)
+                        : this.sandbox.translate(this.options.translations.viewLess);
+
+                this.sandbox.dom.html(this.$footer, templates.footer.call(this, length));
+
+                this.sandbox.dom.append(
+                    this.sandbox.dom.find('span', this.$footer),
+                    [
+                        '<strong class="pointer"> (<span id="', this.ids.footerView, '">',
+                        translation,
+                        '</span>)</strong>'
+                    ].join('')
+                );
+
+                this.sandbox.dom.append(this.$container, this.$footer);
+
+                this.$footerView = this.sandbox.dom.find(this.getId('footerView'), this.$el);
+            },
+
+            /**
+             * Removes the footer from the DOM
+             */
+            removeFooter: function() {
+                this.sandbox.dom.remove(this.$footer);
+            },
+
+            /**
+             * Returns the data currently stored in this component
+             * @param deepCopy {boolean} True if deep cop should be returned, otherwise false
+             * @returns {object}
+             */
+            getData: function() {
+                return this.sandbox.util.deepCopy(this.sandbox.dom.data(this.$el, this.options.dataAttribute));
+            },
+
+            /**
+             * Set the given data to the elements data attribute
+             * @param data {object} The data to set
+             * @param reload {boolean} True if the itembox list should be reloaded afterwards
+             */
+            setData: function(data, reload) {
+                var oldData = this.sandbox.dom.data(this.$el, this.options.dataAttribute);
+                reload = typeof(reload) === 'undefined' ? true : reload;
+
+                if (!this.sandbox.util.isEqual(oldData, data)) {
+                    this.sandbox.dom.data(this.$el, this.options.dataAttribute, data);
+
+                    if (reload) {
+                        this.sandbox.emit(this.DATA_CHANGED(), data, this.$el);
+                    }
+                }
+            },
+
+            /**
+             * Loads the content based on the given data
+             * @param data {object}
+             */
+            loadContent: function(data) {
+                this.startLoader();
+
+                // reset items visible when new content is loaded
+                this.viewAll = false;
+
+                if (!!data) {
+                    this.sandbox.util.load(this.getUrl(data))
+                        .then(function(data) {
+                            this.sandbox.emit(this.DATA_RETRIEVED(), data._embedded[this.options.resultKey]);
+                        }.bind(this))
+                        .fail(function(error) {
+                            this.sandbox.logger.error(error);
+                        }.bind(this));
+                } else {
+                    this.sandbox.emit(this.DATA_RETRIEVED(), []);
+                }
+            },
+
+            /**
+             * Renders the data into the list
+             * @param data {object} The data to render
+             */
+            renderContent: function(data) {
+                if (data.length > 0) {
+                    var length = data.length;
+
+                    this.$list = createItemList.call(this);
+
+                    for (var i = -1; ++i < length;) {
+                        this.addItem(data[i], false);
+                    }
+
+                    this.sandbox.dom.html(this.$content, this.$list);
+
+                    initSortable.call(this);
+                    this.renderFooter(data);
+                    this.updateOrder();
+                    this.updateVisibility();
+                } else {
+                    this.renderNoContent();
+                }
+            },
+
+            /**
+             * Starts the loader for the content
+             */
+            startLoader: function() {
+                this.removeFooter();
+
+                var $loader = this.sandbox.dom.createElement('<div class="loader"/>');
+                this.sandbox.dom.html(this.$content, $loader);
+
+                this.sandbox.start([
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: $loader,
+                            size: '100px',
+                            color: '#e4e4e4'
+                        }
+                    }
+                ]);
+            },
+
+            /**
+             * Set the display option
+             * @param displayOption {string} The string representation of the display option
+             */
+            setDisplayOption: function(displayOption) {
+                var $element = this.sandbox.dom.find('[data-position="' + displayOption + '"]', this.$container);
+
+                // deselect the current positon element
+                this.sandbox.dom.removeClass(
+                    this.sandbox.dom.find('.' + constants.displayOptionSelectedClass, this.getId('displayOption')),
+                    constants.displayOptionSelectedClass
+                );
+
+                // select clicked on
+                this.sandbox.dom.addClass($element, constants.displayOptionSelectedClass);
+            },
+
+            /**
+             * DOM event handler for clicking on the display option
+             * @param event
+             */
+            changeDisplayOption: function(event) {
+                // TODO move display options to own component?
+                var position = this.sandbox.dom.data(event.currentTarget, 'position');
+
+                this.setDisplayOption(position);
+
+                this.sandbox.emit(
+                    this.DISPLAY_OPTION_CHANGED(),
+                    position
+                );
+            },
+
+            /**
+             * Updates the order of the number in the list
+             * @returns {Array}
+             */
+            updateOrder: function() {
+                var $elements = this.sandbox.dom.find('li', this.$content),
+                    ids = [];
+
+                this.sandbox.util.foreach($elements, function($element, index) {
+                    var $number = this.sandbox.dom.find('.num', $element);
+                    $number.html(index + 1);
+                    ids.push(this.sandbox.dom.data($element, 'id'));
+                }.bind(this));
+
+                return ids;
+            },
+
+            /**
+             * Adds an item to the list
+             * @param item {object} The item to display in the list
+             * @param reinitialize {boolean} Defines if the sorting, order and visibility list should be reinitialized
+             */
+            addItem: function(item, reinitialize) {
+                if (typeof(reinitialize) === 'undefined') {
+                    reinitialize = true;
+                }
+
+                if (!this.$list) {
+                    this.$list = createItemList.call(this);
+                    this.sandbox.dom.html(this.$content, this.$list);
+                    this.renderFooter([]);
+                }
+
+                this.sandbox.dom.append(
+                    this.$list,
+                    templates.item.call(
+                        this,
+                        item[this.options.idKey],
+                        this.getItemContent(item)
+                    )
+                );
+
+                if (!!reinitialize) {
+                    if (this.options.sortable) {
+                        initSortable.call(this);
+                    }
+
+                    this.updateOrder();
+                    this.updateVisibility();
+                }
+            },
+
+            /**
+             * DOM event handler for removing an item from the list
+             * @param event
+             */
+            removeItem: function(event) {
+                var $removeItem = this.sandbox.dom.parents(event.currentTarget, 'li'),
+                    itemId = this.sandbox.dom.data($removeItem, 'id');
+
+                this.sandbox.dom.remove($removeItem);
+                this.removeHandler(itemId);
+
+                this.updateOrder();
+                this.updateVisibility();
+            },
+
+            /**
+             * Toggles between listing all and just a limited number of items
+             */
+            toggleInvisibleItems: function() {
+                this.viewAll = !this.viewAll;
+                this.sandbox.dom.html(this.$footerView,
+                    !!this.viewAll
+                        ? this.sandbox.translate(this.options.translations.viewLess)
+                        : this.sandbox.translate(this.options.translations.viewAll)
+                );
+
+                this.updateVisibility();
+            },
+
+            /**
+             * Updates the visibility of all items based on the current state
+             */
+            updateVisibility: function() {
+                var $items = this.sandbox.dom.find('li', this.$list),
+                    length = $items.size(),
+                    itemCount = 0;
+
+                if (!length) {
+                    this.renderNoContent();
+                } else {
+                    // mark the correct amount of items invisible
+                    this.sandbox.util.foreach($items, function($item) {
+                        if (itemCount < this.options.visibleItems) {
+                            this.sandbox.dom.removeClass($item, constants.itemInvisibleClass);
+                        } else {
+                            this.sandbox.dom.addClass($item, constants.itemInvisibleClass);
+                        }
+
+                        itemCount++;
+                    }.bind(this));
+                }
+
+                // correct the display property of every item and the footer values
+                if (!!this.viewAll) {
+                    this.sandbox.dom.show($items);
+                    this.sandbox.dom.html(this.getId('footerCount'), length);
+                } else {
+                    if (!!this.$list) {
+                        this.sandbox.dom.show(
+                            this.sandbox.dom.find(':not(.' + constants.itemInvisibleClass + ')', this.$list)
+                        );
+                        this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.itemInvisibleClass, this.$list));
+                    }
+
+                    this.sandbox.dom.html(
+                        this.getId('footerCount'),
+                        (this.options.visibleItems < length) ? this.options.visibleItems : length
+                    );
+                }
+
+                this.sandbox.dom.html(this.getId('footerMaxCount'), length);
+            },
+
+            /**
+             * Returns the selector for the given id
+             * @param type {string} The type of the element, for which the id should be returned
+             * @returns {string} The id of the element
+             */
+            getId: function(type) {
+                return ['#', this.ids[type]].join('');
+            },
+
+            /**
+             * Returns the URL for the list based on the data
+             * @param data {object} The data for which the URL should be generated
+             */
+            getUrl: function(data) {
+                throw new Error('"getUrl" not implemented');
+            },
+
+            /**
+             * Returns the HTML for an item in the list
+             * @param item
+             */
+            getItemContent: function(item) {
+                throw new Error('"getItemContent" not implemented');
+            },
+
+            /**
+             * This function is called when the sorting has been updated
+             * @param ids {array} The new order of the ids
+             */
+            sortHandler: function(ids) {
+                throw new Error('"sortHandler" not implemented');
+            },
+
+            /**
+             * Handler, which is called when a row is removed
+             * @param id {number} The id of the item to remove
+             */
+            removeHandler: function(id) {
+                throw new Error('"removeHandler" not implemented');
+            }
+        };
+
+    return {
+        name: 'itembox',
+
+        initialize: function(app) {
+            app.components.addType('itembox', itembox);
+        }
+    }
+});
+
 (function() {
 
     
@@ -47880,6 +48984,10 @@ define('husky_extensions/util',[],function() {
                 return s;
             };
 
+            app.core.util.isEqual = _.isEqual;
+
+            app.core.util.isEmpty = _.isEmpty;
+
             /**
              * cool guy loop implementation of foreach: http://jsperf.com/loops3/2
              * returns -> callback(value, index)
@@ -47998,6 +49106,15 @@ define('husky_extensions/util',[],function() {
             app.core.util.union = function() {
                 return _.union.apply(this, arguments);
             };
+
+            app.core.util.deepCopy = function(object) {
+                var parent = {};
+
+                if ($.isArray(object)) {
+                    parent = [];
+                }
+                return $.extend(true, parent, object);
+            }
 
 			app.core.util.template = _.template;
 

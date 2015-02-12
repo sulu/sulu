@@ -1,0 +1,13 @@
+@mixin background-size($type) {
+  -webkit-background-size: $type;
+  -moz-background-size: $type;
+  -o-background-size: $type;
+  background-size: $type;
+}
+
+@mixin blur {
+  filter: url(../img/blur.svg#blur);
+  -webkit-filter: blur(3px);
+  filter: blur(3px);
+  filter:progid:DXImageTransform.Microsoft.Blur(PixelRadius='3');
+}

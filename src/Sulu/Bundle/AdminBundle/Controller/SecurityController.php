@@ -28,7 +28,7 @@ class SecurityController extends Controller
         }
 
         return $this->render(
-            'SuluAdminBundle:Security:login.form.html.twig',
+            'SuluAdminBundle:Security:login.html.twig',
             array(
                 'name' => $this->container->getParameter('sulu_admin.name'),
                 'username' => $session->get(SecurityContext::LAST_USERNAME),
