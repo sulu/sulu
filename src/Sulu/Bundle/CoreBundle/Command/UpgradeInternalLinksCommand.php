@@ -12,6 +12,7 @@ namespace Sulu\Bundle\CoreBundle\Command;
 
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
+use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -33,6 +34,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UpgradeInternalLinksCommand extends ContainerAwareCommand
 {
     /**
+     * @var WebspaceManagerInterface
+     */
+    private $webspaceManager;
+
+    /**
      * @var SessionInterface
      */
     private $session;
@@ -50,11 +56,16 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         $this->session = $this->getContainer()->get('sulu.phpcr.session')->getSession();
 
         /** @var WebspaceManagerInterface $webspaceManager */
-        $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+        $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
 
         /** @var Webspace $webspace */
-        foreach ($webspaceManager->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $this->upgradeWebspace($webspace, $output);
+        }
+
+        $output->writeln('<info> Upgrade Snippets: </info>');
+        foreach ($this->webspaceManager->getAllLocalizations() as $localization) {
+            $this->upgradeSnippets($output, $localization);
         }
 
         $this->session->save();
@@ -62,22 +73,29 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
 
     private function upgradeWebspace(Webspace $webspace, OutputInterface $output)
     {
-        $output->writeln('<info>> Upgrade Webspace: ' . $webspace->getName() . '</info>');
+        $output->writeln('<info> Upgrade Webspace: ' . $webspace->getName() . '</info>');
         foreach ($webspace->getAllLocalizations() as $localization) {
-            $this->upgradeLocale($webspace, $localization, $output);
+            $output->writeln('  > Upgrade Locale: ' . $localization->getLocalization('-'));
+
+            /** @var ContentMapperInterface $contentMapper */
+            $contentMapper = $this->getContainer()->get('sulu.content.mapper');
+            $startPage = $contentMapper->loadStartPage($webspace->getKey(), $localization->getLocalization());
+
+            $this->upgradeNode($startPage, $localization, $output);
+            $this->upgradeByParent($startPage, $webspace, $localization, $contentMapper, $output);
         }
     }
 
-    private function upgradeLocale(Webspace $webspace, Localization $localization, OutputInterface $output)
+    private function upgradeSnippets(OutputInterface $output, Localization $localization)
     {
-        $output->writeln('  > Upgrade Locale: ' . $localization->getLocalization('-'));
+        /**
+         * @var SnippetRepository
+         */
+        $snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
 
-        /** @var ContentMapperInterface $contentMapper */
-        $contentMapper = $this->getContainer()->get('sulu.content.mapper');
-        $startPage = $contentMapper->loadStartPage($webspace->getKey(), $localization->getLocalization());
-
-        $this->upgradeNode($startPage, $webspace, $localization, $output);
-        $this->upgradeByParent($startPage, $webspace, $localization, $contentMapper, $output);
+        foreach ($snippetRepository->getSnippets($localization) as $snippet) {
+            $this->upgradeNode($snippet, $localization, $output);
+        }
     }
 
     private function upgradeByParent(
@@ -97,29 +115,28 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
 
         /** @var Page $page */
         foreach ($pages as $page) {
-            $this->upgradeNode($page, $webspace, $localization, $output, substr_count($page->getPath(), '/'));
+            $this->upgradeNode($page, $localization, $output, substr_count($page->getPath(), '/'));
             $this->upgradeByParent($page, $webspace, $localization, $contentMapper, $output);
         }
     }
 
     private function upgradeNode(
-        Structure $page,
-        Webspace $webspace,
+        Structure $structure,
         Localization $localization,
         OutputInterface $output,
         $depth = 0
     )
     {
-        foreach ($page->getProperties(true) as $property) {
+        foreach ($structure->getProperties(true) as $property) {
             if ($property->getContentTypeName() == 'internal_links') {
-                $this->upgradeProperty($page, $localization, $output, $property, $depth);
+                $this->upgradeProperty($structure, $localization, $output, $property, $depth);
             }
         }
     }
 
-    private function upgradeProperty(Structure $page, Localization $localization, OutputInterface $output, $property, $depth)
+    private function upgradeProperty(Structure $structure, Localization $localization, OutputInterface $output, $property, $depth)
     {
-        $node = $this->session->getNodeByIdentifier($page->getUuid());
+        $node = $this->session->getNodeByIdentifier($structure->getUuid());
 
         $transProperty = new TranslatedProperty(
             $property,
@@ -130,14 +147,17 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         if ($node->hasProperty($transProperty->getName())) {
             $value = json_decode($node->getPropertyValueWithDefault($transProperty->getName(), '{ids: []}'), true);
             $node->getProperty($transProperty->getName())->remove();
-            $node->setProperty($transProperty->getName(), $value['ids'], PropertyType::REFERENCE);
+
+            $ids = array_key_exists('ids', $value) ? $value['ids'] : $value;
+
+            $node->setProperty($transProperty->getName(), $ids, PropertyType::REFERENCE);
 
             $prefix = '   ';
             for ($i = 0; $i < $depth; $i++) {
                 $prefix .= '-';
             }
 
-            $output->writeln($prefix . '> ' . $page->getPropertyValue('title'));
+            $output->writeln($prefix . '> ' . $structure->getPropertyValue('title'));
         }
     }
 }
