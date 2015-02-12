@@ -273,6 +273,10 @@ interface ContentMapperInterface
      * @param integer $userId
      * @param string $webspaceKey
      * @param string $languageCode
+     *
+     * @throws \Sulu\Component\Content\Exception\InvalidOrderPositionException
+     * thrown if position is out of range
+     *
      * @return StructureInterface
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);

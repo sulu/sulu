@@ -535,7 +535,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
-                    $position = $this->getRequestParameter($request, 'position', true);
+                    $position = (int) $this->getRequestParameter($request, 'position', true);
                     $language = $this->getLanguage($request);
 
                     // call repository method

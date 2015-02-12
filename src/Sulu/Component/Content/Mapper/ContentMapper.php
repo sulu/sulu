@@ -30,6 +30,7 @@ use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -1767,6 +1768,9 @@ class ContentMapper implements ContentMapperInterface
         $siblings = array_values($parent->getNodes()->getArrayCopy()); // get indexed array
         $countSiblings = count($siblings);
         $oldPosition = array_search($subject, $siblings) + 1;
+        if ($countSiblings < $position || $position <= 0) {
+            throw new InvalidOrderPositionException();
+        }
         if ($position === $countSiblings) {
             $this->executeOrderBefore($parent, $subject, $siblings[$position - 1], $languageCode, $userId);
             $this->executeOrderBefore($parent, $siblings[$position - 1], $subject, $languageCode, $userId);
