@@ -28,7 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades Resourcelocators to 0.9.0
+ * Upgrades InternalLinks to 0.15.0
  */
 class UpgradeInternalLinksCommand extends ContainerAwareCommand
 {

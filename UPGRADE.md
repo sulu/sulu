@@ -12,6 +12,14 @@ sulu_core:
 
 You have to add the locales to your configuration, otherwise Sulu will stop working.
 
+### Internal Links
+
+The internal representation of the internal links have changed, you have to run the following command to convert them:
+
+```bash
+app/console sulu:upgrade:0.15.0:internal-links
+```
+
 ### Websocket Component
 
 Websocket start command changed to `app/console sulu:websocket:run`. If you use xdebug on your server please start
