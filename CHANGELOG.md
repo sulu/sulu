@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #123 [ContactBundle]   Changed columns for contact list and made concatenated columns not sortable
     * BUGFIX      #825 [WebsiteBundle]   Fixed syntax error in ExceptionController
     * ENHANCEMENT #798 [All]             Updated Symfony version to 2.6
     * BUGFIX      #826 [All]             Moved locales config from admin-bundle to core-bundle

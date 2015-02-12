@@ -1392,7 +1392,9 @@ class AccountController extends AbstractContactController
             false,
             true,
             '',
-            '200px'
+            '200px',
+            '',
+            false
         );
 
         $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
