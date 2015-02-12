@@ -1741,7 +1741,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $parent = $beforeTargetNode->getParent();
-        $this->executeOrderBefore($parent, $beforeTargetNode, $subjectNode, $languageCode, $userId);
+        $this->executeOrderBefore($parent, $beforeTargetNode, $subjectNode);
 
         // set changer of node in specific language
         $this->setChanger($beforeTargetNode, $userId, $languageCode);
@@ -1772,12 +1772,12 @@ class ContentMapper implements ContentMapperInterface
             throw new InvalidOrderPositionException();
         }
         if ($position === $countSiblings) {
-            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1], $languageCode, $userId);
-            $this->executeOrderBefore($parent, $siblings[$position - 1], $subject, $languageCode, $userId);
+            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1]);
+            $this->executeOrderBefore($parent, $siblings[$position - 1], $subject);
         } else if ($oldPosition < $position) {
-            $this->executeOrderBefore($parent, $subject, $siblings[$position], $languageCode, $userId);
+            $this->executeOrderBefore($parent, $subject, $siblings[$position]);
         } else if ($oldPosition > $position) {
-            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1], $languageCode, $userId);
+            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1]);
         }
 
         // set changer of node in specific language
