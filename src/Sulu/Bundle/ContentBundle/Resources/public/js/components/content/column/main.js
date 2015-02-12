@@ -430,7 +430,8 @@ define(function() {
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.delete')
+                                name: this.sandbox.translate('content.contents.settings.delete'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: 2,
@@ -438,21 +439,42 @@ define(function() {
                             },
                             {
                                 id: MOVE_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.move')
+                                name: this.sandbox.translate('content.contents.settings.move'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: COPY_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.copy')
+                                name: this.sandbox.translate('content.contents.settings.copy'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: ORDER_BUTTON_ID,
                                 name: this.sandbox.translate('content.contents.settings.order'),
-                                mode: 'order'
+                                mode: 'order',
+                                enabler: this.orderEnabler
                             }
                         ]
                     }
                 }
             ]);
+        },
+
+        /**
+         * Enabler for MOVE, COPY and DELETE
+         * @param column
+         * @returns {boolean}
+         */
+        hasSelectedEnabler: function(column) {
+            return !!column.hasSelected;
+        },
+
+        /**
+         * Enaber for ORDER
+         * @param column
+         * @returns {boolean}
+         */
+        orderEnabler: function(column) {
+            return column.numberItems > 1;
         },
 
         /**
