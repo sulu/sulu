@@ -8,6 +8,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #735 [MediaBundle]     Use parameters instead of FCQN of entities in service config
     * ENHANCEMENT #735 [TagBundle]       Use parameters instead of FCQN of entities in service config
     * FEATURE     #792 [ContactBundle]   added widget to show all companys of contact
+    * FEATURE     #820 [ContactBundle]   Contact-Import: define multiple tags: 'account_tag1 ..n'
     * FEATURE     #810 [ContactBundle]   added command line tool for detecting missing country codes in import csv files
                                          that uses google geo api for finding the correct country code
     * BUGFIX      #801 [All]             Removed unused clean task which is deleting the public directory when executed
