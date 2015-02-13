@@ -1,3 +1,5 @@
+@import '../js/vendor/husky/scss/mixins';
+
 @mixin background-size($type) {
   -webkit-background-size: $type;
   -moz-background-size: $type;

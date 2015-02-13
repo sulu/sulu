@@ -237,11 +237,48 @@ input, select {
   position: relative;
 }
 /* line 8, ../scss/modules/login.scss */
+.sulu-login .box {
+  width: 400px;
+  height: 430px;
+  background-color: #e9e9e9;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -215px;
+  margin-left: -200px;
+  z-index: 30;
+  border-radius: 3px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  overflow: hidden;
+}
+/* line 24, ../scss/modules/login.scss */
+.sulu-login .box .frames {
+  height: 100%;
+  width: 50px;
+  white-space: nowrap;
+}
+/* line 30, ../scss/modules/login.scss */
+.sulu-login .box .frame {
+  height: 100%;
+  width: 400px;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 37, ../scss/modules/login.scss */
+.sulu-login .box .login-logo {
+  width: 100%;
+  height: 180px;
+  background: url("../img/logo.png") no-repeat center center;
+  background-size: auto 125px;
+}
+/* line 45, ../scss/modules/login.scss */
 .sulu-login .background {
   display: none;
   position: absolute;
 }
-/* line 12, ../scss/modules/login.scss */
+/* line 49, ../scss/modules/login.scss */
 .sulu-login .background .image {
   position: relative;
   display: block;
@@ -259,7 +296,7 @@ input, select {
   filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='3');
   z-index: 10;
 }
-/* line 24, ../scss/modules/login.scss */
+/* line 61, ../scss/modules/login.scss */
 .sulu-login .background .darkener {
   position: absolute;
   top: 0px;
@@ -272,7 +309,7 @@ input, select {
   transition: opacity 450ms;
   z-index: 20;
 }
-/* line 38, ../scss/modules/login.scss */
+/* line 75, ../scss/modules/login.scss */
 .sulu-login .background.active .darkener {
   opacity: 0.15;
 }

@@ -5,6 +5,43 @@
     overflow: hidden;
     position: relative;
 
+    .box {
+        $boxWidth: 400px;
+        $boxHeight: 430px;
+        width: $boxWidth;
+        height: $boxHeight;
+        background-color: $grayLightMedium2;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -($boxHeight/2);
+        margin-left: -($boxWidth/2);
+        z-index: 30;
+        border-radius: $borderRadius;
+        @include standard-box-shadow;
+        overflow: hidden;
+
+        .frames {
+            height: 100%;
+            width: 50px;
+            white-space: nowrap;
+        }
+
+        .frame {
+            height: 100%;
+            width: $boxWidth;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .login-logo {
+            width: 100%;
+            height: 180px;
+            background: url("../img/logo.png") no-repeat center center;
+            background-size: auto 125px;
+        }
+    }
+
     .background {
         display: none;
         position: absolute;

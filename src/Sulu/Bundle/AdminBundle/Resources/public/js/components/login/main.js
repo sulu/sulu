@@ -32,14 +32,26 @@ define([], function() {
             backgroundClass: 'background',
             imageClass: 'image',
             darkenerClass: 'darkener',
-            bgActiveClass: 'active'
+            bgActiveClass: 'active',
+            boxClass: 'box',
+            frameClass: 'frame',
+            framesClass: 'frames',
+            logoClass: 'login-logo'
         },
 
         templates = {
             background: ['<div class="'+ constants.backgroundClass +'">',
                          '    <div class="'+ constants.imageClass+'"></div>',
                          '    <div class="'+ constants.darkenerClass+'"></div>',
-                         '</div>'].join('')
+                         '</div>'].join(''),
+            box: ['<div class="'+ constants.boxClass +'">',
+                  '    <div class="'+ constants.framesClass +'"></div>',
+                  '</div>'].join(''),
+            frame: ['<div class="'+ constants.frameClass +'">',
+                    '   <div class="'+ constants.logoClass +'"></div>',
+                    '</div>'].join(''),
+            loginFrame: ['<input class="form-element input-large husky-validate" type="text" placeholder="<%= username %>"/>',
+                         '<input class="form-element input-large husky-validate" type="password" placeholder="<%= password %>"/>'].join('')
         },
 
         /**
@@ -74,7 +86,11 @@ define([], function() {
          */
         initProperties: function() {
             this.dom = {
-                $bg: null
+                $bg: null,
+                $box: null,
+                $frames: null,
+                $login: null,
+                $reset: null
             }
         },
 
@@ -84,6 +100,7 @@ define([], function() {
         render: function() {
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
             this.renderBg();
+            this.renderBox();
         },
 
         /**
@@ -101,6 +118,37 @@ define([], function() {
             this.setBgSize();
             this.setBgPosition(0, 0);
             this.sandbox.dom.append(this.$el, this.dom.$bg);
+        },
+
+        /**
+         * Renders the content-box
+         */
+        renderBox: function() {
+            this.dom.$box = this.sandbox.dom.createElement(templates.box);
+            this.dom.$frames = this.sandbox.dom.find('.' + constants.framesClass, this.dom.$box);
+            this.renderLoginFrame();
+            this.renderResetPwdFrame();
+            this.sandbox.dom.append(this.$el, this.dom.$box);
+        },
+
+        /**
+         * Renders the frame with the login inputs
+         */
+        renderLoginFrame: function() {
+            this.dom.$login = this.sandbox.dom.createElement(templates.frame);
+            this.sandbox.dom.append(this.dom.$login, this.sandbox.util.template(templates.loginFrame)({
+                username: 'Username',
+                password: 'Password'
+            }));
+            this.sandbox.dom.append(this.dom.$frames, this.dom.$login);
+        },
+
+        /**
+         * Renders the frame with the password-reset functionality
+         */
+        renderResetPwdFrame: function() {
+            this.dom.$reset = this.sandbox.dom.createElement(templates.frame);
+            this.sandbox.dom.append(this.dom.$frames, this.dom.$reset);
         },
 
         /**
