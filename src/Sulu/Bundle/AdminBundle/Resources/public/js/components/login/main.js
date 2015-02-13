@@ -50,8 +50,14 @@ define([], function() {
             frame: ['<div class="'+ constants.frameClass +'">',
                     '   <div class="'+ constants.logoClass +'"></div>',
                     '</div>'].join(''),
-            loginFrame: ['<input class="form-element input-large husky-validate" type="text" placeholder="<%= username %>"/>',
-                         '<input class="form-element input-large husky-validate" type="password" placeholder="<%= password %>"/>'].join('')
+            loginFrame: ['<div class="inputs">',
+                         '  <div class="grid-row">',
+                         '    <input class="form-element input-large husky-validate" type="text" placeholder="<%= username %>"/>',
+                         '  </div>',
+                         '  <div class="grid-row">',
+                         '    <input class="form-element input-large husky-validate" type="password" placeholder="<%= password %>"/>',
+                         '  </div>',
+                         '</div>'].join('')
         },
 
         /**
@@ -197,7 +203,7 @@ define([], function() {
         bindDomEvents: function() {
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeHandler.bind(this));
             this.sandbox.dom.on(this.dom.$bg, 'mousedown', this.toggleBgActive.bind(this, true));
-            this.sandbox.dom.on(this.dom.$bg, 'mouseup', this.toggleBgActive.bind(this, false));
+            this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBgActive.bind(this, false));
         },
 
         /**

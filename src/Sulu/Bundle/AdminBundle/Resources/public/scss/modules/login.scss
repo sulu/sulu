@@ -32,6 +32,15 @@
             width: $boxWidth;
             display: inline-block;
             vertical-align: top;
+            white-space: normal;
+        }
+
+        .inputs {
+            padding: 0 50px;
+            .form-element {
+                padding-left: 5px;
+
+            }
         }
 
         .login-logo {
