@@ -10,12 +10,12 @@ Feature: Manage people
     Scenario: List people
         Given the contact "Daniel" "Leech" with "home" email "daniel@dantleech.com" exists
         And I am on "/admin/#contacts/contacts"
-        Then I expect to see "Daniel Leech"
+        Then I expect to see "Daniel"
 
     Scenario: Edit a person
         Given the contact "Daniel" "Leech" with "home" email "daniel@dantleech.com" exists
         And I am on "/admin/#contacts/contacts"
-        And I click the edit icon in the row containing "Daniel Leech"
+        And I click the edit icon in the row containing "Daniel"
         And I expect a form to appear
         And I clear and fill in "first-name" with "John"
         And I clear and fill in "last-name" with "Smith"
@@ -31,7 +31,7 @@ Feature: Manage people
         And I am on "/admin/#contacts/contacts"
         And I expect a data grid to appear
         And I wait a second
-        And I click the edit icon in the row containing "Daniel Leech"
+        And I click the edit icon in the row containing "Daniel"
         And I expect a form to appear
         And I click delete from the drop down
         Then I expect a confirmation dialog to appear
