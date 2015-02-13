@@ -35,8 +35,16 @@ define([], function() {
             bgActiveClass: 'active',
             boxClass: 'box',
             frameClass: 'frame',
+            loginFrameClass: 'login',
+            resetFrameClass: 'reset',
             framesClass: 'frames',
-            logoClass: 'login-logo'
+            logoClass: 'login-logo',
+            loginBtnId: 'login',
+            forgotSwitchClass: 'forgot-password-switch',
+            loginSwitchClass: 'login-switch',
+            errorClass: 'husky-validate-error',
+            resetMailBoxClass: 'reset-mail',
+            resetMsgBoxClass: 'reset-msg'
         },
 
         templates = {
@@ -54,10 +62,36 @@ define([], function() {
                          '  <div class="grid-row">',
                          '    <input class="form-element input-large husky-validate" type="text" placeholder="<%= username %>"/>',
                          '  </div>',
-                         '  <div class="grid-row">',
+                         '  <div class="grid-row small">',
                          '    <input class="form-element input-large husky-validate" type="password" placeholder="<%= password %>"/>',
                          '  </div>',
-                         '</div>'].join('')
+                         '  <span class="error-msg"><%= errorMsg %></span>',
+                         '</div>',
+                         '<div class="grid-row">',
+                         '    <div class="btn action large fit"><%= login %></div>',
+                         '</div>',
+                         '<div class="bottom-container small-font">',
+                         '  <span class="'+ constants.forgotSwitchClass +'"><%= forgotPwdMsg %></span>',
+                         '</div>'].join(''),
+            resetPwdFrame: ['<div class="'+ constants.resetMailBoxClass +'">',
+                            '  <div class="inputs">',
+                            '    <div class="grid-row small">',
+                            '      <label for="email"><%= label %></label>',
+                            '      <input id="email" class="form-element input-large husky-validate" type="text" placeholder="<%= email %>"/>',
+                            '    </div>',
+                            '  </div>',
+                            '  <div class="grid-row">',
+                            '      <div class="btn action large fit"><%= reset %></div>',
+                            '  </div>',
+                            '</div>',
+                            '<div class="'+ constants.resetMsgBoxClass +'">',
+                            '<span class="msg"><%= sentMsg %></span>',
+                            '   <div class="btn action large fit"><%= resend %></div>',
+                            '</div>',
+                            '<div class="bottom-container small-font">',
+                                '  <span class="'+ constants.loginSwitchClass +'"><%= backLoginMsg %></span>',
+                            '</div>'].join('')
+
         },
 
         /**
@@ -96,7 +130,9 @@ define([], function() {
                 $box: null,
                 $frames: null,
                 $login: null,
-                $reset: null
+                $reset: null,
+                $forgotSwitch: null,
+                $loginSwitch: null
             }
         },
 
@@ -142,10 +178,15 @@ define([], function() {
          */
         renderLoginFrame: function() {
             this.dom.$login = this.sandbox.dom.createElement(templates.frame);
+            this.sandbox.dom.addClass(this.dom.$login, constants.loginFrameClass);
             this.sandbox.dom.append(this.dom.$login, this.sandbox.util.template(templates.loginFrame)({
                 username: 'Username',
-                password: 'Password'
+                password: 'Password',
+                forgotPwdMsg: 'I forgot my password',
+                errorMsg: 'This Email/Password combination is wrong. Please try again.',
+                login: 'Login'
             }));
+            this.dom.$forgotSwitch = this.sandbox.dom.find('.' + constants.forgotSwitchClass, this.dom.$login);
             this.sandbox.dom.append(this.dom.$frames, this.dom.$login);
         },
 
@@ -154,6 +195,17 @@ define([], function() {
          */
         renderResetPwdFrame: function() {
             this.dom.$reset = this.sandbox.dom.createElement(templates.frame);
+            this.sandbox.dom.addClass(this.dom.$reset, constants.resetFrameClass);
+            this.sandbox.dom.append(this.dom.$reset, this.sandbox.util.template(templates.resetPwdFrame)({
+                label: 'Reset your password',
+                reset: 'Reset',
+                email: 'Email',
+                backLoginMsg: 'Back to login',
+                resend: 'Re-send Email',
+                sentMsg: 'An email with instruction how to reset your password has been sent to:'
+            }));
+            this.dom.$loginSwitch = this.sandbox.dom.find('.' + constants.loginSwitchClass, this.dom.$reset);
+            this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.resetMsgBoxClass, this.dom.$reset));
             this.sandbox.dom.append(this.dom.$frames, this.dom.$reset);
         },
 
@@ -204,13 +256,23 @@ define([], function() {
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeHandler.bind(this));
             this.sandbox.dom.on(this.dom.$bg, 'mousedown', this.toggleBgActive.bind(this, true));
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBgActive.bind(this, false));
+            this.sandbox.dom.on(this.dom.$forgotSwitch, 'click', this.moveToFrame.bind(this, this.dom.$reset));
+            this.sandbox.dom.on(this.dom.$loginSwitch, 'click', this.moveToFrame.bind(this, this.dom.$login));
+        },
+
+        /**
+         * Moves the frames container so that a given frame is
+         * visible in the box
+         * @param $frame
+         */
+        moveToFrame: function($frame) {
+            this.sandbox.dom.css(this.dom.$frames, 'left', -(this.sandbox.dom.position($frame).left) + 'px');
         },
 
         /**
          * Handles the window resize event
-         * @param event
          */
-        resizeHandler: function(event) {
+        resizeHandler: function() {
             this.setBgSize();
         }
     };

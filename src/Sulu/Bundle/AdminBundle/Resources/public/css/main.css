@@ -244,50 +244,133 @@ input, select {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin-top: -215px;
-  margin-left: -200px;
+  transform: translate(-50%, -50%);
   z-index: 30;
   border-radius: 3px;
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   overflow: hidden;
+  transition: height 200ms;
 }
-/* line 24, ../scss/modules/login.scss */
+/* line 25, ../scss/modules/login.scss */
+.sulu-login .box.larger {
+  height: 450px;
+}
+/* line 29, ../scss/modules/login.scss */
+.sulu-login .box.husky-validate-error {
+  height: 450px;
+}
+/* line 31, ../scss/modules/login.scss */
+.sulu-login .box.husky-validate-error .error-msg {
+  height: 40px;
+}
+/* line 34, ../scss/modules/login.scss */
+.sulu-login .box.husky-validate-error .bottom-container span {
+  color: #000;
+}
+/* line 39, ../scss/modules/login.scss */
 .sulu-login .box .frames {
   height: 100%;
   width: 50px;
   white-space: nowrap;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  transition: left 300ms;
 }
-/* line 30, ../scss/modules/login.scss */
+/* line 49, ../scss/modules/login.scss */
 .sulu-login .box .frame {
   height: 100%;
   width: 400px;
   display: inline-block;
   vertical-align: top;
   white-space: normal;
+  position: relative;
 }
-/* line 38, ../scss/modules/login.scss */
+/* line 58, ../scss/modules/login.scss */
 .sulu-login .box .inputs {
   padding: 0 50px;
 }
-/* line 40, ../scss/modules/login.scss */
+/* line 60, ../scss/modules/login.scss */
 .sulu-login .box .inputs .form-element {
   padding-left: 5px;
 }
-/* line 46, ../scss/modules/login.scss */
+/* line 66, ../scss/modules/login.scss */
+.sulu-login .box .error-msg {
+  color: #EA524E;
+  display: block;
+  height: 0px;
+  overflow: hidden;
+  transition: height 200ms;
+}
+/* line 74, ../scss/modules/login.scss */
 .sulu-login .box .login-logo {
   width: 100%;
   height: 180px;
   background: url("../img/logo.png") no-repeat center center;
-  background-size: auto 125px;
+  background-size: auto 122px;
+  margin-bottom: 10px;
 }
-/* line 54, ../scss/modules/login.scss */
+/* line 81, ../scss/modules/login.scss */
+.sulu-login .box .btn.action {
+  float: right;
+  margin-right: 25px;
+  margin-top: 10px;
+  padding-left: 45px;
+  padding-right: 45px;
+}
+/* line 89, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  text-align: center;
+}
+/* line 96, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container span {
+  display: inline-block;
+  padding: 10px;
+  cursor: pointer;
+  color: #999;
+}
+/* line 101, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container span:hover {
+  color: #000;
+}
+/* line 108, ../scss/modules/login.scss */
+.sulu-login .box .reset .bottom-container span {
+  color: #000;
+}
+/* line 113, ../scss/modules/login.scss */
+.sulu-login .box .reset-msg {
+  padding: 0 50px;
+  text-align: center;
+}
+/* line 116, ../scss/modules/login.scss */
+.sulu-login .box .reset-msg .msg {
+  display: block;
+  color: #999;
+  padding-bottom: 20px;
+}
+/* line 121, ../scss/modules/login.scss */
+.sulu-login .box .reset-msg .btn.action {
+  float: none;
+  margin: 0;
+  padding: 0 15px;
+}
+/* line 128, ../scss/modules/login.scss */
+.sulu-login .box label {
+  text-align: center;
+  padding-bottom: 5px;
+}
+/* line 134, ../scss/modules/login.scss */
 .sulu-login .background {
   display: none;
   position: absolute;
 }
-/* line 58, ../scss/modules/login.scss */
+/* line 138, ../scss/modules/login.scss */
 .sulu-login .background .image {
   position: relative;
   display: block;
@@ -305,7 +388,7 @@ input, select {
   filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='3');
   z-index: 10;
 }
-/* line 70, ../scss/modules/login.scss */
+/* line 150, ../scss/modules/login.scss */
 .sulu-login .background .darkener {
   position: absolute;
   top: 0px;
@@ -318,7 +401,7 @@ input, select {
   transition: opacity 450ms;
   z-index: 20;
 }
-/* line 84, ../scss/modules/login.scss */
+/* line 164, ../scss/modules/login.scss */
 .sulu-login .background.active .darkener {
   opacity: 0.15;
 }
