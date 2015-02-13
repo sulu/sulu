@@ -13,6 +13,8 @@ namespace Sulu\Bundle\CoreBundle\Command;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
+use Sulu\Component\Content\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -129,28 +131,67 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
     {
         foreach ($structure->getProperties(true) as $property) {
             if ($property->getContentTypeName() == 'internal_links') {
-                $this->upgradeProperty($structure, $localization, $output, $property, $depth);
+                $transProperty = new TranslatedProperty(
+                    $property,
+                    $localization->getLocalization(),
+                    $this->getContainer()->getParameter('sulu.content.language.namespace')
+                );
+                $this->upgradeProperty($structure, $output, $transProperty, $depth);
+            } else if ($property instanceof BlockPropertyInterface) {
+                $this->upgradeBlockProperty($structure, $localization, $output, $property, $depth);
             }
         }
     }
 
-    private function upgradeProperty(Structure $structure, Localization $localization, OutputInterface $output, $property, $depth)
+    private function upgradeBlockProperty(
+        Structure $structure,
+        Localization $localization,
+        OutputInterface $output,
+        BlockPropertyInterface $property,
+        $depth
+    ) {
+        for ($i = 0; $i < $property->getLength(); $i++) {
+            $blockProperty = $property->getProperties($i);
+            foreach ($blockProperty->getChildProperties() as $childProperty) {
+                if ($childProperty->getContentTypeName() == 'internal_links') {
+                    $transProperty = new TranslatedProperty(
+                        new BlockPropertyWrapper(
+                            $childProperty,
+                            $property,
+                            $i
+                        ),
+                        $localization->getLocalization(),
+                        $this->getContainer()->getParameter('sulu.content.language.namespace')
+                    );
+                    $this->upgradeProperty($structure, $output, $transProperty, $depth);
+                }
+            }
+        }
+    }
+
+    private function upgradeProperty(
+        Structure $structure,
+        OutputInterface $output,
+        $property,
+        $depth
+    )
     {
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
 
-        $transProperty = new TranslatedProperty(
-            $property,
-            $localization->getLocalization(),
-            $this->getContainer()->getParameter('sulu.content.language.namespace')
-        );
 
-        if ($node->hasProperty($transProperty->getName())) {
-            $value = json_decode($node->getPropertyValueWithDefault($transProperty->getName(), '{ids: []}'), true);
-            $node->getProperty($transProperty->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $value = $node->getPropertyValueWithDefault($property->getName(), '{ids: []}');
+
+            if (is_array($value)) {
+                return;
+            }
+
+            $value = json_decode($value, true);
+            $node->getProperty($property->getName())->remove();
 
             $ids = array_key_exists('ids', $value) ? $value['ids'] : $value;
 
-            $node->setProperty($transProperty->getName(), $ids, PropertyType::REFERENCE);
+            $node->setProperty($property->getName(), $ids, PropertyType::REFERENCE);
 
             $prefix = '   ';
             for ($i = 0; $i < $depth; $i++) {
