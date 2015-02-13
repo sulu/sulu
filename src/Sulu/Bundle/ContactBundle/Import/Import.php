@@ -167,6 +167,12 @@ class Import
     protected $headerData = array();
 
     /**
+     * current row-number
+     * @var
+     */
+    protected $rowNumber;
+
+    /**
      * holds the amount of header variables
      * @var int
      */
@@ -483,6 +489,7 @@ class Import
         $this->initDefaults();
 
         $row = 0;
+        $this->rowNumber = $row;
         $successCount = 0;
         $errorCount = 0;
         $this->headerData = array();
@@ -553,6 +560,7 @@ class Import
                 break;
             }
             $row++;
+            $this->rowNumber = $row;
 
             if (self::DEBUG) {
                 print(sprintf("%d ", $row));
@@ -709,11 +717,9 @@ class Import
         if ($this->checkData('account_category', $data)) {
             $this->addCategory($data['account_category'], $account);
         }
-        if ($this->checkData('account_tag', $data)) {
-            $this->addTag($data['account_tag'], $account);
-        }
 
         // process emails, phones, faxes, urls and notes
+        $this->processTags($data, $account);
         $this->processEmails($data, $account);
         $this->processPhones($data, $account);
         $this->processFaxes($data, $account);
@@ -853,6 +859,42 @@ class Import
             }
         }
         $this->getContactManager()->setMainFax($entity);
+    }
+
+    /**
+     * process tags
+     *
+     * @param $data
+     * @param $entity
+     */
+    protected function processTags($data, $entity)
+    {
+        $prefix = 'account_';
+        if ($entity instanceof Contact) {
+            $prefix = 'contact_';
+        }
+        // add tags
+        $tagPrefix = $prefix . 'tag';
+        $this->checkAndAddTag($tagPrefix, $data, $entity);
+        
+        for ($i = 0, $len = 10; ++$i < $len;) {
+            $index = $tagPrefix . $i;
+            $this->checkAndAddTag($index, $data, $entity);
+        }
+    }
+
+    /**
+     * checks if tagindex exists in data and adds it to entity's tags
+     *
+     * @param $tagIndex
+     * @param $data
+     * @param $entity
+     */
+    protected function checkAndAddTag($tagIndex, $data, $entity)
+    {
+        if ($this->checkData($tagIndex, $data, null, 60)) {
+            $this->addTag($data[$tagIndex], $entity);
+        }
     }
 
     /**
@@ -1096,6 +1138,10 @@ class Import
             $address->setAddition($data[$prefix . 'extension']);
             $addAddress = true;
         }
+
+        // define if this is a normal address or just a postbox address
+        $isNormalAddress = $addAddress;
+        
         // postbox
         if ($this->checkData($prefix . 'postbox', $data)) {
             $address->setPostboxNumber($data[$prefix . 'postbox']);
@@ -1147,6 +1193,9 @@ class Import
             $address->setCountry($country);
             $addAddress = $addAddress && true;
         } else {
+            if ($addAddress && $isNormalAddress) {
+                $this->debug("no country defined at line " . $this->rowNumber);
+            }
             $addAddress = false;
         }
 
@@ -1160,7 +1209,6 @@ class Import
             }
 
             $address->setAddressType($addressType);
-
 
             $this->em->persist($address);
 
@@ -1331,10 +1379,6 @@ class Import
             $contact->setDisabled($this->getBoolValue($data['contact_disabled']));
         }
 
-        if ($this->checkData('contact_tag', $data)) {
-            $this->addTag($data['contact_tag'], $contact);
-        }
-
         $contact->setChanged(new \DateTime());
         $contact->setCreated(new \DateTime());
 
@@ -1345,6 +1389,7 @@ class Import
         $this->createAddresses($data, $contact);
 
         // process emails, phones, faxes, urls and notes
+        $this->processTags($data, $contact);
         $this->processEmails($data, $contact);
         $this->processPhones($data, $contact);
         $this->processFaxes($data, $contact);
@@ -1567,7 +1612,7 @@ class Import
             if ($index >= sizeof($headerData)) {
                 break;
             }
-            if (empty($value)) {
+            if (empty($value) && $value != "0") {
                 continue;
             }
             // search index in mapping config

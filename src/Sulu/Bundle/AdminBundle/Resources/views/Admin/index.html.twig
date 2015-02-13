@@ -71,7 +71,7 @@
                     settings: {{ user.settings }}
                 },
                 sections: {{ config | json_encode }},
-                locales: ['en', 'de']
+                locales: {{ locales | json_encode }}
             };
             {% endautoescape %}
 

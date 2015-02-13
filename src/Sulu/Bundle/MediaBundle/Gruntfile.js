@@ -32,10 +32,6 @@ module.exports = function (grunt) {
             compass: {
                 files: ['Resources/public/scss/{,*/}*.{scss,sass}'],
                 tasks: ['compass:dev']
-            },
-            scripts: {
-                files: ['Resources/public/**'],
-                tasks: ['publish']
             }
         },
         jshint: {
@@ -81,7 +77,6 @@ module.exports = function (grunt) {
         'compass:dev',
         'uglify',
         'replace:build',
-        'publish'
     ]);
 
     grunt.registerTask('default', [

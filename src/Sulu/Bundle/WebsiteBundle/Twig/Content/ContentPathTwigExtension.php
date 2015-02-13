@@ -82,7 +82,7 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
                 return rtrim($portalUrls[0], '/');
             }
         } elseif (strpos($url, '/') === 0 && $this->requestAnalyzer) {
-            return rtrim($this->requestAnalyzer->getCurrentResourceLocatorPrefix() . $url, '/');
+            return rtrim($this->requestAnalyzer->getResourceLocatorPrefix() . $url, '/');
         }
 
         return $url;
@@ -95,9 +95,9 @@ class ContentPathTwigExtension extends \Twig_Extension implements ContentPathInt
     {
         if ($this->requestAnalyzer !== null) {
             if ($full) {
-                return $this->requestAnalyzer->getCurrentPortalUrl();
+                return $this->requestAnalyzer->getPortalUrl();
             } else {
-                return $this->requestAnalyzer->getCurrentResourceLocatorPrefix();
+                return $this->requestAnalyzer->getResourceLocatorPrefix();
             }
         } else {
             return '/';

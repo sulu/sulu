@@ -85,6 +85,33 @@ class ContactController extends AbstractContactController
             'fullName',
             'public.name',
             ' ',
+            true,
+            false,
+            '',
+            '',
+            '100px',
+            false
+        );
+
+        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
+            'firstName',
+            'firstName',
+            self::$entityName,
+            'contact.contacts.firstName',
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '100px'
+        );
+
+        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'lastName',
+            self::$entityName,
+            'contact.contacts.lastName',
+            array(),
             false,
             true,
             '',
@@ -280,7 +307,21 @@ class ContactController extends AbstractContactController
         // field descriptors for the account contact list
         $this->accountContactFieldDescriptors = array();
         $this->accountContactFieldDescriptors['id'] = $this->fieldDescriptors['id'];
-        $this->accountContactFieldDescriptors['fullName'] = $this->fieldDescriptors['fullName'];
+        $this->accountContactFieldDescriptors['fullName'] = new DoctrineConcatenationFieldDescriptor(
+            array(
+                new DoctrineFieldDescriptor('firstName', 'firstName', self::$entityName),
+                new DoctrineFieldDescriptor('lastName', 'lastName', self::$entityName)
+            ),
+            'fullName',
+            'public.name',
+            ' ',
+            false,
+            true,
+            '',
+            '',
+            '100px',
+            false
+        );
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
             'position',
             'position',

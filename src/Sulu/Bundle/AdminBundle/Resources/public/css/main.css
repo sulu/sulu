@@ -484,8 +484,14 @@ input, select {
 .sulu-sidebar .show-icon:hover .blue-icon {
   opacity: 1;
 }
+/* line 62, ../scss/modules/sidebar.scss */
+.sulu-sidebar hr {
+  border: 0;
+  height: 1px;
+  background: #ddd;
+}
 
-/* line 64, ../scss/modules/sidebar.scss */
+/* line 70, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }

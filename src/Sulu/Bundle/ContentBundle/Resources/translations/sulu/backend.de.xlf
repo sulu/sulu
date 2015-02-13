@@ -216,7 +216,7 @@
             </trans-unit>
             <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
                 <source>smart-content.choose-data-source.cancel</source>
-                <target>Zurück</target>
+                <target>Abbrechenk</target>
             </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>

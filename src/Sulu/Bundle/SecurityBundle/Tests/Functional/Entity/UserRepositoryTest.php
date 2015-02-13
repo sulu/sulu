@@ -155,7 +155,7 @@ class UserRepositoryTest extends SuluTestCase
 //        $repo = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User');
 //        $employees = $repo->getUserInSystem();
 //
-//        // FIXME alternative would be to get the container via the factory but there following in the repo is null $this->requestAnalyzer->getCurrentWebspace()
+//        // FIXME alternative would be to get the container via the factory but there following in the repo is null $this->requestAnalyzer->getWebspace()
 //        $repo = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
 //
 //        $this->assertEquals(1, count($employees));

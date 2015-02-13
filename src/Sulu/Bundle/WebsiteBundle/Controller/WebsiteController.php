@@ -97,10 +97,10 @@ abstract class WebsiteController extends Controller
                 ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
         }
 
-        if (null !== ($portal = $requestAnalyzer->getCurrentPortal())) {
+        if (null !== ($portal = $requestAnalyzer->getPortal())) {
             $allLocalizations = $portal->getLocalizations();
         } else {
-            $allLocalizations = $requestAnalyzer->getCurrentWebspace()->getLocalizations();
+            $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
         }
 
         $urls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();

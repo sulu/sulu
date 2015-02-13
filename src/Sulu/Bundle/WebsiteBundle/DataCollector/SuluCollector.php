@@ -34,13 +34,13 @@ class SuluCollector extends DataCollector
     {
         $requestAnalyzer = $this->requestAnalyzer;
 
-        $webspace = $requestAnalyzer->getCurrentWebspace();
-        $portal = $requestAnalyzer->getCurrentPortal();
-        $segment = $requestAnalyzer->getCurrentSegment();
+        $webspace = $requestAnalyzer->getWebspace();
+        $portal = $requestAnalyzer->getPortal();
+        $segment = $requestAnalyzer->getSegment();
 
-        $this->data['match_type'] = $requestAnalyzer->getCurrentMatchType();
-        $this->data['redirect'] = $requestAnalyzer->getCurrentRedirect();
-        $this->data['portal_url'] = $requestAnalyzer->getCurrentPortalUrl();
+        $this->data['match_type'] = $requestAnalyzer->getMatchType();
+        $this->data['redirect'] = $requestAnalyzer->getRedirect();
+        $this->data['portal_url'] = $requestAnalyzer->getPortalUrl();
 
         if ($webspace) {
             $this->data['webspace'] = $webspace->toArray();
@@ -55,8 +55,8 @@ class SuluCollector extends DataCollector
         }
 
         $this->data['localization'] = $requestAnalyzer->getCurrentLocalization();
-        $this->data['resource_locator'] = $requestAnalyzer->getCurrentResourceLocator();
-        $this->data['resource_locator_prefix'] = $requestAnalyzer->getCurrentResourceLocatorPrefix();
+        $this->data['resource_locator'] = $requestAnalyzer->getResourceLocator();
+        $this->data['resource_locator_prefix'] = $requestAnalyzer->getResourceLocatorPrefix();
 
         $structure = null;
         if ($request->attributes->has('_route_params')) {

@@ -84,7 +84,7 @@ define(function() {
                             icons: [
                                 {
                                     icon: 'pencil',
-                                    column: 'fullName',
+                                    column: 'firstName',
                                     align: 'left',
                                     callback: function(id) {
                                         this.sandbox.emit('sulu.contacts.contacts.load', id);

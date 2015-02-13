@@ -66,7 +66,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      */
     public function flatRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
         return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, true, $context, $loadExcerpt);
@@ -77,7 +77,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      */
     public function treeRootNavigationFunction($context = null, $depth = 1, $loadExcerpt = false)
     {
-        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
         return $this->navigationMapper->getRootNavigation($webspaceKey, $locale, $depth, false, $context, $loadExcerpt);
@@ -88,7 +88,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
-        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
         if ($level !== null) {
@@ -114,7 +114,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null)
     {
-        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
         if ($level !== null) {
@@ -140,7 +140,7 @@ class NavigationTwigExtension extends \Twig_Extension implements NavigationTwigE
      */
     public function breadcrumbFunction($uuid)
     {
-        $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+        $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
         return $this->navigationMapper->getBreadcrumb(

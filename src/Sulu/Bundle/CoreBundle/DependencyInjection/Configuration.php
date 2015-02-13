@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
         $this->getCacheConfiguration($children);
+        $this->getLocaleConfiguration($children);
         $children->end();
 
         return $treeBuilder;
@@ -47,6 +48,17 @@ class Configuration implements ConfigurationInterface
     private function getCoreConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sulu')->end();
+    }
+
+    /**
+     * @param NodeBuilder $rootNode
+     */
+    private function getLocaleConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('locales')
+            ->useAttributeAsKey('locale')
+            ->prototype('scalar')
+        ->end();
     }
 
     /**

@@ -247,11 +247,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $system = $this->suluSystem;
         if (
             $this->requestAnalyzer != null &&
-            $this->requestAnalyzer->getCurrentWebspace() !== null &&
-            $this->requestAnalyzer->getCurrentWebspace()->getSecurity() !== null
+            $this->requestAnalyzer->getWebspace() !== null &&
+            $this->requestAnalyzer->getWebspace()->getSecurity() !== null
         ) {
             // if the request analyzer is available, overwrite the system
-            $system = $this->requestAnalyzer->getCurrentWebspace()->getSecurity()->getSystem();
+            $system = $this->requestAnalyzer->getWebspace()->getSecurity()->getSystem();
         }
 
         return $system;

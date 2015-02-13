@@ -35,6 +35,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
 
+        $container->setParameter('sulu_core.locales', $config['locales']);
+
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 

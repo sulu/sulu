@@ -2,6 +2,24 @@
 
 ## dev-develop
 
+### Sulu Locales
+The Sulu Locales are not hardcoded anymore, but configured in the `app/config/config.yml` file:
+
+```yml
+sulu_core:
+    locales: ["de","en"]
+```
+
+You have to add the locales to your configuration, otherwise Sulu will stop working.
+
+### Internal Links
+
+The internal representation of the internal links have changed, you have to run the following command to convert them:
+
+```bash
+app/console sulu:upgrade:0.15.0:internal-links
+```
+
 ### Websocket Component
 
 Websocket start command changed to `app/console sulu:websocket:run`. If you use xdebug on your server please start
@@ -35,6 +53,12 @@ The Symfony HTTP cache is enabled by default now, so there is no need to do
 anything else. See the [HTTP cache
 documentation](http://sulu.readthedocs.org/en/latest/reference/bundles/http_cache.html)
 for more information.
+
+### Renamed RequestAnalyzerInterface methods
+
+The text "Current" has been removed from all of the request analyzer methods.
+If you used the request analyzer service then you will probably need to update
+your code, see: https://github.com/sulu-cmf/sulu/pull/749/files#diff-23
 
 ## 0.14.0
 

@@ -89,15 +89,15 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $localization->setCountry('at');
 
         $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer');
-        $requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
-        $requestAnalyzer->getCurrentPortalUrl()->willReturn('sulu.io/de');
-        $requestAnalyzer->getCurrentResourceLocatorPrefix()->willReturn('/de');
-        $requestAnalyzer->getCurrentResourceLocator()->willReturn('/search');
-        $requestAnalyzer->getCurrentGetParameter()->willReturn(array('p' => 1));
-        $requestAnalyzer->getCurrentPostParameter()->willReturn(array());
-        $requestAnalyzer->getCurrentPortal()->willReturn($portal);
-        $requestAnalyzer->getCurrentAnalyticsKey()->willReturn('analyticsKey');
+        $requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');
+        $requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
+        $requestAnalyzer->getResourceLocator()->willReturn('/search');
+        $requestAnalyzer->getGetParameters()->willReturn(array('p' => 1));
+        $requestAnalyzer->getPostParameters()->willReturn(array());
+        $requestAnalyzer->getPortal()->willReturn($portal);
+        $requestAnalyzer->getAnalyticsKey()->willReturn('analyticsKey');
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
