@@ -222,8 +222,6 @@ define([], function() {
 
         sortHandler: function(ids) {
             this.setData(ids, false);
-
-            this.sandbox.emit('sulu.content.changed');
         },
 
         removeHandler: function(id) {
@@ -235,9 +233,7 @@ define([], function() {
                 }
             }
 
-            this.setData(data);
-
-            this.sandbox.emit('sulu.content.changed');
+            this.setData(data, false);
         }
     };
 });
