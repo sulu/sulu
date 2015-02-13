@@ -85,6 +85,33 @@ class ContactController extends AbstractContactController
             'fullName',
             'public.name',
             ' ',
+            true,
+            true,
+            '',
+            '',
+            '100px',
+            false
+        );
+
+        $this->fieldDescriptors['firstName'] = new DoctrineFieldDescriptor(
+            'firstName',
+            'firstName',
+            self::$entityName,
+            'contact.contacts.firstName',
+            array(),
+            false,
+            true,
+            '',
+            '',
+            '100px'
+        );
+
+        $this->fieldDescriptors['lastName'] = new DoctrineFieldDescriptor(
+            'lastName',
+            'lastName',
+            self::$entityName,
+            'contact.contacts.lastName',
+            array(),
             false,
             true,
             '',
