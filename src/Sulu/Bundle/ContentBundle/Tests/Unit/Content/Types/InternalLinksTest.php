@@ -64,12 +64,8 @@ class InternalLinksTest extends ProphecyTestCase
     {
         return array(
             array(
-                array('ids' => array('4234-2345-2345-3245', '4321-4321-4321-4321')),
                 array('4234-2345-2345-3245', '4321-4321-4321-4321'),
-            ),
-            array(
-                array(array('someotherkey' => '4234-2345-2345-3245', '4321-4321-4321-4321')),
-                array(),
+                array('4234-2345-2345-3245', '4321-4321-4321-4321'),
             ),
             array(
                 array(),

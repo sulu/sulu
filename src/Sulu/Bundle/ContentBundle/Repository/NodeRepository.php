@@ -372,6 +372,7 @@ class NodeRepository implements NodeRepositoryInterface
             'path' => '/',
             'title' => $webspace->getName(),
             'hasSub' => true,
+            'publishedState' => true,
             '_embedded' => $embedded,
             '_links' => array(
                 'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
@@ -533,6 +534,7 @@ class NodeRepository implements NodeRepositoryInterface
                             'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
                             'path' => '/',
                             'title' => $webspace->getName(),
+                            'publishedState' => true,
                             'hasSub' => true,
                             '_embedded' => array(
                                 'nodes' => $this->prepareNodesTree(
