@@ -7,7 +7,7 @@ use Sulu\Component\Content\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Sulu\Component\Content\ContentEvents;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
+use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Prophecy\Argument;
 
 class NodeOrderSubscriberTest extends ProphecyTestCase
@@ -32,13 +32,13 @@ class NodeOrderSubscriberTest extends ProphecyTestCase
         $this->structure = $this->prophesize('Sulu\Component\Content\Structure');
 
         $this->subscriber = new NodeOrderSubscriber();
-        $this->orderBeforeEvent = new ContentOrderBeforeEvent($this->node->reveal(), $this->orderBefore->reveal());
+        $this->nodeOrderEvent = new ContentNodeOrderEvent($this->node->reveal(), $this->orderBefore->reveal());
         $this->nodeSaveEvent = new ContentNodeEvent($this->node->reveal(), $this->structure->reveal());
         $this->eventDispatcher = new EventDispatcher();
         $this->eventDispatcher->addSubscriber($this->subscriber);
     }
 
-    public function testDispatchOrderBefore()
+    public function testDispatchNodeOrder()
     {
         $this->node->getParent()->willReturn($this->parent->reveal());
         $this->parent->getNodes()->willReturn(array(
@@ -50,7 +50,7 @@ class NodeOrderSubscriberTest extends ProphecyTestCase
 
         $this->node->setProperty('sulu:order', 30, PropertyType::LONG)->shouldBeCalled();
 
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER_BEFORE, $this->orderBeforeEvent);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $this->nodeOrderEvent);
     }
 
     public function testDispatchNodeSave()

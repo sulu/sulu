@@ -25,6 +25,7 @@ use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
@@ -53,7 +54,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
-use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
 use Sulu\Component\Util\SuluNodeHelper;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
@@ -1741,7 +1741,10 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $parent = $beforeTargetNode->getParent();
-        $this->executeOrderBefore($parent, $beforeTargetNode, $subjectNode);
+        $parent->orderBefore($beforeTargetNode->getName(), $subjectNode->getName());
+
+        $event = new ContentNodeOrderEvent($beforeTargetNode);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $event);
 
         // set changer of node in specific language
         $this->setChanger($beforeTargetNode, $userId, $languageCode);
@@ -1772,19 +1775,23 @@ class ContentMapper implements ContentMapperInterface
             throw new InvalidOrderPositionException();
         }
         if ($position === $countSiblings) {
-            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1]);
-            $this->executeOrderBefore($parent, $siblings[$position - 1], $subject);
+            $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
+            $parent->orderBefore($siblings[$position - 1]->getName(), $subject->getName());
         } else if ($oldPosition < $position) {
-            $this->executeOrderBefore($parent, $subject, $siblings[$position]);
+            $parent->orderBefore($subject->getName(), $siblings[$position]->getName());
         } else if ($oldPosition > $position) {
-            $this->executeOrderBefore($parent, $subject, $siblings[$position - 1]);
+            $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
         }
+
+        $event = new ContentNodeOrderEvent($subject);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $event);
 
         // set changer of node in specific language
         $this->setChanger($subject, $userId, $languageCode);
 
         $session->save();
         $session->refresh(false);
+
         return $this->load($uuid, $webspaceKey, $languageCode);
     }
 
@@ -1813,24 +1820,6 @@ class ContentMapper implements ContentMapperInterface
         $this->ignoreMandatoryFlag = $ignoreMandatoryFlag;
 
         return $this;
-    }
-
-    /**
-     * Orders a child before another child
-     * @param NodeInterface $parent
-     * @param NodeInterface $childSource
-     * @param NodeInterface $childDest
-     */
-    private function executeOrderBefore(
-        NodeInterface $parent,
-        NodeInterface $childSource,
-        NodeInterface $childDest
-    ) {
-        // reorder
-        $parent->orderBefore($childSource->getName(), $childDest->getName());
-
-        $event = new ContentOrderBeforeEvent($childDest, $childSource);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER_BEFORE, $event);
     }
 
     /**

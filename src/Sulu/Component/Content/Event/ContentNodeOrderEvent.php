@@ -11,13 +11,12 @@
 namespace Sulu\Component\Content\Event;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event class for the ContentEvents::NODE_ORDER_BEFORE event
+ * Event class for the ContentEvents::NODE_ORDER event
  */
-class ContentOrderBeforeEvent extends Event
+class ContentNodeOrderEvent extends Event
 {
     /**
      * @var NodeInterface
@@ -25,18 +24,11 @@ class ContentOrderBeforeEvent extends Event
     protected $node;
 
     /**
-     * @var NodeInterface
-     */
-    protected $beforeTargetNode;
-
-    /**
      * @param NodeInterface $node
-     * @param StructureInterface $structure
      */
-    public function __construct(NodeInterface $node, NodeInterface $beforeTargetNode)
+    public function __construct(NodeInterface $node)
     {
         $this->node = $node;
-        $this->beforeTargetNode = $beforeTargetNode;
     }
 
     /**
@@ -45,13 +37,5 @@ class ContentOrderBeforeEvent extends Event
     public function getNode()
     {
         return $this->node;
-    }
-
-    /**
-     * @return NodeInterface
-     */
-    public function getBeforeTargetNode()
-    {
-        return $this->beforeTargetNode;
     }
 }
