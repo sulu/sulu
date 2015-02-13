@@ -27610,7 +27610,7 @@ define('husky',[
         app.use('./husky_extensions/dropzone');
         app.use('./husky_extensions/colorpicker');
         app.use('./husky_extensions/datepicker');
-
+        app.use('./husky_extensions/itembox');
     }
 
     // subclass extends superclass
@@ -28996,170 +28996,170 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
     
 
     var defaults = {
-            editable: false,
-            fullWidth: false,
-            removeRow: false,
-            selectItem: {
-                type: 'checkbox',
-                inFirstCell: false
-            },
-            noItemsText: 'This list is empty',
-            addRowTop: true,
-            excludeFields: [''],
-            cssClass: '',
-            thumbnailFormat: '50x50',
-            showHead: true,
-            hideChildrenAtBeginning: true,
-            openChildId: null,
-            highlightSelected: false,
-            stickyHeader: false,
-            icons: [],
-            removeIcon: 'trash-o',
-            croppedMaxLength: 35,
-            openPathToSelectedChildren: false
+        editable: false,
+        fullWidth: false,
+        removeItem: false,
+        selectItem: {
+            type: 'checkbox',
+            inFirstCell: false
         },
+        noItemsText: 'This list is empty',
+        addRowTop: true,
+        excludeFields: [''],
+        cssClass: '',
+        thumbnailFormat: '50x50',
+        showHead: true,
+        hideChildrenAtBeginning: true,
+        openChildId: null,
+        highlightSelected: false,
+        stickyHeader: false,
+        icons: [],
+        removeIcon: 'trash-o',
+        croppedMaxLength: 35,
+        openPathToSelectedChildren: false
+    },
 
-        constants = {
-            fullWidthClass: 'fullwidth',
-            stickyHeaderClass: 'sticky-header',
-            selectedRowClass: 'selected',
-            isSelectableClass: 'is-selectable',
-            sortableClass: 'is-sortable',
-            skeletonClass: 'husky-table',
-            containerClass: 'table-container',
-            overflowClass: 'overflow',
-            emptyListElementClass: 'empty-list',
-            rowRemoverClass: 'row-remover',
-            checkboxClass: 'checkbox',
-            radioClass: 'radio',
-            cellFitClass: 'fit',
-            tableClass: 'table',
-            rowClass: 'row',
-            thumbSrcKey: 'url',
-            thumbAltKey: 'alt',
-            headerCellClass: 'header-cell',
-            ascSortedClass: 'sorted-asc',
-            descSortedClass: 'sorted-desc',
-            headerCellLoaderClass: 'header-loader',
-            headerLoadingClass: 'is-loading',
-            editableItemClass: 'editable',
-            editableInputClass: 'editable-input',
-            inputWrapperClass: 'input-wrapper',
-            editedErrorClass: 'server-validation-error',
-            newRecordId: 'newrecord',
-            gridIconClass: 'grid-icon',
-            childWrapperClass: 'child-wrapper',
-            parentClass: 'children-toggler',
-            noChildrenClass: 'no-children',
-            toggleIconClass: 'toggle-icon',
-            collapsedIcon: 'fa-caret-right',
-            expandedIcon: 'fa-caret-down',
-            checkboxCellClass: 'checkbox-cell',
-            textContainerClass: 'cell-content',
-            renderingClass: 'rendering',
-            headerCloneClass: 'header-clone',
-            childIndent: 25 //px
-        },
+    constants = {
+        fullWidthClass: 'fullwidth',
+        stickyHeaderClass: 'sticky-header',
+        selectedRowClass: 'selected',
+        isSelectableClass: 'is-selectable',
+        sortableClass: 'is-sortable',
+        skeletonClass: 'husky-table',
+        containerClass: 'table-container',
+        overflowClass: 'overflow',
+        emptyListElementClass: 'empty-list',
+        rowRemoverClass: 'row-remover',
+        checkboxClass: 'checkbox',
+        radioClass: 'radio',
+        cellFitClass: 'fit',
+        tableClass: 'table',
+        rowClass: 'row',
+        thumbSrcKey: 'url',
+        thumbAltKey: 'alt',
+        headerCellClass: 'header-cell',
+        ascSortedClass: 'sorted-asc',
+        descSortedClass: 'sorted-desc',
+        headerCellLoaderClass: 'header-loader',
+        headerLoadingClass: 'is-loading',
+        editableItemClass: 'editable',
+        editableInputClass: 'editable-input',
+        inputWrapperClass: 'input-wrapper',
+        editedErrorClass: 'server-validation-error',
+        newRecordId: 'newrecord',
+        gridIconClass: 'grid-icon',
+        childWrapperClass: 'child-wrapper',
+        parentClass: 'children-toggler',
+        noChildrenClass: 'no-children',
+        toggleIconClass: 'toggle-icon',
+        collapsedIcon: 'fa-caret-right',
+        expandedIcon: 'fa-caret-down',
+        checkboxCellClass: 'checkbox-cell',
+        textContainerClass: 'cell-content',
+        renderingClass: 'rendering',
+        headerCloneClass: 'header-clone',
+        childIndent: 25 //px
+    },
 
-        selectItems = {
-            CHECKBOX: 'checkbox',
-            RADIO: 'radio'
-        },
+    selectItems = {
+        CHECKBOX: 'checkbox',
+        RADIO: 'radio'
+    },
 
-        /**
-         * Templates used by this class
-         */
-        templates = {
-            skeleton: [
-                '<div class="' + constants.skeletonClass + '">',
-                '   <div class="' + constants.containerClass + '"></div>',
-                '</div>'
-            ].join(''),
-            table: '<table class="' + constants.tableClass + '"></table>',
-            header: '<thead></thead>',
-            body: '<tbody></tbody>',
-            row: '<tr class="' + constants.rowClass + '"></tr>',
-            headerCell: '<th class="' + constants.headerCellClass + '"></th>',
-            cell: '<td></td>',
-            textContainer: '<span class="' + constants.textContainerClass + '"><%= content %></span>',
-            headerCellLoader: '<div class="' + constants.headerCellLoaderClass + '"></div>',
-            removeCellContent: '<span class="fa-<%= icon %> ' + constants.rowRemoverClass + '"></span>',
-            editableCellContent: [
-                '<span class="' + constants.editableItemClass + '"><%= value %></span>',
-                '<div class="' + constants.inputWrapperClass + '">',
-                '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
-                '</div>'
-            ].join(''),
-            img: '<img alt="<%= alt %>" src="<%= src %>"/>',
-            childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
-            toggleIcon: '<span class="' + constants.toggleIconClass + '"></span>',
-            icon: [
-                '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
-                '   <span class="fa-<%= icon %>"></span>',
-                '</span>'
-            ].join(''),
-            checkbox: [
-                '<div class="custom-checkbox">',
-                '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
-                '   <span class="icon"></span>',
-                '</div>'
-            ].join(''),
-            radio: [
-                '<div class="custom-radio">',
-                '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
-                '    <span class="icon"></span>',
-                '</div>'
-            ].join(''),
-            empty: [
-                '<div class="' + constants.emptyListElementClass + '">',
-                '   <div class="fa-coffee icon"></div>',
-                '   <span><%= text %></span>',
-                '</div>'
-            ].join('')
-        },
+    /**
+     * Templates used by this class
+     */
+    templates = {
+        skeleton: [
+            '<div class="'+ constants.skeletonClass +'">',
+            '   <div class="'+ constants.containerClass +'"></div>',
+            '</div>'
+        ].join(''),
+        table: '<table class="'+ constants.tableClass +'"></table>',
+        header: '<thead></thead>',
+        body: '<tbody></tbody>',
+        row: '<tr class="' + constants.rowClass + '"></tr>',
+        headerCell: '<th class="'+ constants.headerCellClass +'"></th>',
+        cell: '<td></td>',
+        textContainer: '<span class="'+ constants.textContainerClass +'"><%= content %></span>',
+        headerCellLoader: '<div class="'+ constants.headerCellLoaderClass +'"></div>',
+        removeCellContent: '<span class="fa-<%= icon %> '+ constants.rowRemoverClass +'"></span>',
+        editableCellContent: [
+            '<span class="'+ constants.editableItemClass +'"><%= value %></span>',
+            '<div class="'+ constants.inputWrapperClass +'">',
+            '   <input type="text" class="form-element husky-validate '+ constants.editableInputClass +'" value="<%= value %>">',
+            '</div>'
+        ].join(''),
+        img: '<img alt="<%= alt %>" src="<%= src %>"/>',
+        childWrapper: '<div class="'+ constants.childWrapperClass +'"></div>',
+        toggleIcon: '<span class="'+ constants.toggleIconClass +'"></span>',
+        icon: [
+            '<span class="'+ constants.gridIconClass +' <%= align %>" data-icon-index="<%= index %>">',
+            '   <span class="fa-<%= icon %>"></span>',
+            '</span>'
+        ].join(''),
+        checkbox: [
+            '<div class="custom-checkbox">',
+            '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
+            '   <span class="icon"></span>',
+            '</div>'
+        ].join(''),
+        radio: [
+            '<div class="custom-radio">',
+            '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
+            '    <span class="icon"></span>',
+            '</div>'
+        ].join(''),
+        empty: [
+            '<div class="'+ constants.emptyListElementClass +'">',
+            '   <div class="fa-coffee icon"></div>',
+            '   <span><%= text %></span>',
+            '</div>'
+        ].join('')
+    },
 
-        /**
-         * used to update the table width and its containers due to responsiveness
-         * @event husky.datagrid.update.table
-         */
-        UPDATE_TABLE = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'update.table');
-        },
+    /**
+     * used to update the table width and its containers due to responsiveness
+     * @event husky.datagrid.update.table
+     */
+    UPDATE_TABLE = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'update.table');
+    },
 
-        /**
-         * used to update the table width and its containers due to responsiveness
-         * @event husky.datagrid.table.open-child
-         * @param {Number|String} id The id of the data-record to open the parents for
-         */
-        OPEN_PARENTS = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
-        },
+    /**
+     * used to update the table width and its containers due to responsiveness
+     * @event husky.datagrid.table.open-child
+     * @param {Number|String} id The id of the data-record to open the parents for
+     */
+    OPEN_PARENTS = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
+    },
 
-        /**
-         * triggered when a radio button inside the datagrid is clicked
-         * @event husky.datagrid.table.open-child
-         * @param {Number|String} id The id of the data-record to open the parents for
-         * @param {String} columnName column name
-         */
-        RADIO_SELECTED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
-        },
+    /**
+     * triggered when a radio button inside the datagrid is clicked
+     * @event husky.datagrid.table.open-child
+     * @param {Number|String} id The id of the data-record to open the parents for
+     * @param {String} columnName column name
+     */
+    RADIO_SELECTED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
+    },
 
-        /**
-         * triggered when children were collapsed
-         * @event husky.datagrid.table.children.collapsed
-         */
-        CHILDREN_COLLAPSED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
-        },
+    /**
+     * triggered when children were collapsed
+     * @event husky.datagrid.table.children.collapsed
+     */
+    CHILDREN_COLLAPSED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
+    },
 
-        /**
-         * triggered when children were expanded
-         * @event husky.datagrid.table.children.expanded
-         */
-        CHILDREN_EXPANDED = function() {
-            return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
-        };
+    /**
+     * triggered when children were expanded
+     * @event husky.datagrid.table.children.expanded
+     */
+    CHILDREN_EXPANDED = function() {
+        return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
+    };
 
     return {
 
@@ -29193,10 +29193,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
 
-            if (!!this.options.openPathToSelectedChildren) {
+            if(!!this.options.openPathToSelectedChildren){
                 var eventName = '';
-                if (!!this.datagrid.options.instanceName) {
-                    eventName = 'husky.datagrid.' + this.datagrid.options.instanceName + '.view.rendered';
+                if(!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
                 } else {
                     eventName = 'husky.datagrid.view.rendered';
                 }
@@ -29207,8 +29207,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Opens path to all selected children
          */
-        openPathToSelectedChildren: function() {
-            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id) {
+        openPathToSelectedChildren: function(){
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
                 this.openParents(id);
             }.bind(this));
         },
@@ -29256,7 +29256,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a row to the datagrid
          * @param record {Object} the new record to add
          */
-        addRecord: function(record) {
+        addRecord: function (record) {
             this.removeEmptyIndicator();
             this.renderBodyRow(record, this.options.addRowTop);
         },
@@ -29312,7 +29312,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Adds css classes to the view element
          */
-        addViewClasses: function() {
+        addViewClasses: function () {
             this.sandbox.dom.addClass(this.$el, this.options.cssClass);
             this.sandbox.dom.addClass(this.$el, constants.renderingClass);
             if (this.options.stickyHeader === true) {
@@ -29426,8 +29426,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Renderes an empty remove-row cell into the header
          */
-        renderHeaderRemoveItem: function() {
-            if (this.options.removeRow === true) {
+        renderHeaderRemoveItem: function () {
+            if (this.options.removeItem === true) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
                 this.sandbox.dom.append(this.table.header.$row, $cell);
@@ -29442,7 +29442,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.table.rows = {};
             if (this.data.embedded.length > 0) {
                 this.sandbox.util.foreach(this.data.embedded, function(record) {
-                    this.renderBodyRow(record, false);
+                    this.renderBodyRow(record);
                 }.bind(this));
             } else {
                 this.renderEmptyIndicator();
@@ -29483,43 +29483,36 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param record {Object} the record
          * @param prepend {Boolean} if true row gets prepended
          */
-        renderBodyRow: function(record, prepend) {
+        renderBodyRow: function (record, prepend) {
             this.removeNewRecordRow();
+            var $row = this.sandbox.dom.createElement(templates.row),
+                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            if (!this.table.rows[record.id]) {
-                var $row = this.sandbox.dom.createElement(templates.row),
-                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
+            record.id = (!!record.id) ? record.id : constants.newRecordId;
+            this.sandbox.dom.data($row, 'id', record.id);
 
-                record.id = (!!record.id) ? record.id : constants.newRecordId;
-                this.sandbox.dom.data($row, 'id', record.id);
-
-                if (!!record.parent) {
-                    if (!this.table.rows[record.parent]) {
-                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
-                    }
-                    this.table.rows[record.parent].childrenLoaded = true;
-                }
-
-                this.table.rows[record.id] = {
-                    $el: $row,
-                    cells: {},
-                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
-                    childrenExpanded: false,
-                    parent: !!(record.parent) ? record.parent : null,
-                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                    level: 1
-                };
-                this.renderRowSelectItem(record.id);
-                this.renderBodyCellsForRow(record);
-                this.renderRowRemoveItem(record.id);
-
-                this.insertBodyRow(record, $overrideElement, prepend);
-                this.executeRowPostRenderActions(record);
+            if (!!record.parent) {
+                this.table.rows[record.parent].childrenLoaded = true;
             }
+
+            this.table.rows[record.id] = {
+                $el: $row,
+                cells: {},
+                childrenLoaded: false,
+                childrenExpanded: false,
+                parent: !!(record.parent) ? record.parent : null,
+                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                level: 1
+            };
+            this.renderRowSelectItem(record.id);
+            this.renderBodyCellsForRow(record);
+            this.renderRowRemoveItem(record.id);
+            this.insertBodyRow(record, $overrideElement, prepend);
+            this.executeRowPostRenderActions(record);
         },
 
         /**
-         * Inserts a body row into the dom. Looks if a row needs to be overridden, or if a parent exists etc.
+         * Inserts a body row into the dom. Looks if a row needs to be overriden, or if a parent exists etc.
          * @param record {Object} the data object of the record
          * @param $overrideElement {Object}
          * @param prepend {Boolean} true to prepend
@@ -29581,8 +29574,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Renders the remove item for a row in the tbody
          * @param id {Number|String} the id of the row to add the select-item for
          */
-        renderRowRemoveItem: function(id) {
-            if (this.options.removeRow === true) {
+        renderRowRemoveItem: function (id) {
+            if (this.options.removeItem === true) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.html($cell, this.sandbox.util.template(templates.removeCellContent)({
                     icon: this.options.removeIcon
@@ -29605,7 +29598,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
             }
-            if (!!this.options.selectItem && this.options.selectItem.inFirstCell === true && index === 0) {
+            if (!!this.options.selectItem && !!this.options.selectItem.inFirstCell === true && index === 0) {
                 this.sandbox.dom.attr($cell, 'colspan', 2);
                 selectItem = this.renderRowSelectItem(record.id, true);
                 if (typeof content === 'string') {
@@ -29647,8 +29640,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!column.type && column.type === this.datagrid.types.THUMBNAILS) {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
-                    alt: content[constants.thumbAltKey],
-                    src: content[constants.thumbSrcKey]
+                   alt: content[constants.thumbAltKey],
+                   src: content[constants.thumbSrcKey]
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -29724,9 +29717,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.util.foreach(this.options.icons, function(icon, index) {
                 if (icon.column === column.attribute) {
                     iconStr = this.sandbox.util.template(templates.icon)({
-                        icon: icon.icon,
-                        align: icon.align,
-                        index: index
+                       icon: icon.icon,
+                       align: icon.align,
+                       index: index
                     });
                     if (typeof content === 'object') {
                         this.sandbox.dom.append(content, iconStr);
@@ -29766,10 +29759,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @returns {boolean}
          */
         containerIsOverflown: function() {
-            if (!!this.sandbox.dom.get(this.table.$container, 0)) {
-                return this.sandbox.dom.get(this.table.$container, 0).scrollWidth > this.sandbox.dom.width(this.table.$container);
-            }
-            return false;
+            return this.sandbox.dom.get(this.table.$container, 0).scrollWidth > this.sandbox.dom.width(this.table.$container);
         },
 
         /**
@@ -29834,7 +29824,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Bindes dom related events
          */
-        bindDomEvents: function() {
+        bindDomEvents: function () {
             // select or deselect items if the body recognizes a change event
             this.sandbox.dom.on(
                 this.table.$body, 'click', this.selectItemChangeHandler.bind(this),
@@ -29843,7 +29833,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // handle click on body row
             this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
             // remove row event
-            if (this.options.removeRow === true) {
+            if (this.options.removeItem === true) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.removeItemClickHandler.bind(this), '.' + constants.rowRemoverClass);
             }
             if (!!this.table.header) {
@@ -29879,7 +29869,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 var cloneThs = this.sandbox.dom.find('th', this.table.header.$clone),
                     originalThs = this.sandbox.dom.find('th', this.table.header.$el);
                 this.sandbox.dom.width(this.table.header.$row, this.sandbox.dom.width(
-                    this.sandbox.dom.find('tr', this.table.header.$clone)
+                   this.sandbox.dom.find('tr', this.table.header.$clone)
                 ));
                 this.sandbox.util.foreach(cloneThs, function(cloneTh, index) {
                     // min- and max-width because for table-cells normal width has no effect
@@ -29993,7 +29983,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the focusout of an editable input
          * @param event {Object} the event object
          */
-        editableInputFocusoutHandler: function(event) {
+        editableInputFocusoutHandler: function (event) {
             if (!!this.isFocusoutHandlerEnabled) {
                 this.sandbox.dom.stopPropagation(event);
                 var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
@@ -30008,7 +29998,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         editRow: function(recordId) {
             var modifiedRecord = {};
             // build new record object out of the inputs in the row
-            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
                 if (!!this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el).length) {
                     modifiedRecord[attribute] = this.sandbox.dom.val(
                         this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el)
@@ -30022,7 +30012,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Clears everything up after a row was edited. (hides the input and updates the values)
          * @param record {Object} the changed data record
          */
-        editedSuccessCallback: function(record) {
+        editedSuccessCallback: function (record) {
             var $row;
             if (!!record.id && !!this.table.rows[record.id]) {
                 $row = this.table.rows[record.id].$el;
@@ -30039,7 +30029,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a css class to all inputs in a row, if the editing request returned with an error
          * @param recordId
          */
-        editedErrorCallback: function(recordId) {
+        editedErrorCallback: function (recordId) {
             var $row = this.table.rows[recordId].$el;
             this.sandbox.dom.addClass(
                 this.sandbox.dom.find('.' + constants.inputWrapperClass, $row),
@@ -30054,10 +30044,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param successCallback {Function} gets executed after success
          * @param errorCallback {Function} gets executed after error
          */
-        saveRow: function(recordId, newRecordData, successCallback, errorCallback) {
+        saveRow: function (recordId, newRecordData, successCallback, errorCallback) {
             var hasChanged = false,
                 record;
-            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
                 if (cell.editable === true && cell.originalData !== newRecordData[attribute]) {
                     hasChanged = true;
                 }
@@ -30103,11 +30093,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the click on a body row
          * @param event {Object} the event object
          */
-        bodyRowClickHandler: function(event) {
+        bodyRowClickHandler: function (event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
-            if (!!recordId && !!this.table.rows && !!this.table.rows[recordId]) {
+            if (!!recordId && !!this.table.rows[recordId]) {
                 if (this.options.highlightSelected === true) {
                     this.uniqueHighlightRecord(recordId);
                 }
@@ -30121,14 +30111,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Emits the row clicked event
          * @param event {Object} the original click event
          */
-        emitRowClickedEvent: function(event) {
+        emitRowClickedEvent: function (event) {
             if (this.rowClicked === false) {
                 this.rowClicked = true;
                 var recordId = this.sandbox.dom.data(event.currentTarget, 'id'),
                     parameter = recordId || event;
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, parameter);
                 // delay to prevent multiple emits on double click
-                this.sandbox.util.delay(function() {
+                this.sandbox.util.delay(function () {
                     this.rowClicked = false;
                 }.bind(this), 500);
             }
@@ -30148,7 +30138,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of the select items
          * @param event {Object} the event object
          */
-        selectItemChangeHandler: function(event) {
+        selectItemChangeHandler: function (event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.target, '.' + constants.rowClass), 'id'),
                 isChecked = this.sandbox.dom.is(event.target, ':checked');
@@ -30163,7 +30153,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of a select item in the header
          * @param event {Object} the event object
          */
-        allSelectItemChangeHandler: function(event) {
+        allSelectItemChangeHandler: function (event) {
             this.sandbox.dom.stopPropagation(event);
             var isChecked = this.sandbox.dom.is(event.target, ':checked');
             if (isChecked === true) {
@@ -30177,7 +30167,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Highlights a record an unhighlights all other rows
          * @param id {Number|String} the id of the record to highlight
          */
-        uniqueHighlightRecord: function(id) {
+        uniqueHighlightRecord: function (id) {
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
                 constants.selectedRowClass
@@ -30188,7 +30178,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Selejcts all records
          */
-        selectAllRecords: function() {
+        selectAllRecords: function () {
             this.datagrid.selectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', true);
         },
@@ -30196,7 +30186,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Deselects all records
          */
-        deselectAllRecords: function() {
+        deselectAllRecords: function () {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', false);
         },
@@ -30206,7 +30196,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record to select or deselect
          * @param select {Boolean} true to select false to deselect
          */
-        toggleSelectRecord: function(id, select) {
+        toggleSelectRecord: function (id, select) {
             var areAllSelected;
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
@@ -30232,7 +30222,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects or deselects the select all item
          * @param select {Boolean} true to select false to deselect the select all item
          */
-        toggleSelectAllItem: function(select) {
+        toggleSelectAllItem: function (select) {
             if (!!this.table.header) {
                 this.sandbox.dom.prop(
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.header.$el), 'checked', select
@@ -30244,7 +30234,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects a record and deselects all other records
          * @param id {Number|String} the id of the record to select
          */
-        uniqueSelectRecord: function(id) {
+        uniqueSelectRecord: function (id) {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.datagrid.setItemSelected.call(this.datagrid, id);
         },
@@ -30334,7 +30324,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
         /**
          * Opens all parents of a record
-         * @param recordId {Number|String} the id of the record
+         * @param id {Number|String} the id of the record
          */
         openParents: function(recordId) {
             if (!!this.table && !!this.table.rows[recordId]) {
@@ -30347,7 +30337,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }
             }
         }
-    };
+     };
 });
 
 /**
@@ -47043,6 +47033,650 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ * @module husky/components/listbox
+ */
+
+/**
+ * Introduces functionality used by multiple components, which are displaying some items in a list
+ */
+define('husky_extensions/itembox',[],function() {
+
+    
+
+    var defaults = {
+            instanceName: null,
+            url: null,
+            eventNamespace: 'husky.itembox',
+            idsParameter: 'ids',
+            resultKey: null,
+            idKey: 'id',
+            visibleItems: 6,
+            dataAttribute: '',
+            dataDefault: {},
+            sortable: true,
+            removable: true,
+            hideAddButton: false,
+            hidePositionElement: false,
+            hideConfigButton: false,
+            defaultDisplayOption: 'top',
+            displayOptions: {
+                leftTop: true,
+                top: true,
+                rightTop: true,
+                left: true,
+                middle: true,
+                right: true,
+                leftBottom: true,
+                bottom: true,
+                rightBottom: true
+            },
+            translations: {
+                noContentSelected: 'listbox.nocontent-selected',
+                viewAll: 'public.view-all',
+                viewLess: 'public.view-less',
+                of: 'public.of',
+                visible: 'public.visible'
+            }
+        },
+
+        constants = {
+            displayOptionSelectedClass: 'selected',
+            itemInvisibleClass: 'invisible-item'
+        },
+
+        /**
+         * returns the normalized event names
+         * @param eventName {string} The name of the concrete event without prefix
+         * @returns {string} Returns the prefixed event name
+         */
+        createEventName = function(eventName) {
+            // TODO extract to extension?
+            return [
+                this.options.eventNamespace,
+                '.',
+                (this.options.instanceName ? this.options.instanceName + '.' : ''),
+                eventName
+            ].join('');
+        },
+
+        templates = {
+            skeleton: function() {
+                return [
+                    '<div class="white-box form-element" id="', this.ids.container, '">',
+                    '    <div class="header">',
+                    '        <span class="fa-plus-circle icon left action', !!this.options.hideAddButton ? ' hidden' : '', '" id="', this.ids.addButton, '"></span>',
+                    '        <div class="position', !!this.options.hidePositionElement ? ' hidden' : '', '">',
+                    '            <div class="husky-position" id="', this.ids.displayOption, '">',
+                    '                <div class="top left ', (!this.options.displayOptions.leftTop ? 'inactive' : ''), '" data-position="leftTop"></div>',
+                    '                <div class="top middle ', (!this.options.displayOptions.top ? 'inactive' : ''), '" data-position="top"></div>',
+                    '                <div class="top right ', (!this.options.displayOptions.rightTop ? 'inactive' : ''), '" data-position="rightTop"></div>',
+                    '                <div class="middle left ', (!this.options.displayOptions.left ? 'inactive' : ''), '" data-position="left"></div>',
+                    '                <div class="middle middle ', (!this.options.displayOptions.middle ? 'inactive' : ''), '" data-position="middle"></div>',
+                    '                <div class="middle right ', (!this.options.displayOptions.right ? 'inactive' : ''), '" data-position="right"></div>',
+                    '                <div class="bottom left ', (!this.options.displayOptions.leftBottom ? 'inactive' : ''), '" data-position="leftBottom"></div>',
+                    '                <div class="bottom middle ', (!this.options.displayOptions.bottom ? 'inactive' : ''), '" data-position="bottom"></div>',
+                    '                <div class="bottom right ', (!this.options.displayOptions.rightBottom ? 'inactive' : ''), '" data-position="rightBottom"></div>',
+                    '            </div>',
+                    '        </div>',
+                    '        <span class="fa-cog icon right border', !!this.options.hideConfigButton ? ' hidden' : '', '" id="', this.ids.configButton, '"></span>',
+                    '    </div>',
+                    '    <div class="content" id="', this.ids.content, '"></div>',
+                    '    <div class="footer" id="', this.ids.footer, '"></div>',
+                    '</div>'
+                ].join('');
+            },
+
+            noContent: function() {
+                return [
+                    '<div class="no-content">',
+                    '    <span class="fa-coffee icon"></span>',
+                    '    <div class="text">', this.sandbox.translate(this.options.translations.noContentSelected), '</div>',
+                    '</div>'
+                ].join('');
+            },
+
+            footer: function(length) {
+                return [
+                    '<span>',
+                    '    <strong id="', this.ids.footerCount, '">', (length < this.options.visibleItems) ? length : this.options.visibleItems, '</strong> ', this.sandbox.translate(this.options.translations.of), ' ',
+                    '    <strong id="', this.ids.footerMaxCount, '">', length, '</strong> ', this.sandbox.translate(this.options.translations.visible),
+                    '</span>'
+                ].join('')
+            },
+
+            item: function(id, content) {
+                return [
+                    '<li data-id="', id, '">',
+                    !!this.options.sortable ? '    <span class="fa-ellipsis-v icon move"></span>' : '',
+                    '    <span class="num"></span>',
+                    content,
+                    !!this.options.removable ? '    <span class="fa-times remove"></span>' : '',
+                    '</li>'
+                ].join('');
+            }
+        },
+
+        bindCustomEvents = function() {
+            this.sandbox.on(this.DATA_CHANGED(), this.changeData.bind(this));
+            this.sandbox.on(this.DATA_RETRIEVED(), this.renderContent.bind(this));
+        },
+
+        bindDomEvents = function() {
+            // change display options on click on a positon square
+            this.sandbox.dom.on(
+                this.getId('displayOption') + ' > div:not(.inactive)',
+                'click',
+                this.changeDisplayOption.bind(this)
+            );
+
+            // toggle between view all and view less
+            this.sandbox.dom.on(this.$el, 'click', this.toggleInvisibleItems.bind(this), this.getId('footerView'));
+
+            // click on the add button
+            this.sandbox.dom.on(this.$addButton, 'click', function() {
+                this.sandbox.emit(this.ADD_BUTTON_CLICKED());
+            }.bind(this));
+
+            // click on the config button
+            this.sandbox.dom.on(this.$configButton, 'click', function() {
+                this.sandbox.emit(this.CONFIG_BUTTON_CLICKED());
+            }.bind(this));
+
+            // remove a row from the itembox
+            this.sandbox.dom.on(this.getId('content'), 'click', this.removeItem.bind(this), 'li .remove');
+        },
+
+        initSortable = function() {
+            var $sortable = this.sandbox.dom.find('.sortable', this.$el),
+                sortable;
+
+            this.sandbox.dom.sortable($sortable, 'destroy');
+
+            sortable = this.sandbox.dom.sortable('.sortable', {
+                handle: '.move',
+                forcePlaceholderSize: true
+            });
+
+            this.sandbox.dom.unbind(sortable, 'unbind');
+
+            sortable.bind('sortupdate', function() {
+                var ids = this.updateOrder();
+
+                this.sortHandler(ids);
+            }.bind(this));
+        },
+
+        createItemList = function() {
+            return this.sandbox.dom.createElement('<ul class="items-list sortable"/>');
+        },
+
+        itembox = {
+            /**
+             * raised when the data changed and the list should be reloaded
+             * @event husky.itembox.data-changed
+             * @return {string}
+             */
+            DATA_CHANGED: function() {
+                return createEventName.call(this, 'data-changed');
+            },
+
+            /**
+             * raised when data has returned from the ajax request
+             * @event husky.itembox.data-retrieved
+             * @return {string}
+             */
+            DATA_RETRIEVED: function() {
+                return createEventName.call(this, 'data-retrieved');
+            },
+
+            /**
+             * raised when the display option has changed
+             * @event husky.itembox.display-position-changed
+             * @return {string}
+             */
+            DISPLAY_OPTION_CHANGED: function() {
+                return createEventName.call(this, 'display-position-changed');
+            },
+
+            /**
+             * raised when the add button was clicked
+             * @event husky.itembox.add-button-clicked
+             * @return {string}
+             */
+            ADD_BUTTON_CLICKED: function() {
+                return createEventName.call(this, 'add-button-clicked');
+            },
+
+            /**
+             * raised when the config button was clicked
+             * @event husky.itembox.config-button-clicked
+             * @return {string}
+             */
+            CONFIG_BUTTON_CLICKED: function() {
+                return createEventName.call(this, 'config-button-clicked');
+            },
+
+            /**
+             * render the itembox
+             */
+            render: function() {
+                this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
+                var data = this.getData();
+
+                this.viewAll = true;
+
+                this.ids = {
+                    container: 'listbox-' + this.options.instanceName + '-container',
+                    addButton: 'listbox-' + this.options.instanceName + '-add',
+                    configButton: 'listbox-' + this.options.instanceName + '-config',
+                    displayOption: 'listbox-' + this.options.instanceName + '-display-option',
+                    content: 'listbox-' + this.options.instanceName + '-content',
+                    footer: 'listbox-' + this.options.instanceName + '-footer',
+                    footerView: 'listbox-' + this.options.instanceName + '-footer-view',
+                    footerCount: 'listbox-' + this.options.instanceName + '-footer-count',
+                    footerMaxCount: 'listbox-' + this.options.instanceName + '-footer-max-count'
+                };
+
+                this.sandbox.dom.html(this.$el, templates.skeleton.call(this));
+
+                this.$container = this.sandbox.dom.find(this.getId('container'), this.$el);
+                this.$addButton = this.sandbox.dom.find(this.getId('addButton'), this.$el);
+                this.$configButton = this.sandbox.dom.find(this.getId('configButton'), this.$el);
+                this.$content = this.sandbox.dom.find(this.getId('content'), this.$el);
+                this.$footer = this.sandbox.dom.find(this.getId('footer'), this.$el);
+                this.$list = null;
+
+                this.removeFooter();
+
+                this.renderNoContent();
+
+                if (!this.isDataEmpty(data)) {
+                    this.loadContent(data);
+                } else {
+                    this.sandbox.dom.data(this.$el, this.options.dataAttribute, this.options.dataDefault);
+                }
+
+                this.setDisplayOption(this.options.defaultDisplayOption);
+
+                bindCustomEvents.call(this);
+                bindDomEvents.call(this);
+            },
+
+            /**
+             * render the empty presentation into the content area
+             */
+            renderNoContent: function() {
+                this.$list = null;
+                this.sandbox.dom.html(this.$content, templates.noContent.call(this));
+                this.removeFooter();
+            },
+
+            /**
+             * Render the footer for the given data
+             * @param data {object} the data for which the footer should be generated
+             */
+            renderFooter: function(data) {
+                var length = data.length,
+                    translation = (data.length <= length)
+                        ? this.sandbox.translate(this.options.translations.viewAll)
+                        : this.sandbox.translate(this.options.translations.viewLess);
+
+                this.sandbox.dom.html(this.$footer, templates.footer.call(this, length));
+
+                this.sandbox.dom.append(
+                    this.sandbox.dom.find('span', this.$footer),
+                    [
+                        '<strong class="pointer"> (<span id="', this.ids.footerView, '">',
+                        translation,
+                        '</span>)</strong>'
+                    ].join('')
+                );
+
+                this.sandbox.dom.append(this.$container, this.$footer);
+
+                this.$footerView = this.sandbox.dom.find(this.getId('footerView'), this.$el);
+            },
+
+            /**
+             * Removes the footer from the DOM
+             */
+            removeFooter: function() {
+                this.sandbox.dom.remove(this.$footer);
+            },
+
+            /**
+             * Returns the data currently stored in this component
+             * @param deepCopy {boolean} True if deep cop should be returned, otherwise false
+             * @returns {object}
+             */
+            getData: function() {
+                return this.sandbox.util.deepCopy(this.sandbox.dom.data(this.$el, this.options.dataAttribute));
+            },
+
+            /**
+             * Throws a data-changed event if the data actually has changed
+             * @param data {object} The data to set
+             * @param reload {boolean} True if the itembox list should be reloaded afterwards
+             */
+            setData: function(data, reload) {
+                var oldData = this.sandbox.dom.data(this.$el, this.options.dataAttribute);
+                reload = typeof(reload) === 'undefined' ? true : reload;
+
+                if (!this.sandbox.util.isEqual(oldData, data)) {
+                    this.sandbox.emit(this.DATA_CHANGED(), data, this.$el, reload);
+                }
+            },
+
+            /**
+             * Event handler for the changed data event, sets data to element and reloads the list if specified
+             * @param data {object} The data to set
+             * @param $el {object} The element to which the data should be bound
+             * @param reload {boolean} True if the list should be reloaded, otherwise false
+             */
+            changeData: function (data, $el, reload) {
+                this.sandbox.dom.data(this.$el, this.options.dataAttribute, data);
+
+                if (!!reload) {
+                    this.loadContent(data);
+                }
+            },
+
+            /**
+             * Loads the content based on the given data
+             * @param data {object}
+             */
+            loadContent: function(data) {
+                this.startLoader();
+
+                // reset items visible when new content is loaded
+                this.viewAll = false;
+
+                if (!!data) {
+                    this.sandbox.util.load(this.getUrl(data))
+                        .then(function(data) {
+                            this.sandbox.emit(this.DATA_RETRIEVED(), data._embedded[this.options.resultKey]);
+                        }.bind(this))
+                        .fail(function(error) {
+                            this.sandbox.logger.error(error);
+                        }.bind(this));
+                } else {
+                    this.sandbox.emit(this.DATA_RETRIEVED(), []);
+                }
+            },
+
+            /**
+             * Renders the data into the list
+             * @param data {object} The data to render
+             */
+            renderContent: function(data) {
+                if (data.length > 0) {
+                    var length = data.length;
+
+                    this.$list = createItemList.call(this);
+
+                    for (var i = -1; ++i < length;) {
+                        this.addItem(data[i], false);
+                    }
+
+                    this.sandbox.dom.html(this.$content, this.$list);
+
+                    initSortable.call(this);
+                    this.renderFooter(data);
+                    this.updateOrder();
+                    this.updateVisibility();
+                } else {
+                    this.renderNoContent();
+                }
+            },
+
+            /**
+             * Starts the loader for the content
+             */
+            startLoader: function() {
+                this.removeFooter();
+
+                var $loader = this.sandbox.dom.createElement('<div class="loader"/>');
+                this.sandbox.dom.html(this.$content, $loader);
+
+                this.sandbox.start([
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: $loader,
+                            size: '100px',
+                            color: '#e4e4e4'
+                        }
+                    }
+                ]);
+            },
+
+            /**
+             * Set the display option
+             * @param displayOption {string} The string representation of the display option
+             */
+            setDisplayOption: function(displayOption) {
+                var $element = this.sandbox.dom.find('[data-position="' + displayOption + '"]', this.$container);
+
+                // deselect the current positon element
+                this.sandbox.dom.removeClass(
+                    this.sandbox.dom.find('.' + constants.displayOptionSelectedClass, this.getId('displayOption')),
+                    constants.displayOptionSelectedClass
+                );
+
+                // select clicked on
+                this.sandbox.dom.addClass($element, constants.displayOptionSelectedClass);
+            },
+
+            /**
+             * DOM event handler for clicking on the display option
+             * @param event
+             */
+            changeDisplayOption: function(event) {
+                // TODO move display options to own component?
+                var position = this.sandbox.dom.data(event.currentTarget, 'position');
+
+                this.setDisplayOption(position);
+
+                this.sandbox.emit(
+                    this.DISPLAY_OPTION_CHANGED(),
+                    position
+                );
+            },
+
+            /**
+             * Updates the order of the number in the list
+             * @returns {Array}
+             */
+            updateOrder: function() {
+                var $elements = this.sandbox.dom.find('li', this.$content),
+                    ids = [];
+
+                this.sandbox.util.foreach($elements, function($element, index) {
+                    var $number = this.sandbox.dom.find('.num', $element);
+                    $number.html(index + 1);
+                    ids.push(this.sandbox.dom.data($element, 'id'));
+                }.bind(this));
+
+                return ids;
+            },
+
+            /**
+             * Adds an item to the list
+             * @param item {object} The item to display in the list
+             * @param reinitialize {boolean} Defines if the sorting, order and visibility list should be reinitialized
+             */
+            addItem: function(item, reinitialize) {
+                if (typeof(reinitialize) === 'undefined') {
+                    reinitialize = true;
+                }
+
+                if (!this.$list) {
+                    this.$list = createItemList.call(this);
+                    this.sandbox.dom.html(this.$content, this.$list);
+                    this.renderFooter([]);
+                }
+
+                this.sandbox.dom.append(
+                    this.$list,
+                    templates.item.call(
+                        this,
+                        item[this.options.idKey],
+                        this.getItemContent(item)
+                    )
+                );
+
+                if (!!reinitialize) {
+                    if (this.options.sortable) {
+                        initSortable.call(this);
+                    }
+
+                    this.updateOrder();
+                    this.updateVisibility();
+                }
+            },
+
+            /**
+             * DOM event handler for removing an item from the list
+             * @param event
+             */
+            removeItem: function(event) {
+                var $removeItem = this.sandbox.dom.parents(event.currentTarget, 'li'),
+                    itemId = this.sandbox.dom.data($removeItem, 'id');
+
+                this.sandbox.dom.remove($removeItem);
+                this.removeHandler(itemId);
+
+                this.updateOrder();
+                this.updateVisibility();
+            },
+
+            /**
+             * Toggles between listing all and just a limited number of items
+             */
+            toggleInvisibleItems: function() {
+                this.viewAll = !this.viewAll;
+                this.sandbox.dom.html(this.$footerView,
+                    !!this.viewAll
+                        ? this.sandbox.translate(this.options.translations.viewLess)
+                        : this.sandbox.translate(this.options.translations.viewAll)
+                );
+
+                this.updateVisibility();
+            },
+
+            /**
+             * Updates the visibility of all items based on the current state
+             */
+            updateVisibility: function() {
+                var $items = this.sandbox.dom.find('li', this.$list),
+                    length = $items.size(),
+                    itemCount = 0;
+
+                if (!length) {
+                    this.renderNoContent();
+                } else {
+                    // mark the correct amount of items invisible
+                    this.sandbox.util.foreach($items, function($item) {
+                        if (itemCount < this.options.visibleItems) {
+                            this.sandbox.dom.removeClass($item, constants.itemInvisibleClass);
+                        } else {
+                            this.sandbox.dom.addClass($item, constants.itemInvisibleClass);
+                        }
+
+                        itemCount++;
+                    }.bind(this));
+                }
+
+                // correct the display property of every item and the footer values
+                if (!!this.viewAll) {
+                    this.sandbox.dom.show($items);
+                    this.sandbox.dom.html(this.getId('footerCount'), length);
+                } else {
+                    if (!!this.$list) {
+                        this.sandbox.dom.show(
+                            this.sandbox.dom.find(':not(.' + constants.itemInvisibleClass + ')', this.$list)
+                        );
+                        this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.itemInvisibleClass, this.$list));
+                    }
+
+                    this.sandbox.dom.html(
+                        this.getId('footerCount'),
+                        (this.options.visibleItems < length) ? this.options.visibleItems : length
+                    );
+                }
+
+                this.sandbox.dom.html(this.getId('footerMaxCount'), length);
+            },
+
+            /**
+             * Checks if the given data is empty, can be overriden by the concrete implementation.
+             * Especially useful if data is not an array.
+             * @param data {object} The data to check
+             */
+            isDataEmpty: function(data) {
+                return this.sandbox.util.isEmpty(data);
+            },
+
+            /**
+             * Returns the selector for the given id
+             * @param type {string} The type of the element, for which the id should be returned
+             * @returns {string} The id of the element
+             */
+            getId: function(type) {
+                return ['#', this.ids[type]].join('');
+            },
+
+            /**
+             * Returns the URL for the list based on the data
+             * @param data {object} The data for which the URL should be generated
+             */
+            getUrl: function(data) {
+                throw new Error('"getUrl" not implemented');
+            },
+
+            /**
+             * Returns the HTML for an item in the list
+             * @param item
+             */
+            getItemContent: function(item) {
+                throw new Error('"getItemContent" not implemented');
+            },
+
+            /**
+             * This function is called when the sorting has been updated
+             * @param ids {array} The new order of the ids
+             */
+            sortHandler: function(ids) {
+                throw new Error('"sortHandler" not implemented');
+            },
+
+            /**
+             * Handler, which is called when a row is removed
+             * @param id {number} The id of the item to remove
+             */
+            removeHandler: function(id) {
+                throw new Error('"removeHandler" not implemented');
+            }
+        };
+
+    return {
+        name: 'itembox',
+
+        initialize: function(app) {
+            app.components.addType('itembox', itembox);
+        }
+    }
+});
+
 (function() {
 
     
@@ -47880,6 +48514,10 @@ define('husky_extensions/util',[],function() {
                 return s;
             };
 
+            app.core.util.isEqual = _.isEqual;
+
+            app.core.util.isEmpty = _.isEmpty;
+
             /**
              * cool guy loop implementation of foreach: http://jsperf.com/loops3/2
              * returns -> callback(value, index)
@@ -47998,6 +48636,15 @@ define('husky_extensions/util',[],function() {
             app.core.util.union = function() {
                 return _.union.apply(this, arguments);
             };
+
+            app.core.util.deepCopy = function(object) {
+                var parent = {};
+
+                if ($.isArray(object)) {
+                    parent = [];
+                }
+                return $.extend(true, parent, object);
+            }
 
 			app.core.util.template = _.template;
 
