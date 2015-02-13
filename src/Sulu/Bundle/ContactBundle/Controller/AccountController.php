@@ -1137,7 +1137,8 @@ class AccountController extends AbstractContactController
             true,
             '',
             '',
-            '160px'
+            '160px', 
+            false
         );
 
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
