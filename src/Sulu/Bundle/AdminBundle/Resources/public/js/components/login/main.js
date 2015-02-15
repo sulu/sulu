@@ -14,6 +14,10 @@
  *
  * @param {Object} [options] Configuration object
  * @param {String} [options.instanceName] The instance name of the sidebar
+ * @param {String} [options.backgroundImg] url to the background image
+ * @param {String} [options.shiftSpace] numbers of pixels on each edge available for moving the image
+ * @param {String} [options.fadeInDuration] fade in duration of the image
+ * @param {String} [options.loginCheck] path to post the login-credentials to
  */
 
 define([], function() {
@@ -24,7 +28,8 @@ define([], function() {
             instanceName: '',
             backgroundImg: 'http://upload.wikimedia.org/wikipedia/commons/3/33/Kanisfluh_Au1.JPG',
             shiftSpace: 60, //px
-            fadeInDuration: 350
+            fadeInDuration: 350,
+            loginCheck: ''
         },
 
         constants = {
@@ -34,17 +39,19 @@ define([], function() {
             darkenerClass: 'darkener',
             bgActiveClass: 'active',
             boxClass: 'box',
+            boxLargerClass: 'larger',
             frameClass: 'frame',
             loginFrameClass: 'login',
             resetFrameClass: 'reset',
             framesClass: 'frames',
             logoClass: 'login-logo',
-            loginBtnId: 'login',
+            loginBtnId: 'login-btn',
             forgotSwitchClass: 'forgot-password-switch',
             loginSwitchClass: 'login-switch',
             errorClass: 'husky-validate-error',
             resetMailBoxClass: 'reset-mail',
-            resetMsgBoxClass: 'reset-msg'
+            resetMsgBoxClass: 'reset-msg',
+            loginLoaderClass: 'login-loader'
         },
 
         templates = {
@@ -58,17 +65,18 @@ define([], function() {
             frame: ['<div class="'+ constants.frameClass +'">',
                     '   <div class="'+ constants.logoClass +'"></div>',
                     '</div>'].join(''),
-            loginFrame: ['<div class="inputs">',
+            loginFrame: ['<form class="inputs">',
                          '  <div class="grid-row">',
-                         '    <input class="form-element input-large husky-validate" type="text" placeholder="<%= username %>"/>',
+                         '    <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= username %>"/>',
                          '  </div>',
                          '  <div class="grid-row small">',
-                         '    <input class="form-element input-large husky-validate" type="password" placeholder="<%= password %>"/>',
+                         '    <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                          '  </div>',
                          '  <span class="error-msg"><%= errorMsg %></span>',
-                         '</div>',
+                         '</form>',
                          '<div class="grid-row">',
-                         '    <div class="btn action large fit"><%= login %></div>',
+                         '    <div id="'+ constants.loginBtnId +'" class="btn action large fit"><%= login %></div>',
+                         '    <div class="'+ constants.loginLoaderClass +'"></div>',
                          '</div>',
                          '<div class="bottom-container small-font">',
                          '  <span class="'+ constants.forgotSwitchClass +'"><%= forgotPwdMsg %></span>',
@@ -118,6 +126,7 @@ define([], function() {
             this.initProperties();
             this.render();
             this.bindDomEvents();
+            this.focusUsername();
             this.sandbox.emit(INITIALIZED.call(this));
         },
 
@@ -132,7 +141,10 @@ define([], function() {
                 $login: null,
                 $reset: null,
                 $forgotSwitch: null,
-                $loginSwitch: null
+                $loginSwitch: null,
+                $loginBtn: null,
+                $loginForm: null,
+                $loginLoader: null
             }
         },
 
@@ -187,7 +199,35 @@ define([], function() {
                 login: 'Login'
             }));
             this.dom.$forgotSwitch = this.sandbox.dom.find('.' + constants.forgotSwitchClass, this.dom.$login);
+            this.dom.$loginBtn = this.sandbox.dom.find('#' + constants.loginBtnId, this.dom.$login);
+            this.dom.$loginForm = this.sandbox.dom.find('form', this.dom.$login);
+            this.renderLoginLoader();
             this.sandbox.dom.append(this.dom.$frames, this.dom.$login);
+        },
+
+        /**
+         * Renderes the login loader
+         */
+        renderLoginLoader: function() {
+            this.dom.$loginLoader = this.sandbox.dom.find('.' + constants.loginLoaderClass, this.dom.$login);
+            this.sandbox.dom.hide(this.dom.$loginLoader);
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.dom.$loginLoader,
+                        size: '20px',
+                        color: '#666666'
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * Sets the focus to the username input
+         */
+        focusUsername: function() {
+            this.sandbox.dom.select(this.sandbox.dom.find('#username', this.dom.$loginForm));
         },
 
         /**
@@ -258,6 +298,75 @@ define([], function() {
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBgActive.bind(this, false));
             this.sandbox.dom.on(this.dom.$forgotSwitch, 'click', this.moveToFrame.bind(this, this.dom.$reset));
             this.sandbox.dom.on(this.dom.$loginSwitch, 'click', this.moveToFrame.bind(this, this.dom.$login));
+            this.sandbox.dom.on(this.dom.$loginBtn, 'click', this.loginBtnClickHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
+        },
+
+        /**
+         * Handles a click on the login-button
+         */
+        loginBtnClickHandler: function() {
+            this.sandbox.dom.submit(this.dom.$loginForm);
+        },
+
+        /**
+         * Handles the submit event of the login-form
+         */
+        loginFormSubmitHandler: function() {
+            var username = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#username', this.dom.$loginForm))),
+                password = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#password', this.dom.$loginForm)));
+            if (username.length === 0 || password.length === 0) {
+                this.displayLoginError();
+            } else {
+                this.login(username, password);
+            }
+            return false;
+        },
+        /**
+         * Handles the keydown-event of the login-form
+         * @param event
+         */
+        loginFormKeyHandler: function(event) {
+            if (event.keyCode === 13) { //on enter
+                this.loginFormSubmitHandler();
+            }
+        },
+
+        /**
+         * Sends toe username and password to the server
+         * @param username
+         * @param password
+         */
+        login: function(username, password) {
+            this.sandbox.dom.show(this.dom.$loginLoader);
+            this.sandbox.util.save(this.options.loginCheck, 'POST', {
+                '_username': username,
+                '_password': password
+            }).then(function(data) {
+                if (data.success === true && !!data.url) {
+                    this.redirect(data.url + this.sandbox.dom.window.location.hash);
+                } else {
+                    this.sandbox.dom.hide(this.dom.$loginLoader);
+                    this.displayLoginError();
+                }
+            }.bind(this))
+        },
+
+        /**
+         * Redirects the page to a url
+         * @param url
+         */
+        redirect: function(url) {
+            this.sandbox.dom.window.location = url;
+        },
+
+        /**
+         * Adds a css class -> inputs become red..
+         */
+        displayLoginError: function() {
+            this.sandbox.dom.addClass(this.dom.$box, constants.boxLargerClass);
+            this.sandbox.dom.addClass(this.dom.$login, constants.errorClass);
         },
 
         /**

@@ -26,8 +26,7 @@
           height: $boxHeight2;
         }
 
-        &.husky-validate-error {
-            height: $boxHeight2;
+        .login.husky-validate-error {
             .error-msg {
                 height: 40px;
             }
@@ -77,6 +76,10 @@
             background: url("../img/logo.png") no-repeat center center;
             background-size: auto 122px;
             margin-bottom: 10px;
+        }
+        .login-loader {
+          float: right;
+          margin: 20px 15px 0 0;
         }
         .btn.action {
             float: right;

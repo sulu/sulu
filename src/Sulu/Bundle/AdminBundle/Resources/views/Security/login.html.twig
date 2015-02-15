@@ -20,7 +20,8 @@
 </head>
 <body>
     <div id="main" class="login">
-        <div data-aura-component="login@suluadmin"></div>
+        <div data-aura-component="login@suluadmin"
+             data-aura-login-check="{{ path('sulu_admin.login_check') }}"></div>
     </div>
     <!-- build:js app.min.js -->
     <script data-main="/bundles/suluadmin/js/login" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
