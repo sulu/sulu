@@ -130,7 +130,7 @@ define([], function() {
         bindCustomEvents = function() {
             this.sandbox.on('husky.overlay.single-internal-link.' + this.options.instanceName + '.initialized', initColumnNavigation.bind(this));
 
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', function(item) {
                 setData.call(this, item.id);
                 loadSelectedNode.call(this);
                 this.sandbox.emit(DATA_CHANGED.call(this), this.data, this.$el);
@@ -190,11 +190,12 @@ define([], function() {
                             selected: this.data,
                             url: url,
                             instanceName: this.options.instanceName,
-                            editIcon: 'fa-plus-circle',
+                            actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
-                            showEdit: false,
+                            showOptions: false,
                             showStatus: false,
                             responsive: false,
+                            sortable: false,
                             skin: 'fixed-height-small'
                         }
                     }

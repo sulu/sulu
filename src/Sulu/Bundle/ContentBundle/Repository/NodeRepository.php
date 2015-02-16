@@ -15,6 +15,7 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -671,6 +672,25 @@ class NodeRepository implements NodeRepositoryInterface
         } catch (PHPCRException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (InvalidOrderPositionException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         }
 
