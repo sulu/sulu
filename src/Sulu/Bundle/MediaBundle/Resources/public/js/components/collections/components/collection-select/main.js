@@ -56,8 +56,12 @@ define(function() {
         },
 
         /** returns normalized event names */
-        createEventName = function(postFix) {
-            return namespace + this.options.instanceName + '.' + postFix;
+        createEventName = function(postFix, eventNamespace) {
+            if(!eventNamespace){
+                eventNamespace = namespace;
+            }
+
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
     return {
@@ -78,26 +82,26 @@ define(function() {
          */
         bindCustomEvents: function() {
             this.sandbox.on(OPEN.call(this), function() {
-                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.open');
+                this.sandbox.emit(createEventName.call(this, 'open', 'husky.overlay.'));
             }.bind(this));
 
             this.sandbox.on(CLOSE.call(this), function() {
-                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.close');
+                this.sandbox.emit(createEventName.call(this, 'close', 'husky.overlay.'));
             }.bind(this));
 
             // wait for overlay initialized to initialize overlay
-            this.sandbox.once('husky.overlay.' + this.options.instanceName + '.initialized', function() {
+            this.sandbox.once(createEventName.call(this, 'initialized', 'husky.overlay.'), function() {
                 this.startOverlayColumnNavigation();
             }.bind(this));
 
             // wait for column navigation edit click
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', function(item) {
+            this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
                 this.sandbox.emit(SELECTED.call(this), item);
             }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
-            this.sandbox.once('husky.column-navigation.' + this.options.instanceName + '.initialized', function() {
-                this.sandbox.emit('husky.overlay.' + this.options.instanceName + '.set-position');
+            this.sandbox.once(createEventName.call(this, 'initialized', 'husky.column-navigation.'), function() {
+                this.sandbox.emit(createEventName.call(this, 'set-position', 'husky.overlay.'));
             }.bind(this));
         },
 
