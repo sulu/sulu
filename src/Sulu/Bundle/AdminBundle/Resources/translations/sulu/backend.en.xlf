@@ -1434,6 +1434,54 @@
                 <source>labels.successfully-saved</source>
                 <target>Data has been successfully saved.</target>
             </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.reset-password">
+                <source>sulu.login.reset-password</source>
+                <target>Reset your password:</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a4d" resname="public.reset">
+                <source>public.reset</source>
+                <target>Reset</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a43" resname="public.email">
+                <source>public.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a41" resname="sulu.login.back-login">
+                <source>sulu.login.back-login</source>
+                <target>Back to login</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a42" resname="sulu.login.resend-email">
+                <source>sulu.login.resend-email</source>
+                <target>Re-send email</target>
+            </trans-unit>
+            <trans-unit id="a404f52dde1456ff4132c0b4820e29a43" resname="sulu.login.email-sent-msg">
+                <source>sulu.login.email-sent-msg</source>
+                <target>An email with instrucions how to reset your password has been sent to:</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.back-website">
+                <source>sulu.login.back-website</source>
+                <target>Back to website</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29add" resname="public.login">
+                <source>public.login</source>
+                <target>Login</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad1" resname="sulu.login.error-msg">
+                <source>sulu.login.error-msg</source>
+                <target>This Email/Password combination is wrong. Please try again.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad7" resname="sulu.login.forgot-password">
+                <source>sulu.login.forgot-password</source>
+                <target>I forgot my password</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff3132c0b4820e29ad7" resname="sulu.login.email-username">
+                <source>sulu.login.email-username</source>
+                <target>Username or email</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad2" resname="public.password">
+                <source>public.password</source>
+                <target>Password</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

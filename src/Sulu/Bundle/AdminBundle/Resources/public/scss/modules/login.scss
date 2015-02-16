@@ -28,9 +28,9 @@
 
         .login.husky-validate-error {
             .error-msg {
-                height: 40px;
+                height: 50px;
             }
-            .bottom-container span {
+            .bottom-container span:not(.website-switch) {
               color: $black;
             }
         }
@@ -52,10 +52,10 @@
             vertical-align: top;
             white-space: normal;
             position: relative;
+            padding: 0 50px;
         }
 
         .inputs {
-            padding: 0 50px;
             .form-element {
                 padding-left: 5px;
 
@@ -83,7 +83,6 @@
         }
         .btn.action {
             float: right;
-            margin-right: 25px;
             margin-top: 10px;
             padding-left: 45px;
             padding-right: 45px;
@@ -94,27 +93,32 @@
             bottom: 0px;
             left: 0px;
             width: 100%;
-            text-align: center;
+            padding: 0 50px;
+            @include clear-float;
 
             span {
-                display: inline-block;
-                padding: 10px;
+                display: block;
+                padding: 10px 0 10px 10px;
                 cursor: pointer;
                 color: $grayLight;
+                float: right;
                 &:hover {
                   color: $black;
                 }
             }
+            .website-switch {
+                float: left;
+                padding-left: 0;
+            }
         }
 
         .reset {
-            .bottom-container span {
+            .bottom-container span:not(.website-switch) {
                 color: $black;
             }
         }
 
         .reset-msg {
-            padding: 0 50px;
             text-align: center;
             .msg {
                 display: block;

@@ -26,10 +26,24 @@ define([], function() {
 
     var defaults = {
             instanceName: '',
-            backgroundImg: 'http://upload.wikimedia.org/wikipedia/commons/3/33/Kanisfluh_Au1.JPG',
-            shiftSpace: 60, //px
+            backgroundImg: '/bundles/suluadmin/img/background.jpg',
+            shiftSpace: 50, //px
             fadeInDuration: 350,
-            loginCheck: ''
+            loginCheck: '',
+            translations: {
+                resetPassword: 'sulu.login.reset-password',
+                reset: 'public.reset',
+                email: 'public.email',
+                backLogin: 'sulu.login.back-login',
+                resend: 'sulu.login.resend-email',
+                emailSent: 'sulu.login.email-sent-msg',
+                backWebsite: 'sulu.login.back-website',
+                login: 'public.login',
+                errorMsg: 'sulu.login.error-msg',
+                forgotPassword: 'sulu.login.forgot-password',
+                emailUser: 'sulu.login.email-username',
+                password: 'public.password'
+            }
         },
 
         constants = {
@@ -47,6 +61,7 @@ define([], function() {
             logoClass: 'login-logo',
             loginBtnId: 'login-btn',
             forgotSwitchClass: 'forgot-password-switch',
+            websiteSwitchClass: 'website-switch',
             loginSwitchClass: 'login-switch',
             errorClass: 'husky-validate-error',
             resetMailBoxClass: 'reset-mail',
@@ -67,7 +82,7 @@ define([], function() {
                     '</div>'].join(''),
             loginFrame: ['<form class="inputs">',
                          '  <div class="grid-row">',
-                         '    <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= username %>"/>',
+                         '    <input class="form-element input-large husky-validate" type="text" name="username" id="username" placeholder="<%= emailUser %>"/>',
                          '  </div>',
                          '  <div class="grid-row small">',
                          '    <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
@@ -79,6 +94,7 @@ define([], function() {
                          '    <div class="'+ constants.loginLoaderClass +'"></div>',
                          '</div>',
                          '<div class="bottom-container small-font">',
+                         '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMsg %></span>',
                          '  <span class="'+ constants.forgotSwitchClass +'"><%= forgotPwdMsg %></span>',
                          '</div>'].join(''),
             resetPwdFrame: ['<div class="'+ constants.resetMailBoxClass +'">',
@@ -97,7 +113,8 @@ define([], function() {
                             '   <div class="btn action large fit"><%= resend %></div>',
                             '</div>',
                             '<div class="bottom-container small-font">',
-                                '  <span class="'+ constants.loginSwitchClass +'"><%= backLoginMsg %></span>',
+                            '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMsg %></span>',
+                            '  <span class="'+ constants.loginSwitchClass +'"><%= backLoginMsg %></span>',
                             '</div>'].join('')
 
         },
@@ -145,7 +162,22 @@ define([], function() {
                 $loginBtn: null,
                 $loginForm: null,
                 $loginLoader: null
-            }
+            };
+            this.mouseOrigin = {
+                x: 0,
+                y: 0
+            };
+            this.setMovementRatio();
+        },
+
+        /**
+         * Calcualtes ratios which tells how much pixel the background moves per pixel the mosue moved
+         */
+        setMovementRatio: function() {
+            this.movementRatio = {
+                x: this.options.shiftSpace/this.sandbox.dom.width(this.sandbox.dom.$window),
+                y: this.options.shiftSpace/this.sandbox.dom.height(this.sandbox.dom.$window)
+            };
         },
 
         /**
@@ -170,7 +202,7 @@ define([], function() {
                 'background-image', 'url("'+ this.options.backgroundImg +'")'
             );
             this.setBgSize();
-            this.setBgPosition(0, 0);
+            this.setBgPosition(-this.options.shiftSpace, -this.options.shiftSpace);
             this.sandbox.dom.append(this.$el, this.dom.$bg);
         },
 
@@ -192,11 +224,12 @@ define([], function() {
             this.dom.$login = this.sandbox.dom.createElement(templates.frame);
             this.sandbox.dom.addClass(this.dom.$login, constants.loginFrameClass);
             this.sandbox.dom.append(this.dom.$login, this.sandbox.util.template(templates.loginFrame)({
-                username: 'Username',
-                password: 'Password',
-                forgotPwdMsg: 'I forgot my password',
-                errorMsg: 'This Email/Password combination is wrong. Please try again.',
-                login: 'Login'
+                emailUser: this.sandbox.translate(this.options.translations.emailUser),
+                password: this.sandbox.translate(this.options.translations.password),
+                forgotPwdMsg: this.sandbox.translate(this.options.translations.forgotPassword),
+                errorMsg: this.sandbox.translate(this.options.translations.errorMsg),
+                login: this.sandbox.translate(this.options.translations.login),
+                backWebsiteMsg: this.sandbox.translate(this.options.translations.backWebsite)
             }));
             this.dom.$forgotSwitch = this.sandbox.dom.find('.' + constants.forgotSwitchClass, this.dom.$login);
             this.dom.$loginBtn = this.sandbox.dom.find('#' + constants.loginBtnId, this.dom.$login);
@@ -237,12 +270,13 @@ define([], function() {
             this.dom.$reset = this.sandbox.dom.createElement(templates.frame);
             this.sandbox.dom.addClass(this.dom.$reset, constants.resetFrameClass);
             this.sandbox.dom.append(this.dom.$reset, this.sandbox.util.template(templates.resetPwdFrame)({
-                label: 'Reset your password',
-                reset: 'Reset',
-                email: 'Email',
-                backLoginMsg: 'Back to login',
-                resend: 'Re-send Email',
-                sentMsg: 'An email with instruction how to reset your password has been sent to:'
+                label: this.sandbox.translate(this.options.translations.resetPassword),
+                reset: this.sandbox.translate(this.options.translations.reset),
+                email: this.sandbox.translate(this.options.translations.email),
+                backLoginMsg: this.sandbox.translate(this.options.translations.backLogin),
+                resend: this.sandbox.translate(this.options.translations.resend),
+                sentMsg: this.sandbox.translate(this.options.translations.emailSent),
+                backWebsiteMsg: this.sandbox.translate(this.options.translations.backWebsite)
             }));
             this.dom.$loginSwitch = this.sandbox.dom.find('.' + constants.loginSwitchClass, this.dom.$reset);
             this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.resetMsgBoxClass, this.dom.$reset));
@@ -283,10 +317,21 @@ define([], function() {
          * @param {Number} shiftY - shift in y (vertical) (in pixel)
          */
         setBgPosition: function(shiftX, shiftY) {
-            shiftX = shiftX || 0;
-            shiftY = shiftY || 0;
-            this.sandbox.dom.css(this.dom.$bg, 'left', (shiftX - this.options.shiftSpace) + 'px');
-            this.sandbox.dom.css(this.dom.$bg, 'top', (shiftY - this.options.shiftSpace) + 'px');
+            var positionX = this.sandbox.dom.position(this.dom.$bg).left + shiftX,
+                positionY = this.sandbox.dom.position(this.dom.$bg).top + shiftY,
+                padding = 3; // additional pixels which can't be seen - makes sure there is never a white border
+            if (positionX > -padding) {
+                positionX = -padding;
+            } else if (positionX < (this.options.shiftSpace* -2) + padding) {
+                positionX = (this.options.shiftSpace* -2) + padding;
+            }
+            if (positionY > -padding) {
+                positionY = -padding;
+            } else if (positionY < (this.options.shiftSpace* -2) + padding) {
+                positionY = (this.options.shiftSpace* -2) + padding;
+            }
+            this.sandbox.dom.css(this.dom.$bg, 'left', positionX + 'px');
+            this.sandbox.dom.css(this.dom.$bg, 'top', positionY + 'px');
         },
 
         /**
@@ -294,6 +339,7 @@ define([], function() {
          */
         bindDomEvents: function() {
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeHandler.bind(this));
+            this.sandbox.dom.on(this.sandbox.dom.window, 'mouseenter', this.mouseenterHandler.bind(this));
             this.sandbox.dom.on(this.dom.$bg, 'mousedown', this.toggleBgActive.bind(this, true));
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBgActive.bind(this, false));
             this.sandbox.dom.on(this.dom.$forgotSwitch, 'click', this.moveToFrame.bind(this, this.dom.$reset));
@@ -302,6 +348,19 @@ define([], function() {
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
             this.sandbox.dom.on(this.sandbox.dom.window, 'mousemove', this.mousemoveHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$box, 'click',
+                this.redirect.bind(this, this.sandbox.dom.window.location.origin), '.' + constants.websiteSwitchClass);
+        },
+
+        /**
+         * Handles the window's mousenter-event
+         * @param event
+         */
+        mouseenterHandler: function(event) {
+            if (event.relatedTarget === null) {
+                this.mouseOrigin.x = event.pageX;
+                this.mouseOrigin.y = event.pageY;
+            }
         },
 
         /**
@@ -309,8 +368,10 @@ define([], function() {
          * @param event
          */
         mousemoveHandler: function(event) {
-            //TODO
-            this.dom.$bg.css('left', (this.dom.$bg.position().left + 1) + 'px');
+            var changeInX = (event.pageX - this.mouseOrigin.x) * -this.movementRatio.x,
+                changeInY = (event.pageY - this.mouseOrigin.y) * -this.movementRatio.y;
+            this.setBgPosition(changeInX, changeInY);
+            this.mouseenterHandler(event);
         },
 
         /**
@@ -393,6 +454,7 @@ define([], function() {
          */
         resizeHandler: function() {
             this.setBgSize();
+            this.setMovementRatio();
         }
     };
 });
