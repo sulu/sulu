@@ -1525,7 +1525,7 @@ class AccountController extends AbstractContactController
             'category',
             'accountCategory',
             self::$accountCategoryEntityName,
-            'contact.contacts.categories.label',
+            'contacts.accounts.category',
             array(
                 self::$accountCategoryEntityName => new DoctrineJoinDescriptor(
                     self::$accountCategoryEntityName,
