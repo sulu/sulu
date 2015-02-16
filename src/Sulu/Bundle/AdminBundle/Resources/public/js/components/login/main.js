@@ -301,6 +301,16 @@ define([], function() {
             this.sandbox.dom.on(this.dom.$loginBtn, 'click', this.loginBtnClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
+            this.sandbox.dom.on(this.sandbox.dom.window, 'mousemove', this.mousemoveHandler.bind(this));
+        },
+
+        /**
+         * Handles the window's mousemove-event
+         * @param event
+         */
+        mousemoveHandler: function(event) {
+            //TODO
+            this.dom.$bg.css('left', (this.dom.$bg.position().left + 1) + 'px');
         },
 
         /**
