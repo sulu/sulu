@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 0.15.0
 
 ### Sulu Locales
 The Sulu Locales are not hardcoded anymore, but configured in the `app/config/config.yml` file:
