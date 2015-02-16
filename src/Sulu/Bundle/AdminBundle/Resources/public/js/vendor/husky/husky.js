@@ -28998,7 +28998,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
     var defaults = {
         editable: false,
         fullWidth: false,
-        removeItem: false,
+        removeRow: false,
         selectItem: {
             type: 'checkbox',
             inFirstCell: false
@@ -29427,7 +29427,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Renderes an empty remove-row cell into the header
          */
         renderHeaderRemoveItem: function () {
-            if (this.options.removeItem === true) {
+            if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
                 this.sandbox.dom.append(this.table.header.$row, $cell);
@@ -29479,36 +29479,44 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
-         * Renderes a single table row. If the row already exists it replaces the exiting one
+         * Renders a single table row. If the row already exists it replaces the exiting one
          * @param record {Object} the record
          * @param prepend {Boolean} if true row gets prepended
          */
-        renderBodyRow: function (record, prepend) {
+        renderBodyRow: function(record, prepend) {
             this.removeNewRecordRow();
-            var $row = this.sandbox.dom.createElement(templates.row),
-                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
-            this.sandbox.dom.data($row, 'id', record.id);
+            if (!this.table.rows[record.id]) {
+                var $row = this.sandbox.dom.createElement(templates.row),
+                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            if (!!record.parent) {
-                this.table.rows[record.parent].childrenLoaded = true;
+                record.id = (!!record.id) ? record.id : constants.newRecordId;
+                this.sandbox.dom.data($row, 'id', record.id);
+
+                // render the parents before rendering the children
+                if (!!record.parent) {
+                    if (!this.table.rows[record.parent]) {
+                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
+                    }
+                    this.table.rows[record.parent].childrenLoaded = true;
+                }
+
+                this.table.rows[record.id] = {
+                    $el: $row,
+                    cells: {},
+                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
+                    childrenExpanded: false,
+                    parent: !!(record.parent) ? record.parent : null,
+                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                    level: 1
+                };
+
+                this.renderRowSelectItem(record.id);
+                this.renderBodyCellsForRow(record);
+                this.renderRowRemoveItem(record.id);
+                this.insertBodyRow(record, $overrideElement, prepend);
+                this.executeRowPostRenderActions(record);
             }
-
-            this.table.rows[record.id] = {
-                $el: $row,
-                cells: {},
-                childrenLoaded: false,
-                childrenExpanded: false,
-                parent: !!(record.parent) ? record.parent : null,
-                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                level: 1
-            };
-            this.renderRowSelectItem(record.id);
-            this.renderBodyCellsForRow(record);
-            this.renderRowRemoveItem(record.id);
-            this.insertBodyRow(record, $overrideElement, prepend);
-            this.executeRowPostRenderActions(record);
         },
 
         /**
@@ -29575,7 +29583,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the row to add the select-item for
          */
         renderRowRemoveItem: function (id) {
-            if (this.options.removeItem === true) {
+            if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.html($cell, this.sandbox.util.template(templates.removeCellContent)({
                     icon: this.options.removeIcon
@@ -29598,7 +29606,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
             }
-            if (!!this.options.selectItem && !!this.options.selectItem.inFirstCell === true && index === 0) {
+            if (!!this.options.selectItem && this.options.selectItem.inFirstCell === true && index === 0) {
                 this.sandbox.dom.attr($cell, 'colspan', 2);
                 selectItem = this.renderRowSelectItem(record.id, true);
                 if (typeof content === 'string') {
@@ -29833,7 +29841,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // handle click on body row
             this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
             // remove row event
-            if (this.options.removeItem === true) {
+            if (this.options.removeRow === true) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.removeItemClickHandler.bind(this), '.' + constants.rowRemoverClass);
             }
             if (!!this.table.header) {
