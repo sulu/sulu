@@ -39032,7 +39032,8 @@ define('__component__$column-navigation@husky',[], function () {
             item: function (width, data) {
 
                 var isMarked = (this.marked.indexOf(data[this.options.idName]) !== -1),
-                    item = ['<li data-id="', data[this.options.idName], '" class="pointer' + ((isMarked === true) ? ' ' + this.options.markedClass : '' ) + '">'];
+                    item = ['<li data-id="', data[this.options.idName], '" class="pointer' + ((isMarked === true) ? ' ' + this.options.markedClass : '' ) + '">'],
+                    title = this.sandbox.util.escapeHtml(data[this.options.titleName]);
 
                 // icons left
                 item.push('<span class="icons-left">');
@@ -39067,9 +39068,9 @@ define('__component__$column-navigation@husky',[], function () {
 
                 // text center
                 if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
-                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
+                    item.push('<span title="' + title + '" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
                 } else {
-                    item.push('<span title="' + data[this.options.titleName] + '" class="item-text pull-left">', data[this.options.titleName], '</span>');
+                    item.push('<span title="' + title + '" class="item-text pull-left">', data[this.options.titleName], '</span>');
                 }
 
                 // icons right (subpage, edit)
@@ -48483,6 +48484,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 define('husky_extensions/util',[],function() {
 
     
@@ -48491,6 +48501,18 @@ define('husky_extensions/util',[],function() {
         name: 'Util',
 
         initialize: function(app) {
+            /**
+             * Replace rules for escape html function
+             * @type {{}}
+             */
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': '&quot;',
+                "'": '&#39;',
+                "/": '&#x2F;'
+            };
 
             // for comparing arrays
             app.core.util.compare = function(a, b) {
@@ -48601,29 +48623,29 @@ define('husky_extensions/util',[],function() {
                 return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
             },
 
-            app.core.util.cropFront = function(text, maxLength, delimiter) {
-                if (!text || text.length <= maxLength) {
-                    return text;
-                }
+                app.core.util.cropFront = function(text, maxLength, delimiter) {
+                    if (!text || text.length <= maxLength) {
+                        return text;
+                    }
 
-                delimiter = delimiter || '...';
+                    delimiter = delimiter || '...';
 
-                return delimiter + text.slice(-(maxLength - delimiter.length));
-            },
+                    return delimiter + text.slice(-(maxLength - delimiter.length));
+                },
 
-            app.core.util.cropTail = function(text, maxLength, delimiter) {
-                if (!text || text.length <= maxLength) {
-                    return text;
-                }
+                app.core.util.cropTail = function(text, maxLength, delimiter) {
+                    if (!text || text.length <= maxLength) {
+                        return text;
+                    }
 
-                delimiter = delimiter || '...';
+                    delimiter = delimiter || '...';
 
-                return text.slice(0, (maxLength - delimiter.length)) + delimiter;
-            },
+                    return text.slice(0, (maxLength - delimiter.length)) + delimiter;
+                },
 
-            app.core.util.contains = function(list, value) {
-                return _.contains(list, value);
-            };
+                app.core.util.contains = function(list, value) {
+                    return _.contains(list, value);
+                };
 
             app.core.util.uniqueId = function(prefix) {
                 return _.uniqueId(prefix);
@@ -48644,10 +48666,20 @@ define('husky_extensions/util',[],function() {
                     parent = [];
                 }
                 return $.extend(true, parent, object);
-            }
+            };
 
 			app.core.util.template = _.template;
 
+            /**
+             * Escapes special html character
+             * @param string
+             * @returns {string}
+             */
+            app.core.util.escapeHtml = function(string) {
+                return String(string).replace(/[&<>"'\/]/g, function(s) {
+                    return entityMap[s];
+                });
+            };
         }
     };
 });
