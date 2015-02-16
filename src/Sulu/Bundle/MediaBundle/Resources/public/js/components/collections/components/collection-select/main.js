@@ -91,7 +91,7 @@ define(function() {
             }.bind(this));
 
             // wait for column navigation edit click
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', function(item) {
                 this.sandbox.emit(SELECTED.call(this), item);
             }.bind(this));
 
@@ -152,11 +152,12 @@ define(function() {
                             el: '#child-column-navigation',
                             url: '/admin/api/collections',
                             instanceName: this.options.instanceName,
-                            editIcon: 'fa-check-circle',
+                            actionIcon: 'fa-check-circle',
                             resultKey: 'collections',
-                            showEdit: false,
+                            showOptions: false,
                             showStatus: false,
                             responsive: false,
+                            sortable: false,
                             skin: 'fixed-height-small'
                         }
                     }
