@@ -488,13 +488,15 @@ define([
                 }.bind(this));
         },
 
-        order: function(id, parentId, successCallback, errorCallback) {
+        order: function(uuid, position, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
-                '&language=', this.options.language, '&action=order&destination=', parentId
+                '/admin/api/nodes/', uuid, '?webspace=', this.options.webspace,
+                '&language=', this.options.language, '&action=order'
             ].join('');
 
-            this.sandbox.util.save(url, 'POST', {})
+            this.sandbox.util.save(url, 'POST', {
+                position: position
+            })
                 .then(function(data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);

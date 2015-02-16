@@ -59,7 +59,13 @@ define([], function() {
         bindCustomEvents = function() {
             this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
 
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.edit', selectLink.bind(this));
+            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
+
+            // data from overlay retrieved
+            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
+                setURI.call(this);
+                loadContent.call(this);
+            }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.initialized', function() {
@@ -99,13 +105,14 @@ define([], function() {
                             el: getId.call(this, 'columnNavigation'),
                             url: this.options.columnNavigationUrl,
                             instanceName: this.options.instanceName,
-                            editIcon: 'fa-plus-circle',
+                            actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
-                            showEdit: false,
+                            showOptions: false,
                             showStatus: true,
                             responsive: false,
                             skin: 'fixed-height-small',
                             markable: true,
+                            sortable: false,
                             premarkedIds: data
                         }
                     }

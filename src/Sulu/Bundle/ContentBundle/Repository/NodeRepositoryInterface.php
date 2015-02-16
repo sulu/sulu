@@ -238,6 +238,17 @@ interface NodeRepositoryInterface
     public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
 
     /**
+     * brings a given node into a given position
+     * @param string $uuid
+     * @param integer $position
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     * @return array
+     */
+    public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId);
+
+    /**
      * @param string $uuid
      * @param integer $userId
      * @param string $webspaceKey
