@@ -1137,7 +1137,8 @@ class AccountController extends AbstractContactController
             true,
             '',
             '',
-            '160px'
+            '160px', 
+            false
         );
 
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -1517,6 +1518,20 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
+        );
+
+        // account-category
+        $this->fieldDescriptors['accountCategory'] = new DoctrineFieldDescriptor(
+            'category',
+            'accountCategory',
+            self::$accountCategoryEntityName,
+            'contacts.accounts.category',
+            array(
+                self::$accountCategoryEntityName => new DoctrineJoinDescriptor(
+                    self::$accountCategoryEntityName,
+                    self::$entityName . '.accountCategory'
+                ),
+            )
         );
     }
 }

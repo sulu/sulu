@@ -82,7 +82,7 @@ class SnippetContent extends ComplexContentType
      */
     protected function setData($data, PropertyInterface $property)
     {
-        $refs = isset($data['ids']) ? $data['ids'] : array();
+        $refs = isset($data) ? $data : array();
         $ids = array();
         if (is_array($refs)) {
             foreach ($refs as $i => $ref) {
@@ -95,8 +95,7 @@ class SnippetContent extends ComplexContentType
             }
         }
 
-        $data['ids'] = $ids;
-        $property->setValue($data);
+        $property->setValue($ids);
     }
 
     /**
@@ -105,7 +104,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData(array('ids' => $refs), $property);
+        $this->setData($refs, $property);
     }
 
     /**
@@ -131,14 +130,9 @@ class SnippetContent extends ComplexContentType
         $snippetReferences = array();
         $values = $property->getValue();
 
-        $values = array_merge(
-            array(
-                'ids' => array(),
-            ),
-            is_array($values) ? $values : array()
-        );
+        $values = is_array($values) ? $values : array();
 
-        foreach ((array)$values['ids'] as $value) {
+        foreach ($values as $value) {
             if ($value instanceof Snippet) {
                 $snippetReferences[] = $value->getUuid();
             } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
@@ -268,7 +262,7 @@ class SnippetContent extends ComplexContentType
      */
     private function getUuids($data)
     {
-        $ids = is_array($data) && array_key_exists('ids', $data) ? $data['ids'] : array();
+        $ids = is_array($data) ? $data : array();
         return $ids;
     }
 }

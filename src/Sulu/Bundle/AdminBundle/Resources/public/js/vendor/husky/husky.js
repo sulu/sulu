@@ -28999,7 +28999,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
     var defaults = {
         editable: false,
         fullWidth: false,
-        removeItem: false,
+        removeRow: false,
         selectItem: {
             type: 'checkbox',
             inFirstCell: false
@@ -29428,7 +29428,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Renderes an empty remove-row cell into the header
          */
         renderHeaderRemoveItem: function () {
-            if (this.options.removeItem === true) {
+            if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
                 this.sandbox.dom.append(this.table.header.$row, $cell);
@@ -29480,36 +29480,44 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
-         * Renderes a single table row. If the row already exists it replaces the exiting one
+         * Renders a single table row. If the row already exists it replaces the exiting one
          * @param record {Object} the record
          * @param prepend {Boolean} if true row gets prepended
          */
-        renderBodyRow: function (record, prepend) {
+        renderBodyRow: function(record, prepend) {
             this.removeNewRecordRow();
-            var $row = this.sandbox.dom.createElement(templates.row),
-                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            record.id = (!!record.id) ? record.id : constants.newRecordId;
-            this.sandbox.dom.data($row, 'id', record.id);
+            if (!this.table.rows[record.id]) {
+                var $row = this.sandbox.dom.createElement(templates.row),
+                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
 
-            if (!!record.parent) {
-                this.table.rows[record.parent].childrenLoaded = true;
+                record.id = (!!record.id) ? record.id : constants.newRecordId;
+                this.sandbox.dom.data($row, 'id', record.id);
+
+                // render the parents before rendering the children
+                if (!!record.parent) {
+                    if (!this.table.rows[record.parent]) {
+                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
+                    }
+                    this.table.rows[record.parent].childrenLoaded = true;
+                }
+
+                this.table.rows[record.id] = {
+                    $el: $row,
+                    cells: {},
+                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
+                    childrenExpanded: false,
+                    parent: !!(record.parent) ? record.parent : null,
+                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                    level: 1
+                };
+
+                this.renderRowSelectItem(record.id);
+                this.renderBodyCellsForRow(record);
+                this.renderRowRemoveItem(record.id);
+                this.insertBodyRow(record, $overrideElement, prepend);
+                this.executeRowPostRenderActions(record);
             }
-
-            this.table.rows[record.id] = {
-                $el: $row,
-                cells: {},
-                childrenLoaded: false,
-                childrenExpanded: false,
-                parent: !!(record.parent) ? record.parent : null,
-                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                level: 1
-            };
-            this.renderRowSelectItem(record.id);
-            this.renderBodyCellsForRow(record);
-            this.renderRowRemoveItem(record.id);
-            this.insertBodyRow(record, $overrideElement, prepend);
-            this.executeRowPostRenderActions(record);
         },
 
         /**
@@ -29576,7 +29584,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the row to add the select-item for
          */
         renderRowRemoveItem: function (id) {
-            if (this.options.removeItem === true) {
+            if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.html($cell, this.sandbox.util.template(templates.removeCellContent)({
                     icon: this.options.removeIcon
@@ -29599,7 +29607,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!this.datagrid.options.childrenPropertyName && index === 0) {
                 content = this.wrapChildrenCellContent(content, record);
             }
-            if (!!this.options.selectItem && !!this.options.selectItem.inFirstCell === true && index === 0) {
+            if (!!this.options.selectItem && this.options.selectItem.inFirstCell === true && index === 0) {
                 this.sandbox.dom.attr($cell, 'colspan', 2);
                 selectItem = this.renderRowSelectItem(record.id, true);
                 if (typeof content === 'string') {
@@ -29834,7 +29842,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             // handle click on body row
             this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
             // remove row event
-            if (this.options.removeItem === true) {
+            if (this.options.removeRow === true) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.removeItemClickHandler.bind(this), '.' + constants.rowRemoverClass);
             }
             if (!!this.table.header) {
@@ -39535,7 +39543,9 @@ define('__component__$column-navigation@husky',[], function () {
          */
         actionClickHandler: function (event) {
             var $listItem, id, item, column;
-
+            if (this.inOrderMode === true) {
+                return false;
+            }
             if (this.sandbox.dom.hasClass(event.currentTarget, 'action') === true) {
                 $listItem = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget));
             } else {
@@ -43212,6 +43222,15 @@ define('__component__$input@husky',[], function() {
 
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -43316,6 +43335,15 @@ define('__component__$input@husky',[], function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -43442,6 +43470,15 @@ define('__component__$input@husky',[], function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/collection',[],function() {
 
     
@@ -44318,6 +44355,15 @@ if(jQuery) (function($) {
 })(jQuery);
 define("jquery-minicolors", function(){});
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -44345,6 +44391,15 @@ define("jquery-minicolors", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -44364,9 +44419,11 @@ define("jquery-minicolors", function(){});
                  * @param message - the message (or translation key) for the box
                  * @param okCallback - callback to execute after box was confirmed
                  * @param closeCallback - callback to execute on cancel
+                 * @param [type] - 'warning' or 'error' - default 'warning'
                  */
-                warning: function (that, title, message, okCallback, closeCallback) {
-                    var $element = app.core.dom.createElement('<div/>');
+                warning: function (that, title, message, okCallback, closeCallback, type) {
+                    var $element = app.core.dom.createElement('<div/>'),
+                        type = type || 'warning';
                     app.core.dom.append(that.$el, $element);
 
                     that.sandbox.start([
@@ -44378,7 +44435,7 @@ define("jquery-minicolors", function(){});
                                 message: app.sandbox.translate(message),
                                 closeCallback: closeCallback,
                                 okCallback: okCallback,
-                                type: 'warning'
+                                type: type
                             }
                         }
                     ]);
@@ -44387,8 +44444,6 @@ define("jquery-minicolors", function(){});
         }
     });
 })();
-
-
 
 /* =========================================================
  * bootstrap-datepicker.js
@@ -46985,6 +47040,15 @@ define("datepicker-zh-CN", function(){});
 
 define("datepicker-zh-TW", function(){});
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -47150,6 +47214,15 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -47178,6 +47251,15 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -47358,6 +47440,16 @@ define("datepicker-zh-TW", function(){});
 })();
 
 /**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+/**
  * see https://github.com/farhadi/html5sortable for documentation
  */
 
@@ -47391,6 +47483,15 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -47536,7 +47637,6 @@ define("datepicker-zh-TW", function(){});
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
- * @module husky/components/listbox
  */
 
 /**
@@ -47594,7 +47694,12 @@ define('husky_extensions/itembox',[],function() {
          */
         createEventName = function(eventName) {
             // TODO extract to extension?
-            return this.options.eventNamespace + '.' + eventName;
+            return [
+                this.options.eventNamespace,
+                '.',
+                (this.options.instanceName ? this.options.instanceName + '.' : ''),
+                eventName
+            ].join('');
         },
 
         templates = {
@@ -47655,7 +47760,7 @@ define('husky_extensions/itembox',[],function() {
         },
 
         bindCustomEvents = function() {
-            this.sandbox.on(this.DATA_CHANGED(), this.loadContent.bind(this));
+            this.sandbox.on(this.DATA_CHANGED(), this.changeData.bind(this));
             this.sandbox.on(this.DATA_RETRIEVED(), this.renderContent.bind(this));
         },
 
@@ -47758,9 +47863,10 @@ define('husky_extensions/itembox',[],function() {
              * render the itembox
              */
             render: function() {
+                this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
+
                 var data = this.getData();
 
-                this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
                 this.viewAll = true;
 
                 this.ids = {
@@ -47788,10 +47894,10 @@ define('husky_extensions/itembox',[],function() {
 
                 this.renderNoContent();
 
-                if (!this.sandbox.util.isEmpty(data)) {
+                if (!this.isDataEmpty(data)) {
                     this.loadContent(data);
                 } else {
-                    this.setData(this.options.dataDefault, false);
+                    this.sandbox.dom.data(this.$el, this.options.dataAttribute, this.options.dataDefault);
                 }
 
                 this.setDisplayOption(this.options.defaultDisplayOption);
@@ -47852,7 +47958,7 @@ define('husky_extensions/itembox',[],function() {
             },
 
             /**
-             * Set the given data to the elements data attribute
+             * Throws a data-changed event if the data actually has changed
              * @param data {object} The data to set
              * @param reload {boolean} True if the itembox list should be reloaded afterwards
              */
@@ -47861,11 +47967,21 @@ define('husky_extensions/itembox',[],function() {
                 reload = typeof(reload) === 'undefined' ? true : reload;
 
                 if (!this.sandbox.util.isEqual(oldData, data)) {
-                    this.sandbox.dom.data(this.$el, this.options.dataAttribute, data);
+                    this.sandbox.emit(this.DATA_CHANGED(), data, this.$el, reload);
+                }
+            },
 
-                    if (reload) {
-                        this.sandbox.emit(this.DATA_CHANGED(), data, this.$el);
-                    }
+            /**
+             * Event handler for the changed data event, sets data to element and reloads the list if specified
+             * @param data {object} The data to set
+             * @param $el {object} The element to which the data should be bound
+             * @param reload {boolean} True if the list should be reloaded, otherwise false
+             */
+            changeData: function (data, $el, reload) {
+                this.sandbox.dom.data(this.$el, this.options.dataAttribute, data);
+
+                if (!!reload) {
+                    this.loadContent(data);
                 }
             },
 
@@ -48097,6 +48213,15 @@ define('husky_extensions/itembox',[],function() {
             },
 
             /**
+             * Checks if the given data is empty, can be overriden by the concrete implementation.
+             * Especially useful if data is not an array.
+             * @param data {object} The data to check
+             */
+            isDataEmpty: function(data) {
+                return this.sandbox.util.isEmpty(data);
+            },
+
+            /**
              * Returns the selector for the given id
              * @param type {string} The type of the element, for which the id should be returned
              * @returns {string} The id of the element
@@ -48147,6 +48272,15 @@ define('husky_extensions/itembox',[],function() {
     }
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48697,6 +48831,15 @@ define('husky_extensions/itembox',[],function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/model',[],function() {
 
     
@@ -48724,6 +48867,15 @@ define('husky_extensions/model',[],function() {
     };
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48754,6 +48906,15 @@ define('husky_extensions/model',[],function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
     
@@ -48870,6 +49031,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48924,6 +49094,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48957,6 +49136,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/util',[],function() {
 
     
@@ -48965,6 +49153,18 @@ define('husky_extensions/util',[],function() {
         name: 'Util',
 
         initialize: function(app) {
+            /**
+             * Replace rules for escape html function
+             * @type {{}}
+             */
+            var entityMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': '&quot;',
+                "'": '&#39;',
+                "/": '&#x2F;'
+            };
 
             // for comparing arrays
             app.core.util.compare = function(a, b) {
@@ -49075,29 +49275,29 @@ define('husky_extensions/util',[],function() {
                 return text.slice(0, substrLength) + delimiter + text.slice(-substrLength);
             },
 
-            app.core.util.cropFront = function(text, maxLength, delimiter) {
-                if (!text || text.length <= maxLength) {
-                    return text;
-                }
+                app.core.util.cropFront = function(text, maxLength, delimiter) {
+                    if (!text || text.length <= maxLength) {
+                        return text;
+                    }
 
-                delimiter = delimiter || '...';
+                    delimiter = delimiter || '...';
 
-                return delimiter + text.slice(-(maxLength - delimiter.length));
-            },
+                    return delimiter + text.slice(-(maxLength - delimiter.length));
+                },
 
-            app.core.util.cropTail = function(text, maxLength, delimiter) {
-                if (!text || text.length <= maxLength) {
-                    return text;
-                }
+                app.core.util.cropTail = function(text, maxLength, delimiter) {
+                    if (!text || text.length <= maxLength) {
+                        return text;
+                    }
 
-                delimiter = delimiter || '...';
+                    delimiter = delimiter || '...';
 
-                return text.slice(0, (maxLength - delimiter.length)) + delimiter;
-            },
+                    return text.slice(0, (maxLength - delimiter.length)) + delimiter;
+                },
 
-            app.core.util.contains = function(list, value) {
-                return _.contains(list, value);
-            };
+                app.core.util.contains = function(list, value) {
+                    return _.contains(list, value);
+                };
 
             app.core.util.uniqueId = function(prefix) {
                 return _.uniqueId(prefix);
@@ -49118,10 +49318,20 @@ define('husky_extensions/util',[],function() {
                     parent = [];
                 }
                 return $.extend(true, parent, object);
-            }
+            };
 
 			app.core.util.template = _.template;
 
+            /**
+             * Escapes special html character
+             * @param string
+             * @returns {string}
+             */
+            app.core.util.escapeHtml = function(string) {
+                return String(string).replace(/[&<>"'\/]/g, function(s) {
+                    return entityMap[s];
+                });
+            };
         }
     };
 });

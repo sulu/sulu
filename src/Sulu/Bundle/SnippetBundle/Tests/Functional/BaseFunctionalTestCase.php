@@ -89,10 +89,8 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
                 'title' => 'Hotels page',
                 'url' => '/hotels',
                 'hotels' => array(
-                    'ids' => array(
-                        $this->hotel1->getUuid(),
-                        $this->hotel2->getUuid(),
-                    ),
+                    $this->hotel1->getUuid(),
+                    $this->hotel2->getUuid(),
                 ),
             ));
 

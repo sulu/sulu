@@ -360,7 +360,7 @@ define(function () {
                     name: 'dropzone@husky',
                     options: {
                         el: constants.dropzoneSelector,
-                        url: '/admin/api/media/' + this.media.id,
+                        url: '/admin/api/media/' + this.media.id + '?action=new-version',
                         method: 'POST',
                         paramName: 'fileVersion',
                         showOverlay: false,

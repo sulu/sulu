@@ -287,6 +287,11 @@
   top: 2px;
 }
 
+/* line 62, ../scss/modules/general.scss */
+#changelog-container {
+  color: #999;
+}
+
 /* line 1, ../scss/modules/seo.scss */
 .seo-excerpt {
   background: #fff;
