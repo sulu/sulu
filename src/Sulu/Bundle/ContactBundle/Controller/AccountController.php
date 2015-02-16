@@ -1519,5 +1519,19 @@ class AccountController extends AbstractContactController
             array(),
             true
         );
+
+        // status
+        $this->fieldDescriptors['accountCategory'] = new DoctrineFieldDescriptor(
+            'category',
+            'accountCategory',
+            self::$accountCategoryEntityName,
+            'contact.contacts.categories.label',
+            array(
+                self::$accountCategoryEntityName => new DoctrineJoinDescriptor(
+                    self::$accountCategoryEntityName,
+                    self::$entityName . '.accountCategory'
+                ),
+            )
+        );
     }
 }
