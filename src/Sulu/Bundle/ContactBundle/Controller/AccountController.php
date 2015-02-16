@@ -1520,7 +1520,7 @@ class AccountController extends AbstractContactController
             true
         );
 
-        // status
+        // account-category
         $this->fieldDescriptors['accountCategory'] = new DoctrineFieldDescriptor(
             'category',
             'accountCategory',
