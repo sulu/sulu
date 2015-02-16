@@ -77,7 +77,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $subject = $e->getSubject();
         $evaluator = $e->getFieldEvaluator();
 
-        if (false === $metadata->reflection->isSubclassOf('Sulu\Component\Content\Structure')) {
+        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf('Sulu\Component\Content\Structure')) {
             return;
         }
 

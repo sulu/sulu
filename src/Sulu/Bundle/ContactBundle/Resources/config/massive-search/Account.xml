@@ -9,10 +9,8 @@
             <field name="name" type="string" />
         </fields>
 
-        <context name="admin">
-            <url expr="'/admin/#contacts/accounts/edit:' ~ object.getId() ~ '/details'" />
-            <index name="admin_account" />
-        </context>
+        <url expr="'/admin/#contacts/accounts/edit:' ~ object.getId() ~ '/details'" />
+        <index name="admin_account" />
     </mapping>
 
 </massive-search-mapping>

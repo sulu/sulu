@@ -78,8 +78,9 @@ class StructureDriver implements DriverInterface
         /** @var StructureInterface $structure */
         $structure = $class->newInstance();
 
-        $indexMeta = $this->factory->makeIndexMetadata($class->name);
+        $classMetadata = $this->factory->makeClassMetadata($class->name);
 
+        $indexMeta = $this->factory->makeIndexMetadata();
         $indexMeta->setIndexName($this->structureIndexName);
         $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
@@ -133,7 +134,10 @@ class StructureDriver implements DriverInterface
             new StructureMetadataLoadEvent($structure, $indexMeta)
         );
 
-        return $indexMeta;
+        $classMetadata->addIndexMetadata('_default', $indexMeta);
+
+
+        return $classMetadata;
     }
 
     private function mapProperty(PropertyInterface $property, $metadata)
