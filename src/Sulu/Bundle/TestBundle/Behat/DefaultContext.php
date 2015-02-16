@@ -12,6 +12,7 @@ namespace Sulu\Bundle\TestBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\PyStringNode;
 
 /**
  * Default context class for Sulu contexts.
@@ -148,5 +149,14 @@ EOT;
         }
 
         $this->getSession()->wait(BaseContext::LONG_WAIT_TIME, '$.active == 0');
+    }
+
+    /**
+     * @Then I should receieve the following json response:
+     */
+    public function iShouldReveiveTheJsonResponse(PyStringNode $node)
+    {
+        $content = $this->getSession()->getPage()->getContent();
+        var_dump($content);die();;
     }
 }
