@@ -269,8 +269,31 @@
                         }
                     }
                     return url;
+                },
+                
+                cropLabelOfElement = function(sandbox, $element) {
+                    var original = sandbox.dom.trim(sandbox.dom.text($element));
+                    // replace multiple spaces with single
+                    original = original.replace(/\s{2,}/g, ' ');
+                    sandbox.dom.attr($element, 'title', original);
+                    sandbox.dom.html($element, sandbox.util.cropMiddle(original, 20));
                 };
 
+            /**
+             * function crops all labels with class 'crop'
+             * @param className define another class name than 'crop'
+             */
+            app.sandbox.sulu.cropAllLabels = function(className) {
+                var sandbox = app.sandbox;
+                if (!className) {
+                    className = 'crop'
+                }
+                var elements = sandbox.dom.find('label.' + className, this.$el), i, length;
+                for (i = -1, length = elements.length; ++i < length;) {
+                    cropLabelOfElement(sandbox, elements[i]);
+                }
+            };
+            
             /**
              * creates an address string from an object
              * @param address
