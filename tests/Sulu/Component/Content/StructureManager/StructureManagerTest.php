@@ -566,18 +566,17 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             array(
-                'minLinks' => new PropertyParameter('minLinks', 'string', 1, array()),
-                'maxLinks' => new PropertyParameter('maxLinks', 'string', 10, array()),
+                'minLinks' => new PropertyParameter('minLinks', 1),
+                'maxLinks' => new PropertyParameter('maxLinks', 10),
                 'test' => new PropertyParameter(
                     'test',
-                    'collection',
                     array(
-                        't1' => new PropertyParameter('t1', 'string', 'v1', array()),
-                        't2' => new PropertyParameter('t2', 'string', 'v2', array()),
-                        't3' => new PropertyParameter('t3', 'string', 'v3', array()),
-                        't4' => new PropertyParameter('t4', 'string', 'v4', array()),
+                        't1' => new PropertyParameter('t1', 'v1'),
+                        't2' => new PropertyParameter('t2', 'v2'),
+                        't3' => new PropertyParameter('t3','v3'),
+                        't4' => new PropertyParameter('t4', 'v4'),
                     ),
-                    array()
+                    'collection'
                 )
             ),
             $structure->getProperty('title')->getParams()
@@ -592,7 +591,6 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
             array(
                 'min' => new PropertyParameter(
                     'min',
-                    'string',
                     1,
                     array(
                         'title' => array('de' => 'Mindestens', 'en' => 'Minimum')

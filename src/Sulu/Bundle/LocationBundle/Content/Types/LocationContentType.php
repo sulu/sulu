@@ -73,22 +73,21 @@ class LocationContentType extends ComplexContentType
                 'countries',
                 'collection',
                 array(
-                    'at' => new PropertyParameter('at', 'string', 'Austria'),
-                    'fr' => new PropertyParameter('fr', 'string', 'France'),
-                    'gb' => new PropertyParameter('gb', 'string', 'Great Britain'),
+                    'at' => new PropertyParameter('at', 'Austria'),
+                    'fr' => new PropertyParameter('fr', 'France'),
+                    'gb' => new PropertyParameter('gb', 'Great Britain'),
                 )
             ),
             'mapProviders' => new PropertyParameter(
                 'mapProviders',
-                'collection',
-                $this->mapManager->getProvidersAsArray()
+                $this->mapManager->getProvidersAsArray(),
+                'collection'
             ),
             'defaultProvider' => new PropertyParameter(
                 'defaultProvider',
-                'string',
                 $this->mapManager->getDefaultProviderName()
             ),
-            'geolocatorName' => new PropertyParameter('geolocatorName', 'string', $this->geolocatorName),
+            'geolocatorName' => new PropertyParameter('geolocatorName', $this->geolocatorName),
         );
     }
 

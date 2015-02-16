@@ -181,9 +181,9 @@ class SmartContent extends ComplexContentType
     public function getDefaultParams()
     {
         $params = parent::getDefaultParams();
-        $params['page_parameter'] = new PropertyParameter('page_parameter', 'string', 'p');
-        $params['properties'] = new PropertyParameter('properties', 'collection', array());
-        $params['present_as'] = new PropertyParameter('present_as', 'collection', array());
+        $params['page_parameter'] = new PropertyParameter('page_parameter', 'p');
+        $params['properties'] = new PropertyParameter('properties', array(), 'collection');
+        $params['present_as'] = new PropertyParameter('present_as', array(), 'collection');
 
         return $params;
     }

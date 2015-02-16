@@ -368,7 +368,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             ->willReturn(array_merge($config, array('page' => 1, 'hasNextPage' => true)));
 
         $property->expects($this->exactly(1))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', '5'))));
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', '5'))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -439,7 +439,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(array('dataSource' => '123-123-123')));
 
         $property->expects($this->exactly(1))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', '5'))));
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', '5'))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -514,7 +514,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $property->expects($this->exactly(1))->method('getValue')
             ->will($this->returnValue($config));
         $property->expects($this->exactly(1))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', $pageSize))));
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', $pageSize))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 
@@ -565,7 +565,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             ->willReturn(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)));
 
         $property->expects($this->exactly(1))->method('getParams')
-            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', 'string', $pageSize))));
+            ->will($this->returnValue(array('max_per_page' => new PropertyParameter('max_per_page', $pageSize))));
         $property->expects($this->exactly(3))->method('getStructure')
             ->will($this->returnValue($structure));
 

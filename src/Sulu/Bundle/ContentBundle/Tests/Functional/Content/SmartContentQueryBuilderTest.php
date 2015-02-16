@@ -184,9 +184,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder->init(
             array(
                 'properties' => array(
-                    'my_article' => new PropertyParameter(
-                        'my_article', 'string', 'article', array()
-                    )
+                    'my_article' => new PropertyParameter('my_article', 'article')
                 )
             )
         );
@@ -608,9 +606,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder->init(
             array(
                 'properties' => array(
-                    'my_title' => new PropertyParameter('my_title', 'string', 'title', array()),
-                    'ext_title' => new PropertyParameter('ext_title', 'string', 'excerpt.title', array()),
-                    'ext_tags' =>new PropertyParameter('ext_tags', 'string', 'excerpt.tags', array())
+                    'my_title' => new PropertyParameter('my_title', 'title'),
+                    'ext_title' => new PropertyParameter('ext_title', 'excerpt.title'),
+                    'ext_tags' => new PropertyParameter('ext_tags', 'string', 'excerpt.tags')
                 )
             )
         );

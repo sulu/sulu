@@ -51,11 +51,11 @@ class PropertyParameter
     /**
      * Constructor
      * @param string $name
-     * @param string $type
+     * @param string|null $type
      * @param string|bool|array $value
      * @param array $metadata
      */
-    function __construct($name, $type, $value, $metadata = array())
+    function __construct($name, $value, $type = null, $metadata = array())
     {
         $this->name = $name;
         $this->value = $value;

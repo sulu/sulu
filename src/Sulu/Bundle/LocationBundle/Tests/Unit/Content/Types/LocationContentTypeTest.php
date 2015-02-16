@@ -114,19 +114,21 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'countries' => new PropertyParameter(
                 'countries', 'collection', array(
-                    'at' => new PropertyParameter('at', 'string', 'Austria'),
-                    'fr' => new PropertyParameter('fr', 'string', 'France'),
-                    'gb' => new PropertyParameter('gb', 'string', 'Great Britain'),
+                    'at' => new PropertyParameter('at', 'Austria'),
+                    'fr' => new PropertyParameter('fr', 'France'),
+                    'gb' => new PropertyParameter('gb', 'Great Britain'),
                 )
             ),
             'mapProviders' => new PropertyParameter(
-                'mapProviders', 'collection', array(
+                'mapProviders',
+                array(
                     'foo' => 'Foo',
                     'bar' => 'Bar',
-                )
+                ),
+                'collection'
             ),
-            'defaultProvider' => new PropertyParameter('defaultProvider', 'string', 'leaflet'),
-            'geolocatorName' => new PropertyParameter('geolocatorName', 'string', 'some_geolocator'),
+            'defaultProvider' => new PropertyParameter('defaultProvider', 'leaflet'),
+            'geolocatorName' => new PropertyParameter('geolocatorName', 'some_geolocator'),
         );
 
         $this->mapManager->expects($this->once())

@@ -43,10 +43,10 @@ class TextEditor extends SimpleContentType
     public function getDefaultParams()
     {
         return array(
-            'godMode' => new PropertyParameter('', 'string', false),
-            'tables' => new PropertyParameter('', 'string', true),
-            'links' => new PropertyParameter('', 'string', true),
-            'pasteFromWord' => new PropertyParameter('', 'string', true)
+            'godMode' => new PropertyParameter('godMode', false),
+            'tables' => new PropertyParameter('tables', true),
+            'links' => new PropertyParameter('links', true),
+            'pasteFromWord' => new PropertyParameter('pasteFromWord', true)
         );
     }
 }

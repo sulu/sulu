@@ -45,22 +45,22 @@ class MediaSelectionContentType extends ComplexContentType
     public function getDefaultParams()
     {
         return array(
-            'types' => new PropertyParameter('types', 'string', null),
-            'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'string', 'top'),
+            'types' => new PropertyParameter('types', null),
+            'defaultDisplayOption' => new PropertyParameter('defaultDisplayOption', 'top'),
             'displayOptions' => new PropertyParameter(
                 'displayOptions',
-                'collection',
                 array(
-                    'leftTop' => new PropertyParameter('leftTop', 'string', true),
-                    'top' => new PropertyParameter('top', 'string', true),
-                    'rightTop' => new PropertyParameter('rightTop', 'string', true),
-                    'left' => new PropertyParameter('left', 'string', true),
-                    'middle' => new PropertyParameter('middle', 'string', false),
-                    'right' => new PropertyParameter('right', 'string', true),
-                    'leftBottom' => new PropertyParameter('leftBottom', 'string', true),
-                    'bottom' => new PropertyParameter('bottom', 'string', true),
-                    'rightBottom' => new PropertyParameter('rightBottom', 'string', true)
-                )
+                    'leftTop' => new PropertyParameter('leftTop', true),
+                    'top' => new PropertyParameter('top', true),
+                    'rightTop' => new PropertyParameter('rightTop', true),
+                    'left' => new PropertyParameter('left', true),
+                    'middle' => new PropertyParameter('middle', false),
+                    'right' => new PropertyParameter('right', true),
+                    'leftBottom' => new PropertyParameter('leftBottom', true),
+                    'bottom' => new PropertyParameter('bottom', true),
+                    'rightBottom' => new PropertyParameter('rightBottom', true)
+                ),
+                'collection'
             )
         );
     }

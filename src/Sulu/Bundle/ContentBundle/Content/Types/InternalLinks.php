@@ -139,7 +139,7 @@ class InternalLinks extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array('properties' => new PropertyParameter('properties', 'collection', array(), array()));
+        return array('properties' => new PropertyParameter('properties', array(), 'collection'));
     }
 
     /**
