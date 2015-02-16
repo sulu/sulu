@@ -1783,11 +1783,11 @@ class ContentMapper implements ContentMapperInterface
             $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
         }
 
-        $event = new ContentNodeOrderEvent($subject);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $event);
-
         // set changer of node in specific language
         $this->setChanger($subject, $userId, $languageCode);
+
+        $event = new ContentNodeOrderEvent($subject);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $event);
 
         $session->save();
         $session->refresh(false);
