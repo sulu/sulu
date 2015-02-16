@@ -100,16 +100,6 @@ define([
             },
 
             /**
-             * raised after a media got moved
-             * @event sulu.media.collections.media-moved
-             * @param id {Number|String} the id of the moved media
-             * @param collection {Object} collection moved media into
-             */
-            SINGLE_MEDIA_MOVED = function() {
-                return createEventName.call(this, 'media-moved');
-            },
-
-            /**
              * raised after a collection got deleted
              * @event sulu.media.collections.collection-deleted
              * @param id {Number|String} the id of the deleted media
@@ -495,8 +485,6 @@ define([
                         .then(function() {
                             if (typeof callback === 'function') {
                                 callback(id);
-                            } else {
-                                this.sandbox.emit(SINGLE_MEDIA_MOVED.call(this), id);
                             }
                         }.bind(this))
                         .fail(function() {
