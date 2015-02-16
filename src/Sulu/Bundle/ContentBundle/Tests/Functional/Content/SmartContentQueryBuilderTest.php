@@ -608,7 +608,7 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 'properties' => array(
                     'my_title' => new PropertyParameter('my_title', 'title'),
                     'ext_title' => new PropertyParameter('ext_title', 'excerpt.title'),
-                    'ext_tags' => new PropertyParameter('ext_tags', 'string', 'excerpt.tags')
+                    'ext_tags' => new PropertyParameter('ext_tags', 'excerpt.tags')
                 )
             )
         );
