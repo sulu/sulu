@@ -27601,6 +27601,7 @@ define('husky',[
         app.use('./husky_extensions/html5sortable');
         app.use('./husky_extensions/husky-validation');
         app.use('./husky_extensions/util');
+        app.use('./husky_extensions/confirm');
         app.use('./husky_extensions/template');
         app.use('./husky_extensions/globalize');
         app.use('./husky_extensions/uri-template');
@@ -33076,7 +33077,9 @@ define('__component__$dropdown@husky',[], function() {
             // on click on list item
             this.sandbox.dom.on(this.$dropDownList, 'click', function(event) {
                 event.stopPropagation();
-                this.clickItem(this.sandbox.dom.data(event.currentTarget, 'id'));
+                if (!this.sandbox.dom.hasClass(event.currentTarget, 'disabled')) {
+                    this.clickItem(this.sandbox.dom.data(event.currentTarget, 'id'));
+                }
             }.bind(this), 'li:not(".divider")');
         },
 
@@ -33084,10 +33087,29 @@ define('__component__$dropdown@husky',[], function() {
             this.sandbox.on(this.getEvent('toggle'), this.triggerClick.bind(this));
             this.sandbox.on(this.getEvent('show'), this.showDropDown.bind(this));
             this.sandbox.on(this.getEvent('hide'), this.hideDropDown.bind(this));
+            this.sandbox.on(this.getEvent('item.enable'), this.itemEnable.bind(this));
+            this.sandbox.on(this.getEvent('item.disable'), this.itemDisable.bind(this));
+            this.sandbox.on(this.getEvent('item.toggle'), this.itemToggle.bind(this));
         },
 
         getEvent: function(append) {
             return 'husky.dropdown.' + this.options.instanceName + '.' + append;
+        },
+
+        itemToggle: function(id, enable) {
+            if (enable === true) {
+                this.itemEnable(id);
+            } else {
+                this.itemDisable(id);
+            }
+        },
+
+        itemEnable: function(id) {
+            this.sandbox.dom.removeClass(this.$find('li[data-id="'+ id +'"]'), 'disabled');
+        },
+
+        itemDisable: function(id) {
+            this.sandbox.dom.addClass(this.$find('li[data-id="'+ id +'"]'), 'disabled');
         },
 
         // trigger event with clicked item
@@ -38196,69 +38218,135 @@ define('__component__$password-fields@husky',[], function() {
  * @constructor
  *
  * @params {Object} [options] Configuration object
- * @params {Number} [options.wrapper.height] height of container in percentage
- * @params {Number} [options.column.width] width of a column in within the navigation in pixels
- * @params {Number} [options.scrollBarWidth] with of scrollbar
  * @params {String} [options.url] url to load data
  * @params {String} [options.selected] id of selected element - needed to restore state
- * @params {String} [options.editIcon] icon class of edit button
+ * @params {String} [options.actionIcon] icon class of action button
  * @params {Array}  [options.data] array of data displayed in the settings dropdown
+ * @params {String}  [options.data[].mode] if 'order' - column gets set in order mode if clicked
+ * @params {Function}  [options.data[].enabler] Gets called each time the options change columns.
+ *                                            Gets an object with a numberItems and a hasSelected property.
+ *                                            If returns false the dropdown item will get disabled, enabled otherwise
  * @params {String} [options.instanceName] name of current instance
  * @params {String} [options.hasSubName] name of hasSub-key
  * @params {String} [options.idName] name of id-key
+ * @params {String} [options.pathName] name of path-key
  * @params {String} [options.linkedName] name of linked-key
  * @params {String} [options.publishedName] name of published-key
- * @params {String} [options.typeName] name of type-key
  * @params {String} [options.titleName] name of title-key
+ * @params {String} [options.noPageDescription] translation key for the "No-Page"-description
  * @params {String} [options.resultKey] The name of the array in the responded _embedded
- * @params {Number} [options.visibleRatio] minimum ratio of how much of a column must be visible to display the navigation
  * @params {Boolean} [options.responsive] If true the resize listener gets initialized. Otherwise the column navigation just takes up 100 % of the height and width
- * @params {Boolean} [options.showEdit] hide or display edit elements
- * @params {Boolean} [options.showEditIcon] hide or display edit icon element
+ * @params {Boolean} [options.showOptions] hide or shows the options
+ * @params {Boolean} [options.showActionIcon] if true the action icon is shown, not shown otherwise
  * @params {Boolean} [options.showStatus] hide or display status of elements
  * @params {String} [options.skin] css class which gets added to the components element. Available: '', 'fixed-height-small'
  * @params {Boolean} [options.markable] If true a node gets marked with a css class on click on the blue button
- * @params {String} [options.markedClass] The css-class which gets set on the node if node gets marked
  * @params {Array} [options.premarkedIds] an array of uuids of nodes which should be marked from the beginning on
+ * @params {Boolean} [options.orderable] if true component-items can be ordered
+ * @params {Boolean} [options.tooltipTranslations] translation-keys for the tooltips
+ * @params {Boolean} [options.tooltipTranslations.ghost] translation-keys for ghost
+ * @params {Boolean} [options.tooltipTranslations.shadow] translation-keys for shadow
+ * @params {Boolean} [options.tooltipTranslations.unpublished] translation-keys for unpublished
+ * @params {Boolean} [options.tooltipTranslations.internalLink] translation-keys for internal-link
+ * @params {Boolean} [options.tooltipTranslations.externalLink] translation-keys for external-link
  */
 define('__component__$column-navigation@husky',[], function () {
 
     
 
     var defaults = {
-            wrapper: {
-                height: 70
-            },
-            column: {
-                width: 250
-            },
-            paddingLeft: 50,
             url: null,
             selected: null,
             data: null,
             instanceName: '',
             hasSubName: 'hasSub',
-            editIcon: 'fa-pencil',
+            actionIcon: 'fa-pencil',
             idName: 'id',
             pathName: 'path',
             linkedName: 'linked',
             publishedName: 'publishedState',
             titleName: 'title',
             typeName: 'type',
-            minVisibleRatio: 1 / 2,
             noPageDescription: 'public.no-pages',
             skin: '',
             resultKey: 'nodes',
             responsive: true,
-            showEdit: true,
-            showEditIcon: true,
+            showOptions: true,
             showStatus: true,
             premarkedIds: [],
-            markedClass: 'marked',
-            markable: false
+            markable: false,
+            orderable: true,
+            showActionIcon: true,
+            orderConfirmTitle: 'column-navigation.order-title',
+            orderConfirmMessage: 'column-navigation.order-message',
+            tooltipTranslations: {
+                ghost: 'column-navigation.ghost',
+                shadow: 'column-navigation.shadow',
+                unpublished: 'public.unpublished',
+                internalLink: 'public.internal-link',
+                externalLink: 'public.external-link'
+            }
         },
 
-        DISPLAYEDCOLUMNS = 2, // number of displayed columns with content
+        constants = {
+            responsiveHeightRation: 7 / 10,
+            columnWidth: 250,
+            minVisibleRatio: 1 / 2,
+            markedClass: 'marked',
+            displayedcolumns: 2, // number of displayed columns with content
+            wrapperClass: 'column-navigation-wrapper',
+            columnClass: 'column',
+            optionsClass: 'options',
+            componentClass: 'husky-column-navigation',
+            nodeLoaderClass: 'husky-column-navigation-loader',
+            bigLoaderClass: 'column-navigation-loader',
+            columnItemClass: 'column-item',
+            iconsLeftClass: 'icons-left',
+            iconsRightClass: 'icons-right',
+            itemTextClass: 'item-text',
+            orderInputClass: 'orderer',
+            orderErrorClass: 'husky-validate-error',
+            highlightClass: 'highlight-animation',
+            orderModeClass: 'order-mode'
+        },
+
+        templates = {
+            wrapper: ['<div class="' + constants.wrapperClass + '"></div>'].join(''),
+            container: ['<div class="column-navigation"></div>'].join(''),
+
+            column: ['<div data-column="<%= columnNumber %>" class="' + constants.columnClass + '" id="<%= id %>">',
+                     '    <ul></ul>',
+                    '</div>'].join(''),
+
+            noPage: ['<div class="no-page">',
+                     '    <span class="fa-coffee icon"></span>',
+                     '    <div class="text"><%= description %></div>',
+                     '</div>'].join(''),
+
+            optionsContainer: ['<div class="' + constants.optionsClass + ' grid-row"></div>'].join(''),
+
+            optionsAdd: ['<div class="align-center add pointer">',
+                            '<span class="fa-plus-circle"></span>',
+                         '</div>'].join(''),
+
+            optionsSettings: ['<div class="align-center settings pointer drop-down-trigger">',
+                              '   <span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
+                              '</div>'].join(''),
+
+            optionsOk: ['<div class="align-center ok pointer">',
+                        '   <span class="fa-check"></span>',
+                        '</div>'].join(''),
+
+            item: ['<li data-id="<%= id %>" class="' + constants.columnItemClass + '">',
+                   '    <span class="' + constants.iconsLeftClass + '"></span>',
+                   '    <span title="<%= title %>" class="' + constants.itemTextClass + '"><%= title%></span>',
+                   '    <span class="' + constants.iconsRightClass + '"></span>',
+                   '</li>'].join(''),
+
+            orderInput: ['<span class="' + constants.orderInputClass + '">',
+                        '   <input type="text" class="form-element husky-validate" value="<%= value %>" />',
+                        '</span>'].join('')
+        },
 
         /**
          * namespace for events
@@ -38292,15 +38380,6 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
-         * @event husky.column-navigation.get-selected
-         * @description listens on and passes the selected nodes to a given callback
-         * @param {Function} callback to pass the ids to
-         */
-        GET_SELECTED = function () {
-            return createEventName.call(this, 'get-selected');
-        },
-
-        /**
          * @event husky.column-navigation.settings
          * @description an navigation element has been selected and a item from selected dropdown clicked
          * @param {Object} selected column navigation object
@@ -38320,12 +38399,47 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
-         * @event husky.column-navigation.edit
-         * @description the edit icon has been clicked
-         * @param {Object} clicked object
+         * @event husky.column-navigation.action
+         * @description emitted if the action-icon of an item gets clicked
+         * @param {Object} clicked item
          */
-        EDIT = function () {
-            return createEventName.call(this, 'edit');
+        ACTION = function () {
+            return createEventName.call(this, 'action');
+        },
+
+        /**
+         * @event husky.column-navigation.ordered
+         * @description emited when the position of an item gets changed
+         * @param {String} uuid of the reposition item
+         * @param {Number} the new position of the item
+         */
+        ORDERED = function () {
+            return createEventName.call(this, 'ordered');
+        },
+
+        /**
+         * @event husky.column-navigation.order
+         * @description listens on and sets the column containing an item with a given id in order-mode
+         * @param {String} uuid of the item
+         */
+        ORDER = function () {
+            return createEventName.call(this, 'order');
+        },
+
+        /**
+         * @event husky.column-navigation.order-start
+         * @description emited if a column is set in order-mode
+         */
+        ORDER_START = function () {
+            return createEventName.call(this, 'order-start');
+        },
+
+        /**
+         * @event husky.column-navigation.order-start
+         * @description emited if a column is set in order-mode
+         */
+        ORDER_END = function () {
+            return createEventName.call(this, 'order-end');
         },
 
         /**
@@ -38335,6 +38449,15 @@ define('__component__$column-navigation@husky',[], function () {
          */
         UNMARK = function () {
             return createEventName.call(this, 'unmark');
+        },
+
+        /**
+         * @event husky.column-navigation.highlight
+         * @description listens on and highlights an item with a given uuid
+         * @param {Number|String} the id of the item to highlight
+         */
+        HIGHLIGHT = function () {
+            return createEventName.call(this, 'highlight');
         },
 
         /**
@@ -38365,18 +38488,7 @@ define('__component__$column-navigation@husky',[], function () {
         initialize: function () {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            this.$element = this.sandbox.dom.$(this.options.el);
-            this.$selectedElement = null;
-            this.filledColumns = 0;
-            this.columnLoadStarted = false;
-            this.$loader = null;
-            this.$bigLoader = null;
-
-            this.columns = [];
-            this.selected = [];
-            // array with all marked ids
-            this.marked = this.options.premarkedIds || [];
-
+            this.setProperties();
             this.render();
             this.startBigLoader();
             this.load(this.options.url, 0);
@@ -38387,77 +38499,123 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
+         * Initializes the class properties with their default-values
+         */
+        setProperties: function() {
+            this.$selectedElement = null;
+            this.filledColumns = 0;
+            this.columnLoadStarted = false;
+            this.isOrdering = false; // flag (only one item at a time can be ordered)
+            this.inOrderMode = false; // flag (only one column at a time can be in order-mode)
+            this.optionsLocked = false;
+            this.dom = {
+                $wrapper: null,
+                $container: null,
+                $add: null,
+                $settings: null,
+                $bigLoader: null,
+                $loader: null,
+                $ok: null,
+                $lastClicked: null
+            };
+
+            this.columns = [];
+            this.selected = [];
+            // array with all marked ids
+            this.marked = this.options.premarkedIds || [];
+        },
+
+        /**
          * Renders basic structure (wrapper) of column navigation
          */
-        render: function () {
-            var $add, $settings, $wrapper;
+        render: function() {
+            this.renderWrapper();
+            if (!!this.options.showOptions) { // Options-toolbar with "add" and "settings"
+                this.renderOptions();
+            }
+            if (!!this.options.data) {
+                this.initSettingsDropdown();
+            }
+            if (this.options.responsive === true) {
+                this.setContainerHeight();
+            }
+        },
 
-            this.sandbox.dom.addClass(this.$el, 'husky-column-navigation');
+        /**
+         * Returns the index of a column which contains an item with a given id
+         * @param item - the id of the item
+         * @returns {number} the index of the column if found, a value below 0 otherwise
+         */
+        getColumnForItem: function (item) {
+            for (var i = -1, length = this.columns.length; ++i < length;) {
+                if (!!this.columns[i] && !!this.columns[i][item]) {
+                    return i;
+                }
+            }
+            return -1;
+        },
+
+        /**
+         * Renders the options-buttons. "Add" and "Settings"
+         */
+        renderOptions: function() {
+            this.$optionsContainer = this.sandbox.dom.createElement(templates.optionsContainer);
+            this.dom.$add = this.sandbox.dom.createElement(templates.optionsAdd);
+            this.dom.$settings = this.sandbox.dom.createElement(templates.optionsSettings);
+            this.dom.$ok = this.sandbox.dom.createElement(templates.optionsOk);
+            this.sandbox.dom.hide(this.dom.$ok);
+            this.sandbox.dom.append(this.$optionsContainer, this.dom.$add);
+            this.sandbox.dom.append(this.$optionsContainer, this.dom.$settings);
+            this.sandbox.dom.append(this.$optionsContainer, this.dom.$ok);
+            this.hideOptions();
+            this.sandbox.dom.append(this.dom.$wrapper, this.$optionsContainer);
+        },
+
+        /**
+         * Renders the component wrapper and an additional container
+         */
+        renderWrapper: function() {
+            this.sandbox.dom.addClass(this.$el, constants.componentClass);
             if (!!this.options.skin) {
                 this.sandbox.dom.addClass(this.$el, this.options.skin);
             }
 
-            $wrapper = this.sandbox.dom.$(this.template.wrapper.call(this));
-            this.sandbox.dom.append(this.$element, $wrapper);
+            this.dom.$wrapper = this.sandbox.dom.createElement(templates.wrapper);
+            this.sandbox.dom.append(this.$el, this.dom.$wrapper);
 
             // navigation container
-
-            this.$columnContainer = this.sandbox.dom.$(this.template.columnContainer.call(this));
-            this.sandbox.dom.append($wrapper, this.$columnContainer);
-
-            // options container - add and settings button
-            this.addId = this.options.instanceName + "-column-navigation-add";
-            this.settingsId = this.options.instanceName + "-column-navigation-settings";
-
-            if (!!this.options.showEdit) {
-                this.$optionsContainer = this.sandbox.dom.$(this.template.optionsContainer.call(this, this.options.column.width));
-                $add = this.sandbox.dom.$(this.template.options.add(this.addId));
-                $settings = this.sandbox.dom.$(this.template.options.settings(this.settingsId));
-                this.sandbox.dom.append(this.$optionsContainer, $add);
-                this.sandbox.dom.append(this.$optionsContainer, $settings);
-                this.hideOptions();
-                this.sandbox.dom.append($wrapper, this.$optionsContainer);
-            }
-
-            if (this.options.responsive === true) {
-                this.setContainerHeight();
-            }
-
-            //init dropdown for settings in options container
-            if (!!this.options.data) {
-                this.initSettingsDropdown(this.sandbox.dom.attr($settings, 'id'));
-            }
-
+            this.dom.$container = this.sandbox.dom.createElement(templates.container);
+            this.sandbox.dom.append(this.dom.$wrapper, this.dom.$container);
         },
 
         /**
          * Starts the big loader, before loading content during the initialization
          */
         startBigLoader: function () {
-            if (this.$bigLoader === null) {
-                this.$bigLoader = this.sandbox.dom.createElement('<div class="column-navigation-loader"/>');
-                this.sandbox.dom.hide(this.$bigLoader);
-                this.sandbox.dom.html(this.$columnContainer, this.$bigLoader);
+            if (this.dom.$bigLoader === null) {
+                this.dom.$bigLoader = this.sandbox.dom.createElement('<div class="'+ constants.bigLoaderClass +'"/>');
+                this.sandbox.dom.hide(this.dom.$bigLoader);
+                this.sandbox.dom.html(this.dom.$container, this.dom.$bigLoader);
 
                 this.sandbox.start([
                     {
                         name: 'loader@husky',
                         options: {
-                            el: this.$bigLoader,
+                            el: this.dom.$bigLoader,
                             size: '100px',
                             color: '#e4e4e4'
                         }
                     }
                 ]);
             }
-            this.sandbox.dom.show(this.$bigLoader);
+            this.sandbox.dom.show(this.dom.$bigLoader);
         },
 
         /**
          * Detatches the big loader from the column-navigation
          */
         removeBigLoader: function () {
-            this.sandbox.dom.hide(this.$find('.column-navigation-loader'));
+            this.sandbox.dom.hide(this.dom.$bigLoader);
         },
 
         /**
@@ -38465,27 +38623,19 @@ define('__component__$column-navigation@husky',[], function () {
          */
         setContainerHeight: function () {
             var height = this.sandbox.dom.height(this.sandbox.dom.$window),
-                top = this.sandbox.dom.offset(this.$el).top - (this.sandbox.dom.$window !== this.sandbox.dom.$window ? this.sandbox.dom.offset(this.sandbox.dom.$window).top : 0);
-            top = top < 0 ? 0 : top;
-
-            this.sandbox.dom.height(
-                this.$columnContainer, (height - top) * this.options.wrapper.height / 100
-            );
+                top = this.sandbox.dom.offset(this.$el).top;
+            this.sandbox.dom.height(this.dom.$container, (height - top) * constants.responsiveHeightRation);
         },
 
         /**
          * Instantiats the dropdown component
-         * @param containerId dom id for element to start dropdown
          */
-        initSettingsDropdown: function (containerId) {
-
-            // TODO show dropdown only if item is selected and enable/disable certain elements of the dropdown depending on the selected element
-
+        initSettingsDropdown: function () {
             this.sandbox.start([
                 {
                     name: 'dropdown@husky',
                     options: {
-                        el: '#' + containerId,
+                        el: this.dom.$settings,
                         setParentDropDown: true,
                         instanceName: this.options.instanceName + '.settings.dropdown',
                         alignment: 'left',
@@ -38508,7 +38658,6 @@ define('__component__$column-navigation@husky',[], function () {
                         this.removeBigLoader();
                         this.columnLoadStarted = false;
                         this.parseData(response, columnNumber);
-                        this.handleLastEmptyColumn();
                         this.scrollIfNeeded(this.filledColumns + 1);
                         this.setOverflowClass();
                         this.showOptionsAtLast();
@@ -38545,51 +38694,157 @@ define('__component__$column-navigation@husky',[], function () {
          * @param {Number} columnNumber
          */
         parseData: function (data, columnNumber) {
-            var $column, $list, newColumn, nodeWithSubNodes = null, lastSelected = null;
-
-            if (columnNumber === 0) {  // case 1: no elements in container
-                this.columns[0] = [];
+            // if there is nothing loaded yet, create a "root"-column
+            if (columnNumber === 0) {
+                this.columns[0] = {};
                 this.columns[0][data[this.options.idName]] = data;
-                newColumn = 1;
-            } else { // case 2: columns in container replace level after clicked column and clear following levels
-                newColumn = columnNumber + 1;
             }
+            var newColNumber = columnNumber + 1;
 
-            $column = this.sandbox.dom.$(this.template.column.call(this, newColumn, this.options.column.width));
-            this.sandbox.dom.append(this.$columnContainer, $column);
+            this.renderColumn(newColNumber, data);
+            this.removeLoadingIconForSelected();
+        },
 
-            $list = this.sandbox.dom.find('ul', $column);
+        /**
+         * Renderes a column
+         * @param number - the number of the new column
+         * @param data - the data for the column
+         */
+        renderColumn: function(number,  data) {
+            var $column = this.sandbox.dom.createElement(this.sandbox.util.template(templates.column)({
+                columnNumber: number,
+                id: 'column' + this.options.instanceName + '-' + number
+            }));
+            this.sandbox.dom.append(this.dom.$container, $column);
+            this.filledColumns = number;
+            this.renderItems($column, number, data);
+        },
 
-            this.sandbox.util.each(data._embedded[this.options.resultKey], function (index, value) {
-                this.storeDataItem(newColumn, value);
-                var $element = this.sandbox.dom.$(this.template.item.call(this, this.options.column.width, value));
-                this.sandbox.dom.append($list, $element);
+        /**
+         * Renderes the items for a column
+         * @param $column - the dom-object of the column
+         * @param number - the number of the column to add the items to
+         * @param data - the columns data object
+         */
+        renderItems: function($column, number, data) {
+            var $list = this.sandbox.dom.find('ul', $column), nodeWithSubNodes, lastSelected;
+            this.sandbox.util.each(data._embedded[this.options.resultKey], function (index, itemData) {
+                itemData.order = (index + 1);
+                var $item = this.renderItem(itemData);
+                itemData.$el = $item;
+                this.storeDataItem(number, itemData);
+                this.sandbox.dom.append($list, $item);
+                this.setItemsTextWidth($item);
 
-                this.setItemsTextWidth($element);
-
-                // remember which item has subitems to display a whole tree when column navigation should be restored
-                if (!!value[this.options.hasSubName] && !!value._embedded[this.options.resultKey] && value._embedded[this.options.resultKey].length > 0) {
-                    nodeWithSubNodes = value;
-                    this.setElementSelected($element);
-                    this.selected[newColumn] = value;
+                // if there are sub-nodes for this node loaded (need to be rendered later, so we save a reference)
+                if (!!itemData[this.options.hasSubName] && !!itemData._embedded[this.options.resultKey] && itemData._embedded[this.options.resultKey].length > 0) {
+                    nodeWithSubNodes = itemData;
+                    this.setElementSelected($item);
+                    this.selected[number] = itemData;
                 }
 
-                // needed to select node in last level of nodes
-                if (!!this.options.selected && (this.options.selected === value[this.options.idName] || this.options.selected === value[this.options.pathName])) {
-                    this.setElementSelected($element);
-                    this.selected[newColumn] = value;
-                    lastSelected = value;
+                // if this node is the specified as selected in the options, we select it
+                if (!!this.options.selected && (this.options.selected === itemData[this.options.idName] || this.options.selected === itemData[this.options.pathName])) {
+                    this.setElementSelected($item);
+                    this.selected[number] = itemData;
+                    lastSelected = itemData;
                 }
             }.bind(this));
 
-            this.removeLoadingIconForSelected();
+            // here we come back the the node with the sub-nodes and recursively parse the sub-nodes-column
+            if (!!nodeWithSubNodes) {
+                this.parseData(nodeWithSubNodes, number);
+            // otherwise, if there are no sub-nodes and we have a selected node - we display the "No-Pages"-column
+            } else if (!!lastSelected && !lastSelected[this.options.hasSubName]) {
+                this.insertAddColumn(lastSelected, number);
+            }
+        },
 
-            this.filledColumns = newColumn;
+        /**
+         * Takes the data object and returns a column-item
+         * @param data - the item's data
+         * @returns the items dom-object
+         */
+        renderItem: function(data) {
+            var $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.item)({
+                title: data[this.options.titleName],
+                id: data[this.options.idName]
+            }));
+            if (this.marked.indexOf(data[this.options.idName]) !== -1) { // if is marked
+                this.sandbox.dom.addClass($item, constants.markedClass);
+            }
+            this.renderLeftInfo($item, data);
+            this.renderItemText($item, data);
+            this.renderRightInfo($item, data);
+            return $item;
+        },
 
-            if (!!nodeWithSubNodes) { // parse next column if data exists
-                this.parseData(nodeWithSubNodes, newColumn);
-            } else if (!!lastSelected && !lastSelected[this.options.hasSubName]) { // append add column if no children
-                this.addColumn(lastSelected, newColumn);
+        /**
+         * Renders the left buttons and icons for an item
+         * @param $item - dom object of the item
+         * @param data - the item's data
+         */
+        renderLeftInfo: function($item, data) {
+            var $container = this.sandbox.dom.find('.' + constants.iconsLeftClass, $item);
+            this.sandbox.dom.append($container, '<span class="fa-check pull-left marked-icon"></span>');
+            if (!!this.options.showStatus) {
+                // link
+                if (!!data[this.options.linkedName]) {
+                    if (data[this.options.linkedName] === 'internal') {
+                        this.sandbox.dom.append($container,
+                            '<span class="fa-internal-link col-icon" title="'+ this.sandbox.translate(this.options.tooltipTranslations.internalLink) +'"></span>');
+                    } else if (data[this.options.linkedName] === 'external') {
+                        this.sandbox.dom.append($container,
+                            '<span class="fa-external-link col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.externalLink) +'"></span>');
+                    }
+                }
+                // type (ghost, shadow)
+                if (!!data[this.options.typeName]) {
+                    if (data[this.options.typeName].name === 'ghost') {
+                        this.sandbox.dom.append($container,
+                                '<span class="ghost col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.ghost) +'">'+ data[this.options.typeName].value +'</span>');
+                    } else if (data[this.options.typeName].name === 'shadow') {
+                        this.sandbox.dom.append($container,
+                            '<span class="fa-shadow-node col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.shadow) +'"></span>');
+                    }
+                }
+                // unpublished
+                if (!data[this.options.publishedName]) {
+                    this.sandbox.dom.append($container,
+                        '<span class="not-published col-icon"  title="'+ this.sandbox.translate(this.options.tooltipTranslations.unpublished) +'">&bull;</span>');
+                }
+            }
+            if (!!this.options.orderable) {
+                this.sandbox.dom.append($container, this.sandbox.util.template(templates.orderInput)({
+                    value: data.order
+                }));
+            }
+        },
+
+        /**
+         * Renderes the text element of a column-item
+         * @param $item - dom object of the item
+         * @param data - the data for the item
+         */
+        renderItemText: function($item, data) {
+            var $container = this.sandbox.dom.find('.' + constants.itemTextClass, $item);
+            if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
+                this.sandbox.dom.addClass($container, 'inactive');
+            }
+        },
+
+        /**
+         * Renders the right buttons and icons for an item
+         * @param $item - dom object of the item
+         * @param data - the data for the item
+         */
+        renderRightInfo: function($item, data) {
+            var $container = this.sandbox.dom.find('.' + constants.iconsRightClass, $item);
+            if (this.options.showActionIcon === true) {
+                this.sandbox.dom.append($container, '<span class="' + this.options.actionIcon + ' action col-icon"></span>');
+            }
+            if (!!data[this.options.hasSubName]) {
+                this.sandbox.dom.append($container, '<span class="fa-chevron-right arrow inactive col-icon"></span>');
             }
         },
 
@@ -38601,13 +38856,23 @@ define('__component__$column-navigation@husky',[], function () {
             var width, $itemText;
 
             $itemText = this.sandbox.dom.find('.item-text', $item);
-            width = this.options.column.width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-left', $item));
-            width = width - parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', '')) - 2;
-            width = width - parseInt(this.sandbox.dom.css($item, 'padding-left').replace('px', ''));
-            width = width - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-right', $item));
-
+            width = constants.columnWidth - this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-left', $item));
+            width -= parseInt(this.sandbox.dom.css($item, 'padding-right').replace('px', ''));
+            width -= parseInt(this.sandbox.dom.css($item, 'padding-left').replace('px', ''));
+            width -= this.sandbox.dom.outerWidth(this.sandbox.dom.find('.icons-right', $item));
+            width -= 17; // FIXME: Better solution? (For potential scrollbar)
             this.sandbox.dom.width($itemText, width);
             this.cropItemsText($itemText);
+        },
+
+        /**
+         * Sets the text width of all items in a column
+         * @param column
+         */
+        setColumnTextWidth: function(column) {
+            this.sandbox.util.each(this.columns[column], function (id, item) {
+                this.setItemsTextWidth(item.$el);
+            }.bind(this));
         },
 
         /**
@@ -38622,15 +38887,17 @@ define('__component__$column-navigation@husky',[], function () {
 
             //set the item text to the original title
             this.sandbox.dom.html($itemText, title);
+            this.sandbox.dom.css($itemText, 'font-weight', 'bold');
 
             overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
 
             while (overflow === true) {
-                maxLength = maxLength - 1;
+                maxLength--;
                 croppedTitle = this.sandbox.util.cropMiddle(title, maxLength);
                 this.sandbox.dom.html($itemText, croppedTitle);
                 overflow = (this.sandbox.dom.get($itemText, 0).scrollWidth > this.sandbox.dom.width($itemText));
             }
+            this.sandbox.dom.css($itemText, 'font-weight', '');
         },
 
         /**
@@ -38650,25 +38917,25 @@ define('__component__$column-navigation@husky',[], function () {
         addLoadingIcon: function ($container) {
             this.sandbox.dom.removeClass($container, 'fa-chevron-right inactive');
 
-            if (this.$loader === null) {
-                this.$loader = this.sandbox.dom.createElement('<div class="husky-column-navigation-loader"/>');
-                this.sandbox.dom.hide(this.$loader);
+            if (this.dom.$loader === null) {
+                this.dom.$loader = this.sandbox.dom.createElement('<div class="'+ constants.nodeLoaderClass +'"/>');
+                this.sandbox.dom.hide(this.dom.$loader);
             }
-            if (this.sandbox.dom.is(this.$loader, ':empty')) {
+            if (this.sandbox.dom.is(this.dom.$loader, ':empty')) {
                 this.sandbox.start([
                     {
                         name: 'loader@husky',
                         options: {
-                            el: this.$loader,
+                            el: this.dom.$loader,
                             size: '16px',
                             color: '#666666'
                         }
                     }
                 ]);
             }
-            this.sandbox.dom.detach(this.$loader);
-            this.sandbox.dom.html($container, this.$loader);
-            this.sandbox.dom.show(this.$loader);
+            this.sandbox.dom.detach(this.dom.$loader);
+            this.sandbox.dom.html($container, this.dom.$loader);
+            this.sandbox.dom.show(this.dom.$loader);
         },
 
         /**
@@ -38677,7 +38944,7 @@ define('__component__$column-navigation@husky',[], function () {
         removeLoadingIconForSelected: function () {
             if (!!this.$selectedElement) {
                 var $arrow = this.sandbox.dom.find('.arrow', this.$selectedElement);
-                this.sandbox.dom.hide(this.$loader);
+                this.sandbox.dom.hide(this.dom.$loader);
                 this.sandbox.dom.prependClass($arrow, 'fa-chevron-right');
             }
         },
@@ -38690,10 +38957,9 @@ define('__component__$column-navigation@husky',[], function () {
         storeDataItem: function (columnNumber, item) {
 
             if (!this.columns[columnNumber]) {
-                this.columns[columnNumber] = [];
+                this.columns[columnNumber] = {};
             }
             this.columns[columnNumber][item[this.options.idName]] = item;
-
         },
 
         bindDOMEvents: function () {
@@ -38703,9 +38969,9 @@ define('__component__$column-navigation@husky',[], function () {
             this.sandbox.dom.on(this.$el, 'mouseleave', this.itemMouseLeave.bind(this), '.column-navigation li');
 
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showOptions.bind(this), '.column');
-            this.sandbox.dom.on(this.$el, 'click', this.addNode.bind(this), '#' + this.addId);
-            this.sandbox.dom.on(this.$el, 'click', this.editNode.bind(this), '.edit');
-            this.sandbox.dom.on(this.$el, 'dblclick', this.editNode.bind(this), 'li');
+            this.sandbox.dom.on(this.dom.$add, 'click', this.addNode.bind(this));
+            this.sandbox.dom.on(this.$el, 'click', this.actionClickHandler.bind(this), '.action');
+            this.sandbox.dom.on(this.dom.$container, 'dblclick', this.actionClickHandler.bind(this), 'li');
 
             this.sandbox.dom.on(this.$el, 'click', function (event) {
                 this.sandbox.dom.stopPropagation(event);
@@ -38717,6 +38983,192 @@ define('__component__$column-navigation@husky',[], function () {
                     this.setOverflowClass();
                 }.bind(this));
             }
+
+            if (this.options.orderable) {
+                this.sandbox.dom.on(this.$el, 'click', function(event) {
+                    this.sandbox.dom.stopPropagation(event);
+                }.bind(this), '.' + constants.orderInputClass);
+
+                this.sandbox.dom.on(this.$el, 'focus', function(event) {
+                    if (this.isOrdering === true) {
+                        this.sandbox.dom.blur(event.currentTarget);
+                        return false;
+                    }
+                    this.sandbox.dom.select(event.currentTarget);
+                }.bind(this), '.' + constants.orderInputClass + ' input');
+
+                // save last clicked element -> used to trigger the default action after the ordering has finished
+                this.sandbox.dom.on(this.dom.$wrapper, 'mousedown', function(event) {
+                    this.lastClicked = this.sandbox.dom.$(event.target);
+                }.bind(this));
+
+                this.sandbox.dom.on(this.dom.$ok, 'click', this.closeOrderMode.bind(this));
+                this.sandbox.dom.on(this.$el, 'keydown', this.orderKeyHandler.bind(this), '.' + constants.orderInputClass + ' input');
+                this.sandbox.dom.on(this.$el, 'focusout', this.orderBlurHandler.bind(this), '.' + constants.orderInputClass);
+            }
+        },
+
+        /**
+         * Handles the key-down event of a order-input
+         * @param event
+         */
+        orderKeyHandler: function(event) {
+            if (event.keyCode === 13) { // blur on enter
+                this.sandbox.dom.blur(event.currentTarget);
+            }
+            if (event.keyCode === 27) { // cancel on esc
+                var column = this.sandbox.dom.attr(this.sandbox.dom.parents(
+                        event.currentTarget, '.' + constants.columnClass), 'data-column'),
+                    item = this.sandbox.dom.attr(this.sandbox.dom.parents(
+                        event.currentTarget, '.' + constants.columnItemClass), 'data-id');
+                this.resetOrderInput(column, item);
+                this.sandbox.dom.blur(event.currentTarget);
+            }
+        },
+
+        /**
+         * Handles the blur event of a order-input
+         * @param event
+         */
+        orderBlurHandler: function(event) {
+            if (this.isOrdering === false) {
+                var column = this.sandbox.dom.attr(this.sandbox.dom.parents(event.currentTarget, '.' + constants.columnClass), 'data-column'),
+                    item = this.sandbox.dom.attr(this.sandbox.dom.parents(event.currentTarget, '.' + constants.columnItemClass), 'data-id'),
+                    $input = this.sandbox.dom.find('input', this.columns[column][item].$el);
+                // if is an integer
+                if (this.sandbox.dom.isNumeric(this.sandbox.dom.val($input)) &&
+                    Math.floor(this.sandbox.dom.val($input)) == this.sandbox.dom.val($input)) {
+                    this.orderPrepare(column, item);
+                } else {
+                    this.orderError(column, item);
+                }
+            }
+        },
+
+        /**
+         * Looks if the position changes and executes the order or resets the inputs
+         * @param column - column in which the item is
+         * @param item - the id of the item
+         */
+        orderPrepare: function(column, item) {
+            var $input = this.sandbox.dom.find('input', this.columns[column][item].$el),
+            position = this.normalizeOrderPosition(column, parseInt(this.sandbox.dom.val($input), 10));
+            this.sandbox.dom.val($input, position);
+            this.sandbox.dom.removeClass(this.columns[column][item].$el, constants.orderErrorClass);
+            if (position !== this.columns[column][item].order) {
+                this.isOrdering = true;
+                this.confirmOrder(
+                    function() { // ok callback
+                        this.order(column, item, position);
+                        this.isOrdering = false;
+                        this.sandbox.dom.click(this.lastClicked);
+                    }.bind(this),
+                    function() { // cancel callback
+                        this.resetOrderInput(column, item);
+                        this.isOrdering = false;
+                        this.sandbox.dom.click(this.lastClicked);
+                    }.bind(this)
+                );
+            }
+        },
+
+        /**
+         * Changes the position of an item and updates the positions of the other items in the column
+         * @param column - the index of the column in which the item is
+         * @param item - the id of the item
+         * @param newPosition - the new position of the item
+         */
+        order: function(column, item, newPosition) {
+            var oldPosition = this.columns[column][item].order;
+            this.sandbox.util.each(this.columns[column], function (itemId) {
+                this.repositionItem(column, itemId, oldPosition, newPosition);
+                this.resetOrderInput(column, itemId);
+            }.bind(this));
+            this.updateItemDomPosition(column, item);
+            this.sandbox.util.delay(this.highlight.bind(this, item), 550);
+            this.sandbox.emit(ORDERED.call(this), item, newPosition);
+            this.isOrdering = false;
+        },
+
+        /**
+         * Determines and resets the position of a single item, given a position-change
+         * @param column - the column in which the item is
+         * @param item - the id of the item
+         * @param oldPosition - the old position of the position-change
+         * @param newPosition - the new position of the position-change
+         */
+        repositionItem: function(column, item, oldPosition, newPosition) {
+            if (this.columns[column][item].order === oldPosition) { // update property to new position
+                this.columns[column][item].order = newPosition;
+            } else { // update the order-position of the other items
+                if (this.columns[column][item].order > oldPosition &&
+                    this.columns[column][item].order <= newPosition) {
+                    this.columns[column][item].order--;
+                } else if (this.columns[column][item].order < oldPosition &&
+                    this.columns[column][item].order >= newPosition) {
+                    this.columns[column][item].order++;
+                }
+            }
+        },
+
+        /**
+         * Brings an item to the position set in the order-position-property
+         * @param column - the column of the item
+         * @param item - the id of the item
+         */
+        updateItemDomPosition: function(column, item) {
+            var $list = this.sandbox.dom.parent(this.columns[column][item].$el);
+            this.sandbox.dom.detach(this.columns[column][item].$el);
+            this.sandbox.dom.insertAt(
+                this.columns[column][item].order - 1, '.' + constants.columnItemClass,
+                $list, this.columns[column][item].$el
+            );
+            this.sandbox.dom.scrollAnimate(
+                this.sandbox.dom.position(this.columns[column][item].$el).top,
+                this.sandbox.dom.parents(this.columns[column][item].$el, '.' + constants.columnClass)
+            );
+        },
+
+        /**
+         * Resets the position input of an item
+         * @param column
+         * @param item
+         */
+        resetOrderInput: function(column, item) {
+            var $input = this.sandbox.dom.find('input', this.columns[column][item].$el);
+            this.sandbox.dom.val($input, this.columns[column][item].order);
+        },
+
+        /**
+         * Normalizes a position used for ordering
+         * @param column - the column for which the position gets normalized
+         * @param position (int) - the position to normalize
+         * @returns int - the normalized position
+         */
+        normalizeOrderPosition: function(column, position) {
+            position = (position < 1) ? 1 : position;
+            return (position > (Object.keys(this.columns[column])).length) ?
+                        Object.keys(this.columns[column]).length : position;
+        },
+
+        /**
+         * Sets css-classes on an item, through which an input error get signalized
+         * @param column - the column in which the item is
+         * @param item - the id of the item
+         */
+        orderError: function(column, item) {
+            this.sandbox.dom.addClass(this.columns[column][item].$el, constants.orderErrorClass);
+        },
+
+        /**
+         * Shows a confirmation-overlay
+         * @param okCallback - callback to execute if clicked on ok
+         * @param closeCallback - callback to execute if clicked on ok
+         */
+        confirmOrder: function(okCallback, closeCallback) {
+            this.sandbox.confirm.warning(this,
+                this.options.orderConfirmTitle, this.options.orderConfirmMessage,
+                okCallback, closeCallback);
         },
 
         /**
@@ -38731,24 +39183,11 @@ define('__component__$column-navigation@husky',[], function () {
             }
         },
 
-        /**
-         * Inserts some markup into the last column if column is empty
-         */
-        handleLastEmptyColumn: function () {
-            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
-
-            this.sandbox.dom.remove(this.sandbox.dom.find('.no-page', this.$columnContainer));
-
-            // if last column is empty insert markup
-            if (this.sandbox.dom.find('li', $lastColumn).length === 0) {
-                this.sandbox.dom.append($lastColumn, this.template.noPage.call(this, this.sandbox.translate(this.options.noPageDescription)));
-            }
-        },
-
         bindCustomEvents: function () {
             this.sandbox.on(BREADCRUMB.call(this), this.getBreadCrumb.bind(this));
-            this.sandbox.on(GET_SELECTED.call(this), this.getSelected.bind(this));
             this.sandbox.on(UNMARK.call(this), this.unmark.bind(this));
+            this.sandbox.on(HIGHLIGHT.call(this), this.highlight.bind(this));
+            this.sandbox.on(ORDER.call(this), this.startOrderModeItem.bind(this));
 
             this.sandbox.on('husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.click', this.dropdownItemClicked.bind(this));
 
@@ -38760,12 +39199,83 @@ define('__component__$column-navigation@husky',[], function () {
             }
         },
 
-        dropdownItemClicked: function (item) {
+        /**
+         * Sets a column containing an item with a given id in order-mode
+         * @param itemId - the id of the item
+         */
+        startOrderModeItem: function(itemId) {
+            var column = this.getColumnForItem(itemId);
+            if (column > 0) {
+                this.startOrderModeColumn(column);
+            }
+        },
+
+
+        /**
+         * Sets a column in order-mode
+         * @param column - the index of the column
+         */
+        startOrderModeColumn: function(column) {
+            if (this.inOrderMode === false && !!this.columns[column] && Object.keys(this.columns[column]).length > 1) {
+                this.inOrderMode = true;
+                var $column = this.$find('.' + constants.columnClass + '[data-column="' + column + '"]');
+                this.lockOptions(column);
+                this.sandbox.dom.addClass($column, constants.orderModeClass);
+                this.sandbox.dom.hide(this.dom.$settings);
+                this.sandbox.dom.hide(this.dom.$add);
+                this.sandbox.dom.show(this.dom.$ok);
+                this.setColumnTextWidth(column);
+                this.sandbox.emit(ORDER_START.call(this));
+            }
+        },
+
+        /**
+         * Closes the order mode
+         */
+        closeOrderMode: function() {
+            if (this.inOrderMode === true) {
+                var $column = this.$find('.' + constants.columnClass + '.' + constants.orderModeClass),
+                    column = this.sandbox.dom.data($column, 'column');
+                this.unlockOptions();
+                this.sandbox.dom.removeClass($column, constants.orderModeClass);
+                this.sandbox.dom.hide(this.dom.$ok);
+                this.sandbox.dom.show(this.dom.$settings);
+                this.sandbox.dom.show(this.dom.$add);
+                this.setColumnTextWidth(column);
+                this.inOrderMode = false;
+                this.sandbox.emit(ORDER_END.call(this));
+            }
+        },
+
+        /**
+         * Highlights an item
+         * @param item - the id of the item
+         */
+        highlight: function(item) {
+            var column = this.getColumnForItem(item);
+            if (column > 0) {
+                this.sandbox.dom.addClass(this.columns[column][item].$el, constants.highlightClass);
+
+                // remove class after effect has finished
+                this.sandbox.dom.on(this.columns[column][item].$el,'animationend webkitAnimationEnd oanimationend MSAnimationEnd', function() {
+                    this.sandbox.dom.removeClass(this.columns[column][item].$el, constants.highlightClass);
+                }.bind(this));
+            }
+        },
+
+        /**
+         * Gets execute after an item in the settings-dropdown has been clicked
+         * @param dropdownItem - the dropdown-item
+         */
+        dropdownItemClicked: function (dropdownItem) {
+            if (!!this.lastHoveredColumn && !!dropdownItem.mode && dropdownItem.mode === 'order') {
+                this.startOrderModeColumn(this.lastHoveredColumn);
+            }
             if (!!this.selected[this.lastHoveredColumn]) {
-                if (!!item.callback) {
-                    item.callback(item, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
+                if (!!dropdownItem.callback) {
+                    dropdownItem.callback(dropdownItem, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
                 } else {
-                    this.sandbox.emit(SETTINGS.call(this), item, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
+                    this.sandbox.emit(SETTINGS.call(this), dropdownItem, this.selected[this.lastHoveredColumn], this.columns[this.lastHoveredColumn]);
                 }
             }
         },
@@ -38777,23 +39287,8 @@ define('__component__$column-navigation@husky',[], function () {
         unmark: function (id) {
             var $element = this.$find('li[data-id="' + id + '"]');
             if (!!$element.length) {
-                this.sandbox.dom.removeClass($element, this.options.markedClass);
+                this.sandbox.dom.removeClass($element, constants.markedClass);
                 this.marked.splice(this.marked.indexOf(id), 1);
-            }
-        },
-
-        /**
-         * Passes all selected nodes to a callback
-         * @param callback {Function} the callback to pass the selected nodes to
-         */
-        getSelected: function (callback) {
-            var $checkboxes = this.$find('input[type="checkbox"]:checked'),
-                checkedNodes = [],
-                $column, $node;
-            if ($checkboxes.length !== 0) {
-                this.sandbox.util.foreach($checkboxes, function ($checkbox) {
-                    //TODO: foreach checkbox get the node object and create the checked Nodes array
-                }.bind(this));
             }
         },
 
@@ -38829,7 +39324,7 @@ define('__component__$column-navigation@husky',[], function () {
          * Shows the options at the last available column
          */
         showOptionsAtLast: function () {
-            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.$columnContainer));
+            var $lastColumn = this.sandbox.dom.last(this.sandbox.dom.find('.column', this.dom.$container));
             this.showOptions({
                 currentTarget: $lastColumn
             });
@@ -38840,12 +39335,33 @@ define('__component__$column-navigation@husky',[], function () {
          * @param {Object} event
          */
         showOptions: function (event) {
-            var $currentTarget = this.sandbox.dom.$(event.currentTarget);
+            if (this.optionsLocked === false) {
+                var $currentTarget = this.sandbox.dom.$(event.currentTarget);
 
-            this.displayOptions($currentTarget);
+                this.displayOptions($currentTarget);
 
-            this.sandbox.dom.off(this.$columnContainer, 'scroll.column-navigation.' + this.options.instanceName);
-            this.sandbox.dom.on(this.$columnContainer, 'scroll.column-navigation.' + this.options.instanceName, this.displayOptions.bind(this, $currentTarget));
+                this.sandbox.dom.off(this.dom.$container, 'scroll.column-navigation.' + this.options.instanceName);
+                this.sandbox.dom.on(this.dom.$container, 'scroll.column-navigation.' + this.options.instanceName, this.displayOptions.bind(this, $currentTarget));
+            }
+        },
+
+        /**
+         * Shows the options below the passed column and locks them
+         * @param column - the index of the column
+         */
+        lockOptions: function(column) {
+            var $column = this.$find('.'+ constants.columnClass +'[data-column="' + column + '"]');
+            if (!!$column.length) {
+                this.showOptions({currentTarget: $column});
+                this.optionsLocked = true;
+            }
+        },
+
+        /**
+         * Unlocks the options
+         */
+        unlockOptions: function() {
+            this.optionsLocked = false;
         },
 
         /**
@@ -38858,18 +39374,45 @@ define('__component__$column-navigation@husky',[], function () {
             this.lastHoveredColumn = this.sandbox.dom.data($activeColumn, 'column');
 
             // calculate the ratio of how much of the hovered column is visible
-            if (this.sandbox.dom.position($activeColumn).left + this.sandbox.dom.width($activeColumn) > this.sandbox.dom.width(this.$columnContainer)) {
-                visibleRatio = (this.sandbox.dom.width(this.$columnContainer) - this.sandbox.dom.position($activeColumn).left ) / this.sandbox.dom.width($activeColumn);
+            if (this.sandbox.dom.position($activeColumn).left + this.sandbox.dom.width($activeColumn) > this.sandbox.dom.width(this.dom.$container)) {
+                visibleRatio = (this.sandbox.dom.width(this.dom.$container) - this.sandbox.dom.position($activeColumn).left ) / this.sandbox.dom.width($activeColumn);
             } else {
                 visibleRatio = (this.sandbox.dom.width($activeColumn) + this.sandbox.dom.position($activeColumn).left) / this.sandbox.dom.width($activeColumn);
             }
 
             // display the option only if the column is visible enough
-            if (visibleRatio >= this.options.minVisibleRatio) {
+            if (visibleRatio >= constants.minVisibleRatio) {
                 this.sandbox.dom.css(this.$optionsContainer, {'visibility': 'visible'});
                 this.updateOptionsMargin($activeColumn);
+                this.toggleSettingDropdownItems(this.lastHoveredColumn);
             } else {
                 this.hideOptions();
+            }
+        },
+
+        /**
+         * Calls the enabler for all dropdown-items (if exists) and disables
+         * or enalbes the corresponding item
+         * @param column - the index of the column on which the enalber should check the states of the items
+         */
+        toggleSettingDropdownItems: function(column) {
+            if (!!this.options.data && this.options.data.length > 0) {
+                var context = {
+                    numberItems: 0,
+                    hasSelected: false
+                };
+                if (!!this.columns[column]) {
+                    context.numberItems = Object.keys(this.columns[column]).length;
+                    context.hasSelected = !!this.selected[column];
+                }
+                this.sandbox.util.each(this.options.data, function (index, item) {
+                    if (!!item.enabler && typeof item.enabler === 'function') {
+                        this.sandbox.emit(
+                                'husky.dropdown.' + this.options.instanceName + '.settings.dropdown.item.toggle',
+                                item.id, item.enabler(context)
+                        );
+                    }
+                }.bind(this));
             }
         },
 
@@ -38896,6 +39439,7 @@ define('__component__$column-navigation@husky',[], function () {
         itemSelected: function (event) {
             //only do something if no column is loading
             if (this.columnLoadStarted === false) {
+                this.closeOrderMode(); // force closing of possible order mode
                 this.$selectedElement = this.sandbox.dom.$(event.currentTarget);
                 var id = this.sandbox.dom.data(this.$selectedElement, 'id'),
                     column = this.sandbox.dom.data(this.sandbox.dom.parent(this.sandbox.dom.parent(this.$selectedElement)), 'column'),
@@ -38938,20 +39482,26 @@ define('__component__$column-navigation@husky',[], function () {
 
                 // scroll for add column
                 if (!selectedItem.hasSub) {
-                    this.addColumn(selectedItem, column);
-                    this.handleLastEmptyColumn();
+                    this.insertAddColumn(selectedItem, column);
                     this.scrollIfNeeded(column);
                     this.setOverflowClass();
+                    this.toggleSettingDropdownItems(column);
                 }
             }
         },
 
-        addColumn: function (selectedItem, column) {
-            this.sandbox.dom.append(
-                this.$columnContainer,
-                this.sandbox.dom.createElement(this.template.column.call(this, column + 1, this.options.column.width))
-            );
-
+        insertAddColumn: function (selectedItem, column) {
+            var $addColumn = this.sandbox.dom.createElement(this.sandbox.util.template(templates.column)({
+                columnNumber: column + 1,
+                id: 'column' + this.options.instanceName + '-' + (column + 1)
+            }));
+            // fill it with the "No Page"-content
+            this.sandbox.dom.append($addColumn, this.sandbox.dom.createElement(
+                this.sandbox.util.template(templates.noPage)({
+                    description: this.sandbox.translate(this.options.noPageDescription)
+                })
+            ));
+            this.sandbox.dom.append(this.dom.$container, $addColumn);
             this.filledColumns++;
         },
 
@@ -38960,8 +39510,8 @@ define('__component__$column-navigation@husky',[], function () {
          * @param column
          */
         scrollIfNeeded: function (column) {
-            if (column > DISPLAYEDCOLUMNS) {
-                this.sandbox.dom.scrollLeft(this.$columnContainer, (column - DISPLAYEDCOLUMNS) * this.options.column.width);
+            if (column > constants.displayedcolumns) {
+                this.sandbox.dom.scrollLeft(this.dom.$container, (column - constants.displayedcolumns) * constants.columnWidth);
             }
         },
 
@@ -38988,13 +39538,15 @@ define('__component__$column-navigation@husky',[], function () {
         },
 
         /**
-         * Emits an edit event
+         * Handles the click on action-icons as well as the double click on items
          * @param {Object} event
          */
-        editNode: function (event) {
+        actionClickHandler: function (event) {
             var $listItem, id, item, column;
-
-            if (this.sandbox.dom.hasClass(event.currentTarget, 'edit') === true) {
+            if (this.inOrderMode === true) {
+                return false;
+            }
+            if (this.sandbox.dom.hasClass(event.currentTarget, 'action') === true) {
                 $listItem = this.sandbox.dom.parent(this.sandbox.dom.parent(event.currentTarget));
             } else {
                 $listItem = this.sandbox.dom.$(event.currentTarget);
@@ -39004,110 +39556,13 @@ define('__component__$column-navigation@husky',[], function () {
             item = this.columns[column][id];
 
             if (this.options.markable === true) {
-                this.sandbox.dom.addClass($listItem, this.options.markedClass);
+                this.sandbox.dom.addClass($listItem, constants.markedClass);
                 this.marked.push(id);
                 this.setItemsTextWidth($listItem);
             }
 
             this.sandbox.dom.stopPropagation(event);
-            this.sandbox.emit(EDIT.call(this), item);
-        },
-
-        /**
-         * Templates for various parts
-         */
-        template: {
-
-            wrapper: function () {
-                return '<div class="column-navigation-wrapper"></div>';
-            },
-
-            columnContainer: function () {
-                return ['<div class="column-navigation"></div>'].join('');
-            },
-
-            column: function (columnNumber, width) {
-                return ['<div data-column="', columnNumber, '" class="column" id="column' + this.options.instanceName + '-', columnNumber, '" style="width: ', width, 'px"><ul></ul></div>'].join('');
-            },
-
-            noPage: function (description) {
-                return ['<div class="no-page">',
-                    '<span class="fa-coffee icon"></span>',
-                    '<div class="text">', description , '</div>',
-                    '</div>'].join('');
-            },
-
-            item: function (width, data) {
-
-                var isMarked = (this.marked.indexOf(data[this.options.idName]) !== -1),
-                    item = ['<li data-id="', data[this.options.idName], '" class="pointer' + ((isMarked === true) ? ' ' + this.options.markedClass : '' ) + '">'],
-                    title = this.sandbox.util.escapeHtml(data[this.options.titleName]);
-
-                // icons left
-                item.push('<span class="icons-left">');
-
-                item.push('<span class="fa-check pull-left markedIcon"></span>');
-
-                if (!!this.options.showStatus) {
-                    // link
-                    if (!!data[this.options.linkedName]) {
-                        if (data[this.options.linkedName] === 'internal') {
-                            item.push('<span class="fa-internal-link pull-left m-right-5"></span>');
-                        } else if (data[this.options.linkedName] === 'external') {
-                            item.push('<span class="fa-external-link pull-left m-right-5"></span>');
-                        }
-                    }
-
-                    // type (ghost, shadow)
-                    if (!!data[this.options.typeName]) {
-                        if (data[this.options.typeName].name === 'ghost') {
-                            item.push('<span class="ghost pull-left m-right-5">', data[this.options.typeName].value, '</span>');
-                        } else if (data[this.options.typeName].name === 'shadow') {
-                            item.push('<span class="fa-shadow-node pull-left m-right-5"></span>');
-                        }
-                    }
-
-                    // published
-                    if (!data[this.options.publishedName]) {
-                        item.push('<span class="not-published pull-left m-right-5">&bull;</span>');
-                    }
-                }
-                item.push('</span>');
-
-                // text center
-                if (!!data[this.options.typeName] && data[this.options.typeName].name === 'ghost') {
-                    item.push('<span title="' + title + '" class="item-text inactive pull-left">', data[this.options.titleName], '</span>');
-                } else {
-                    item.push('<span title="' + title + '" class="item-text pull-left">', data[this.options.titleName], '</span>');
-                }
-
-                // icons right (subpage, edit)
-                item.push('<span class="icons-right">');
-                if (!!this.options.showEditIcon) {
-                    item.push('<span class="' + this.options.editIcon + ' edit pull-left"></span>');
-                }
-                !!data[this.options.hasSubName] ? item.push('<span class="fa-chevron-right arrow inactive pull-left"></span>') : '';
-                item.push('</span></li>');
-                return item.join('');
-            },
-
-            optionsContainer: function (width) {
-                return ['<div class="options grid-row" style="width:', width + 1, 'px"></div>'].join('');
-            },
-
-            options: {
-                add: function (id) {
-                    return ['<div id="', id, '" class="align-center add pointer">',
-                        '<span class="fa-plus-circle"></span>',
-                        '</div>'].join('');
-                },
-
-                settings: function (id) {
-                    return ['<div id="', id, '" class="align-center settings pointer drop-down-trigger">',
-                        '<span class="fa-gear inline-block"></span><span class="dropdown-toggle inline-block"></span>',
-                        '</div>'].join('');
-                }
-            }
+            this.sandbox.emit(ACTION.call(this), item);
         }
     };
 });
@@ -39891,12 +40346,6 @@ define('__component__$overlay@husky',[], function() {
          * Removes the component
          */
         removeComponent: function() {
-            // todo fix bug: sometimes overlay-sandbox has own sandbox or parent-sandboxes as child which
-            // couses an endless loop. The bug can be reproduced by starting the component
-            // in a clickhandler with openOnStart-option true
-            // this.sandbox.stop();
-
-            this.sandbox.stop('*');
             this.sandbox.stop();
         },
 
@@ -40417,13 +40866,15 @@ define('__component__$overlay@husky',[], function() {
          */
         closeHandler: function(event) {
             var cancelCallback = this.slides[this.activeSlide].closeCallback ||
-                this.slides[this.activeSlide].cancelCallback;
+                this.slides[this.activeSlide].cancelCallback,
+                element = null;
 
             if (!!event) {
                 this.sandbox.dom.preventDefault(event);
                 this.sandbox.dom.stopPropagation(event);
+                element = event.currentTarget;
             }
-            if (this.executeCallback(cancelCallback, event.currentTarget) !== false) {
+            if (this.executeCallback(cancelCallback, element) !== false) {
                 this.closeOverlay();
             }
         },
@@ -42771,6 +43222,15 @@ define('__component__$input@husky',[], function() {
 
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -42875,6 +43335,15 @@ define('__component__$input@husky',[], function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -43001,6 +43470,15 @@ define('__component__$input@husky',[], function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/collection',[],function() {
 
     
@@ -43877,6 +44355,15 @@ if(jQuery) (function($) {
 })(jQuery);
 define("jquery-minicolors", function(){});
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -43898,6 +44385,60 @@ define("jquery-minicolors", function(){});
 
                 value: function(selector, value) {
                     return app.core.dom.$(selector).minicolors('value', value);
+                }
+            };
+        }
+    });
+})();
+
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+(function() {
+
+    
+
+    define('husky_extensions/confirm',{
+
+        name: 'Confirm',
+
+        initialize: function(app) {
+
+            app.sandbox.confirm = {
+
+                /**
+                 * Shows a confirmation box
+                 * @param that - the context in which the box gets displayed. Must be an aura-component with a sandbox and an element
+                 * @param title - the title (or translation key) for the box
+                 * @param message - the message (or translation key) for the box
+                 * @param okCallback - callback to execute after box was confirmed
+                 * @param closeCallback - callback to execute on cancel
+                 * @param [type] - 'warning' or 'error' - default 'warning'
+                 */
+                warning: function (that, title, message, okCallback, closeCallback, type) {
+                    var $element = app.core.dom.createElement('<div/>'),
+                        type = type || 'warning';
+                    app.core.dom.append(that.$el, $element);
+
+                    that.sandbox.start([
+                        {
+                            name: 'overlay@husky',
+                            options: {
+                                el: $element,
+                                title: app.sandbox.translate(title),
+                                message: app.sandbox.translate(message),
+                                closeCallback: closeCallback,
+                                okCallback: okCallback,
+                                type: type
+                            }
+                        }
+                    ]);
                 }
             };
         }
@@ -46499,6 +47040,15 @@ define("datepicker-zh-CN", function(){});
 
 define("datepicker-zh-TW", function(){});
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -46664,6 +47214,15 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -46692,6 +47251,15 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -46872,6 +47440,16 @@ define("datepicker-zh-TW", function(){});
 })();
 
 /**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
+
+/**
  * see https://github.com/farhadi/html5sortable for documentation
  */
 
@@ -46905,6 +47483,15 @@ define("datepicker-zh-TW", function(){});
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -47050,7 +47637,6 @@ define("datepicker-zh-TW", function(){});
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  *
- * @module husky/components/listbox
  */
 
 /**
@@ -47686,6 +48272,15 @@ define('husky_extensions/itembox',[],function() {
     }
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48135,6 +48730,10 @@ define('husky_extensions/itembox',[],function() {
                 $(selector).click();
             };
 
+            app.core.dom.submit = function(selector) {
+                $(selector).submit();
+            };
+
             app.core.dom.animate = function(selector, properties, options) {
                 $(selector).animate(properties, options);
             };
@@ -48232,6 +48831,15 @@ define('husky_extensions/itembox',[],function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/model',[],function() {
 
     
@@ -48259,6 +48867,15 @@ define('husky_extensions/model',[],function() {
     };
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48289,6 +48906,15 @@ define('husky_extensions/model',[],function() {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
     
@@ -48405,6 +49031,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
 
 });
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48459,6 +49094,15 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
     });
 })();
 
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 (function() {
 
     
@@ -48499,8 +49143,8 @@ define('husky_extensions/template',['underscore', 'jquery'], function(_, $) {
  *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
+ *
  */
-
 define('husky_extensions/util',[],function() {
 
     
