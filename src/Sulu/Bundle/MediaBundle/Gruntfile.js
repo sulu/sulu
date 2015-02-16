@@ -76,7 +76,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'compass:dev',
         'uglify',
-        'replace:build',
+        'replace:build'
     ]);
 
     grunt.registerTask('default', [

@@ -31,3 +31,12 @@
 .media-selection-overlay-add .overlay-loader {
   margin: 20px 0;
 }
+
+/* line 6, ../scss/modules/collection-select.scss */
+.collection-select .overlay-header {
+  margin-bottom: 0px;
+}
+/* line 10, ../scss/modules/collection-select.scss */
+.collection-select .overlay-footer {
+  margin-top: -1px;
+}

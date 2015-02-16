@@ -325,8 +325,8 @@ EOT
     /**
      * Wait for the named aura events
      *
-     * @param array Array of event names
-     * @param integer Timeout in milliseconds
+     * @param array $eventNames Array of event names
+     * @param integer $time in milliseconds
      */
     protected function waitForAuraEvents($eventNames, $time = self::MEDIUM_WAIT_TIME)
     {
