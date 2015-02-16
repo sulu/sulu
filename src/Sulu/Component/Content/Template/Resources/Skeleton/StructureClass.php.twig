@@ -140,7 +140,7 @@ new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? 
                     '{{ param.value }}',
 {% endif %}
 {% endif %}
-                    '{{ param.type === 'string' ? 'null' : param.type }}',
+                    '{{ param.type == 'string' ? 'null' : param.type }}',
                     {{ _self.renderArray(param.meta) }}
                 ),
 {% endfor %}
