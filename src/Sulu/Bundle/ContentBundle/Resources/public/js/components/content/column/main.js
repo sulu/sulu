@@ -124,7 +124,7 @@ define(function() {
                 this.sandbox.emit('sulu.content.contents.new', parent);
             }, this);
 
-            this.sandbox.on('husky.column-navigation.node.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.node.action', function(item) {
                 this.setLastSelected(item.id);
                 if (!item.type || item.type.name !== 'ghost') {
                     this.sandbox.emit('sulu.content.contents.load', item);
@@ -154,10 +154,19 @@ define(function() {
                     this.copySelected(selectedItem);
                 } else if (dropdownItem.id === DELETE_BUTTON_ID) {
                     this.deleteSelected(selectedItem);
-                } else if (dropdownItem.id === ORDER_BUTTON_ID) {
-                    this.orderSelected(selectedItem, columnItems);
                 }
             }.bind(this));
+
+            this.sandbox.on('husky.column-navigation.node.ordered', this.arrangeNode.bind(this));
+        },
+
+        /**
+         * Saves an arrangement of a node
+         * @param uuid - the uuid of the node
+         * @param position - the new position of the node
+         */
+        arrangeNode: function(uuid, position) {
+            this.sandbox.emit('sulu.content.contents.order', uuid, position);
         },
 
         /**
@@ -220,11 +229,11 @@ define(function() {
             }.bind(this));
 
             // wait for click on column navigation to send request
-            this.sandbox.once('husky.column-navigation.overlay.edit', editCallback);
+            this.sandbox.once('husky.column-navigation.overlay.action', editCallback);
 
             // wait for closing overlay to unbind events
             this.sandbox.once('husky.overlay.node.closed', function() {
-                this.sandbox.off('husky.column-navigation.overlay.edit', editCallback);
+                this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
             }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
@@ -244,43 +253,6 @@ define(function() {
                 this.restartColumnNavigation();
             }.bind(this));
             this.sandbox.emit('sulu.content.content.delete', item.id);
-        },
-
-        /**
-         * order item in his layer
-         * @param {Object} item
-         * @param {Array} columnItems
-         */
-        orderSelected: function(item, columnItems) {
-            // event listener for select click
-            this.sandbox.dom.one(this.$el, 'click', function(e) {
-                var $item = this.sandbox.dom.parent(e.currentTarget),
-                    id = this.sandbox.dom.data($item, 'id');
-
-                this.showOverlayLoader();
-                this.sandbox.emit('sulu.content.contents.order', item.id, id,
-                    function(data) {
-                        this.setLastSelected(data.id);
-
-                        this.restartColumnNavigation();
-                        this.sandbox.emit('husky.overlay.node.close');
-                    }.bind(this),
-                    function(error) {
-                        this.sandbox.logger.error(error);
-                        this.hideOverlayLoader();
-                    }.bind(this));
-
-                this.restartColumnNavigation();
-                this.sandbox.emit('husky.overlay.node.close');
-            }.bind(this), '#child-table .options-select');
-
-            // wait for overlay initialized to initialize overlay
-            this.sandbox.once('husky.overlay.node.opened', function() {
-                this.renderOverlayTable('#child-table', columnItems, item.id);
-                this.sandbox.emit('husky.overlay.node.set-position');
-            }.bind(this));
-
-            this.startOverlay('content.contents.settings.order.title', templates.table(), false);
         },
 
         /**
@@ -381,11 +353,12 @@ define(function() {
                             selected: id,
                             url: url.replace('{/id}', (!!id ? '/' + id : '')),
                             instanceName: 'overlay',
-                            editIcon: 'fa-check-circle',
+                            actionIcon: 'fa-check-circle',
                             resultKey: this.options.resultKey,
-                            showEdit: false,
+                            showOptions: false,
                             showStatus: false,
                             responsive: false,
+                            sortable: false,
                             skin: 'fixed-height-small'
                         }
                     }
@@ -457,7 +430,8 @@ define(function() {
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.delete')
+                                name: this.sandbox.translate('content.contents.settings.delete'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: 2,
@@ -465,20 +439,42 @@ define(function() {
                             },
                             {
                                 id: MOVE_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.move')
+                                name: this.sandbox.translate('content.contents.settings.move'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: COPY_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.copy')
+                                name: this.sandbox.translate('content.contents.settings.copy'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: ORDER_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.order')
+                                name: this.sandbox.translate('content.contents.settings.order'),
+                                mode: 'order',
+                                enabler: this.orderEnabler
                             }
                         ]
                     }
                 }
             ]);
+        },
+
+        /**
+         * Enabler for MOVE, COPY and DELETE
+         * @param column
+         * @returns {boolean}
+         */
+        hasSelectedEnabler: function(column) {
+            return !!column.hasSelected;
+        },
+
+        /**
+         * Enaber for ORDER
+         * @param column
+         * @returns {boolean}
+         */
+        orderEnabler: function(column) {
+            return column.numberItems > 1;
         },
 
         /**

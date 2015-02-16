@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentOrderBeforeEvent;
+use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 
 /**
  * Calculate the vertical position of the saved node relative to its siblings
@@ -29,7 +29,7 @@ class NodeOrderSubscriber implements EventSubscriberInterface
     {
         return array(
             ContentEvents::NODE_PRE_SAVE => 'handleNodeSave',
-            ContentEvents::NODE_ORDER_BEFORE => 'handleOrderBefore',
+            ContentEvents::NODE_ORDER => 'handleNodeOrder',
         );
     }
 
@@ -49,7 +49,7 @@ class NodeOrderSubscriber implements EventSubscriberInterface
         $node->setProperty('sulu:order', $order, PropertyType::LONG);
     }
 
-    public function handleOrderBefore(ContentOrderBeforeEvent $e)
+    public function handleNodeOrder(ContentNodeOrderEvent $e)
     {
         $node = $e->getNode();
         $parent = $node->getParent();

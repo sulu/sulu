@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -63,6 +65,18 @@ interface MediaManagerInterface
      * @param int $id the id of the category to delete
      */
     public function delete($id);
+
+    /**
+     * Moves a media to a given collection
+     * @param int $id id of media
+     * @param string $locale the locale which the object will be returned
+     * @param int $destCollection id of destination collection
+     * @return Media
+     *
+     * @throws MediaNotFoundException
+     * @throws CollectionNotFoundException
+     */
+    public function move($id, $locale, $destCollection);
 
     /**
      * Return the FieldDescriptor by name

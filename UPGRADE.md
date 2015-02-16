@@ -1,6 +1,6 @@
 # Upgrade
 
-## dev-develop
+## 0.15.0
 
 ### Sulu Locales
 The Sulu Locales are not hardcoded anymore, but configured in the `app/config/config.yml` file:
@@ -11,6 +11,14 @@ sulu_core:
 ```
 
 You have to add the locales to your configuration, otherwise Sulu will stop working.
+
+### Internal Links
+
+The internal representation of the internal links have changed, you have to run the following command to convert them:
+
+```bash
+app/console sulu:upgrade:0.15.0:internal-links
+```
 
 ### Websocket Component
 
