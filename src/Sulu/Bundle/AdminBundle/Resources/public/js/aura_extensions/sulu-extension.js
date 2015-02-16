@@ -270,7 +270,11 @@
                     }
                     return url;
                 },
-                
+
+                /**
+                 * @param sandbox
+                 * @param $element
+                 */
                 cropLabelOfElement = function(sandbox, $element) {
                     var original = sandbox.dom.trim(sandbox.dom.text($element));
                     // replace multiple spaces with single
@@ -281,14 +285,15 @@
 
             /**
              * function crops all labels with class 'crop'
-             * @param className define another class name than 'crop'
+             * @param form The form that contains the labels
+             * @param className Define another class name than 'crop'
              */
-            app.sandbox.sulu.cropAllLabels = function(className) {
+            app.sandbox.sulu.cropAllLabels = function(form, className) {
                 var sandbox = app.sandbox;
                 if (!className) {
                     className = 'crop'
                 }
-                var elements = sandbox.dom.find('label.' + className, this.$el), i, length;
+                var elements = sandbox.dom.find('label.' + className, form), i, length;
                 for (i = -1, length = elements.length; ++i < length;) {
                     cropLabelOfElement(sandbox, elements[i]);
                 }

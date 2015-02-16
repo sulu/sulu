@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
     * BUGFIX      #829 [ContactBundle]   Account-Contacts: show full-name of contact
     * ENHANCEMENT #828 [ContactBundle]   Changed columns for contact list and made concatenated columns not sortable
     * BUGFIX      #825 [WebsiteBundle]   Fixed syntax error in ExceptionController
