@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #833 [AdminBundle]     Added new husky version
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
     * BUGFIX      #829 [ContactBundle]   Account-Contacts: show full-name of contact
     * ENHANCEMENT #828 [ContactBundle]   Changed columns for contact list and made concatenated columns not sortable
