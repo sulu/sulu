@@ -22,8 +22,8 @@ app/console sulu:upgrade:0.15.0:internal-links
 
 ### Content Types
 
-PropertyParameter are now able to hold metadata. Therefor the Interface has changed. Please check all your ContentTypes
-which uses params.
+PropertyParameter are now able to hold metadata. Therefore the Interface has changed. Please check all your
+ContentTypes which uses params.
 
 __Before:__
 

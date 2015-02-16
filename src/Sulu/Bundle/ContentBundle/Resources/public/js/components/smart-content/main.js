@@ -26,7 +26,7 @@
  * @params {Integer} [options.preSelectedSortBy] array with id of the preselected sort-possibility
  * @params {String} [options.preSelectedSortMethod] Sort-method to begin with (asc or desc)
  * @params {Array} [options.presentAs] array of presentation-possibilities with id and name property
- * @params {Integer} [options.preSelectedPresentAs] id presentation-possibility to begin with
+ * @params {Integer} [options.preSelectedPresentAs] id of the default presentation-mode
  * @params {Integer} [options.limitResult] maximum number of items returned on the request
  * @params {String} [options.instanceName] name of the component instance
  * @params {String} [options.url] url for requesting the items
