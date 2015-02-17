@@ -2,7 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
     * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
+
+* 0.15.1 (2015-02-17)
+    * HOTFIX      #842 [CoreBundle]      Fixed upgrade internal links command for installations without snippets
 
 * 0.15.0 (2015-02-13)
     * BUGFIX      #833 [AdminBundle]     Added new husky version
