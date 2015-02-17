@@ -264,10 +264,13 @@ class UserController extends RestController implements ClassResourceInterface, S
             $user->setUsername($request->get('username'));
 
             if ($request->get('email') !== null) {
-                if (!$this->isEmailUnique($request->get('email'))) {
+                if ($request->get('email') !== $user->getEmail() &&
+                    !$this->isEmailUnique($request->get('email'))) {
                     throw new EmailNotUniqueException();
                 }
                 $user->setEmail($request->get('email'));
+            } else {
+                $user->setEmail(null);
             }
 
             if ($request->get('password') != '') {
@@ -393,7 +396,7 @@ class UserController extends RestController implements ClassResourceInterface, S
                 );
             }
             if ($email !== null) {
-                if (!$this->isEmailUnique($email)) {
+                if ($email !== $user->getEmail() && !$this->isEmailUnique($email)) {
                     throw new EmailNotUniqueException();
                 }
                 $user->setEmail($email);

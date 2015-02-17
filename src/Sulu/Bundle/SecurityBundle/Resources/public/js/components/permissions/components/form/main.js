@@ -193,16 +193,13 @@ define(['app-config'], function(AppConfig) {
         // Form
 
         render: function() {
-            var email = "",
-                headline;
-            if (!!this.contact.emails && this.contact.emails.length > 0) {
-                email = this.contact.emails[0].email;
-            }
-
-            headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
-            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {user: !!this.user ? this.user : null, email: email, headline: headline}));
+            var headline = this.contact ? this.contact.firstName + ' ' + this.contact.lastName : this.sandbox.translate('security.permission.title');
+            this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/security/template/permission/form', {
+                user: !!this.user ? this.user : null,
+                headline: headline
+            }));
+            this.sandbox.start(this.$el);
             this.startLanguageDropdown();
-
             setHeaderToolbar.call(this);
         },
 
@@ -306,20 +303,18 @@ define(['app-config'], function(AppConfig) {
                     case 1001:
                         var $wrapper = this.sandbox.dom.parent(this.sandbox.dom.find('#username'));
                         this.sandbox.dom.prependClass($wrapper, 'husky-validate-error');
-                        this.setHeaderBar(true);
                         break;
                     case 1002:
                         var $wrapperPasswordRepeat = this.sandbox.dom.parent(this.sandbox.dom.find('#passwordRepeat')),
                             $wrapperPassword = this.sandbox.dom.parent(this.sandbox.dom.find('#password'));
                         this.sandbox.dom.prependClass($wrapperPassword, 'husky-validate-error');
                         this.sandbox.dom.prependClass($wrapperPasswordRepeat, 'husky-validate-error');
-
-                        this.setHeaderBar(true);
                         break;
                     default:
                         this.sandbox.logger.warn('Unrecognized error code!', code);
                         break;
                 }
+                this.setHeaderBar(true);
             }.bind(this));
 
             // delete contact
@@ -329,7 +324,7 @@ define(['app-config'], function(AppConfig) {
 
             this.sandbox.on('sulu.user.permissions.saved', function(model) {
                 this.user = model;
-
+                this.sandbox.emit('sulu.labels.success.show', 'labels.success.permission-save-desc', 'labels.success');
                 this.setHeaderBar(true);
             }, this);
 
@@ -359,6 +354,7 @@ define(['app-config'], function(AppConfig) {
                 data = {
                     user: {
                         username: this.sandbox.dom.val('#username'),
+                        email: this.sandbox.dom.val('#email'),
                         contact: this.contact,
                         locale: this.systemLanguage
                     },
