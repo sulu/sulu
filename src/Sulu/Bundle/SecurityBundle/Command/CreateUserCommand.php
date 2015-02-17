@@ -109,6 +109,9 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
+        if ($this->isEmailUnique($emailText)) {
+            $user->setEmail($emailText);
+        }
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array('name' => $roleName));
 
         $userRole = new UserRole();
@@ -133,6 +136,20 @@ class CreateUserCommand extends ContainerAwareCommand
     protected function getUser()
     {
         return new User();
+    }
+
+    /**
+     * Returns true if the passed email is a unique user-email
+     * @param $email
+     * @return bool
+     */
+    protected function isEmailUnique($email) {
+        $doctrine = $this->getContainer()->get('doctrine');
+        $users = $doctrine->getRepository('SuluSecurityBundle:User')->findBy(
+            array('email' => $email)
+        );
+
+        return count($users) === 0;
     }
 
     /**

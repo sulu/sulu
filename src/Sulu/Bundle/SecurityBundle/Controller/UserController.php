@@ -16,7 +16,6 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Security\Exception\EmailNotUniqueException;
-use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidEmailException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\UsernameNotUniqueException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
@@ -35,6 +34,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Symfony\Component\Validator\Validator\RecursiveValidator as Validator;
 
 /**
  * Makes the users accessible through a rest api
@@ -98,6 +98,8 @@ class UserController extends RestController implements ClassResourceInterface, S
         try {
             $userRoles = $request->get('userRoles');
             $userGroups = $request->get('userGroups');
+            $email = $request->get('email');
+            $contact = $request->get('contact');
 
             $this->checkArguments($request);
 
@@ -108,9 +110,16 @@ class UserController extends RestController implements ClassResourceInterface, S
             $em = $this->getDoctrine()->getManager();
 
             $user = new User();
-            $user->setContact($this->getContact($request->get('contact')['id']));
+            $user->setContact($this->getContact($contact['id']));
             $user->setUsername($request->get('username'));
             $user->setSalt($this->generateSalt());
+
+            // if no email passed try to use to contact's first email
+            if ($email === null &&
+                array_key_exists('emails', $contact) && count($contact['emails']) > 0 &&
+                $this->isEmailUnique($contact['emails'][0]['email'])) {
+                $email = $contact['emails'][0]['email'];
+            }
 
             if ($this->isValidPassword($request->get('password'))) {
                 $user->setPassword(
@@ -120,14 +129,11 @@ class UserController extends RestController implements ClassResourceInterface, S
                 throw new MissingPasswordException();
             }
 
-            if ($request->get('email') !== null) {
-                if (!$this->isValidEmail($request->get('email'))) {
-                    throw new InvalidEmailException();
-                }
-                if (!$this->isEmailUnique($request->get('email'))) {
+            if ($email !== null) {
+                if (!$this->isEmailUnique($email)) {
                     throw new EmailNotUniqueException();
                 }
-                $user->setEmail($request->get('email'));
+                $user->setEmail($email);
             }
 
             $user->setLocale($request->get('locale'));
@@ -153,8 +159,6 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (UsernameNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (MissingPasswordException $exc) {
-            $view = $this->view($exc->toArray(), 400);
-        } catch (InvalidEmailException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (EmailNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
@@ -228,15 +232,6 @@ class UserController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * checks if a given email is valid or not
-     * @param string $email The email to check
-     * @return bool True if email is valid, false otherwise
-     */
-    private function isValidEmail($email) {
-        return empty($this->get('validator')->validateValue($email, new EmailConstraint()));
-    }
-
-    /**
      * Updates the given user with the given data
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param $id
@@ -269,9 +264,6 @@ class UserController extends RestController implements ClassResourceInterface, S
             $user->setUsername($request->get('username'));
 
             if ($request->get('email') !== null) {
-                if (!$this->isValidEmail($request->get('email'))) {
-                    throw new InvalidEmailException();
-                }
                 if (!$this->isEmailUnique($request->get('email'))) {
                     throw new EmailNotUniqueException();
                 }
@@ -301,8 +293,6 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
-        } catch (InvalidEmailException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (EmailNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
@@ -403,9 +393,6 @@ class UserController extends RestController implements ClassResourceInterface, S
                 );
             }
             if ($email !== null) {
-                if (!$this->isValidEmail($email)) {
-                    throw new InvalidEmailException();
-                }
                 if (!$this->isEmailUnique($email)) {
                     throw new EmailNotUniqueException();
                 }
@@ -432,8 +419,6 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
-        } catch (InvalidEmailException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (EmailNotUniqueException $exc) {
             $view = $this->view($exc->toArray(), 400);
