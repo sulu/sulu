@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
+
 * 0.15.0 (2015-02-13)
     * BUGFIX      #833 [AdminBundle]     Added new husky version
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
