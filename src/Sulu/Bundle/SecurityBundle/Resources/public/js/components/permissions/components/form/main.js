@@ -98,7 +98,7 @@ define(['app-config'], function(AppConfig) {
                 this.contact = this.options.data.contact;
                 this.roles = this.options.data.roles;
             } else {
-                // TODO error message
+                // TODO error-message
                 this.sandbox.logger.log("no data given");
             }
 
