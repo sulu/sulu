@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #842 [CoreBundle]      Fixed upgrade internal links command for installations without snippets
+
 * 0.15.0 (2015-02-13)
     * BUGFIX      #833 [AdminBundle]     Added new husky version
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
