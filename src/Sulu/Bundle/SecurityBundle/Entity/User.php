@@ -167,4 +167,14 @@ class User extends BaseUser
     {
         return $this->getContact()->getFullName();
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 }

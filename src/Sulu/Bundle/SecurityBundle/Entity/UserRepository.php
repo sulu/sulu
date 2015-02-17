@@ -197,6 +197,26 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
+     * Finds a user for a given email
+     *
+     * @param string $email The email-adress
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByEmail($email)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.email=:email');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('email', $email);
+
+        return $query->getSingleResult();
+    }
+
+    /**
      * Refreshes the user for the account interface.
      *
      * @param UserInterface $user

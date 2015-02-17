@@ -82,6 +82,7 @@ class UserRepositoryTest extends SuluTestCase
         // User 1
         $user = new User();
         $user->setUsername('admin');
+        $user->setEmail('user1@test.com');
         $user->setPassword('securepassword');
         $user->setSalt('salt');
         $user->setLocale('de');
@@ -91,6 +92,7 @@ class UserRepositoryTest extends SuluTestCase
         // User 2
         $user2 = new User();
         $user2->setUsername('test');
+        $user->setEmail('user2@test.com');
         $user2->setPassword('securepassword');
         $user2->setSalt('salt');
         $user2->setLocale('de');
@@ -206,6 +208,23 @@ class UserRepositoryTest extends SuluTestCase
         $user = $userRepository->loadUserByUsername('sulu');
 
         $this->assertEquals('max.mustermann@muster.at', $user->getContact()->getEmails()[0]->getEmail());
+        $this->assertEquals('user1@test.com', $user->getEmail());
+    }
+
+    public function testfindUserByEmail()
+    {
+        $this->prepareUser('sulu', 'sulu');
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $user = $userRepository->findUserByEmail('user2@test.com');
+
+        $this->assertEquals($user->getId(), 2);
+        $this->assertEquals($user->getEmail(), 'user2@test.com');
+        $this->assertEquals($user->getUsername(), 'test');
     }
 
     private function prepareUser($username, $password, $enabled = true, $locked = false)

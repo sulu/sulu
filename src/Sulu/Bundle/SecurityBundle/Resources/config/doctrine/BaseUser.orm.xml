@@ -27,5 +27,6 @@
         <field name="passwordResetToken" column="passwordResetToken" type="string" length="256" nullable="true" />
         <field name="privateKey" type="string" column="privateKey" length="2000" nullable="true"/>
         <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
+        <field name="email" column="email" type="string" length="255" unique="true" nullable="true"/>
     </mapped-superclass>
 </doctrine-mapping>
