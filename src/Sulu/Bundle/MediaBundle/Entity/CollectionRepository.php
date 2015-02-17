@@ -44,16 +44,17 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $sql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia
+                'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionMedia, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
+                        LEFT JOIN n.children AS collectionChildren
                         LEFT JOIN n.media AS collectionMedia
                         LEFT JOIN collectionParent.meta AS parentMeta,
                       %s AS p
                  WHERE n.lft BETWEEN p.lft AND p.rgt
-                   AND n.depth <= p.depth + :maxDepth
+                   AND (n.depth <= p.depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)
                    AND p.id = :id',
                 $this->_entityName,
                 $this->_entityName
@@ -62,6 +63,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('maxDepth', intval($depth));
+            $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
             $query->setParameter('id', $id);
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
@@ -78,14 +80,15 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $sql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta
+                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
+                        LEFT JOIN n.children AS collectionChildren
                         LEFT JOIN n.media AS collectionMedia
                         LEFT JOIN collectionParent.meta AS parentMeta
-                 WHERE n.depth <= :maxDepth',
+                 WHERE n.depth <= :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne',
                 $this->_entityName,
                 $this->_entityName
             );
@@ -93,6 +96,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('maxDepth', intval($depth));
+            $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
             return $query->getResult();

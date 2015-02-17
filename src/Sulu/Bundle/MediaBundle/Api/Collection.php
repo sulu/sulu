@@ -111,7 +111,8 @@ class Collection extends ApiWrapper
             $childrenEntities[] = $child->getEntity();
         }
 
-        $this->entity->setChildren(new ArrayCollection($childrenEntities));
+        // FIXME destroys entity if depth is not deep enough
+        // $this->entity->setChildren(new ArrayCollection($childrenEntities));
 
         // FIXME cache for children because of the preview images
         $this->children = $children;
@@ -126,6 +127,17 @@ class Collection extends ApiWrapper
         // FIXME remove cache for children because of the preview images
         //       generate this at the fly
         return $this->children;
+    }
+
+    /**
+     * Indicates if sub collections exists
+     * @VirtualProperty
+     * @SerializedName("hasSub")
+     * @return boolean
+     */
+    public function getHasSub()
+    {
+        return $this->getEntity()->getChildren()->count() > 0;
     }
 
     /**
@@ -383,7 +395,7 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param DateTime|string $created
+     * @param \DateTime|string $created
      * @return $this
      */
     public function setCreated($created)
