@@ -138,8 +138,9 @@ define(function() {
             // edit media
             this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
 
-            // selected collection
+            // move
             this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
+            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
         },
 
         /**
@@ -259,7 +260,17 @@ define(function() {
                 name: 'collections/components/collection-select@sulumedia',
                 options: {
                     el: this.$find(constants.moveSelector),
-                    instanceName: 'move-media'
+                    instanceName: 'move-media',
+                    title: this.sandbox.translate('sulu.media.move.overlay-title')
+                }
+            }]);
+
+            this.sandbox.start([{
+                name: 'collections/components/collection-select@sulumedia',
+                options: {
+                    el: this.$find(constants.moveSelector),
+                    instanceName: 'move-collection',
+                    title: this.sandbox.translate('sulu.collection.move.overlay-title')
                 }
             }]);
         },
@@ -296,6 +307,28 @@ define(function() {
         },
 
         /**
+         * starts overlay for collection media
+         */
+        startMoveCollectionOverlay: function() {
+            this.sandbox.emit('sulu.media.collection-select.move-collection.open');
+        },
+
+        /**
+         * emit events to move collection
+         * @param collection
+         */
+        moveCollection: function(collection) {
+            this.sandbox.emit('sulu.media.collections.move', this.options.data.id, collection,
+                function() {
+                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-move-desc', 'labels.success');
+                }.bind(this)
+            );
+
+            this.sandbox.emit('sulu.media.collection-select.move-collection.restart');
+            this.sandbox.emit('sulu.media.collection-select.move-collection.close');
+        },
+
+        /**
          * Starts the list-toolbar in the header
          */
         startDatagrid: function() {
@@ -312,10 +345,17 @@ define(function() {
                             position: 30,
                             items: [
                                 {
-                                    id: 'move',
+                                    id: 'media-move',
                                     title: this.sandbox.translate('sulu.media.move'),
                                     callback: function() {
                                         this.startMoveMediaOverlay();
+                                    }.bind(this)
+                                },
+                                {
+                                    id: 'collection-move',
+                                    title: this.sandbox.translate('sulu.collection.move'),
+                                    callback: function() {
+                                        this.startMoveCollectionOverlay();
                                     }.bind(this)
                                 },
                                 {
@@ -380,7 +420,7 @@ define(function() {
             this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.edit.state-change', enable);
             this.sandbox.emit(
                 'husky.toolbar.' + this.options.instanceName + '.item.' + (!!enable ? 'enable' : 'disable'),
-                'move',
+                'media-move',
                 false
             );
         },

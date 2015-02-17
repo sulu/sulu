@@ -60,6 +60,17 @@ define([
             },
 
             /**
+             * listens on and move collection
+             * @event sulu.media.collections.move-media
+             * @param id {integer} id of moving collection
+             * @param collection {Object} collection to move collection into
+             * @param callback {Function} callback to execute after collection got moved
+             */
+            MOVE_COLLECTION = function() {
+                return createEventName.call(this, 'move');
+            },
+
+            /**
              * listens on and reloads a media
              * @event sulu.media.collections.reload-single-media
              * @param id {String|Number} The id of the media
@@ -296,6 +307,9 @@ define([
                 // move media
                 this.sandbox.on(MOVE_MEDIA.call(this), this.moveMedia.bind(this));
 
+                // move collection
+                this.sandbox.on(MOVE_COLLECTION.call(this), this.moveCollection.bind(this));
+
                 // delete collection
                 this.sandbox.on(DELETE_COLLECTION.call(this), this.deleteCollection.bind(this));
 
@@ -500,6 +514,25 @@ define([
                             this.sandbox.logger.log('Error while moving a single media');
                         }.bind(this));
                 }.bind(this));
+            },
+
+            /**
+             * Move a collection
+             * @param collectionId {Integer} id of collection
+             * @param collection {Object} collection to move collection to
+             * @param callback {Function} callback to execute after moving the collection
+             */
+            moveCollection: function(collectionId, collection, callback) {
+                this.sandbox.util.save(
+                    '/admin/api/collections/' + collectionId + '?action=move&destination=' + collection.id, 'POST'
+                ).then(function() {
+                        if (typeof callback === 'function') {
+                            callback(collectionId);
+                        }
+                    }.bind(this))
+                    .fail(function() {
+                        this.sandbox.logger.log('Error while moving a single media');
+                    }.bind(this));
             },
 
             /**
