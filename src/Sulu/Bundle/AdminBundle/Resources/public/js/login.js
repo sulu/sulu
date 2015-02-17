@@ -27,14 +27,23 @@ require(['husky'], function(Husky) {
 
     'use strict';
 
-    var language = (!!window.navigator.language && window.navigator.language.indexOf('de') >= 0) ? 'de' : 'en';
+    var browserLocale = window.navigator.language.slice(0, 2).toLowerCase(),
+        language = 'en';
+    // get the locale for the login
+    for (var i = -1, length = SULU.locales.length; ++i < length;) {
+        if (SULU.locales[i] === browserLocale) {
+            language = SULU.locales[i];
+            break;
+        }
+    }
+
 
     require(['text!/admin/translations/sulu.' + language + '.json'], function(messagesText) {
         var messages = JSON.parse(messagesText),
 
         app = new Husky({
             debug: {
-                enable: true
+                enable: !!SULU.debug
             },
             culture: {
                 name: language,

@@ -20,10 +20,7 @@ class SecurityController extends Controller
         $request = $this->getRequest();
         $session = $request->getSession();
 
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContex::AUTHENTICATION_ERROR);
-        } else {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+        if (!$request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
@@ -31,8 +28,7 @@ class SecurityController extends Controller
             'SuluAdminBundle:Security:login.html.twig',
             array(
                 'name' => $this->container->getParameter('sulu_admin.name'),
-                'username' => $session->get(SecurityContext::LAST_USERNAME),
-                'error' => $error
+                'locales' => $this->container->getParameter('sulu_core.locales'),
             )
         );
     }

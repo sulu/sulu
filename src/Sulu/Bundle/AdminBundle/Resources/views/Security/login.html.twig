@@ -23,6 +23,17 @@
         <div data-aura-component="login@suluadmin"
              data-aura-login-check="{{ path('sulu_admin.login_check') }}"></div>
     </div>
+    <script type="text/javascript">
+        {% autoescape false %}
+        var SULU = {
+            debug: true,
+            locales: {{ locales | json_encode }}
+        };
+        {% endautoescape %}
+
+        // CKEditor needs base path to load some other files
+        var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
+    </script>
     <!-- build:js app.min.js -->
     <script data-main="/bundles/suluadmin/js/login" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
     <!-- endbuild -->

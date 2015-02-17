@@ -48746,6 +48746,10 @@ define('husky_extensions/itembox',[],function() {
               $(selector).replaceWith(newContent);
             };
 
+            app.core.dom.inArray = function(value, array) {
+                return $.inArray(value, array);
+            };
+
             /**
              * Awesome visible method. Returns false if any part of a given element is not visible
              * Method is copied and slightly adapted from https://github.com/teamdf/jquery-visible/
