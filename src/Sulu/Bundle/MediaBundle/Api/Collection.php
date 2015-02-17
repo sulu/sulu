@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Hateoas\Configuration\Annotation\Embedded;
 use Hateoas\Configuration\Annotation\Relation;
 use Hateoas\Configuration\Annotation\Route;
@@ -137,7 +136,11 @@ class Collection extends ApiWrapper
      */
     public function getHasSub()
     {
-        return $this->getEntity()->getChildren()->count() > 0;
+        if (($children = $this->getEntity()->getChildren()) !== null) {
+            return $children->count() > 0;
+        }
+
+        return false;
     }
 
     /**
