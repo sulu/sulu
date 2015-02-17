@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 0.15.1 (2015-02-17)
     * HOTFIX      #842 [CoreBundle]      Fixed upgrade internal links command for installations without snippets
 
 * 0.15.0 (2015-02-13)
