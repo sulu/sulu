@@ -84,6 +84,7 @@ class UserRepositoryTest extends SuluTestCase
         $user->setUsername('admin');
         $user->setEmail('user1@test.com');
         $user->setPassword('securepassword');
+        $user->setPasswordResetToken('mySuperSecretToken');
         $user->setSalt('salt');
         $user->setLocale('de');
         $user->setContact($contact1);
@@ -241,6 +242,21 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $userByMail->getUsername());
         $this->assertEquals('user2@test.com', $userByUsername->getEmail());
         $this->assertEquals('test', $userByUsername->getUsername());
+    }
+
+    public function testFindUserByToken()
+    {
+        $this->prepareUser('sulu', 'sulu');
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $user = $userRepository->findUserByToken('mySuperSecretToken');
+
+        $this->assertEquals('user1@test.com', $user->getEmail());
+        $this->assertEquals('admin', $user->getUsername());
     }
 
     private function prepareUser($username, $password, $enabled = true, $locked = false)

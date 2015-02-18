@@ -89,11 +89,10 @@ class ResettingController extends Controller
      * @return string
      */
     private function getEmail($user) {
-        if ($user->getEmail() !== '') {
+        if ($user->getEmail() !== null) {
             return $user->getEmail();
         }
-        // TODO: load from config
-        return '';
+        return $this->container->getParameter('sulu_admin.email');
     }
 
     /**
