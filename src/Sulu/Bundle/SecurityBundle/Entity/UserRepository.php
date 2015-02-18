@@ -71,7 +71,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->where('user.id=:userId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('userId', $id);
 
             return $query->getSingleResult();
@@ -106,7 +105,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->where('user.contact=:contactId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('contactId', $id);
 
             return $query->getSingleResult();
@@ -190,8 +188,26 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->where('user.username=:username');
 
         $query = $qb->getQuery();
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * Finds a user for a given email
+     *
+     * @param string $email The email-adress
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByEmail($email)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.email=:email');
+
+        $query = $qb->getQuery();
+        $query->setParameter('email', $email);
 
         return $query->getSingleResult();
     }
@@ -285,7 +301,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->where('role.system=:system');
 
         $query = $qb->getQuery();
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('system', $this->getSystem());
 
         try {
