@@ -13,7 +13,8 @@ require.config({
         'accountsutil/header': '../../sulucontact/js/components/accounts/util/header',
         'type/bic-input': '../../sulucontact/js/input-type/bic-input',
         'type/vat-input': '../../sulucontact/js/input-type/vat-input',
-        'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/deleteDialog'
+        'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/deleteDialog',
+        'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/deleteDialog'
     }
 });
 
