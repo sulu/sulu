@@ -11,14 +11,22 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * This exception is thrown when the password is mandatory but missing.
+ * This Exception is thrown if the email for a user is not unique
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
-class MissingPasswordException extends SecurityException
+class EmailNotUniqueException extends SecurityException
 {
-    public function __construct()
+
+    private $email;
+
+    public function __construct($email)
     {
-        parent::__construct('The password is missing!', 1002);
+        $this->email = $email;
+        parent::__construct('A user\'s email has to be unique!', 1004);
+    }
+
+    public function getEmail() {
+        return $this->email;
     }
 
     public function toArray()

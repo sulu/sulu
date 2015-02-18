@@ -20,6 +20,7 @@ define([
         defaults: {
             username: '',
             password: '',
+            email: '',
             locale: 'en',
             contact: [],
             userRoles: []

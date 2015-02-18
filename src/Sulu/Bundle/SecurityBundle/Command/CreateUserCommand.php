@@ -66,7 +66,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $username = $input->getArgument('username');
         $firstName = $input->getArgument('firstName');
         $lastName = $input->getArgument('lastName');
-        $emailText = $input->getArgument('email');
+        $email = $input->getArgument('email');
         $locale = $input->getArgument('locale');
         $roleName = $input->getArgument('role');
         $password = $input->getArgument('password');
@@ -74,31 +74,13 @@ class CreateUserCommand extends ContainerAwareCommand
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
 
-        $emailTypes = $doctrine->getRepository('SuluContactBundle:EmailType')->findAll();
-
-        if (!$emailTypes) {
-            throw new \RuntimeException(
-                'Cannot find any SuluContactBundle:EmailType entities in database, maybe you ' .
-                'should load the fixtures?'
-            );
-        }
-
-        $email = new Email();
-        $email->setEmail($emailText);
-        $email->setEmailType($emailTypes[0]);
-
-        $em->persist($email);
-        $em->flush();
-
         $now = new DateTime();
 
         $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
-        $contact->addEmail($email);
         $contact->setCreated($now);
         $contact->setChanged($now);
-        $contact->setMainEmail($email->getEmail());
 
         $em->persist($contact);
         $em->flush();
@@ -109,6 +91,8 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setSalt($this->generateSalt());
         $user->setPassword($this->encodePassword($user, $password, $user->getSalt()));
         $user->setLocale($locale);
+        $user->setEmail($email);
+
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array('name' => $roleName));
 
         $userRole = new UserRole();
@@ -203,7 +187,15 @@ class CreateUserCommand extends ContainerAwareCommand
             $question->setValidator(
                 function ($email) use ($doctrine) {
                     if (empty($email)) {
-                        throw new \InvalidArgumentException('Email can not be empty');
+                        $email = null;
+                    }
+                    if ($email !== null) {
+                        $users = $doctrine->getRepository('SuluSecurityBundle:User')->findBy(
+                            array('email' => $email)
+                        );
+                        if (count($users) > 0) {
+                            throw new \InvalidArgumentException(sprintf('Email "%s" is not unique', $email));
+                        }
                     }
 
                     return $email;
