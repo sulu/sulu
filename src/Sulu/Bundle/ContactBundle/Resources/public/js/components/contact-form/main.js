@@ -124,7 +124,6 @@ define([
 
         bindCustomEvents = function() {
             this.sandbox.on('sulu.contact-form.add-collectionfilters', addCollectionFilters.bind(this));
-            this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
@@ -365,24 +364,6 @@ define([
                 }
                 return note.value !== "";
             });
-        },
-
-        addRequires = function(data) {
-            var tplNames = {
-                    email: 'email-tpl'
-                },
-                tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
-                emailSelector;
-
-            // TODO: set required to first email field
-
-            if (data.indexOf('email') !== -1) {
-                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});
-//                this.sandbox.dom.attr(emailSelector + ' *[data-type=husky-input]', 'data-validation-required','true');
-                this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
-                this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
-            }
         },
 
         getDataById = function(array, id) {
