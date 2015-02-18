@@ -121,6 +121,14 @@ define([], function() {
                 this.submit();
             }, this);
 
+            this.sandbox.on('sulu.header.toolbar.delete', function() {
+                if(this.options.params.type === 'account') {
+                    this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
+                } else {
+                    this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
+                }
+            }, this);
+
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
