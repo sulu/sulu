@@ -114,38 +114,19 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Loads the user for the given username.
+     * Loads the user for the given username or email
      *
-     * @param string $username The username
+     * @param string $identifier The username or email of the user to load
      * @throws LockedException if the User is Locked
      * @throws DisabledException if the User is not active
      * @throws UsernameNotFoundException if the User is not found
      * @return UserInterface
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($identifier)
     {
-        $qb = $this->createQueryBuilder('user')
-            ->leftJoin('user.userRoles', 'userRoles')
-            ->leftJoin('userRoles.role', 'role')
-            ->leftJoin('role.permissions', 'permissions')
-            ->leftJoin('user.userGroups', 'userGroups')
-            ->leftJoin('userGroups.group', 'grp')
-            ->leftJoin('user.userSettings', 'settings')
-            ->addSelect('userRoles')
-            ->addSelect('role')
-            ->addSelect('userGroups')
-            ->addSelect('grp')
-            ->addSelect('settings')
-            ->addSelect('permissions')
-            ->where('user.username=:username');
-
-        // TODO add groups for system recognition
-        $query = $qb->getQuery();
-        $query->setParameter('username', $username);
-
         try {
             /** @var User $user */
-            $user = $query->getSingleResult();
+            $user = $this->findUserByIdentifier($identifier);
 
             if (!$user->getEnabled()) {
                 throw new DisabledException();
@@ -165,7 +146,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         } catch (NoResultException $nre) {
             $message = sprintf(
                 'Unable to find an SuluSecurityBundle:User object identified by %s',
-                $username
+                $identifier
             );
 
             throw new UsernameNotFoundException($message, 0, $nre);
@@ -196,7 +177,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     /**
      * Finds a user for a given email
      *
-     * @param string $email The email-adress
+     * @param string $email The email-address
      * @return UserInterface
      * @throws NoResultException if the user is not found
      *
@@ -210,6 +191,22 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         $query->setParameter('email', $email);
 
         return $query->getSingleResult();
+    }
+
+    /**
+     * Finds a user for a given email or username
+     *
+     * @param string $identifier The email-address or username
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByIdentifier($identifier) {
+        try {
+            return $this->findUserByUsername($identifier);
+        } catch (NoResultException $exc) {
+            return $this->findUserByEmail($identifier);
+        }
     }
 
     /**
