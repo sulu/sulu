@@ -12,8 +12,9 @@ define([
     'sulucontact/model/activity',
     'sulucontact/model/title',
     'sulucontact/model/position',
-    'sulucategory/model/category'
-], function(Contact, Activity, Title, Position, Category) {
+    'sulucategory/model/category',
+    'contactsutil/delete-dialog'
+], function(Contact, Activity, Title, Position, Category, DeleteDialog) {
 
     'use strict';
 
@@ -256,16 +257,7 @@ define([
         },
 
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
-                if (wasConfirmed) {
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.contact.destroy({
-                        success: function() {
-                            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-                        }.bind(this)
-                    });
-                }
-            }.bind(this));
+            DeleteDialog.show(this.sandbox, this.contact);
         },
 
         save: function(data) {
@@ -547,24 +539,6 @@ define([
             this.sandbox.on(instance + '.save', function(data) {
                 this.itemSaved(data, url, instance);
             }.bind(this));
-        },
-
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmDeleteDialog: function(callbackFunction) {
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-            // show dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'sulu.overlay.delete-desc',
-                callbackFunction.bind(this, false),
-                callbackFunction.bind(this, true)
-            );
         }
     };
 });
