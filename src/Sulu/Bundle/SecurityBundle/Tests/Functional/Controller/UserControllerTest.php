@@ -357,7 +357,7 @@ class UserControllerTest extends SuluTestCase
         );
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertContains('email', strtolower($response->message));
         $this->assertEquals(1004, $response->code);
     }
@@ -527,7 +527,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -564,7 +564,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -643,7 +643,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }

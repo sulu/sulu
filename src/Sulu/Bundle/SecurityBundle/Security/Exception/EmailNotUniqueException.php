@@ -16,9 +16,17 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
  */
 class EmailNotUniqueException extends SecurityException
 {
-    public function __construct()
+
+    private $email;
+
+    public function __construct($email)
     {
-        parent::__construct('security.user.error.notUniqueEmail', 1004);
+        $this->email = $email;
+        parent::__construct('A user\'s email has to be unique!', 1004);
+    }
+
+    public function getEmail() {
+        return $this->email;
     }
 
     public function toArray()

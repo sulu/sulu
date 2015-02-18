@@ -33,8 +33,6 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
-use Symfony\Component\Validator\Validator\RecursiveValidator as Validator;
 
 /**
  * Makes the users accessible through a rest api
@@ -117,7 +115,8 @@ class UserController extends RestController implements ClassResourceInterface, S
             // if no email passed try to use to contact's first email
             if ($email === null &&
                 array_key_exists('emails', $contact) && count($contact['emails']) > 0 &&
-                $this->isEmailUnique($contact['emails'][0]['email'])) {
+                $this->isEmailUnique($contact['emails'][0]['email'])
+            ) {
                 $email = $contact['emails'][0]['email'];
             }
 
@@ -131,7 +130,7 @@ class UserController extends RestController implements ClassResourceInterface, S
 
             if ($email !== null) {
                 if (!$this->isEmailUnique($email)) {
-                    throw new EmailNotUniqueException();
+                    throw new EmailNotUniqueException($email);
                 }
                 $user->setEmail($email);
             }
@@ -157,11 +156,11 @@ class UserController extends RestController implements ClassResourceInterface, S
 
             $view = $this->view($user, 200);
         } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($exc->toArray(), 409);
         } catch (MissingPasswordException $exc) {
             $view = $this->view($exc->toArray(), 400);
         } catch (EmailNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($exc->toArray(), 409);
         } catch (RestException $re) {
             if (isset($user)) {
                 $em->remove($user);
@@ -265,8 +264,9 @@ class UserController extends RestController implements ClassResourceInterface, S
 
             if ($request->get('email') !== null) {
                 if ($request->get('email') !== $user->getEmail() &&
-                    !$this->isEmailUnique($request->get('email'))) {
-                    throw new EmailNotUniqueException();
+                    !$this->isEmailUnique($request->get('email'))
+                ) {
+                    throw new EmailNotUniqueException($request->get('email'));
                 }
                 $user->setEmail($request->get('email'));
             } else {
@@ -296,9 +296,9 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($exc->toArray(), 409);
         } catch (EmailNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($exc->toArray(), 409);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -397,7 +397,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             }
             if ($email !== null) {
                 if ($email !== $user->getEmail() && !$this->isEmailUnique($email)) {
-                    throw new EmailNotUniqueException();
+                    throw new EmailNotUniqueException($email);
                 }
                 $user->setEmail($email);
             }
@@ -422,9 +422,9 @@ class UserController extends RestController implements ClassResourceInterface, S
         } catch (EntityNotFoundException $exc) {
             $view = $this->view($exc->toArray(), 404);
         } catch (UsernameNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($exc->toArray(), 409);
         } catch (EmailNotUniqueException $exc) {
-            $view = $this->view($exc->toArray(), 400);
+            $view = $this->view($exc->toArray(), 409);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }

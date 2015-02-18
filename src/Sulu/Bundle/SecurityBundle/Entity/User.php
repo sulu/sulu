@@ -167,6 +167,7 @@ class User extends BaseUser
     {
         return $this->getContact()->getFullName();
     }
+
     /**
      * Constructor
      */

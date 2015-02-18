@@ -18,7 +18,7 @@ class MissingPasswordException extends SecurityException
 {
     public function __construct()
     {
-        parent::__construct('security.user.error.missingPassword', 1002);
+        parent::__construct('The password is missing!', 1002);
     }
 
     public function toArray()
