@@ -72,7 +72,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
          * returns normalized event names
          */
         createEventName = function(postFix) {
-            return this.options.eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+            return this.options.eventNamespace + '.' + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         },
 
         templates = {
