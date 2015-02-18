@@ -11,27 +11,22 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * This exception is thrown when the username is not unique.
+ * This Exception is thrown if a request with a not existing token tries to reset a password
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
-class UsernameNotUniqueException extends SecurityException
+class InvalidTokenException extends SecurityException
 {
-    /**
-     * The username which is not unique
-     *
-     * @var string
-     */
-    private $username;
 
-    public function __construct($username)
+    private $token;
+
+    public function __construct($token)
     {
-        parent::__construct('a username has to be unique!', 1001);
-        $this->username = $username;
+        $this->token = $token;
+        parent::__construct('This token does not exist!', 1005);
     }
 
-    public function getUsername()
-    {
-        return $this->username;
+    public function getToken() {
+        return $this->token;
     }
 
     public function toArray()
@@ -39,7 +34,7 @@ class UsernameNotUniqueException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'username' => $this->username
+            'token' => $this->token
         );
     }
 }

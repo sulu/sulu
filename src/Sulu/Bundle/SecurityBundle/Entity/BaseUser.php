@@ -98,6 +98,11 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     protected $passwordResetToken;
 
     /**
+     * @var \DateTime
+     */
+    private $tokenExpiresAt;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -443,5 +448,28 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Set tokenExpiresAt
+     *
+     * @param \DateTime $tokenExpiresAt
+     * @return BaseUser
+     */
+    public function setTokenExpiresAt($tokenExpiresAt)
+    {
+        $this->tokenExpiresAt = $tokenExpiresAt;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenExpiresAt
+     *
+     * @return \DateTime 
+     */
+    public function getTokenExpiresAt()
+    {
+        return $this->tokenExpiresAt;
     }
 }

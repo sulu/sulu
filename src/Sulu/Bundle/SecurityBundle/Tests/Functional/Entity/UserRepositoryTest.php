@@ -225,6 +225,24 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $user->getUsername());
     }
 
+    public function testfindUserByIdentifier()
+    {
+        $this->prepareUser('sulu', 'sulu');
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userByMail = $userRepository->findUserByIdentifier('user2@test.com');
+        $userByUsername = $userRepository->findUserByIdentifier('test');
+
+        $this->assertEquals('user2@test.com', $userByMail->getEmail());
+        $this->assertEquals('test', $userByMail->getUsername());
+        $this->assertEquals('user2@test.com', $userByUsername->getEmail());
+        $this->assertEquals('test', $userByUsername->getUsername());
+    }
+
     private function prepareUser($username, $password, $enabled = true, $locked = false)
     {
         $emailType = new EmailType();

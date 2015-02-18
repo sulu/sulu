@@ -33,7 +33,8 @@ class EmailNotUniqueException extends SecurityException
     {
         return array(
             'code' => $this->code,
-            'message' => $this->message
+            'message' => $this->message,
+            'email' => $this->email
         );
     }
 }

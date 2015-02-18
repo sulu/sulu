@@ -194,6 +194,25 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
+     * Finds a user for a given password-reset-token
+     *
+     * @param string $token the reset-token
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByToken($token)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.passwordResetToken=:token');
+
+        $query = $qb->getQuery();
+        $query->setParameter('token', $token);
+
+        return $query->getSingleResult();
+    }
+
+    /**
      * Finds a user for a given email or username
      *
      * @param string $identifier The email-address or username
