@@ -164,7 +164,7 @@ class ResettingController extends Controller
      * @throws MissingPasswordException
      */
     private function changePassword($user, $password) {
-        if ($password) {
+        if ($password === '') {
             throw new MissingPasswordException();
         }
         $em = $this->getDoctrine()->getManager();
@@ -179,7 +179,7 @@ class ResettingController extends Controller
      * @throws TokenAlreadyRequestedException
      */
     private function generateTokenForUser($user) {
-        if ($user->getPasswordResetToken() !== '' &&
+        if ($user->getPasswordResetToken() !== null &&
             (new \DateTime())->add($this->getResetInterval()) < $user->getTokenExpiresAt()->add($this->getRequestInterval())
         ) { // if a token was already requested within the request interval time frame
             throw new TokenAlreadyRequestedException($this->getRequestInterval());
