@@ -112,7 +112,7 @@ class UserController extends RestController implements ClassResourceInterface, S
             $user->setUsername($request->get('username'));
             $user->setSalt($this->generateSalt());
 
-            // if no email passed try to use to contact's first email
+            // if no email passed try to use the contact's first email
             if ($email === null &&
                 array_key_exists('emails', $contact) && count($contact['emails']) > 0 &&
                 $this->isEmailUnique($contact['emails'][0]['email'])
