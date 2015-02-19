@@ -592,6 +592,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
                 'min' => new PropertyParameter(
                     'min',
                     1,
+                    null,
                     array(
                         'title' => array('de' => 'Mindestens', 'en' => 'Minimum')
                     )
