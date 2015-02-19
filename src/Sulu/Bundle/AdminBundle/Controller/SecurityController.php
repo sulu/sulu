@@ -12,12 +12,22 @@ namespace Sulu\Bundle\AdminBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Controller to render the login template or the reset-password template
+ * Class SecurityController
+ * @package Sulu\Bundle\AdminBundle\Controller
+ */
 class SecurityController extends Controller
 {
-    public function loginAction()
+    /**
+     * Renders the login template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function loginAction(Request $request)
     {
-        $request = $this->getRequest();
         $session = $request->getSession();
 
         if (!$request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
@@ -29,6 +39,23 @@ class SecurityController extends Controller
             array(
                 'name' => $this->container->getParameter('sulu_admin.name'),
                 'locales' => $this->container->getParameter('sulu_core.locales'),
+            )
+        );
+    }
+
+    /**
+     * Renderes the reset-password template
+     * @param string $token the reset token
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function resetAction($token)
+    {
+        return $this->render(
+            'SuluAdminBundle:Security:login.html.twig',
+            array(
+                'name' => $this->container->getParameter('sulu_admin.name'),
+                'locales' => $this->container->getParameter('sulu_core.locales'),
+                'token' => $token
             )
         );
     }

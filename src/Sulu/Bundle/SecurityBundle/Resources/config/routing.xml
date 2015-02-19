@@ -18,4 +18,14 @@
     <route id="sulu_security.profile.change_language" path="/profile/change-language">
         <default key="_controller">SuluSecurityBundle:Profile:changeLanguage</default>
     </route>
+    <route id="sulu_security.reset_password.email" path="reset/email">
+        <default key="_controller">SuluSecurityBundle:Resetting:sendEmail</default>
+    </route>
+    <route id="sulu_security.reset_password.email.resend" path="reset/email/resend">
+        <default key="_controller">SuluSecurityBundle:Resetting:sendEmail</default>
+        <default key="nonewkey">true</default>
+    </route>
+    <route id="sulu_security.reset_password.reset" path="reset">
+        <default key="_controller">SuluSecurityBundle:Resetting:reset</default>
+    </route>
 </routes>
