@@ -40,7 +40,7 @@ class ResettingControllerTest extends SuluTestCase
         // User 2
         $user2 = new User();
         $user2->setUsername('user2');
-        $user2->setEmail('user2@test.com');
+        $user2->setEmail(null);
         $user2->setPassword('securepassword');
         $user2->setSalt('salt');
         $user2->setLocale('en');
@@ -54,6 +54,8 @@ class ResettingControllerTest extends SuluTestCase
         $user3->setPassword('securepassword');
         $user3->setSalt('salt');
         $user3->setLocale('en');
+        $user3->setPasswordResetToken('thisisasupersecrettoken');
+        $user3->setTokenExpiresAt((new \DateTime())->add(new \DateInterval('PT24H')));
         $this->em->persist($user3);
         $this->user3 = $user3;
 
@@ -61,72 +63,240 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailAction() {
-        $client = static::createClient(); // unauthenticated client
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
 
         $client->request('GET', '/security/reset/email', array(
             'user' => $this->user1->getEmail()
         ));
 
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
         $response = json_decode($client->getResponse()->getContent());
 
-        // test response
+        // asserting response
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        /*$this->assertTrue($response['success']);
-        $this->assertEquals($this->user1->getEmail(), $response['email']);
-        // test user properties
+        $this->assertTrue($response->success);
+        $this->assertEquals($this->user1->getEmail(), $response->email);
+
+        // asserting user properties
+        $this->em->refresh($this->user1);
         $this->assertTrue(is_string($this->user1->getPasswordResetToken()));
-        $this->assertGreaterThan(new \DateTime(), $this->user1->getTokenExpiresAt());*/
+        $this->assertGreaterThan(new \DateTime(), $this->user1->getTokenExpiresAt());
+
+        // asserting sent mail
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $message = $mailCollector->getMessages()[0];
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($this->user1->getEmail(), key($message->getTo()));
+        $this->assertContains($this->user1->getPasswordResetToken(), $message->getBody());
     }
 
     public function testSendEmailActionWtihUsername() {
-        $client = static::createClient(); // unauthenticated client
-        //TODO: tests
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        $client->request('GET', '/security/reset/email', array(
+            'user' => $this->user1->getUsername()
+        ));
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        // asserting response
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($response->success);
+        $this->assertEquals($this->user1->getEmail(), $response->email);
+
+        // asserting user properties
+        $this->em->refresh($this->user1);
+        $this->assertTrue(is_string($this->user1->getPasswordResetToken()));
+        $this->assertGreaterThan(new \DateTime(), $this->user1->getTokenExpiresAt());
+
+        // asserting sent mail
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $message = $mailCollector->getMessages()[0];
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($this->user1->getEmail(), key($message->getTo()));
+        $this->assertContains($this->user1->getPasswordResetToken(), $message->getBody());
     }
 
     public function testSendEmailActionWithUserWithoutEmail() {
-        $client = static::createClient(); // unauthenticated client
-        //TODO: tests
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        $client->request('GET', '/security/reset/email', array(
+            'user' => $this->user2->getUsername()
+        ));
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        // asserting response
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($response->success);
+        $this->assertEquals('installation.email@sulu.test', $response->email);
+
+        // asserting user properties
+        $this->em->refresh($this->user2);
+        $this->assertTrue(is_string($this->user2->getPasswordResetToken()));
+        $this->assertGreaterThan(new \DateTime(), $this->user2->getTokenExpiresAt());
+
+        // asserting sent mail
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $message = $mailCollector->getMessages()[0];
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals('installation.email@sulu.test', key($message->getTo()));
+        $this->assertContains($this->user2->getPasswordResetToken(), $message->getBody());
     }
 
-    public function testSendEmailActionWithNoNewKey() {
-        $client = static::createClient(); // unauthenticated client
-        //TODO: tests
-        $this->assertEquals(1, 1);
+    public function testResendEmailAction() {
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        $client->request('GET', '/security/reset/email/resend', array(
+            'user' => $this->user3->getEmail()
+        ));
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        // asserting response
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($response->success);
+        $this->assertEquals($this->user3->getEmail(), $response->email);
+
+        // asserting user properties
+        $this->em->refresh($this->user3);
+        $this->assertEquals('thisisasupersecrettoken', $this->user3->getPasswordResetToken());
+        $this->assertGreaterThan(new \DateTime(), $this->user3->getTokenExpiresAt());
+
+        // asserting sent mail
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $message = $mailCollector->getMessages()[0];
+        $this->assertInstanceOf('Swift_Message', $message);
+        $this->assertEquals($this->user3->getEmail(), key($message->getTo()));
+        $this->assertContains($this->user3->getPasswordResetToken(), $message->getBody());
     }
 
     public function testSendEmailActionWithMissingUser() {
-        $client = static::createClient(); // unauthenticated client
-        //TODO: tests
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        $client->request('GET', '/security/reset/email');
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(0, $response->code);
+        $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
     public function testSendEmailActionWithNotExistingUser() {
-        $client = static::createClient(); // unauthenticated client
-        //TODO: tests
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        $client->request('GET', '/security/reset/email', array(
+            'user' => 'lord.voldemort@askab.an'
+        ));
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(0, $response->code);
+        $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
     public function testSendEmailActionMultipleTimes() {
-        $client = static::createClient(); // unauthenticated client
-        //TODO: tests
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        $client->request('GET', '/security/reset/email', array(
+            'user' => $this->user1->getUsername()
+        ));
+        $response = json_decode($client->getResponse()->getContent());
+        // asserting response
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($response->success);
+        $this->assertEquals($this->user1->getEmail(), $response->email);
+
+        // second request should be blocked
+        $client->request('GET', '/security/reset/email', array(
+            'user' => $this->user1->getUsername()
+        ));
+        $response = json_decode($client->getResponse()->getContent());
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        // asserting response
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1003, $response->code);
+        $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
     public function testResetAction() {
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $newPassword = 'anewpasswordishouldremeber';
+
+        $client->request('GET', '/security/reset', array(
+            'token' => 'thisisasupersecrettoken',
+            'password' => $newPassword
+        ));
+        $response = json_decode($client->getResponse()->getContent());
+        $this->em->refresh($this->user3);
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertTrue($response->success);
+
+        $encoder = $this->container->get('security.encoder_factory')->getEncoder($this->user3);
+        $this->assertEquals($encoder->encodePassword($newPassword, $this->user3->getSalt()), $this->user3->getPassword());
+        $this->assertNull($this->user3->getPasswordResetToken());
+        $this->assertNull($this->user3->getTokenExpiresAt());
     }
 
     public function testResetActionWithoutToken() {
-        $this->assertEquals(1, 1);
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $passwordBefore = $this->user3->getPassword();
+
+        $client->request('GET', '/security/reset', array(
+            'password' => 'thispasswordshouldnotbeapplied'
+        ));
+        $response = json_decode($client->getResponse()->getContent());
+        $this->em->refresh($this->user3);
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1005, $response->code);
+        $this->assertEquals($passwordBefore, $this->user3->getPassword());
     }
 
     public function testResetActionWithInvalidToken() {
-        $this->assertEquals(1, 1);
-    }
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $passwordBefore = $this->user3->getPassword();
 
-    public function testResetActionMultipleTimes() {
-        $this->assertEquals(1, 1);
+        $client->request('GET', '/security/reset', array(
+            'token' => 'thistokendoesnotexist',
+            'password' => 'thispasswordshouldnotbeapplied'
+        ));
+        $response = json_decode($client->getResponse()->getContent());
+        $this->em->refresh($this->user3);
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1005, $response->code);
+        $this->assertEquals($passwordBefore, $this->user3->getPassword());
     }
 }

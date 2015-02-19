@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -81,6 +82,8 @@ class ResettingController extends Controller
         } catch(EntityNotFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch(TokenAlreadyRequestedException $ex) {
+            $response = new JsonResponse($ex->toArray(), 400);
+        } catch(NoTokenFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -196,8 +199,12 @@ class ResettingController extends Controller
      * @param $user
      * @param $from
      * @param $to
+     * @throws NoTokenFoundException
      */
     private function sendTokenEmail(User $user, $from, $to) {
+        if ($user->getPasswordResetToken() === null) {
+            throw new NoTokenFoundException($user);
+        }
         $mailer = $this->get('mailer');
         $translator = $this->get('translator');
         $message = $mailer->createMessage()
