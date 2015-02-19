@@ -7,6 +7,9 @@ CHANGELOG for Sulu
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
     * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
 
+* 0.15.2 (2915-02-19)
+    * HOTFIX      #850 [MediaBundle]     Fixed bug with deleted media in media selection
+
 * 0.15.1 (2015-02-17)
     * HOTFIX      #842 [CoreBundle]      Fixed upgrade internal links command for installations without snippets
 
