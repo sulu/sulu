@@ -381,7 +381,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
         ksort($media);
 
-        return $media;
+        return array_values($media);
     }
 
     /**
