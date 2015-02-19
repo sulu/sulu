@@ -115,13 +115,14 @@ class DefaultMediaManagerTest extends ProphecyTestCase
         $media3 = $this->createMedia(3);
 
         return array(
-            array(array(1, 2, 3),  array($media1, $media2, $media3), array($media1, $media2, $media3)),
-            array(array(2,1,3), array($media1, $media2, $media3), array($media2, $media1, $media3)),
+            array(array(1, 2, 3), array($media1, $media2, $media3), array($media1, $media2, $media3)),
+            array(array(2, 1, 3), array($media1, $media2, $media3), array($media2, $media1, $media3)),
             array(array(4, 1, 2), array($media1, $media2), array($media1, $media2)),
         );
     }
 
-    protected function createMedia($id) {
+    protected function createMedia($id)
+    {
         $mediaIdReflection = new \ReflectionProperty(Media::class, 'id');
         $mediaIdReflection->setAccessible(true);
 
