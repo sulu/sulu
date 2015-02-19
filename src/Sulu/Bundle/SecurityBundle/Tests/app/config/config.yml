@@ -8,6 +8,10 @@ framework:
     profiler:
         enabled: false
 
+security:
+    access_control:
+        - { path: ^/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
 fos_rest:
     routing_loader:
         default_format: json
@@ -48,9 +52,6 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
-
-sulu_admin:
-    name: SULU 2.0
 
 parameters:
     # Just a dirty hack to get the jms serializer bundle correctly working

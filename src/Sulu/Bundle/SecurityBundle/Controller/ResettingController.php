@@ -34,6 +34,31 @@ class ResettingController extends Controller
     const EMAIL_MSG_KEY = 'security.reset.mail-msg';
 
     /**
+     * The interval in which the token is valid
+     * @return \DateInterval
+     */
+    private static function getResetInterval() {
+        return new \DateInterval('PT24H');
+    }
+
+    /**
+     * The interval in which only one token can be generated
+     * @return \DateInterval
+     */
+    private static function getRequestInterval() {
+        return new \DateInterval('PT10M');
+    }
+
+    /**
+     * Returns the sender's email address
+     * @param Request $reqeust
+     * @return string
+     */
+    private static function getSenderAddress(Request $reqeust) {
+        return 'no-reply@' . $reqeust->getHost();
+    }
+
+    /**
      * Generates a token for a user and sends an email with
      * a link to the resetting route
      * @param Request $request
@@ -127,6 +152,7 @@ class ResettingController extends Controller
             if (new \DateTime() > $user->getTokenExpiresAt()) {
                 throw new InvalidTokenException($token);
             }
+            return $user;
         } catch (NoResultException $exc) {
             throw new InvalidTokenException($token);
         }
@@ -176,12 +202,14 @@ class ResettingController extends Controller
         $translator = $this->get('translator');
         $message = $mailer->createMessage()
             ->setSubject(
-                $translator->trans(self::EMAIL_SUBJECT_KEY, array(), 'backend') . '\n' .
-                $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()))
+                $translator->trans(self::EMAIL_SUBJECT_KEY, array(), 'backend')
             )
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($translator->trans(self::EMAIL_MSG_KEY, array(), 'backend'));
+            ->setBody(
+                $translator->trans(self::EMAIL_MSG_KEY, array(), 'backend') . PHP_EOL .
+                $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()), true)
+            );
         $mailer->send($message);
     }
 
@@ -256,30 +284,5 @@ class ResettingController extends Controller
         $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
-    }
-
-    /**
-     * The interval in which the token is valid
-     * @return \DateInterval
-     */
-    private static function getResetInterval() {
-        return new \DateInterval('PT24H');
-    }
-
-    /**
-     * The interval in which only one token can be generated
-     * @return \DateInterval
-     */
-    private static function getRequestInterval() {
-        return new \DateInterval('PT10M');
-    }
-
-    /**
-     * Returns the sender's email address
-     * @param Request $reqeust
-     * @return string
-     */
-    private static function getSenderAddress(Request $reqeust) {
-        return 'no-reply@' . $reqeust->getHost();
     }
 }
