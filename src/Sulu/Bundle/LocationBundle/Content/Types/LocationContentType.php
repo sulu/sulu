@@ -71,12 +71,12 @@ class LocationContentType extends ComplexContentType
         return array(
             'countries' => new PropertyParameter(
                 'countries',
-                'collection',
                 array(
                     'at' => new PropertyParameter('at', 'Austria'),
                     'fr' => new PropertyParameter('fr', 'France'),
                     'gb' => new PropertyParameter('gb', 'Great Britain'),
-                )
+                ),
+                'collection'
             ),
             'mapProviders' => new PropertyParameter(
                 'mapProviders',
