@@ -172,7 +172,7 @@ class SmartContentContainer implements ArrayableInterface
         $result = array();
         if (array_key_exists('dataSource', $config) && $config['dataSource'] !== '') {
             $this->contentQueryBuilder->init(
-                array('config' => $config, 'properties' => $this->params['properties'], 'excluded' => $excludeUuids)
+                array('config' => $config, 'properties' => $this->params['properties']->getValue(), 'excluded' => $excludeUuids)
             );
             $result = $this->contentQueryExecutor->execute(
                 $this->webspaceKey,

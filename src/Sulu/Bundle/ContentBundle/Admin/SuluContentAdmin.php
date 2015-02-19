@@ -56,15 +56,15 @@ class SuluContentAdmin extends Admin
                 $webspaceItem = new NavigationItem($webspace->getName());
                 $webspaceItem->setIcon('bullseye');
 
-                $contentItem = new NavigationItem('navigation.webspaces.content');
-                $contentItem->setAction('content/contents/' . $webspace->getKey());
-                $webspaceItem->addChild($contentItem);
-
                 $indexPageItem = new NavigationItem('navigation.webspaces.index-page');
                 $indexPageItem->setAction(
                     'content/contents/' . $webspace->getKey() . '/edit:index/details'
                 );
                 $webspaceItem->addChild($indexPageItem);
+
+                $contentItem = new NavigationItem('navigation.webspaces.content');
+                $contentItem->setAction('content/contents/' . $webspace->getKey());
+                $webspaceItem->addChild($contentItem);
 
                 $section->addChild($webspaceItem);
             }
