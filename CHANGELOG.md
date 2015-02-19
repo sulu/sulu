@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 0.15.2 (2015-02-19)
     * HOTFIX      #850 [MediaBundle]     Fixed bug with deleted media in media selection
 
 * 0.15.1 (2015-02-17)
