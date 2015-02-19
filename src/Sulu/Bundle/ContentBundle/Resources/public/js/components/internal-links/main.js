@@ -61,12 +61,6 @@ define([], function() {
 
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
 
-            // data from overlay retrieved
-            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
-                setURI.call(this);
-                loadContent.call(this);
-            }.bind(this));
-
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.initialized', function() {
                 this.sandbox.emit('husky.overlay.internal-links.' + this.options.instanceName + '.add.set-position');
