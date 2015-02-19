@@ -59,7 +59,7 @@ As Array or boolean:
 {{ params.name.value }}
 
 Get translated title:
-{{ params.getTitle('de') }}
+{{ params.name.getTitle('de') }}
 ```
 
 __Optional:__
