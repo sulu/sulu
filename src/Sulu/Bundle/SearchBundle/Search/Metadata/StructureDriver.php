@@ -21,12 +21,14 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use Metadata\Driver\AdvancedDriverInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
  * @package Sulu\Bundle\SearchBundle\Metadata
  */
-class StructureDriver implements DriverInterface
+class StructureDriver implements AdvancedDriverInterface
 {
     /**
      * @var Factory
@@ -44,6 +46,11 @@ class StructureDriver implements DriverInterface
     private $structureIndexName;
 
     /**
+     * @var StructureManagerInterface
+     */
+    private $structureManager;
+
+    /**
      * @param Factory $factory
      * @param EventDispatcherInterface $eventDispatcher
      * @param mixed $structureIndexName Name of the index to use for the stucture
@@ -51,11 +58,13 @@ class StructureDriver implements DriverInterface
     public function __construct(
         Factory $factory,
         EventDispatcherInterface $eventDispatcher,
+        StructureManagerInterface $structureManager,
         $structureIndexName = 'content'
     )
     {
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->structureManager = $structureManager;
         $this->structureIndexName = $structureIndexName;
     }
 
@@ -178,5 +187,20 @@ class StructureDriver implements DriverInterface
                 );
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAllClassNames()
+    {
+        $structures = $this->structureManager->getStructures();
+        $classes = array();
+
+        foreach ($structures as $structure) {
+            $classes[] = get_class($structure);
+        }
+
+        return $classes;
     }
 }

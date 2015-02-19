@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #797 [SearchBundle]    Rebuild command removed, now hooks into massive:search:index:rebuild
+    * ENHANCEMENT #797 [ContactBundle]   Contacts and Accounts have massive search mappings
     * BUGFIX      #866 [ContactBundle]   Serialization group "select" for serializing system users
     * BUGFIX      #860 [AdminBundle]     Extended toolbar to accept more options
     * BUGFIX      #--- [ContentBundle]   Added validation for time field

@@ -6,6 +6,7 @@
     <parameters>
         <parameter key="sulu_search.event_subscriber.content_mapper.class">Sulu\Bundle\SearchBundle\EventListener\ContentMapperSubscriber</parameter>
         <parameter key="sulu_search.event_listener.search.class">Sulu\Bundle\SearchBundle\EventListener\SearchListener</parameter>
+        <parameter key="sulu_search.event_listener.reindex.class">Sulu\Bundle\SearchBundle\EventListener\ReindexListener</parameter>
     </parameters>
 
     <services>
@@ -22,6 +23,19 @@
             <argument type="service" id="sulu.content.structure_manager" />
 
             <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
+        </service>
+
+        <!-- rebuild structure index on massive:search:index:rebuild -->
+        <service id="sulu_search.event_listener.search" class="%sulu_search.event_listener.reindex.class%">
+            <argument type="service" id="sulu.phpcr.session" />
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu.util.node_helper" />
+            <argument>%sulu_search.structure_index_name%</argument>
+            <argument>%sulu.content.node_names.base%</argument>
+            <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
         </service>
     </services>
 </container>
