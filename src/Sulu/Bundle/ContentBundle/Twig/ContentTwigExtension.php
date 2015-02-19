@@ -19,7 +19,7 @@ use Sulu\Component\Content\PropertyParameter;
  * Extension for content form generation
  * @package Sulu\Bundle\ContentBundle\Twig
  */
-class ContentExtension extends \Twig_Extension
+class ContentTwigExtension extends \Twig_Extension
 {
     /**
      * @var ContentTypeManagerInterface
