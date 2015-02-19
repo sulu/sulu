@@ -113,11 +113,13 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array(
             'countries' => new PropertyParameter(
-                'countries', 'collection', array(
+                'countries',
+                array(
                     'at' => new PropertyParameter('at', 'Austria'),
                     'fr' => new PropertyParameter('fr', 'France'),
                     'gb' => new PropertyParameter('gb', 'Great Britain'),
-                )
+                ),
+                'collection'
             ),
             'mapProviders' => new PropertyParameter(
                 'mapProviders',
