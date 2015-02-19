@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media;
+namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
@@ -80,7 +80,7 @@ class DefaultFormatManagerTest extends ProphecyTestCase
         $mediaRepository->findMediaById(1)->willReturn($media);
 
         $originalStorage->load('dummy.gif', 1, array('a' => 'b'))->willReturn(
-            dirname(dirname(__DIR__)) . '/Fixtures/image/data/dummy.gif'
+            dirname(__DIR__) . '/../../Fixtures/image/data/dummy.gif'
         );
 
         $converter->convert(Argument::type('string'), $formats['640x480'])->willReturn($image->reveal());

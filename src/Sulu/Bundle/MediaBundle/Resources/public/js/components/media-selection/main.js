@@ -151,6 +151,15 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 setData.call(this, {displayOption: position}, false);
             }, this);
 
+            this.sandbox.on(this.DATA_RETRIEVED(), function(data) {
+                var ids = [];
+                this.sandbox.util.foreach(data, function(el) {
+                    ids.push(el.id);
+                }.bind(this));
+
+                setData.call(this, {ids: ids}, false);
+            }, this);
+
             this.sandbox.on('husky.tabs.overlaymedia-selection.' + this.options.instanceName + '.add.initialized', function() {
                 startOverlayLoader.call(this);
                 this.collections.fetchSorted('title', {

@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #850 [MediaBundle]     Fixed bug with deleted media in media selection
+
 * 0.15.1 (2015-02-17)
     * HOTFIX      #842 [CoreBundle]      Fixed upgrade internal links command for installations without snippets
 

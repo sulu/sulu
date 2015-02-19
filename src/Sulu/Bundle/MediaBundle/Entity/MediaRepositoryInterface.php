@@ -9,6 +9,7 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Entity;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
