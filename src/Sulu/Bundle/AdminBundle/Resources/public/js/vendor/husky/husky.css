@@ -627,7 +627,7 @@ table {
 
 /* line 47, ../scss/utilities.scss */
 .align-right {
-  text-align: right;
+  text-align: right !important;
 }
 
 /* line 51, ../scss/utilities.scss */
