@@ -26,11 +26,11 @@
           height: $boxHeight2;
         }
 
-        .login.husky-validate-error {
+        .husky-validate-error {
             .error-msg {
                 height: 50px;
             }
-            .bottom-container span:not(.website-switch) {
+            &.login .bottom-container span:not(.website-switch) {
               color: $black;
             }
         }
@@ -78,8 +78,13 @@
             margin-bottom: 10px;
         }
         .login-loader {
-          float: right;
-          margin: 20px 15px 0 0;
+            float: right;
+            margin: 20px 15px 0 0;
+        }
+        .reset-mail-msg .login-loader {
+            float: none;
+            margin-right: 0;
+            margin-left: 0;
         }
         .btn.action {
             float: right;
@@ -112,13 +117,13 @@
             }
         }
 
-        .reset {
+        .reset-mail {
             .bottom-container span:not(.website-switch) {
                 color: $black;
             }
         }
 
-        .reset-msg {
+        .reset-mail-msg {
             text-align: center;
             .msg {
                 display: block;

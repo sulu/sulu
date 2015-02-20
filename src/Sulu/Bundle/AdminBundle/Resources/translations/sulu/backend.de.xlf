@@ -1393,6 +1393,34 @@
                 <source>public.password</source>
                 <target>Passwort</target>
             </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad2" resname="sulu.login.mail.user-not-found">
+                <source>sulu.login.mail.user-not-found</source>
+                <target>Der User mit dieser Email/Usernamen existiert nicht.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad1" resname="sulu.login.mail.already-sent">
+                <source>sulu.login.mail.already-sent</source>
+                <target>Es wurde schon ein Email mit Instruktionen, wie Sie ihr Passwort zurücksetzen können, an Sie gesendet.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad3" resname="sulu.login.token-does-not-exist">
+                <source>sulu.login.token-does-not-exist</source>
+                <target>Dieser Token existiert nicht.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad4" resname="sulu.login.mail.limit-reached">
+                <source>sulu.login.mail.limit-reached</source>
+                <target>Das Limit für gesendete Emails wurde erreicht.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29adf" resname="sulu.login.repeat-password">
+                <source>sulu.login.repeat-password</source>
+                <target>Neues Passwort bestätigen</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29adc" resname="sulu.login.enter-new-password">
+                <source>sulu.login.enter-new-password</source>
+                <target>Neues Passwort eingeben</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e28adf" resname="sulu.login.email-sent-success">
+                <source>sulu.login.email-sent-success</source>
+                <target>Email erfolgreich gesendet.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

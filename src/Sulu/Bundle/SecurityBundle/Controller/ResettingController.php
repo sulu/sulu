@@ -15,6 +15,7 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\InvalidTokenException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\MissingPasswordException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\NoTokenFoundException;
 use Sulu\Bundle\SecurityBundle\Security\Exception\TokenAlreadyRequestedException;
+use Sulu\Bundle\SecurityBundle\Security\Exception\TokenEmailsLimitReachedException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,7 @@ class ResettingController extends Controller
     const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
     const EMAIL_SUBJECT_KEY = 'security.reset.mail-subject';
     const EMAIL_MSG_KEY = 'security.reset.mail-msg';
+    const MAX_NUMBER_EMAILS = 3;
 
     /**
      * The interval in which the token is valid
@@ -84,6 +86,8 @@ class ResettingController extends Controller
         } catch(TokenAlreadyRequestedException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch(NoTokenFoundException $ex) {
+            $response = new JsonResponse($ex->toArray(), 400);
+        } catch(TokenEmailsLimitReachedException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         }
 
@@ -190,6 +194,7 @@ class ResettingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user->setPasswordResetToken(null);
         $user->setTokenExpiresAt(null);
+        $user->setTokenEmailsSent(null);
         $em->persist($user);
         $em->flush();
     }
@@ -200,13 +205,18 @@ class ResettingController extends Controller
      * @param $from
      * @param $to
      * @throws NoTokenFoundException
+     * @throws TokenEmailsLimitReachedException
      */
     private function sendTokenEmail(User $user, $from, $to) {
         if ($user->getPasswordResetToken() === null) {
             throw new NoTokenFoundException($user);
         }
+        if ($user->getTokenEmailsSent() === self::MAX_NUMBER_EMAILS) {
+            throw new TokenEmailsLimitReachedException(self::MAX_NUMBER_EMAILS, $user);
+        }
         $mailer = $this->get('mailer');
         $translator = $this->get('translator');
+        $em = $this->getDoctrine()->getManager();
         $message = $mailer->createMessage()
             ->setSubject(
                 $translator->trans(self::EMAIL_SUBJECT_KEY, array(), 'backend')
@@ -218,6 +228,9 @@ class ResettingController extends Controller
                 $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()), true)
             );
         $mailer->send($message);
+        $user->setTokenEmailsSent($user->getTokenEmailsSent() + 1);
+        $em->persist($user);
+        $em->flush();
     }
 
     /**
@@ -252,6 +265,7 @@ class ResettingController extends Controller
         $user->setPasswordResetToken($this->getToken());
         $expireDateTime = (new \DateTime())->add(self::getResetInterval());
         $user->setTokenExpiresAt($expireDateTime);
+        $user->setTokenEmailsSent(0);
 
         $em->persist($user);
         $em->flush();

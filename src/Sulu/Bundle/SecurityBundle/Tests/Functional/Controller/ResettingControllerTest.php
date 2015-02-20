@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\SecurityBundle\Controller\ResettingController;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
@@ -56,6 +57,7 @@ class ResettingControllerTest extends SuluTestCase
         $user3->setLocale('en');
         $user3->setPasswordResetToken('thisisasupersecrettoken');
         $user3->setTokenExpiresAt((new \DateTime())->add(new \DateInterval('PT24H')));
+        $user3->setTokenEmailsSent(1);
         $this->em->persist($user3);
         $this->user3 = $user3;
 
@@ -115,6 +117,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->refresh($this->user1);
         $this->assertTrue(is_string($this->user1->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $this->user1->getTokenExpiresAt());
+        $this->assertEquals(1, $this->user1->getTokenEmailsSent());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -146,6 +149,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->refresh($this->user2);
         $this->assertTrue(is_string($this->user2->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $this->user2->getTokenExpiresAt());
+        $this->assertEquals(1, $this->user2->getTokenEmailsSent());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -177,6 +181,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->refresh($this->user3);
         $this->assertEquals('thisisasupersecrettoken', $this->user3->getPasswordResetToken());
         $this->assertGreaterThan(new \DateTime(), $this->user3->getTokenExpiresAt());
+        $this->assertEquals(2, $this->user3->getTokenEmailsSent());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -184,6 +189,42 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertInstanceOf('Swift_Message', $message);
         $this->assertEquals($this->user3->getEmail(), key($message->getTo()));
         $this->assertContains($this->user3->getPasswordResetToken(), $message->getBody());
+    }
+
+    public function testResendEmailActionToMuch() {
+        //$client = static::createClient(); // unauthenticated client
+        $client = $this->createAuthenticatedClient();
+        $client->enableProfiler();
+
+        // these request should all work (starting counter at 1 - because user3 already has one sent email)
+        $counter = 1;
+        for (; $counter < ResettingController::MAX_NUMBER_EMAILS; ++$counter) {
+            $client->request('GET', '/security/reset/email/resend', array(
+                'user' => $this->user3->getEmail()
+            ));
+
+            $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+            $response = json_decode($client->getResponse()->getContent());
+
+            $this->assertEquals(200, $client->getResponse()->getStatusCode());
+            $this->assertTrue($response->success);
+            $this->assertEquals($this->user3->getEmail(), $response->email);
+            $this->assertEquals(1, $mailCollector->getMessageCount());
+        }
+
+        // now this request should fail
+        $client->request('GET', '/security/reset/email/resend', array(
+            'user' => $this->user3->getEmail()
+        ));
+
+        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
+        $response = json_decode($client->getResponse()->getContent());
+        $this->em->refresh($this->user3);
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(1007, $response->code);
+        $this->assertEquals(0, $mailCollector->getMessageCount());
+        $this->assertEquals($counter, $this->user3->getTokenEmailsSent());
     }
 
     public function testSendEmailActionWithMissingUser() {

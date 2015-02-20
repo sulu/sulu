@@ -103,6 +103,11 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     private $tokenExpiresAt;
 
     /**
+     * @var integer
+     */
+    private $tokenEmailsSent;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -471,5 +476,28 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getTokenExpiresAt()
     {
         return $this->tokenExpiresAt;
+    }
+
+    /**
+     * Set tokenEmailsSent
+     *
+     * @param integer $tokenEmailsSent
+     * @return BaseUser
+     */
+    public function setTokenEmailsSent($tokenEmailsSent)
+    {
+        $this->tokenEmailsSent = $tokenEmailsSent;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenEmailsSent
+     *
+     * @return integer 
+     */
+    public function getTokenEmailsSent()
+    {
+        return $this->tokenEmailsSent;
     }
 }
