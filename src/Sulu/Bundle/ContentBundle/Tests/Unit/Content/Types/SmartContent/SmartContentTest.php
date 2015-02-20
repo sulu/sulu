@@ -578,7 +578,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
                     'dataSource' => null,
                     'includeSubFolders' => null,
                     'category' => null,
-                    'tags' => null,
+                    'tags' => array(),
                     'sortBy' => null,
                     'sortMethod' => null,
                     'presentAs' => null,

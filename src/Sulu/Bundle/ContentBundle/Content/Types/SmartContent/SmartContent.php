@@ -201,7 +201,7 @@ class SmartContent extends ComplexContentType
                 'dataSource' => null,
                 'includeSubFolders' => null,
                 'category' => null,
-                'tags' => null,
+                'tags' => array(),
                 'sortBy' => null,
                 'sortMethod' => null,
                 'presentAs' => null,
