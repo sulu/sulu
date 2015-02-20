@@ -1,5 +1,14 @@
 # Upgrade
 
+## dev-develop
+
+## Security
+Database has changed: User has now a unique email address. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ## 0.15.0
 
 ### Sulu Locales
