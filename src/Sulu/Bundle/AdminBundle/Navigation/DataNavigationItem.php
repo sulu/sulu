@@ -56,6 +56,11 @@ class DataNavigationItem extends NavigationItem
      */
     protected $titleTranslationKey = 'sulu.data-navigation.no-data';
 
+    /**
+     * @param string $name The name of the item
+     * @param string $dataUrl url to load data for data-navigation
+     * @param NavigationItem $parent The parent of the item
+     */
     function __construct($name, $dataUrl, $parent = null)
     {
         parent::__construct($name, $parent);
