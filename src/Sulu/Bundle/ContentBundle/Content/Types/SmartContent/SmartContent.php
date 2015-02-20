@@ -18,8 +18,8 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -195,6 +195,22 @@ class SmartContent extends ComplexContentType
     {
         $this->getContentData($property);
         $config = $property->getValue();
+
+        $config = array_merge(
+            array(
+                'dataSource' => null,
+                'includeSubFolders' => null,
+                'category' => null,
+                'tags' => null,
+                'sortBy' => null,
+                'sortMethod' => null,
+                'presentAs' => null,
+                'limitResult' => null,
+                'page' => null,
+                'hasNextPage' => null,
+            ),
+            $config
+        );
 
         return $config;
     }
