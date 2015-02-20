@@ -61,12 +61,6 @@ define([], function() {
 
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
 
-            // data from overlay retrieved
-            this.sandbox.on(INPUT_RETRIEVED.call(this), function() {
-                setURI.call(this);
-                loadContent.call(this);
-            }.bind(this));
-
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.initialized', function() {
                 this.sandbox.emit('husky.overlay.internal-links.' + this.options.instanceName + '.add.set-position');
@@ -81,6 +75,9 @@ define([], function() {
             var data = this.getData();
 
             if (data.indexOf(item.id) === -1) {
+                // FIXME return of node api returns for column-navigation id and for "filter by id" uuid as id key
+                item.uuid = item.id;
+                
                 data.push(item.id);
 
                 this.setData(data, false);

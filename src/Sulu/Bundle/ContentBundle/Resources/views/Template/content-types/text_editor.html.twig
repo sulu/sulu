@@ -5,29 +5,32 @@
           data-type-instance-name="{{ id|raw }}"
           data-aura-component="ckeditor@husky"
           data-aura-height="300"
-          {% if params.godMode is defined and params.godMode == true %}
+{% if params.godMode.value is defined and params.godMode.value == true %}
           data-aura-god-mode="true"
-          {% else %}
+{% else %}
           data-aura-god-mode="false"
-          {% endif %}
-          {% if params.tables is defined and params.tables == true %}
+{% endif %}
+{% if params.tables.value is defined and params.tables.value == true %}
           data-aura-table-enabled="true"
-          {% else %}
+{% else %}
           data-aura-table-enabled="false"
-          {% endif %}
-          {% if params.links is defined and params.links == true %}
+{% endif %}
+{% if params.links.value is defined and params.links.value == true %}
           data-aura-links-enabled="true"
-          {% else %}
+{% else %}
           data-aura-links-enabled="false"
-          {% endif %}
-          {% if params.pasteFromWord is defined and params.pasteFromWord == true %}
+{% endif %}
+{% if params.pasteFromWord.value is defined and params.pasteFromWord.value == true %}
           data-aura-paste-from-word="true"
-          {% else %}
+{% else %}
           data-aura-paste-from-word="false"
-          {% endif %}
+{% endif %}
           data-mapper-property="{{ property.name }}"
           data-aura-instance-name="{{ id|raw }}"
           placeholder="{{ property.getPlaceholder(userLocale) }}"
-          {% if property.mandatory %}data-validation-required="true"{% endif %}></textarea>
+{% if property.mandatory %}
+          data-validation-required="true"
+{% endif %}
+          ></textarea>
 
 <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>

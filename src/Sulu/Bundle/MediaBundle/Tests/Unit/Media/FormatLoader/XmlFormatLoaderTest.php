@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media;
+namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\XmlFormatLoader;
 use Symfony\Component\Config\FileLocator;
@@ -27,7 +27,7 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader = new XmlFormatLoader($fileLocator);
 
-        $result = $loader->load(dirname(dirname(__DIR__)) . '/Fixtures/image/formats/valid.xml');
+        $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid.xml');
         $this->assertEquals(
             array(
                 '640x480' => array(
@@ -78,7 +78,7 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader = new XmlFormatLoader($fileLocator);
 
-        $result = $loader->load(dirname(dirname(__DIR__)) . '/Fixtures/image/formats/valid_no_options.xml');
+        $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid_no_options.xml');
         $this->assertEquals(
             array(
                 '640x480' => array(
@@ -111,7 +111,7 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
 
         $loader = new XmlFormatLoader($fileLocator);
 
-        $result = $loader->load(dirname(dirname(__DIR__)) . '/Fixtures/image/formats/valid_no_commands.xml');
+        $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid_no_commands.xml');
         $this->assertEquals(
             array(
                 '640x480' => array(
@@ -140,7 +140,7 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new XmlFormatLoader($fileLocator);
         $loader->setDefaultOptions(array('jpeg_quality' => 10, 'a' => 'test'));
 
-        $result = $loader->load(dirname(dirname(__DIR__)) . '/Fixtures/image/formats/valid.xml');
+        $result = $loader->load(dirname(__DIR__) . '/../../Fixtures/image/formats/valid.xml');
         $this->assertEquals(
             array(
                 '640x480' => array(

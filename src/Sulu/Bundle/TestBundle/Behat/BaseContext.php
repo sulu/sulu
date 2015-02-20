@@ -189,11 +189,8 @@ f();
 EOT;
 
         $script = sprintf($script, $type, $selector, $itemTitle);
-        try {
-            $this->getSession()->executeScript($script);
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());die();;
-        }
+
+        $this->getSession()->executeScript($script);
     }
 
     /**

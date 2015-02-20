@@ -3,6 +3,7 @@
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Types;
 
 use Sulu\Bundle\LocationBundle\Content\Types\LocationContentType;
+use Sulu\Component\Content\PropertyParameter;
 
 class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +17,12 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
         $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
         $this->suluProperty = $this->getMock('Sulu\Component\Content\PropertyInterface');
         $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
-        $this->locationContent = new LocationContentType($this->nodeRepository, 'Foo:bar.html.twig', $this->mapManager, 'some_geolocator');
+        $this->locationContent = new LocationContentType(
+            $this->nodeRepository,
+            'Foo:bar.html.twig',
+            $this->mapManager,
+            'some_geolocator'
+        );
     }
 
     protected function initReadTest($data)
@@ -106,22 +112,30 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
     public function testGetParams()
     {
         $expected = array(
-            'countries' => array(
-                'at' => 'Austria',
-                'fr' => 'France',
-                'gb' => 'Great Britain',
+            'countries' => new PropertyParameter(
+                'countries',
+                array(
+                    'at' => new PropertyParameter('at', 'Austria'),
+                    'fr' => new PropertyParameter('fr', 'France'),
+                    'gb' => new PropertyParameter('gb', 'Great Britain'),
+                ),
+                'collection'
             ),
-            'mapProviders' => array(
-                'foo' => 'Foo',
-                'bar' => 'Bar',
+            'mapProviders' => new PropertyParameter(
+                'mapProviders',
+                array(
+                    'foo' => 'Foo',
+                    'bar' => 'Bar',
+                ),
+                'collection'
             ),
-            'defaultProvider' => 'leaflet',
-            'geolocatorName' => 'some_geolocator',
+            'defaultProvider' => new PropertyParameter('defaultProvider', 'leaflet'),
+            'geolocatorName' => new PropertyParameter('geolocatorName', 'some_geolocator'),
         );
 
         $this->mapManager->expects($this->once())
             ->method('getProvidersAsArray')
-            ->will($this->returnValue($expected['mapProviders']));
+            ->will($this->returnValue($expected['mapProviders']->getValue()));
 
         $this->mapManager->expects($this->once())
             ->method('getDefaultProviderName')

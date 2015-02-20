@@ -29397,6 +29397,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             this.sandbox.util.foreach(this.datagrid.matchings, function(column) {
                 $headerCell = this.sandbox.dom.createElement(templates.headerCell);
+
+                if (!!column.class && typeof column.class === 'string') {
+                    this.sandbox.dom.addClass($headerCell, column.class);
+                }
+
                 this.sandbox.dom.html($headerCell, this.sandbox.util.template(templates.textContainer)({
                     content: this.sandbox.translate(column.content)
                 }));
@@ -29620,6 +29625,11 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     this.sandbox.dom.prepend(content, selectItem);
                 }
             }
+
+            if (!!column.class && typeof column.class === 'string') {
+                this.sandbox.dom.addClass($cell, column.class);
+            }
+
             this.sandbox.dom.html($cell, content);
             this.sandbox.dom.data($cell, 'attribute', column.attribute);
 
@@ -40859,7 +40869,10 @@ define('__component__$overlay@husky',[], function() {
             }
             !!event && this.sandbox.dom.preventDefault(event);
 
-            if (this.executeCallback(this.slides[this.activeSlide].okCallback, this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)) !== false) {
+            if (this.executeCallback(
+                    this.slides[this.activeSlide].okCallback,
+                    this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
+                ) !== false) {
                 this.closeOverlay();
             }
         },
@@ -40870,15 +40883,16 @@ define('__component__$overlay@husky',[], function() {
          */
         closeHandler: function(event) {
             var cancelCallback = this.slides[this.activeSlide].closeCallback ||
-                this.slides[this.activeSlide].cancelCallback,
-                element = null;
+                this.slides[this.activeSlide].cancelCallback;
 
             if (!!event) {
                 this.sandbox.dom.preventDefault(event);
                 this.sandbox.dom.stopPropagation(event);
-                element = event.currentTarget;
             }
-            if (this.executeCallback(cancelCallback, element) !== false) {
+            if (this.executeCallback(
+                    cancelCallback,
+                    this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
+                ) !== false) {
                 this.closeOverlay();
             }
         },

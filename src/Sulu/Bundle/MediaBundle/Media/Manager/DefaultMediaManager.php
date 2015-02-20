@@ -381,7 +381,7 @@ class DefaultMediaManager implements MediaManagerInterface
 
         ksort($media);
 
-        return $media;
+        return array_values($media);
     }
 
     /**
@@ -823,7 +823,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param Media $media
      * @return Media
      */
-    protected function addFormatsAndUrl(Media $media)
+    public function addFormatsAndUrl(Media $media)
     {
         $media->setFormats(
             $this->formatManager->getFormats(

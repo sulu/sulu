@@ -9,8 +9,8 @@
      data-webspace="{{ webspaceKey }}"
      data-language="{{ languageCode }}"
      data-url="{{ path('get_snippets') }}?language={{ languageCode }}{% if property.params.snippetType is defined %}&type={{ property.params.snippetType }}{% endif %}"
-     {% if property.params.snippetType is defined %}
+ {% if property.params.snippetType is defined %}
      data-snippet-type="{{ property.params.snippetType }}"
-     {% endif %}
+ {% endif %}
      >
  </div>

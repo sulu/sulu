@@ -21,12 +21,6 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             'view' => 'page.html.twig',
             'controller' => 'SuluContentBundle:Default:index',
             'cacheLifetime' => '2400',
-            'meta' => array(
-                'title' => array(
-                    'de' => 'Das ist das Template 1',
-                    'en' => 'That´s the template 1'
-                )
-            ),
             'tags' => array(
                 array(
                     'name' => 'some.random.structure.tag',
@@ -35,6 +29,12 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         'bar' => 'foo'
                     )
                 ),
+            ),
+            'meta' => array(
+                'title' => array(
+                    'de' => 'Das ist das Template 1',
+                    'en' => 'That´s the template 1'
+                )
             ),
             'properties' => array(
                 'title' => array(
@@ -162,12 +162,14 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                         array(
                             'name' => 'minLinks',
                             'value' => 1,
-                            'type' => 'string'
+                            'type' => 'string',
+                            'meta' => array()
                         ),
                         array(
                             'name' => 'maxLinks',
                             'value' => 10,
-                            'type' => 'string'
+                            'type' => 'string',
+                            'meta' => array()
                         )
                     ),
                     'meta' => array()
@@ -899,15 +901,17 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(
-                        '0' => array(
+                        array(
                             'name' => 'minLinks',
                             'value' => 1,
-                            'type' => 'string'
+                            'type' => 'string',
+                            'meta' => array()
                         ),
-                        '1' => array(
+                        array(
                             'name' => 'maxLinks',
                             'value' => 10,
-                            'type' => 'string'
+                            'type' => 'string',
+                            'meta' => array()
                         )
                     ),
                     'meta' => array(),
@@ -951,17 +955,18 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(),
                     'params' => array(
-                        array('name' => 'minLinks', 'value' => '1', 'type' => 'string'),
-                        array('name' => 'maxLinks', 'value' => '10', 'type' => 'string'),
+                        array('name' => 'minLinks', 'value' => '1', 'type' => 'string', 'meta' => array()),
+                        array('name' => 'maxLinks', 'value' => '10', 'type' => 'string', 'meta' => array()),
                         array(
                             'name' => 'test',
                             'value' => array(
-                                array('name' => 't1', 'value' => 'v1', 'type' => 'string'),
-                                array('name' => 't2', 'value' => 'v2', 'type' => 'string'),
-                                array('name' => 't3', 'value' => 'v3', 'type' => 'string'),
-                                array('name' => 't4', 'value' => 'v4', 'type' => 'string')
+                                array('name' => 't1', 'value' => 'v1', 'type' => 'string', 'meta' => array()),
+                                array('name' => 't2', 'value' => 'v2', 'type' => 'string', 'meta' => array()),
+                                array('name' => 't3', 'value' => 'v3', 'type' => 'string', 'meta' => array()),
+                                array('name' => 't4', 'value' => 'v4', 'type' => 'string', 'meta' => array())
                             ),
-                            'type' => 'collection'
+                            'type' => 'collection',
+                            'meta' => array()
                         )
                     ),
                     'meta' => array(),
@@ -976,6 +981,47 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
+        $this->assertEquals($template, $result);
+    }
+
+    public function testMetaParams()
+    {
+        $template = array(
+            'key' => 'template_meta_params',
+            'view' => 'page.html.twig',
+            'controller' => 'SuluContentBundle:Default:index',
+            'cacheLifetime' => '2400',
+            'properties' => array(
+                'title' => array(
+                    'name' => 'title',
+                    'type' => 'text_line',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => array(),
+                    'params' => array(
+                        array(
+                            'name' => 'min',
+                            'value' => '1',
+                            'type' => 'string',
+                            'meta' => array(
+                                'title' => array('de' => 'Mindestens', 'en' => 'Minimum')
+                            )
+                        ),
+                    ),
+                    'meta' => array(),
+                )
+            )
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_meta_params.xml'
+        );
+
         $this->assertEquals($template, $result);
     }
 
