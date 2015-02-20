@@ -40869,7 +40869,10 @@ define('__component__$overlay@husky',[], function() {
             }
             !!event && this.sandbox.dom.preventDefault(event);
 
-            if (this.executeCallback(this.slides[this.activeSlide].okCallback, this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)) !== false) {
+            if (this.executeCallback(
+                    this.slides[this.activeSlide].okCallback,
+                    this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
+                ) !== false) {
                 this.closeOverlay();
             }
         },
@@ -40880,15 +40883,16 @@ define('__component__$overlay@husky',[], function() {
          */
         closeHandler: function(event) {
             var cancelCallback = this.slides[this.activeSlide].closeCallback ||
-                this.slides[this.activeSlide].cancelCallback,
-                element = null;
+                this.slides[this.activeSlide].cancelCallback;
 
             if (!!event) {
                 this.sandbox.dom.preventDefault(event);
                 this.sandbox.dom.stopPropagation(event);
-                element = event.currentTarget;
             }
-            if (this.executeCallback(cancelCallback, element) !== false) {
+            if (this.executeCallback(
+                    cancelCallback,
+                    this.sandbox.dom.find(constants.contentSelector, this.overlay.$el)
+                ) !== false) {
                 this.closeOverlay();
             }
         },
