@@ -389,7 +389,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
 
         $viewData = $this->smartContent->getViewData($property);
 
-        $this->assertEquals(array_merge($config, array('page' => 1, 'hasNextPage' => true)), $viewData);
+        $this->assertContains(array_merge($config, array('page' => 1, 'hasNextPage' => true)), $viewData);
     }
 
     public function testGetContentData()
@@ -572,7 +572,24 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         $structure->expects($this->any())->method('getUuid')->will($this->returnValue($uuid));
 
         $viewData = $this->smartContent->getViewData($property);
-        $this->assertEquals(array_merge($config, array('page' => $page, 'hasNextPage' => $hasNextPage)), $viewData);
+        $this->assertEquals(
+            array_merge(
+                array(
+                    'dataSource' => null,
+                    'includeSubFolders' => null,
+                    'category' => null,
+                    'tags' => array(),
+                    'sortBy' => null,
+                    'sortMethod' => null,
+                    'presentAs' => null,
+                    'limitResult' => null,
+                    'page' => null,
+                    'hasNextPage' => null,
+                ),
+                $config,
+                array('page' => $page, 'hasNextPage' => $hasNextPage)
+            ),
+            $viewData);
     }
 
     private function getContentDataProperty()

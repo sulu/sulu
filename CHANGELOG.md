@@ -9,6 +9,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
     * BUGFIX      #857 [ContentBundle]   Added links without save could not be removed
     * FEATURE     #789 [ContentBundle]   Added present as to smart content config (see [here ...](https://github.com/sulu-cmf/docs/blob/master/developer-documentation/300-webspaces/smart-content.md))
+    * BUGFIX      #856 [ContentBundle]   Added default values for smart content view vars
 
 * 0.15.2 (2915-02-19)
     * HOTFIX      #850 [MediaBundle]     Fixed bug with deleted media in media selection
