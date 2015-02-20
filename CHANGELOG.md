@@ -6,6 +6,7 @@ CHANGELOG for Sulu
     * BUGFIX      #846 [MediaBundle]     Added missing dot to create event name method (\cc Daniel)
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
     * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
+    * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
 
 * 0.15.2 (2915-02-19)
     * HOTFIX      #850 [MediaBundle]     Fixed bug with deleted media in media selection
@@ -15,7 +16,6 @@ CHANGELOG for Sulu
 
 * 0.15.0 (2015-02-13)
     * BUGFIX      #833 [AdminBundle]     Added new husky version
-    * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
     * BUGFIX      #829 [ContactBundle]   Account-Contacts: show full-name of contact
     * ENHANCEMENT #828 [ContactBundle]   Changed columns for contact list and made concatenated columns not sortable
     * BUGFIX      #825 [WebsiteBundle]   Fixed syntax error in ExceptionController
