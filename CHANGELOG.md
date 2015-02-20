@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* 0.16.0 (2015-02-20)
+* dev-develop
     * BUGFIX      #848 [ContactBundle]   Refactored delete dialog function to make it reuseable
     * BUGFIX      #846 [MediaBundle]     Added missing dot to create event name method (\cc Daniel)
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
