@@ -13,9 +13,7 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <!-- build:css login.min.css -->
-    <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/js/vendor/husky/husky.min.css"/>
-    <!-- endbuild -->
+    <link rel="stylesheet" href="/bundles/suluadmin/dist/login.min.1424444859276.css">
 
     <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
 </head>
@@ -37,7 +35,7 @@
     <script type="text/javascript">
         {% autoescape false %}
         var SULU = {
-            debug: true,
+            debug: false,
             locales: {{ locales | json_encode }}
         };
         {% endautoescape %}
@@ -46,8 +44,6 @@
         var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
     </script>
 
-    <!-- build:js login.min.js -->
-    <script data-main="/bundles/suluadmin/js/login" src="/bundles/suluadmin/js/vendor/husky/husky.js"></script>
-    <!-- endbuild -->
+    <script data-main="/bundles/suluadmin/dist/login.min.1424444859276" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 </body>
 </html>
