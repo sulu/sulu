@@ -7,6 +7,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
     * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
+    * BUGFIX      #857 [ContentBundle]   Added links without save could not be removed
+    * FEATURE     #789 [ContentBundle]   Added present as to smart content config (see [here ...](https://github.com/sulu-cmf/docs/blob/master/developer-documentation/300-webspaces/smart-content.md))
 
 * 0.15.2 (2915-02-19)
     * HOTFIX      #850 [MediaBundle]     Fixed bug with deleted media in media selection
@@ -42,7 +44,6 @@ CHANGELOG for Sulu
     * BUGFIX      #778 [ContentBundle]   Fixed shadow page with internal link and smart-content
     * BUGFIX      #790 [WebsiteBundle]   Fixed twig variables for 404 page
     * FEATURE     #791 [ContentBundle]   Added Changelog to settings tab
-    * FEATURE     #789 [ContentBundle]   Added present as to smart content config
     * FEATURE     #789 [ContentBundle]   Enabled property parameters to have metadata for localization
     * FEATURE     #684 [ContentBundle]   Refactored preview to use new websocket component and only one socket for form
                                          and preview
