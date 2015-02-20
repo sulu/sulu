@@ -75,6 +75,9 @@ define([], function() {
             var data = this.getData();
 
             if (data.indexOf(item.id) === -1) {
+                // FIXME return of node api returns for column-navigation id and for "filter by id" uuid as id key
+                item.uuid = item.id;
+                
                 data.push(item.id);
 
                 this.setData(data, false);
