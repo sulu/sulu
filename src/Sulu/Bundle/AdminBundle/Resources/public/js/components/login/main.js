@@ -30,6 +30,8 @@ define([], function() {
             shiftSpace: 50, //px
             fadeInDuration: 350,
             loginCheck: '',
+            resetUrl: '',
+            resendUrl: '',
             translations: {
                 resetPassword: 'sulu.login.reset-password',
                 reset: 'public.reset',
@@ -144,6 +146,8 @@ define([], function() {
             this.render();
             this.bindDomEvents();
             this.focusUsername();
+            alert(this.options.resendUrl);
+            alert(this.options.resetUrl);
             this.sandbox.emit(INITIALIZED.call(this));
         },
 

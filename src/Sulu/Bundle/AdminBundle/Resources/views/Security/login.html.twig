@@ -21,7 +21,9 @@
 <body>
     <div id="main" class="login">
         <div data-aura-component="login@suluadmin"
-             data-aura-login-check="{{ path('sulu_admin.login_check') }}"></div>
+             data-aura-login-check="{{ path('sulu_admin.login_check') }}"
+             data-aura-reset-url="{{ path('sulu_security.reset_password.email') }}"
+             data-aura-resend-url="{{ path('sulu_security.reset_password.email.resend') }}"></div>
     </div>
     <script type="text/javascript">
         {% autoescape false %}
