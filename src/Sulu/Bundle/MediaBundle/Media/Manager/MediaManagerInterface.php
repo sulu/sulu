@@ -97,4 +97,12 @@ interface MediaManagerInterface
      * @return mixed
      */
     public function increaseDownloadCounter($fileVersionId);
+
+    /**
+     * Adds thumbnails and image urls
+     *
+     * @param Media $media
+     * @return Media
+     */
+    public function addFormatsAndUrl(Media $media);
 }
