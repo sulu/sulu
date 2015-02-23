@@ -34,8 +34,14 @@ class SecurityController extends Controller
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
+        if ($this->get('kernel')->getEnvironment() === 'dev') {
+            $template = 'SuluAdminBundle:Security:login.html.twig';
+        } else {
+            $template = 'SuluAdminBundle:Security:login.html.dist.twig';
+        }
+
         return $this->render(
-            'SuluAdminBundle:Security:login.html.twig',
+            $template,
             array(
                 'name' => $this->container->getParameter('sulu_admin.name'),
                 'locales' => $this->container->getParameter('sulu_core.locales'),

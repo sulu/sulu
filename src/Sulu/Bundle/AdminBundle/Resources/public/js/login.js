@@ -11,12 +11,17 @@ require.config({
     waitSeconds: 0,
     paths: {
         suluadmin: '../../suluadmin/js',
+
+        'main': 'login',
+
         'cultures': 'vendor/globalize/cultures',
+        'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'husky': 'vendor/husky/husky',
-        'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational'
+        '__component__$login@suluadmin': 'components/login/main'
     },
     include: [
-        'aura_extensions/backbone-relational'
+        'aura_extensions/backbone-relational',
+        '__component__$login@suluadmin'
     ],
     exclude: [
         'husky'
@@ -36,7 +41,6 @@ require(['husky'], function(Husky) {
             break;
         }
     }
-
 
     require(['text!/admin/translations/sulu.' + language + '.json'], function(messagesText) {
         var messages = JSON.parse(messagesText),

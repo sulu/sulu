@@ -152,21 +152,18 @@ module.exports = function(grunt) {
         },
         requirejs: {
             app: {
-                compile: {
-                    options: {
-                        baseUrl: 'Resources/public/js/',
-                        mainConfigFile: 'Resources/public/js/main.js',
-                        preserveLicenseComments: false
-                    }
+                options: {
+                    baseUrl: 'Resources/public/js/',
+                    mainConfigFile: 'Resources/public/js/main.js',
+                    preserveLicenseComments: false
                 }
             },
             login: {
-                compile: {
-                    options: {
-                        baseUrl: 'Resources/public/js/',
-                        mainConfigFile: 'Resources/public/js/login.js',
-                        preserveLicenseComments: false
-                    }
+                options: {
+                    baseUrl: 'Resources/public/js/',
+                    mainConfigFile: 'Resources/public/js/login.js',
+                    preserveLicenseComments: false,
+                    out: 'Resources/public/dist/login.min.js'
                 }
             }
         },
