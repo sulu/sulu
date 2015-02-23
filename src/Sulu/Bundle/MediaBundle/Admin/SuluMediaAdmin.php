@@ -37,6 +37,7 @@ class SuluMediaAdmin extends Admin
             $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections', $media);
             $collections->setDataNameKey('title');
             $collections->setDataResultKey('collections');
+            $collections->setShowAddButton(true);
         }
 
         if ($media->hasChildren()) {
