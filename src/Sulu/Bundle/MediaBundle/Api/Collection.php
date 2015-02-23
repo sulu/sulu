@@ -49,6 +49,10 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      )
  * )
  * @Relation(
+ *      "admin",
+ *      href ="expr('media/collections/edit:'~object.getId()~'/files')"
+ * )
+ * @Relation(
  *      "children",
  *      href = @Route(
  *          "get_collection",
