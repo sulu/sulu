@@ -303,6 +303,12 @@ define(function() {
                 }
             }.bind(this));
 
+            this.sandbox.on('husky.data-navigation.select', function(item) {
+                if(!!item._links && !!item._links.admin) {
+                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href);
+                }
+            }.bind(this));
+
             // content tabs event
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
