@@ -65,7 +65,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailAction() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -96,7 +95,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailActionWtihUsername() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -128,7 +126,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailActionWithUserWithoutEmail() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -160,7 +157,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testResendEmailAction() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -192,7 +188,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testResendEmailActionToMuch() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -228,7 +223,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailActionWithMissingUser() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -244,7 +238,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailActionWithNotExistingUser() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -262,7 +255,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testSendEmailActionMultipleTimes() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $client->enableProfiler();
 
@@ -288,7 +280,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testResetAction() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $newPassword = 'anewpasswordishouldremeber';
 
@@ -309,7 +300,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testResetActionWithoutToken() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $passwordBefore = $this->user3->getPassword();
 
@@ -325,7 +315,6 @@ class ResettingControllerTest extends SuluTestCase
     }
 
     public function testResetActionWithInvalidToken() {
-        //$client = static::createClient(); // unauthenticated client
         $client = $this->createAuthenticatedClient();
         $passwordBefore = $this->user3->getPassword();
 

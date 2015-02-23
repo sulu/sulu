@@ -2,9 +2,5 @@ framework:
     profiler:
         enabled: true
 
-security:
-    access_control:
-        - { path: ^/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-
 swiftmailer:
     disable_delivery: true
