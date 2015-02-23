@@ -7,6 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace Sulu\Bundle\AdminBundle\Navigation;
 
 /**
@@ -40,7 +41,7 @@ class DataNavigationItem extends NavigationItem
 
     /**
      * If true a add button will be shown in data-navigation
-     * @var string
+     * @var boolean
      */
     protected $showAddButton;
 
@@ -48,13 +49,13 @@ class DataNavigationItem extends NavigationItem
      * Key to translate no data available
      * @var string
      */
-    protected $noDataTranslationKey = 'sulu.data-navigation.title';
+    protected $noDataTranslationKey = 'sulu.data-navigation.no-data';
 
     /**
      * Key to translate root node
      * @var string
      */
-    protected $titleTranslationKey = 'sulu.data-navigation.no-data';
+    protected $titleTranslationKey = 'sulu.data-navigation.title';
 
     /**
      * @param string $name The name of the item
@@ -126,7 +127,7 @@ class DataNavigationItem extends NavigationItem
     }
 
     /**
-     * @return string
+     * @return boolean
      */
     public function getShowAddButton()
     {
@@ -134,7 +135,7 @@ class DataNavigationItem extends NavigationItem
     }
 
     /**
-     * @param string $showAddButton
+     * @param boolean $showAddButton
      */
     public function setShowAddButton($showAddButton)
     {
@@ -176,6 +177,22 @@ class DataNavigationItem extends NavigationItem
     /**
      * {@inheritdoc}
      */
+    protected function newInstance()
+    {
+        $new = new DataNavigationItem($this->name, $this->dataUrl);
+        $new->setDataResultKey($this->getDataResultKey());
+        $new->setDataNameKey($this->getDataNameKey());
+        $new->setDataChildrenLinkKey($this->getDataChildrenLinkKey());
+        $new->setShowAddButton($this->getShowAddButton());
+        $new->setNoDataTranslationKey($this->getNoDataTranslationKey());
+        $new->setTitleTranslationKey($this->getTitleTranslationKey());
+
+        return $new;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function toArray()
     {
         $result = parent::toArray();
@@ -185,7 +202,7 @@ class DataNavigationItem extends NavigationItem
             'url' => $this->dataUrl,
             'resultKey' => $this->dataResultKey,
             'nameKey' => $this->dataNameKey,
-            'childrenLinkKey' => $this->getDataChildrenLinkKey(),
+            'childrenLinkKey' => $this->dataChildrenLinkKey,
             'showAddButton' => $this->showAddButton,
             'translates' => array(
                 'noData' => $this->noDataTranslationKey,
