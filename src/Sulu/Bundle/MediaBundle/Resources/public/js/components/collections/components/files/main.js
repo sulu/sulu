@@ -50,6 +50,9 @@ define(function() {
         view: true,
 
         layout: {
+            navigation: {
+                collapsed: true
+            },
             content: {
                 width: 'max'
             }
