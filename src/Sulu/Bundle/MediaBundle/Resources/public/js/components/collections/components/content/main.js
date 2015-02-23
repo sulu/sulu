@@ -40,7 +40,8 @@ define(function () {
         header: {
             tabs: {
                 url: '/admin/media/navigation/collection'
-            }
+            },
+            noBack: true
         },
 
         initialize: function () {

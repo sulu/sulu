@@ -232,7 +232,7 @@ define(function() {
             this.sandbox.emit('sulu.header.set-title', this.options.data.title);
             this.sandbox.emit('sulu.header.set-breadcrumb', [
                 {title: 'navigation.media'},
-                {title: 'media.collections.title', event: 'sulu.media.collections.list'},
+                {title: 'media.collections.title'},
                 {title: this.options.data.title}
             ]);
         },

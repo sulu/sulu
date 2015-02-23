@@ -25,18 +25,12 @@ define({
 
         app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
 
-        // list all collections
-        sandbox.mvc.routes.push({
-            route: 'media/collections',
-            callback: function() {
-                this.html('<div data-aura-component="collections@sulumedia" data-aura-display="list"/>');
-            }
-        });
-
         // show a single collection with files and upload
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content',
             callback: function(id, content) {
+                this.sandbox.emit('husky.navigation.select-item', 'media/collection');
+
                 this.html(
                     '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
                 );
