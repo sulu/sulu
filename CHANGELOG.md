@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #866 [ContactBundle]   Serialization group "select" for serializing system users
     * BUGFIX      #848 [ContactBundle]   Refactored delete dialog function to make it reuseable
     * BUGFIX      #846 [MediaBundle]     Added missing dot to create event name method (\cc Daniel)
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
