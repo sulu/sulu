@@ -315,6 +315,7 @@ define([], function() {
 
             var $container,
                 options = {
+                    groups: this.options.groups,
                     hasSearch: true,
                     data: this.options.template,
                     instanceName: this.options.instanceName,
