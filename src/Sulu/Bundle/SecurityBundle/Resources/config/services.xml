@@ -16,8 +16,10 @@
 
         <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
         <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
+        <parameter key="sulu_security.authentication_handler.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler</parameter>
         <parameter key="sulu_security.mask_converter.class">Sulu\Bundle\SecurityBundle\Permission\MaskConverter</parameter>
         <parameter key="sulu_security.salt_generator.class">Sulu\Bundle\SecurityBundle\Permission\SaltGenerator</parameter>
+        <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
         <parameter key="sulu_security.admin.content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation</parameter>
         <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
         <parameter key="sulu_security.permission_voter.class">Sulu\Bundle\SecurityBundle\Permission\PermissionVoter</parameter>
@@ -38,11 +40,19 @@
             <argument type="service" id="router"/>
         </service>
 
+        <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
+            <argument type="service" id="router"/>
+            <argument type="service" id="session"/>
+        </service>
+
         <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%">
             <argument>%permissions%</argument>
         </service>
 
         <service id="sulu_security.salt_generator" class="%sulu_security.salt_generator.class%">
+        </service>
+
+        <service id="sulu_security.token_generator" class="%sulu_security.token_generator.class%">
         </service>
 
         <service id="sulu_security.admin.roles_navigation" class="%sulu_security.admin.roles_navigation.class%">
