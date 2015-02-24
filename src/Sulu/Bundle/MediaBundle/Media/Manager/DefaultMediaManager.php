@@ -545,7 +545,7 @@ class DefaultMediaManager implements MediaManagerInterface
     private function buildData($uploadedFile, $data, $user)
     {
         if (!($uploadedFile instanceof UploadedFile)) {
-            throw new InvalidFileException('Fiven uploaded file is not of instance UploadedFile');
+            throw new InvalidFileException('Given uploaded file is not of instance UploadedFile');
         }
 
         $this->validator->validate($uploadedFile);
