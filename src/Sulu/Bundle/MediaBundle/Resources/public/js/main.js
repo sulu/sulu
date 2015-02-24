@@ -29,12 +29,21 @@ define({
         sandbox.mvc.routes.push({
             route: 'media/collections/edit::id/:content',
             callback: function(id, content) {
-                this.sandbox.emit('husky.navigation.select-item', 'media/collection');
-
                 this.html(
                     '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
                 );
             }
+        });
+
+        sandbox.on('husky.data-navigation.collections.add', function(item) {
+            var $element = App.dom.createElement('<div id="collection-add"/>');
+
+            App.dom.append('body', $element);
+
+            App.start([{
+                name: 'collections/components/collection-create@sulumedia',
+                options: {el: $element, parent: !!item.id ? item.id : null}
+            }]);
         });
     }
 });
