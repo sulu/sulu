@@ -41,10 +41,10 @@ define([], function() {
                 reset: 'public.reset',
                 backLogin: 'sulu.login.back-login',
                 resend: 'sulu.login.resend-email',
-                emailSent: 'sulu.login.email-sent-msg',
+                emailSent: 'sulu.login.email-sent-message',
                 backWebsite: 'sulu.login.back-website',
                 login: 'public.login',
-                errorMessage: 'sulu.login.error-msg',
+                errorMessage: 'sulu.login.error-message',
                 forgotPassword: 'sulu.login.forgot-password',
                 emailUser: 'sulu.login.email-username',
                 password: 'public.password',
@@ -65,7 +65,7 @@ define([], function() {
             backgroundClass: 'background',
             imageClass: 'image',
             darkenerClass: 'darkener',
-            bgActiveClass: 'active',
+            backgroundActiveClass: 'active',
             boxClass: 'box',
             boxLargerClass: 'larger',
             frameClass: 'frame',
@@ -372,14 +372,14 @@ define([], function() {
         },
 
         /**
-         * Sets the Bg active or inactive
+         * Sets the Background active or inactive
          * @param active - true to set active, false to set unactive
          */
         toggleBackgroundActive: function(active) {
             if (active === true) {
-                this.sandbox.dom.addClass(this.dom.$background, constants.bgActiveClass);
+                this.sandbox.dom.addClass(this.dom.$background, constants.backgroundActiveClass);
             } else {
-                this.sandbox.dom.removeClass(this.dom.$background, constants.bgActiveClass);
+                this.sandbox.dom.removeClass(this.dom.$background, constants.backgroundActiveClass);
             }
         },
 

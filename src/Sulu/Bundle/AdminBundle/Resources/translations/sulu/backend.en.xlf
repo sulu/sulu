@@ -1370,8 +1370,8 @@
                 <source>sulu.login.resend-email</source>
                 <target>Re-send email</target>
             </trans-unit>
-            <trans-unit id="a404f52dde1456ff4132c0b4820e29a43" resname="sulu.login.email-sent-msg">
-                <source>sulu.login.email-sent-msg</source>
+            <trans-unit id="a404f52dde1456ff4132c0b4820e29a43" resname="sulu.login.email-sent-message">
+                <source>sulu.login.email-sent-message</source>
                 <target>An email with instrucions how to reset your password has been sent to:</target>
             </trans-unit>
             <trans-unit id="b504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.back-website">
@@ -1382,8 +1382,8 @@
                 <source>public.login</source>
                 <target>Login</target>
             </trans-unit>
-            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad1" resname="sulu.login.error-msg">
-                <source>sulu.login.error-msg</source>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad1" resname="sulu.login.error-message">
+                <source>sulu.login.error-message</source>
                 <target>This Email/Password combination is wrong. Please try again.</target>
             </trans-unit>
             <trans-unit id="b504f52dde1456ff4132c0b4820e29ad7" resname="sulu.login.forgot-password">
