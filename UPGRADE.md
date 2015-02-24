@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+## Search
+
+- Adapter namen changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
+configuration.
+
 ## Content Types
 
 Time content types returns now standardized values (hh:mm:ss) and can handle this as localized string in the input
