@@ -13,6 +13,8 @@ For content you can upgrade the pages with:
 app/console sulu:upgrade:0.16.0:time
 ```
 
+In the website you should change the output if time to your format.
+
 If you use the field in another component you should upgrade your api that it returns time values in format (hh:mm:ss).
 
 ## Security
