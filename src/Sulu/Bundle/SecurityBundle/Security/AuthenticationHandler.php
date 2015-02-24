@@ -62,8 +62,8 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         if ($request->isXmlHttpRequest()) {
             // if AJAX login
-            $array = array('success' => true, 'url' => $url);
-            $response = new JsonResponse($array);
+            $array = array('url' => $url);
+            $response = new JsonResponse($array, 200);
         } else {
             // if form login
             $response =  new RedirectResponse($url);
@@ -83,8 +83,8 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     {
         if ($request->isXmlHttpRequest()) {
             // if AJAX login
-            $array = array('success' => false, 'message' => $exception->getMessage());
-            $response = new JsonResponse($array);
+            $array = array('message' => $exception->getMessage());
+            $response = new JsonResponse($array, 401);
         } else {
             // if form login
             // set authentication exception to session

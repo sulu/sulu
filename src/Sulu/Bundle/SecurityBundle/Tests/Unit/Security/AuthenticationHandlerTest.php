@@ -58,7 +58,6 @@ class AuthenticationHandlerTest extends ProphecyTestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = json_decode($response->getContent(), true);
-        $this->assertEquals(true, $response['success']);
         $this->assertEquals('/admin/target/path', $response['url']);
     }
 
@@ -77,9 +76,6 @@ class AuthenticationHandlerTest extends ProphecyTestCase
         $request->isXmlHttpRequest()->willReturn(true);
         $response = $this->authenticationHandler->onAuthenticationFailure($request->reveal(), $this->exception->reveal());
         $this->assertTrue($response instanceof JsonResponse);
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $response = json_decode($response->getContent(), true);
-        $this->assertEquals(false, $response['success']);
+        $this->assertEquals(401, $response->getStatusCode());
     }
 }

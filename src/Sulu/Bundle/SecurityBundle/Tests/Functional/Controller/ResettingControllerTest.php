@@ -78,7 +78,6 @@ class ResettingControllerTest extends SuluTestCase
 
         // asserting response
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue($response->success);
         $this->assertEquals($this->user1->getEmail(), $response->email);
 
         // asserting user properties
@@ -108,7 +107,6 @@ class ResettingControllerTest extends SuluTestCase
 
         // asserting response
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue($response->success);
         $this->assertEquals($this->user1->getEmail(), $response->email);
 
         // asserting user properties
@@ -139,7 +137,6 @@ class ResettingControllerTest extends SuluTestCase
 
         // asserting response
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue($response->success);
         $this->assertEquals('installation.email@sulu.test', $response->email);
 
         // asserting user properties
@@ -170,7 +167,6 @@ class ResettingControllerTest extends SuluTestCase
 
         // asserting response
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue($response->success);
         $this->assertEquals($this->user3->getEmail(), $response->email);
 
         // asserting user properties
@@ -202,7 +198,6 @@ class ResettingControllerTest extends SuluTestCase
             $response = json_decode($client->getResponse()->getContent());
 
             $this->assertEquals(200, $client->getResponse()->getStatusCode());
-            $this->assertTrue($response->success);
             $this->assertEquals($this->user3->getEmail(), $response->email);
             $this->assertEquals(1, $mailCollector->getMessageCount());
         }
@@ -264,7 +259,6 @@ class ResettingControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
         // asserting response
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue($response->success);
         $this->assertEquals($this->user1->getEmail(), $response->email);
 
         // second request should be blocked
@@ -291,7 +285,6 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->refresh($this->user3);
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue($response->success);
 
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($this->user3);
         $this->assertEquals($encoder->encodePassword($newPassword, $this->user3->getSalt()), $this->user3->getPassword());

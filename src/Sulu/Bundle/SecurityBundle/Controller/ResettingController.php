@@ -76,10 +76,7 @@ class ResettingController extends Controller
             }
             $email = $this->getEmail($user);
             $this->sendTokenEmail($user, self::getSenderAddress($request), $email);
-            $response = new JsonResponse(array(
-                'success' => true,
-                'email' => $email
-            ));
+            $response = new JsonResponse(array('email' => $email));
         } catch(EntityNotFoundException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch(TokenAlreadyRequestedException $ex) {
@@ -106,10 +103,7 @@ class ResettingController extends Controller
             $this->changePassword($user, $request->get('password', ''));
             $this->deleteToken($user);
             $this->loginUser($user, $request);
-            $response = new JsonResponse(array(
-                'success' => true,
-                'url' => $this->get('router')->generate('sulu_admin')
-            ));
+            $response = new JsonResponse(array('url' => $this->get('router')->generate('sulu_admin')));
         } catch(InvalidTokenException $ex) {
             $response = new JsonResponse($ex->toArray(), 400);
         } catch(MissingPasswordException $ex) {

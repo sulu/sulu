@@ -419,7 +419,6 @@ define([], function() {
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resetMailButton, 'click', this.resetMailButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resendButton, 'click', this.resendButtonClickHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resetMail, 'keydown', this.resetMailKeyHandler.bind(this));
@@ -561,13 +560,11 @@ define([], function() {
                 '_username': username,
                 '_password': password
             }).then(function(data) {
-                if (data.success === true && !!data.url) {
-                    this.redirect(data.url + this.sandbox.dom.window.location.hash);
-                } else {
-                    this.sandbox.dom.hide(this.dom.$loader);
-                    this.displayLoginError();
-                }
-            }.bind(this))
+                this.redirect(data.url + this.sandbox.dom.window.location.hash);
+            }.bind(this)).fail(function() {
+                this.sandbox.dom.hide(this.dom.$loader);
+                this.displayLoginError();
+            }.bind(this));
         },
 
         /**
