@@ -150,13 +150,4 @@ EOT;
 
         $this->getSession()->wait(BaseContext::LONG_WAIT_TIME, '$.active == 0');
     }
-
-    /**
-     * @Then I should receieve the following json response:
-     */
-    public function iShouldReveiveTheJsonResponse(PyStringNode $node)
-    {
-        $content = $this->getSession()->getPage()->getContent();
-        var_dump($content);die();;
-    }
 }

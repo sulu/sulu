@@ -26,7 +26,6 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 
-
 /**
  * Base context extended by all Sulu Behat contexts
  * Note this context does not and should not contain any specifications.
