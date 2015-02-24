@@ -46,6 +46,18 @@ class DataNavigationItem extends NavigationItem
     protected $showAddButton;
 
     /**
+     * Instance name for component
+     * @var string
+     */
+    protected $instanceName = '';
+
+    /**
+     * Key to translate add button
+     * @var string
+     */
+    protected $addButtonTranslationKey = 'sulu.data-navigation.add-button';
+
+    /**
      * Key to translate no data available
      * @var string
      */
@@ -145,6 +157,22 @@ class DataNavigationItem extends NavigationItem
     /**
      * @return string
      */
+    public function getInstanceName()
+    {
+        return $this->instanceName;
+    }
+
+    /**
+     * @param string $instanceName
+     */
+    public function setInstanceName($instanceName)
+    {
+        $this->instanceName = $instanceName;
+    }
+
+    /**
+     * @return string
+     */
     public function getNoDataTranslationKey()
     {
         return $this->noDataTranslationKey;
@@ -175,6 +203,22 @@ class DataNavigationItem extends NavigationItem
     }
 
     /**
+     * @param string $addButtonTranslationKey
+     */
+    public function setAddButtonTranslationKey($addButtonTranslationKey)
+    {
+        $this->addButtonTranslationKey = $addButtonTranslationKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddButtonTranslationKey()
+    {
+        return $this->addButtonTranslationKey;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function newInstance()
@@ -183,9 +227,11 @@ class DataNavigationItem extends NavigationItem
         $new->setDataResultKey($this->getDataResultKey());
         $new->setDataNameKey($this->getDataNameKey());
         $new->setDataChildrenLinkKey($this->getDataChildrenLinkKey());
+        $new->setInstanceName($this->getInstanceName());
         $new->setShowAddButton($this->getShowAddButton());
         $new->setNoDataTranslationKey($this->getNoDataTranslationKey());
         $new->setTitleTranslationKey($this->getTitleTranslationKey());
+        $new->setAddButtonTranslationKey($this->getAddButtonTranslationKey());
 
         return $new;
     }
@@ -204,9 +250,11 @@ class DataNavigationItem extends NavigationItem
             'nameKey' => $this->dataNameKey,
             'childrenLinkKey' => $this->dataChildrenLinkKey,
             'showAddButton' => $this->showAddButton,
+            'instanceName' => $this->instanceName,
             'translates' => array(
                 'noData' => $this->noDataTranslationKey,
-                'title' => $this->titleTranslationKey
+                'title' => $this->titleTranslationKey,
+                'addButton' => $this->addButtonTranslationKey
             )
         );
 
