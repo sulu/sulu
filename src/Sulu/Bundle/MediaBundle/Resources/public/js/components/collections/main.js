@@ -345,6 +345,11 @@ define([
                 this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function () {
                     this.sandbox.emit('sulu.router.navigate', 'media/collections', true, true);
                 }.bind(this));
+
+                // TODO instance name in navigation
+                this.sandbox.on('husky.data-navigation.collections.add', function () {
+                    this.sandbox.emit('sulu.router.navigate', 'media/collections', true, true);
+                }.bind(this));
             },
 
             /**
