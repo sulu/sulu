@@ -2,6 +2,8 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #860 [AdminBundle]     Extended toolbar to accept more options
+    * BUGFIX      #--- [ContentBundle]   Added validation for time field
     * BUGFIX      #865 [ContentBundle]   Added validation and localized formatted value for time field
     * BUGFIX      #848 [ContactBundle]   Refactored delete dialog function to make it reuseable
     * BUGFIX      #846 [MediaBundle]     Added missing dot to create event name method (\cc Daniel)
