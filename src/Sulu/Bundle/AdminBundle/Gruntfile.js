@@ -54,7 +54,8 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['bower_components/backbone-relational/backbone-relational.js'], dest: 'Resources/public/js/vendor/backbone-relational'
+                        src: ['bower_components/backbone-relational/backbone-relational.js'],
+                        dest: 'Resources/public/js/vendor/backbone-relational'
                     },
                     {
                         expand: true,
@@ -64,14 +65,15 @@ module.exports = function(grunt) {
                     },
                     {
                         expand: true,
-                        flatten: true,
-                        src: ['bower_components/parsleyjs/parsley.js'], dest: 'Resources/public/js/vendor/parsleyjs'
-                    },
-                    {
-                        expand: true,
                         cwd: 'bower_components/globalize/lib/',
                         src: ['**'],
                         dest: 'Resources/public/js/vendor/globalize/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/iban',
+                        src: ['iban.js'],
+                        dest: 'Resources/public/js/vendor/iban-converter/'
                     }
                 ]
             }
