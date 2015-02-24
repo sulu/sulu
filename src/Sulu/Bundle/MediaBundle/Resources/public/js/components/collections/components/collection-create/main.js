@@ -7,23 +7,37 @@
  * with this source code in the file LICENSE.
  */
 
-define(function () {
+define(['sulumedia/model/collection'], function(Collection) {
 
     'use strict';
 
     var defaults = {
-            data: {},
-            instanceName: '',
-            newThumbnailSrc: 'http://lorempixel.com/150/100/',
-            newThumbnailTitel: ''
+            parent: null,
+            instanceName: ''
         },
+
         constants = {
             newFormSelector: '#collection-new'
+        },
+
+        eventNamespace = 'sulu.collections.add-overlay.',
+
+        /**
+         * Creates the eventnames
+         * @param postFix {String} event name to append
+         */
+        createEventName = function(postFix) {
+            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        },
+
+        /**
+         * @event sulu.collections.add-overlay.created
+         */
+        CREATED = function() {
+            return createEventName.call(this, 'created')
         };
 
     return {
-
-        view: true,
 
         templates: [
             '/admin/media/template/collection/new'
@@ -41,13 +55,28 @@ define(function () {
 
         /**
          * Adds a new collection the the list
-         * @returns {Boolean} returns false if a new and unsafed colleciton exists
+         * @returns {Boolean} returns false if a new and unsafed collection exists
          */
         addCollection: function () {
             if (this.sandbox.form.validate(constants.newFormSelector)) {
-                var collection = this.sandbox.form.getData(constants.newFormSelector);
-                // TODO save collection
-                // TODO navigate to collection
+                var collection = this.sandbox.form.getData(constants.newFormSelector),
+                    model = new Collection();
+
+                collection.parent = this.options.parent;
+
+                model.set(collection);
+
+                model.save(null, {
+                    success: function(collection) {
+                        this.sandbox.emit(
+                            'sulu.labels.success.show',
+                            'labels.success.collection-save-desc',
+                            'labels.success'
+                        );
+                        this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collection.get('id') + '/files');
+                        this.sandbox.emit(CREATED.call(this), collection);
+                    }.bind(this)
+                });
 
                 this.sandbox.stop();
             } else {
@@ -78,7 +107,11 @@ define(function () {
                         instanceName: 'add-collection',
                         data: this.$overlayContent,
                         okCallback: this.addCollection.bind(this),
-                        openOnStart: true
+                        cancelCallBack: function() {
+                            this.sandbox.stop();
+                        }.bind(this),
+                        openOnStart: true,
+                        removeOnClose: true
                     }
                 }
             ]);
