@@ -9,24 +9,21 @@
  */
 
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 
 /**
- * This Exception is thrown if the email for a user is not unique
+ * This exception is thrown when a token-email for user without a token is requested
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
-class EmailNotUniqueException extends SecurityException
+class NoTokenFoundException extends SecurityException
 {
+    /** @var User  */
+    private $user;
 
-    private $email;
-
-    public function __construct($email)
+    public function __construct(User $user)
     {
-        $this->email = $email;
-        parent::__construct(sprintf('The email "%s" is not unique!', $email), 1004);
-    }
-
-    public function getEmail() {
-        return $this->email;
+        parent::__construct(sprintf('The user "%s" has no token!', $user->getUsername()), 1006);
+        $this->user = $user;
     }
 
     public function toArray()
@@ -34,7 +31,7 @@ class EmailNotUniqueException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'email' => $this->email
+            'user' => $this->user->getUsername()
         );
     }
 }

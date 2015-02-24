@@ -11,22 +11,22 @@
 namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 
 /**
- * This Exception is thrown if the email for a user is not unique
+ * This Exception is thrown if a request with a not existing token tries to reset a password
  * @package Sulu\Bundle\SecurityBundle\Security\Exception
  */
-class EmailNotUniqueException extends SecurityException
+class InvalidTokenException extends SecurityException
 {
+    /** @var string  */
+    private $token;
 
-    private $email;
-
-    public function __construct($email)
+    public function __construct($token)
     {
-        $this->email = $email;
-        parent::__construct(sprintf('The email "%s" is not unique!', $email), 1004);
+        $this->token = $token;
+        parent::__construct(sprintf('The token "%s" does not exist!', $token), 1005);
     }
 
-    public function getEmail() {
-        return $this->email;
+    public function getToken() {
+        return $this->token;
     }
 
     public function toArray()
@@ -34,7 +34,7 @@ class EmailNotUniqueException extends SecurityException
         return array(
             'code' => $this->code,
             'message' => $this->message,
-            'email' => $this->email
+            'token' => $this->token
         );
     }
 }

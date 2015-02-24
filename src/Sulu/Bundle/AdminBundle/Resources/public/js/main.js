@@ -12,6 +12,8 @@ require.config({
     paths: {
         suluadmin: '../../suluadmin/js',
 
+        'main': 'main',
+
         'app-config': 'components/app-config/main',
         'config': 'components/config/main',
         'cultures': 'vendor/globalize/cultures',

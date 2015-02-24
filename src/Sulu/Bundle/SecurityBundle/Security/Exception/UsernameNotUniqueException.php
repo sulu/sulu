@@ -19,7 +19,7 @@ class UsernameNotUniqueException extends SecurityException
     /**
      * The username which is not unique
      *
-     * @var integer
+     * @var string
      */
     private $username;
 
