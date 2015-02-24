@@ -32,7 +32,7 @@ class ResettingController extends Controller
 {
     const ENTITY_NAME_USER = 'SuluSecurityBundle:User';
     const EMAIL_SUBJECT_KEY = 'security.reset.mail-subject';
-    const EMAIL_MSG_KEY = 'security.reset.mail-msg';
+    const EMAIL_MESSAGE_KEY = 'security.reset.mail-message';
     const MAX_NUMBER_EMAILS = 3;
 
     /**
@@ -133,7 +133,7 @@ class ResettingController extends Controller
 
     /**
      * Finds a user with an identifier (username or email)
-     * @param $identifier
+     * @param string $identifier
      * @return \Symfony\Component\Security\Core\User\UserInterface
      * @throws EntityNotFoundException
      */
@@ -147,7 +147,7 @@ class ResettingController extends Controller
 
     /**
      * Returns a user for a given token and checks if the token is still valid
-     * @param $token
+     * @param string $token
      * @return \Symfony\Component\Security\Core\User\UserInterface
      * @throws InvalidTokenException
      */
@@ -223,7 +223,7 @@ class ResettingController extends Controller
             ->setFrom($from)
             ->setTo($to)
             ->setBody(
-                $translator->trans(self::EMAIL_MSG_KEY, array(), 'backend') . PHP_EOL .
+                $translator->trans(self::EMAIL_MESSAGE_KEY, array(), 'backend') . PHP_EOL .
                 $this->generateUrl('sulu_admin.reset', array('token' => $user->getPasswordResetToken()), true)
             );
         $mailer->send($message);

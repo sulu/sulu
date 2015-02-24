@@ -22,7 +22,7 @@ class NoTokenFoundException extends SecurityException
 
     public function __construct(User $user)
     {
-        parent::__construct(sprintf('The user %s has no token!', $user->getUsername()), 1006);
+        parent::__construct(sprintf('The user "%s" has no token!', $user->getUsername()), 1006);
         $this->user = $user;
     }
 

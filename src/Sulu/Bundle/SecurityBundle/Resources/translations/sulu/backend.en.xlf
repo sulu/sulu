@@ -114,8 +114,8 @@
                 <source>security.reset.mail-subject</source>
                 <target>Reset your Sulu password</target>
             </trans-unit>
-            <trans-unit id="1cd67d24ab0a432414bc0685517c721c" resname="security.reset.mail-msg">
-                <source>security.reset.mail-msg</source>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721c" resname="security.reset.mail-message">
+                <source>security.reset.mail-message</source>
                 <target>To reset your Sulu password please click on the following link or copy/paste it to your browser:</target>
             </trans-unit>
         </body>
