@@ -1,9 +1,11 @@
 CHANGELOG for Sulu
 ==================
 
-* 0.16.0 (2015-02-24)
+* dev-develop
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #838 [AdminBundle]     Login UI
+
+* 0.16.0 (2015-02-24)
     * BUGFIX      #866 [ContactBundle]   Serialization group "select" for serializing system users
     * BUGFIX      #860 [AdminBundle]     Extended toolbar to accept more options
     * BUGFIX      #--- [ContentBundle]   Added validation for time field
