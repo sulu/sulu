@@ -10,19 +10,14 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
-use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Block\BlockPropertyWrapper;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -31,10 +26,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Upgrades InternalLinks to 0.15.0
+ * Upgrades time to 0.16.0
  * @deprecated
  */
-class UpgradeInternalLinksCommand extends ContainerAwareCommand
+class UpgradeTimeCommand extends ContainerAwareCommand
 {
     /**
      * @var WebspaceManagerInterface
@@ -51,7 +46,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('sulu:upgrade:0.15.0:internal-links')->setDescription('Upgrades internal-links to 0.15.0');
+        $this->setName('sulu:upgrade:0.16.0:time')->setDescription('Upgrades time to 0.16.0');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -109,8 +104,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         Localization $localization,
         ContentMapperInterface $contentMapper,
         OutputInterface $output
-    )
-    {
+    ) {
         $pages = $contentMapper->loadByParent(
             $parent->getUuid(),
             $webspace->getKey(),
@@ -130,18 +124,19 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         Localization $localization,
         OutputInterface $output,
         $depth = 0
-    )
-    {
+    ) {
         foreach ($structure->getProperties(true) as $property) {
-            if ($property->getContentTypeName() == 'internal_links') {
+            if ($property->getContentTypeName() == 'time') {
                 $transProperty = new TranslatedProperty(
                     $property,
                     $localization->getLocalization(),
                     $this->getContainer()->getParameter('sulu.content.language.namespace')
                 );
                 $this->upgradeProperty($structure, $output, $transProperty, $depth);
-            } else if ($property instanceof BlockPropertyInterface) {
-                $this->upgradeBlockProperty($structure, $localization, $output, $property, $depth);
+            } else {
+                if ($property instanceof BlockPropertyInterface) {
+                    $this->upgradeBlockProperty($structure, $localization, $output, $property, $depth);
+                }
             }
         }
     }
@@ -156,7 +151,7 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         for ($i = 0; $i < $property->getLength(); $i++) {
             $blockProperty = $property->getProperties($i);
             foreach ($blockProperty->getChildProperties() as $childProperty) {
-                if ($childProperty->getContentTypeName() == 'internal_links') {
+                if ($childProperty->getContentTypeName() == 'time') {
                     $transProperty = new TranslatedProperty(
                         new BlockPropertyWrapper(
                             $childProperty,
@@ -177,31 +172,48 @@ class UpgradeInternalLinksCommand extends ContainerAwareCommand
         OutputInterface $output,
         $property,
         $depth
-    )
-    {
+    ) {
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
 
-
         if ($node->hasProperty($property->getName())) {
-            $value = $node->getPropertyValueWithDefault($property->getName(), '{ids: []}');
+            $value = $node->getPropertyValueWithDefault($property->getName(), null);
 
-            if (is_array($value)) {
+            if ($value === null) {
                 return;
             }
 
-            $value = json_decode($value, true);
-            $node->getProperty($property->getName())->remove();
+            $dateTime = false;
+            $formats = array(
+                'H:i',
+                'H:i:s',
+                'h:i a',
+                'h:ia',
+                'h:i:s a',
+                'h:i:sa',
+            );
 
-            $ids = array_key_exists('ids', $value) ? $value['ids'] : $value;
+            foreach ($formats as $format) {
+                $dateTime = \DateTime::createFromFormat($format, $value);
 
-            $node->setProperty($property->getName(), $ids, PropertyType::REFERENCE);
+                if ($dateTime !== false) {
+                    break;
+                }
+            }
+
+            if ($dateTime !== false) {
+                $value = $dateTime->format('H:i:s');
+                $node->setProperty($property->getName(), $value);
+            } else {
+                $value = null;
+                $node->getProperty($property->getName())->remove();
+            }
 
             $prefix = '   ';
             for ($i = 0; $i < $depth; $i++) {
                 $prefix .= '-';
             }
 
-            $output->writeln($prefix . '> ' . $structure->getPropertyValue('title'));
+            $output->writeln($prefix . '> ' . $structure->getPropertyValue('title') . ': ' . print_r($value, true));
         }
     }
 }
