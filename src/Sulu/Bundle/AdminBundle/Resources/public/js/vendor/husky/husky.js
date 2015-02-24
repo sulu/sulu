@@ -26698,7 +26698,9 @@ define('type/husky-input',[
         var defaults = {
                 id: 'id',
                 label: 'value',
-                required: false
+                required: false,
+                dateFormat: 'd',
+                timeFormat: 't'
             },
 
             typeValidators = {
@@ -26719,8 +26721,7 @@ define('type/husky-input',[
                     return regex.test(value);
                 },
                 time: function(value) {
-                    var regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
-                    return regex.test(value);
+                    return Globalize.parseDate(value, 'HH:mm:ss') !== null;
                 },
                 color: function(value) {
                     // hex color with leading #
@@ -26729,29 +26730,60 @@ define('type/husky-input',[
                 }
             },
 
-            typeInterface = {
-                setValue: function(data) {
+            typeSetter = {
+                default: function(data) {
                     this.$el.data({
                         value: data
                     }).trigger('data-changed');
                 },
 
+                time: function(data) {
+                    var dateTime = Globalize.parseDate(data, 'HH:mm:ss');
+
+                    typeSetter.default.call(this, Globalize.format(dateTime, this.options.timeFormat));
+                }
+            },
+
+            typeGetter = {
+                default: function() {
+                    return this.$el.find('input').val();
+                },
+                time: function() {
+                    var value = typeGetter.default.call(this),
+                        dateTime = Globalize.parseDate(value, this.options.timeFormat);
+
+                    return Globalize.format(dateTime, 'HH:mm:ss');
+                },
+                date: function() {
+                    return this.$el.data('value');
+                }
+            },
+
+            typeInterface = {
+                setValue: function(data) {
+                    var type = this.$el.data('auraSkin'),
+                        setter = typeSetter[type] || typeSetter.default;
+
+                    setter.call(this, data);
+                },
+
                 getValue: function() {
-                    if (this.$el.data('auraSkin') === 'date') {
-                        return this.$el.data('value');
-                    } else {
-                        return this.$el.find('input').val();
-                    }
+                    var type = this.$el.data('auraSkin'),
+                        getter = typeGetter[type] || typeGetter.default;
+
+                    return getter.call(this);
                 },
 
                 needsValidation: function() {
                     var val = this.getValue();
+
                     return val !== '';
                 },
 
                 validate: function() {
                     var value = this.getValue(),
                         type = this.$el.data('auraSkin');
+
                     if (!!type && !!typeValidators[type]) {
                         return typeValidators[type].call(this, value);
                     } else {

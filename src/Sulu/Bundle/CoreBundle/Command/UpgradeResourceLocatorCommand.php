@@ -27,6 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Upgrades Resourcelocators to 0.9.0
+ * @deprecated
  */
 class UpgradeResourceLocatorCommand extends ContainerAwareCommand
 {
