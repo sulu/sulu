@@ -17,11 +17,12 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
  */
 class NoTokenFoundException extends SecurityException
 {
+    /** @var User  */
     private $user;
 
     public function __construct(User $user)
     {
-        parent::__construct('This user has no token!', 1006);
+        parent::__construct(sprintf('The user %s has no token!', $user->getUsername()), 1006);
         $this->user = $user;
     }
 

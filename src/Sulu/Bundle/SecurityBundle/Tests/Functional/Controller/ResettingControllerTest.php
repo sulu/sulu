@@ -56,8 +56,8 @@ class ResettingControllerTest extends SuluTestCase
         $user3->setSalt('salt');
         $user3->setLocale('en');
         $user3->setPasswordResetToken('thisisasupersecrettoken');
-        $user3->setTokenExpiresAt((new \DateTime())->add(new \DateInterval('PT24H')));
-        $user3->setTokenEmailsSent(1);
+        $user3->setPasswordResetTokenExpiresAt((new \DateTime())->add(new \DateInterval('PT24H')));
+        $user3->setPasswordResetTokenEmailsSent(1);
         $this->em->persist($user3);
         $this->user3 = $user3;
 
@@ -84,7 +84,7 @@ class ResettingControllerTest extends SuluTestCase
         // asserting user properties
         $this->em->refresh($this->user1);
         $this->assertTrue(is_string($this->user1->getPasswordResetToken()));
-        $this->assertGreaterThan(new \DateTime(), $this->user1->getTokenExpiresAt());
+        $this->assertGreaterThan(new \DateTime(), $this->user1->getPasswordResetTokenExpiresAt());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -114,8 +114,8 @@ class ResettingControllerTest extends SuluTestCase
         // asserting user properties
         $this->em->refresh($this->user1);
         $this->assertTrue(is_string($this->user1->getPasswordResetToken()));
-        $this->assertGreaterThan(new \DateTime(), $this->user1->getTokenExpiresAt());
-        $this->assertEquals(1, $this->user1->getTokenEmailsSent());
+        $this->assertGreaterThan(new \DateTime(), $this->user1->getPasswordResetTokenExpiresAt());
+        $this->assertEquals(1, $this->user1->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -145,8 +145,8 @@ class ResettingControllerTest extends SuluTestCase
         // asserting user properties
         $this->em->refresh($this->user2);
         $this->assertTrue(is_string($this->user2->getPasswordResetToken()));
-        $this->assertGreaterThan(new \DateTime(), $this->user2->getTokenExpiresAt());
-        $this->assertEquals(1, $this->user2->getTokenEmailsSent());
+        $this->assertGreaterThan(new \DateTime(), $this->user2->getPasswordResetTokenExpiresAt());
+        $this->assertEquals(1, $this->user2->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -176,8 +176,8 @@ class ResettingControllerTest extends SuluTestCase
         // asserting user properties
         $this->em->refresh($this->user3);
         $this->assertEquals('thisisasupersecrettoken', $this->user3->getPasswordResetToken());
-        $this->assertGreaterThan(new \DateTime(), $this->user3->getTokenExpiresAt());
-        $this->assertEquals(2, $this->user3->getTokenEmailsSent());
+        $this->assertGreaterThan(new \DateTime(), $this->user3->getPasswordResetTokenExpiresAt());
+        $this->assertEquals(2, $this->user3->getPasswordResetTokenEmailsSent());
 
         // asserting sent mail
         $this->assertEquals(1, $mailCollector->getMessageCount());
@@ -219,7 +219,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertEquals(1007, $response->code);
         $this->assertEquals(0, $mailCollector->getMessageCount());
-        $this->assertEquals($counter, $this->user3->getTokenEmailsSent());
+        $this->assertEquals($counter, $this->user3->getPasswordResetTokenEmailsSent());
     }
 
     public function testSendEmailActionWithMissingUser() {
@@ -296,7 +296,7 @@ class ResettingControllerTest extends SuluTestCase
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($this->user3);
         $this->assertEquals($encoder->encodePassword($newPassword, $this->user3->getSalt()), $this->user3->getPassword());
         $this->assertNull($this->user3->getPasswordResetToken());
-        $this->assertNull($this->user3->getTokenExpiresAt());
+        $this->assertNull($this->user3->getPasswordResetTokenExpiresAt());
     }
 
     public function testResetActionWithoutToken() {

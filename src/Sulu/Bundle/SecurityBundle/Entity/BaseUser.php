@@ -100,12 +100,12 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * @var \DateTime
      */
-    private $tokenExpiresAt;
+    private $passwordResetTokenExpiresAt;
 
     /**
      * @var integer
      */
-    private $tokenEmailsSent;
+    private $passwordResetTokenEmailsSent;
 
     /**
      * Constructor
@@ -458,46 +458,46 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     /**
      * Set tokenExpiresAt
      *
-     * @param \DateTime $tokenExpiresAt
+     * @param \DateTime $passwordResetTokenExpiresAt
      * @return BaseUser
      */
-    public function setTokenExpiresAt($tokenExpiresAt)
+    public function setPasswordResetTokenExpiresAt($passwordResetTokenExpiresAt)
     {
-        $this->tokenExpiresAt = $tokenExpiresAt;
+        $this->passwordResetTokenExpiresAt = $passwordResetTokenExpiresAt;
 
         return $this;
     }
 
     /**
-     * Get tokenExpiresAt
+     * Get passwordResetTokenExpiresAt
      *
      * @return \DateTime 
      */
-    public function getTokenExpiresAt()
+    public function getPasswordResetTokenExpiresAt()
     {
-        return $this->tokenExpiresAt;
+        return $this->passwordResetTokenExpiresAt;
     }
 
     /**
-     * Set tokenEmailsSent
+     * Set passwordResetTokenEmailsSent
      *
-     * @param integer $tokenEmailsSent
+     * @param integer $passwordResetTokenEmailsSent
      * @return BaseUser
      */
-    public function setTokenEmailsSent($tokenEmailsSent)
+    public function setPasswordResetTokenEmailsSent($passwordResetTokenEmailsSent)
     {
-        $this->tokenEmailsSent = $tokenEmailsSent;
+        $this->passwordResetTokenEmailsSent = $passwordResetTokenEmailsSent;
 
         return $this;
     }
 
     /**
-     * Get tokenEmailsSent
+     * Get passwordResetTokenEmailsSent
      *
      * @return integer 
      */
-    public function getTokenEmailsSent()
+    public function getPasswordResetTokenEmailsSent()
     {
-        return $this->tokenEmailsSent;
+        return $this->passwordResetTokenEmailsSent;
     }
 }

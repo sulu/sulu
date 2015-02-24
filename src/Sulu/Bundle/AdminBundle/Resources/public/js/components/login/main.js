@@ -44,7 +44,7 @@ define([], function() {
                 emailSent: 'sulu.login.email-sent-msg',
                 backWebsite: 'sulu.login.back-website',
                 login: 'public.login',
-                errorMsg: 'sulu.login.error-msg',
+                errorMessage: 'sulu.login.error-msg',
                 forgotPassword: 'sulu.login.forgot-password',
                 emailUser: 'sulu.login.email-username',
                 password: 'public.password',
@@ -74,16 +74,16 @@ define([], function() {
             resetFrameClass: 'reset',
             framesClass: 'frames',
             logoClass: 'login-logo',
-            loginBtnId: 'login-btn',
-            resetBtnId: 'reset-btn',
-            resetMailBtnId: 'reset-mail-btn',
-            resendBtnId: 'resend-btn',
+            loginButtonId: 'login-button',
+            resetButtonId: 'reset-button',
+            resetMailButtonId: 'reset-mail-button',
+            resendButtonId: 'resend-button',
             forgotSwitchClass: 'forgot-password-switch',
             websiteSwitchClass: 'website-switch',
             loginSwitchClass: 'login-switch',
             errorClass: 'husky-validate-error',
             resetMailBoxClass: 'reset-mail',
-            resetMailMsgBoxClass: 'reset-mail-msg',
+            resetMailMessageBoxClass: 'reset-mail-message',
             loaderClass: 'login-loader',
             loginRouteClass: 'login-route'
         },
@@ -106,14 +106,14 @@ define([], function() {
                          '  <div class="grid-row small">',
                          '    <input class="form-element input-large husky-validate" type="password" name="password" id="password" placeholder="<%= password %>"/>',
                          '  </div>',
-                         '  <span class="error-msg"><%= errorMsg %></span>',
+                         '  <span class="error-message"><%= errorMessage %></span>',
                          '</form>',
                          '<div class="grid-row">',
-                         '    <div id="'+ constants.loginBtnId +'" class="btn action large fit"><%= login %></div>',
+                         '    <div id="'+ constants.loginButtonId +'" class="btn action large fit"><%= login %></div>',
                          '</div>',
                          '<div class="bottom-container small-font">',
-                         '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMsg %></span>',
-                         '  <span class="'+ constants.forgotSwitchClass +'"><%= forgotPwdMsg %></span>',
+                         '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMessage %></span>',
+                         '  <span class="'+ constants.forgotSwitchClass +'"><%= forgotPasswordMessage %></span>',
                          '</div>'].join(''),
             resetMailFrame: ['<div class="'+ constants.resetMailBoxClass +'">',
                             '  <div class="inputs">',
@@ -121,19 +121,19 @@ define([], function() {
                             '      <label for="user"><%= label %></label>',
                             '      <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>"/>',
                             '    </div>',
-                            '    <span class="error-msg"></span>',
+                            '    <span class="error-message"></span>',
                             '  </div>',
                             '  <div class="grid-row">',
-                            '      <div id="'+ constants.resetMailBtnId +'" class="btn action large fit"><%= reset %></div>',
+                            '      <div id="'+ constants.resetMailButtonId +'" class="btn action large fit"><%= reset %></div>',
                             '  </div>',
                             '</div>',
-                            '<div class="'+ constants.resetMailMsgBoxClass +'">',
-                            '<span class="msg"><%= sentMsg %> <span class="to-mail"></span></span>',
-                            '   <div id="'+ constants.resendBtnId +'" class="btn action large fit"><%= resend %></div>',
+                            '<div class="'+ constants.resetMailMessageBoxClass +'">',
+                            '<span class="message"><%= sentMessage %> <span class="to-mail"></span></span>',
+                            '   <div id="'+ constants.resendButtonId +'" class="btn action large fit"><%= resend %></div>',
                             '</div>',
                             '<div class="bottom-container small-font">',
-                            '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMsg %></span>',
-                            '  <span class="'+ constants.loginSwitchClass +'"><%= backLoginMsg %></span>',
+                            '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMessage %></span>',
+                            '  <span class="'+ constants.loginSwitchClass +'"><%= backLoginMessage %></span>',
                             '</div>'].join(''),
                 resetFrame: ['<div class="'+ constants.resetMailBoxClass +'">',
                              '  <div class="inputs">',
@@ -147,12 +147,12 @@ define([], function() {
                              '    </div>',
                              '  </div>',
                              '  <div class="grid-row">',
-                             '      <div id="'+ constants.resetBtnId +'" class="btn action large fit"><%= login %></div>',
+                             '      <div id="'+ constants.resetButtonId +'" class="btn action large fit"><%= login %></div>',
                              '  </div>',
                              '</div>',
                              '<div class="bottom-container small-font">',
-                             '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMsg %></span>',
-                             '  <span class="'+ constants.loginRouteClass +'"><%= loginRouteMsg %></span>',
+                             '  <span class="'+ constants.websiteSwitchClass +'"><%= backWebsiteMessage %></span>',
+                             '  <span class="'+ constants.loginRouteClass +'"><%= loginRouteMessage %></span>',
                              '</div>'].join('')
         },
 
@@ -193,19 +193,20 @@ define([], function() {
          */
         initProperties: function() {
             this.dom = {
-                $bg: null,
+                $background: null,
                 $box: null,
                 $frames: null,
                 $login: null,
                 $resetMail: null,
                 $forgotSwitch: null,
                 $loginSwitch: null,
-                $loginBtn: null,
-                $resetMailBtn: null,
-                $resendBtn: null,
+                $loginButton: null,
+                $resetMailButton: null,
+                $resendButton: null,
                 $loginForm: null,
                 $loader: null,
-                $reset: null
+                $reset: null,
+                $resetButton: null
             };
             this.mouseOrigin = {
                 x: 0,
@@ -220,8 +221,8 @@ define([], function() {
          */
         setMovementRatio: function() {
             this.movementRatio = {
-                x: this.options.shiftSpace/this.sandbox.dom.width(this.sandbox.dom.$window),
-                y: this.options.shiftSpace/this.sandbox.dom.height(this.sandbox.dom.$window)
+                x: this.options.shiftSpace / this.sandbox.dom.width(this.sandbox.dom.$window),
+                y: this.options.shiftSpace / this.sandbox.dom.height(this.sandbox.dom.$window)
             };
         },
 
@@ -230,25 +231,25 @@ define([], function() {
          */
         render: function() {
             this.sandbox.dom.addClass(this.$el, constants.componentClass);
-            this.renderBg();
+            this.renderBackground();
             this.renderBox();
         },
 
         /**
          * Render background
          */
-        renderBg: function() {
+        renderBackground: function() {
             var $img = this.sandbox.dom.createElement('<img/>'); // used to load the image
-            this.sandbox.dom.one($img, 'load', this.showBg.bind(this));
-            this.dom.$bg = this.sandbox.dom.createElement(templates.background);
+            this.sandbox.dom.one($img, 'load', this.showBackground.bind(this));
+            this.dom.$background = this.sandbox.dom.createElement(templates.background);
             this.sandbox.dom.attr($img, 'src', this.options.backgroundImg);
             this.sandbox.dom.css(
-                this.sandbox.dom.find('.' + constants.imageClass, this.dom.$bg),
+                this.sandbox.dom.find('.' + constants.imageClass, this.dom.$background),
                 'background-image', 'url("'+ this.options.backgroundImg +'")'
             );
-            this.setBgSize();
-            this.setBgPosition(-this.options.shiftSpace, -this.options.shiftSpace);
-            this.sandbox.dom.append(this.$el, this.dom.$bg);
+            this.setBackgroundSize();
+            this.setBackgroundPosition(-this.options.shiftSpace, -this.options.shiftSpace);
+            this.sandbox.dom.append(this.$el, this.dom.$background);
         },
 
         /**
@@ -276,13 +277,13 @@ define([], function() {
             this.sandbox.dom.append(this.dom.$login, this.sandbox.util.template(templates.loginFrame)({
                 emailUser: this.sandbox.translate(this.options.translations.emailUser),
                 password: this.sandbox.translate(this.options.translations.password),
-                forgotPwdMsg: this.sandbox.translate(this.options.translations.forgotPassword),
-                errorMsg: this.sandbox.translate(this.options.translations.errorMsg),
+                forgotPasswordMessage: this.sandbox.translate(this.options.translations.forgotPassword),
+                errorMessage: this.sandbox.translate(this.options.translations.errorMessage),
                 login: this.sandbox.translate(this.options.translations.login),
-                backWebsiteMsg: this.sandbox.translate(this.options.translations.backWebsite)
+                backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite)
             }));
             this.dom.$forgotSwitch = this.sandbox.dom.find('.' + constants.forgotSwitchClass, this.dom.$login);
-            this.dom.$loginBtn = this.sandbox.dom.find('#' + constants.loginBtnId, this.dom.$login);
+            this.dom.$loginButton = this.sandbox.dom.find('#' + constants.loginButtonId, this.dom.$login);
             this.dom.$loginForm = this.sandbox.dom.find('form', this.dom.$login);
             this.sandbox.dom.append(this.dom.$frames, this.dom.$login);
         },
@@ -323,15 +324,15 @@ define([], function() {
                 label: this.sandbox.translate(this.options.translations.resetPassword),
                 reset: this.sandbox.translate(this.options.translations.reset),
                 emailUser: this.sandbox.translate(this.options.translations.emailUser),
-                backLoginMsg: this.sandbox.translate(this.options.translations.backLogin),
+                backLoginMessage: this.sandbox.translate(this.options.translations.backLogin),
                 resend: this.sandbox.translate(this.options.translations.resend),
-                sentMsg: this.sandbox.translate(this.options.translations.emailSent),
-                backWebsiteMsg: this.sandbox.translate(this.options.translations.backWebsite)
+                sentMessage: this.sandbox.translate(this.options.translations.emailSent),
+                backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite)
             }));
             this.dom.$loginSwitch = this.sandbox.dom.find('.' + constants.loginSwitchClass, this.dom.$resetMail);
-            this.dom.$resetMailBtn = this.sandbox.dom.find('#' + constants.resetMailBtnId, this.dom.$resetMail);
-            this.dom.$resendBtn = this.sandbox.dom.find('#' + constants.resendBtnId, this.dom.$resetMail);
-            this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.resetMailMsgBoxClass, this.dom.$resetMail));
+            this.dom.$resetMailButton = this.sandbox.dom.find('#' + constants.resetMailButtonId, this.dom.$resetMail);
+            this.dom.$resendButton = this.sandbox.dom.find('#' + constants.resendButtonId, this.dom.$resetMail);
+            this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.resetMailMessageBoxClass, this.dom.$resetMail));
             this.sandbox.dom.append(this.dom.$frames, this.dom.$resetMail);
         },
 
@@ -347,38 +348,38 @@ define([], function() {
                 password2Label: this.sandbox.translate(this.options.translations.repeatPassword),
                 password: this.sandbox.translate(this.options.translations.password),
                 login: this.sandbox.translate(this.options.translations.login),
-                backWebsiteMsg: this.sandbox.translate(this.options.translations.backWebsite),
-                loginRouteMsg: this.sandbox.translate(this.options.translations.backLogin)
+                backWebsiteMessage: this.sandbox.translate(this.options.translations.backWebsite),
+                loginRouteMessage: this.sandbox.translate(this.options.translations.backLogin)
             }));
-            this.dom.$resetBtn = this.sandbox.dom.find('#' + constants.resetBtnId, this.dom.$reset);
+            this.dom.$resetButton = this.sandbox.dom.find('#' + constants.resetButtonId, this.dom.$reset);
             this.sandbox.dom.append(this.dom.$frames, this.dom.$reset);
         },
 
         /**
          * Fades the background in
          */
-        showBg: function() {
-            this.sandbox.dom.fadeIn(this.dom.$bg, this.options.fadeInDuration);
+        showBackground: function() {
+            this.sandbox.dom.fadeIn(this.dom.$background, this.options.fadeInDuration);
         },
 
         /**
          * Sets the the size of the background to window size
          * plus a the shift-space
          */
-        setBgSize: function() {
-            this.sandbox.dom.width(this.dom.$bg, this.sandbox.dom.width(this.sandbox.dom.window) + this.options.shiftSpace * 2);
-            this.sandbox.dom.height(this.dom.$bg, this.sandbox.dom.height(this.sandbox.dom.window) + this.options.shiftSpace * 2);
+        setBackgroundSize: function() {
+            this.sandbox.dom.width(this.dom.$background, this.sandbox.dom.width(this.sandbox.dom.window) + this.options.shiftSpace * 2);
+            this.sandbox.dom.height(this.dom.$background, this.sandbox.dom.height(this.sandbox.dom.window) + this.options.shiftSpace * 2);
         },
 
         /**
          * Sets the Bg active or inactive
          * @param active - true to set active, false to set unactive
          */
-        toggleBgActive: function(active) {
+        toggleBackgroundActive: function(active) {
             if (active === true) {
-                this.sandbox.dom.addClass(this.dom.$bg, constants.bgActiveClass);
+                this.sandbox.dom.addClass(this.dom.$background, constants.bgActiveClass);
             } else {
-                this.sandbox.dom.removeClass(this.dom.$bg, constants.bgActiveClass);
+                this.sandbox.dom.removeClass(this.dom.$background, constants.bgActiveClass);
             }
         },
 
@@ -387,9 +388,9 @@ define([], function() {
          * @param {Number} shiftX - shift in x (horizontal) (in pixel)
          * @param {Number} shiftY - shift in y (vertical) (in pixel)
          */
-        setBgPosition: function(shiftX, shiftY) {
-            var positionX = this.sandbox.dom.position(this.dom.$bg).left + shiftX,
-                positionY = this.sandbox.dom.position(this.dom.$bg).top + shiftY,
+        setBackgroundPosition: function(shiftX, shiftY) {
+            var positionX = this.sandbox.dom.position(this.dom.$background).left + shiftX,
+                positionY = this.sandbox.dom.position(this.dom.$background).top + shiftY,
                 padding = 3; // additional pixels which can't be seen - makes sure there is never a white border
             if (positionX > -padding) {
                 positionX = -padding;
@@ -401,8 +402,8 @@ define([], function() {
             } else if (positionY < (this.options.shiftSpace* -2) + padding) {
                 positionY = (this.options.shiftSpace* -2) + padding;
             }
-            this.sandbox.dom.css(this.dom.$bg, 'left', positionX + 'px');
-            this.sandbox.dom.css(this.dom.$bg, 'top', positionY + 'px');
+            this.sandbox.dom.css(this.dom.$background, 'left', positionX + 'px');
+            this.sandbox.dom.css(this.dom.$background, 'top', positionY + 'px');
         },
 
         /**
@@ -411,14 +412,14 @@ define([], function() {
         bindDomEvents: function() {
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeHandler.bind(this));
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseenter', this.mouseenterHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$bg, 'mousedown', this.toggleBgActive.bind(this, true));
-            this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBgActive.bind(this, false));
+            this.sandbox.dom.on(this.dom.$background, 'mousedown', this.toggleBackgroundActive.bind(this, true));
+            this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBackgroundActive.bind(this, false));
             this.sandbox.dom.on(this.dom.$forgotSwitch, 'click', this.moveToFrame.bind(this, this.dom.$resetMail));
             this.sandbox.dom.on(this.dom.$loginSwitch, 'click', this.moveToFrame.bind(this, this.dom.$login));
-            this.sandbox.dom.on(this.dom.$loginBtn, 'click', this.loginBtnClickHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$resetMailBtn, 'click', this.resetMailBtnClickHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$resendBtn, 'click', this.resendBtnClickHandler.bind(this));
-            this.sandbox.dom.on(this.dom.$loginBtn, 'click', this.loginBtnClickHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$resetMailButton, 'click', this.resetMailButtonClickHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$resendButton, 'click', this.resendButtonClickHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'submit', this.loginFormSubmitHandler.bind(this));
             this.sandbox.dom.on(this.dom.$loginForm, 'keydown', this.loginFormKeyHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resetMail, 'keydown', this.resetMailKeyHandler.bind(this));
@@ -431,7 +432,7 @@ define([], function() {
          * Binds dom events for the reset-mode
          */
         bindResetDomEvents: function() {
-            this.sandbox.dom.on(this.dom.$resetBtn, 'click', this.resetBtnClickHandler.bind(this));
+            this.sandbox.dom.on(this.dom.$resetButton, 'click', this.resetButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$reset, 'keydown', this.resetKeyHandler.bind(this));
             this.sandbox.dom.on(this.sandbox.dom.find('.' + constants.loginRouteClass), 'click', this.loginRouteClickHandler.bind(this));
         },
@@ -454,14 +455,14 @@ define([], function() {
         mousemoveHandler: function(event) {
             var changeInX = (event.pageX - this.mouseOrigin.x) * -this.movementRatio.x,
                 changeInY = (event.pageY - this.mouseOrigin.y) * -this.movementRatio.y;
-            this.setBgPosition(changeInX, changeInY);
+            this.setBackgroundPosition(changeInX, changeInY);
             this.mouseenterHandler(event);
         },
 
         /**
          * Handles a click on the login-button
          */
-        loginBtnClickHandler: function() {
+        loginButtonClickHandler: function() {
             this.sandbox.dom.submit(this.dom.$loginForm);
         },
 
@@ -475,7 +476,7 @@ define([], function() {
         /**
          * Handles the click on the reset-mail button
          */
-        resetMailBtnClickHandler: function() {
+        resetMailButtonClickHandler: function() {
             var user = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#user', this.dom.$resetMail)));
             this.resetMail(user);
         },
@@ -483,7 +484,7 @@ define([], function() {
         /**
          * Handles the click on the reset button
          */
-        resetBtnClickHandler: function() {
+        resetButtonClickHandler: function() {
             var password1 = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#password1', this.dom.$reset))),
                 password2 = this.sandbox.dom.trim(this.sandbox.dom.val(this.sandbox.dom.find('#password2', this.dom.$reset)));
             if (password1 !== password2 || password1.length === 0) {
@@ -495,10 +496,10 @@ define([], function() {
         },
 
         /**
-         * Handles the click on the resend btn
+         * Handles the click on the resend Button
          */
-        resendBtnClickHandler: function() {
-            if (this.sandbox.dom.hasClass(this.dom.$resendBtn, 'inactive')) {
+        resendButtonClickHandler: function() {
+            if (this.sandbox.dom.hasClass(this.dom.$resendButton, 'inactive')) {
                 return false;
             }
             this.resend();
@@ -534,7 +535,7 @@ define([], function() {
          */
         resetMailKeyHandler: function(event) {
             if (event.keyCode === 13) { //on enter
-                this.resetMailBtnClickHandler();
+                this.resetMailButtonClickHandler();
             }
         },
 
@@ -544,7 +545,7 @@ define([], function() {
          */
         resetKeyHandler: function(event) {
             if (event.keyCode === 13) { //on enter
-                this.resetBtnClickHandler();
+                this.resetButtonClickHandler();
             }
         },
 
@@ -554,7 +555,7 @@ define([], function() {
          * @param password
          */
         login: function(username, password) {
-            this.sandbox.dom.after(this.dom.$loginBtn, this.dom.$loader);
+            this.sandbox.dom.after(this.dom.$loginButton, this.dom.$loader);
             this.sandbox.dom.show(this.dom.$loader);
             this.sandbox.util.save(this.options.loginCheck, 'POST', {
                 '_username': username,
@@ -574,7 +575,7 @@ define([], function() {
          * @param user
          */
         resetMail: function(user) {
-            this.sandbox.dom.after(this.dom.$resetMailBtn, this.dom.$loader);
+            this.sandbox.dom.after(this.dom.$resetMailButton, this.dom.$loader);
             this.sandbox.dom.show(this.dom.$loader);
             this.sandbox.util.save(this.options.resetMailUrl, 'POST', {
                 'user': user
@@ -594,7 +595,7 @@ define([], function() {
          * @param newPassword - string
          */
         reset: function(newPassword) {
-            this.sandbox.dom.after(this.dom.$resetBtn, this.dom.$loader);
+            this.sandbox.dom.after(this.dom.$resetButton, this.dom.$loader);
             this.sandbox.dom.show(this.dom.$loader);
             this.sandbox.util.save(this.options.resetUrl, 'POST', {
                 'password': newPassword,
@@ -612,7 +613,7 @@ define([], function() {
          * to the server to resend the mail
          */
         resend: function() {
-            this.sandbox.dom.after(this.dom.$resendBtn, this.dom.$loader);
+            this.sandbox.dom.after(this.dom.$resendButton, this.dom.$loader);
             this.sandbox.dom.show(this.dom.$loader);
             this.sandbox.util.save(this.options.resendUrl, 'POST', {
                 'user': this.resetMailUser
@@ -632,7 +633,7 @@ define([], function() {
         showResendElement: function(email) {
             this.sandbox.dom.html(this.sandbox.dom.find('.to-mail', this.dom.$resetMail), email);
             this.sandbox.dom.hide(this.sandbox.dom.find('.' + constants.resetMailBoxClass, this.dom.$resetMail));
-            this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.resetMailMsgBoxClass, this.dom.$resetMail));
+            this.sandbox.dom.show(this.sandbox.dom.find('.' + constants.resetMailMessageBoxClass, this.dom.$resetMail));
         },
 
         /**
@@ -644,11 +645,11 @@ define([], function() {
 
         /**
          * Displays a reset-mail error
-         * @param code - integer - the code for the reset-mail-msg
+         * @param code - integer - the code for the reset-mail-message
          */
         displayResetMailError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
-            this.sandbox.dom.html(this.sandbox.dom.find('.error-msg', this.dom.$resetMail), this.sandbox.translate(errorTransKey));
+            this.sandbox.dom.html(this.sandbox.dom.find('.error-message', this.dom.$resetMail), this.sandbox.translate(errorTransKey));
             this.sandbox.dom.addClass(this.dom.$box, constants.boxLargerClass);
             this.sandbox.dom.addClass(this.dom.$resetMail, constants.errorClass);
         },
@@ -660,8 +661,8 @@ define([], function() {
         displayResendError: function(code) {
             var errorTransKey = this.options.errorTranslations[code] || 'Error';
             this.sandbox.emit('sulu.labels.error.show', this.sandbox.translate(errorTransKey), 'labels.error');
-            this.sandbox.dom.removeClass(this.dom.$resendBtn, 'action');
-            this.sandbox.dom.addClass(this.dom.$resendBtn, 'inactive gray-dark');
+            this.sandbox.dom.removeClass(this.dom.$resendButton, 'action');
+            this.sandbox.dom.addClass(this.dom.$resendButton, 'inactive gray-dark');
         },
 
         /**
@@ -702,7 +703,7 @@ define([], function() {
          * Handles the window resize event
          */
         resizeHandler: function() {
-            this.setBgSize();
+            this.setBackgroundSize();
             this.setMovementRatio();
         }
     };

@@ -23,7 +23,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 
 /**
  * Called after a user gets authenticated at the admin firewall
- * Generates the response (either JSON or a Redirect depending on if the request is a XmlHttpReqeust or not)
+ * Generates the response (either JSON or a Redirect depending on if the request is a XmlHttpRequest or not)
  * @package Sulu\Bundle\SecurityBundle\Security
  */
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
@@ -45,8 +45,8 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     }
 
     /**
-     * Handler for Authentication-success. Returns a JSON-Response if reqeust is an AJAX-request.
-     * Returns a Redirect-response otherwise.
+     * Handler for AuthenticationSuccess. Returns a JsonResponse if request is an AJAX-request.
+     * Returns a RedirectResponse otherwise.
      * @param Request $request
      * @param TokenInterface $token
      * @return Response
@@ -60,12 +60,12 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             $url = $this->router->generate('sulu_admin');
         }
 
-        // if AJAX login
         if ($request->isXmlHttpRequest()) {
+            // if AJAX login
             $array = array('success' => true, 'url' => $url);
             $response = new JsonResponse($array);
-        // if form login
         } else {
+            // if form login
             $response =  new RedirectResponse($url);
         }
 
@@ -73,7 +73,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     }
 
     /**
-     * Handler for Authentication-failure. Returns a JSON-Response if reqeust is an AJAX-request.
+     * Handler for AuthenticationFailure. Returns a JsonResponse if request is an AJAX-request.
      * Returns a Redirect-response otherwise.
      * @param Request $request
      * @param AuthenticationException $exception
@@ -81,12 +81,12 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        // if AJAX login
         if ($request->isXmlHttpRequest()) {
+            // if AJAX login
             $array = array('success' => false, 'message' => $exception->getMessage());
             $response = new JsonResponse($array);
-        // if form login
         } else {
+            // if form login
             // set authentication exception to session
             $this->session->set(SecurityContextInterface::AUTHENTICATION_ERROR, $exception);
             $response = new RedirectResponse($this->router->generate('sulu_admin.login'));

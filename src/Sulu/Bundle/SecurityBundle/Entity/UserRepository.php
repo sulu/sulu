@@ -221,11 +221,15 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      */
     public function findUserByIdentifier($identifier) {
-        try {
-            return $this->findUserByUsername($identifier);
-        } catch (NoResultException $exc) {
-            return $this->findUserByEmail($identifier);
-        }
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.email=:email')
+            ->orWhere('user.username=:username');
+
+        $query = $qb->getQuery();
+        $query->setParameter('email', $identifier);
+        $query->setParameter('username', $identifier);
+
+        return $query->getSingleResult();
     }
 
     /**

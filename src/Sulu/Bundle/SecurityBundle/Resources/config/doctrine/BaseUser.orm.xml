@@ -25,8 +25,8 @@
         <field name="lastLogin" column="lastLogin" type="datetime" nullable="true" />
         <field name="confirmationKey" column="confirmationKey" type="string" length="128" nullable="true" />
         <field name="passwordResetToken" column="passwordResetToken" type="string" length="80" nullable="true" unique="true" />
-        <field name="tokenExpiresAt" column="tokenExpiresAt" type="datetime" nullable="true" />
-        <field name="tokenEmailsSent" column="tokenEmailsSent" type="integer" nullable="true">
+        <field name="passwordResetTokenExpiresAt" column="passwordResetTokenExpiresAt" type="datetime" nullable="true" />
+        <field name="passwordResetTokenEmailsSent" column="passwordResetTokenEmailsSent" type="integer" nullable="true">
             <options>
                 <option name="default">0</option>
             </options>

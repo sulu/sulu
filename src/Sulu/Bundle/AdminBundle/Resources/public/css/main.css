@@ -258,7 +258,7 @@ input, select {
   height: 450px;
 }
 /* line 30, ../scss/modules/login.scss */
-.sulu-login .box .husky-validate-error .error-msg {
+.sulu-login .box .husky-validate-error .error-message {
   height: 50px;
 }
 /* line 33, ../scss/modules/login.scss */
@@ -290,7 +290,7 @@ input, select {
   padding-left: 5px;
 }
 /* line 65, ../scss/modules/login.scss */
-.sulu-login .box .error-msg {
+.sulu-login .box .error-message {
   color: #EA524E;
   display: block;
   height: 0px;
@@ -311,7 +311,7 @@ input, select {
   margin: 20px 15px 0 0;
 }
 /* line 84, ../scss/modules/login.scss */
-.sulu-login .box .reset-mail-msg .login-loader {
+.sulu-login .box .reset-mail-message .login-loader {
   float: none;
   margin-right: 0;
   margin-left: 0;
@@ -359,17 +359,17 @@ input, select {
   color: #000;
 }
 /* line 126, ../scss/modules/login.scss */
-.sulu-login .box .reset-mail-msg {
+.sulu-login .box .reset-mail-message {
   text-align: center;
 }
 /* line 128, ../scss/modules/login.scss */
-.sulu-login .box .reset-mail-msg .msg {
+.sulu-login .box .reset-mail-message .message {
   display: block;
   color: #999;
   padding-bottom: 20px;
 }
 /* line 133, ../scss/modules/login.scss */
-.sulu-login .box .reset-mail-msg .btn.action {
+.sulu-login .box .reset-mail-message .btn.action {
   float: none;
   margin: 0;
   padding: 0 15px;

@@ -23,7 +23,7 @@
     </route>
     <route id="sulu_security.reset_password.email.resend" path="reset/email/resend">
         <default key="_controller">SuluSecurityBundle:Resetting:sendEmail</default>
-        <default key="nonewkey">true</default>
+        <default key="generateNewKey">false</default>
     </route>
     <route id="sulu_security.reset_password.reset" path="reset">
         <default key="_controller">SuluSecurityBundle:Resetting:reset</default>

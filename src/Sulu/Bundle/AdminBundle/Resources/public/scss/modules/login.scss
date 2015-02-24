@@ -27,7 +27,7 @@
         }
 
         .husky-validate-error {
-            .error-msg {
+            .error-message {
                 height: 50px;
             }
             &.login .bottom-container span:not(.website-switch) {
@@ -62,7 +62,7 @@
             }
         }
 
-        .error-msg {
+        .error-message {
             color: $red;
             display: block;
             height: 0px;
@@ -81,7 +81,7 @@
             float: right;
             margin: 20px 15px 0 0;
         }
-        .reset-mail-msg .login-loader {
+        .reset-mail-message .login-loader {
             float: none;
             margin-right: 0;
             margin-left: 0;
@@ -123,9 +123,9 @@
             }
         }
 
-        .reset-mail-msg {
+        .reset-mail-message {
             text-align: center;
-            .msg {
+            .message {
                 display: block;
                 color: $grayLight;
                 padding-bottom: 20px;
