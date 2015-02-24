@@ -305,7 +305,7 @@ define(function() {
 
             this.sandbox.on('husky.data-navigation.select', function(item) {
                 if(!!item._links && !!item._links.admin) {
-                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href);
+                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href, false, false);
                 }
             }.bind(this));
 
