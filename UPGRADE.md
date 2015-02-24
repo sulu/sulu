@@ -2,7 +2,21 @@
 
 ## dev-develop
 
+## Content Types
+
+Time content types returns now standardized values (hh:mm:ss) and can handle this as localized string in the input
+field.
+
+For content you can upgrade the pages with:
+
+```bash
+app/console sulu:upgrade:0.16.0:time
+```
+
+If you use the field in another component you should upgrade your api that it returns time values in format (hh:mm:ss).
+
 ## Security
+
 Database has changed: User has now a unique email address. Run following command:
 
 ```bash
