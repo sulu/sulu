@@ -5519,50 +5519,51 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
   box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 16, ../scss/modules/overlay.scss */
+/* line 22, ../scss/modules/overlay.scss */
 .husky-overlay-container.right-aligned {
   left: auto;
   right: 0;
 }
-/* line 21, ../scss/modules/overlay.scss */
+/* line 27, ../scss/modules/overlay.scss */
 .husky-overlay-container.overflow-hidden {
   /* FIXME select in slides hidden */
   overflow: hidden;
 }
-/* line 26, ../scss/modules/overlay.scss */
+/* line 32, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide {
   width: 600px;
 }
-/* line 29, ../scss/modules/overlay.scss */
+/* line 35, ../scss/modules/overlay.scss */
 .husky-overlay-container.wide .slides .slide {
   width: 600px;
 }
-/* line 34, ../scss/modules/overlay.scss */
+/* line 40, ../scss/modules/overlay.scss */
 .husky-overlay-container.medium {
   width: 460px;
 }
-/* line 37, ../scss/modules/overlay.scss */
+/* line 43, ../scss/modules/overlay.scss */
 .husky-overlay-container.medium .slides .slide {
   width: 460px;
 }
-/* line 42, ../scss/modules/overlay.scss */
+/* line 48, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone {
   width: 700px;
 }
-/* line 44, ../scss/modules/overlay.scss */
+/* line 50, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone .slides .slide {
   width: 700px;
 }
-/* line 47, ../scss/modules/overlay.scss */
+/* line 53, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone .overlay-content {
   margin-bottom: 20px;
 }
-/* line 50, ../scss/modules/overlay.scss */
+/* line 56, ../scss/modules/overlay.scss */
 .husky-overlay-container.dropzone .overlay-footer {
   display: none;
 }
-/* line 56, ../scss/modules/overlay.scss */
+/* line 62, ../scss/modules/overlay.scss */
 .husky-overlay-container .draggable .overlay-header {
   cursor: move;
   user-select: none;
@@ -5571,24 +5572,24 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   -ms-user-select: none;
   -o-user-select: none;
 }
-/* line 63, ../scss/modules/overlay.scss */
+/* line 69, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header {
   background: #EA524E;
   color: #fff;
 }
-/* line 66, ../scss/modules/overlay.scss */
+/* line 72, ../scss/modules/overlay.scss */
 .husky-overlay-container.error .overlay-header .title {
   color: #000;
 }
-/* line 73, ../scss/modules/overlay.scss */
+/* line 79, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header {
   background: #F2D212;
 }
-/* line 75, ../scss/modules/overlay.scss */
+/* line 81, ../scss/modules/overlay.scss */
 .husky-overlay-container.warning .overlay-header .title {
   color: #000;
 }
-/* line 81, ../scss/modules/overlay.scss */
+/* line 87, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides {
   position: relative;
   left: 0px;
@@ -5597,20 +5598,20 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   -webkit-transition: left 500ms;
   transition: left 500ms;
 }
-/* line 86, ../scss/modules/overlay.scss */
+/* line 92, ../scss/modules/overlay.scss */
 .husky-overlay-container .slides .slide {
   float: left;
   width: 400px;
 }
 
-/* line 93, ../scss/modules/overlay.scss */
+/* line 99, ../scss/modules/overlay.scss */
 .overlay-header {
   min-height: 50px;
   background: #efefef;
   position: relative;
   border-radius: 3px 3px 0 0;
 }
-/* line 99, ../scss/modules/overlay.scss */
+/* line 105, ../scss/modules/overlay.scss */
 .overlay-header .title {
   color: #999;
   font-size: 23px;
@@ -5621,12 +5622,12 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   white-space: nowrap;
   overflow: hidden;
 }
-/* line 111, ../scss/modules/overlay.scss */
+/* line 117, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .title {
   margin-bottom: 0;
   padding-bottom: 0;
 }
-/* line 116, ../scss/modules/overlay.scss */
+/* line 122, ../scss/modules/overlay.scss */
 .overlay-header.with-sub-title .sub-title {
   padding-left: 20px;
   padding-top: 5px;
@@ -5634,7 +5635,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   font-size: smaller;
   color: #999;
 }
-/* line 126, ../scss/modules/overlay.scss */
+/* line 132, ../scss/modules/overlay.scss */
 .overlay-header .close-button {
   position: absolute;
   top: 0px;
@@ -5645,25 +5646,25 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   line-height: 12px;
   padding: 8px;
 }
-/* line 137, ../scss/modules/overlay.scss */
+/* line 143, ../scss/modules/overlay.scss */
 .overlay-header .tabs {
   display: inline-block;
 }
-/* line 141, ../scss/modules/overlay.scss */
+/* line 147, ../scss/modules/overlay.scss */
 .overlay-header .language-changer {
   width: 80px;
   position: absolute;
   bottom: 10px;
   right: 20px;
 }
-/* line 148, ../scss/modules/overlay.scss */
+/* line 154, ../scss/modules/overlay.scss */
 .overlay-header.small-header {
   background: transparent;
   min-height: 0;
   height: 25px;
 }
 
-/* line 155, ../scss/modules/overlay.scss */
+/* line 161, ../scss/modules/overlay.scss */
 .overlay-footer {
   padding: 10px;
   border-top: 1px solid #ccc;
@@ -5676,59 +5677,59 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   content: ' ';
   display: block;
 }
-/* line 162, ../scss/modules/overlay.scss */
+/* line 168, ../scss/modules/overlay.scss */
 .overlay-footer .btn {
   display: inline-block;
   min-width: 70px;
   margin: 0 auto;
   padding: 0;
 }
-/* line 168, ../scss/modules/overlay.scss */
+/* line 174, ../scss/modules/overlay.scss */
 .overlay-footer .btn.tick {
   width: 70px;
   line-height: 28px;
 }
-/* line 173, ../scss/modules/overlay.scss */
+/* line 179, ../scss/modules/overlay.scss */
 .overlay-footer .btn.left {
   float: left;
   margin-right: 20px;
   margin-right: 0;
 }
-/* line 178, ../scss/modules/overlay.scss */
+/* line 184, ../scss/modules/overlay.scss */
 .overlay-footer .btn.right {
   float: right;
   margin-left: 20px;
   margin-right: 0;
 }
-/* line 185, ../scss/modules/overlay.scss */
+/* line 191, ../scss/modules/overlay.scss */
 .overlay-footer.center .btn {
   margin: 0 auto;
 }
-/* line 189, ../scss/modules/overlay.scss */
+/* line 195, ../scss/modules/overlay.scss */
 .overlay-footer.left .btn {
   float: left;
   margin-right: 20px;
 }
-/* line 194, ../scss/modules/overlay.scss */
+/* line 200, ../scss/modules/overlay.scss */
 .overlay-footer.right .btn {
   float: right;
   margin-left: 20px;
 }
 
-/* line 200, ../scss/modules/overlay.scss */
+/* line 206, ../scss/modules/overlay.scss */
 .overlay-content {
   overflow: auto;
   padding-left: 0;
   margin: 0 20px 10px 20px;
 }
-/* line 205, ../scss/modules/overlay.scss */
+/* line 211, ../scss/modules/overlay.scss */
 .overlay-content .message {
   padding: 20px 0 25px 0;
   font-size: 16px;
   color: #999;
 }
 
-/* line 212, ../scss/modules/overlay.scss */
+/* line 218, ../scss/modules/overlay.scss */
 .husky-overlay-backdrop {
   width: 100%;
   height: 100%;
@@ -5737,6 +5738,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled.active, fieldset
   left: 0px;
   background: #000;
   z-index: 999;
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 /* line 6, ../scss/modules/custom-icons.scss */
@@ -6543,7 +6545,7 @@ span.error {
   height: 0;
   -webkit-transform: scale3d(1, 1, 1);
 }
-/* line 91, ../scss/modules/navigation.scss */
+/* line 90, ../scss/modules/navigation.scss */
 .navigation.collapseIcon .navigation-close-icon {
   position: absolute;
   display: block;
@@ -6561,8 +6563,12 @@ span.error {
   border-radius: 0 0 2px 0;
   opacity: 1;
 }
+/* line 108, ../scss/modules/navigation.scss */
+.navigation.disappeared.collapseIcon .navigation-close-icon {
+  display: none;
+}
 
-/* line 110, ../scss/modules/navigation.scss */
+/* line 113, ../scss/modules/navigation.scss */
 .navigation-content {
   height: 100%;
   overflow-y: auto;
@@ -6571,40 +6577,40 @@ span.error {
   font-size: 16px;
   /*for sticky navigation footer*/
 }
-/* line 117, ../scss/modules/navigation.scss */
+/* line 120, ../scss/modules/navigation.scss */
 .navigation-content a {
   display: inline-block;
   text-decoration: none;
   color: rgba(255, 255, 255, 0.5);
   outline: none;
 }
-/* line 124, ../scss/modules/navigation.scss */
+/* line 127, ../scss/modules/navigation.scss */
 .navigation-content ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-/* line 131, ../scss/modules/navigation.scss */
+/* line 134, ../scss/modules/navigation.scss */
 .navigation-content .wrapper {
   min-height: 100%;
   margin-bottom: -121px;
   overflow: hidden;
 }
-/* line 136, ../scss/modules/navigation.scss */
+/* line 139, ../scss/modules/navigation.scss */
 .navigation-content .wrapper:after {
   content: "";
   display: block;
   height: 161px;
 }
 
-/* line 144, ../scss/modules/navigation.scss */
+/* line 147, ../scss/modules/navigation.scss */
 .navigation-header {
   height: 30px;
   overflow: hidden;
   margin: 40px 20px 30px;
 }
 
-/* line 150, ../scss/modules/navigation.scss */
+/* line 153, ../scss/modules/navigation.scss */
 .navigation-header-title {
   display: inline-block;
   font-size: 18px;
@@ -6613,7 +6619,7 @@ span.error {
   line-height: 30px;
 }
 
-/* line 158, ../scss/modules/navigation.scss */
+/* line 161, ../scss/modules/navigation.scss */
 .logo {
   display: inline-block;
   margin-right: 10px;
@@ -6625,30 +6631,30 @@ span.error {
   background-repeat: no-repeat;
 }
 
-/* line 169, ../scss/modules/navigation.scss */
+/* line 172, ../scss/modules/navigation.scss */
 .navigation-search {
   position: relative;
   margin: 0px 20px;
   padding: 10px 0;
   height: 50px;
 }
-/* line 175, ../scss/modules/navigation.scss */
+/* line 178, ../scss/modules/navigation.scss */
 .navigation-search .search-icon {
   opacity: 1;
 }
 
-/* line 181, ../scss/modules/navigation.scss */
+/* line 184, ../scss/modules/navigation.scss */
 li.is-active > .navigation-items-toggle a,
 li.is-active > .navigation-subitems-toggle a {
   color: #fff;
 }
-/* line 186, ../scss/modules/navigation.scss */
+/* line 189, ../scss/modules/navigation.scss */
 li.is-active > div > a.navigation-settings-icon {
   display: block;
   color: #999;
 }
 
-/* line 192, ../scss/modules/navigation.scss */
+/* line 195, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items {
   position: relative;
   top: 0px;
@@ -6658,41 +6664,41 @@ li.is-active > div > a.navigation-settings-icon {
   /* sub-items */
   /* sub-sub-items */
 }
-/* line 199, ../scss/modules/navigation.scss */
+/* line 202, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items:hover:not(.is-active) {
   background-color: #191D22;
 }
-/* line 203, ../scss/modules/navigation.scss */
+/* line 206, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items:hover:not(.is-active).is-expanded .navigation-items-toggle {
   border-bottom-color: #21272E;
 }
-/* line 209, ../scss/modules/navigation.scss */
+/* line 212, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items > div {
   position: relative;
   width: 100%;
   padding-left: 20px;
   padding-right: 20px;
 }
-/* line 216, ../scss/modules/navigation.scss */
+/* line 219, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-active {
   background-color: #111417;
 }
-/* line 220, ../scss/modules/navigation.scss */
+/* line 223, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-active.is-expanded .navigation-items-toggle {
   border-bottom-color: #21272E;
 }
-/* line 226, ../scss/modules/navigation.scss */
+/* line 229, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-expanded {
   padding-bottom: 20px;
 }
-/* line 229, ../scss/modules/navigation.scss */
+/* line 232, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-expanded .navigation-items-toggle {
   border-bottom: 1px solid #111417;
   height: inherit;
   padding-bottom: 15px;
   height: 50px;
 }
-/* line 234, ../scss/modules/navigation.scss */
+/* line 237, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-expanded > .navigation-items-list {
   display: block;
   opacity: 1;
@@ -6702,11 +6708,11 @@ li.is-active > div > a.navigation-settings-icon {
   -webkit-transition-delay: 75ms;
   transition: opacity 100ms 75ms;
 }
-/* line 243, ../scss/modules/navigation.scss */
+/* line 246, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items.is-selected a {
   color: white;
 }
-/* line 249, ../scss/modules/navigation.scss */
+/* line 252, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items .navigation-items-list {
   position: absolute;
   left: 0px;
@@ -6724,12 +6730,12 @@ li.is-active > div > a.navigation-settings-icon {
   -webkit-transition: opacity 100ms;
   transition: opacity 100ms;
 }
-/* line 265, ../scss/modules/navigation.scss */
+/* line 268, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items ul ul {
   font-size: 12px;
   padding-left: 20px;
 }
-/* line 270, ../scss/modules/navigation.scss */
+/* line 273, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li {
   border-radius: 3px;
   cursor: pointer;
@@ -6738,7 +6744,7 @@ li.is-active > div > a.navigation-settings-icon {
   left: 0px;
   height: 30px;
 }
-/* line 278, ../scss/modules/navigation.scss */
+/* line 281, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li:hover:not(.navigation-subitems) a::before {
   font-size: 12px;
   content: "";
@@ -6751,11 +6757,11 @@ li.is-active > div > a.navigation-settings-icon {
   left: 0px;
   padding-right: 9px;
 }
-/* line 284, ../scss/modules/navigation.scss */
+/* line 287, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li.is-selected a {
   color: white;
 }
-/* line 287, ../scss/modules/navigation.scss */
+/* line 290, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li.is-selected a::before {
   font-size: 12px;
   content: "";
@@ -6768,7 +6774,7 @@ li.is-active > div > a.navigation-settings-icon {
   left: 0px;
   padding-right: 9px;
 }
-/* line 293, ../scss/modules/navigation.scss */
+/* line 296, ../scss/modules/navigation.scss */
 .navigation-item-container .navigation-items li a {
   padding: 0px 0 0px 10px;
   height: 100%;
@@ -6783,11 +6789,11 @@ li.is-active > div > a.navigation-settings-icon {
   /* prohibits height changes on select */
 }
 
-/* line 310, ../scss/modules/navigation.scss */
+/* line 313, ../scss/modules/navigation.scss */
 .navigation-subitems.is-expanded > .navigation-items-list {
   display: block;
 }
-/* line 313, ../scss/modules/navigation.scss */
+/* line 316, ../scss/modules/navigation.scss */
 .navigation-subitems.is-expanded .navigation-subitems-toggle {
   border-bottom: 1px solid #111417;
   height: inherit;
@@ -6795,7 +6801,7 @@ li.is-active > div > a.navigation-settings-icon {
   padding-bottom: 0;
 }
 
-/* line 320, ../scss/modules/navigation.scss */
+/* line 323, ../scss/modules/navigation.scss */
 .navigation-item {
   width: 100%;
   display: inline-block;
@@ -6806,7 +6812,7 @@ li.is-active > div > a.navigation-settings-icon {
   height: 100%;
 }
 
-/* line 330, ../scss/modules/navigation.scss */
+/* line 333, ../scss/modules/navigation.scss */
 .navigation-item-title {
   padding-left: 35px;
   height: 100%;
@@ -6818,7 +6824,7 @@ li.is-active > div > a.navigation-settings-icon {
   white-space: nowrap;
 }
 
-/* line 341, ../scss/modules/navigation.scss */
+/* line 344, ../scss/modules/navigation.scss */
 .navigation-item-icon {
   position: absolute;
   top: 0px;
@@ -6829,7 +6835,7 @@ li.is-active > div > a.navigation-settings-icon {
   line-height: 48px;
 }
 
-/* line 351, ../scss/modules/navigation.scss */
+/* line 354, ../scss/modules/navigation.scss */
 .navigation-items-toggle {
   position: relative;
   height: 50px;
@@ -6837,7 +6843,7 @@ li.is-active > div > a.navigation-settings-icon {
   z-index: 200;
 }
 
-/* line 358, ../scss/modules/navigation.scss */
+/* line 361, ../scss/modules/navigation.scss */
 li a.navigation-settings-icon {
   width: auto;
   position: absolute;
@@ -6847,7 +6853,7 @@ li a.navigation-settings-icon {
   display: none;
 }
 
-/* line 367, ../scss/modules/navigation.scss */
+/* line 370, ../scss/modules/navigation.scss */
 .navigation-toggle-icon {
   width: auto;
   position: absolute;
@@ -6856,28 +6862,28 @@ li a.navigation-settings-icon {
   font-size: 12px;
 }
 
-/* line 375, ../scss/modules/navigation.scss */
+/* line 378, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle {
   padding: 2px 0 2px;
   position: relative;
   height: 30px;
 }
-/* line 380, ../scss/modules/navigation.scss */
+/* line 383, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle .navigation-toggle-icon {
   top: 3px;
 }
-/* line 384, ../scss/modules/navigation.scss */
+/* line 387, ../scss/modules/navigation.scss */
 .navigation-subitems-toggle .navigation-item {
   padding: 0px;
 }
 
-/* line 390, ../scss/modules/navigation.scss */
+/* line 393, ../scss/modules/navigation.scss */
 .navigation footer {
   padding: 15px 20px 15px 23px;
   height: 121px;
   background-color: #111417;
 }
-/* line 395, ../scss/modules/navigation.scss */
+/* line 398, ../scss/modules/navigation.scss */
 .navigation footer .user {
   font-size: 12px;
   color: #fff;
@@ -6886,7 +6892,7 @@ li a.navigation-settings-icon {
   white-space: nowrap;
   cursor: pointer;
 }
-/* line 403, ../scss/modules/navigation.scss */
+/* line 406, ../scss/modules/navigation.scss */
 .navigation footer .user .pic {
   color: #fff;
   text-align: right;
@@ -6894,13 +6900,13 @@ li a.navigation-settings-icon {
   display: inline-block;
   margin-right: 15px;
 }
-/* line 410, ../scss/modules/navigation.scss */
+/* line 413, ../scss/modules/navigation.scss */
 .navigation footer .user .name {
   display: inline-block;
   vertical-align: middle;
   padding-bottom: 5px;
 }
-/* line 417, ../scss/modules/navigation.scss */
+/* line 420, ../scss/modules/navigation.scss */
 .navigation footer .options {
   height: 20px;
   margin-bottom: 15px;
@@ -6910,16 +6916,16 @@ li a.navigation-settings-icon {
   top: 0px;
   left: 0px;
 }
-/* line 426, ../scss/modules/navigation.scss */
+/* line 429, ../scss/modules/navigation.scss */
 .navigation footer .options .locale-dropdown {
   color: #000;
   width: 60px;
 }
-/* line 431, ../scss/modules/navigation.scss */
+/* line 434, ../scss/modules/navigation.scss */
 .navigation footer .options .dropdown-list {
   min-width: 150px;
 }
-/* line 435, ../scss/modules/navigation.scss */
+/* line 438, ../scss/modules/navigation.scss */
 .navigation footer .options .logout {
   color: white;
   cursor: pointer;
@@ -6931,14 +6937,14 @@ li a.navigation-settings-icon {
   top: 0px;
   right: 0px;
 }
-/* line 447, ../scss/modules/navigation.scss */
+/* line 450, ../scss/modules/navigation.scss */
 .navigation footer .version {
   padding-left: 35px;
   font-size: 10px;
   color: #878787;
   white-space: nowrap;
 }
-/* line 453, ../scss/modules/navigation.scss */
+/* line 456, ../scss/modules/navigation.scss */
 .navigation footer .version a {
   color: #fff;
   text-decoration: none;
@@ -6947,21 +6953,21 @@ li a.navigation-settings-icon {
 /**
  * MINIFIED NAVIGATION
  */
-/* line 464, ../scss/modules/navigation.scss */
+/* line 467, ../scss/modules/navigation.scss */
 .navigation.collapsed {
   width: 50px;
   overflow-x: hidden;
 }
-/* line 468, ../scss/modules/navigation.scss */
+/* line 471, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-header {
   margin-left: 10px;
   margin-right: 0;
 }
-/* line 473, ../scss/modules/navigation.scss */
+/* line 476, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-header-title {
   opacity: 0;
 }
-/* line 477, ../scss/modules/navigation.scss */
+/* line 480, ../scss/modules/navigation.scss */
 .navigation.collapsed .section-headline {
   opacity: 0;
   height: 0;
@@ -6970,23 +6976,23 @@ li a.navigation-settings-icon {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 486, ../scss/modules/navigation.scss */
+/* line 489, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-search.search-container {
   margin: 0;
   margin-left: 8px;
 }
-/* line 490, ../scss/modules/navigation.scss */
+/* line 493, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-search.search-container input {
   opacity: 0;
   z-index: 0;
 }
-/* line 494, ../scss/modules/navigation.scss */
+/* line 497, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-search.search-container .search-icon {
   opacity: 1;
   z-index: 100;
   color: rgba(255, 255, 255, 0.5);
 }
-/* line 503, ../scss/modules/navigation.scss */
+/* line 506, ../scss/modules/navigation.scss */
 .navigation.collapsed * .navigation-settings-icon,
 .navigation.collapsed * .navigation-toggle-icon, .navigation.collapsed .is-active .navigation-settings-icon,
 .navigation.collapsed .is-active .navigation-toggle-icon, .navigation.collapsed .is-expanded .navigation-settings-icon,
@@ -6997,70 +7003,70 @@ li a.navigation-settings-icon {
   -webkit-transition: opacity 0.2s;
   transition: opacity 0.2s;
 }
-/* line 509, ../scss/modules/navigation.scss */
+/* line 512, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-item-title {
   opacity: 0;
 }
-/* line 514, ../scss/modules/navigation.scss */
+/* line 517, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-items div {
   border: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 0;
 }
-/* line 521, ../scss/modules/navigation.scss */
+/* line 524, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-items a {
   padding: 0;
 }
-/* line 525, ../scss/modules/navigation.scss */
+/* line 528, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-items .navigation-items-list {
   opacity: 0;
   display: none;
 }
-/* line 531, ../scss/modules/navigation.scss */
+/* line 534, ../scss/modules/navigation.scss */
 .navigation.collapsed li {
   padding: 0;
 }
-/* line 535, ../scss/modules/navigation.scss */
+/* line 538, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-item-icon {
   margin-left: 15px;
   padding-left: 0px;
   line-height: 50px;
   vertical-align: middle;
 }
-/* line 542, ../scss/modules/navigation.scss */
+/* line 545, ../scss/modules/navigation.scss */
 .navigation.collapsed footer {
   padding-left: 15px;
   cursor: pointer;
   height: 51px;
   overflow: hidden;
 }
-/* line 548, ../scss/modules/navigation.scss */
+/* line 551, ../scss/modules/navigation.scss */
 .navigation.collapsed footer * {
   opacity: 0;
   height: 0px;
   margin: 0px;
 }
-/* line 554, ../scss/modules/navigation.scss */
+/* line 557, ../scss/modules/navigation.scss */
 .navigation.collapsed footer .user {
   opacity: 1;
   height: 20px;
 }
-/* line 558, ../scss/modules/navigation.scss */
+/* line 561, ../scss/modules/navigation.scss */
 .navigation.collapsed footer .user .pic {
   opacity: 1;
   height: 20px;
 }
-/* line 566, ../scss/modules/navigation.scss */
+/* line 569, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-content .wrapper {
   margin-bottom: -51px;
 }
-/* line 568, ../scss/modules/navigation.scss */
+/* line 571, ../scss/modules/navigation.scss */
 .navigation.collapsed .navigation-content .wrapper:after {
   height: 91px;
 }
 
-/* line 575, ../scss/modules/navigation.scss */
+/* line 578, ../scss/modules/navigation.scss */
 .navigation-tooltip {
   position: absolute;
   height: 30px;
@@ -7074,7 +7080,7 @@ li a.navigation-settings-icon {
   border-radius: 2px;
   z-index: 1000;
 }
-/* line 588, ../scss/modules/navigation.scss */
+/* line 591, ../scss/modules/navigation.scss */
 .navigation-tooltip::before {
   content: ' ';
   position: absolute;
@@ -7087,7 +7093,7 @@ li a.navigation-settings-icon {
   border-right: 10px solid #111417;
 }
 
-/* line 602, ../scss/modules/navigation.scss */
+/* line 605, ../scss/modules/navigation.scss */
 .navigation {
   -moz-transition: width 0.5s;
   -o-transition: width 0.5s;
@@ -7095,7 +7101,7 @@ li a.navigation-settings-icon {
   transition: width 0.5s;
 }
 
-/* line 606, ../scss/modules/navigation.scss */
+/* line 609, ../scss/modules/navigation.scss */
 .navigation footer,
 .navigation footer > *,
 .navigation .wrapper,
@@ -7107,7 +7113,7 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 614, ../scss/modules/navigation.scss */
+/* line 617, ../scss/modules/navigation.scss */
 .navigation-items {
   -moz-transition: all 0, opacity 0.5s, background 0.5s;
   -o-transition: all 0, opacity 0.5s, background 0.5s;
@@ -7115,14 +7121,14 @@ li a.navigation-settings-icon {
   transition: all 0, opacity 0.5s, background 0.5s;
 }
 
-/* line 618, ../scss/modules/navigation.scss */
+/* line 621, ../scss/modules/navigation.scss */
 .navigation-header {
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   -webkit-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 621, ../scss/modules/navigation.scss */
+/* line 624, ../scss/modules/navigation.scss */
 .navigation-header .navigation-header-title {
   -moz-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
@@ -7130,14 +7136,14 @@ li a.navigation-settings-icon {
   transition: opacity 0.5s;
 }
 
-/* line 626, ../scss/modules/navigation.scss */
+/* line 629, ../scss/modules/navigation.scss */
 .navigation-search {
   -moz-transition: margin 0.5s;
   -o-transition: margin 0.5s;
   -webkit-transition: margin 0.5s;
   transition: margin 0.5s;
 }
-/* line 628, ../scss/modules/navigation.scss */
+/* line 631, ../scss/modules/navigation.scss */
 .navigation-search input {
   -moz-transition: width 0.5s;
   -o-transition: width 0.5s;
@@ -7145,7 +7151,7 @@ li a.navigation-settings-icon {
   transition: width 0.5s;
 }
 
-/* line 633, ../scss/modules/navigation.scss */
+/* line 636, ../scss/modules/navigation.scss */
 .section-headline,
 .section-headline * {
   -moz-transition: all 0.5s;
@@ -7154,7 +7160,7 @@ li a.navigation-settings-icon {
   transition: all 0.5s;
 }
 
-/* line 638, ../scss/modules/navigation.scss */
+/* line 641, ../scss/modules/navigation.scss */
 .navigation-item-title {
   -moz-transition: opacity 0.5s;
   -o-transition: opacity 0.5s;
@@ -7162,7 +7168,7 @@ li a.navigation-settings-icon {
   transition: opacity 0.5s;
 }
 
-/* line 642, ../scss/modules/navigation.scss */
+/* line 645, ../scss/modules/navigation.scss */
 .search-icon {
   -moz-transition: color 0.5s;
   -o-transition: color 0.5s;
@@ -7170,7 +7176,7 @@ li a.navigation-settings-icon {
   transition: color 0.5s;
 }
 
-/* line 647, ../scss/modules/navigation.scss */
+/* line 650, ../scss/modules/navigation.scss */
 .navigation:not(.collapsed) * {
   opacity: 1;
 }
