@@ -42,7 +42,10 @@ define({
 
             App.start([{
                 name: 'collections/components/collection-create@sulumedia',
-                options: {el: $element, parent: !!item.id ? item.id : null}
+                options: {
+                    el: $element,
+                    parent: !!item.id ? item.id : null
+                }
             }]);
         });
     }
