@@ -189,11 +189,8 @@ f();
 EOT;
 
         $script = sprintf($script, $type, $selector, $itemTitle);
-        try {
-            $this->getSession()->executeScript($script);
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());die();;
-        }
+
+        $this->getSession()->executeScript($script);
     }
 
     /**
@@ -325,8 +322,8 @@ EOT
     /**
      * Wait for the named aura events
      *
-     * @param array Array of event names
-     * @param integer Timeout in milliseconds
+     * @param array $eventNames Array of event names
+     * @param integer $time in milliseconds
      */
     protected function waitForAuraEvents($eventNames, $time = self::MEDIUM_WAIT_TIME)
     {

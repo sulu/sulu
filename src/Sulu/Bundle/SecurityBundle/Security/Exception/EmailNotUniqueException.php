@@ -1,0 +1,39 @@
+<?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Sulu\Bundle\SecurityBundle\Security\Exception;
+
+/**
+ * This Exception is thrown if the email for a user is not unique
+ * @package Sulu\Bundle\SecurityBundle\Security\Exception
+ */
+class EmailNotUniqueException extends SecurityException
+{
+
+    private $email;
+
+    public function __construct($email)
+    {
+        $this->email = $email;
+        parent::__construct('A user\'s email has to be unique!', 1004);
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function toArray()
+    {
+        return array(
+            'code' => $this->code,
+            'message' => $this->message
+        );
+    }
+}

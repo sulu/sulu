@@ -72,7 +72,7 @@ class DefaultMediaManagerTest extends ProphecyTestCase
         $this->mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface');
         $this->collectionRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface');
         $this->userRepository = $this->prophesize('Sulu\Component\Security\UserRepositoryInterface');
-        $this->em = $this->prophesize('Doctrine\Common\Persistence\ObjectManager');
+        $this->em = $this->prophesize('Doctrine\ORM\EntityManager');
         $this->storage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $this->validator = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface');
         $this->formatManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface');

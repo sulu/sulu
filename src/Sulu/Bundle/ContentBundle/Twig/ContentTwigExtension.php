@@ -13,12 +13,13 @@ namespace Sulu\Bundle\ContentBundle\Twig;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 
 /**
  * Extension for content form generation
  * @package Sulu\Bundle\ContentBundle\Twig
  */
-class ContentExtension extends \Twig_Extension
+class ContentTwigExtension extends \Twig_Extension
 {
     /**
      * @var ContentTypeManagerInterface
@@ -37,9 +38,11 @@ class ContentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('getType', array($this, 'getTypeFunction')),
-            new \Twig_SimpleFunction('needsAddButton', array($this, 'needsAddButtonFunction')),
-            new \Twig_SimpleFunction('getParams', array($this, 'getParamsFunction'))
+            new \Twig_SimpleFunction('get_type', array($this, 'getTypeFunction')),
+            new \Twig_SimpleFunction('needs_add_button', array($this, 'needsAddButtonFunction')),
+            new \Twig_SimpleFunction('get_params', array($this, 'getParamsFunction')),
+            new \Twig_SimpleFunction('parameter_to_select', array($this, 'convertParameterToSelect')),
+            new \Twig_SimpleFunction('parameter_to_key_value', array($this, 'convertParameterToKeyValue'))
         );
     }
 
@@ -64,7 +67,8 @@ class ContentExtension extends \Twig_Extension
      * @see http://php.net/manual/de/function.array-merge-recursive.php#106985
      * @return array
      */
-    private function mergeRecursive() {
+    private function mergeRecursive()
+    {
 
         $arrays = func_get_args();
         $base = array_shift($arrays);
@@ -122,6 +126,45 @@ class ContentExtension extends \Twig_Extension
     public function isMultipleTest($property)
     {
         return $property->getMinOccurs() > 1;
+    }
+
+    /**
+     * @param PropertyParameter[] $parameters
+     * @param string $locale
+     * @return array
+     */
+    public function convertParameterToSelect($parameters, $locale)
+    {
+        $result = array();
+
+        foreach ($parameters as $parameter) {
+            $result[] = array(
+                'id' => $parameter->getName(),
+                'name' => $parameter->getTitle($locale)
+            );
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param PropertyParameter[] $parameters
+     * @return array
+     */
+    public function convertParameterToKeyValue($parameters)
+    {
+        $result = array();
+
+        if (is_array($parameters)) {
+            foreach ($parameters as $parameter) {
+                $result[$parameter->getName()] = $parameter->getValue();
+
+            }
+        } else {
+            return $parameters;
+        }
+
+        return $result;
     }
 
     /**

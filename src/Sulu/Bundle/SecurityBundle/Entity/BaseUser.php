@@ -35,6 +35,12 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      * @var string
      * @Expose
      */
+    private $email;
+
+    /**
+     * @var string
+     * @Expose
+     */
     protected $password;
 
     /**
@@ -414,5 +420,28 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getPasswordResetToken()
     {
         return $this->passwordResetToken;
+    }
+
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return BaseUser
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email
+     *
+     * @return string 
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 }

@@ -269,8 +269,36 @@
                         }
                     }
                     return url;
+                },
+
+                /**
+                 * @param sandbox
+                 * @param $element
+                 */
+                cropLabelOfElement = function(sandbox, $element) {
+                    var original = sandbox.dom.trim(sandbox.dom.text($element));
+                    // replace multiple spaces with single
+                    original = original.replace(/\s{2,}/g, ' ');
+                    sandbox.dom.attr($element, 'title', original);
+                    sandbox.dom.html($element, sandbox.util.cropMiddle(original, 20));
                 };
 
+            /**
+             * function crops all labels with class 'crop'
+             * @param form The form that contains the labels
+             * @param className Define another class name than 'crop'
+             */
+            app.sandbox.sulu.cropAllLabels = function(form, className) {
+                var sandbox = app.sandbox;
+                if (!className) {
+                    className = 'crop'
+                }
+                var elements = sandbox.dom.find('label.' + className, form), i, length;
+                for (i = -1, length = elements.length; ++i < length;) {
+                    cropLabelOfElement(sandbox, elements[i]);
+                }
+            };
+            
             /**
              * creates an address string from an object
              * @param address

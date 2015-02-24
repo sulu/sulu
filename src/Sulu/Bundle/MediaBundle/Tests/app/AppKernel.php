@@ -19,7 +19,6 @@ class AppKernel extends SuluTestKernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config_' . $this->getContext() . '.yml');
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
         $loader->load(__DIR__ . '/config/config.yml');
     }

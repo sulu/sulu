@@ -407,6 +407,50 @@
                 <source>content.contents.start-preview</source>
                 <target>Start preview</target>
             </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf030" resname="sulu.content.form.settings.changelog">
+                <source>sulu.content.form.settings.changelog</source>
+                <target>Changelog</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.changed">
+                <source>sulu.content.form.settings.changelog.changed</source>
+                <target>Changed by:</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.created">
+                <source>sulu.content.form.settings.changelog.created</source>
+                <target>Created by:</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.user-not-found">
+                <source>sulu.content.form.settings.changelog.user-not-found</source>
+                <target>User not found</target>
+            </trans-unit>
+            <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
+                <source>column-navigation.ghost</source>
+                <target>Ghost page</target>
+            </trans-unit>
+            <trans-unit id="acbaaaaa38148fbed4a73a4123dfdf0fc" resname="column-navigation.shadow">
+                <source>column-navigation.shadow</source>
+                <target>Shadow page</target>
+            </trans-unit>
+            <trans-unit id="9cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.unpublished">
+                <source>public.unpublished</source>
+                <target>Not published</target>
+            </trans-unit>
+            <trans-unit id="5cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.internal-link">
+                <source>public.internal-link</source>
+                <target>internal link</target>
+            </trans-unit>
+            <trans-unit id="2cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.external-link">
+                <source>public.external-link</source>
+                <target>external link</target>
+            </trans-unit>
+            <trans-unit id="2cbaaaaa38248fbed4a73a4129dfdf0fc" resname="column-navigation.order-title">
+                <source>column-navigation.order-title</source>
+                <target>Rearrange page</target>
+            </trans-unit>
+            <trans-unit id="2cbbaaca39148fbed4a73a4123dfdf0fc" resname="column-navigation.order-message">
+                <source>column-navigation.order-message</source>
+                <target>The operation you are about to do will rearrange a page.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

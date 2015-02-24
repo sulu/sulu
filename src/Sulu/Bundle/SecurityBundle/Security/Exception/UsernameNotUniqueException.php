@@ -25,7 +25,7 @@ class UsernameNotUniqueException extends SecurityException
 
     public function __construct($username)
     {
-        parent::__construct('security.user.error.notUnique', 1001);
+        parent::__construct('a username has to be unique!', 1001);
         $this->username = $username;
     }
 

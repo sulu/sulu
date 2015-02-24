@@ -25,11 +25,10 @@ final class ContentEvents
     const NODE_PRE_SAVE = 'sulu.content.node.pre_save';
 
     /**
-     * Thrown before a structure before the session save after a content move
-     * operation.
+     * Thrown after a node has been order. Note. Thrown before session is saved
      * @var string
      */
-    const NODE_ORDER_BEFORE = 'sulu.content.node.order_before';
+    const NODE_ORDER = 'sulu.content.node.order';
 
     /**
      * Thrown before structure node is loaded.

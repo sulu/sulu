@@ -59,7 +59,7 @@ define([], function() {
         bindCustomEvents = function() {
             this.sandbox.on('husky.overlay.internal-links.' + this.options.instanceName + '.add.initialized', initColumnNavigation.bind(this));
 
-            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.edit', selectLink.bind(this));
+            this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.action', selectLink.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
             this.sandbox.on('husky.column-navigation.' + this.options.instanceName + '.initialized', function() {
@@ -75,6 +75,9 @@ define([], function() {
             var data = this.getData();
 
             if (data.indexOf(item.id) === -1) {
+                // FIXME return of node api returns for column-navigation id and for "filter by id" uuid as id key
+                item.uuid = item.id;
+                
                 data.push(item.id);
 
                 this.setData(data, false);
@@ -99,13 +102,14 @@ define([], function() {
                             el: getId.call(this, 'columnNavigation'),
                             url: this.options.columnNavigationUrl,
                             instanceName: this.options.instanceName,
-                            editIcon: 'fa-plus-circle',
+                            actionIcon: 'fa-plus-circle',
                             resultKey: this.options.resultKey,
-                            showEdit: false,
+                            showOptions: false,
                             showStatus: true,
                             responsive: false,
                             skin: 'fixed-height-small',
                             markable: true,
+                            sortable: false,
                             premarkedIds: data
                         }
                     }

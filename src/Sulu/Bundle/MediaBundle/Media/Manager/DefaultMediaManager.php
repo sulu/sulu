@@ -10,34 +10,33 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use Doctrine\Common\Persistence\ObjectManager;
-
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
+use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
-use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\UserInterface;
 use Sulu\Component\Security\UserRepositoryInterface;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
@@ -45,6 +44,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 class DefaultMediaManager implements MediaManagerInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
+    const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
     const ENTITY_NAME_MEDIATYPE = 'SuluMediaBundle:MediaType';
     const ENTITY_NAME_FILE = 'SuluMediaBundle:File';
     const ENTITY_NAME_FILEVERSION = 'SuluMediaBundle:FileVersion';
@@ -68,7 +68,7 @@ class DefaultMediaManager implements MediaManagerInterface
     private $collectionRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
     private $em;
 
@@ -136,7 +136,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param MediaRepositoryInterface $mediaRepository
      * @param CollectionRepositoryInterface $collectionRepository
      * @param UserRepositoryInterface $userRepository
-     * @param ObjectManager $em
+     * @param EntityManager $em
      * @param StorageInterface $storage
      * @param FileValidatorInterface $validator
      * @param FormatManagerInterface $formatManager
@@ -150,7 +150,7 @@ class DefaultMediaManager implements MediaManagerInterface
         MediaRepositoryInterface $mediaRepository,
         CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
-        ObjectManager $em,
+        EntityManager $em,
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
@@ -786,6 +786,28 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function move($id, $locale, $destCollection)
+    {
+        try {
+            $mediaEntity = $this->mediaRepository->findMediaById($id);
+
+            if ($mediaEntity === null) {
+                throw new MediaNotFoundException($id);
+            }
+
+            $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
+
+            $this->em->flush();
+
+            return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        } catch (DBALException $ex) {
+            throw new CollectionNotFoundException($destCollection);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function increaseDownloadCounter($fileVersionId)
     {
         $query = $this->em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
@@ -801,7 +823,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param Media $media
      * @return Media
      */
-    protected function addFormatsAndUrl(Media $media)
+    public function addFormatsAndUrl(Media $media)
     {
         $media->setFormats(
             $this->formatManager->getFormats(

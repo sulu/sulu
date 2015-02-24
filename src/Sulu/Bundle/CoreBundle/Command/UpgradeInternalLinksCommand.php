@@ -32,6 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Upgrades InternalLinks to 0.15.0
+ * @deprecated
  */
 class UpgradeInternalLinksCommand extends ContainerAwareCommand
 {

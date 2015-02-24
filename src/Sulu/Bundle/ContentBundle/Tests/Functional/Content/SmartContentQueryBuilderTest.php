@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
@@ -180,7 +181,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(array('properties' => array('my_article' => 'article')));
+        $builder->init(
+            array(
+                'properties' => array(
+                    'my_article' => new PropertyParameter('my_article', 'article')
+                )
+            )
+        );
 
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
@@ -599,9 +606,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder->init(
             array(
                 'properties' => array(
-                    'my_title' => 'title',
-                    'ext_title' => 'excerpt.title',
-                    'ext_tags' => 'excerpt.tags'
+                    'my_title' => new PropertyParameter('my_title', 'title'),
+                    'ext_title' => new PropertyParameter('ext_title', 'excerpt.title'),
+                    'ext_tags' => new PropertyParameter('ext_tags', 'excerpt.tags')
                 )
             )
         );

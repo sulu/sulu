@@ -27,7 +27,7 @@
             </script>
         </div>
 
-        {% if needsAddButton(property) %}
+        {% if needs_add_button(property) %}
             {% include 'SuluContentBundle:Template:macros/add_button.html.twig' with {'property': property} only %}
         {% endif %}
     </div>

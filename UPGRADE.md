@@ -1,5 +1,30 @@
 # Upgrade
 
+## 0.16.0
+
+## Content Types
+
+Time content types returns now standardized values (hh:mm:ss) and can handle this as localized string in the input
+field.
+
+For content you can upgrade the pages with:
+
+```bash
+app/console sulu:upgrade:0.16.0:time
+```
+
+In the website you should change the output if time to your format.
+
+If you use the field in another component you should upgrade your api that it returns time values in format (hh:mm:ss).
+
+## Security
+
+Database has changed: User has now a unique email address. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ## 0.15.0
 
 ### Sulu Locales
@@ -18,6 +43,70 @@ The internal representation of the internal links have changed, you have to run 
 
 ```bash
 app/console sulu:upgrade:0.15.0:internal-links
+```
+
+### Content Types
+
+PropertyParameter are now able to hold metadata. Therefore the Interface has changed. Please check all your
+ContentTypes which uses params.
+
+__Before:__
+
+DefaultParams:
+
+```php
+array(
+    'name' => 'value',
+    ...
+)
+```
+Access in Twig:
+
+```twig
+{{ params.name }}
+```
+
+__After:__
+
+```php
+array(
+    'name' => new PropertyParameter('name', 'string', 'value', array()),
+    ...
+)
+```
+Access in Twig:
+
+```twig
+As String:
+{{ params.name }}
+
+As Array or boolean:
+{{ params.name.value }}
+
+Get translated title:
+{{ params.name.getTitle('de') }}
+```
+
+__Optional:__
+
+Metadata under properties in template:
+
+```xml
+<property name="smart_content" type="smart_content">
+    <params>
+        <param name="display_as" type="collection">
+            <param name="two">
+                <meta>
+                    <title lang="de">Zwei Spalten</title>
+                    <title lang="en">Two columns</title>
+
+                    <info_text lang="de">Die Seiten werden in zwei Spalten dargestellt</info_text>
+                    <info_text lang="en">The pages would be displayed in two columns</info_text>
+                </meta>
+            </param>
+        </param>
+    </params>
+</property>
 ```
 
 ### Websocket Component

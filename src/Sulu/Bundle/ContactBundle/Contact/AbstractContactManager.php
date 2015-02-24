@@ -412,6 +412,24 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
+     * checks if an account is employee of a company
+     * @param $contact
+     * @param $account
+     * @return bool
+     */
+    public function contactIsEmployeeOfAccount($contact, $account)
+    {
+        if ($contact->getAccountContacts() && !$contact->getAccountContacts()->isEmpty()) {
+            foreach($contact->getAccountContacts() as $accountContact) {
+                if ($accountContact->getAccount()->getId() === $account->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns an address by callback-condition
      * @param Account|Contact $entity
      * @param bool $force Forces function to return an address if any address is defined

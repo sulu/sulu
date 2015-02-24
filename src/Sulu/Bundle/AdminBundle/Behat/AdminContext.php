@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Behat;
 
-use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
+use Sulu\Bundle\TestBundle\Behat\BaseContext;
 use WebDriver\Exception\UnknownError;
 
 /**
@@ -181,6 +181,22 @@ EOT;
         $this->waitForAuraEvents(array(
             'husky.toolbar.header.item.show'
         ));
+
+        $this->getSession()->executeScript($script . '.click();');
+    }
+
+    /**
+     * @Given I click toolbar item ":id"
+     */
+    public function iClickToolbarItem($id)
+    {
+        $script = "$(\"li[data-id='" . $id . "']\")";
+
+        $this->waitForAuraEvents(
+            array(
+                'husky.toolbar.header.item.show'
+            )
+        );
 
         $this->getSession()->executeScript($script . '.click();');
     }
