@@ -56,7 +56,7 @@ class Contact extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("id")
-     * @Groups({"fullContact","partialContact"})
+     * @Groups({"fullContact","partialContact","select"})
      */
     public function getId()
     {
@@ -146,7 +146,7 @@ class Contact extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("fullName")
      * @return string
-     * @Groups({"fullContact","partialContact"})
+     * @Groups({"fullContact","partialContact","select"})
      */
     public function getFullName()
     {
