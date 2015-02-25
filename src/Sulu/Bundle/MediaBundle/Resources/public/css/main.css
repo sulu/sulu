@@ -13,7 +13,12 @@
 
 /* line 1, ../scss/modules/collection.scss */
 .datagrid-container {
-  margin-top: 30px;
+  margin-top: 20px;
+}
+
+/* line 5, ../scss/modules/collection.scss */
+.list-toolbar-container {
+  margin-top: 20px;
 }
 
 /* line 6, ../scss/modules/media-selection.scss */
