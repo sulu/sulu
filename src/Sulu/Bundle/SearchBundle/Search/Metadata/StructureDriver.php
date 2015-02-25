@@ -21,6 +21,7 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 
@@ -136,7 +137,10 @@ class StructureDriver implements AdvancedDriverInterface
         }
 
         // index the webspace
-        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string', 'field' => $this->factory->makeMetadataField('webspaceKey')));
+        $indexMeta->addFieldMapping('webspaceKey', array(
+            'type' => 'string',
+            'field' => $this->factory->makeMetadataField('webspaceKey')
+        ));
 
         $this->eventDispatcher->dispatch(
             SuluSearchEvents::STRUCTURE_LOAD_METADATA,
@@ -155,15 +159,21 @@ class StructureDriver implements AdvancedDriverInterface
             $tag = $property->getTag('sulu.search.field');
             $tagAttributes = $tag->getAttributes();
 
-            if ($metadata instanceof ClassMetadata && isset($tagAttributes['role'])) {
+            if ($metadata instanceof IndexMetadata && isset($tagAttributes['role'])) {
                 switch ($tagAttributes['role']) {
                     case 'title':
                         $metadata->setTitleField($this->factory->makeMetadataField($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array('field' => $this->factory->makeMetadataField($property->getName()), 'type' => 'string'));
+                        $metadata->addFieldMapping($property->getName(), array(
+                            'field' => $this->factory->makeMetadataField($property->getName()), 
+                            'type' => 'string',
+                        ));
                         break;
                     case 'description':
                         $metadata->setDescriptionField($this->factory->makeMetadataField($property->getName()));
-                        $metadata->addFieldMapping($property->getName(), array('field' => $this->factory->makeMetadataField($property->getName()), 'type' => 'string'));
+                        $metadata->addFieldMapping($property->getName(), array(
+                            'field' => $this->factory->makeMetadataField($property->getName()),
+                            'type' => 'string',
+                        ));
                         break;
                     case 'image':
                         $metadata->setImageUrlField($this->factory->makeMetadataField($property->getName()));
