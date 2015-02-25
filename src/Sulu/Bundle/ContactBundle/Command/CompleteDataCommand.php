@@ -18,10 +18,18 @@ class CompleteDataCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('sulu:contacts:data:complete')
-            ->addArgument(
+            ->addOption(
                 'file',
-                InputArgument::REQUIRED,
-                'file to complete'
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'complete a csv file'
+            )
+            ->addOption(
+                'database',
+                'd',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'complete database entries. currently supported: state',
+                array()
             )
             ->addOption(
                 'limit',
@@ -33,19 +41,27 @@ class CompleteDataCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file = $input->getArgument('file');
+        $file = $input->getOption('file');
         $limit = $input->getOption('limit');
+        $database = $input->getOption('database');
 
         /** @var Import $import */
         $completer = $this->getContainer()->get('sulu_contact.data_completer');
-        $completer->setFile($file);
 
         // set limit number of columns to import
         if ($limit) {
             $completer->setLimit($limit);
         }
-
-        $completer->execute();
+        
+        if ($file) {
+            $completer->setFile($file);
+            $completer->executeCsvCompletion();
+        } elseif($database) {
+            $completer->executeDbCompletion($database);
+        } else {
+            $output->writeln('No file of database option given. See --help for more information');
+            return;
+        }
 
         $output->writeln('Data Completion complete');
     }

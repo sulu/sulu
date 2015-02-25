@@ -90,6 +90,11 @@ class DataCompleter
     protected $lastApiCallCount;
 
     /**
+     * @var 
+     */
+    protected $output;
+
+    /**
      * constructor
      */
     public function __construct()
@@ -117,6 +122,15 @@ class DataCompleter
     }
 
     /**
+     * set output for writing to console
+     * @param $output
+     */
+    public function setOutput($output)
+    {
+        $this->output = $output;
+    }
+
+    /**
      * appends a string to a path + filename
      *
      * @param $oldPath
@@ -137,7 +151,7 @@ class DataCompleter
     /**
      * process csv file
      */
-    public function execute()
+    public function executeCsvCompletion()
     {
         $outputFileName = $this->extendFileName($this->file,'_processed');
         $output = fopen($outputFileName, "w");
@@ -157,6 +171,18 @@ class DataCompleter
         fclose($output);
 
         $this->createLogFile();
+    }
+
+    /**
+     * process csv file
+     */
+    public function executeDbCompletion($databaseOptions)
+    {
+        if (in_array('state', $databaseOptions)) {
+            echo "you said state. and so it is";
+            
+        }
+//        $this->createLogFile();
     }
 
     /**
