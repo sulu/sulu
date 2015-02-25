@@ -70,8 +70,6 @@ define(function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
-
-            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
@@ -148,7 +146,6 @@ define(function() {
 
             // move
             this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
-            this.sandbox.on('sulu.media.collection-select.move-collection.selected', this.moveCollection.bind(this));
         },
 
         /**
@@ -272,15 +269,6 @@ define(function() {
                     title: this.sandbox.translate('sulu.media.move.overlay-title')
                 }
             }]);
-
-            this.sandbox.start([{
-                name: 'collections/components/collection-select@sulumedia',
-                options: {
-                    el: this.$find(constants.moveSelector),
-                    instanceName: 'move-collection',
-                    title: this.sandbox.translate('sulu.collection.move.overlay-title')
-                }
-            }]);
         },
 
         /**
@@ -315,28 +303,6 @@ define(function() {
         },
 
         /**
-         * starts overlay for collection media
-         */
-        startMoveCollectionOverlay: function() {
-            this.sandbox.emit('sulu.media.collection-select.move-collection.open');
-        },
-
-        /**
-         * emit events to move collection
-         * @param collection
-         */
-        moveCollection: function(collection) {
-            this.sandbox.emit('sulu.media.collections.move', this.options.data.id, collection,
-                function() {
-                    this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-move-desc', 'labels.success');
-                }.bind(this)
-            );
-
-            this.sandbox.emit('sulu.media.collection-select.move-collection.restart');
-            this.sandbox.emit('sulu.media.collection-select.move-collection.close');
-        },
-
-        /**
          * Starts the list-toolbar in the header
          */
         startDatagrid: function() {
@@ -358,14 +324,14 @@ define(function() {
                                     callback: function() {
                                         this.startMoveMediaOverlay();
                                     }.bind(this)
-                                },
+                                },/*
                                 {
                                     id: 'collection-move',
                                     title: this.sandbox.translate('sulu.collection.move'),
                                     callback: function() {
                                         this.startMoveCollectionOverlay();
                                     }.bind(this)
-                                },
+                                },*/
                                 {
                                     type: 'columnOptions'
                                 }
@@ -402,7 +368,7 @@ define(function() {
                             ]
                         }
                     ],
-                    inHeader: true
+                    inHeader: false
                 },
                 {
                     el: this.$find(constants.datagridSelector),

@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function () {
+define(function() {
 
     'use strict';
 
@@ -40,14 +40,12 @@ define(function () {
         /**
          * Initializes the collections list
          */
-        initialize: function () {
+        initialize: function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.saved = true;
 
             var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
-
-            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.bindCustomEvents();
@@ -57,9 +55,9 @@ define(function () {
         /**
          * Binds custom related events
          */
-        bindCustomEvents: function () {
+        bindCustomEvents: function() {
             // load collections list if back icon is clicked
-            this.sandbox.on('sulu.header.back', function () {
+            this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.media.collections.list');
             }.bind(this));
 
@@ -68,16 +66,6 @@ define(function () {
 
             // save button clicked
             this.sandbox.on('sulu.header.toolbar.save', this.save.bind(this));
-        },
-
-        /**
-         * Deletes the current collection
-         */
-        deleteCollection: function () {
-            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.data.id, function () {
-                this.sandbox.sulu.unlockDeleteSuccessLabel();
-                this.sandbox.emit('sulu.media.collections.collection-list');
-            }.bind(this));
         },
 
         /**
@@ -102,13 +90,12 @@ define(function () {
         /**
          * Renderes the files tab
          */
-        render: function () {
+        render: function() {
             this.setHeaderInfos();
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/media/template/collection/settings'));
             this.sandbox.start('#' + constants.settingsFormId);
             this.sandbox.form.create('#' + constants.settingsFormId);
-            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data).then(function () {
-                this.startToolbar();
+            this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data).then(function() {
                 this.bindDomEvents();
             }.bind(this));
         },
@@ -116,9 +103,9 @@ define(function () {
         /**
          * Binds dom events concerning the settings tab
          */
-        bindDomEvents: function () {
+        bindDomEvents: function() {
             // activate save-button on key input
-            this.sandbox.dom.on('#' + constants.settingsFormId, 'change keyup', function () {
+            this.sandbox.dom.on('#' + constants.settingsFormId, 'change keyup', function() {
                 if (this.saved === true) {
                     this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false);
                     this.saved = false;
@@ -127,29 +114,10 @@ define(function () {
         },
 
         /**
-         * Starts the Toolbar for the settings-tab
-         */
-        startToolbar: function () {
-            this.sandbox.emit('sulu.header.set-toolbar', {
-                    template: 'save',
-                    parentTemplate: [{
-                        id: 'delete',
-                        icon: 'trash-o',
-                        title: this.sandbox.translate('sulu.collections.delete-collection'),
-                        callback: this.deleteCollection.bind(this)
-                    }],
-                    languageChanger: {
-                        preSelected: this.options.locale
-                    }
-                }
-            );
-        },
-
-        /**
          * Sets all the Info contained in the header
          * like breadcrumb or title
          */
-        setHeaderInfos: function () {
+        setHeaderInfos: function() {
             this.sandbox.emit('sulu.header.set-title', this.options.data.title);
             this.sandbox.emit('sulu.header.set-breadcrumb', [
                 {title: 'navigation.media'},
@@ -161,7 +129,7 @@ define(function () {
         /**
          * Saves the settings-tab
          */
-        save: function () {
+        save: function() {
             if (this.sandbox.form.validate('#' + constants.settingsFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.settingsFormId);
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
@@ -174,11 +142,12 @@ define(function () {
         /**
          * Method which gets called after the save-process has finished
          */
-        savedCallback: function () {
+        savedCallback: function() {
             this.setHeaderInfos();
             this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true);
             this.saved = true;
             this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-save-desc', 'labels.success');
+            this.sandbox.emit('husky.data-navigation.collections.reload');
         }
     };
 });

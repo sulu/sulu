@@ -61,6 +61,10 @@ define({
                                 'sulu.router.navigate',
                                 'media/collections/edit:' + collection.get('id') + '/files'
                             );
+                            this.sandbox.emit(
+                                'husky.data-navigation.collections.set-url',
+                                '/admin/api/collections/' + collection.get('id') + '?depth=1'
+                            );
                         }.bind(this)
                     }
                 }]);
