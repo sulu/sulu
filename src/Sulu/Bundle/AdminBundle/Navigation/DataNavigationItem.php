@@ -245,6 +245,7 @@ class DataNavigationItem extends NavigationItem
 
         // build options object
         $dataNavigation = array(
+            'rootUrl' => $this->dataUrl,
             'url' => $this->dataUrl,
             'resultKey' => $this->dataResultKey,
             'nameKey' => $this->dataNameKey,
