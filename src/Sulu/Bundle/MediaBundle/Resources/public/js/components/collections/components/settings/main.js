@@ -25,6 +25,9 @@ define(function () {
         view: true,
 
         layout: {
+            navigation: {
+                collapsed: true
+            },
             content: {
                 width: 'fixed'
             }
@@ -41,6 +44,11 @@ define(function () {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.saved = true;
+
+            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
+
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.bindCustomEvents();
             this.render();
