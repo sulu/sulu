@@ -81,7 +81,6 @@ class DataNavigationItem extends NavigationItem
         $this->dataUrl = $dataUrl;
     }
 
-
     /**
      * @return string
      */
