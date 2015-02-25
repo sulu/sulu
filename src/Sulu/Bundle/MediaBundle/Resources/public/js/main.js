@@ -35,18 +35,36 @@ define({
             }
         });
 
-        sandbox.on('husky.data-navigation.collections.add', function(item) {
-            var $element = App.dom.createElement('<div id="collection-add"/>');
+        app.components.before('initialize', function() {
+            if (this.name !== 'Sulu App') {
+                return;
+            }
 
-            App.dom.append('body', $element);
+            this.sandbox.on('husky.data-navigation.collections.add', function(item) {
+                var $element = this.sandbox.dom.createElement('<div id="collection-add"/>'),
+                    parentId = !!item && !!item.id ? item.id : null;
 
-            App.start([{
-                name: 'collections/components/collection-create@sulumedia',
-                options: {
-                    el: $element,
-                    parent: !!item.id ? item.id : null
-                }
-            }]);
+                this.sandbox.dom.append('body', $element);
+
+                this.sandbox.start([{
+                    name: 'collections/components/collection-create@sulumedia',
+                    options: {
+                        el: $element,
+                        parent: parentId,
+                        createdCallback: function(collection) {
+                            this.sandbox.emit(
+                                'sulu.labels.success.show',
+                                'labels.success.collection-save-desc',
+                                'labels.success'
+                            );
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                'media/collections/edit:' + collection.get('id') + '/files'
+                            );
+                        }.bind(this)
+                    }
+                }]);
+            }.bind(this));
         });
     }
 });
