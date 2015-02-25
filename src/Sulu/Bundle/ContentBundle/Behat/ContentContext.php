@@ -38,7 +38,7 @@ class ContentContext extends BaseStructureContext implements SnippetAcceptingCon
 
     <key>%s</key>
 
-    <view>SuluTestBundle::content_test</view>
+    <view>@sulu_test_bundle/content_test</view>
     <controller>SuluWebsiteBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
 

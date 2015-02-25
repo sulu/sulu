@@ -146,6 +146,10 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
     {
         $paths = $this->getContainer()->getParameter('sulu.content.structure.paths');
         $paths = array_filter($paths, function ($value) use ($type) {
+            if (true === $value['internal']) {
+                return false;
+            }
+
             if ($value['type'] == $type) {
                 return true;
             }
@@ -160,12 +164,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
             ));
         }
 
-        if (isset($paths[0])) {
-            $path = $paths[0];
-        } else {
-            $path = reset($paths);
-        }
-
+        $path = reset($paths);
         $templatePath = $path['path'] . '/' . $name . '.xml';
         $this->templatePaths[$templatePath] = true;
         file_put_contents($templatePath, $template);
