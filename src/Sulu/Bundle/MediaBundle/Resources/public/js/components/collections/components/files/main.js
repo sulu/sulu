@@ -73,6 +73,11 @@ define(function() {
 
             this.bindCustomEvents();
             this.render();
+
+            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
+
+            this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
         },
 
         /**
