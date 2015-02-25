@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #838 [AdminBundle]     Login UI
 

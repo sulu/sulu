@@ -669,7 +669,8 @@ define([
             // extend address data by additional variables
             this.sandbox.util.extend(true, data, {
                 translate: this.sandbox.translate,
-                countries: this.options.fieldTypes.countries
+                countries: this.options.fieldTypes.countries,
+                addressTypes: this.options.fieldTypes.address
             });
 
             addressTemplate = this.sandbox.util.template(AddressForm, data);
