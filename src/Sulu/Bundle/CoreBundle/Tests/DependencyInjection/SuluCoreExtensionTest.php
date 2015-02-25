@@ -16,7 +16,9 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
 
     public function testLoadNoConfig()
     {
-        $this->load();
+        $this->load(array(
+            'locales' => array('en', 'de')
+        ));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(
             'sulu.cache.warmer.structure', 'kernel.cache_warmer'
         );
@@ -42,7 +44,8 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                     ),
                     'paths' => array(),
                 )
-            )
+            ),
+            'locales' => array('en', 'de')
         ));
 
         $this->assertEquals(
