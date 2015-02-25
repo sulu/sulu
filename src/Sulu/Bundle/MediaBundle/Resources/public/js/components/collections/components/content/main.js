@@ -132,7 +132,8 @@ define(function() {
                 options: {
                     el: $element,
                     instanceName: 'move-collection',
-                    title: this.sandbox.translate('sulu.collection.move.overlay-title')
+                    title: this.sandbox.translate('sulu.collection.move.overlay-title'),
+                    rootCollection: true
                 }
             }]);
         },

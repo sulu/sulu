@@ -13,7 +13,8 @@ define(function() {
 
     var defaults = {
             instanceName: 'collection-select',
-            title: ''
+            title: '',
+            rootCollection: false
         },
 
         templates = {
@@ -165,22 +166,43 @@ define(function() {
         startOverlayColumnNavigation: function() {
             this.sandbox.dom.append(this.$columnNavigationContainer, '<div class="container"/>');
 
+            var options = {
+                el: this.$columnNavigation,
+                instanceName: this.options.instanceName,
+                actionIcon: 'fa-check-circle',
+                resultKey: 'collections',
+                showOptions: false,
+                showStatus: false,
+                responsive: false,
+                sortable: false,
+                skin: 'fixed-height-small'
+            };
+
+            if (!!this.options.rootCollection) {
+                options.prefilledData = {
+                    '_embedded': {
+                        'collections': [
+                            {
+                                'id': 'root',
+                                'title': this.sandbox.translate('navigation.media.collections'),
+                                'hasSub': true,
+                                '_links': {
+                                    'children': {'href': '/admin/api/collections'}
+                                },
+                                '_embedded': {'collections': []}
+                            }
+                        ]
+                    }
+                };
+            } else {
+                options.url = '/admin/api/collections';
+            }
+
             this.sandbox.start(
                 [
                     {
                         name: 'column-navigation@husky',
-                        options: {
-                            el: this.$columnNavigation,
-                            url: '/admin/api/collections',
-                            instanceName: this.options.instanceName,
-                            actionIcon: 'fa-check-circle',
-                            resultKey: 'collections',
-                            showOptions: false,
-                            showStatus: false,
-                            responsive: false,
-                            sortable: false,
-                            skin: 'fixed-height-small'
-                        }
+                        options: options
                     }
                 ]
             );
