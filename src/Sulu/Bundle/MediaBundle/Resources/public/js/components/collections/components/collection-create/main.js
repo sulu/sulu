@@ -13,28 +13,13 @@ define(['sulumedia/model/collection'], function(Collection) {
 
     var defaults = {
             parent: null,
-            instanceName: ''
+            instanceName: '',
+            createdCallback: function() {
+            }
         },
 
         constants = {
             newFormSelector: '#collection-new'
-        },
-
-        eventNamespace = 'sulu.collections.add-overlay.',
-
-        /**
-         * Creates the eventnames
-         * @param postFix {String} event name to append
-         */
-        createEventName = function(postFix) {
-            return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
-        },
-
-        /**
-         * @event sulu.collections.add-overlay.created
-         */
-        CREATED = function() {
-            return createEventName.call(this, 'created')
         };
 
     return {
@@ -68,17 +53,13 @@ define(['sulumedia/model/collection'], function(Collection) {
 
                 model.save(null, {
                     success: function(collection) {
-                        this.sandbox.emit(
-                            'sulu.labels.success.show',
-                            'labels.success.collection-save-desc',
-                            'labels.success'
-                        );
-                        this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collection.get('id') + '/files');
-                        this.sandbox.emit(CREATED.call(this), collection);
+                        this.options.createdCallback(collection);
+                        this.sandbox.stop();
+                    }.bind(this),
+                    error: function() {
+                        this.sandbox.stop();
                     }.bind(this)
                 });
-
-                this.sandbox.stop();
             } else {
                 return false;
             }
