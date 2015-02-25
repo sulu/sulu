@@ -277,6 +277,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+        $this->assertEquals($this->addressType->getId(), $response->addresses[0]->addressType->id);
 
         $this->assertEquals(1, $response->formOfAddress);
         $this->assertEquals("Sehr geehrter Herr Dr Mustermann", $response->salutation);
