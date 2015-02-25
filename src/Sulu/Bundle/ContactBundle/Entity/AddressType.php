@@ -20,13 +20,13 @@ class AddressType implements \JsonSerializable
 {
     /**
      * @var string
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     private $name;
 
     /**
      * @var integer
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     private $id;
 
