@@ -150,14 +150,14 @@ define(function() {
          * @param {object} request
          * @return {string}
          */
-        extractErrorMessage: function (request) {
+        extractErrorMessage: function(request) {
             var message = [request.status];
 
             // if response is symfony JSON exception
             if (request.responseJSON !== undefined) {
                 var response = request.responseJSON
 
-                this.sandbox.util.each(response, function (index) {
+                this.sandbox.util.each(response, function(index) {
                     var exception = response[index];
 
                     if (exception.message !== undefined) {
@@ -230,8 +230,7 @@ define(function() {
                 }
 
                 // if valid href attribute is set navigate to it using the sulu.navigate method
-                if (!!event.currentTarget.attributes.href &&
-                    !!event.currentTarget.attributes.href.value &&
+                if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
                     this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
@@ -304,8 +303,8 @@ define(function() {
             }.bind(this));
 
             this.sandbox.on('husky.data-navigation.select', function(item) {
-                if(!!item._links && !!item._links.admin) {
-                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href, false, false);
+                if (!!item && !!item._links && !!item._links.admin) {
+                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
             }.bind(this));
 
@@ -499,7 +498,7 @@ define(function() {
             //Todo: don't use hardcoded url
             this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.contact.id + '/details', true, false, false);
             this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
-         },
+        },
 
         /**
          * Takes a postifix and updates the page title
