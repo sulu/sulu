@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
+    * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
+    * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #838 [AdminBundle]     Login UI
