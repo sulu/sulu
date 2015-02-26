@@ -189,7 +189,7 @@
   line-height: 32px;
 }
 
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 900px) {
   /* line 183, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .resolutions {
     display: none;
