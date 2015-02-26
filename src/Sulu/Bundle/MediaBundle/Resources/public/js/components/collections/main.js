@@ -61,7 +61,7 @@ define([
 
             /**
              * listens on and move collection
-             * @event sulu.media.collections.move-media
+             * @event sulu.media.collections.move
              * @param id {integer} id of moving collection
              * @param collection {Object} collection to move collection into
              * @param callback {Function} callback to execute after collection got moved
