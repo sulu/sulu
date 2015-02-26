@@ -181,7 +181,10 @@ class CurrentUserData implements CurrentUserDataInterface
             'icon' => $this->getUserIcon(),
             'logout' => $this->getLogoutLink(),
             'locale' => $this->getLocale(),
-            'settings' => json_encode($this->getUserSettings())
+            'settings' => json_encode($this->getUserSettings()),
+            'contact' => array(
+                'id' => $this->getUser()->getContact()->getId()
+            )
         );
     }
 }
