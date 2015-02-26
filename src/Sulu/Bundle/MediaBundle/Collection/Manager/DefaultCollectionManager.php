@@ -491,10 +491,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * @param Collection $collection
      * @return Collection
      */
-    protected function addPreviews(Collection $collection)
+    protected function addPreview(Collection $collection)
     {
-        return $collection->setPreviews(
-            $this->getPreviews($collection->getId(), $collection->getLocale())
+        return $collection->setPreview(
+            $this->getPreview($collection->getId(), $collection->getLocale())
         );
     }
 
@@ -503,20 +503,20 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * @param string $locale
      * @return array
      */
-    protected function getPreviews($id, $locale)
+    protected function getPreview($id, $locale)
     {
-        $formats = array();
-
+        $media = null;
         $medias = $this->mediaRepository
-            ->findMedia(array('collection' => $id), $this->previewLimit);
+            ->findMedia(array('collection' => $id, 'paginator' => false), $this->previewLimit);
 
-        foreach ($medias as $media) {
+        if (count($medias) > 0) {
+            $media = $medias[0];
             foreach ($media->getFiles() as $file) {
                 foreach ($file->getFileVersions() as $fileVersion) {
                     if ($fileVersion->getVersion() == $file->getVersion()) {
                         $format = $this->getPreviewsFromFileVersion($media->getId(), $fileVersion, $locale);
                         if (!empty($format)) {
-                            $formats[] = $format;
+                            $media = $format;
                         }
                         break;
                     }
@@ -525,7 +525,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
             }
         }
 
-        return $formats;
+        return $media;
     }
 
     /**
@@ -595,6 +595,6 @@ class DefaultCollectionManager implements CollectionManagerInterface
             $apiEntity->setParent($this->getApiEntity($entity->getParent(), $locale));
         }
 
-        return $this->addPreviews($apiEntity);
+        return $this->addPreview($apiEntity);
     }
 }

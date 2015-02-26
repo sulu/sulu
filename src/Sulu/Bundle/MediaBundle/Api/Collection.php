@@ -79,7 +79,7 @@ class Collection extends ApiWrapper
     /**
      * @var array
      */
-    protected $previews = array();
+    protected $preview = array();
 
     /**
      * @var array
@@ -267,29 +267,22 @@ class Collection extends ApiWrapper
     }
 
     /**
+     * @VirtualProperty
+     * @SerializedName("preview")
      * @return array
      */
-    public function getPreviews()
+    public function getPreview()
     {
-        return $this->previews;
+        return $this->preview;
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails")
-     */
-    public function getThumbnails() // FIXME change to getPreviews when SerializedName working
-    {
-        return $this->previews;
-    }
-
-    /**
-     * @param array $previews
+     * @param array $preview
      * @return $this
      */
-    public function setPreviews($previews)
+    public function setPreview($preview)
     {
-        $this->previews = $previews;
+        $this->preview = $preview;
 
         return $this;
     }
