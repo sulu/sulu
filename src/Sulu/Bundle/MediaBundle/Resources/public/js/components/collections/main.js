@@ -524,7 +524,12 @@ define([
              */
             moveCollection: function(collectionId, collection, callback) {
                 this.sandbox.util.save(
-                    '/admin/api/collections/' + collectionId + '?action=move&destination=' + collection.id, 'POST'
+                    [
+                        '/admin/api/collections/', collectionId,
+                        '?action=move',
+                        (!!collection ? '&destination=' + collection.id : '')
+                    ].join(''),
+                    'POST'
                 ).then(function() {
                         if (typeof callback === 'function') {
                             callback(collectionId);
