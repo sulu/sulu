@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Permission;
+namespace Sulu\Component\Security\Authorization;
 
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
@@ -17,14 +17,11 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\SecurityBundle\Security\SecurityContext;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class PermissionVoter implements VoterInterface
 {
-    const SECURITY_CONTEXT_CLASS = 'Sulu\Bundle\SecurityBundle\Security\SecurityContext';
-
     /**
      * The permissions avaiable, defined by config
      * @var array
@@ -59,7 +56,7 @@ class PermissionVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        return $class === self::SECURITY_CONTEXT_CLASS || is_subclass_of($class, self::SECURITY_CONTEXT_CLASS);
+        return $class === SecurityContext::class || is_subclass_of($class, SecurityContext::class);
     }
 
     /**

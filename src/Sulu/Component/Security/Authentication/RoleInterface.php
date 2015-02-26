@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Entity;
+namespace Sulu\Component\Security\Authentication;
 
 /**
  * Defines the interface for a role
@@ -20,7 +20,7 @@ interface RoleInterface
      * Set name
      *
      * @param string $name
-     * @return Role
+     * @return RoleInterface
      */
     public function setName($name);
 
@@ -35,7 +35,7 @@ interface RoleInterface
      * Set system
      *
      * @param string $system
-     * @return Role
+     * @return RoleInterface
      */
     public function setSystem($system);
 
@@ -50,7 +50,7 @@ interface RoleInterface
      * Set created
      *
      * @param \DateTime $created
-     * @return Role
+     * @return RoleInterface
      */
     public function setCreated($created);
 
@@ -65,7 +65,7 @@ interface RoleInterface
      * Set changed
      *
      * @param \DateTime $changed
-     * @return Role
+     * @return RoleInterface
      */
     public function setChanged($changed);
 
@@ -86,30 +86,30 @@ interface RoleInterface
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
-     * @return Role
+     * @param UserInterface $creator
+     * @return RoleInterface
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null);
+    public function setCreator(UserInterface $creator = null);
 
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getCreator();
 
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
-     * @return Role
+     * @param UserInterface $changer
+     * @return RoleInterface
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null);
+    public function setChanger(UserInterface $changer = null);
 
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getChanger();
 
@@ -117,7 +117,7 @@ interface RoleInterface
      * Add permissions
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
-     * @return Role
+     * @return RoleInterface
      */
     public function addPermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions);
 
@@ -161,7 +161,7 @@ interface RoleInterface
      * Add groups
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
-     * @return Role
+     * @return RoleInterface
      */
     public function addGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups);
 
@@ -183,7 +183,7 @@ interface RoleInterface
      * Set securityType
      *
      * @param \Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType
-     * @return Role
+     * @return RoleInterface
      */
     public function setSecurityType(\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null);
 

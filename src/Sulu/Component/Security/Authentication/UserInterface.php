@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Security;
+namespace Sulu\Component\Security\Authentication;
 
 /**
  * The UserInterface for Sulu, extends the Symfony UserInterface with an ID

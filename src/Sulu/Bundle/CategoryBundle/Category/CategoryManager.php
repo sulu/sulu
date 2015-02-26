@@ -11,15 +11,14 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\DBALException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
-use Sulu\Component\Security\UserRepositoryInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
@@ -295,7 +294,7 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns a user for a given user-id
      * @param $userId
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     private function getUser($userId)
     {

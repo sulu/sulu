@@ -64,19 +64,19 @@ class Account extends ApiEntity
     private $id;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      * @Exclude
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      * @Exclude
      */
     private $creator;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      * @Exclude
      */
     private $children;
@@ -398,10 +398,10 @@ class Account extends ApiEntity
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return Account
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -411,7 +411,7 @@ class Account extends ApiEntity
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {
@@ -421,10 +421,10 @@ class Account extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return Account
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -434,7 +434,7 @@ class Account extends ApiEntity
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {

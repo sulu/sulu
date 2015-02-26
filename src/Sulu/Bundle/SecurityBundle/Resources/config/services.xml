@@ -15,17 +15,21 @@
         </parameter>
 
         <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
+        <parameter key="sulu_security.security_checker.class">Sulu\Component\Security\Authorization\SecurityChecker</parameter>
+        <parameter key="sulu_security.event_listener.security.class">Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener</parameter>
         <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
         <parameter key="sulu_security.authentication_handler.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler</parameter>
-        <parameter key="sulu_security.mask_converter.class">Sulu\Bundle\SecurityBundle\Permission\MaskConverter</parameter>
-        <parameter key="sulu_security.salt_generator.class">Sulu\Bundle\SecurityBundle\Permission\SaltGenerator</parameter>
+        <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
+        <parameter key="sulu_security.salt_generator.class">Sulu\Component\Security\Authentication\SaltGenerator</parameter>
         <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
         <parameter key="sulu_security.admin.content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation</parameter>
         <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
-        <parameter key="sulu_security.permission_voter.class">Sulu\Bundle\SecurityBundle\Permission\PermissionVoter</parameter>
-        <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
-        <parameter key="sulu_security.user_repository_factory.class">Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactory</parameter>
+        <parameter key="sulu_security.permission_voter.class">Sulu\Component\Security\Authorization\PermissionVoter</parameter>
+        <parameter key="sulu_security.role_repository.class">Sulu\Bundle\SecurityBundle\Entity\RoleRepository</parameter>
+        <parameter key="sulu_security.user_repository.class">Sulu\Component\Security\Authentication\UserRepository</parameter>
+        <parameter key="sulu_security.user_repository_factory.class">Sulu\Component\Security\Authentication\UserRepositoryFactory</parameter>
         <parameter key="sulu_security.build.user.class">Sulu\Bundle\SecurityBundle\Build\UserBuilder</parameter>
+        <parameter key="sulu_security.entity.role">SuluSecurityBundle:Role</parameter>
     </parameters>
 
     <services>
@@ -34,6 +38,18 @@
             <argument>%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.security_checker" class="%sulu_security.security_checker.class%">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.event_listener.security" class="%sulu_security.event_listener.security.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <tag name="sulu.context" context="admin"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
         </service>
 
         <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
@@ -73,6 +89,11 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>%sulu_security.system%</argument>
             <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+
+        <service id="sulu_security.role_repository" class="%sulu_security.role_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>%sulu_security.entity.role%</argument>
         </service>
 
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"

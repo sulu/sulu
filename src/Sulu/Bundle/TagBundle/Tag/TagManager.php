@@ -21,7 +21,7 @@ use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

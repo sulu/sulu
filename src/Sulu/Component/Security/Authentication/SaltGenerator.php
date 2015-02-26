@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Permission;
+namespace Sulu\Component\Security\Authentication;
 
 use Symfony\Component\Security\Core\Util\SecureRandom;
 
