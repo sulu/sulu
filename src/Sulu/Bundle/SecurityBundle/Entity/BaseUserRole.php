@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * UserRole
@@ -35,12 +37,12 @@ abstract class BaseUserRole extends ApiEntity
     protected $locale;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var UserInterface
      */
     protected $user;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
+     * @var RoleInterface
      * @Expose
      */
     protected $role;
@@ -92,10 +94,10 @@ abstract class BaseUserRole extends ApiEntity
     /**
      * Set user
      *
-     * @param \Sulu\Component\Security\UserInterface $user
+     * @param UserInterface $user
      * @return UserRole
      */
-    public function setUser(\Sulu\Component\Security\UserInterface $user)
+    public function setUser(UserInterface $user)
     {
         $this->user = $user;
 
@@ -105,7 +107,7 @@ abstract class BaseUserRole extends ApiEntity
     /**
      * Get user
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -115,10 +117,10 @@ abstract class BaseUserRole extends ApiEntity
     /**
      * Set role
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role
+     * @param RoleInterface $role
      * @return UserRole
      */
-    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role)
+    public function setRole(RoleInterface $role)
     {
         $this->role = $role;
 
@@ -128,7 +130,7 @@ abstract class BaseUserRole extends ApiEntity
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
+     * @return RoleInterface
      */
     public function getRole()
     {

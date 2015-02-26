@@ -8,10 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Permission;
+namespace Sulu\Component\Security\Authorization;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTestCase;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class SecurityCheckerTest extends ProphecyTestCase
@@ -22,22 +24,33 @@ class SecurityCheckerTest extends ProphecyTestCase
     private $securityChecker;
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->securityContext = $this->prophesize('Symfony\Component\Security\Core\SecurityContextInterface');
-        $this->securityContext->getToken()->willReturn(true); // stands for a valid token
-        $this->securityChecker = new SecurityChecker($this->securityContext->reveal());
+        $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
+        $this->tokenStorage->getToken()->willReturn(true); // stands for a valid token
+
+        $this->authorizationChecker = $this->prophesize(AuthorizationCheckerInterface::class);
+
+        $this->securityChecker = new SecurityChecker(
+            $this->tokenStorage->reveal(),
+            $this->authorizationChecker->reveal()
+        );
     }
 
     public function testIsGrantedContext()
     {
-        $this->securityContext->isGranted(
+        $this->authorizationChecker->isGranted(
             array('permission' => 'view', 'locale' => 'de'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(true);
@@ -51,7 +64,7 @@ class SecurityCheckerTest extends ProphecyTestCase
     {
         $object = new \stdClass();
 
-        $this->securityContext->isGranted(
+        $this->authorizationChecker->isGranted(
             array('permission' => 'view', 'locale' => 'de'),
             $object
         )->willReturn(true);
@@ -76,7 +89,7 @@ class SecurityCheckerTest extends ProphecyTestCase
             'Permission "view" in localization "de" not granted'
         );
 
-        $this->securityContext->isGranted(
+        $this->authorizationChecker->isGranted(
             array('permission' => 'view', 'locale' => 'de'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(false);
@@ -91,7 +104,7 @@ class SecurityCheckerTest extends ProphecyTestCase
             'Permission "view" in localization "" not granted'
         );
 
-        $this->securityContext->isGranted(
+        $this->authorizationChecker->isGranted(
             array('permission' => 'view'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(false);
@@ -101,8 +114,8 @@ class SecurityCheckerTest extends ProphecyTestCase
 
     public function testIsGrantedWithoutToken()
     {
-        $this->securityContext->getToken()->willReturn(null);
-        $this->securityContext->isGranted(Argument::any(), Argument::any())->willReturn(false);
+        $this->tokenStorage->getToken()->willReturn(null);
+        $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willReturn(false);
 
         $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
     }

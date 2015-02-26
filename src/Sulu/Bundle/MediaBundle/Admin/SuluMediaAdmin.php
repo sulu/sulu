@@ -13,8 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SuluMediaAdmin extends Admin
 {

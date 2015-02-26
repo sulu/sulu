@@ -19,13 +19,12 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Security\UserRepositoryInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class DefaultCollectionManager implements CollectionManagerInterface
 {
@@ -434,7 +433,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * Returns a user for a given user-id
      * @param $userId
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     protected function getUser($userId)
     {

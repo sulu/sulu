@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #877 [SecurityBundle]  Extracted some classes to component
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit

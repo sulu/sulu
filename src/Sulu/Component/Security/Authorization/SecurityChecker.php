@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Permission;
+namespace Sulu\Component\Security\Authorization;
 
-use Sulu\Bundle\SecurityBundle\Security\SecurityContext;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
 
 /**
  * Implementation of Sulu specific security checks, includes a subject, the type of permission and the localization
@@ -21,13 +21,21 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class SecurityChecker extends AbstractSecurityChecker
 {
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
-    public function __construct(SecurityContextInterface $securityContext)
-    {
-        $this->securityContext = $securityContext;
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -35,7 +43,7 @@ class SecurityChecker extends AbstractSecurityChecker
      */
     public function hasPermission($subject, $permission, $locale = null)
     {
-        if (!$subject || !$this->securityContext->getToken()) {
+        if (!$subject || !$this->tokenStorage->getToken()) {
             // if there is no subject the operation is allowed, since we have nothing to check against
             // if there is no token we are not behind a firewall, so the action is also allowed (e.g. command execution)
             return true;
@@ -53,7 +61,7 @@ class SecurityChecker extends AbstractSecurityChecker
             $subject = new SecurityContext($subject);
         }
 
-        $granted = $this->securityContext->isGranted($attributes, $subject);
+        $granted = $this->authorizationChecker->isGranted($attributes, $subject);
 
         return $granted;
     }

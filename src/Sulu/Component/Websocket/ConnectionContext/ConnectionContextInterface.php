@@ -12,7 +12,7 @@ namespace Sulu\Component\Websocket\ConnectionContext;
 
 use Guzzle\Http\Message\RequestInterface;
 use Guzzle\Http\QueryString;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
