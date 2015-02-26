@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'sulucontact/model/contact'], function(AppConfig, Contact) {
+define(['app-config', 'sulusecurity/components/permissions/models/user'], function(AppConfig, User) {
 
     'use strict';
 
@@ -231,7 +231,7 @@ define(['app-config', 'sulucontact/model/contact'], function(AppConfig, Contact)
                 changer, changerDef = this.sandbox.data.deferred();
 
             if (data.creator === data.changer) {
-                creator = new Contact({id: data.creator});
+                creator = new User({id: data.creator});
 
                 creator.fetch({
                     global: false,
@@ -247,8 +247,8 @@ define(['app-config', 'sulucontact/model/contact'], function(AppConfig, Contact)
                     }.bind(this)
                 });
             } else {
-                creator = new Contact({id: data.creator});
-                changer = new Contact({id: data.changer});
+                creator = new User({id: data.creator});
+                changer = new User({id: data.changer});
 
                 creator.fetch({
                     global: false,
