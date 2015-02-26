@@ -183,7 +183,7 @@ define(function() {
                     '_embedded': {
                         'collections': [
                             {
-                                'id': 'root',
+                                'id': null,
                                 'title': this.sandbox.translate('navigation.media.collections'),
                                 'hasSub': true,
                                 '_links': {
