@@ -221,7 +221,8 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function deleteNode($uuid, $webspaceKey)
     {
-        $this->getMapper()->delete($uuid, $webspaceKey);
+        // TODO remove third parameter, and ask in UI if referenced node should be deleted
+        $this->getMapper()->delete($uuid, $webspaceKey, true);
     }
 
     /**
