@@ -138,7 +138,7 @@
 // ------------------------------------------------------
 //
 
-// 1. collapses to content-column to medium width
+// 1. collapses the content-column to medium width
 @media only screen and (max-width: 50px + $contentFixedWidth + $sidebarMaxCollapseWidth) {
   .has-visible-sidebar .content-column.fixed {
     width: $contentFixedMediumWidth;
