@@ -34,7 +34,8 @@ define(function () {
             descriptionCheckboxSelector: '#show-descriptions',
             tagsCheckboxSelector: '#show-tags',
             singleEditClass: 'single-edit',
-            multiEditClass: 'multi-edit'
+            multiEditClass: 'multi-edit',
+            loaderClass: 'loader'
         },
 
         /**
@@ -85,6 +86,9 @@ define(function () {
             this.$info = null;
             // stores the multiple edit-form
             this.$multiple = null;
+            // stores the loader dom object
+            this.$loader = null;
+            this.renderLoader();
         },
 
         /**
@@ -92,6 +96,8 @@ define(function () {
          */
         bindCustomEvents: function () {
             this.sandbox.on(EDIT.call(this), this.editMedia.bind(this));
+
+            // TODO: event for setting content
 
             // emit finished event if overlay gets closed
             this.sandbox.on('husky.overlay.media-edit.closed', function () {
@@ -106,14 +112,46 @@ define(function () {
         },
 
         /**
+         * Renders the loader dom-object
+         */
+        renderLoader: function() {
+            this.$loader = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'"/>');
+            this.sandbox.dom.append(this.$el, this.$loader);
+            this.sandbox.dom.hide(this.$loader);
+
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.$loader,
+                        size: '100px',
+                        color: '#cccccc'
+                    }
+                }
+            ]);
+        },
+
+        /**
          * Shows an overlay to edit media
+         * @param multiple {Boolean} if true a multiple-edit overlay gets initialized
+         */
+        editMedia: function (multiple) {
+            if (multiple === true) {
+                this.editMultipleMedia();
+            } else {
+                this.editSingleMedia();
+            }
+        },
+
+        /**
+         * Sets the content of the overlay
          * @param media {Object|Array} the media model or an array with media models
          */
-        editMedia: function (media) {
+        setContent: function(media) {
             if (this.sandbox.dom.isArray(media)) {
-                this.editMultipleMedia(media);
+
             } else {
-                this.editSingleMedia(media);
+
             }
         },
 
@@ -168,14 +206,31 @@ define(function () {
         },
 
         /**
-         * Edits a single media
+         * Sets the content for the single-edit overlay
          * @param media {Object} the id of the media to edit
          */
-        editSingleMedia: function (media) {
+        setSingleMediaContent: function (media) {
             this.media = media;
-            this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
-                media: this.media
-            }));
+            this.sandbox.dom.hide(this.$loader);
+            this.sandbox.dom.detach(this.$loader);
+            this.sandbox.dom.append(this.$el);
+            this.sandbox.dom.append(
+                this.$info,
+                this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
+                    media: this.media
+                }))
+            );
+            this.bindSingleOverlayEvents();
+        },
+
+        /**
+         * Renderes the dom for and starts a single-edit overlay
+         */
+        editSingleMedia: function () {
+            this.$info = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.detach(this.$loader);
+            this.sandbox.dom.show(this.$loader);
+            this.sandbox.dom.append(this.$info, this.$loader);
             this.startSingleOverlay();
         },
 
@@ -183,10 +238,26 @@ define(function () {
          * Edits multiple media
          * @param medias {Array} array with the ids of the media to edit
          */
-        editMultipleMedia: function (medias) {
+        setMultipleMediaContent: function (medias) {
             this.medias = medias;
-            this.$multiple = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/multiple-edit'));
+            this.sandbox.dom.hide(this.$loader);
+            this.sandbox.dom.detach(this.$loader);
+            this.sandbox.dom.append(this.$el);
+            this.sandbox.dom.append(
+                this.$multiple,
+                this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/multiple-edit'))
+            );
             this.bindMultipleEditDomEvents();
+        },
+
+        /**
+         * Edits multiple media
+         */
+        editMultipleMedia: function () {
+            this.$multiple = this.sandbox.dom.createElement('<div/>');
+            this.sandbox.dom.detach(this.$loader);
+            this.sandbox.dom.show(this.$loader);
+            this.sandbox.dom.append(this.$info, this.$loader);
             this.startMultipleEditOverlay();
         },
 
@@ -196,19 +267,18 @@ define(function () {
         startSingleOverlay: function () {
             var $container = this.sandbox.dom.createElement('<div class="'+ constants.singleEditClass +'"/>');
             this.sandbox.dom.append(this.$el, $container);
-            this.bindSingleOverlayEvents();
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
                     options: {
                         el: $container,
-                        title: this.media.title,
+                        title: '', // TODO: set title via event, this.media.title
                         tabs: [
                             {title: this.sandbox.translate(this.options.infoKey), data: this.$info}
                         ],
                         languageChanger: {
                             locales: ['en', 'de'],
-                            preSelected: this.media.locale
+                            preSelected: '' // TODO: change to this.media.locale
                         },
                         openOnStart: true,
                         instanceName: 'media-edit',
@@ -225,12 +295,10 @@ define(function () {
          * Binds events related to the single-edit overlay
          */
         bindSingleOverlayEvents: function() {
-            this.sandbox.once('husky.overlay.media-edit.opened', function () {
-                this.sandbox.form.create(constants.infoFormSelector);
-                this.sandbox.form.setData(constants.infoFormSelector, this.media).then(function() {
-                    this.sandbox.start(constants.infoFormSelector);
-                    this.startDropzone();
-                }.bind(this));
+            this.sandbox.form.create(constants.infoFormSelector);
+            this.sandbox.form.setData(constants.infoFormSelector, this.media).then(function() {
+                this.sandbox.start(constants.infoFormSelector);
+                this.startDropzone();
             }.bind(this));
 
             this.sandbox.once('husky.dropzone.file-version-'+ this.media.id +'.initialized', function() {

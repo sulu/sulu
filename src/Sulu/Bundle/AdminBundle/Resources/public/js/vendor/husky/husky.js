@@ -26721,7 +26721,7 @@ define('type/husky-input',[
                     return regex.test(value);
                 },
                 time: function(value) {
-                    return Globalize.parseDate(value, 'HH:mm:ss') !== null;
+                    return Globalize.parseDate(value, this.options.timeFormat) !== null;
                 },
                 color: function(value) {
                     // hex color with leading #
@@ -26775,13 +26775,23 @@ define('type/husky-input',[
                 },
 
                 needsValidation: function() {
-                    var val = this.getValue();
+                    var val = this.getInputValue();
 
                     return val !== '';
                 },
 
+                getInputValue: function() {
+                    var type = this.$el.data('auraSkin');
+
+                    if (type === 'data') {
+                        return typeGetter.date.call(this);
+                    }
+
+                    return typeGetter.default.call(this);
+                },
+
                 validate: function() {
-                    var value = this.getValue(),
+                    var value = this.getInputValue(),
                         type = this.$el.data('auraSkin');
 
                     if (!!type && !!typeValidators[type]) {
@@ -29020,6 +29030,7 @@ define('__component__$column-options@husky',[],function() {
  * @param {Number} [options.croppedMaxLength] the length to which croppable cells will be cropped on overflow
  * @param {Boolean} [options.stickyHeader] true to make the table header sticky
  * @param {Boolean} [options.openPathToSelectedChildren] true to show path to selected children
+ * @param {Boolean} [options.rowClickSelect] if true the row gets selected on click and the row-click event is emitted on double-click
  *
  * @param {Boolean} [rendered] property used by the datagrid-main class
  * @param {Function} [initialize] function which gets called once at the start of the view
@@ -29053,7 +29064,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         icons: [],
         removeIcon: 'trash-o',
         croppedMaxLength: 35,
-        openPathToSelectedChildren: false
+        openPathToSelectedChildren: false,
+        rowClickSelect: false
     },
 
     constants = {
@@ -29095,6 +29107,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         textContainerClass: 'cell-content',
         renderingClass: 'rendering',
         headerCloneClass: 'header-clone',
+        counterIndentClass: 'indent',
         childIndent: 25 //px
     },
 
@@ -29266,6 +29279,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.dom.append($container, this.$el);
             this.addViewClasses();
             this.data = data;
+            if (this.options.fullWidth === true) {
+                this.indentSelectedCounter();
+            }
             this.renderTable();
             this.bindDomEvents();
             if (this.datagrid.options.resizeListeners === true) {
@@ -29281,10 +29297,29 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         },
 
         /**
+         * Indents the datagrid's selected-counter
+         */
+        indentSelectedCounter: function() {
+            if (this.datagrid.options.selectedCounter === true) {
+                this.sandbox.dom.addClass(this.datagrid.$find('.selected-elements'), constants.counterIndentClass);
+            }
+        },
+
+        /**
+         * Removes the indent of the selected-counter
+         */
+        removeIndentSelectedCounter: function() {
+            if (this.datagrid.options.selectedCounter === true) {
+                this.sandbox.dom.removeClass(this.datagrid.$find('.selected-elements'), constants.counterIndentClass);
+            }
+        },
+
+        /**
          * Destroys the view
          */
         destroy: function() {
             this.sandbox.stop(this.sandbox.dom.find('*', this.$el));
+            this.removeIndentSelectedCounter();
             this.sandbox.dom.remove(this.$el);
             this.setVariables();
         },
@@ -29886,7 +29921,12 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 '.' + constants.checkboxClass + ', .' + constants.radioClass
             );
             // handle click on body row
-            this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
+            if (this.options.rowClickSelect === false) {
+                this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
+            } else {
+                this.sandbox.dom.on(this.table.$body, 'dblclick', this.bodyRowClickHandler.bind(this), '.' + constants.rowClass);
+                this.sandbox.dom.on(this.table.$body, 'click', this.bodyRowSelectHandler.bind(this), '.' + constants.rowClass);
+            }
             // remove row event
             if (this.options.removeRow === true) {
                 this.sandbox.dom.on(this.table.$body, 'click', this.removeItemClickHandler.bind(this), '.' + constants.rowRemoverClass);
@@ -30194,11 +30234,24 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         selectItemChangeHandler: function (event) {
-            this.sandbox.dom.stopPropagation(event);
+            //this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.target, '.' + constants.rowClass), 'id'),
                 isChecked = this.sandbox.dom.is(event.target, ':checked');
             if (this.options.selectItem.type === selectItems.CHECKBOX) {
                 this.toggleSelectRecord(recordId, isChecked);
+            } else if (this.options.selectItem.type === selectItems.RADIO) {
+                this.uniqueSelectRecord(recordId);
+            }
+        },
+
+        /**
+         * Handles the click on a body row if the options rowClickSelect is set to true
+         * @param event
+         */
+        bodyRowSelectHandler: function (event) {
+            var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
+            if (this.options.selectItem.type === selectItems.CHECKBOX) {
+                this.toggleSelectRecord(recordId, !this.datagrid.itemIsSelected(recordId));
             } else if (this.options.selectItem.type === selectItems.RADIO) {
                 this.uniqueSelectRecord(recordId);
             }
@@ -31329,6 +31382,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
  * @param {String} [options.matchings.class] css class of the column
  * @param {String} [options.matchings.type] type of the column. Used to manipulate its content (e.g. 'date')
  * @param {String} [options.matchings.attribute] mapping information to data (if not set it will just iterate through attributes)
+ * @param {Boolean} [options.selectedCounter] If true a counter will be displayed which shows how much elements have been selected
+ * @param {String} [options.selectedCounterText] translation key or text used in the selected-counter
  */
 (function() {
 
@@ -31368,7 +31423,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 onlySelectLeaves: false,
                 childrenPropertyName: false,
                 resizeListeners: true,
-                resultKey: 'items'
+                resultKey: 'items',
+                selectedCounter: false,
+                selectedCounterText: 'public.elements-selected'
             },
 
             types = {
@@ -31486,6 +31543,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     '   <input name="radio-<%= columnName %>" type="radio" class="form-element" <% if (checked) { print("checked")} %>/>',
                     '   <span class="icon"></span>',
                     '</div>'
+                ].join(''),
+                selectedCounter: [
+                    '<span class="selected-elements smaller-font grey-font"><%= text %>: <span class="number">0</span></span>'
                 ].join('')
             },
 
@@ -31732,6 +31792,22 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 return this.createEventName('items.get-selected');
             },
 
+            /**
+             * listens on and shows the medium loader above the view
+             * @event husky.datagrid.medium-loader.show
+             */
+            MEDIUM_LOADER_SHOW = function() {
+                return this.createEventName('medium-loader.show');
+            },
+
+            /**
+             * listens on and shows the medium loader above the view
+             * @event husky.datagrid.medium-loader.show
+             */
+            MEDIUM_LOADER_HIDE = function() {
+                return this.createEventName('medium-loader.hide');
+            },
+
         /**
          * Private Methods
          * --------------------------------------------------------------------
@@ -31808,6 +31884,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.paginationId = this.options.pagination;
 
                 this.$loader = null;
+                this.$mediumLoader = null;
                 this.isLoading = false;
                 this.initialLoaded = false;
 
@@ -31822,10 +31899,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     direction: null
                 };
 
-                this.initRender();
-
                 // Should only be be called once
                 this.bindCustomEvents();
+
+                this.initRender();
 
                 this.sandbox.emit(INITIALIZED.call(this));
             },
@@ -31877,7 +31954,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             evaluateMatchings: function() {
                 var matchings = this.options.matchings;
-                if (typeof(matchings) == 'string') {
+                if (typeof(matchings) === 'string') {
                     // Load matchings/fields from url
                     this.loading();
                     this.loadMatchings({
@@ -31898,8 +31975,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @param params url
              */
             loadMatchings: function(params) {
+                this.sandbox.dom.hide(this.$find('.selected-elements'));
                 this.sandbox.util.load(params.url)
                     .then(function(response) {
+                        this.sandbox.dom.show(this.$find('.selected-elements'));
                         if (this.isLoading === true) {
                             this.stopLoading();
                         }
@@ -31965,7 +32044,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     this.preSelectItems();
                     this.initialLoaded = true;
                 }
-
                 this.renderView();
                 if (!!this.paginations[this.paginationId]) {
                     this.paginations[this.paginationId].render(this.data, this.$element);
@@ -31976,10 +32054,21 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
+             * Renderes the counter which shows how many elements have been selected
+             */
+            renderSelectedCounter: function() {
+                this.sandbox.dom.append(this.$element, this.sandbox.util.template(templates.selectedCounter)({
+                    text: this.sandbox.translate(this.options.selectedCounterText)
+                }));
+                this.sandbox.dom.hide(this.$find('.selected-elements'));
+            },
+
+            /**
              * Renderes the current view
              */
             renderView: function() {
                 this.gridViews[this.viewId].render(this.data, this.$element);
+                this.sandbox.dom.show(this.$find('.selected-elements'));
                 this.sandbox.emit(VIEW_RENDERED.call(this));
             },
 
@@ -32049,9 +32138,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             load: function(params) {
                 this.currentUrl = this.getUrl(params);
-
+                this.sandbox.dom.hide(this.$find('.selected-elements'));
                 this.sandbox.util.load(this.currentUrl, params.data)
                     .then(function(response) {
+                        this.sandbox.dom.show(this.$find('.selected-elements'));
                         if (this.isLoading === true) {
                             this.stopLoading();
                         }
@@ -32117,9 +32207,47 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             initRender: function() {
                 this.bindDOMEvents();
+                this.renderMediumLoader();
+                if (this.options.selectedCounter === true) {
+                    this.renderSelectedCounter();
+                }
                 this.getPaginationDecorator(this.paginationId);
                 this.getViewDecorator(this.viewId);
                 this.evaluateMatchings();
+            },
+
+            /**
+             * Renderes and starts the medium loader, which can
+             * be displayed above a view with events
+             */
+            renderMediumLoader: function() {
+                this.$mediumLoader = this.sandbox.dom.createElement('<div class="medium-loader"/>');
+                this.sandbox.dom.append(this.$element, this.$mediumLoader);
+
+                this.sandbox.start([
+                    {
+                        name: 'loader@husky',
+                        options: {
+                            el: this.$mediumLoader,
+                            size: '50px',
+                            color: '#cccccc'
+                        }
+                    }
+                ]);
+            },
+
+            /**
+             * Displays the medium loader above the view
+             */
+            showMediumLoader: function() {
+                this.sandbox.dom.addClass(this.$mediumLoader, 'show');
+            },
+
+            /**
+             * Hides the medium loader
+             */
+            hideMediumLoader: function() {
+                this.sandbox.dom.removeClass(this.$mediumLoader, 'show');
             },
 
             /**
@@ -32408,6 +32536,12 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 // change an exsiting data-record
                 this.sandbox.on(RECORDS_CHANGE.call(this), this.changeRecordsHandler.bind(this));
 
+                // update selected-counter
+                this.sandbox.on(NUMBER_SELECTIONS.call(this), this.updateSelectedCounter.bind(this));
+
+                this.sandbox.on(MEDIUM_LOADER_SHOW.call(this), this.showMediumLoader.bind(this));
+                this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
+
                 this.startColumnOptionsListener();
                 this.startSearchListener();
             },
@@ -32571,6 +32705,16 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
+             * Updates the selected-elements counter
+             * @param {String|number} number - the number of selected items
+             */
+            updateSelectedCounter: function(number) {
+                if (this.options.selectedCounter === true) {
+                    this.sandbox.dom.html(this.$find('.selected-elements .number'), number);
+                }
+            },
+
+            /**
              * Methods for data manipulation
              * --------------------------------------------------------------------
              */
@@ -32594,8 +32738,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 for (i = -1, length = this.data.embedded.length; ++i < length;) {
                     this.setItemSelected(this.data.embedded[i].id);
                 }
-                // emit events with selected data
                 this.sandbox.emit(ALL_SELECT.call(this), this.selectedItems);
+                // emit events with selected data
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.selectedItems.length);
                 this.setSelectedItemsToData();
             },

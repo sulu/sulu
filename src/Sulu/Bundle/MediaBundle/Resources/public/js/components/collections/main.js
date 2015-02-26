@@ -439,20 +439,24 @@ define([
             /**
              * Deletes an array of media
              * @param mediaIds {Array} array of media ids
+             * @param confirm {Function} callback to execute after modal has been confirmed
              * @param callback {Function} callback to execute after deleting a media
              * @param noDialog {Boolean} if true no dialog box will be shown
              */
-            deleteMedia: function (mediaIds, callback, noDialog) {
+            deleteMedia: function (mediaIds, confirm, callback, noDialog) {
                 var media,
+                    length = mediaIds.length,
+                    counter = 0,
                     action = function () {
                         this.sandbox.util.foreach(mediaIds, function (id) {
                             media = this.getMediaModel(id);
                             media.destroy({
                                 success: function () {
+                                    var finished = ++counter === length;
                                     if (typeof callback === 'function') {
-                                        callback(id);
+                                        callback(id, finished);
                                     } else {
-                                        this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id);
+                                        this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id, finished);
                                     }
                                 }.bind(this),
                                 error: function () {
@@ -467,6 +471,9 @@ define([
                 } else {
                     this.sandbox.sulu.showDeleteDialog(function (confirmed) {
                         if (confirmed === true) {
+                            if (typeof confirm === 'function') {
+                                confirm();
+                            }
                             action();
                         }
                     }.bind(this));
@@ -540,6 +547,7 @@ define([
              * @param record {Number|String} id of the media to edit
              */
             editSingleMedia: function (record) {
+                // TODO: start overlay here and set content later
                 var media;
                 // if media exists there is no need to fetch the media again - the local one is up to date
                 if (!this.medias.get(record)) {
@@ -564,6 +572,7 @@ define([
              * @param records {Array} array with ids of the media to edit
              */
             editMultipleMedia: function (records) {
+                // TODO: start overlay here and set content later
                 var mediaList = [],
                     media,
                     action = function () {
