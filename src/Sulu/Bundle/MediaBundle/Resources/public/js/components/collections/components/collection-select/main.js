@@ -14,7 +14,9 @@ define(function() {
     var defaults = {
             instanceName: 'collection-select',
             title: '',
-            rootCollection: false
+            rootCollection: false,
+            disableIds: [],
+            disabledChildren: false
         },
 
         templates = {
@@ -175,7 +177,9 @@ define(function() {
                 showStatus: false,
                 responsive: false,
                 sortable: false,
-                skin: 'fixed-height-small'
+                skin: 'fixed-height-small',
+                disableIds: this.options.disableIds,
+                disabledChildren: this.options.disabledChildren
             };
 
             if (!!this.options.rootCollection) {

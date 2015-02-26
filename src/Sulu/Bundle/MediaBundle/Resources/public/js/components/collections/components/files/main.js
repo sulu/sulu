@@ -266,7 +266,8 @@ define(function() {
                 options: {
                     el: this.$find(constants.moveSelector),
                     instanceName: 'move-media',
-                    title: this.sandbox.translate('sulu.media.move.overlay-title')
+                    title: this.sandbox.translate('sulu.media.move.overlay-title'),
+                    disableIds: [this.options.data.id]
                 }
             }]);
         },

@@ -133,7 +133,9 @@ define(function() {
                     el: $element,
                     instanceName: 'move-collection',
                     title: this.sandbox.translate('sulu.collection.move.overlay-title'),
-                    rootCollection: true
+                    rootCollection: true,
+                    disableIds: [this.options.id],
+                    disabledChildren: true
                 }
             }]);
         },
