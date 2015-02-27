@@ -7,6 +7,8 @@ CHANGELOG for Sulu
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
+    * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all 
+                                         account-addresses in database. 'app/console sulu:contacts:data:complete -d state'
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #838 [AdminBundle]     Login UI
 
