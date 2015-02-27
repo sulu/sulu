@@ -185,15 +185,15 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionBreadcrumbById($id, $locale)
+    public function findCollectionBreadcrumbById($id)
     {
         try {
             $sql = sprintf(
-                'SELECT n.id AS id, collectionMeta.title AS title
+                'SELECT n, collectionMeta
                  FROM %s AS p,
                       %s AS n
                         LEFT JOIN n.meta AS collectionMeta
-                 WHERE p.id = :id AND p.lft > n.lft AND p.rgt < n.rgt AND collectionMeta.locale = :locale
+                 WHERE p.id = :id AND p.lft > n.lft AND p.rgt < n.rgt
                  ORDER BY n.lft',
                 $this->_entityName,
                 $this->_entityName
@@ -202,9 +202,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('id', $id);
-            $query->setParameter('locale', $locale);
 
-            return $query->getArrayResult();
+            return $query->getResult();
         } catch (NoResultException $ex) {
             return array();
         }

@@ -109,12 +109,12 @@ class DefaultCollectionManager implements CollectionManagerInterface
         if (sizeof($collectionSet) === 0) {
             throw new CollectionNotFoundException($id);
         }
-        $breadcrumbArray = null;
+        $breadcrumbEntities = null;
         if ($breadcrumb) {
-            $breadcrumbArray = $this->collectionRepository->findCollectionBreadcrumbById($id, $locale);
+            $breadcrumbEntities = $this->collectionRepository->findCollectionBreadcrumbById($id);
         }
 
-        return $this->getApiEntity($collectionSet[0], $locale, $collectionSet, $breadcrumbArray);
+        return $this->getApiEntity($collectionSet[0], $locale, $collectionSet, $breadcrumbEntities);
     }
 
     /**
@@ -578,10 +578,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * @param CollectionEntity $entity
      * @param string $locale
      * @param CollectionEntity[] $entities nested set
-     * @param array $breadcrumb
+     * @param array $breadcrumbEntities
      * @return Collection
      */
-    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumb = null)
+    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumbEntities = null)
     {
         $apiEntity = new Collection($entity, $locale);
 
@@ -600,7 +600,14 @@ class DefaultCollectionManager implements CollectionManagerInterface
             $apiEntity->setParent($this->getApiEntity($entity->getParent(), $locale));
         }
 
-        $apiEntity->setBreadcrumb($breadcrumb);
+        if ($breadcrumbEntities !== null) {
+            $breadcrumbApiEntities = array();
+            foreach ($breadcrumbEntities as $entity) {
+                $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);
+            }
+            $apiEntity->setBreadcrumb($breadcrumbApiEntities);
+        }
+
 
         return $this->addPreview($apiEntity);
     }

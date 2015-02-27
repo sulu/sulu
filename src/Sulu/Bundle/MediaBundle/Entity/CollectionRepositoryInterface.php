@@ -51,8 +51,7 @@ interface CollectionRepositoryInterface
     /**
      * Finds the breadcrumb of a collection with given id
      * @param int $id
-     * @param string $locale
-     * @return array {id: ..., title: '...'}
+     * @return Collection[]
      */
-    public function findCollectionBreadcrumbById($id, $locale);
+    public function findCollectionBreadcrumbById($id);
 }

@@ -166,7 +166,7 @@ define(function() {
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
                 }.bind(this)
             );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale);
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.id);
         },
 
         /**
