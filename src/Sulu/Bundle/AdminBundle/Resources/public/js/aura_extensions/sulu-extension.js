@@ -397,6 +397,7 @@
                                 view: 'table',
                                 pagination: 'dropdown',
                                 matchings: data,
+                                selectedCounter: true,
                                 viewOptions: {
                                     table: {
                                         noItemsText: 'public.empty-list',
@@ -467,6 +468,7 @@
                         var options = {
                             view: 'table',
                             pagination: 'dropdown',
+                            selectedCounter: true,
                             matchings: data
                         };
 

@@ -119,7 +119,7 @@ define([], function() {
                             '  <div class="inputs">',
                             '    <div class="grid-row small">',
                             '      <label for="user"><%= label %></label>',
-                            '      <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>"/>',
+                            '      <input id="user" class="form-element input-large husky-validate" type="text" placeholder="<%= emailUser %>" tabindex="-1"/>',
                             '    </div>',
                             '    <span class="error-message"></span>',
                             '  </div>',
@@ -694,6 +694,10 @@ define([], function() {
          */
         moveToFrame: function($frame) {
             this.sandbox.dom.css(this.dom.$frames, 'left', -(this.sandbox.dom.position($frame).left) + 'px');
+            // focus first input
+            if (this.sandbox.dom.find('input', $frame).length > 0) {
+                this.sandbox.dom.select(this.sandbox.dom.find('input', $frame)[0]);
+            }
         },
 
         /**

@@ -1426,6 +1426,10 @@
                 <source>sulu.login.email-sent-success</source>
                 <target>Email successfully sent</target>
             </trans-unit>
+            <trans-unit id="b504f52dde2354cc4132c0b4820e28adc" resname="public.elements-selected">
+                <source>public.elements-selected</source>
+                <target>elements selected</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
