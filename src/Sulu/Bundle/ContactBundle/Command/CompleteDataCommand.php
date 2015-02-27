@@ -32,6 +32,13 @@ class CompleteDataCommand extends ContainerAwareCommand
                 array()
             )
             ->addOption(
+                'language',
+                'lo',
+                InputOption::VALUE_REQUIRED,
+                'the language locale',
+                'de'
+            )
+            ->addOption(
                 'limit',
                 'l',
                 InputOption::VALUE_REQUIRED,
@@ -44,10 +51,13 @@ class CompleteDataCommand extends ContainerAwareCommand
         $file = $input->getOption('file');
         $limit = $input->getOption('limit');
         $database = $input->getOption('database');
+        $locale = $input->getOption('language');
 
-        /** @var Import $import */
+        /** @var \Sulu\Bundle\ContactBundle\Import\DataCompleter $completer */
         $completer = $this->getContainer()->get('sulu_contact.data_completer');
-
+        // set locale
+        $completer->setLocale($locale);
+        
         // set limit number of columns to import
         if ($limit) {
             $completer->setLimit($limit);
@@ -59,7 +69,7 @@ class CompleteDataCommand extends ContainerAwareCommand
         } elseif($database) {
             $completer->executeDbCompletion($database);
         } else {
-            $output->writeln('No file of database option given. See --help for more information');
+            $output->writeln('<comment>No file of database option given. See --help for more information<comment>');
             return;
         }
 
