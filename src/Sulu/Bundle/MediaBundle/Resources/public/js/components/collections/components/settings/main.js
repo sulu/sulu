@@ -118,12 +118,23 @@ define(function() {
          * like breadcrumb or title
          */
         setHeaderInfos: function() {
-            this.sandbox.emit('sulu.header.set-title', this.options.data.title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', [
+            var breadcrumb = [
                 {title: 'navigation.media'},
-                {title: 'media.collections.title', event: 'sulu.media.collections.list'},
-                {title: this.options.data.title}
-            ]);
+                {title: 'media.collections.title'}
+            ], i, len, data = this.options.data._embedded.breadcrumb || [];
+
+            for (i = 0, len = data.length; i < len; i++) {
+                breadcrumb.push({
+                    title: data[i].title,
+                    event: 'sulu.media.collections.breadcrumb-navigate',
+                    eventArgs: data[i]
+                });
+            }
+
+            breadcrumb.push({title: this.options.data.title});
+
+            this.sandbox.emit('sulu.header.set-title', this.options.data.title);
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         /**

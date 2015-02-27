@@ -80,14 +80,7 @@ define(function() {
          * Deletes the current collection
          */
         deleteCollection: function() {
-            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.id, function() {
-                this.sandbox.sulu.unlockDeleteSuccessLabel();
-                var url = '/admin/api/collections';
-                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
-
-                // TODO goto?
-                // this.sandbox.emit('sulu.media.collections.collection-list');
-            }.bind(this));
+            this.sandbox.emit('sulu.media.collections.delete-collection', this.options.id);
         },
 
         /**

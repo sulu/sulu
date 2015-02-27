@@ -28,15 +28,6 @@ define([
             namespace = 'sulu.media.collections.',
 
             /**
-             * listens on and changes the view to collections list
-             * @event sulu.media.collections.list
-             * @param noReload {Boolean} if false page reloads
-             */
-            ROUTE_TO_LIST = function () {
-                return createEventName.call(this, 'list');
-            },
-
-            /**
              * listens on and deletes medias
              * @event sulu.media.collections.delete-media
              * @param ids {Array} array of ids of the media to delete
@@ -109,15 +100,6 @@ define([
              */
             SINGLE_MEDIA_DELETED = function () {
                 return createEventName.call(this, 'media-deleted');
-            },
-
-            /**
-             * raised after a collection got deleted
-             * @event sulu.media.collections.collection-deleted
-             * @param id {Number|String} the id of the deleted media
-             */
-            COLLECTION_DELETED = function () {
-                return createEventName.call(this, 'collection-deleted');
             },
 
             /**
@@ -202,6 +184,14 @@ define([
              */
             DOWNLOAD_MEDIA = function () {
                 return createEventName.call(this, 'download-media');
+            },
+
+            /**
+             * navigate to a collection when breadcrumb where clicked
+             * @event sulu.media.collections.breadcrumb-navigate
+             */
+            BREADCRUMB_NAVIGATE = function() {
+                return createEventName.call(this, 'breadcrumb-navigate');
             },
 
             /** returns normalized event names */
@@ -296,11 +286,6 @@ define([
              * Bind custom events concerning collections
              */
             bindCustomEvents: function () {
-                // navigate to list view
-                this.sandbox.on(ROUTE_TO_LIST.call(this), function (noReload) {
-                    this.sandbox.emit('sulu.router.navigate', 'media/collections', !noReload ? true : false, true);
-                }, this);
-
                 // delete media
                 this.sandbox.on(DELETE_MEDIA.call(this), this.deleteMedia.bind(this));
 
@@ -344,6 +329,13 @@ define([
                 // navigate to collection list
                 this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function () {
                     this.sandbox.emit('sulu.router.navigate', 'media/collections', true, true);
+                }.bind(this));
+
+                this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
+                    this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
+
+                    var url = '/admin/api/collections/' + item.id + '?depth=1';
+                    this.sandbox.emit('husky.data-navigation.collections.set-url', url);
                 }.bind(this));
             },
 
@@ -545,16 +537,20 @@ define([
              * @param id {Number|String} the id of the collection to delete
              * @param callback {Function} callback to execute after deleting the collection
              */
-            deleteCollection: function (id, callback) {
+            deleteCollection: function(id) {
                 this.sandbox.sulu.showDeleteDialog(function (confirmed) {
                     if (confirmed === true) {
                         var collection = this.getCollectionModel(id);
                         collection.destroy({
                             success: function () {
-                                if (typeof callback === 'function') {
-                                    callback(id);
+                                this.sandbox.sulu.unlockDeleteSuccessLabel();
+                                var url = '/admin/api/collections' + (!!this.options.data._embedded.parent ? '/' + this.options.data._embedded.parent.id + '?depth=1' : '');
+                                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+
+                                if (!!this.options.data._embedded.parent) {
+                                    this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + this.options.data._embedded.parent.id + '/' + this.options.display);
                                 } else {
-                                    this.sandbox.emit(COLLECTION_DELETED.call(this), id);
+                                    // TODO clear content
                                 }
                             }.bind(this),
                             error: function () {
@@ -684,6 +680,7 @@ define([
 
                 this.collections.fetch({
                     success: function (collections) {
+                        this.options.data = collections.toJSON();
                         this.sandbox.start([
                             {
                                 name: 'collections/components/list@sulumedia',
@@ -713,8 +710,10 @@ define([
                 this.sandbox.sulu.saveUserSetting(constants.lastVisitedCollectionKey, this.options.id);
 
                 collection.fetch({
-                    data: {locale: this.locale},
+                    data: {locale: this.locale, breadcrumb: 'true'},
                     success: function (collection) {
+                        this.options.data = collection.toJSON();
+
                         if (options.activeTab === collectionEditTabs.FILES) {
                             this.sandbox.start([
                                 {
