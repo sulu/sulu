@@ -12,7 +12,7 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1424781334925.css">
+        <link rel="stylesheet" href="/bundles/suluadmin/dist/app.min.1425022396478.css">
 
         <link rel="stylesheet" type="text/css" href="/bundles/suluadmin/css/main.css"/>
         <link rel="stylesheet" type="text/css" href="/bundles/sulucontact/css/main.min.css"/>
@@ -66,7 +66,10 @@
                 user: {
                     id: '{{ user.id }}',
                     locale: '{{ user.locale is defined ? user.locale : 'en' }}',
-                    settings: {{ user.settings }}
+                    settings: {{ user.settings }},
+                    contact: {
+                        id: '{{ user.contact.id }}'
+                    }
                 },
                 sections: {{ config | json_encode }},
                 locales: {{ locales | json_encode }}
@@ -77,7 +80,7 @@
             var CKEDITOR_BASEPATH = '/bundles/suluadmin/js/vendor/husky/vendor/ckeditor/';
         </script>
 
-        <script data-main="/bundles/suluadmin/dist/app.min.1424781334925" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
+        <script data-main="/bundles/suluadmin/dist/app.min.1425022396478" src="/bundles/suluadmin/js/vendor/husky/husky.min.js"></script>
 
     </body>
 </html>
