@@ -23,6 +23,7 @@ CHANGELOG for Sulu
     * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
     * FEATURE     #838 [AdminBundle]     Login UI
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
+    * BUGFIX      #917 [ContentBundle]  Added webspace and locale to page in smart-content to load snippet in correct language
 
 * dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
