@@ -12,19 +12,13 @@ namespace Sulu\Bundle\SecurityBundle\Command;
 
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\SecurityBundle\Entity\Permission;
-use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -58,6 +52,7 @@ class CreateUserCommand extends ContainerAwareCommand
     {
         $localizations = $this->getContainer()->get('sulu.core.localization_manager')->getLocalizations();
         $locales = array();
+        $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
         foreach ($localizations as $localization) {
             $locales[] = $localization->getLocalization();
@@ -71,10 +66,30 @@ class CreateUserCommand extends ContainerAwareCommand
         $roleName = $input->getArgument('role');
         $password = $input->getArgument('password');
 
-        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine = $this->getDoctrine();
         $em = $doctrine->getManager();
+        $user = $this->getUser();
 
         $now = new DateTime();
+
+        $existing = $doctrine->getRepository(get_class($user))->findOneBy(array('username' => $username));
+
+        if ($existing) {
+            $output->writeln(sprintf('<error>User "%s" already exists</error>',
+                $username
+            ));
+
+            return 1;
+        }
+
+        if (!in_array($locale, $userLocales)) {
+            $output->writeln(sprintf(
+                'Given locale "%s" is invalid, must be one of "%s"',
+                $locale, implode('", "', $userLocales)
+            ));
+
+            return 1;
+        }
 
         $contact = new Contact();
         $contact->setFirstName($firstName);
@@ -85,7 +100,6 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->persist($contact);
         $em->flush();
 
-        $user = $this->getUser();
         $user->setContact($contact);
         $user->setUsername($username);
         $user->setSalt($this->generateSalt());
@@ -94,6 +108,15 @@ class CreateUserCommand extends ContainerAwareCommand
         $user->setEmail($email);
 
         $role = $doctrine->getRepository('SuluSecurityBundle:Role')->findOneBy(array('name' => $roleName));
+
+        if (!$role) {
+            $output->writeln(sprintf('<error>Role "%s" not found. The following roles are available: "%s"</error>',
+                $roleName,
+                implode('", "', $this->getRoleNames())
+            ));
+
+            return 1;
+        }
 
         $userRole = new UserRole();
         $userRole->setRole($role);
@@ -105,7 +128,7 @@ class CreateUserCommand extends ContainerAwareCommand
         $em->flush();
 
         $output->writeln(
-            sprintf('Created user <comment>%s</comment> in role <comment>%s</comment>', $username, $roleName)
+            sprintf('Created user "<comment>%s</comment>" in role "<comment>%s</comment>"', $username, $roleName)
         );
     }
 
@@ -124,8 +147,10 @@ class CreateUserCommand extends ContainerAwareCommand
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
+        $roleNames = $this->getRoleNames();
         $helper = $this->getHelper('question');
-        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine = $this->getDoctrine();
+        $userLocales = $this->getContainer()->getParameter('sulu_core.locales');
 
         if (!$input->getArgument('username')) {
             $question = new Question('Please choose a username: ');
@@ -207,38 +232,17 @@ class CreateUserCommand extends ContainerAwareCommand
         }
 
         if (!$input->getArgument('locale')) {
-            $question = new Question('Please choose a locale: ');
-            $question->setValidator(
-                function ($locale) use ($doctrine) {
-                    if (empty($locale)) {
-                        throw new \InvalidArgumentException('Locale can not be empty');
-                    }
-
-                    return $locale;
-                }
-            );
-
+            $question = new ChoiceQuestion('Please choose a locale', $userLocales);
             $value = $helper->ask($input, $output, $question);
             $input->setArgument('locale', $value);
         }
 
         if (!$input->getArgument('role')) {
-            $query = $doctrine->getRepository('SuluSecurityBundle:Role')
-                ->createQueryBuilder('role')
-                ->select('role.name')
-                ->getQuery();
-
-            $roles = array();
-            foreach ($query->getArrayResult() as $roleEntity) {
-                $roles[] = $roleEntity['name'];
-            }
-
             $question = new ChoiceQuestion(
                 'Please choose a role: ',
-                $roles,
+                $roleNames,
                 0
             );
-
             $value = $helper->ask($input, $output, $question);
             $input->setArgument('role', $value);
         }
@@ -282,5 +286,33 @@ class CreateUserCommand extends ContainerAwareCommand
         $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
 
         return $encoder->encodePassword($password, $salt);
+    }
+
+    /**
+     * Return the names of all the roles
+     *
+     * @return array
+     * @throws RuntimeException If no roles exist
+     */
+    private function getRoleNames()
+    {
+        $roleNames = $this->getDoctrine()->getRepository('SuluSecurityBundle:Role')->getRoleNames();
+
+        if (empty($roleNames)) {
+            throw new \RuntimeException(sprintf(
+                'The system currently has no roles. Use the "sulu:security:role:create" command to create roles.'
+            ));
+        }
+
+        return $roleNames;
+    }
+
+    /**
+     * Return the doctrine service
+     * @return Doctrine\Common\Persistence\ManagerRegistry
+     */
+    private function getDoctrine()
+    {
+        return $this->getContainer()->get('doctrine');
     }
 }

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Permission;
+namespace Sulu\Component\Security\Authorization;
 
 /**
  * Container class for a string, which described the security context

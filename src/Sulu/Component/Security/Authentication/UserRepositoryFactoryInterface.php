@@ -8,9 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Factory;
-
-use Sulu\Component\Security\UserRepositoryInterface;
+namespace Sulu\Component\Security\Authentication;
 
 interface UserRepositoryFactoryInterface
 {

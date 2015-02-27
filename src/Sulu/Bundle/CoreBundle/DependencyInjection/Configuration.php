@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_core');
+        $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();
         $this->getPhpcrConfiguration($children);
@@ -56,8 +57,9 @@ class Configuration implements ConfigurationInterface
     private function getLocaleConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->arrayNode('locales')
+            ->isRequired()
             ->useAttributeAsKey('locale')
-            ->prototype('scalar')
+            ->prototype('scalar')->end()
         ->end();
     }
 

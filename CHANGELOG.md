@@ -2,8 +2,19 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #877 [SecurityBundle]  Extracted some classes to component
+    * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
+    * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
+    * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
+    * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #838 [AdminBundle]     Login UI
+
+* dev-master
+    * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
+    * HOTFIX      #880 [AdminBundle]     Fixed user link if user and contact has not the same id
+    * HOTFIX      #880 [ContentBundle]   Fixed content type time to allow empty time values
+    * HOTFIX      #882 [ContentBundle]   Fixed deletion of referenced pages
 
 * 0.16.0 (2015-02-24)
     * BUGFIX      #866 [ContactBundle]   Serialization group "select" for serializing system users
@@ -13,6 +24,9 @@ CHANGELOG for Sulu
     * BUGFIX      #848 [ContactBundle]   Refactored delete dialog function to make it reuseable
     * BUGFIX      #846 [MediaBundle]     Added missing dot to create event name method (\cc Daniel)
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
+    * BUGFIX      #698 [SecurityBundle]  Create user command - do not crash when no roles exist.
+    * ENHANCEMENT #698 [SecurityBundle]  Create user/role commands - exit gracefully if user / role already exists
+    * ENHANCEMENT #698 [SecurityBundle]  Create user command - validate locale when creating new user
     * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
     * BUGFIX      #857 [ContentBundle]   Added links without save could not be removed
@@ -72,7 +86,7 @@ CHANGELOG for Sulu
     * BUGFIX      #697 [CoreBundle]      Do not try and set the theme when the portal has not been found
     * FEATURE     #697 [HttpCacheBundle] Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
     * ENHANCEMENT #777 [ContentBundle]   Enable "copy language" on startpage
-    * HOTFIX      #788 [ContentBundle]  Fixed bug with empty selection with single internal link
+    * HOTFIX      #788 [ContentBundle]   Fixed bug with empty selection with single internal link
 
 * 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change

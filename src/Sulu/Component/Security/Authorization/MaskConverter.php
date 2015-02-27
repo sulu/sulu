@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Permission;
+namespace Sulu\Component\Security\Authorization;
 
 /**
  * A helper class to convert the mask between the numerical and array representation.
  * Also offered as a service by this bundle.
  */
-class MaskConverter
+class MaskConverter implements MaskConverterInterface
 {
     /**
-     * The permissions avaiable, defined by config
+     * The permissions available, defined by config
      * @var array
      */
     protected $permissions;
@@ -28,9 +28,7 @@ class MaskConverter
     }
 
     /**
-     * Converts a permissions array to a bit field
-     * @param array $permissionsData
-     * @return int
+     * {@inheritdoc}
      */
     public function convertPermissionsToNumber($permissionsData)
     {
@@ -46,9 +44,7 @@ class MaskConverter
     }
 
     /**
-     * Converts the given permissions from the numerical to the array representation
-     * @param int $permissions
-     * @return array
+     * {@inheritdoc}
      */
     public function convertPermissionsToArray($permissions)
     {

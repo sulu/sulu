@@ -142,7 +142,7 @@ input, select {
 }
 /* line 90, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed {
-  width: 480px;
+  width: 510px;
 }
 /* line 92, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed #content {
@@ -181,19 +181,19 @@ input, select {
     height: 0;
   }
 }
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1290px) {
   /* line 143, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
-    width: 690px;
+    width: 700px;
   }
 }
-@media only screen and (max-width: 990px) {
+@media only screen and (max-width: 1090px) {
   /* line 149, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
-    width: 480px;
+    width: 510px;
   }
 }
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 900px) {
   /* line 155, ../scss/modules/layout.scss */
   .sidebar-column.max {
     width: 0;
