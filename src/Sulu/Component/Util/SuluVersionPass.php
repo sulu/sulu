@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AdminBundle\DependencyInjection\Compiler;
+namespace Sulu\Component\Util;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
- * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
+ * @package Sulu\Component\Util
  */
 class SuluVersionPass implements CompilerPassInterface
 {
