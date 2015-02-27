@@ -5,7 +5,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Import;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
+use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\ContactBundle\Import\Exception\ImportException;
+use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 /**
@@ -17,6 +21,7 @@ class DataCompleter
      * constants
      */
     const DEBUG = true;
+    const BATCH_SIZE = 20;
     const API_CALL_LIMIT_PER_SECOND = 9;
     const API_CALL_SLEEP_TIME = 2;
 
@@ -52,6 +57,12 @@ class DataCompleter
      * @var array
      */
     protected $headerData = array();
+
+    /**
+     * language of the api results
+     * @var string
+     */
+    protected $locale;
 
     /**
      * logfile
@@ -90,11 +101,27 @@ class DataCompleter
     protected $lastApiCallCount;
 
     /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
+    /**
+     * @var AccountRepository
+     */
+    protected $accountRepository;
+
+    /**
      * constructor
      */
-    public function __construct()
+    public function __construct(
+        EntityManagerInterface $em,
+        $accountRepository
+    )
     {
         $this->log = array();
+
+        $this->em = $em;
+        $this->accountRepository = $accountRepository;
     }
 
     /**
@@ -105,6 +132,16 @@ class DataCompleter
     public function setLimit($limit)
     {
         $this->limit = $limit;
+    }
+
+    /**
+     * set language of completion
+     *
+     * @param $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 
     /**
@@ -129,7 +166,7 @@ class DataCompleter
         $parts = pathinfo($oldPath);
         $filename = $parts['dirname'] . '/' . $parts['filename'] . $postfix;
         if ($keepExtension) {
-            $filename .=  '.' . $parts['extension'];
+            $filename .= '.' . $parts['extension'];
         }
         return $filename;
     }
@@ -137,9 +174,9 @@ class DataCompleter
     /**
      * process csv file
      */
-    public function execute()
+    public function executeCsvCompletion()
     {
-        $outputFileName = $this->extendFileName($this->file,'_processed');
+        $outputFileName = $this->extendFileName($this->file, '_processed');
         $output = fopen($outputFileName, "w");
 
         $this->processCsvLoop(
@@ -160,6 +197,70 @@ class DataCompleter
     }
 
     /**
+     * process csv file
+     */
+    public function executeDbCompletion($databaseOptions)
+    {
+        if (in_array('state', $databaseOptions)) {
+            $this->debug("Completing states:\n");
+
+            /** @var ContentQueryBuilderInterface $qb */
+            $qb = $this->accountRepository->createQueryBuilder('account')
+                ->select('account.id');
+
+            if ($this->limit) {
+                $qb->setMaxResults($this->limit);
+            }
+
+            $ids = $qb->getQuery()->getScalarResult();
+            $accountIds = array_column($ids, 'id');
+            $this->debug(sprintf("Found %d accounts to complete addresses.\n", count($accountIds)));
+
+            $counter = 0;
+            foreach ($accountIds as $id) {
+                $counter++;
+                $account = $this->accountRepository->find($id);
+                $this->updateStateOfAddresses($account->getAccountAddresses());
+
+                // store
+                if ($counter % self::BATCH_SIZE === 0) {
+                    $this->em->flush();
+                    $this->em->clear();
+                }
+            }
+            $this->em->flush();
+        }
+        $this->createLogFile();
+    }
+
+    /**
+     * @param $addresses
+     * @internal param $entity
+     */
+    protected function updateStateOfAddresses($addresses)
+    {
+        if (!$addresses || $addresses->isEmpty()) {
+            return;
+        }
+        /** @var AccountAddress $accountAddress */
+        foreach ($addresses as $accountAddress) {
+            $this->debug('.', false);
+            $address = $accountAddress->getAddress();
+
+            $zip = $address->getZip();
+            $country = $address->getCountry()->getName();
+
+            // identify state by zip and country
+            if ($zip && $country) {
+                $state = $this->getStateByApiCall(array($zip, $country));
+                if ($state) {
+                    $address->setState($state);
+                }
+            }
+        }
+    }
+
+    /**
      * callback loop
      *
      * @param $filename
@@ -170,7 +271,8 @@ class DataCompleter
         $filename,
         callable $callback,
         callable $headerCallback
-    ) {
+    )
+    {
         $row = 0;
         $this->currentRow = 0;
         $this->headerData = array();
@@ -238,7 +340,7 @@ class DataCompleter
             // check if country is set
             if (!$country) {
                 // we need to make an api call to fetch country
-                $country = $this->getCountryByApiCall($street, $city, $zip, $state);
+                $country = $this->getCountryByApiCall(array($street, $city, $zip, $state));
 
                 $this->setColumnValue('country', $data, $country);
             }
@@ -249,19 +351,62 @@ class DataCompleter
 
     /**
      * performs an api call and returns shorcode for a country
-     * @param $street
-     * @param $city
-     * @param $zip
-     * @param $state
+     * @param $data
      * @return null|void
      */
-    protected function getCountryByApiCall($street, $city, $zip, $state)
+    protected function getCountryByApiCall($data = array())
+    {
+        return $this->getDataByApiCall($data, array($this, 'getDataFromApiResultByKey'), array('country'));
+    }
+
+    /**
+     * performs an api call and returns shorcode for a country
+     * @param $data
+     * @return null|void
+     */
+    protected function getStateByApiCall($data = array())
+    {
+        // FIXME: this is a workaround for a google geocode bug: austrian state names are only properly returned in
+        //      short_name. for all other countries take long_name
+        $resultKey = in_array('Austria', $data) ? 'short_name' : 'long_name';
+        return $this->getDataByApiCall($data, array($this, 'getDataFromApiResultByKey'), array('administrative_area_level_1', $resultKey));
+    }
+
+    /**
+     * returns key from google geocode api result
+     * @param object $result
+     * @param string $key
+     * @param $returnKey $key (either short_name or long_name)
+     * @return null|string (short_name)
+     */
+    protected function getDataFromApiResultByKey($result, $key, $returnKey = 'short_name')
+    {
+        if (property_exists($result, 'address_components')) {
+            foreach ($result->address_components as $resultBlock) {
+                if ($resultBlock->types[0] === $key) {
+                    return $resultBlock->$returnKey;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * performs an api call and returns shorcode for a country
+     *
+     * @param array $dataArray
+     * @param callable $resultCallback will be called, passing the api-result object
+     * @param array $callbackData Possibility to pass additional data to the callback
+     *
+     * @return mixed|void
+     */
+    protected function getDataByApiCall($dataArray = array(), callable $resultCallback, $callbackData = array())
     {
         // limit api calls per second
         if ($this->lastApiCallTime == time()) {
             if ($this->lastApiCallCount >= static::API_CALL_LIMIT_PER_SECOND) {
                 sleep(static::API_CALL_SLEEP_TIME);
-                return $this->getCountryByApiCall($street, $city, $zip, $state);
+                return $this->getDataByApiCall($dataArray, $resultCallback);
             }
             $this->lastApiCallCount++;
         } else {
@@ -270,67 +415,44 @@ class DataCompleter
         }
 
         // remove null values
-        $params = array_filter(
-            array(
-                $street,
-                $city,
-                $zip,
-                $state
-            )
-        );
+        $params = array_filter($dataArray);
         // create string
         $params = implode(',', $params);
         // avoid spaces
         $urlparams = urlencode($params);
 
-        $apiResult = json_decode(file_get_contents(static::$geocode_url . $urlparams));
+        $apiResult = json_decode(file_get_contents(static::$geocode_url . $urlparams . '&language=' . $this->locale));
 
         $results = $apiResult->results;
 
         if (count($results) === 0) {
-            $this->debug(sprintf("ERROR: No valid country found at row %d (by api)", $this->currentRow, $params));
-            return;
+            $this->debug(sprintf("ERROR: No valid data found at row %d (by api)", $this->currentRow, $params));
+            return null;
         }
 
         // take first result (if not unique)
         $result = $results[0];
 
-        $country = $this->getCountryFromApiResult($result);
+        // get data by callback user function
+        $callbackDataArray = array_merge(array($result), $callbackData);
+        $data = call_user_func_array($resultCallback, $callbackDataArray);
 
-        if (!$country) {
-            $this->debug(sprintf("ERROR: No country found in result for row %d", $this->currentRow));
-            return;
+        if (!$data) {
+            $this->debug(sprintf("ERROR: No data found in result for row %d", $this->currentRow));
+            return null;
         }
 
-        //
-        if (count($results) >1) {
+        if (count($results) > 1) {
             $this->debug(
-                sprintf("Non unique country result at row %d! chose countrycode %s (params: %s)",
+                sprintf("Non unique result at row %d! chose data %s (params: %s)",
                     $this->currentRow,
-                    $country,
+                    $data,
                     $params
                 )
             );
         }
 
-        return $country;
-    }
-
-    /**
-     * returns country short_name from array
-     * @param $result
-     * @return null
-     */
-    protected function getCountryFromApiResult($result)
-    {
-        foreach($result as $value) {
-            foreach ($value as $resultBlock) {
-                if ($resultBlock->types[0] === 'country') {
-                    return $resultBlock->short_name;
-                }
-            }
-        }
-        return null;
+        return $data;
     }
 
     /**
@@ -400,7 +522,12 @@ class DataCompleter
      */
     public function createLogFile()
     {
-        $file = fopen($this->extendFileName($this->file, '_log_' . time(), false), 'w');
+        if ($this->file) {
+            $fileName = $this->extendFileName($this->file, '_log_' . time(), false);
+        } else {
+            $fileName = 'app/logs/datacompletion/' . time();
+        }
+        $file = fopen($fileName, 'w');
         fwrite($file, implode("\n", $this->log));
         fclose($file);
     }

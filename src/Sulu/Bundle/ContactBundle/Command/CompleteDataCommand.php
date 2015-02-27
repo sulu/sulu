@@ -18,10 +18,25 @@ class CompleteDataCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('sulu:contacts:data:complete')
-            ->addArgument(
+            ->addOption(
                 'file',
-                InputArgument::REQUIRED,
-                'file to complete'
+                'f',
+                InputOption::VALUE_REQUIRED,
+                'complete a csv file'
+            )
+            ->addOption(
+                'database',
+                'd',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'complete database entries. currently supported: state',
+                array()
+            )
+            ->addOption(
+                'language',
+                'lo',
+                InputOption::VALUE_REQUIRED,
+                'the language locale',
+                'de'
             )
             ->addOption(
                 'limit',
@@ -33,19 +48,30 @@ class CompleteDataCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $file = $input->getArgument('file');
+        $file = $input->getOption('file');
         $limit = $input->getOption('limit');
+        $database = $input->getOption('database');
+        $locale = $input->getOption('language');
 
-        /** @var Import $import */
+        /** @var \Sulu\Bundle\ContactBundle\Import\DataCompleter $completer */
         $completer = $this->getContainer()->get('sulu_contact.data_completer');
-        $completer->setFile($file);
-
+        // set locale
+        $completer->setLocale($locale);
+        
         // set limit number of columns to import
         if ($limit) {
             $completer->setLimit($limit);
         }
-
-        $completer->execute();
+        
+        if ($file) {
+            $completer->setFile($file);
+            $completer->executeCsvCompletion();
+        } elseif($database) {
+            $completer->executeDbCompletion($database);
+        } else {
+            $output->writeln('<comment>No file of database option given. See --help for more information<comment>');
+            return;
+        }
 
         $output->writeln('Data Completion complete');
     }
