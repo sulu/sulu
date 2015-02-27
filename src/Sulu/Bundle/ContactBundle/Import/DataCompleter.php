@@ -104,7 +104,7 @@ class DataCompleter
      * @var EntityManagerInterface
      */
     protected $em;
-    
+
     /**
      * @var AccountRepository
      */
@@ -119,7 +119,7 @@ class DataCompleter
     )
     {
         $this->log = array();
-        
+
         $this->em = $em;
         $this->accountRepository = $accountRepository;
     }
@@ -166,7 +166,7 @@ class DataCompleter
         $parts = pathinfo($oldPath);
         $filename = $parts['dirname'] . '/' . $parts['filename'] . $postfix;
         if ($keepExtension) {
-            $filename .=  '.' . $parts['extension'];
+            $filename .= '.' . $parts['extension'];
         }
         return $filename;
     }
@@ -176,7 +176,7 @@ class DataCompleter
      */
     public function executeCsvCompletion()
     {
-        $outputFileName = $this->extendFileName($this->file,'_processed');
+        $outputFileName = $this->extendFileName($this->file, '_processed');
         $output = fopen($outputFileName, "w");
 
         $this->processCsvLoop(
@@ -203,11 +203,11 @@ class DataCompleter
     {
         if (in_array('state', $databaseOptions)) {
             $this->debug("Completing states:\n");
-            
+
             /** @var ContentQueryBuilderInterface $qb */
             $qb = $this->accountRepository->createQueryBuilder('account')
                 ->select('account.id');
-            
+
             if ($this->limit) {
                 $qb->setMaxResults($this->limit);
             }
@@ -215,23 +215,22 @@ class DataCompleter
             $ids = $qb->getQuery()->getScalarResult();
             $accountIds = array_column($ids, 'id');
             $this->debug(sprintf("Found %d accounts to complete addresses.\n", count($accountIds)));
-            
+
             $counter = 0;
             foreach ($accountIds as $id) {
                 $counter++;
                 $account = $this->accountRepository->find($id);
                 $this->updateStateOfAddresses($account->getAccountAddresses());
-                
+
                 // store
                 if ($counter % self::BATCH_SIZE === 0) {
                     $this->em->flush();
                     $this->em->clear();
                 }
             }
-            
             $this->em->flush();
         }
-//        $this->createLogFile();
+        $this->createLogFile();
     }
 
     /**
@@ -247,12 +246,12 @@ class DataCompleter
         foreach ($addresses as $accountAddress) {
             $this->debug('.', false);
             $address = $accountAddress->getAddress();
-         
+
             $zip = $address->getZip();
             $country = $address->getCountry()->getName();
-            
+
             // identify state by zip and country
-            if($zip && $country) {
+            if ($zip && $country) {
                 $state = $this->getStateByApiCall(array($zip, $country));
                 if ($state) {
                     $address->setState($state);
@@ -272,7 +271,8 @@ class DataCompleter
         $filename,
         callable $callback,
         callable $headerCallback
-    ) {
+    )
+    {
         $row = 0;
         $this->currentRow = 0;
         $this->headerData = array();
@@ -442,7 +442,7 @@ class DataCompleter
             return null;
         }
 
-        if (count($results) >1) {
+        if (count($results) > 1) {
             $this->debug(
                 sprintf("Non unique result at row %d! chose data %s (params: %s)",
                     $this->currentRow,
@@ -522,7 +522,12 @@ class DataCompleter
      */
     public function createLogFile()
     {
-        $file = fopen($this->extendFileName($this->file, '_log_' . time(), false), 'w');
+        if ($this->file) {
+            $fileName = $this->extendFileName($this->file, '_log_' . time(), false);
+        } else {
+            $fileName = 'app/logs/datacompletion/' . time();
+        }
+        $file = fopen($fileName, 'w');
         fwrite($file, implode("\n", $this->log));
         fclose($file);
     }
