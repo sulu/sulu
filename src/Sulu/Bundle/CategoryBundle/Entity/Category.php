@@ -63,12 +63,12 @@ class Category
     private $parent;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $creator;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $changer;
 
@@ -355,10 +355,10 @@ class Category
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return Category
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -368,7 +368,7 @@ class Category
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {
@@ -378,10 +378,10 @@ class Category
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return Category
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -391,7 +391,7 @@ class Category
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {

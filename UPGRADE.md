@@ -1,8 +1,24 @@
 # Upgrade
 
+## dev-develop
+
+### Security
+
+The names of some classes have changed like shown in the following table:
+
+Old name                                                          | New name
+------------------------------------------------------------------|--------------------------------------------------------------
+Sulu\Bundle\SecurityBundle\Entity\RoleInterface                   | Sulu\Component\Security\Authentication\RoleInterface
+Sulu\Component\Security\UserInterface                             | Sulu\Component\Security\Authentication\UserInterface
+Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactoryInterface | Sulu\Component\Security\Authentication\UserRepositoryFactoryInterface
+Sulu\Component\Security\UserRepositoryInterface                   | Sulu\Component\Security\Authentication\UserRepositoryInterface
+Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface    | Sulu\Component\Security\Authorization\SecurityCheckerInterface
+
+If you have used any of these interfaces you have to update them.
+
 ## 0.16.0
 
-## Content Types
+### Content Types
 
 Time content types returns now standardized values (hh:mm:ss) and can handle this as localized string in the input
 field.
@@ -17,7 +33,7 @@ In the website you should change the output if time to your format.
 
 If you use the field in another component you should upgrade your api that it returns time values in format (hh:mm:ss).
 
-## Security
+### Security
 
 Database has changed: User has now a unique email address. Run following command:
 

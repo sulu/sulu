@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * User

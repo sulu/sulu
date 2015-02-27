@@ -58,7 +58,7 @@ class TagManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->userRepository = $this->getMockForAbstractClass(
-            'Sulu\Component\Security\UserRepositoryInterface',
+            'Sulu\Component\Security\Authentication\UserRepositoryInterface',
             array(),
             '',
             false

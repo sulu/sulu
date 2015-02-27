@@ -2,12 +2,19 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #877 [SecurityBundle]  Extracted some classes to component
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #838 [AdminBundle]     Login UI
+
+* dev-master
+    * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
+    * HOTFIX      #880 [AdminBundle]     Fixed user link if user and contact has not the same id
+    * HOTFIX      #880 [ContentBundle]   Fixed content type time to allow empty time values
+    * HOTFIX      #882 [ContentBundle]   Fixed deletion of referenced pages
 
 * 0.16.0 (2015-02-24)
     * BUGFIX      #866 [ContactBundle]   Serialization group "select" for serializing system users

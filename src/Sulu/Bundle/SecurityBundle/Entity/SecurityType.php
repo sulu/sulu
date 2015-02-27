@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Sulu\Component\Security\Authentication\RoleInterface;
+
 /**
  * SecurityType
  */
@@ -84,10 +86,10 @@ class SecurityType
     /**
      * Add roles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles
+     * @param RoleInterface $roles
      * @return SecurityType
      */
-    public function addRole(\Sulu\Bundle\SecurityBundle\Entity\Role $roles)
+    public function addRole(RoleInterface $roles)
     {
         $this->roles[] = $roles;
 
@@ -97,9 +99,9 @@ class SecurityType
     /**
      * Remove roles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles
+     * @param RoleInterface $roles
      */
-    public function removeRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles)
+    public function removeRole(RoleInterface $roles)
     {
         $this->roles->removeElement($roles);
     }

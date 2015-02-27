@@ -24,7 +24,7 @@ use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;

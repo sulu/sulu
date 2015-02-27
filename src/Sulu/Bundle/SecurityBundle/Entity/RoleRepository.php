@@ -13,12 +13,13 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
  * Repository for the User, implementing some additional functions
  * for querying objects
  */
-class RoleRepository extends EntityRepository
+class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 {
     /**
      * Finds a role with a specific id
