@@ -17,7 +17,6 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -80,11 +79,12 @@ class CollectionController extends RestController implements ClassResourceInterf
         try {
             $locale = $this->getLocale($request);
             $depth = $request->get('depth');
+            $breadcrumb = ($request->get('breadcrumb') === 'true' ? true : false);
             $collectionManager = $this->getCollectionManager();
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth) {
-                    return $collectionManager->getById($id, $locale, $depth);
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb) {
+                    return $collectionManager->getById($id, $locale, $depth, $breadcrumb);
                 }
             );
         } catch (CollectionNotFoundException $cnf) {

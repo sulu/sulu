@@ -181,4 +181,32 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             return null;
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findCollectionBreadcrumbById($id, $locale)
+    {
+        try {
+            $sql = sprintf(
+                'SELECT n.id AS id, collectionMeta.title AS title
+                 FROM %s AS p,
+                      %s AS n
+                        LEFT JOIN n.meta AS collectionMeta
+                 WHERE p.id = :id AND p.lft > n.lft AND p.rgt < n.rgt AND collectionMeta.locale = :locale
+                 ORDER BY n.lft',
+                $this->_entityName,
+                $this->_entityName
+            );
+
+            $query = new Query($this->_em);
+            $query->setDQL($sql);
+            $query->setParameter('id', $id);
+            $query->setParameter('locale', $locale);
+
+            return $query->getArrayResult();
+        } catch (NoResultException $ex) {
+            return array();
+        }
+    }
 }

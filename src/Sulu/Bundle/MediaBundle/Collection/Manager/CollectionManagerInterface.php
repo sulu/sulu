@@ -28,7 +28,7 @@ interface CollectionManagerInterface
      * @param int $depth if depth > 1 children will returned also
      * @return Collection
      */
-    public function getById($id, $locale, $depth = 0);
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false);
 
     /**
      * Returns collections with a given parent and/or a given depth-level

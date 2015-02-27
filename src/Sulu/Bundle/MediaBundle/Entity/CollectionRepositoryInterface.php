@@ -47,4 +47,12 @@ interface CollectionRepositoryInterface
      * @return Collection[]
      */
     public function findCollections($filter = array(), $limit = null, $offset = null, $sortBy = array());
+
+    /**
+     * Finds the breadcrumb of a collection with given id
+     * @param int $id
+     * @param string $locale
+     * @return array {id: ..., title: '...'}
+     */
+    public function findCollectionBreadcrumbById($id, $locale);
 }

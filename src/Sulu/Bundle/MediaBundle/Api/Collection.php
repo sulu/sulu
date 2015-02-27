@@ -73,6 +73,13 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *         xmlElementName = "parent"
  *     )
  * )
+ * @Relation(
+ *     name = "breadcrumb",
+ *     embedded = @Embedded(
+ *         "expr(object.getBreadcrumb())",
+ *         xmlElementName = "breadcrumb"
+ *     )
+ * )
  */
 class Collection extends ApiWrapper
 {
@@ -95,6 +102,11 @@ class Collection extends ApiWrapper
      * @var Collection
      */
     protected $parent;
+
+    /**
+     * @var array
+     */
+    protected $breadcrumb;
 
     public function __construct(CollectionInterface $collection, $locale)
     {
@@ -219,6 +231,22 @@ class Collection extends ApiWrapper
         // FIXME cache for parent because of the preview images
         //       generate it on the fly
         return $this->parent;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBreadcrumb()
+    {
+        return $this->breadcrumb;
+    }
+
+    /**
+     * @param array $breadcrumb
+     */
+    public function setBreadcrumb($breadcrumb)
+    {
+        $this->breadcrumb = $breadcrumb;
     }
 
     /**

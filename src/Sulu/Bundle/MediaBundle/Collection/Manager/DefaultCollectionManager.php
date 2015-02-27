@@ -23,8 +23,8 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class DefaultCollectionManager implements CollectionManagerInterface
@@ -103,14 +103,18 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale, $depth = 0)
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false)
     {
         $collectionSet = $this->collectionRepository->findCollectionSet($id, $depth);
         if (sizeof($collectionSet) === 0) {
             throw new CollectionNotFoundException($id);
         }
+        $breadcrumbArray = null;
+        if ($breadcrumb) {
+            $breadcrumbArray = $this->collectionRepository->findCollectionBreadcrumbById($id, $locale);
+        }
 
-        return $this->getApiEntity($collectionSet[0], $locale, $collectionSet);
+        return $this->getApiEntity($collectionSet[0], $locale, $collectionSet, $breadcrumbArray);
     }
 
     /**
@@ -574,9 +578,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * @param CollectionEntity $entity
      * @param string $locale
      * @param CollectionEntity[] $entities nested set
+     * @param array $breadcrumb
      * @return Collection
      */
-    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null)
+    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumb = null)
     {
         $apiEntity = new Collection($entity, $locale);
 
@@ -594,6 +599,8 @@ class DefaultCollectionManager implements CollectionManagerInterface
         if ($entity->getParent() !== null) {
             $apiEntity->setParent($this->getApiEntity($entity->getParent(), $locale));
         }
+
+        $apiEntity->setBreadcrumb($breadcrumb);
 
         return $this->addPreview($apiEntity);
     }

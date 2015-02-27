@@ -1077,6 +1077,31 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEmpty($subItems[0]->_embedded->collections);
     }
 
+    public function testGetBreadcrumb()
+    {
+        list($titles, $ids) = $this->prepareTree();
+
+        $client = $this->createAuthenticatedClient();
+        $client->request(
+            'GET',
+            '/api/collections/' . $ids[6],
+            array(
+                'locale' => 'en-gb',
+                'breadcrumb' => 'true'
+            )
+        );
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals($titles[6], $response['title']);
+
+        $breadcrumb = $response['_embedded']['breadcrumb'];
+        $this->assertCount(2, $breadcrumb);
+        $this->assertEquals($titles[3], $breadcrumb[0]['title']);
+        $this->assertEquals($ids[3], $breadcrumb[0]['id']);
+        $this->assertEquals($titles[5], $breadcrumb[1]['title']);
+        $this->assertEquals($ids[5], $breadcrumb[1]['id']);
+    }
+
     /**
      * @description Test Collection GET by ID with a depth
      */
