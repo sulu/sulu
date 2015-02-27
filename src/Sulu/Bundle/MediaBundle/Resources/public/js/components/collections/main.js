@@ -550,7 +550,7 @@ define([
                                 if (!!this.options.data._embedded.parent) {
                                     this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + this.options.data._embedded.parent.id + '/' + this.options.display);
                                 } else {
-                                    // TODO clear content
+                                    this.sandbox.emit('sulu.router.navigate', 'media/collections');
                                 }
                             }.bind(this),
                             error: function () {
