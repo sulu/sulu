@@ -113,6 +113,17 @@
             <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
                 <source>sulu.media.edit.loading</source>
                 <target>Media loading</target>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
+                <source>sulu.collection.move</source>
+                <target>Move collections</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
+                <source>navigation.media.collections.empty</source>
+                <target>No collections exists</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
+                <source>navigation.media.collections.add</source>
+                <target>Add collection</target>
             </trans-unit>
         </body>
     </file>

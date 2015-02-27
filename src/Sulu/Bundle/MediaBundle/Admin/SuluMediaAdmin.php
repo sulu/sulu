@@ -40,6 +40,9 @@ class SuluMediaAdmin extends Admin
             $collections->setDataNameKey('title');
             $collections->setDataResultKey('collections');
             $collections->setShowAddButton(true);
+            $collections->setTitleTranslationKey('navigation.media.collections');
+            $collections->setNoDataTranslationKey('navigation.media.collections.empty');
+            $collections->setAddButtonTranslationKey('navigation.media.collections.add');
         }
 
         if ($media->hasChildren()) {
