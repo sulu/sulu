@@ -124,7 +124,7 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
                 <source>navigation.media.collections.add</source>
-                <target>Kollektionen hinzufügen</target>
+                <target>Kollektion hinzufügen</target>
             </trans-unit>
         </body>
     </file>
