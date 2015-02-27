@@ -106,15 +106,23 @@ class DefaultCollectionManager implements CollectionManagerInterface
     public function getById($id, $locale, $depth = 0, $breadcrumb = false)
     {
         $collectionSet = $this->collectionRepository->findCollectionSet($id, $depth);
-        if (sizeof($collectionSet) === 0) {
+
+        $collectionEntity = null;
+        foreach ($collectionSet as $entity) {
+            if($entity->getId() === intval($id)) {
+                $collectionEntity = $entity;
+            }
+        }
+        if ($collectionEntity === null) {
             throw new CollectionNotFoundException($id);
         }
+
         $breadcrumbEntities = null;
         if ($breadcrumb) {
             $breadcrumbEntities = $this->collectionRepository->findCollectionBreadcrumbById($id);
         }
 
-        return $this->getApiEntity($collectionSet[0], $locale, $collectionSet, $breadcrumbEntities);
+        return $this->getApiEntity($collectionEntity, $locale, $collectionSet, $breadcrumbEntities);
     }
 
     /**
