@@ -221,12 +221,13 @@ define(function() {
                 // prevent the default action for the anchor tag
                 this.sandbox.dom.preventDefault(event);
 
-                var dataSuluEvent = this.sandbox.dom.attr(event.currentTarget, 'data-sulu-event');
+                var dataSuluEvent = this.sandbox.dom.attr(event.currentTarget, 'data-sulu-event'),
+                    eventArgs = this.sandbox.dom.data(event.currentTarget, 'eventArgs');
 
                 // if data-sulu-event attribute is set emit the attribute value as an event
                 if (!!dataSuluEvent &&
                     typeof dataSuluEvent === 'string') {
-                    this.sandbox.emit(dataSuluEvent);
+                    this.sandbox.emit(dataSuluEvent, eventArgs);
                 }
 
                 // if valid href attribute is set navigate to it using the sulu.navigate method
