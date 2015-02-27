@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #884 [MediaBundle]     Loaders on media delete and media edit
+    * BUGFIX      #884 [AdminBundle]     Fix for login displacement issues
+    * BUGFIX      #884 [MediaBundle]     Fix for uploading bug on click on dropzone
     * ENHANCEMENT #877 [SecurityBundle]  Extracted some classes to component
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
