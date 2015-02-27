@@ -54,7 +54,9 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         // get url to redirect (or return in the JSON-response)
-        if ($this->session->get('_security.admin.target_path')) {
+        if ($this->session->get('_security.admin.target_path') &&
+            strpos($this->session->get('_security.admin.target_path'), '#') !== false
+        ) {
             $url = $this->session->get('_security.admin.target_path');
         } else {
             $url = $this->router->generate('sulu_admin');
