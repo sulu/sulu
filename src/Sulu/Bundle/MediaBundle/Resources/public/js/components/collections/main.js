@@ -40,6 +40,7 @@ define([
              * listens on and deletes medias
              * @event sulu.media.collections.delete-media
              * @param ids {Array} array of ids of the media to delete
+             * @param afterConfirm {Function} callback to execute after modal has been confirmed
              * @param callback {Function} callback to execute after a media got deleted
              * @param noDialog {Boolean} if true no dialog will be shown
              */
@@ -439,20 +440,21 @@ define([
             /**
              * Deletes an array of media
              * @param mediaIds {Array} array of media ids
-             * @param confirm {Function} callback to execute after modal has been confirmed
+             * @param afterConfirm {Function} callback to execute after modal has been confirmed
              * @param callback {Function} callback to execute after deleting a media
              * @param noDialog {Boolean} if true no dialog box will be shown
              */
-            deleteMedia: function (mediaIds, confirm, callback, noDialog) {
+            deleteMedia: function (mediaIds, afterConfirm, callback, noDialog) {
                 var media,
                     length = mediaIds.length,
                     counter = 0,
+                    finished = false,
                     action = function () {
                         this.sandbox.util.foreach(mediaIds, function (id) {
                             media = this.getMediaModel(id);
                             media.destroy({
                                 success: function () {
-                                    var finished = ++counter === length;
+                                    finished = ++counter === length;
                                     if (typeof callback === 'function') {
                                         callback(id, finished);
                                     } else {
@@ -471,8 +473,8 @@ define([
                 } else {
                     this.sandbox.sulu.showDeleteDialog(function (confirmed) {
                         if (confirmed === true) {
-                            if (typeof confirm === 'function') {
-                                confirm();
+                            if (typeof afterConfirm === 'function') {
+                                afterConfirm();
                             }
                             action();
                         }
@@ -547,10 +549,10 @@ define([
              * @param record {Number|String} id of the media to edit
              */
             editSingleMedia: function (record) {
-                // TODO: start overlay here and set content later
                 var media;
                 // if media exists there is no need to fetch the media again - the local one is up to date
                 if (!this.medias.get(record)) {
+                    this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
                     media = this.getMediaModel(record);
                     media.fetch({
                         success: function (media) {
@@ -572,7 +574,6 @@ define([
              * @param records {Array} array with ids of the media to edit
              */
             editMultipleMedia: function (records) {
-                // TODO: start overlay here and set content later
                 var mediaList = [],
                     media,
                     action = function () {
@@ -584,6 +585,7 @@ define([
                 // loop through ids - if model is already loaded take it else load it
                 this.sandbox.util.foreach(records, function (mediaId) {
                     if (!this.medias.get(mediaId)) {
+                        this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
                         media = this.getMediaModel(mediaId);
                         media.fetch({
                             success: function (media) {

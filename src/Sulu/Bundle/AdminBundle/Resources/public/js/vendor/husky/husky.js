@@ -27682,7 +27682,6 @@ define('husky',[
  *
  * Description:
  *  Navigation Element
- *  also loads search component
  *
  * Options:
  *  footerTemplate - html template to define the footer
@@ -27719,7 +27718,6 @@ define('__component__$navigation@husky',[],function() {
                 '               <div class="logo"></div>',
                 '               <div class="navigation-header-title"><% if (data.title) { %> <%= translate(data.title) %><% } %></div>',
                 '           </header>',
-                '           <div id="navigation-search" class="navigation-search"></div>',
                 '           <div id="navigation-item-container" class="navigation-item-container"></div>',
                 '       </div>',
                 '       <footer>',
@@ -27942,17 +27940,6 @@ define('__component__$navigation@husky',[],function() {
             this.$navigation = this.$find('.navigation');
             this.$navigationContent = this.$find('.navigation-content');
 
-            // start search component
-            this.sandbox.start([
-                {
-                    name: 'search@husky',
-                    options: {
-                        el: '#navigation-search',
-                        placeholderText: 'public.search'
-                    }
-                }
-            ]);
-
             // render navigation items
             this.renderNavigationItems(this.options.data);
 
@@ -28091,20 +28078,16 @@ define('__component__$navigation@husky',[],function() {
 
             // collapse events
             this.sandbox.dom.on(this.sandbox.dom.window, 'resize', this.resizeListener.bind(this));
-            this.sandbox.dom.on(this.$el, 'click', this.showCollapsedSearch.bind(this), '.navigation #navigation-search a.search-icon');
             this.sandbox.dom.on(this.$el, 'click', this.collapse.bind(this), '.navigation.collapseIcon .navigation-close-icon');
             this.sandbox.dom.on(this.$el, 'click', this.collapsedFooterClickHandler.bind(this), '.navigation.collapsed footer');
 
 
             // tooltip events
             this.sandbox.dom.on(this.$el, 'mouseenter', function(event) {
-                this.showToolTip.call(this, this.sandbox.dom.attr(this.sandbox.dom.find('input', '.navigation-search'), 'placeholder'), event);
-            }.bind(this), '.navigation.collapsed .navigation-search');
-            this.sandbox.dom.on(this.$el, 'mouseenter', function(event) {
                 this.showToolTip.call(this, this.sandbox.translate(this.options.translations.user), event);
             }.bind(this), '.navigation.collapsed footer');
             this.sandbox.dom.on(this.$el, 'mouseenter', this.showToolTip.bind(this, ''), '.navigation.collapsed .navigation-items');
-            this.sandbox.dom.on(this.$el, 'mouseleave', this.hideToolTip.bind(this), '.navigation.collapsed .navigation-items, .navigation.collapsed .navigation-search, .navigation.collapsed footer');
+            this.sandbox.dom.on(this.$el, 'mouseleave', this.hideToolTip.bind(this), '.navigation.collapsed .navigation-items, .navigation.collapsed, .navigation.collapsed footer');
 
             this.sandbox.dom.on(this.$el, CONSTANTS.TRANSITIONEND_EVENT, function() {
                 this.sandbox.emit(EVENT_SIZE_CHANGED, this.sandbox.dom.width(this.$navigation));
@@ -28474,22 +28457,6 @@ define('__component__$navigation@husky',[],function() {
                     this.tooltipsEnabled = false;
                 }
             }
-        },
-
-        // called when search icon was clicked
-        showCollapsedSearch: function(event) {
-
-            // remove collapse
-            this.unCollapse(true);
-
-            // focus search
-            var input = this.sandbox.dom.find('input', this.sandbox.dom.parent(event.currentTarget)),
-                instanceName;
-            this.sandbox.dom.trigger(input, 'focus');
-
-            // close when search is sent
-            instanceName = this.options.searchInstanceName ? this.options.searchInstanceName + '.' : '';
-            this.sandbox.once('husky.' + instanceName + 'search', this.resizeListener.bind(this));
         },
 
 
@@ -30234,7 +30201,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param event {Object} the event object
          */
         selectItemChangeHandler: function (event) {
-            //this.sandbox.dom.stopPropagation(event);
+            if (!!event.type) {
+                this.sandbox.dom.stopPropagation(event);
+            }
             var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.target, '.' + constants.rowClass), 'id'),
                 isChecked = this.sandbox.dom.is(event.target, ':checked');
             if (this.options.selectItem.type === selectItems.CHECKBOX) {
@@ -31975,10 +31944,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @param params url
              */
             loadMatchings: function(params) {
-                this.sandbox.dom.hide(this.$find('.selected-elements'));
+                this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
                 this.sandbox.util.load(params.url)
                     .then(function(response) {
-                        this.sandbox.dom.show(this.$find('.selected-elements'));
+                        this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
                         if (this.isLoading === true) {
                             this.stopLoading();
                         }
@@ -32060,7 +32029,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.dom.append(this.$element, this.sandbox.util.template(templates.selectedCounter)({
                     text: this.sandbox.translate(this.options.selectedCounterText)
                 }));
-                this.sandbox.dom.hide(this.$find('.selected-elements'));
+                this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
             },
 
             /**
@@ -32068,7 +32037,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             renderView: function() {
                 this.gridViews[this.viewId].render(this.data, this.$element);
-                this.sandbox.dom.show(this.$find('.selected-elements'));
+                this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
                 this.sandbox.emit(VIEW_RENDERED.call(this));
             },
 
@@ -32138,10 +32107,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             load: function(params) {
                 this.currentUrl = this.getUrl(params);
-                this.sandbox.dom.hide(this.$find('.selected-elements'));
+                this.sandbox.dom.addClass(this.$find('.selected-elements'), 'invisible');
                 this.sandbox.util.load(this.currentUrl, params.data)
                     .then(function(response) {
-                        this.sandbox.dom.show(this.$find('.selected-elements'));
+                        this.sandbox.dom.removeClass(this.$find('.selected-elements'), 'invisible');
                         if (this.isLoading === true) {
                             this.stopLoading();
                         }

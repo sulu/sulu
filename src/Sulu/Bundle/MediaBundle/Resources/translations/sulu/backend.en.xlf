@@ -110,6 +110,10 @@
                 <source>labels.success.media-move-desc</source>
                 <target>Media successfully moved.</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
+                <source>sulu.media.edit.loading</source>
+                <target>Media loading</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
