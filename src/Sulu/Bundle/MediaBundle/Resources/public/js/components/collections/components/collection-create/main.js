@@ -48,6 +48,7 @@ define(['sulumedia/model/collection'], function(Collection) {
                     model = new Collection();
 
                 collection.parent = this.options.parent;
+                collection.locale = this.sandbox.sulu.user.locale;
 
                 model.set(collection);
 

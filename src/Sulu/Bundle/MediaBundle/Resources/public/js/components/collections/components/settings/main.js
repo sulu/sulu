@@ -62,7 +62,7 @@ define(function() {
             }.bind(this));
 
             // change the editing language
-            this.sandbox.on('sulu.header.language-changed', this.changeLanguage.bind(this));
+            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
 
             // save button clicked
             this.sandbox.on('sulu.header.toolbar.save', this.save.bind(this));
@@ -76,7 +76,7 @@ define(function() {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale},
+                this.options.data.id, {locale: locale.id, breadcrumb:'true'},
                 function(collection) {
                     this.options.data = collection;
                     this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);

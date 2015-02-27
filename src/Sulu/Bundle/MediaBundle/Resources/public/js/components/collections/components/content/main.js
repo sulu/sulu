@@ -13,10 +13,6 @@ define(function() {
 
     var namespace = 'sulu.media.collections-edit.',
 
-        constants = {
-            moveSelector: '.move-container'
-        },
-
         /**
          * sets the locale
          * @event sulu.media.collections.collection-list
@@ -42,38 +38,51 @@ define(function() {
 
     return {
         header: function() {
-            return {
-                tabs: {
-                    url: '/admin/media/navigation/collection'
-                },
-                toolbar: {
-                    template: [
-                        {
-                            id: 'delete',
-                            icon: 'trash-o',
-                            position: 20,
-                            callback: this.deleteCollection.bind(this)
+            var def = this.sandbox.data.deferred();
+            this.sandbox.util.load('/admin/api/localizations')
+                .then(function(data) {
+                    var localizations = data.map(function(localization) {
+                        return {
+                            id: localization.localization,
+                            title: localization.localization
+                        };
+                    });
+
+                    def.resolve({
+                        tabs: {
+                            url: '/admin/media/navigation/collection'
                         },
-                        {
-                            id: 'settings',
-                            icon: 'gear',
-                            position: 30,
-                            items: [
+                        toolbar: {
+                            template: [
                                 {
-                                    id: 'collection-move',
-                                    title: this.sandbox.translate('sulu.collection.move'),
-                                    callback: this.startMoveCollectionOverlay.bind(this)
+                                    id: 'settings',
+                                    icon: 'gear',
+                                    position: 30,
+                                    items: [
+                                        {
+                                            id: 'collection-move',
+                                            title: this.sandbox.translate('sulu.collection.move'),
+                                            callback: this.startMoveCollectionOverlay.bind(this)
+                                        },
+                                        {
+                                            id: 'delete',
+                                            title: this.sandbox.translate('sulu.collections.delete-collection'),
+                                            callback: this.deleteCollection.bind(this)
+                                        }
+                                    ]
                                 }
-                            ]
-                        }
-                    ],
-                    parentTemplate: 'save',
-                    languageChanger: {
-                        preSelected: this.options.locale
-                    }
-                },
-                noBack: true
-            };
+                            ],
+                            parentTemplate: 'save',
+                            languageChanger: {
+                                data: localizations,
+                                preSelected: this.options.locale
+                            }
+                        },
+                        noBack: true
+                    })
+                }.bind(this));
+
+            return def;
         },
 
         /**

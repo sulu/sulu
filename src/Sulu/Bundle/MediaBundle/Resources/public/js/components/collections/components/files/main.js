@@ -146,6 +146,27 @@ define(function() {
 
             // move
             this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
+
+            // change the editing language
+            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
+        },
+
+        /**
+         * Changes the editing language
+         * @param locale {string} the new locale to edit the collection in
+         */
+        changeLanguage: function(locale) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
+            this.sandbox.emit(
+                'sulu.media.collections.reload-collection',
+                this.options.data.id, {locale: locale.id, breadcrumb:'true'},
+                function(collection) {
+                    this.options.data = collection;
+                    this.setHeaderInfos();
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
+                }.bind(this)
+            );
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale);
         },
 
         /**
@@ -233,7 +254,11 @@ define(function() {
         setHeaderInfos: function() {
             var breadcrumb = [
                 {title: 'navigation.media'},
-                {title: 'media.collections.title'}
+                {
+                    title: 'media.collections.title',
+                    event: 'husky.data-navigation.collections.set-url',
+                    eventArgs: '/admin/api/collections'
+                }
             ], i, len, data = this.options.data._embedded.breadcrumb || [];
 
             for (i = 0, len = data.length; i < len; i++) {
@@ -336,14 +361,7 @@ define(function() {
                                     callback: function() {
                                         this.startMoveMediaOverlay();
                                     }.bind(this)
-                                },/*
-                                {
-                                    id: 'collection-move',
-                                    title: this.sandbox.translate('sulu.collection.move'),
-                                    callback: function() {
-                                        this.startMoveCollectionOverlay();
-                                    }.bind(this)
-                                },*/
+                                },
                                 {
                                     type: 'columnOptions'
                                 }
