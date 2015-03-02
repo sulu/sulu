@@ -144,6 +144,8 @@ define(function() {
             if (this.sandbox.form.validate('#' + constants.settingsFormId)) {
                 var data = this.sandbox.form.getData('#' + constants.settingsFormId);
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
+                this.options.data.parent = this.options.data._embedded.parent ? this.options.data._embedded.parent.id : null;
+                
                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
                 this.sandbox.once('sulu.media.collections.collection-changed', this.savedCallback.bind(this));
                 this.sandbox.emit('sulu.media.collections.save-collection', this.options.data);
