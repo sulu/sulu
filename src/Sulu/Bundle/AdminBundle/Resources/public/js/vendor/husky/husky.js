@@ -43568,7 +43568,7 @@ define('husky_components/data-navigation/list-view',[], function() {
                 '<ul class="data-navigation-items">',
                 '<% if (!!data.children && !!data.children.length) { %>',
                 '<% _.each(data.children, function(child) { %>',
-                '<li data-id="<%= child.id %>">',
+                '<li data-id="<%= child.id %>" class="data-navigation-item">',
                 '<% if (!!child.preview) { %>',
                 '<div class="data-navigation-item-thumb" style="background-image: url(\'<%=child.preview.url%>\')"></div>',
                 '<% } else { %>',
@@ -43873,11 +43873,11 @@ define('__component__$data-navigation@husky',[
          * @method bindDOMEvents
          */
         bindDOMEvents: function() {
-            this.$el.on('click', '.data-navigation-item-name', this.selectChildrenDataHandler.bind(this));
+            this.$el.on('click', '.data-navigation-item', this.selectChildrenDataHandler.bind(this));
             this.$el.on('click', '.data-navigation-item-thumb', this.selectChildrenDataHandler.bind(this));
             this.$el.on('click', '.data-navigation-item-next', this.navigateChildrenHandler.bind(this));
             this.$el.on('click', '.data-navigation-parent-back', this.navigateParentDataHandler.bind(this));
-            this.$el.on('click', '.data-navigation-parent-text', this.selectParentDataHandler.bind(this));
+            this.$el.on('click', '.data-navigation-back', this.selectParentDataHandler.bind(this));
             this.$el.on('click', '.data-navigation-add', this.addHandler.bind(this));
         },
 
@@ -44034,8 +44034,8 @@ define('__component__$data-navigation@husky',[
          * @method openParentHandler
          */
         openParentHandler: function(event) {
-            var $item = $(event.currentTarget),
-                id = this.sandbox.dom.parent($item).data('parent-id'),
+            var $item = $(event.currentTarget).closest('*[data-parent-id]'),
+                id = this.sandbox.dom.data($item, 'parent-id'),
                 newView = this.createView();
 
             this.prependView(newView);
