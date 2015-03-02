@@ -63,6 +63,12 @@
   margin-bottom: 0px;
 }
 /* line 10, ../scss/modules/collection-select.scss */
+.collection-select .overlay-content {
+  margin-right: 0px;
+  margin-bottom: 1px;
+  margin-left: 0px;
+}
+/* line 16, ../scss/modules/collection-select.scss */
 .collection-select .overlay-footer {
   margin-top: -1px;
 }

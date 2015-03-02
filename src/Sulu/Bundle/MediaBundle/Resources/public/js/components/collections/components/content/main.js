@@ -120,26 +120,6 @@ define(function() {
         initialize: function() {
             this.locale = this.sandbox.sulu.user.locale;
             this.bindCustomEvents();
-
-            this.renderMoveOverlay();
-        },
-
-        renderMoveOverlay: function() {
-            var $element = this.sandbox.dom.createElement('<div/>');
-
-            this.sandbox.dom.append(this.$el, $element);
-
-            this.sandbox.start([{
-                name: 'collections/components/collection-select@sulumedia',
-                options: {
-                    el: $element,
-                    instanceName: 'move-collection',
-                    title: this.sandbox.translate('sulu.collection.move.overlay-title'),
-                    rootCollection: true,
-                    disableIds: [this.options.id],
-                    disabledChildren: true
-                }
-            }]);
         },
 
         bindCustomEvents: function() {
