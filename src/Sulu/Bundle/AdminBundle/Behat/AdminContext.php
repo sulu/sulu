@@ -262,11 +262,11 @@ EOT;
     }
 
     /**
-     * @Then I click the ":text" navigation item
+     * @Then I click the ":id" navigation item
      */
-    public function iClickTheNavigationItem($text)
+    public function iClickTheNavigationItem($id)
     {
-        $this->clickByTitle('.js-navigation-sub-item', $text);
+        $this->clickSelector('#' . $id);
     }
 
     /**

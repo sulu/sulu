@@ -17,7 +17,7 @@ Feature: Media move
         Given I am editing the media collection "Dornbirn"
         And I expect to see "4" ".item" elements
         And I click on the element ".item:nth-child(1)"
-        And I click toolbar item "move"
+        And I click toolbar item "media-move"
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         And I double click the column navigation item "Foobar"
@@ -38,7 +38,7 @@ Feature: Media move
         And I expect to see "4" ".item" elements
         And I click on the element ".item:nth-child(1)"
         And I click on the element ".item:nth-child(3)"
-        And I click toolbar item "move"
+        And I click toolbar item "media-move"
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         And I double click the column navigation item "Foobar"
