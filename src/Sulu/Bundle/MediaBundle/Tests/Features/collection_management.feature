@@ -7,7 +7,8 @@ Feature: Collection management
         Given I am logged in as an administrator
 
     Scenario: Create collection
-        Given I am on "/admin/#media/collections"
+        Given I am on "/admin/"
+        And I click on the "Collections" navigation item
         And I click the add icon
         And I fill in husky field "title" with "Dornbirn"
         And I click the tick button
