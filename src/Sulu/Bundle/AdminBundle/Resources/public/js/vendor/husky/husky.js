@@ -43678,8 +43678,13 @@ define('husky_components/data-navigation/list-view',[], function() {
  * @class DataNavigation
  * @constructor
  * @param {Object} [options] Configuration object
+ * @param {String} [options.instanceName] - name of instance
  * @param {String} [options.rootUrl] - optional root url to fetch root data
  * @param {String} [options.url] url to fetch data from
+ * @param {String} [options.resultKey] - key of array result
+ * @param {String} [options.nameKey] - key of object name
+ * @param {String} [options.childrenLinkKey] - key of children link in object
+ * @param {String} [options.showAddButton] - Indicates if add button should be rendered
  * @param {Object} [options.translates] Holds the translates
  */
 define('__component__$data-navigation@husky',[
@@ -43691,7 +43696,6 @@ define('__component__$data-navigation@husky',[
     var defaultOptions = {
             url: null,
             rootUrl: null,
-            id: null,
             resultKey: 'items',
             parentResultKey: 'parent',
             nameKey: 'name',
@@ -43888,6 +43892,8 @@ define('__component__$data-navigation@husky',[
             this.sandbox.on(SET_URL.call(this), function(url) {
                 if (url !== this.getCurrentUrl) {
                     this.setUrl(url, true);
+                } else {
+                    this.cache.deleteAll();
                 }
             }.bind(this));
 
@@ -44065,7 +44071,9 @@ define('__component__$data-navigation@husky',[
          * @method selectDataHandler
          */
         selectParentDataHandler: function(event) {
-            this.openParentHandler(event).then(function(){
+            event.stopPropagation();
+
+            this.openParentHandler(event).then(function() {
                 this.sandbox.emit(SELECT.call(this), this.data.current.item);
                 this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
             }.bind(this));
@@ -44076,6 +44084,8 @@ define('__component__$data-navigation@husky',[
          * @method selectDataHandler
          */
         navigateParentDataHandler: function(event) {
+            event.stopPropagation();
+
             this.openParentHandler(event);
         },
 
@@ -44084,6 +44094,8 @@ define('__component__$data-navigation@husky',[
          * @method selectDataHandler
          */
         selectChildrenDataHandler: function(event) {
+            event.stopPropagation();
+
             this.openChildrenHandler(event).then(function() {
                 this.sandbox.emit(SELECT.call(this), this.data.current.item);
                 this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
