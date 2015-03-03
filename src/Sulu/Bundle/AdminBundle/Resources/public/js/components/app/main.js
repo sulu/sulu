@@ -303,11 +303,12 @@ define(function() {
                 }
             }.bind(this));
 
-            this.sandbox.on('husky.data-navigation.select', function(item) {
+            // FIXME aura cannot handle so fast navigates (https://github.com/sulu-cmf/sulu/issues/892)
+            this.sandbox.on('husky.data-navigation.select', _.debounce(function(item) {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
-            }.bind(this));
+            }.bind(this), 1500));
 
             // content tabs event
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
