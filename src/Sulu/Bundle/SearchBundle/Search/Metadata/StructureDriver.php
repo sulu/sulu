@@ -24,6 +24,8 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
 use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Snippet;
+use Sulu\Component\Content\Structure\Page;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -94,6 +96,14 @@ class StructureDriver implements AdvancedDriverInterface
         $indexMeta->setIndexName($this->structureIndexName);
         $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
+
+        if ($structure instanceof Page) {
+            $indexMeta->setCategoryName('page');
+        }
+
+        if ($structure instanceof Snippet) {
+            $indexMeta->setCategoryName('snippet');
+        }
 
         foreach ($structure->getProperties(true) as $property) {
 

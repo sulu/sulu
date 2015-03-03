@@ -30,8 +30,12 @@ class SearchManagerTest extends BaseTestCase
     {
         $this->generateStructureIndex(4, 'webspace_four');
         $this->generateStructureIndex(2, 'webspace_two');
-        $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
-        $this->assertCount(6, $res);
+        $result = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
+        $this->assertCount(6, $result);
+
+        $firstResult = reset($result);
+        $document = $result->getDocument();
+        $this->assertEquals('page', $document);
 
         if (!$this->getContainer()->get('massive_search.adapter') instanceof \Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter) {
             $this->markTestSkipped('Skipping zend lucene specific test');
