@@ -28645,6 +28645,7 @@ define('__component__$navigation@husky',[],function() {
                 }
             }
 
+            this.sandbox.dom.addClass(this.$el, 'data-navigation-opened');
             this.sandbox.util.delay(function() {
                 $element.addClass('expanded');
             }, 0);
@@ -28660,6 +28661,8 @@ define('__component__$navigation@husky',[],function() {
          * Remove data navigation
          */
         removeDataNavigation: function() {
+            this.sandbox.dom.removeClass(this.$el, 'data-navigation-opened');
+
             this.sandbox.stop(this.$find('.navigation-data-container'));
 
             this.unCollapse();
@@ -43715,16 +43718,16 @@ define('__component__$data-navigation@husky',[
                     '<div class="data-navigation-back" data-parent-id="<%= !!data.parent ? data.parent.id : \'root\' %>">',
                     '<span class="fa-chevron-left data-navigation-parent-back"></span>',
                     '<div class="data-navigation-parent-text">',
-                    '<% if (!!data.parent && data.parent[nameKey]) { %>',
-                    '<%= data.parent[nameKey] %>',
+                    '<% if (!!data.current && data.current.name) { %>',
+                    '<%= data.current.name %>',
                     '<% } else { %>',
                     '<%= translates.title %>',
                     '<% } %>',
                     '</div>',
                     '</div>',
                     '<% } else { %>',
-                    '<div>',
-                    '<%= data.current[nameKey] || translates.title %>',
+                    '<div class="root-text">',
+                    '<%= data.current.name || translates.title %>',
                     '</div>',
                     '<% } %>'
                 ].join('');
@@ -43879,9 +43882,7 @@ define('__component__$data-navigation@husky',[
         bindDOMEvents: function() {
             this.$el.on('click', '.data-navigation-item', this.selectChildrenDataHandler.bind(this));
             this.$el.on('click', '.data-navigation-item-thumb', this.selectChildrenDataHandler.bind(this));
-            this.$el.on('click', '.data-navigation-item-next', this.navigateChildrenHandler.bind(this));
-            this.$el.on('click', '.data-navigation-parent-back', this.navigateParentDataHandler.bind(this));
-            this.$el.on('click', '.data-navigation-back', this.selectParentDataHandler.bind(this));
+            this.$el.on('click', '.data-navigation-parent-back', this.selectParentDataHandler.bind(this));
             this.$el.on('click', '.data-navigation-add', this.addHandler.bind(this));
         },
 
