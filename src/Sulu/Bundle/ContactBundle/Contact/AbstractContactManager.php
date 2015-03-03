@@ -17,8 +17,6 @@ use Sulu\Bundle\ContactBundle\Entity\Contact;
 
 /**
  * This Manager handles general Account and Contact functionality
- * Class AbstractContactManager
- * @package Sulu\Bundle\ContactBundle\Contact
  */
 abstract class AbstractContactManager implements ContactManagerInterface
 {

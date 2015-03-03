@@ -22,9 +22,6 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 /**
  * This Manager handles Account functionality
- * Class AccountManager
- *
- * @package Sulu\Bundle\ContactBundle\Contact
  */
 class AccountManager extends AbstractContactManager
 {

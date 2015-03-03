@@ -13,8 +13,6 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 
 /**
  * Defines functionality of ContactManger
- * Interface ContactManagerInterface
- * @package Sulu\Bundle\ContactBundle\Contact
  */
 interface ContactManagerInterface
 {

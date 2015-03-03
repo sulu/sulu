@@ -20,9 +20,6 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 
 /**
  * This Manager handles Contact functionality
- * Class ContactManager
- *
- * @package Sulu\Bundle\ContactBundle\Contact
  */
 class ContactManager extends AbstractContactManager
 {
