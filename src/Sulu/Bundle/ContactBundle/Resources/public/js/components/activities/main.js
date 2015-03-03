@@ -56,6 +56,9 @@ define(
             view: true,
 
             layout: {
+                content: {
+                    width: 'max'
+                },
                 sidebar: {
                     width: 'fixed',
                     cssClasses: 'sidebar-padding-50'

@@ -33,6 +33,9 @@ define(['config'], function(Config) {
             view: true,
 
             layout: {
+                content: {
+                    width: 'max'
+                },
                 sidebar: {
                     width: 'fixed',
                     cssClasses: 'sidebar-padding-50'
@@ -186,7 +189,7 @@ define(['config'], function(Config) {
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
 
-                    if(!!startForm){
+                    if (!!startForm) {
                         this.sandbox.start(form);
                     } else {
                         this.sandbox.start('#contact-fields');
@@ -454,14 +457,14 @@ define(['config'], function(Config) {
                     this.sandbox.dom.on('#contact-form', 'change', function() {
                         this.setHeaderBar(false);
                     }.bind(this), '.changeListener select, ' +
-                        '.changeListener input, ' +
-                        '.changeListener textarea');
+                    '.changeListener input, ' +
+                    '.changeListener textarea');
 
                     this.sandbox.dom.on('#contact-form', 'keyup', function() {
                         this.setHeaderBar(false);
                     }.bind(this), '.changeListener select, ' +
-                        '.changeListener input, ' +
-                        '.changeListener textarea');
+                    '.changeListener input, ' +
+                    '.changeListener textarea');
 
                     this.sandbox.on('sulu.contact-form.changed', function() {
                         this.setHeaderBar(false);
@@ -476,8 +479,8 @@ define(['config'], function(Config) {
 
                     // enabel position dropdown only if something got selected
                     this.companySelected = 'husky.auto-complete.' +
-                        this.companyInstanceName +
-                        '.select';
+                    this.companyInstanceName +
+                    '.select';
                     this.sandbox.on(this.companySelected, function() {
                         this.enablePositionDropdown(true);
                     }.bind(this));

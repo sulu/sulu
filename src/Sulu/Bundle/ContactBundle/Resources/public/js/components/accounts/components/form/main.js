@@ -27,6 +27,9 @@ define(['config'], function(Config) {
         view: true,
 
         layout: {
+            content: {
+                width: 'max'
+            },
             sidebar: {
                 width: 'fixed',
                 cssClasses: 'sidebar-padding-50'
