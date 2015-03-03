@@ -31404,7 +31404,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 BYTES: 'bytes',
                 RADIO: 'radio',
                 COUNT: 'count',
-                TRANSLATION: 'translation'
+                TRANSLATION: 'translation',
+                NUMBER: 'number'
             },
 
             decorators = {
@@ -31464,6 +31465,14 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     return this.sandbox.translate(val);
                 },
 
+                /**
+                 * Formats a float as culture specific number
+                 * @param val {String} the string to format
+                 * @returns {String}
+                 */
+                number: function(val) {
+                    return this.sandbox.numberFormat(val, 'n');
+                },
 
                 /**
                  * Attaches a postfix to a number
@@ -31514,7 +31523,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                     '</div>'
                 ].join(''),
                 selectedCounter: [
-                    '<span class="selected-elements smaller-font grey-font"><%= text %>: <span class="number">0</span></span>'
+                    '<span class="selected-elements smaller-font grey-font"><span class="number">0</span> <%= text %></span>'
                 ].join('')
             },
 
