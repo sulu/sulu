@@ -85,7 +85,7 @@ abstract class AbstractFieldDescriptor
 
     /**
      * The css class of the column
-     * @var boolean
+     * @var string
      * @Expose
      */
     private $class;
