@@ -44183,7 +44183,11 @@ define('__component__$data-navigation@husky',[
          * @param {Object} view
          */
         playPrependAnimation: function(view) {
-            this.currentView.$el
+            var oldView = this.currentView;
+            this.currentView = view;
+
+            oldView.$el
+                .stop()
                 .css({
                     left: '0%'
                 })
@@ -44192,8 +44196,7 @@ define('__component__$data-navigation@husky',[
                 }, {
                     duration: 250,
                     done: function() {
-                        this.currentView.destroy();
-                        this.currentView = view;
+                        oldView.destroy();
                     }.bind(this)
                 });
         }

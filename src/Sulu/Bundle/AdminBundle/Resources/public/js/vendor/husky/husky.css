@@ -11240,8 +11240,9 @@ a.btn-black, a.btn-highlight {
   width: calc(100% - 45px);
   text-overflow: ellipsis;
   overflow: hidden;
+  padding-left: 5px;
 }
-/* line 93, ../scss/modules/data-navigation.scss */
+/* line 94, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name .fa-chevron-right {
   position: absolute;
   right: 10px;
@@ -11250,7 +11251,7 @@ a.btn-black, a.btn-highlight {
   color: #999;
 }
 
-/* line 102, ../scss/modules/data-navigation.scss */
+/* line 103, ../scss/modules/data-navigation.scss */
 .data-navigation-item-thumb {
   position: relative;
   top: 6px;
@@ -11264,9 +11265,8 @@ a.btn-black, a.btn-highlight {
   background-repeat: no-repeat;
 }
 
-/* line 115, ../scss/modules/data-navigation.scss */
+/* line 116, ../scss/modules/data-navigation.scss */
 .data-navigation-back {
-  padding-left: 5px;
   height: 50px;
 }
 /* line 119, ../scss/modules/data-navigation.scss */
@@ -11279,10 +11279,10 @@ a.btn-black, a.btn-highlight {
   font-size: 14px;
   color: #fff;
   cursor: pointer;
-  width: 45px;
-  height: 45px;
-  padding-top: 16px;
-  padding-left: 16px;
+  width: 50px;
+  height: 50px;
+  padding-top: 17px;
+  padding-left: 22px;
 }
 /* line 134, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back:hover {
@@ -11291,7 +11291,7 @@ a.btn-black, a.btn-highlight {
 }
 /* line 140, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-text {
-  margin-left: 50px;
+  margin-left: 60px;
   padding-right: 20px;
   white-space: nowrap;
   overflow: hidden;
