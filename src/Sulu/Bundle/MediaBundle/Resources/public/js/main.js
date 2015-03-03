@@ -26,14 +26,11 @@ define({
         app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
 
         sandbox.mvc.routes.push({
-            route: 'media/collections',
+            route: 'media/collections/root',
             callback: function() {
-                this.html([
-                    '<div class="no-content" id="collections-root">',
-                    '<span class="fa-coffee icon"></span>',
-                    '<div class="text">', this.sandbox.translate('media.collections.title'), '</div>',
-                    '</div>'
-                ].join(''));
+                this.html(
+                    '<div data-aura-component="collections/components/root@sulumedia" />'
+                );
             }
         });
 

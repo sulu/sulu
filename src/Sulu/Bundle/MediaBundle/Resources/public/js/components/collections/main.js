@@ -347,7 +347,7 @@ define([
 
                 // navigate to collection list
                 this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function () {
-                    this.sandbox.emit('sulu.router.navigate', 'media/collections', true, true);
+                    this.sandbox.emit('sulu.router.navigate', 'media/collections/root', true, true);
                 }.bind(this));
 
                 this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
@@ -569,7 +569,7 @@ define([
                                 if (!!this.options.data._embedded.parent) {
                                     this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + this.options.data._embedded.parent.id + '/' + this.options.display);
                                 } else {
-                                    this.sandbox.emit('sulu.router.navigate', 'media/collections');
+                                    this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
                                 }
                             }.bind(this),
                             error: function () {
