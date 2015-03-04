@@ -169,15 +169,7 @@ define([
         NAVIGATE_COLLECTION_EDIT = function() {
             return createEventName.call(this, 'collection-edit');
         },
-
-        /**
-         * listens on and navigates to collection list
-         * @event sulu.media.collections.collection-list
-         */
-        NAVIGATE_COLLECTION_LIST = function() {
-            return createEventName.call(this, 'collection-list');
-        },
-
+        
         /**
          * listens on and downloads a single media
          * @event sulu.media.collections.download-media
@@ -344,12 +336,7 @@ define([
                 tab = (!!tab) ? tab : 'files';
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/' + tab, true, true);
             }.bind(this));
-
-            // navigate to collection list
-            this.sandbox.on(NAVIGATE_COLLECTION_LIST.call(this), function() {
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/root', true, true);
-            }.bind(this));
-
+            
             this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
 
