@@ -136,7 +136,7 @@ class Collection extends ApiWrapper
      */
     public function getChildren()
     {
-        // FIXME remove cache for children because of the preview images
+        // FIXME remove cache for children because of the preview images which need a service to create them
         //       generate this at the fly
         return $this->children;
     }
