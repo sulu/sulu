@@ -64,11 +64,6 @@ class CollectionManager implements CollectionManagerInterface
     protected $em;
 
     /**
-     * @var int
-     */
-    private $previewLimit;
-
-    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors;
@@ -89,7 +84,6 @@ class CollectionManager implements CollectionManagerInterface
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
         EntityManager $em,
-        $previewLimit,
         $collectionPreviewFormat
     ) {
         $this->em = $em;
@@ -97,7 +91,6 @@ class CollectionManager implements CollectionManagerInterface
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
         $this->formatManager = $formatManager;
-        $this->previewLimit = $previewLimit;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
 
         $this->initializeFieldDescriptors();
@@ -522,7 +515,7 @@ class CollectionManager implements CollectionManagerInterface
     {
         $media = null;
         $medias = $this->mediaRepository
-            ->findMedia(array('collection' => $id, 'paginator' => false), $this->previewLimit);
+            ->findMedia(array('collection' => $id, 'paginator' => false), 1);
 
         if (count($medias) > 0) {
             $media = $medias[0];

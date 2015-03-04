@@ -31,7 +31,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes collections available through a REST API
- * @package Sulu\Bundle\MediaBundle\Controller
  */
 class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
@@ -79,7 +78,7 @@ class CollectionController extends RestController implements ClassResourceInterf
         try {
             $locale = $this->getLocale($request);
             $depth = $request->get('depth');
-            $breadcrumb = ($request->get('breadcrumb') === 'true' ? true : false);
+            $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
             $view = $this->responseGetById(
                 $id,

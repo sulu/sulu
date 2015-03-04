@@ -112,7 +112,6 @@
             <argument type="service" id="sulu_media.format_manager" />
             <argument type="service" id="sulu_security.user_repository" />
             <argument type="service" id="doctrine.orm.entity_manager" />
-            <argument type="string">%sulu_media.collection.previews.limit%</argument>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
         </service>
 
