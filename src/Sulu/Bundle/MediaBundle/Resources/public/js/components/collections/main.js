@@ -169,7 +169,7 @@ define([
         NAVIGATE_COLLECTION_EDIT = function() {
             return createEventName.call(this, 'collection-edit');
         },
-        
+
         /**
          * listens on and downloads a single media
          * @event sulu.media.collections.download-media

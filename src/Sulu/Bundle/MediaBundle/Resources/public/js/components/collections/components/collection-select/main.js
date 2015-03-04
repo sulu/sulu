@@ -152,7 +152,7 @@ define(function() {
                         skin: 'wide',
                         slides: [
                             {
-                                title: this.options.title,
+                                title: sandbox.translate('sulu.media.move.overlay-title'),
                                 data: templates.columnNavigation(),
                                 buttons: buttons
                             }
