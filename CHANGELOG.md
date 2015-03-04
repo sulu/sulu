@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #891 [All]             Added (css) class property to field descriptors, updated husky and fixed an issue when merging settings with matchings
     * FEATURE     #884 [MediaBundle]     Loaders on media delete and media edit
     * BUGFIX      #884 [AdminBundle]     Fix for login displacement issues
     * BUGFIX      #884 [MediaBundle]     Fix for uploading bug on click on dropzone
