@@ -84,12 +84,6 @@ class NavigationItem implements \Iterator
     protected $disabled;
 
     /**
-     * Defines url to load data for the data-navigation (if null no data-navigation will be initialized
-     * @var string|null
-     */
-    protected $dataNavigationUrl;
-
-    /**
      * @param string $name The name of the item
      * @param NavigationItem $parent The parent of the item
      */
@@ -288,22 +282,6 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @return null|string
-     */
-    public function getDataNavigationUrl()
-    {
-        return $this->dataNavigationUrl;
-    }
-
-    /**
-     * @param string $dataNavigationUrl
-     */
-    public function setDataNavigationUrl($dataNavigationUrl)
-    {
-        $this->dataNavigationUrl = $dataNavigationUrl;
-    }
-
-    /**
      * Returns a copy of this navigation item without its children
      * @return NavigationItem
      */
@@ -481,10 +459,6 @@ class NavigationItem implements \Iterator
                 'title' => $this->getHeaderTitle(),
                 'logo' => $this->getHeaderIcon()
             );
-        }
-
-        if ($this->getDataNavigationUrl() !== null) {
-            $array['dataNavigationUrl'] = $this->getDataNavigationUrl();
         }
 
         foreach ($this->getChildren() as $key => $child) {

@@ -3,20 +3,20 @@
     <parameters>
         <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaAdmin</parameter>
         <parameter key="sulu_media.admin.content_navigation.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaContentNavigation</parameter>
-        <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\DefaultMediaManager</parameter>
+        <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\MediaManager</parameter>
         <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
-        <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\DefaultFileValidator</parameter>
-        <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager</parameter>
+        <parameter key="sulu_media.file_validator.class">Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidator</parameter>
+        <parameter key="sulu_media.format_manager.class">Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager</parameter>
         <parameter key="sulu_media.format_cache.class">Sulu\Bundle\MediaBundle\Media\FormatCache\LocalFormatCache</parameter>
         <parameter key="sulu_media.image.converter.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter</parameter>
-        <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\DefaultCommandManager</parameter>
+        <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\CommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
-        <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\DefaultCollectionManager</parameter>
+        <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
         <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
     </parameters>

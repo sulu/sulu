@@ -126,10 +126,7 @@ class Collection extends ApiWrapper
             $childrenEntities[] = $child->getEntity();
         }
 
-        // FIXME destroys entity if depth is not deep enough
-        // $this->entity->setChildren(new ArrayCollection($childrenEntities));
-
-        // FIXME cache for children because of the preview images
+        // FIXME cache for children because of the preview images which need a service to create them
         $this->children = $children;
     }
 
@@ -213,11 +210,11 @@ class Collection extends ApiWrapper
     {
         if ($parent !== null) {
             $this->entity->setParent($parent->getEntity());
-        }else{
+        } else {
             $this->entity->setParent(null);
         }
 
-        // FIXME cache for parent because of the preview images
+        // FIXME cache for parent because of the preview images which need a service to create them
         $this->parent = $parent;
 
         return $this;
@@ -228,7 +225,7 @@ class Collection extends ApiWrapper
      */
     public function getParent()
     {
-        // FIXME cache for parent because of the preview images
+        // FIXME cache for parent because of the preview images which need a service to create them
         //       generate it on the fly
         return $this->parent;
     }
@@ -482,14 +479,16 @@ class Collection extends ApiWrapper
         $metaCollection = $this->entity->getMeta();
 
         // get meta only with this locale
-        $metaCollectionFiltered = $metaCollection->filter(function ($meta) use ($locale) {
-            /** @var CollectionMeta $meta */
-            if ($meta->getLocale() == $locale) {
-                return true;
-            }
+        $metaCollectionFiltered = $metaCollection->filter(
+            function ($meta) use ($locale) {
+                /** @var CollectionMeta $meta */
+                if ($meta->getLocale() == $locale) {
+                    return true;
+                }
 
-            return false;
-        });
+                return false;
+            }
+        );
 
         // check if meta was found
         if ($metaCollectionFiltered->isEmpty()) {

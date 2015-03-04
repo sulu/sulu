@@ -21,7 +21,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 class DefaultMediaManagerTest extends ProphecyTestCase
 {
     /**
-     * @var DefaultMediaManager
+     * @var MediaManager
      */
     private $mediaManager;
 
@@ -78,7 +78,7 @@ class DefaultMediaManagerTest extends ProphecyTestCase
         $this->formatManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface');
         $this->tagManager = $this->prophesize('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
 
-        $this->mediaManager = new DefaultMediaManager(
+        $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),

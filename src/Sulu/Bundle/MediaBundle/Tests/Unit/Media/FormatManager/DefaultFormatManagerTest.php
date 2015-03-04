@@ -16,7 +16,7 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 
 class DefaultFormatManagerTest extends ProphecyTestCase
 {
@@ -93,7 +93,7 @@ class DefaultFormatManagerTest extends ProphecyTestCase
             '640x480'
         )->willReturn(null);
 
-        $formatManager = new DefaultFormatManager(
+        $formatManager = new FormatManager(
             $mediaRepository->reveal(),
             $originalStorage->reveal(),
             $formatCache->reveal(),

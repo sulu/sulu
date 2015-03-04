@@ -35,30 +35,29 @@ Feature: Collection management
         # See: https://github.com/sulu-cmf/sulu/issues/708
         And I wait a second
         And I wait a second
-        Then the media collection "Foobar" should not exist
+        And the media collection "Foobar" should not exist
 
     Scenario: View collection
         Given the file "image1.png" has been uploaded to the "Dornbirn" collection
-        Given the file "image2.png" has been uploaded to the "Dornbirn" collection
-        Given the file "image3.jpg" has been uploaded to the "Dornbirn" collection
-        Given the file "image4.jpg" has been uploaded to the "Dornbirn" collection
+        And the file "image2.png" has been uploaded to the "Dornbirn" collection
+        And the file "image3.jpg" has been uploaded to the "Dornbirn" collection
+        And the file "image4.jpg" has been uploaded to the "Dornbirn" collection
         And I am on the media collection edit page
         Then I expect to see "4" ".item" elements
 
     Scenario: Move collection
         Given the media collection "Dornbirn" exists
-        Given the media collection "Foobar" exists
-        Given I am editing the media collection "Dornbirn"
+        And the media collection "Foobar" exists
+        And I am editing the media collection "Dornbirn"
         And I click toolbar item "collection-move"
-        And I expect an overlay to appear
+        Then I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         And I click the column navigation item "Collections"
         And I wait a second
         And I double click the column navigation item "Foobar"
-        Given I am on "/admin/"
+        And I am on "/admin/"
         And I wait a second
-        Given I am editing the media collection "Foobar"
-        And I wait a second
+        And I am editing the media collection "Foobar"
         And I expect to see "1" ".data-navigation-item" elements
 
     Scenario: Delete item

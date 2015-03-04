@@ -27,7 +27,10 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
-class DefaultCollectionManager implements CollectionManagerInterface
+/**
+ * Default implementation of collection manager
+ */
+class CollectionManager implements CollectionManagerInterface
 {
     private static $entityName = 'SuluMediaBundle:Collection';
     private static $entityCollectionType = 'SuluMediaBundle:Collection';
@@ -131,9 +134,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
-        $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count(
-            $collectionEntities
-        );
+        $this->count = $collectionEntities instanceof Paginator ? 
+            $collectionEntities->count() : count($collectionEntities);
+        
         $collections = [];
         foreach ($collectionEntities as $entity) {
             $collections[] = $this->getApiEntity($entity, $locale);
