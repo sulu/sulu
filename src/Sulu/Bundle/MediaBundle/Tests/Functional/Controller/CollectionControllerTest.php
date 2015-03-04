@@ -324,10 +324,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection 2', $response->title);
         $this->assertEquals('This Description 2 is only for testing', $response->description);
         $this->assertEquals($this->collection1->getId(), $response->_embedded->parent->id);
-        /*
-        $this->assertNotEmpty($response->creator);
-        $this->assertNotEmpty($response->changer);
-        */
 
         $client = $this->createAuthenticatedClient();
 
@@ -548,12 +544,10 @@ class CollectionControllerTest extends SuluTestCase
             'PUT',
             '/api/collections/' . $this->collection1->getId(),
             array(
-                'style' =>
-                    array(
-                        'type' => 'circle',
-                        'color' => '#00ccff'
-                    )
-            ,
+                'style' => array(
+                    'type' => 'circle',
+                    'color' => '#00ccff'
+                ),
                 'type' => $this->collectionType1->getId(),
                 'title' => 'Test Collection changed',
                 'description' => 'This Description is only for testing changed',
