@@ -49,7 +49,7 @@ Feature: Collection management
         Given the media collection "Dornbirn" exists
         And the media collection "Foobar" exists
         And I am editing the media collection "Dornbirn"
-        And I click toolbar item "collection-move"
+        When I click toolbar item "collection-move"
         Then I expect an overlay to appear
         And I expect the "husky.column-navigation.collection-select.initialized" event
         And I click the column navigation item "Collections"
