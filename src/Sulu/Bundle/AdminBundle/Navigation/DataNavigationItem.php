@@ -220,9 +220,11 @@ class DataNavigationItem extends NavigationItem
     /**
      * {@inheritdoc}
      */
-    protected function newInstance()
+    public function copyChildless()
     {
-        $new = new DataNavigationItem($this->name, $this->dataUrl);
+        /** @var DataNavigationItem $new */
+        $new = parent::copyChildless();
+
         $new->setDataResultKey($this->getDataResultKey());
         $new->setDataNameKey($this->getDataNameKey());
         $new->setDataChildrenLinkKey($this->getDataChildrenLinkKey());
@@ -233,6 +235,14 @@ class DataNavigationItem extends NavigationItem
         $new->setAddButtonTranslationKey($this->getAddButtonTranslationKey());
 
         return $new;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function copyWithName()
+    {
+        return new DataNavigationItem($this->name, $this->dataUrl);
     }
 
     /**

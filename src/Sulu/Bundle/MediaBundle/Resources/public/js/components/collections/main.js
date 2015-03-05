@@ -336,7 +336,7 @@ define([
                 tab = (!!tab) ? tab : 'files';
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + collectionId + '/' + tab, true, true);
             }.bind(this));
-            
+
             this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
 
@@ -532,8 +532,7 @@ define([
                     if (typeof callback === 'function') {
                         callback(collectionId);
                     }
-                }.bind(this))
-                .fail(function() {
+                }.bind(this)).fail(function() {
                     this.sandbox.logger.log('Error while moving a single media');
                 }.bind(this));
         },
@@ -541,7 +540,6 @@ define([
         /**
          * Deletes a single collection
          * @param id {Number|String} the id of the collection to delete
-         * @param callback {Function} callback to execute after deleting the collection
          */
         deleteCollection: function(id) {
             this.sandbox.sulu.showDeleteDialog(function(confirmed) {

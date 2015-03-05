@@ -287,7 +287,7 @@ class NavigationItem implements \Iterator
      */
     public function copyChildless()
     {
-        $new = $this->newInstance();
+        $new = $this->copyWithName();
         $new->setAction($this->getAction());
         $new->setIcon($this->getIcon());
         $new->setHeaderIcon($this->getHeaderIcon());
@@ -303,7 +303,7 @@ class NavigationItem implements \Iterator
      * Create a new instance of current navigation item class
      * @return NavigationItem
      */
-    protected function newInstance()
+    protected function copyWithName()
     {
         return new NavigationItem($this->getName());
     }
