@@ -20,6 +20,7 @@ require.config({
         'aura_extensions/sulu-content-tabs': 'aura_extensions/sulu-content-tabs',
         'aura_extensions/sulu-extension': 'aura_extensions/sulu-extension',
         'aura_extensions/iban': 'aura_extensions/iban',
+        'aura_extensions/url-manager': 'aura_extensions/url-manager',
 
         'vendor/iban-converter':'vendor/iban-converter/iban',
         'type/iban-input': 'components/input-type/iban-input',
@@ -84,6 +85,7 @@ require(['husky', 'app-config'], function(Husky, AppConfig) {
             }
         });
 
+        app.use('aura_extensions/url-manager');
 
         bundles.forEach(function(bundle) {
             app.use('/bundles/' + bundle + '/js/main.js');
