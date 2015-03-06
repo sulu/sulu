@@ -65,6 +65,11 @@
   margin: 0;
 }
 
+/* line 62, ../scss/modules/search-results.scss */
+.search-results-loader-container {
+  margin: 50px 0 0;
+}
+
 /* line 1, ../scss/modules/dropdown-input.scss */
 .dropdown-input-container,
 .dropdown-input-entry {

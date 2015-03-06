@@ -145,8 +145,12 @@ define([
          */
         dropDownInputActionHandler: function(data) {
             this.startLoader();
+            this.updateResults();
             this.load(data.value, data.selectedElement)
-                .then(this.updateResults.bind(this));
+                .then(function(data) {
+                    data = this.prepareData(data);
+                    this.updateResults(data);
+                }.bind(this));
         },
 
         /**
@@ -157,11 +161,39 @@ define([
         },
 
         /**
+         * @method prepareData
+         * @param {Array} data
+         */
+        prepareData: function(data) {
+            data = data || [];
+            var preparedData = [],
+                categoriesStore = {},
+                category;
+
+            data.forEach(function(entry) {
+                category = entry.document.category;
+
+                if (!categoriesStore[category]) {
+                    categoriesStore[category] = {
+                        category: category,
+                        results: [entry.document]
+                    };
+
+                    preparedData.push(categoriesStore[category]);
+                } else {
+                    categoriesStore[category].results.push(entry.document);
+                }
+            }.bind(this));
+
+            return preparedData;
+        },
+
+        /**
          * @method updateResults
          */
         updateResults: function(data) {
             var tpl = this.searchResultsTpl({
-                results: data || []
+                sections: data || []
             });
 
             this.stopLoader();
