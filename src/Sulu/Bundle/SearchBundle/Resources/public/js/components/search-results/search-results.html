@@ -1,0 +1,22 @@
+<% if (results.length) { %>
+<div class="search-results-section">
+    <div class="search-results-section-header">
+        Assets
+    </div>
+    <ul class="search-results-section-content">
+        <% _.each(results, function(result) { %>
+        <li>
+            <div class="search-results-thumb">
+                <img src="http://lorempixel.com/50/50"/>
+            </div>
+            <div class="search-results-description">
+                <div class="search-results-title"><%= result.document.title %></div>
+                <div class="search-results-details">
+                    <div><%= result.document.description %></div>
+                </div>
+            </div>
+        </li>
+        <% }) %>
+    </ul>
+</div>
+<% } %>

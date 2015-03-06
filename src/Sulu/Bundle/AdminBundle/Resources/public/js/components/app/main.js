@@ -271,17 +271,17 @@ define(function() {
          * @param {String} route
          */
         beforeNavigateCleanup: function(route) {
-            this.currentRoute = route;
+            // this.currentRoute = route;
 
-            // hide the header
-            App.emit('sulu.header.hide');
+            // // hide the header
+            // App.emit('sulu.header.hide');
 
-            // FIXME App.stop is used in global context; possibly there is a better solution
-            // and the stop method will be called
-            App.stop('#sulu-content-container');
-            App.stop('#content > *');
-            App.stop('#sidebar > *');
-            app.cleanUp();
+            // // FIXME App.stop is used in global context; possibly there is a better solution
+            // // and the stop method will be called
+            // App.stop('#sulu-content-container');
+            // App.stop('#content > *');
+            // App.stop('#sidebar > *');
+            // app.cleanUp();
         },
 
         /**
