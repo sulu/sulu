@@ -126,7 +126,8 @@ class Collection extends ApiWrapper
             $childrenEntities[] = $child->getEntity();
         }
 
-        // FIXME cache for children because of the preview images which need a service to create them
+        // FIXME remove cache for children and generate then on the fly
+        //       reason: preview images cannot be generated without a service
         $this->children = $children;
     }
 
@@ -136,8 +137,8 @@ class Collection extends ApiWrapper
      */
     public function getChildren()
     {
-        // FIXME remove cache for children because of the preview images which need a service to create them
-        //       generate this at the fly
+        // FIXME remove cache for children and generate then on the fly
+        //       reason: preview images cannot be generated without a service
         return $this->children;
     }
 
@@ -214,7 +215,8 @@ class Collection extends ApiWrapper
             $this->entity->setParent(null);
         }
 
-        // FIXME cache for parent because of the preview images which need a service to create them
+        // FIXME remove cache for parent and generate it on the fly
+        //       reason: preview images cannot be generated without a service
         $this->parent = $parent;
 
         return $this;
@@ -225,8 +227,8 @@ class Collection extends ApiWrapper
      */
     public function getParent()
     {
-        // FIXME cache for parent because of the preview images which need a service to create them
-        //       generate it on the fly
+        // FIXME remove cache for parent and generate it on the fly
+        //       reason: preview images cannot be generated without a service
         return $this->parent;
     }
 
