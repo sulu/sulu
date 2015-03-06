@@ -111,17 +111,24 @@ class DataCompleter
     protected $accountRepository;
 
     /**
+     * @var ContactRepository
+     */
+    protected $contactRepository;
+
+    /**
      * constructor
      */
     public function __construct(
         EntityManagerInterface $em,
-        $accountRepository
+        $accountRepository,
+        $contactRepository
     )
     {
         $this->log = array();
 
         $this->em = $em;
         $this->accountRepository = $accountRepository;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -197,6 +204,51 @@ class DataCompleter
     }
 
     /**
+     * gets ids of all records for the specific entity
+     * 
+     * @param $entityRepository
+     * @return array
+     */
+    public function getIdsOfEntity($entityRepository)
+    {
+        /** @var ContentQueryBuilderInterface $qb */
+        $qb = $entityRepository->createQueryBuilder('entity')
+            ->select('entity.id');
+
+        if ($this->limit) {
+            $qb->setMaxResults($this->limit);
+        }
+
+        $ids = $qb->getQuery()->getScalarResult();
+     
+        return array_column($ids, 'id');
+    }
+
+    /**
+     * batch completes states of account or contacts
+     *
+     * @param $entityRepository
+     * @param $ids
+     */
+    public function batchCompleteStates($entityRepository, $ids, $getAddressesName)
+    {
+        $counter = 0;
+        foreach ($ids as $id) {
+            $counter++;
+            $this->currentRow = $id;
+            $entity = $entityRepository->find($id);
+            $this->updateStateOfAddresses(call_user_func(array($entity, $getAddressesName)));
+
+            // save
+            if ($counter % self::BATCH_SIZE === 0) {
+                $this->em->flush();
+                $this->em->clear();
+            }
+        }
+        $this->em->flush();
+    }
+
+    /**
      * process csv file
      */
     public function executeDbCompletion($databaseOptions)
@@ -204,31 +256,15 @@ class DataCompleter
         if (in_array('state', $databaseOptions)) {
             $this->debug("Completing states:\n");
 
-            /** @var ContentQueryBuilderInterface $qb */
-            $qb = $this->accountRepository->createQueryBuilder('account')
-                ->select('account.id');
-
-            if ($this->limit) {
-                $qb->setMaxResults($this->limit);
-            }
-
-            $ids = $qb->getQuery()->getScalarResult();
-            $accountIds = array_column($ids, 'id');
+            // complete account addresses
+            $accountIds = $this->getIdsOfEntity($this->accountRepository);
             $this->debug(sprintf("Found %d accounts to complete addresses.\n", count($accountIds)));
+            $this->batchCompleteStates($this->accountRepository, $accountIds, 'getAccountAddresses');
 
-            $counter = 0;
-            foreach ($accountIds as $id) {
-                $counter++;
-                $account = $this->accountRepository->find($id);
-                $this->updateStateOfAddresses($account->getAccountAddresses());
-
-                // store
-                if ($counter % self::BATCH_SIZE === 0) {
-                    $this->em->flush();
-                    $this->em->clear();
-                }
-            }
-            $this->em->flush();
+            // complete contact addresses
+            $contactIds = $this->getIdsOfEntity($this->contactRepository);
+            $this->debug(sprintf("Found %d contacts to complete addresses.\n", count($contactIds)));
+            $this->batchCompleteStates($this->contactRepository, $contactIds, 'getContactAddresses');
         }
         $this->createLogFile();
     }
@@ -400,8 +436,11 @@ class DataCompleter
      *
      * @return mixed|void
      */
-    protected function getDataByApiCall($dataArray = array(), callable $resultCallback, $callbackData = array())
-    {
+    protected function getDataByApiCall(
+        $dataArray = array(),
+        callable $resultCallback,
+        $callbackData = array()
+    ) {
         // limit api calls per second
         if ($this->lastApiCallTime == time()) {
             if ($this->lastApiCallCount >= static::API_CALL_LIMIT_PER_SECOND) {
