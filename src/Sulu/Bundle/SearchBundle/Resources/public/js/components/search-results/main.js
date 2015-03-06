@@ -87,18 +87,18 @@ define([
                 options: {
                     el: this.$el.find('.search-results-bar'),
                     instanceName: this.dropDownInputInstance,
-                    preSelectedElement: 1,
+                    preSelectedElement: 0,
                     data: [
                         {
-                            'id': 1,
+                            'id': 0,
                             'name': 'Everything'
                         },
                         {
-                            'id': 2,
+                            'id': 1,
                             'name': 'Assets'
                         },
                         {
-                            'id': 3,
+                            'id': 2,
                             'name': 'Contacts'
                         }
                     ]
@@ -110,8 +110,8 @@ define([
          * @type {Object}
          */
         categoryMapping: {
-            0: 'contacts',
-            1: 'products'
+            1: 'assets',
+            2: 'contacts'
         },
 
         /**
@@ -123,7 +123,8 @@ define([
         load: function(query, category) {
             var url = this.options.searchUrl + '?q=' + query;
 
-            if (category || category === 0) {
+            // if category is 0 search for everything
+            if (category) {
                 url += '&index[0]=' + this.categoryMapping[category];
             }
 
@@ -143,6 +144,7 @@ define([
          * @method dropDownInputActionHandler
          */
         dropDownInputActionHandler: function(data) {
+            this.startLoader();
             this.load(data.value, data.selectedElement)
                 .then(this.updateResults.bind(this));
         },
@@ -162,7 +164,34 @@ define([
                 results: data || []
             });
 
+            this.stopLoader();
             this.$el.find('.search-results').html(tpl);
+        },
+
+        /**
+         * Starts a loader for the sidebar
+         * @method startLoader
+         */
+        startLoader: function() {
+            var $container = this.sandbox.dom.createElement('<div class="search-results-loader"/>');
+            this.sandbox.dom.append(this.$el.find('.search-results-loader-container'), $container);
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: $container,
+                        size: '100px',
+                        color: '#ccc'
+                    }
+                }
+            ]);
+        },
+
+        /**
+         * @method stopLoader
+         */
+        stopLoader: function() {
+            this.sandbox.stop('.search-results-loader');
         }
     };
 });

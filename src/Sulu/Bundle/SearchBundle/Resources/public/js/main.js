@@ -33,6 +33,8 @@ define({
             }
 
             this.sandbox.on('husky.navigation.item.select', function(params) {
+                this.sandbox.emit('sulu.data-overlay.hide');
+
                 // Create dom container for data overlay
                 if (params.action === 'search') {
                     if (!dataOverlayStarted) {
