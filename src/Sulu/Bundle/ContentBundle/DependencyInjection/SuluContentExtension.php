@@ -68,6 +68,11 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         );
 
         $container->setParameter(
+            'sulu.content.templates.homepage',
+            $config['templates']['homepage']
+        );
+
+        $container->setParameter(
             'sulu.content.type.smart_content.template',
             $config['types']['smart_content']['template']
         );

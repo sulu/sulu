@@ -47,7 +47,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
     {
         $this->setName('sulu:webspaces:init')
             ->addOption('user-id', 'u', InputOption::VALUE_OPTIONAL, '', 1)
-            ->addOption('template', 't', InputOption::VALUE_OPTIONAL, '', 'overview')
             ->setDescription('Creates default nodes in PHPCR for webspaces');
     }
 
@@ -58,6 +57,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $contents = $this->getContainer()->getParameter('sulu.content.node_names.content');
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
         $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
+        $template = $this->getContainer()->getParameter('sulu.content.templates.homepage');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
         // properties
@@ -87,7 +87,6 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $root = $session->getRootNode();
 
         $userId = $input->getOption('user-id');
-        $template = $input->getOption('template');
 
         $output->writeln('<comment>Create basic nodes</comment>');
 
