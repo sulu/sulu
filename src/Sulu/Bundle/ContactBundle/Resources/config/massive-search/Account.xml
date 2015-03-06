@@ -4,12 +4,12 @@
     <mapping class="Sulu\Bundle\ContactBundle\Entity\Account">
         <id name="id" />
         <title property="name" />
+        <category name="account" />
 
         <fields>
             <field name="name" type="string" />
         </fields>
 
-        <url expr="'/admin/#contacts/accounts/edit:' ~ object.getId() ~ '/details'" />
         <index name="admin_account" />
     </mapping>
 

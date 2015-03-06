@@ -6,6 +6,7 @@
         <title expr="join(' ', [object.getTitle(), object.getFirstName(), object.getLastName()])" />
         <description expr="join(' ', map(object.getEmails(), 'el.getEmail()'))" />
         <index name="admin_contact" />
+        <category name="contact" />
 
         <fields>
             <field name="firstName" type="string" />
@@ -14,8 +15,6 @@
             <field name="mainPhone" expr="join(' ', map(object.getEmails(), 'el.getEmail()'))" type="string" />
             <field name="address" expr="object.getMainAddress() ? join(' ', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : ''" type="string" />
         </fields>
-
-        <url expr="'/admin/#contacts/edit:' ~ object.getId()" />
 
     </mapping>
 
