@@ -98,7 +98,8 @@ class StructureDriver implements AdvancedDriverInterface
         $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
 
         if ($structure instanceof Page) {
-            $indexMeta->setCategoryName('page');
+            $categoryName = $structure->getPath() == '' ? 'homepage' : 'page';
+            $indexMeta->setCategoryName($categoryName);
         }
 
         if ($structure instanceof Snippet) {
