@@ -20,8 +20,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 class BaseTestCase extends SuluTestCase
 {
     protected $session;
-
-    const INDEX = 'content';
+    protected $contentMapper;
 
     public function setUp()
     {
@@ -30,6 +29,7 @@ class BaseTestCase extends SuluTestCase
         $fs->remove(__DIR__ . '/../app/data');
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
+        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
     }
 
     public function getSearchManager()
@@ -51,7 +51,7 @@ class BaseTestCase extends SuluTestCase
             $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
             $structure->setLanguageCode('de');
 
-            $this->getSearchManager()->index($structure, self::INDEX);
+            $this->getSearchManager()->index($structure);
         }
     }
 
@@ -63,8 +63,7 @@ class BaseTestCase extends SuluTestCase
         );
 
         /** @var ContentMapperInterface $mapper */
-        $mapper = $this->getContainer()->get('sulu.content.mapper');
-        $structure = $mapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
+        $structure = $this->contentMapper->save($data, 'default', 'sulu_io', 'de', 1, true, null, null, Structure::STATE_PUBLISHED);
 
         return $structure;
     }

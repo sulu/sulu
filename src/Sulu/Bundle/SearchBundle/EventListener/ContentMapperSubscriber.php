@@ -69,7 +69,9 @@ class ContentMapperSubscriber implements EventSubscriberInterface
     {
         $structure = $event->getStructure();
 
-        if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+        // TODO: if the structure is the homepage, index it.
+        //       for some reason the content mapper never maps the state to published for a homepage
+        if ($structure->getPath() == '' || $structure->getNodeState() === Structure::STATE_PUBLISHED) {
             $this->searchManager->index($structure);
             return;
         }

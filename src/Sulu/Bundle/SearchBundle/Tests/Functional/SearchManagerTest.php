@@ -10,6 +10,8 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional;
 
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+
 class SearchManagerTest extends BaseTestCase
 {
     public function testSearchManager()
@@ -33,9 +35,9 @@ class SearchManagerTest extends BaseTestCase
         $result = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
         $this->assertCount(6, $result);
 
-        $firstResult = reset($result);
-        $document = $result->getDocument();
-        $this->assertEquals('page', $document);
+        $firstHit = reset($result);
+        $document = $firstHit->getDocument();
+        $this->assertEquals('page', $document->getCategory());
 
         if (!$this->getContainer()->get('massive_search.adapter') instanceof \Massive\Bundle\SearchBundle\Search\Adapter\ZendLuceneAdapter) {
             $this->markTestSkipped('Skipping zend lucene specific test');
@@ -45,5 +47,28 @@ class SearchManagerTest extends BaseTestCase
         // TODO: This should should not be here
         $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('content_admin')->execute();
         $this->assertCount(4, $res);
+    }
+
+    public function testHomepage()
+    {
+        $homepage = $this->contentMapper->loadStartPage('sulu_io', 'en');
+        $this->contentMapper->saveRequest(ContentMapperRequest::create()
+            ->setWebspaceKey('sulu_io')
+            ->setTemplateKey('default')
+            ->setUserId(1)
+            ->setUuid($homepage->getUuid())
+            ->setLocale('en')
+            ->setState(2)
+            ->setData(array(
+                'title' => 'Homepage',
+                'url' => '/en'
+            ))
+        );
+
+        $result = $this->getSearchManager()->createSearch('Homepage')->execute();
+        $this->assertCount(1, $result);
+        $firstHit = reset($result);
+        $document = $firstHit->getDocument();
+        $this->assertEquals('homepage', $document->getCategory());
     }
 }
