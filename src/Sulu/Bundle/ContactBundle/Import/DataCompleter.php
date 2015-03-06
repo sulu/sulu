@@ -258,12 +258,12 @@ class DataCompleter
 
             // complete account addresses
             $accountIds = $this->getIdsOfEntity($this->accountRepository);
-            $this->debug(sprintf("Found %d accounts to complete addresses.\n", count($accountIds)));
+            $this->debug(sprintf("\nFound %d accounts to complete addresses.\n", count($accountIds)));
             $this->batchCompleteStates($this->accountRepository, $accountIds, 'getAccountAddresses');
 
             // complete contact addresses
             $contactIds = $this->getIdsOfEntity($this->contactRepository);
-            $this->debug(sprintf("Found %d contacts to complete addresses.\n", count($contactIds)));
+            $this->debug(sprintf("\nFound %d contacts to complete addresses.\n", count($contactIds)));
             $this->batchCompleteStates($this->contactRepository, $contactIds, 'getContactAddresses');
         }
         $this->createLogFile();
