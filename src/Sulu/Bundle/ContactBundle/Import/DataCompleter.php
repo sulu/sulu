@@ -465,7 +465,7 @@ class DataCompleter
         $results = $apiResult->results;
 
         if (count($results) === 0) {
-            $this->debug(sprintf("ERROR: No valid data found at row %d (by api)", $this->currentRow, $params));
+            $this->debug(sprintf("ERROR: No valid data found at data %d (by api)", $this->currentRow, $params));
             return null;
         }
 
@@ -477,7 +477,7 @@ class DataCompleter
         $data = call_user_func_array($resultCallback, $callbackDataArray);
 
         if (!$data) {
-            $this->debug(sprintf("ERROR: No data found in result for row %d", $this->currentRow));
+            $this->debug(sprintf("ERROR: No data found in result for data %d", $this->currentRow));
             return null;
         }
 
