@@ -57,7 +57,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $contents = $this->getContainer()->getParameter('sulu.content.node_names.content');
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
         $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
-        $template = $this->getContainer()->getParameter('sulu.content.templates.homepage');
+        $template = $this->getContainer()->getParameter('sulu.content.structure.default_type.homepage');
         $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
 
         // properties
