@@ -7,9 +7,16 @@
         <parameter key="sulu_search.event_subscriber.content_mapper.class">Sulu\Bundle\SearchBundle\EventListener\ContentMapperSubscriber</parameter>
         <parameter key="sulu_search.event_listener.search.class">Sulu\Bundle\SearchBundle\EventListener\SearchListener</parameter>
         <parameter key="sulu_search.event_listener.reindex.class">Sulu\Bundle\SearchBundle\EventListener\ReindexListener</parameter>
+        <parameter key="sulu_search.controller.search.class">Sulu\Bundle\SearchBundle\Controller\SearchController</parameter>
     </parameters>
 
     <services>
+        <!-- controller -->
+        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%">
+            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="fos_rest.view_handler" />
+        </service>
+
         <!-- node save event listener -->
         <service id="sulu_search.event_subscriber.content_mapper" class="%sulu_search.event_subscriber.content_mapper.class%">
             <argument type="service" id="massive_search.search_manager" />
