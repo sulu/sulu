@@ -80,6 +80,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $sql .= ' AND collectionMeta.title LIKE :search';
             }
 
+            if (array_key_exists('locale', $filter)) {
+                $sql .= ' AND collectionMeta.locale = :locale';
+            }
+
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('maxDepth', intval($depth));
@@ -99,6 +103,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
             if (array_key_exists('offset', $filter)) {
                 $query->setFirstResult($filter['offset']);
+            }
+
+            if (array_key_exists('locale', $filter)) {
+                $query->setParameter('locale', $filter['locale']);
             }
 
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);

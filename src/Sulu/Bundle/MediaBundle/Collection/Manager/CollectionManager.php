@@ -105,6 +105,7 @@ class CollectionManager implements CollectionManagerInterface
         if ($collectionEntity === null) {
             throw new CollectionNotFoundException($id);
         }
+        $filter['locale'] = $locale;
         $collectionChildren = $this->collectionRepository->findCollectionSet($collectionEntity, $depth, $filter);
 
         $breadcrumbEntities = null;
