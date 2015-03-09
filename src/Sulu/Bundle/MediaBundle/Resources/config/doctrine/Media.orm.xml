@@ -27,12 +27,12 @@
                 <join-column name="idMediaTypes" referenced-column-name="id" nullable="false"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
+        <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface">
             <join-columns>
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
+        <many-to-one field="creator" target-entity="Sulu\Component\Security\Authentication\UserInterface">
             <join-columns>
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>

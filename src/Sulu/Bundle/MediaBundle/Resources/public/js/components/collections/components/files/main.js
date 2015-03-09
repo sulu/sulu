@@ -171,9 +171,19 @@ define(function() {
          */
         deleteMedia: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                this.sandbox.emit('sulu.media.collections.delete-media', ids, function(mediaId) {
-                    this.sandbox.emit('husky.datagrid.record.remove', mediaId);
-                }.bind(this));
+
+                this.sandbox.emit('sulu.media.collections.delete-media', ids,
+                    function() {
+                        this.sandbox.emit('husky.datagrid.medium-loader.show');
+                    }.bind(this),
+                    function(mediaId, finished) {
+                        if (finished === true) {
+                            this.sandbox.emit('husky.datagrid.medium-loader.hide');
+                        }
+                        this.sandbox.emit('husky.datagrid.record.remove', mediaId);
+                    }.bind(this)
+                );
+
             }.bind(this));
         },
 
@@ -353,7 +363,8 @@ define(function() {
                     resultKey: 'media',
                     viewOptions: {
                         table: {
-                            fullWidth: false
+                            fullWidth: false,
+                            rowClickSelect: true
                         },
                         thumbnail: listViews[this.listView].thViewOptions || {}
                     }

@@ -17,7 +17,7 @@ interface AuthenticatedConnectionContextInterface extends ConnectionContextInter
 {
     /**
      * Returns user for the current firewall
-     * @return null|\Sulu\Component\Security\UserInterface
+     * @return null|\Sulu\Component\Security\Authentication\UserInterface
      */
     public function getFirewallUser();
 }

@@ -102,11 +102,11 @@
             /**
              * loads an url and matches it against user settings
              * @param key Defines which setting to compare with
-             * @param attributesArray Defines which Attributes should NOT be taken from user-settings and from fields API instead
+             * @param excludeAttributes Defines which Attributes should NOT be taken from user-settings and from fields API instead
              * @param url Where
              * @param callback
              */
-            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, attributesArray, url, callback) {
+            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, excludeAttributes, url, callback) {
                 this.sandbox.util.load(url)
                     .then(function(data) {
                         var userFields = app.sandbox.sulu.getUserSetting(key),
@@ -129,7 +129,7 @@
 
                                     newSetting = serverFields[serverindex];
                                     for (var attrname in userFields[index]) {
-                                        if (attributesArray.indexOf(attrname) < 0) {
+                                        if (excludeAttributes.indexOf(attrname) < 0) {
                                             newSetting[attrname] = userFields[index][attrname];
                                         }
                                     }
@@ -380,7 +380,7 @@
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
                     this,
                     fieldsKey,
-                    ['translation', 'default', 'editable', 'validation', 'width'],
+                    ['translation', 'default', 'editable', 'validation', 'width', 'type'],
                     url,
                     function(data) {
                         var toolbarDefaults = {
@@ -397,6 +397,7 @@
                                 view: 'table',
                                 pagination: 'dropdown',
                                 matchings: data,
+                                selectedCounter: true,
                                 viewOptions: {
                                     table: {
                                         noItemsText: 'public.empty-list',
@@ -460,13 +461,14 @@
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
                     this,
                     key,
-                    ['translation', 'default', 'editable', 'validation', 'width'],
+                    ['translation', 'default', 'editable', 'validation', 'width', 'type'],
                     url,
                     function(data) {
                         // the default options
                         var options = {
                             view: 'table',
                             pagination: 'dropdown',
+                            selectedCounter: true,
                             matchings: data
                         };
 

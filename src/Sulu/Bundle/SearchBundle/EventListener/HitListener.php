@@ -45,6 +45,7 @@ class HitListener
             rtrim($this->requestAnalyzer->getResourceLocatorPrefix(), '/'),
             ltrim($document->getUrl(), '/')
         );
+
         $document->setUrl($url);
     }
 }

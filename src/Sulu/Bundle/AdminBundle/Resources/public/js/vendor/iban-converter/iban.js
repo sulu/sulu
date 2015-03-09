@@ -1,8 +1,3 @@
-/**
- * Code from https://github.com/arhs/iban.js
- */
-
-
 (function(exports){
 
     // Array.prototype.map polyfill

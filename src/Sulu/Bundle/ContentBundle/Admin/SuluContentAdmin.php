@@ -13,10 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SuluContentAdmin extends Admin
 {

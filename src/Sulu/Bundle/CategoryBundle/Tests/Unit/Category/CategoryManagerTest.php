@@ -16,7 +16,7 @@ use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryRepositoryInterface;
-use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CategoryManagerTest extends \PHPUnit_Framework_TestCase
@@ -56,7 +56,7 @@ class CategoryManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->userRepository = $this->getMockForAbstractClass(
-            'Sulu\Component\Security\UserRepositoryInterface',
+            'Sulu\Component\Security\Authentication\UserRepositoryInterface',
             array(),
             '',
             false

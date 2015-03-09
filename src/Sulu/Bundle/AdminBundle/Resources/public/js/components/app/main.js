@@ -491,7 +491,7 @@ define(function() {
          */
         routeToUserForm: function() {
             //Todo: don't use hardcoded url
-            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.id + '/details', true, false, false);
+            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.contact.id + '/details', true, false, false);
             this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
          },
 

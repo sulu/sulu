@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
+use Sulu\Component\Security\Authentication\RoleInterface;
 
 /**
  * Permission
@@ -38,7 +39,7 @@ class Permission
     private $id;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
+     * @var RoleInterface
      */
     private $role;
 
@@ -107,10 +108,10 @@ class Permission
     /**
      * Set role
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role
+     * @param RoleInterface $role
      * @return Permission
      */
-    public function setRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $role = null)
+    public function setRole(RoleInterface $role = null)
     {
         $this->role = $role;
 
@@ -120,7 +121,7 @@ class Permission
     /**
      * Get role
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\RoleInterface
+     * @return RoleInterface
      */
     public function getRole()
     {

@@ -17,6 +17,14 @@ module.exports = function(grunt) {
                     {
                         src: ['Resources/public/dist/app.min.js'],
                         dest: 'Resources/public/dist/app.min.' + time + '.js'
+                    },
+                    {
+                        src: ['Resources/public/dist/login.min.js'],
+                        dest: 'Resources/public/dist/login.min.' + time + '.js'
+                    },
+                    {
+                        src: ['Resources/public/dist/login.min.css'],
+                        dest: 'Resources/public/dist/login.min.' + time + '.css'
                     }
                 ]
             },
@@ -26,6 +34,7 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'Resources/public/js/vendor/husky/', src: ['fonts/**'], dest: 'Resources/public/dist/'},
                     //only needed due to wrong path generation
                     {src: ['Resources/views/Admin/index.html.twig'], dest: 'Resources/public/index.html.twig'},
+                    {src: ['Resources/views/Security/login.html.twig'], dest: 'Resources/public/login.html.twig'},
                     {expand: true, cwd: 'Resources/public', src: ['**'], dest: 'Resources/public/bundles/suluadmin/'},
                     // copy cultures
                     {expand: true, cwd: 'Resources/public/js/vendor/globalize', src: ['cultures/**'], dest: 'Resources/public/dist/vendor/globalize'},
@@ -36,7 +45,8 @@ module.exports = function(grunt) {
             },
             buildResult: {
                 files: [
-                    {src: ['Resources/public/index.html.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'}
+                    {src: ['Resources/public/index.html.twig'], dest: 'Resources/views/Admin/index.html.dist.twig'},
+                    {src: ['Resources/public/login.html.twig'], dest: 'Resources/views/Security/login.html.dist.twig'}
                 ]
             },
             bower: {
@@ -44,7 +54,8 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
-                        src: ['bower_components/backbone-relational/backbone-relational.js'], dest: 'Resources/public/js/vendor/backbone-relational'
+                        src: ['bower_components/backbone-relational/backbone-relational.js'],
+                        dest: 'Resources/public/js/vendor/backbone-relational'
                     },
                     {
                         expand: true,
@@ -54,14 +65,15 @@ module.exports = function(grunt) {
                     },
                     {
                         expand: true,
-                        flatten: true,
-                        src: ['bower_components/parsleyjs/parsley.js'], dest: 'Resources/public/js/vendor/parsleyjs'
-                    },
-                    {
-                        expand: true,
                         cwd: 'bower_components/globalize/lib/',
                         src: ['**'],
                         dest: 'Resources/public/js/vendor/globalize/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_components/iban',
+                        src: ['iban.js'],
+                        dest: 'Resources/public/js/vendor/iban-converter/'
                     }
                 ]
             }
@@ -76,6 +88,7 @@ module.exports = function(grunt) {
             build: {
                 files: [
                     {src: ['Resources/public/index.html.twig']},
+                    {src: ['Resources/public/login.html.twig']},
                     {src: ['Resources/public/bundles']}
                 ]
             },
@@ -99,6 +112,7 @@ module.exports = function(grunt) {
                 options: {
                     variables: {
                         'app.min': '/bundles/suluadmin/dist/app.min.' + time,
+                        'login.min': '/bundles/suluadmin/dist/login.min.' + time,
                         'bundles/suluadmin/js/vendor/husky/husky.js': '/bundles/suluadmin/js/vendor/husky/husky.min.js',
                         'debug: true': 'debug: false'
                     },
@@ -108,6 +122,10 @@ module.exports = function(grunt) {
                     {
                         src: ['Resources/views/Admin/index.html.dist.twig'],
                         dest: 'Resources/views/Admin/index.html.dist.twig'
+                    },
+                    {
+                        src: ['Resources/views/Security/login.html.dist.twig'],
+                        dest: 'Resources/views/Security/login.html.dist.twig'
                     }
                 ]
             },
@@ -121,25 +139,44 @@ module.exports = function(grunt) {
                 files: [
                     {src: ['Resources/public/dist/app.min.js'], dest: 'Resources/public/dist/app.min.js'}
                 ]
+            },
+            buildLogin: {
+                options: {
+                    variables: {
+                        '/js/login.js': '/dist/login.js'
+                    },
+                    prefix: ''
+                },
+                files: [
+                    {src: ['Resources/public/dist/login.min.js'], dest: 'Resources/public/dist/login.min.js'}
+                ]
             }
         },
         requirejs: {
-            compile: {
+            app: {
                 options: {
                     baseUrl: 'Resources/public/js/',
                     mainConfigFile: 'Resources/public/js/main.js',
                     preserveLicenseComments: false
                 }
+            },
+            login: {
+                options: {
+                    baseUrl: 'Resources/public/js/',
+                    mainConfigFile: 'Resources/public/js/login.js',
+                    preserveLicenseComments: false,
+                    out: 'Resources/public/dist/login.min.js'
+                }
             }
         },
         useminPrepare: {
-            html: 'Resources/public/index.html.twig',
+            html: ['Resources/public/index.html.twig', 'Resources/public/login.html.twig'],
             options: {
                 dest: 'Resources/public/dist'
             }
         },
         usemin: {
-            html: ['Resources/public/index.html.twig'],
+            html: ['Resources/public/index.html.twig', 'Resources/public/login.html.twig'],
             options: {
                 basedir: '/bundles/suluadmin/dist'
             }
@@ -196,12 +233,14 @@ module.exports = function(grunt) {
         'clean:dist',
         'copy:build',
         'useminPrepare',
-        'requirejs',
+        'requirejs:app',
+        'requirejs:login',
         'concat',
         'compass:dev',
         'cssmin',
         'usemin',
         'replace:buildMain',
+        'replace:buildLogin',
         'copy:rev',
         'copy:buildResult',
         'replace:buildResult',

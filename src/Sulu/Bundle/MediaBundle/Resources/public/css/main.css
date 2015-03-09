@@ -40,3 +40,8 @@
 .collection-select .overlay-footer {
   margin-top: -1px;
 }
+
+/* line 1, ../scss/modules/media-edit.scss */
+.media-edit-loader {
+  margin: 50px 0;
+}
