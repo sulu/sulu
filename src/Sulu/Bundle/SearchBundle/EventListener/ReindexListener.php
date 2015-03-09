@@ -130,7 +130,6 @@ class ReindexListener
                         $this->searchManager->index($structure, $locale);
                         $count[$structureClass]['indexed']++;
                     } else {
-                        $deindexedCount++;
                         $this->searchManager->deindex($structure, $locale);
                         $count[$structureClass]['deindexed']++;
                     }
