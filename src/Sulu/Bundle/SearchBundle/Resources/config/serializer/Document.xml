@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="Massive\Bundle\SearchBundle\Search\Document">
+        <property name="fields" exclude="true" />
+    </class>
+</serializer>

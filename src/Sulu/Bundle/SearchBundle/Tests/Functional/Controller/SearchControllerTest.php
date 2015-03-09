@@ -64,7 +64,7 @@ class SearchControllerTest extends SuluTestCase
                             'class' => 'Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product',
                             'url' => '/foobar',
                             'locale' => 'fr',
-                            'category' => 'Product',
+                            'category' => 'test_products',
                             'fields' => array(
                                 'title' => array(
                                     'name' => 'title',
@@ -90,7 +90,7 @@ class SearchControllerTest extends SuluTestCase
      */
     public function testSearch($query, $indexes = null, $locale = null, $expectedResult)
     {
-        $this->client->request('GET', '/api/search', array(
+        $this->client->request('GET', '/search/query', array(
             'q' => $query,
             'indexes' => $indexes,
             'locale' => $locale,
@@ -101,6 +101,17 @@ class SearchControllerTest extends SuluTestCase
         $result = json_decode($response->getContent(), true);
 
         $this->assertEquals($expectedResult, $result);
+    }
+
+    public function testGetCategories()
+    {
+        $this->client->request('GET', '/search/categories');
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $result = json_decode($response->getContent(), true);
+
+        $this->assertContains('test_products', $result);
     }
 }
 

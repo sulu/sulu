@@ -2,6 +2,5 @@ sulu_media_website:
     resource: "@SuluMediaBundle/Resources/config/routing_website.yml"
 
 sulu_content_api:
-    type: rest
-    resource: "@SuluSearchBundle/Resources/config/routing_api.yml"
-    prefix: /api
+    resource: "@SuluSearchBundle/Resources/config/routing.yml"
+    prefix: /search

@@ -26,6 +26,7 @@ use Metadata\Driver\AdvancedDriverInterface;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Structure;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -214,7 +215,10 @@ class StructureDriver implements AdvancedDriverInterface
      */
     public function getAllClassNames()
     {
-        $structures = $this->structureManager->getStructures();
+        $structures = array_merge(
+            $this->structureManager->getStructures(Structure::TYPE_PAGE),
+            $this->structureManager->getStructures(Structure::TYPE_SNIPPET)
+        );
         $classes = array();
 
         foreach ($structures as $structure) {

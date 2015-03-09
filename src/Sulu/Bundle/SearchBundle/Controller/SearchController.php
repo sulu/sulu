@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
+use JMS\Serializer\SerializationContext;
 
 /**
  * Sulu search controller
@@ -53,7 +54,7 @@ class SearchController
     public function searchAction(Request $request)
     {
         $query = $request->query->get('q');
-        $index = $request->query->get('index') ? : null;
+        $category = $request->query->get('category') ? : null;
         $locale = $request->query->get('locale') ? : null;
 
         $query = $this->searchManager->createSearch($query);
@@ -62,13 +63,17 @@ class SearchController
             $query->locale($locale);
         }
 
-        if ($index) {
-            $query->index($index);
+        if ($category) {
+            $query->category($category);
         }
 
         $hits = $query->execute();
 
         $view = View::create($hits);
+        $context = SerializationContext::create();
+        $context->enableMaxDepthChecks();
+        $context->setSerializeNull(true);
+        $view->setSerializationContext($context);
 
         return $this->viewHandler->handle($view);
     }
@@ -78,10 +83,10 @@ class SearchController
      *
      * @return JsonResponse
      */
-    public function listIndexesAction(Request $request)
+    public function categoriesAction(Request $request)
     {
-        $view = View::create($this->searchManager->getIndexNames());
-
-        return $this->viewHandler->handleView($view);
+        return $this->viewHandler->handle(
+            View::create($this->searchManager->getCategoryNames())
+        );
     }
 }

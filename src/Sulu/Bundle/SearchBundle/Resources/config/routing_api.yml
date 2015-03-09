@@ -1,3 +1,0 @@
-sulu_search.search:
-    type: rest
-    resource: "sulu_search.controller.search"
