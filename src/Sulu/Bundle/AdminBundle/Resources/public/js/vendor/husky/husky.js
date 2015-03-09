@@ -27659,6 +27659,7 @@ define('husky',[
         app.use('./husky_extensions/datepicker');
         app.use('./husky_extensions/itembox');
         app.use('./husky_extensions/cache-factory');
+        app.use('./husky_extensions/infinite-scroll');
     }
 
     // subclass extends superclass
@@ -28247,7 +28248,7 @@ define('__component__$navigation@husky',[],function() {
             if (this.sandbox.dom.hasClass(domObject, 'js-navigation-sub-item')) {
                 parent = this.sandbox.dom.closest(domObject, '.navigation-items');
 
-                // toggle parent only when it is not expaneded
+                // toggle parent only when it is not expanded
                 if (!this.sandbox.dom.hasClass(parent, 'is-expanded')) {
                     this.toggleItems(null, parent);
                 }
@@ -33841,13 +33842,12 @@ define('__component__$search@husky',[], function() {
             slideExpandedClass: 'slide-expanded'
         },
 
-
         /**
          * triggered when user clicked on search icon or pressed enter
          * @event husky.search[.INSTANCE_NAME]
          * @param {String} the string thats been looked for
          */
-            SEARCH = function() {
+        SEARCH = function() {
             return this.getEventName();
         },
 
@@ -33855,15 +33855,23 @@ define('__component__$search@husky',[], function() {
          * triggered when user clicks on reset button of search
          * @event husky.search[.INSTANCE_NAME].reset
          */
-            RESET = function() {
+        RESET = function() {
             return this.getEventName('reset');
+        },
+
+        /**
+         * clear value if search field
+         * @event husky.search[.INSTANCE_NAME].clear
+         */
+        CLEAR = function() {
+            return this.getEventName('clear');
         },
 
         /**
          * triggered when user clicks on search icon or pressed enter
          * @event husky.search[.INSTANCE_NAME].initialized
          */
-            INITIALIZED = function() {
+        INITIALIZED = function() {
             return this.getEventName('initialized');
         };
 
@@ -33876,9 +33884,15 @@ define('__component__$search@husky',[], function() {
             this.render();
 
             this.bindDOMEvents();
+            this.bindCustomEvents();
 
             this.sandbox.emit(INITIALIZED.call(this));
+        },
 
+        bindCustomEvents: function() {
+            this.sandbox.on(CLEAR.call(this), function() {
+                this.removeSearch(null, true);
+            }.bind(this));
         },
 
         render: function() {
@@ -33890,7 +33904,6 @@ define('__component__$search@husky',[], function() {
             }
 
             this.sandbox.dom.html(this.$el, this.sandbox.template.parse(templates.skeleton, {placeholderText: this.sandbox.translate(this.options.placeholderText)}));
-
         },
 
         // bind dom elements
@@ -33922,8 +33935,11 @@ define('__component__$search@husky',[], function() {
             this.sandbox.dom.addClass(this.$el, constants.slideExpandedClass);
         },
 
-        resetSearch : function() {
-            this.sandbox.emit(RESET.call(this));
+        resetSearch: function(noEmit) {
+            if(!noEmit) {
+                this.sandbox.emit(RESET.call(this));
+            }
+
             this.searchSubmitted = false;
         },
 
@@ -33946,8 +33962,6 @@ define('__component__$search@husky',[], function() {
                 // escape pressed
                 this.removeSearch();
             }
-
-
         },
 
         submitSearch: function(event) {
@@ -33973,7 +33987,7 @@ define('__component__$search@husky',[], function() {
             this.sandbox.emit(SEARCH.call(this), searchString);
         },
 
-        removeSearch: function(event) {
+        removeSearch: function(event, noEmit) {
             if (!!event) {
                 event.preventDefault();
             } else {
@@ -33988,7 +34002,7 @@ define('__component__$search@husky',[], function() {
             this.sandbox.dom.hide(event.target);
             this.sandbox.dom.val($input, '');
             if (this.searchSubmitted) {
-                this.resetSearch();
+                this.resetSearch(noEmit);
             }
         },
 
@@ -43578,39 +43592,45 @@ define('husky_components/data-navigation/list-view',[], function() {
         list: function() {
             return [
                 '<ul class="data-navigation-items">',
-                '<% if (!!data.children && !!data.children.length) { %>',
-                '<% _.each(data.children, function(child) { %>',
-                '<li data-id="<%= child.id %>" class="data-navigation-item">',
-                '<% if (!!child.preview) { %>',
-                '<div class="data-navigation-item-thumb" style="background-image: url(\'<%=child.preview.url%>\')"></div>',
-                '<% } else { %>',
-                '<div class="fa-coffee data-navigation-item-thumb" style="margin-top: 10px;padding-left: 10px;"></div>',
-                '<% } %>',
-                '<div class="data-navigation-item-name">',
-                '<%= child[options.nameKey] %>',
-                '<% if (!!child.hasSub) { %>',
-                '<span class="fa-chevron-right data-navigation-item-next"></span>',
-                '<% } %>',
-                '</div>',
-                '</li>',
-                '<% }) %>',
-                '<% } else if (!!data.children && data.children.length === 0) { %>',
-                '<li class="not-selectable">',
-                '<div class="data-navigation-info data-navigation-info-empty">',
-                '<%=options.translates.noData%>',
-                '</div>',
-                '</li>',
-                '<% } else { %>',
-                '<li class="not-selectable">',
-                '<div class="data-navigation-loader-container">',
-                '<div class="spinner">',
-                '<div class="double-bounce1"></div>',
-                '<div class="double-bounce2"></div>',
-                '</div>',
-                '</div>',
-                '</li>',
-                '<% } %>',
+                '   <% if (!!data.children && !!data.children.length) { %>',
+                templates.children(),
+                '   <% } else if (!!data.children && data.children.length === 0) { %>',
+                '       <li class="not-selectable">',
+                '           <div class="data-navigation-info data-navigation-info-empty">',
+                '               <%=options.translates.noData%>',
+                '           </div>',
+                '       </li>',
+                '   <% } else { %>',
+                '       <li class="not-selectable">',
+                '           <div class="data-navigation-loader-container">',
+                '               <div class="spinner">',
+                '                   <div class="double-bounce1"></div>',
+                '                   <div class="double-bounce2"></div>',
+                '               </div>',
+                '           </div>',
+                '       </li>',
+                '   <% } %>',
                 '</ul>'
+            ].join('');
+        },
+
+        children: function() {
+            return [
+                '       <% _.each(data.children, function(child) { %>',
+                '           <li data-id="<%= child.id %>" class="data-navigation-item">',
+                '               <% if (!!child.preview) { %>',
+                '                   <div class="data-navigation-item-thumb" style="background-image: url(\'<%=child.preview.url%>\')"></div>',
+                '               <% } else { %>',
+                '                   <div class="fa-coffee data-navigation-item-thumb" style="margin-top: 10px;padding-left: 10px;"></div>',
+                '               <% } %>',
+                '               <div class="data-navigation-item-name">',
+                '                   <%= child[options.nameKey] %>',
+                '                   <% if (!!child.hasSub) { %>',
+                '                       <span class="fa-chevron-right data-navigation-item-next"></span>',
+                '                   <% } %>',
+                '               </div>',
+                '           </li>',
+                '       <% }) %>'
             ].join('');
         }
     };
@@ -43626,6 +43646,7 @@ define('husky_components/data-navigation/list-view',[], function() {
              */
             init: function() {
                 this.template = _.template(templates.list());
+                this.children = _.template(templates.children());
                 this.$el = $('<div/>', {
                     'class': 'data-navigation-list'
                 });
@@ -43654,11 +43675,23 @@ define('husky_components/data-navigation/list-view',[], function() {
              */
             render: function(data, options) {
                 data = data || {};
-                var tpl = this.template({ data: data, options: options });
+                var tpl = this.template({data: data, options: options});
 
                 this.$el.html(tpl);
 
                 return this;
+            },
+
+            /**
+             * @method render
+             * @param {Object} data
+             * @param {Object} options
+             * @chainable
+             */
+            append: function(data, options) {
+                var tpl = this.children({data: {children: data}, options: options});
+
+                this.$el.find('ul').append(tpl);
             },
 
             /**
@@ -43712,6 +43745,10 @@ define('__component__$data-navigation@husky',[
             parentResultKey: 'parent',
             nameKey: 'name',
             childrenLinkKey: 'children',
+            pageKey: 'page',
+            limitKey: 'limit',
+            searchKey: 'search',
+            limit: 10,
             showAddButton: true,
             translates: {
                 noData: 'No Data',
@@ -43724,20 +43761,20 @@ define('__component__$data-navigation@husky',[
             header: function() {
                 return [
                     '<% if (data.current.id !== \'root\') { %>',
-                    '<div class="data-navigation-back" data-parent-id="<%= !!data.parent ? data.parent.id : \'root\' %>">',
-                    '<span class="fa-chevron-left data-navigation-parent-back"></span>',
-                    '<div class="data-navigation-parent-text">',
-                    '<% if (!!data.current && data.current.name) { %>',
-                    '<%= data.current.name %>',
+                    '   <div class="data-navigation-back" data-parent-id="<%= !!data.parent ? data.parent.id : \'root\' %>">',
+                    '       <span class="fa-chevron-left data-navigation-parent-back"></span>',
+                    '       <div class="data-navigation-parent-text">',
+                    '           <% if (!!data.current && data.current.name) { %>',
+                    '               <%= data.current.name %>',
+                    '           <% } else { %>',
+                    '               <%= translates.title %>',
+                    '           <% } %>',
+                    '       </div>',
+                    '   </div>',
                     '<% } else { %>',
-                    '<%= translates.title %>',
-                    '<% } %>',
-                    '</div>',
-                    '</div>',
-                    '<% } else { %>',
-                    '<div class="root-text">',
-                    '<%= data.current.name || translates.title %>',
-                    '</div>',
+                    '   <div class="root-text">',
+                    '       <%= data.current.name || translates.title %>',
+                    '   </div>',
                     '<% } %>'
                 ].join('');
             },
@@ -43745,16 +43782,20 @@ define('__component__$data-navigation@husky',[
             main: function() {
                 return [
                     '<div class="data-navigation">',
-                    '<div class="data-navigation-header"></div>',
-                    '<div class="data-navigation-list-container"></div>',
-                    '<% if (options.showAddButton) { %>',
-                    '<div class="data-navigation-list-footer">',
-                    '<button class="data-navigation-add btn">',
-                    '<span class="fa-plus-circle"></span>',
-                    '<%= options.translates.addButton %>',
-                    '</button>',
-                    '</div>',
-                    '<% } %>',
+                    '   <div class="data-navigation-header"></div>',
+                    '   <div class="data-navigation-list-container iscroll">',
+                    '       <div class="search"></div>',
+                    '       <div class="iscroll-inner"></div>',
+                    '       <div class="loader"></div>',
+                    '   </div>',
+                    '   <% if (options.showAddButton) { %>',
+                    '       <div class="data-navigation-list-footer">',
+                    '           <button class="data-navigation-add btn">',
+                    '               <span class="fa-plus-circle"></span>',
+                    '               <%= options.translates.addButton %>',
+                    '           </button>',
+                    '       </div>',
+                    '   <% } %>',
                     '</div>'
                 ].join('');
             }
@@ -43844,6 +43885,9 @@ define('__component__$data-navigation@husky',[
         };
 
     return {
+
+        page: 1,
+
         /**
          * @method initialize
          */
@@ -43883,6 +43927,64 @@ define('__component__$data-navigation@husky',[
             var tpl = this.mainTpl({options: this.options});
             this.$el.html(tpl);
             this.bindDOMEvents();
+
+            this.sandbox.start([
+                {
+                    name: 'search@husky',
+                    options: {
+                        el: this.sandbox.dom.find('.search', this.$el),
+                        appearance: 'white',
+                        instanceName: 'data-navigation'
+                    }
+                }
+            ]);
+
+            this.startInfiniteScroll();
+        },
+
+        /**
+         * start infinite scrolling
+         * @method startInfiniteScroll
+         */
+        startInfiniteScroll: function() {
+            this.sandbox.start([
+                {
+                    name: 'loader@husky',
+                    options: {
+                        el: this.sandbox.dom.find('.loader', this.$el),
+                        hidden: true
+                    }
+                }
+            ]);
+
+            this.sandbox.infiniteScroll('.iscroll', this.loadNextPage.bind(this), 50);
+        },
+
+        /**
+         * load children from next page
+         * @method startInfiniteScroll
+         */
+        loadNextPage: function() {
+            var def = this.sandbox.data.deferred();
+
+            if (!!this.data.hasNextPage) {
+                this.sandbox.emit('husky.loader.show');
+
+                this.page++;
+                this.sandbox.util.load(this.getUrl(this.getCurrentUrl()))
+                    .then(function(data) {
+                        var children = data._embedded[this.options.resultKey] || [];
+                        this.data.children = this.data.children.concat(children);
+                        this.data.hasNextPage = children.length == this.options.limit;
+                        this.currentView.append(children, this.options);
+
+                        this.sandbox.emit('husky.loader.hide');
+                        def.resolve();
+                    }.bind(this));
+            } else {
+                def.resolve();
+            }
+            return def;
         },
 
         /**
@@ -43913,6 +44015,18 @@ define('__component__$data-navigation@husky',[
 
             this.sandbox.on(CLEAR_CACHE.call(this), function() {
                 this.cache.deleteAll();
+            }.bind(this));
+
+            this.sandbox.on('husky.search.data-navigation', function(searchTerm) {
+                this.searchTerm = searchTerm;
+
+                this.setUrl(this.getCurrentUrl(), true);
+            }.bind(this));
+
+            this.sandbox.on('husky.search.data-navigation.reset', function() {
+                this.searchTerm = null;
+
+                this.setUrl(this.getCurrentUrl(), true);
             }.bind(this));
         },
 
@@ -43945,10 +44059,44 @@ define('__component__$data-navigation@husky',[
          * @param {String} url
          */
         load: function(url) {
+            this.page = 1;
+
+            return this.sandbox.util.load(this.getUrl(url))
+                .then(this.parse.bind(this))
+                .then(this.hideSearch.bind(this));
+        },
+
+        /**
+         * @method clearSearch
+         */
+        clearSearch: function() {
+            this.searchTerm = null;
+
+            this.sandbox.emit('husky.search.data-navigation.clear');
+        },
+
+        /**
+         * Returns full url with search, page and limit parameter
+         * @param url
+         * @returns {string}
+         */
+        getUrl: function(url) {
             url = url || this.options.url || this.options.rootUrl;
 
-            return this.sandbox.util.load(url)
-                .then(this.parse.bind(this));
+            var delimiter = (url.indexOf('?') === -1) ? '?' : '&';
+
+            url = [
+                url, delimiter, this.options.pageKey, '=', this.page, '&',
+                this.options.limitKey, '=', this.options.limit
+            ].join('');
+
+            if (!!this.searchTerm) {
+                url = [
+                    url, '&', this.options.searchKey, '=', this.searchTerm
+                ].join('');
+            }
+
+            return url;
         },
 
         /**
@@ -43971,10 +44119,26 @@ define('__component__$data-navigation@husky',[
             this.data = {
                 children: response._embedded[this.options.resultKey] || null,
                 parent: parent,
-                current: current
+                current: current,
+                hasNextPage: true
             };
 
             return this.data;
+        },
+
+        /**
+         * hide search if no children available
+         * @param data
+         * @returns {*}
+         */
+        hideSearch: function(data) {
+            if (data.children.length === 0 && !this.searchTerm) {
+                this.$find('.search').hide();
+            } else {
+                this.$find('.search').show();
+            }
+
+            return data;
         },
 
         /**
@@ -43985,7 +44149,9 @@ define('__component__$data-navigation@husky',[
         storeData: function(data) {
             var current = data.current;
 
-            this.cache.put(current.id, data);
+            if (!this.searchTerm) {
+                this.cache.put(current.id, data);
+            }
 
             return data;
         },
@@ -44021,6 +44187,8 @@ define('__component__$data-navigation@husky',[
                 return this.load(url).then(this.storeData.bind(this));
             } else {
                 this.data = data;
+
+                dfd.then(this.hideSearch.bind(this));
                 dfd.resolve(data);
             }
 
@@ -44036,6 +44204,7 @@ define('__component__$data-navigation@husky',[
                 id = $item.data('id'),
                 oldView = this.currentView;
 
+            this.clearSearch();
             this.currentView = this.createView();
             this.appendView(oldView);
 
@@ -44054,6 +44223,7 @@ define('__component__$data-navigation@husky',[
                 id = this.sandbox.dom.data($item, 'parent-id'),
                 newView = this.createView();
 
+            this.clearSearch();
             this.prependView(newView);
 
             return this.getItems(id)
@@ -44153,7 +44323,7 @@ define('__component__$data-navigation@husky',[
                 this.playAppendAnimation(view);
             }
 
-            this.currentView.placeAt('.data-navigation-list-container');
+            this.currentView.placeAt('.data-navigation-list-container .iscroll-inner');
         },
 
         /**
@@ -44182,7 +44352,7 @@ define('__component__$data-navigation@husky',[
          * @param {Object} view
          */
         prependView: function(view) {
-            view.placeAt('.data-navigation-list-container');
+            view.placeAt('.data-navigation-list-container .iscroll-inner');
             this.currentView.$el.addClass('is-animated');
             this.playPrependAnimation(view);
         },
@@ -48731,6 +48901,64 @@ define("datepicker-zh-TW", function(){});
  * with this source code in the file LICENSE.
  *
  */
+(function() {
+
+    
+
+    define('husky_extensions/infinite-scroll',[],function() {
+
+        var scrollHandler = function(event, sandbox, padding, callback) {
+            var $e = sandbox.dom.find(event.currentTarget),
+                $inner = sandbox.dom.first(
+                    sandbox.dom.find('div.iscroll-inner', $e)
+                ),
+                borderTopWidth = parseInt(sandbox.dom.css($e, 'borderTopWidth')),
+                borderTopWidthInt = isNaN(borderTopWidth) ? 0 : borderTopWidth,
+                iContainerTop = parseInt(sandbox.dom.css($e, 'paddingTop')) + borderTopWidthInt,
+                iTopHeight = sandbox.dom.offset($e).top,
+                innerTop = $inner.length ? sandbox.dom.offset($inner).top : 0,
+                iTotalHeight = Math.ceil(iTopHeight - innerTop + $e.height() + iContainerTop);
+
+            if (sandbox.dom.data($e, 'enabled') === 'on' && iTotalHeight + (isNaN(padding) ? 0 : padding) >= $inner.outerHeight()) {
+                sandbox.dom.data($e, 'enabled', 'off');
+                var result = callback();
+
+                if (!!result && !!result.then) {
+                    result.then(function() {
+                        sandbox.dom.data($e, 'enabled', 'on');
+                    });
+                } else {
+                    sandbox.dom.data($e, 'enabled', 'on');
+                }
+            }
+        };
+
+        return {
+
+            name: 'infinite-scroll',
+
+            initialize: function(app) {
+                app.sandbox.infiniteScroll = function(selector, callback, padding) {
+                    app.sandbox.dom.data(app.sandbox.dom.find(selector), 'enabled', 'on');
+
+                    app.sandbox.dom.on(selector, 'scroll', function(event) {
+                        scrollHandler(event, app.sandbox, padding, callback);
+                    });
+                };
+            }
+        };
+    });
+})();
+
+/**
+ * This file is part of Husky frontend development framework.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ *
+ */
 
 /**
  * Introduces functionality used by multiple components, which are displaying some items in a list
@@ -49841,6 +50069,14 @@ define('husky_extensions/itembox',[],function() {
 
             app.core.dom.inArray = function(value, array) {
                 return $.inArray(value, array);
+            };
+
+            app.core.dom.wrapAll = function(selector, html){
+                return $(selector).wrapAll(html);
+            };
+
+            app.core.dom.first = function(selector) {
+                return $(selector).first();
             };
 
             /**
