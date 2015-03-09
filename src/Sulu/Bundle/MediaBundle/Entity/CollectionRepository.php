@@ -28,9 +28,26 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
      */
     public function findCollectionById($id)
     {
-        $result = $this->findCollectionSet($id, 0);
+        $sql = sprintf(
+            'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionMedia, collectionChildren
+                 FROM %s AS n
+                        LEFT JOIN n.meta AS collectionMeta
+                        LEFT JOIN n.type AS collectionType
+                        LEFT JOIN n.parent AS collectionParent
+                        LEFT JOIN n.children AS collectionChildren
+                        LEFT JOIN n.media AS collectionMedia
+                        LEFT JOIN collectionParent.meta AS parentMeta
+                 WHERE n.id = :id',
+            $this->_entityName
+        );
 
-        if(sizeof($result) === 0){
+        $query = new Query($this->_em);
+        $query->setDQL($sql);
+        $query->setParameter('id', $id);
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $result = $query->getResult();
+
+        if (sizeof($result) === 0) {
             return null;
         }
 
@@ -40,7 +57,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet($id, $depth = 0)
+    public function findCollectionSet(Collection $collection, $depth = 0, $filter = array())
     {
         try {
             $sql = sprintf(
@@ -51,20 +68,39 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                         LEFT JOIN n.parent AS collectionParent
                         LEFT JOIN n.children AS collectionChildren
                         LEFT JOIN n.media AS collectionMedia
-                        LEFT JOIN collectionParent.meta AS parentMeta,
-                      %s AS p
-                 WHERE n.lft BETWEEN p.lft AND p.rgt
-                   AND (n.depth <= p.depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)
-                   AND p.id = :id',
+                        LEFT JOIN collectionParent.meta AS parentMeta
+                 WHERE n.lft BETWEEN :lft AND :rgt
+                   AND (n.depth <= :depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)
+                   AND n.id != :id',
                 $this->_entityName,
                 $this->_entityName
             );
+
+            if (array_key_exists('search', $filter) && $filter['search'] !== '') {
+                $sql .= ' AND collectionMeta.title LIKE :search';
+            }
 
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('maxDepth', intval($depth));
             $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
-            $query->setParameter('id', $id);
+            $query->setParameter('lft', $collection->getLft());
+            $query->setParameter('rgt', $collection->getRgt());
+            $query->setParameter('depth', $collection->getDepth());
+            $query->setParameter('id', $collection->getId());
+
+            if (array_key_exists('search', $filter) && $filter['search'] !== '') {
+                $query->setParameter('search', '%' . $filter['search'] . '%');
+            }
+
+            if (array_key_exists('limit', $filter)) {
+                $query->setMaxResults($filter['limit']);
+            }
+
+            if (array_key_exists('offset', $filter)) {
+                $query->setFirstResult($filter['offset']);
+            }
+
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
             return $query->getResult();
@@ -76,7 +112,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findRootCollectionSet($depth = 0)
+    public function findRootCollectionSet($offset, $limit, $search, $depth = 0)
     {
         try {
             $sql = sprintf(
@@ -88,18 +124,28 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                         LEFT JOIN n.children AS collectionChildren
                         LEFT JOIN n.media AS collectionMedia
                         LEFT JOIN collectionParent.meta AS parentMeta
-                 WHERE n.depth <= :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne',
+                 WHERE (n.depth <= :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)',
                 $this->_entityName,
                 $this->_entityName
             );
+
+            if ($search !== '') {
+                $sql .= ' AND collectionMeta.title LIKE :search';
+            }
 
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('maxDepth', intval($depth));
             $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
+            if ($search !== '') {
+                $query->setParameter('search', '%' . $search . '%');
+            }
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
-            return $query->getResult();
+            $query->setFirstResult($offset);
+            $query->setMaxResults($limit);
+
+            return new Paginator($query, true);
         } catch (NoResultException $ex) {
             return array();
         }
@@ -173,7 +219,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $query->setParameter('depth', intval($depth));
             }
             if ($search !== null) {
-                $query->setParameter('search', '%'.$search.'%');
+                $query->setParameter('search', '%' . $search . '%');
             }
 
             return new Paginator($query);

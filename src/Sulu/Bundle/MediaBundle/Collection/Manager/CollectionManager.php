@@ -99,26 +99,20 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false)
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array())
     {
-        $collectionSet = $this->collectionRepository->findCollectionSet($id, $depth);
-
-        $collectionEntity = null;
-        foreach ($collectionSet as $entity) {
-            if($entity->getId() === intval($id)) {
-                $collectionEntity = $entity;
-            }
-        }
+        $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if ($collectionEntity === null) {
             throw new CollectionNotFoundException($id);
         }
+        $collectionChildren = $this->collectionRepository->findCollectionSet($collectionEntity, $depth, $filter);
 
         $breadcrumbEntities = null;
         if ($breadcrumb) {
             $breadcrumbEntities = $this->collectionRepository->findCollectionBreadcrumbById($id);
         }
 
-        return $this->getApiEntity($collectionEntity, $locale, $collectionSet, $breadcrumbEntities);
+        return $this->getApiEntity($collectionEntity, $locale, $collectionChildren, $breadcrumbEntities);
     }
 
     /**
@@ -127,9 +121,9 @@ class CollectionManager implements CollectionManagerInterface
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
-        $this->count = $collectionEntities instanceof Paginator ? 
+        $this->count = $collectionEntities instanceof Paginator ?
             $collectionEntities->count() : count($collectionEntities);
-        
+
         $collections = [];
         foreach ($collectionEntities as $entity) {
             $collections[] = $this->getApiEntity($entity, $locale);
@@ -141,9 +135,9 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTree($locale, $depth = 0)
+    public function getTree($locale, $offset, $limit, $search, $depth = 0)
     {
-        $collectionSet = $this->collectionRepository->findRootCollectionSet($depth);
+        $collectionSet = $this->collectionRepository->findRootCollectionSet($offset, $limit, $search, $depth);
 
         $collections = [];
         foreach ($collectionSet as $entity) {
