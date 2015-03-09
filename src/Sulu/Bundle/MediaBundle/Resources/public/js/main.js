@@ -44,6 +44,16 @@ define({
             }
         });
 
+        // show a single collection with files and upload
+        sandbox.mvc.routes.push({
+            route: 'media/collections/edit::id/:content/edit::mediaId',
+            callback: function(id, content, mediaId) {
+                this.html(
+                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-media-id="' + mediaId + '"/>'
+                );
+            }
+        });
+
         app.components.before('initialize', function() {
             if (this.name !== 'Sulu App') {
                 return;

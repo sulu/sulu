@@ -85,6 +85,17 @@ define([], function() {
 
             // load component after click
             this.sandbox.on('husky.tabs.header.item.select', this.startTabComponent.bind(this));
+
+            // load component after click
+            this.sandbox.on('husky.tabs.header.option.unset', this.unsetOption.bind(this));
+        },
+
+        /**
+         * remove content option
+         * @param {string} property
+         */
+        unsetOption: function(property) {
+            this.options.contentOptions[property] = null;
         },
 
         /**
@@ -93,7 +104,7 @@ define([], function() {
          */
         startTabComponent: function(item) {
             var options;
-            
+
             item = item || this.options.tabsData.items[0];
 
             if (!item.forceReload && item.action === this.action) {
@@ -103,7 +114,7 @@ define([], function() {
 
             // save action
             this.action = item.action;
-            
+
             // resets store to prevent duplicated models
             if (!!item.resetStore) {
                 this.sandbox.mvc.Store.reset();
@@ -111,10 +122,10 @@ define([], function() {
 
             // stop the current tab
             App.stop('#' + constants.tabsComponentId);
-            
+
             // start the new tab-component
             if (!!item.component) {
-                this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="'+ constants.tabsComponentId +'"/>'));
+                this.sandbox.dom.append(this.$el, this.sandbox.dom.createElement('<div id="' + constants.tabsComponentId + '"/>'));
                 options = this.sandbox.util.extend(true, {}, this.options.contentOptions, {el: '#' + constants.tabsComponentId}, item.componentOptions);
                 // start component defined by
                 this.sandbox.start([{
