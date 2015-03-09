@@ -64,7 +64,7 @@ class SearchControllerTest extends SuluTestCase
                             'class' => 'Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product',
                             'url' => '/foobar',
                             'locale' => 'fr',
-                            'index' => 'product',
+                            'category' => 'Product',
                             'fields' => array(
                                 'title' => array(
                                     'name' => 'title',
