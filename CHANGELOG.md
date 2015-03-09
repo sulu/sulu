@@ -19,6 +19,7 @@ CHANGELOG for Sulu
     * FEATURE     #812 [MediaBundle]     Added nested collection API and UI
     * FEATURE     #812 [MediaBundle]     Implemented move collections
     * FEATURE     #805 [MediaBundle]     Implementing media move
+    * FEATURE     #909 [MediaBundle]     Added scroll down pagination for collection
 
 * dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
