@@ -97,7 +97,7 @@ class ReindexListener
             $this->searchManager->purge($this->structureIndexName);
         }
 
-        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page"';
+        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" OR [jcr:mixinTypes] = "sulu:snippet"';
         $queryManager = $session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $res = $query->execute();
@@ -111,45 +111,34 @@ class ReindexListener
             $locales = $this->nodeHelper->getLanguagesForNode($node);
             foreach ($locales as $locale) {
 
-                $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($node->getPath());
+                $structure = $this->contentMapper->loadByNode($node, $locale);
+                $structureClass = get_class($structure);
 
-                if (null === $webspaceKey) {
-                    $output->writeln(
-                        sprintf('<error>Could not determine webspace for node at path </error>: %s', $node->getPath())
+                if (!isset($count[$structureClass])) {
+                    $count[$structureClass] = array(
+                        'indexed' => 0,
+                        'deindexed' => 0,
                     );
+                }
+
+                if ($filter && !preg_match('{' . $filter . '}', get_class($structure))) {
                     continue;
                 }
 
-                if ($this->webspaceManager->findWebspaceByKey($webspaceKey) !== null) {
-                    $structure = $this->contentMapper->load($node->getIdentifier(), $webspaceKey, $locale);
-                    $structureClass = get_class($structure);
-
-                    if (!isset($count[$structureClass])) {
-                        $count[$structureClass] = array(
-                            'indexed' => 0,
-                            'deindexed' => 0,
-                        );
+                try {
+                    if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
+                        $this->searchManager->index($structure, $locale);
+                        $count[$structureClass]['indexed']++;
+                    } else {
+                        $deindexedCount++;
+                        $this->searchManager->deindex($structure, $locale);
+                        $count[$structureClass]['deindexed']++;
                     }
-
-                    if ($filter && !preg_match('{' . $filter . '}', get_class($structure))) {
-                        continue;
-                    }
-
-                    try {
-                        if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
-                            $this->searchManager->index($structure, $locale);
-                            $count[$structureClass]['indexed']++;
-                        } else {
-                            $deindexedCount++;
-                            $this->searchManager->deindex($structure, $locale);
-                            $count[$structureClass]['deindexed']++;
-                        }
-                    } catch (\Exception $exc) {
-                        $output->writeln(
-                            '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
-                            ', locale: ' . $locale . '): ' . $exc->getMessage() . '</error>'
-                        );
-                    }
+                } catch (\Exception $exc) {
+                    $output->writeln(
+                        '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
+                        ', locale: ' . $locale . '): ' . $exc->getMessage() . '</error>'
+                    );
                 }
             }
         }
@@ -164,4 +153,3 @@ class ReindexListener
         }
     }
 }
-
