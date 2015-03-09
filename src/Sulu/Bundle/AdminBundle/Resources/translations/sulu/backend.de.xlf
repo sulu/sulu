@@ -1345,6 +1345,86 @@
                 <source>labels.successfully-saved</source>
                 <target>Daten wurden erfolgreich gespeichert.</target>
             </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.reset-password">
+                <source>sulu.login.reset-password</source>
+                <target>Passwort zurücksetzen:</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a4d" resname="public.reset">
+                <source>public.reset</source>
+                <target>Zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a43" resname="public.email">
+                <source>public.email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a41" resname="sulu.login.back-login">
+                <source>sulu.login.back-login</source>
+                <target>Zurück zum Login</target>
+            </trans-unit>
+            <trans-unit id="a504f52dde1456ff4132c0b4820e29a42" resname="sulu.login.resend-email">
+                <source>sulu.login.resend-email</source>
+                <target>Erneut senden</target>
+            </trans-unit>
+            <trans-unit id="a404f52dde1456ff4132c0b4820e29a43" resname="sulu.login.email-sent-message">
+                <source>sulu.login.email-sent-message</source>
+                <target>Eine Email mit Anweisungen, wie Sie Ihr Passwort zurücksetzen können wurde gesendet an:</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29a4f" resname="sulu.login.back-website">
+                <source>sulu.login.back-website</source>
+                <target>Zurück zur Website</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29add" resname="public.login">
+                <source>public.login</source>
+                <target>Login</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad1" resname="sulu.login.error-message">
+                <source>sulu.login.error-message</source>
+                <target>Diese Kombination von Email/Passwort ist falsch. Bitte versuchen Sie es erneut.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad7" resname="sulu.login.forgot-password">
+                <source>sulu.login.forgot-password</source>
+                <target>Passwort vergessen</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff3132c0b4820e29ad7" resname="sulu.login.email-username">
+                <source>sulu.login.email-username</source>
+                <target>Username oder Email</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde1456ff4132c0b4820e29ad2" resname="public.password">
+                <source>public.password</source>
+                <target>Passwort</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad2" resname="sulu.login.mail.user-not-found">
+                <source>sulu.login.mail.user-not-found</source>
+                <target>Der User mit dieser Email/Usernamen existiert nicht.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad1" resname="sulu.login.mail.already-sent">
+                <source>sulu.login.mail.already-sent</source>
+                <target>Es wurde schon ein Email mit Instruktionen, wie Sie ihr Passwort zurücksetzen können, an Sie gesendet.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad3" resname="sulu.login.token-does-not-exist">
+                <source>sulu.login.token-does-not-exist</source>
+                <target>Dieser Token existiert nicht.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29ad4" resname="sulu.login.mail.limit-reached">
+                <source>sulu.login.mail.limit-reached</source>
+                <target>Das Limit für gesendete Emails wurde erreicht.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29adf" resname="sulu.login.repeat-password">
+                <source>sulu.login.repeat-password</source>
+                <target>Neues Passwort bestätigen</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e29adc" resname="sulu.login.enter-new-password">
+                <source>sulu.login.enter-new-password</source>
+                <target>Neues Passwort eingeben</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2454cc4132c0b4820e28adf" resname="sulu.login.email-sent-success">
+                <source>sulu.login.email-sent-success</source>
+                <target>Email erfolgreich gesendet.</target>
+            </trans-unit>
+            <trans-unit id="b504f52dde2354cc4132c0b4820e28adc" resname="public.elements-selected">
+                <source>public.elements-selected</source>
+                <target>Elemente ausgewählt</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

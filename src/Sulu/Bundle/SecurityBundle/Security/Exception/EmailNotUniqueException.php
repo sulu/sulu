@@ -22,7 +22,7 @@ class EmailNotUniqueException extends SecurityException
     public function __construct($email)
     {
         $this->email = $email;
-        parent::__construct('A user\'s email has to be unique!', 1004);
+        parent::__construct(sprintf('The email "%s" is not unique!', $email), 1004);
     }
 
     public function getEmail() {
@@ -33,7 +33,8 @@ class EmailNotUniqueException extends SecurityException
     {
         return array(
             'code' => $this->code,
-            'message' => $this->message
+            'message' => $this->message,
+            'email' => $this->email
         );
     }
 }

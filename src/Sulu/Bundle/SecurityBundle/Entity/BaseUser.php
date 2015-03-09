@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * User
@@ -96,6 +96,16 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
      * @var string
      */
     protected $passwordResetToken;
+
+    /**
+     * @var \DateTime
+     */
+    private $passwordResetTokenExpiresAt;
+
+    /**
+     * @var integer
+     */
+    private $passwordResetTokenEmailsSent;
 
     /**
      * Constructor
@@ -443,5 +453,51 @@ abstract class BaseUser extends ApiEntity implements UserInterface, Serializable
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Set tokenExpiresAt
+     *
+     * @param \DateTime $passwordResetTokenExpiresAt
+     * @return BaseUser
+     */
+    public function setPasswordResetTokenExpiresAt($passwordResetTokenExpiresAt)
+    {
+        $this->passwordResetTokenExpiresAt = $passwordResetTokenExpiresAt;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetTokenExpiresAt
+     *
+     * @return \DateTime 
+     */
+    public function getPasswordResetTokenExpiresAt()
+    {
+        return $this->passwordResetTokenExpiresAt;
+    }
+
+    /**
+     * Set passwordResetTokenEmailsSent
+     *
+     * @param integer $passwordResetTokenEmailsSent
+     * @return BaseUser
+     */
+    public function setPasswordResetTokenEmailsSent($passwordResetTokenEmailsSent)
+    {
+        $this->passwordResetTokenEmailsSent = $passwordResetTokenEmailsSent;
+
+        return $this;
+    }
+
+    /**
+     * Get passwordResetTokenEmailsSent
+     *
+     * @return integer 
+     */
+    public function getPasswordResetTokenEmailsSent()
+    {
+        return $this->passwordResetTokenEmailsSent;
     }
 }

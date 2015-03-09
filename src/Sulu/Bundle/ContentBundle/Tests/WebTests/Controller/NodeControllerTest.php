@@ -238,10 +238,13 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($uuid, $content->getParent()->getIdentifier());
     }
 
-    private function beforeTestGet()
+    public function testGet()
     {
+        $client = $this->createAuthenticatedClient();
+
         $data = array(
             array(
+                'template' => 'default',
                 'title' => 'test1',
                 'tags' => array(
                     'tag1',
@@ -251,6 +254,7 @@ class NodeControllerTest extends SuluTestCase
                 'article' => 'Test'
             ),
             array(
+                'template' => 'default',
                 'title' => 'test2',
                 'tags' => array(
                     'tag1',
@@ -261,25 +265,7 @@ class NodeControllerTest extends SuluTestCase
             )
         );
 
-        /** @var ContentMapperInterface $mapper */
-        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
-
-        $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'de', 1);
-
-        $client = $this->createAuthenticatedClient();
-
-        for ($i = 0; $i < count($data); $i++) {
-            $client->request('POST', '/api/nodes?template=default&webspace=sulu_io&language=en', $data[$i]);
-            $data[$i] = (array) json_decode($client->getResponse()->getContent(), true);
-        }
-
-        return $data;
-    }
-
-    public function testGet()
-    {
-        $client = $this->createAuthenticatedClient();
-        $data = $this->beforeTestGet();
+        $data = $this->setUpContent($data);
 
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
 
@@ -296,7 +282,31 @@ class NodeControllerTest extends SuluTestCase
     public function testDelete()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->beforeTestGet();
+
+        $data = array(
+            array(
+                'template' => 'default',
+                'title' => 'test1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'template' => 'default',
+                'title' => 'test2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test2',
+                'article' => 'Test'
+            )
+        );
+
+        $data = $this->setUpContent($data);
 
         $client->request('DELETE', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en');
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
@@ -305,10 +315,68 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
+    public function testDeleteReferencedNode()
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $deleteData = array(
+            array(
+                'template' => 'simple',
+                'title' => 'test1',
+                'url' => '/test1',
+            )
+        );
+
+        $deleteData = $this->setUpContent($deleteData);
+
+        $linkData = array(
+            array(
+                'template' => 'internallinks',
+                'title' => 'test2',
+                'url' => '/test2',
+                'internalLinks' => array(
+                    $deleteData[0]['id']
+                )
+            )
+        );
+
+        $linkData = $this->setupContent($linkData);
+
+        $client->request('DELETE', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        $client->request('GET', '/api/nodes/' . $deleteData[0]['id'] . '?webspace=sulu_io&language=en');
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
     public function testPut()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->beforeTestGet();
+
+        $data = array(
+            array(
+                'template' => 'default',
+                'title' => 'test1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'template' => 'default',
+                'title' => 'test2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test2',
+                'article' => 'Test'
+            )
+        );
+
+        $data = $this->setUpContent($data);
 
         $data[0]['title'] = 'test123';
         $data[0]['tags'] = array('new tag');
@@ -772,7 +840,31 @@ class NodeControllerTest extends SuluTestCase
     public function testSmallResponse()
     {
         $client = $this->createAuthenticatedClient();
-        $data = $this->beforeTestGet();
+
+        $data = array(
+            array(
+                'template' => 'default',
+                'title' => 'test1',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test1',
+                'article' => 'Test'
+            ),
+            array(
+                'template' => 'default',
+                'title' => 'test2',
+                'tags' => array(
+                    'tag1',
+                    'tag2'
+                ),
+                'url' => '/test2',
+                'article' => 'Test'
+            )
+        );
+
+        $data = $this->setUpContent($data);
 
         $client->request('GET', '/api/nodes/' . $data[0]['id'] . '?webspace=sulu_io&language=en&complete=false');
 
@@ -1209,5 +1301,24 @@ class NodeControllerTest extends SuluTestCase
         $this->assertEquals($data['url'], $result['url']);
         $this->assertContains('de', $result['concreteLanguages']);
         $this->assertContains('en', $result['concreteLanguages']);
+    }
+
+    private function setUpContent($data)
+    {
+        /** @var ContentMapperInterface $mapper */
+        $mapper = self::$kernel->getContainer()->get('sulu.content.mapper');
+
+        $mapper->saveStartPage(array('title' => 'Start Page'), 'default', 'sulu_io', 'de', 1);
+
+        $client = $this->createAuthenticatedClient();
+
+        for ($i = 0; $i < count($data); $i++) {
+            $template = $data[$i]['template'];
+            unset($data[$i]['template']);
+            $client->request('POST', '/api/nodes?template=' . $template . '&webspace=sulu_io&language=en', $data[$i]);
+            $data[$i] = (array) json_decode($client->getResponse()->getContent(), true);
+        }
+
+        return $data;
     }
 }

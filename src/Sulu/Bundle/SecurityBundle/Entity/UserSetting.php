@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * UserSetting
@@ -28,7 +29,7 @@ class UserSetting
     private $key;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var UserInterface
      * @Exclude
      */
     private $user;
@@ -82,10 +83,10 @@ class UserSetting
     /**
      * Set user
      *
-     * @param \Sulu\Component\Security\UserInterface $user
+     * @param UserInterface $user
      * @return UserSetting
      */
-    public function setUser(\Sulu\Component\Security\UserInterface $user)
+    public function setUser(UserInterface $user)
     {
         $this->user = $user;
 
@@ -95,7 +96,7 @@ class UserSetting
     /**
      * Get user
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getUser()
     {

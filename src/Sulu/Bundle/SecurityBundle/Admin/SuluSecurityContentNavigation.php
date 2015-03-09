@@ -4,7 +4,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
-use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SuluSecurityContentNavigation implements ContentNavigationInterface
 {

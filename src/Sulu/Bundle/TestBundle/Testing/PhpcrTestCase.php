@@ -364,7 +364,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareSecurityContext()
     {
         if ($this->securityContext === null) {
-            $userMock = $this->getMock('\Sulu\Component\Security\UserInterface');
+            $userMock = $this->getMock('\Sulu\Component\Security\Authentication\UserInterface');
             $userMock->expects($this->any())
                 ->method('getId')
                 ->will($this->returnValue(1));
