@@ -50,7 +50,7 @@ class HttpCache extends HttpCacheAbstract
         if ($this->getStore()->purge($request->getUri())) {
             $response->setStatusCode(200, 'Purged');
         } else {
-            $response->setStatusCode(404, 'Not purged');
+            $response->setStatusCode(200, 'Not purged');
         }
 
         return $response;

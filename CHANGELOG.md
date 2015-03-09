@@ -10,12 +10,14 @@ CHANGELOG for Sulu
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
+    * BUGFIX      #905 [ContactBundle]   Added Functionality for completing contact addresses
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
-    * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all 
+    * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all
                                          account-addresses in database. 'app/console sulu:contacts:data:complete -d state'
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
     * FEATURE     #838 [AdminBundle]     Login UI
+    * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
 
 * dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
