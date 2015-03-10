@@ -62,7 +62,7 @@ abstract class SuluTestCase extends BaseTestCase
     {
         $this->db('ORM')->getOm()->getConnection()->close();
     }
-    
+
     /**
      * Return the test user (which is provided / created
      * by the test_user_provider in this Bundle at runtime)
@@ -188,5 +188,4 @@ abstract class SuluTestCase extends BaseTestCase
             $em->getConnection()->executeUpdate("SET foreign_key_checks = 1;");
         }
     }
-
 }
