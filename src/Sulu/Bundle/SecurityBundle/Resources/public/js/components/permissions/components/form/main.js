@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config', 'widget-groups'], function(AppConfig, WidgetGroups) {
 
     'use strict';
 
@@ -75,11 +75,16 @@ define(['app-config'], function(AppConfig) {
 
         name: 'Sulu Security Permissions Form',
 
-        layout: {
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
-            }
+        layout: function() {
+            return {
+                content: {
+                    width: (WidgetGroups.exists('contact-detail') ? 'max' : 'fixed')
+                },
+                sidebar: {
+                    width: 'fixed',
+                    cssClasses: 'sidebar-padding-50'
+                }
+            };
         },
 
         templates: ['/admin/security/template/permission/form'],
@@ -112,7 +117,7 @@ define(['app-config'], function(AppConfig) {
 
             this.sandbox.form.create(this.formId);
 
-            if (!!this.options.data.contact && !!this.options.data.contact.id) {
+            if (!!this.options.data.contact && !!this.options.data.contact.id && WidgetGroups.exists('contact-detail')) {
                 this.initSidebar(
                     '/admin/widget-groups/contact-detail?contact=',
                     this.options.data.contact.id

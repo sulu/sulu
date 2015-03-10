@@ -28,21 +28,6 @@ class SuluContactExtension extends Extension implements PrependExtensionInterfac
      */
     public function prepend(ContainerBuilder $container)
     {
-        foreach ($container->getExtensions() as $name => $extension) {
-            if ($name === 'sulu_admin') {
-                $container->prependExtensionConfig(
-                    $name,
-                    array(
-                        'widget_groups' => array(
-                            'contact-info' => array('mappings' => array()),
-                            'account-info' => array('mappings' => array()),
-                            'contact-detail' => array('mappings' => array()),
-                            'account-detail' => array('mappings' => array())
-                        )
-                    )
-                );
-            }
-        }
     }
 
     /**

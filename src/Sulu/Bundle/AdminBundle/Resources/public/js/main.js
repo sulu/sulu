@@ -16,6 +16,7 @@ require.config({
 
         'app-config': 'components/app-config/main',
         'config': 'components/config/main',
+        'widget-groups': 'components/sidebar/widget-groups',
         'cultures': 'vendor/globalize/cultures',
         'husky': 'vendor/husky/husky',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',

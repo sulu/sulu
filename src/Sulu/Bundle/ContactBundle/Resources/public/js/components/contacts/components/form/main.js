@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config'], function(Config) {
+define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
     'use strict';
 
@@ -32,14 +32,16 @@ define(['config'], function(Config) {
 
             view: true,
 
-            layout: {
-                content: {
-                    width: 'max'
-                },
-                sidebar: {
-                    width: 'fixed',
-                    cssClasses: 'sidebar-padding-50'
-                }
+            layout: function() {
+                return {
+                    content: {
+                        width: (WidgetGroups.exists('contact-detail') ? 'max' : 'fixed')
+                    },
+                    sidebar: {
+                        width: 'fixed',
+                        cssClasses: 'sidebar-padding-50'
+                    }
+                };
             },
 
             templates: ['/admin/contact/template/contact/form'],
@@ -74,7 +76,7 @@ define(['config'], function(Config) {
                 setHeaderToolbar.call(this);
                 this.listenForChange();
 
-                if (!!this.options.data && !!this.options.data.id) {
+                if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('contact-detail')) {
                     this.initSidebar(
                         '/admin/widget-groups/contact-detail?contact=',
                         this.options.data.id

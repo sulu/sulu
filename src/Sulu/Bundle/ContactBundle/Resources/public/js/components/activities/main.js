@@ -7,9 +7,11 @@
  * with this source code in the file LICENSE.
  */
 
-define(
-    ['text!sulucontact/components/activities/activity.form.html'],
-    function(ActivityForm) {
+define([
+        'text!sulucontact/components/activities/activity.form.html',
+        'widget-groups'
+    ],
+    function(ActivityForm, WidgetGroups) {
 
         'use strict';
 
@@ -55,14 +57,18 @@ define(
 
             view: true,
 
-            layout: {
-                content: {
-                    width: 'max'
-                },
-                sidebar: {
-                    width: 'fixed',
-                    cssClasses: 'sidebar-padding-50'
-                }
+            layout: function() {
+                var type = !!this.contact ? 'contact' : 'account';
+
+                return {
+                    content: {
+                        width: (WidgetGroups.exists(type + '-detail') ? 'max' : 'fixed')
+                    },
+                    sidebar: {
+                        width: 'fixed',
+                        cssClasses: 'sidebar-padding-50'
+                    }
+                };
             },
 
             templates: ['/admin/contact/template/contact/activities'],
@@ -81,9 +87,9 @@ define(
                 // get defaults for priorities/statuses/types
                 this.sandbox.emit('sulu.contacts.activities.get.defaults');
 
-                if (!!this.contact && !!this.contact.id) {
+                if (!!this.contact && !!this.contact.id && WidgetGroups.exists('contact-detail')) {
                     this.initSidebar(this.options.widgetUrl, this.contact.id);
-                } else if (!!this.account && !!this.account.id) {
+                } else if (!!this.account && !!this.account.id && WidgetGroups.exists('account-detail')) {
                     this.initSidebar(this.options.widgetUrl, this.account.id);
                 }
             },
@@ -323,7 +329,7 @@ define(
                     function(ids) {
                         if (ids.length > 0) {
                             this.sandbox.emit(
-                                    'sulu.contacts.' + this.instanceName + '.activities.delete', ids);
+                                'sulu.contacts.' + this.instanceName + '.activities.delete', ids);
                         }
                     }.bind(this));
             }
