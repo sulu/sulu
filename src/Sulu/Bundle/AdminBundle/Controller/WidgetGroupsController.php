@@ -43,7 +43,7 @@ class WidgetGroupsController extends Controller
 
             return new Response($content, $content !== '' ? 200 : 204);
         } catch (WidgetException $ex) {
-            return new Response($ex->getMessage());
+            return new Response($ex->getMessage(), 404);
         }
     }
 
