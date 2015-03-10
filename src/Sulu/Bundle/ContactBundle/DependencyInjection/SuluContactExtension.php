@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -20,8 +21,30 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SuluContactExtension extends Extension
+class SuluContactExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function prepend(ContainerBuilder $container)
+    {
+        foreach ($container->getExtensions() as $name => $extension) {
+            if ($name === 'sulu_admin') {
+                $container->prependExtensionConfig(
+                    $name,
+                    array(
+                        'widget_groups' => array(
+                            'contact-info' => array('mappings' => array()),
+                            'account-info' => array('mappings' => array()),
+                            'contact-detail' => array('mappings' => array()),
+                            'account-detail' => array('mappings' => array())
+                        )
+                    )
+                );
+            }
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
