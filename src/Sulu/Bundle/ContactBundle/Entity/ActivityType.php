@@ -117,4 +117,27 @@ class ActivityType extends ApiEntity implements \JsonSerializable
             'name' => $this->getName()
         );
     }
+
+    /**
+     * Add activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     * @return ActivityType
+     */
+    public function addActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+
+        return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     */
+    public function removeActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
 }

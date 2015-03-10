@@ -182,4 +182,42 @@ class BankAccount
     {
         return $this->bankName;
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
+
+
+    /**
+     * Add contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @return BankAccount
+     */
+    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts[] = $contacts;
+
+        return $this;
+    }
+
+    /**
+     * Remove contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     */
+    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts->removeElement($contacts);
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
 }

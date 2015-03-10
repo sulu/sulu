@@ -1338,4 +1338,73 @@ class Account extends ApiEntity implements AuditableInterface
     {
         return $this->medias;
     }
+
+    /**
+     * Add accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @return Account
+     */
+    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses[] = $accountAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     */
+    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses->removeElement($accountAddresses);
+    }
+
+    /**
+     * Add children
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @return Account
+     */
+    public function addChild(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    {
+        $this->children[] = $children;
+
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     */
+    public function removeChild(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Add activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     * @return Account
+     */
+    public function addActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+
+        return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
+     */
+    public function removeActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
 }
