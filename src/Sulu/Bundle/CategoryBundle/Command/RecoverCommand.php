@@ -43,6 +43,14 @@ class RecoverCommand extends ContainerAwareCommand
             );
     }
 
+    /**
+     * Execute command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $em = $this->getEntityManager();
@@ -63,7 +71,6 @@ class RecoverCommand extends ContainerAwareCommand
                 $em->flush();
                 $success = true;
             }
-
         } else {
             $output->writeln('<info>Your categories are fine. No errors found<info>');
         }
@@ -103,7 +110,7 @@ class RecoverCommand extends ContainerAwareCommand
                 $output->writeln('<info>No categories without parents detected<info>');
             }
         }
-        
+
         if (!$force) {
             $output->writeln(sprintf('Call this command with <info>--force</info> option to perform recovery.'));
         }
@@ -112,7 +119,7 @@ class RecoverCommand extends ContainerAwareCommand
             $output->writeln('<info>Recovery complete<info>');
         }
     }
-    
+
     /**
      * Find number of categories where difference to parents depth > 1
      *
@@ -131,9 +138,9 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * find number of categories that have no parent but depth > 0
+     * Find number of categories that have no parent but depth > 0
      *
-     * @return mixed
+     * @return int Number of categories without a parent
      */
     private function findCategoriesWithoutParents()
     {
@@ -146,11 +153,10 @@ class RecoverCommand extends ContainerAwareCommand
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-
     /**
-     * fix categories where difference to parents depth
+     * Fix categories where difference to parents depth
      *
-     * @return object
+     * @return int|bool Number of affected rows
      */
     private function fixWrongDepthGap()
     {
@@ -160,7 +166,7 @@ class RecoverCommand extends ContainerAwareCommand
                 JOIN ca_categories c1 ON c2.idCategoriesParent = c1.id
                 SET c2.depth = (c1.depth + 1)
                 WHERE ( c2.depth - 1 ) <> c1.depth";
-        
+
         $statement = $this->getEntityManager()->getConnection()->prepare($sql);
         if ($statement->execute()) {
             return $statement->rowCount();
@@ -170,7 +176,7 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * set every category where depth > 0 and has no parents to depth 0
+     * Set every category where depth > 0 and has no parents to depth 0
      */
     private function fixCategoriesWithoutParents()
     {
