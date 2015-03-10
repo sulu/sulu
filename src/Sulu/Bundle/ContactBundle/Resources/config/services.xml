@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_contact.admin.class">Sulu\Bundle\ContactBundle\Admin\SuluContactAdmin</parameter>
+        <parameter key="sulu_contact.admin.content_navigation.class">Sulu\Bundle\ContactBundle\Admin\SuluContactContentNavigation</parameter>
+        <parameter key="sulu_contact.js_config.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
+        <parameter key="sulu_contact.import.class">Sulu\Bundle\ContactBundle\Import\Import</parameter>
+        <parameter key="sulu_contact.data_completer.class">Sulu\Bundle\ContactBundle\Import\DataCompleter</parameter>
+        <parameter key="sulu_contact.account_listener.class">Sulu\Bundle\ContactBundle\EventListener\AccountListener</parameter>
+        <parameter key="sulu_contact.contact_manager.class">Sulu\Bundle\ContactBundle\Contact\ContactManager</parameter>
+        <parameter key="sulu_contact.account_manager.class">Sulu\Bundle\ContactBundle\Contact\AccountManager</parameter>
+        <parameter key="sulu_contact.twig.class">Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension</parameter>
+        <parameter key="sulu_contact.twig.cache.class">Doctrine\Common\Cache\ArrayCache</parameter>
+        <parameter key="sulu_contact.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
+        <parameter key="sulu_contact.user_repository.entity">SuluSecurityBundle:User</parameter>
+        <parameter key="sulu_contact.account.entity">SuluContactBundle:Account</parameter>
+        <parameter key="sulu_contact.account_repository.class">Sulu\Bundle\ContactBundle\Entity\AccountRepository</parameter>
+        <parameter key="sulu_contact.contact.entity">SuluContactBundle:Contact</parameter>
+        <parameter key="sulu_contact.contact_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactRepository</parameter>
+    </parameters>
+    <services>
+        <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument>%sulu_admin.name%</argument>
+        </service>
+        <service id="sulu_contact.admin.content_navigation" class="%sulu_contact.admin.content_navigation.class%">
+            <tag name="sulu.context" context="admin"/>
+        </service>
+        <service id="sulu_contact.import" class="%sulu_contact.import.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_contact.account_manager"/>
+            <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument>%sulu_contact.defaults%</argument>
+            <argument>%sulu_contact.account_types%</argument>
+            <argument>%sulu_contact.form_of_address%</argument>
+        </service>
+        <service id="sulu_contact.data_completer" class="%sulu_contact.data_completer.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_contact.account_repository"/>
+        </service>
+        <service id="sulu_contact.account_repository" class="%sulu_contact.account_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine">
+            <argument>%sulu_contact.account.entity%</argument>
+        </service>
+        <service id="sulu_contact.contact_repository" class="%sulu_contact.contact_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine">
+            <argument>%sulu_contact.contact.entity%</argument>
+        </service>
+        <service id="sulu_contact.js_config" class="%sulu_contact.js_config.class%">
+            <tag name="sulu.js_config"/>
+            <argument>sulu-contact</argument>
+            <argument type="collection">
+                <argument key="accountTypes">%sulu_contact.account_types%</argument>
+            </argument>
+        </service>
+        <service id="sulu_contact.account_listener" class="%sulu_contact.account_listener.class%">
+            <tag name="doctrine.event_listener" event="postPersist"/>
+        </service>
+        <service id="sulu_contact.account_manager" class="%sulu_contact.account_manager.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+        </service>
+        <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_tag.tag_manager"/>
+        </service>
+        <service id="sulu_contact.user_repository" class="%sulu_contact.user_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine">
+            <argument>%sulu_contact.user_repository.entity%</argument>
+        </service>
+        <service id="sulu_contact.twig.cache" class="%sulu_contact.twig.cache.class%"/>
+        <service id="sulu_contact.twig" class="%sulu_contact.twig.class%">
+            <tag name="twig.extension"/>
+            <argument type="service" id="sulu_contact.twig.cache"/>
+            <argument type="service" id="sulu_contact.user_repository"/>
+        </service>
+    </services>
+</container>
