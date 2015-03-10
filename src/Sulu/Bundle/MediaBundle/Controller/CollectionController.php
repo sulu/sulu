@@ -83,9 +83,9 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             // filter children
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
-            $limit = intval($request->get('limit', $listRestHelper->getLimit()));
-            $offset = intval(($request->get('page', 1) - 1)) * $limit;
-            $search = $request->get('search', '');
+            $limit = $listRestHelper->getLimit();
+            $offset = $listRestHelper->getOffset();
+            $search = $listRestHelper->getSearchPattern();
 
             $filter = array(
                 'limit' => $limit,
@@ -121,9 +121,9 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
-            $limit = $request->get('limit', $listRestHelper->getLimit());
-            $offset = ($request->get('page', 1) - 1) * $limit;
-            $search = $request->get('search', '');
+            $limit = $listRestHelper->getLimit();
+            $offset = $listRestHelper->getOffset();
+            $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();

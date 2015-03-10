@@ -60,7 +60,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function findCollectionSet(Collection $collection, $depth = 0, $filter = array())
     {
         try {
-            $sql = sprintf(
+            $dql = sprintf(
                 'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionMedia, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
@@ -76,16 +76,16 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $this->_entityName
             );
 
-            if (array_key_exists('search', $filter) && $filter['search'] !== '') {
-                $sql .= ' AND collectionMeta.title LIKE :search';
+            if (array_key_exists('search', $filter) && $filter['search'] !== null) {
+                $dql .= ' AND collectionMeta.title LIKE :search';
             }
 
             if (array_key_exists('locale', $filter)) {
-                $sql .= ' AND collectionMeta.locale = :locale';
+                $dql .= ' AND collectionMeta.locale = :locale';
             }
 
             $query = new Query($this->_em);
-            $query->setDQL($sql);
+            $query->setDQL($dql);
             $query->setParameter('maxDepth', intval($depth));
             $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
             $query->setParameter('lft', $collection->getLft());
@@ -93,7 +93,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query->setParameter('depth', $collection->getDepth());
             $query->setParameter('id', $collection->getId());
 
-            if (array_key_exists('search', $filter) && $filter['search'] !== '') {
+            if (array_key_exists('search', $filter) && $filter['search'] !== null) {
                 $query->setParameter('search', '%' . $filter['search'] . '%');
             }
 
@@ -121,7 +121,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function findRootCollectionSet($offset, $limit, $search, $depth = 0)
     {
         try {
-            $sql = sprintf(
+            $dql = sprintf(
                 'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
@@ -135,15 +135,15 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $this->_entityName
             );
 
-            if ($search !== '') {
-                $sql .= ' AND collectionMeta.title LIKE :search';
+            if ($search !== null) {
+                $dql .= ' AND collectionMeta.title LIKE :search';
             }
 
             $query = new Query($this->_em);
-            $query->setDQL($sql);
+            $query->setDQL($dql);
             $query->setParameter('maxDepth', intval($depth));
             $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
-            if ($search !== '') {
+            if ($search !== null) {
                 $query->setParameter('search', '%' . $search . '%');
             }
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);

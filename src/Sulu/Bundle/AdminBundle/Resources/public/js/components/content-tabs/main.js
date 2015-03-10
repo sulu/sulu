@@ -86,7 +86,7 @@ define([], function() {
             // load component after click
             this.sandbox.on('husky.tabs.header.item.select', this.startTabComponent.bind(this));
 
-            // load component after click
+            // unset an option which is injected in this component
             this.sandbox.on('husky.tabs.header.option.unset', this.unsetOption.bind(this));
         },
 
