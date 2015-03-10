@@ -251,7 +251,7 @@ define([], function() {
         hideColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector),
                 $parent = this.sandbox.dom.parent($column);
-            
+
             this.changeToFixedWidth();
             this.sandbox.dom.removeClass($parent, constants.visibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.noVisibleSidebarClass);
@@ -344,6 +344,11 @@ define([], function() {
                     var $widget;
                     this.emptySidebar(false);
                     this.loadWidget(url).then(function(widget) {
+                        if (widget === undefined || widget.length === '') {
+                            this.sandbox.dom.css(this.$el, 'display', 'none');
+                            return;
+                        }
+
                         $widget = this.sandbox.dom.createElement(
                             this.sandbox.util.template(
                                 widget, {translate: this.sandbox.translate}
@@ -354,6 +359,8 @@ define([], function() {
                         });
                         this.sandbox.dom.append(this.$el, $widget);
                         this.sandbox.start(this.$el, $widget);
+
+                        this.sandbox.dom.css(this.$el, 'display', 'block');
                     }.bind(this));
                 }
             } else {
@@ -364,6 +371,7 @@ define([], function() {
                     $el: $element
                 });
                 this.sandbox.dom.append(this.$el, $element);
+                this.sandbox.dom.css(this.$el, 'display', 'block');
             }
         },
 
