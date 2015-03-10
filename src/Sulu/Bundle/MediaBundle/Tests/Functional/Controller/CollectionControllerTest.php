@@ -145,7 +145,7 @@ class CollectionControllerTest extends SuluTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode(), $client->getResponse()->getContent());
 
         $this->assertNotEmpty($response->_embedded->collections);
 

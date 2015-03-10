@@ -57,7 +57,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet(Collection $collection, $depth = 0, $filter = array())
+    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null)
     {
         try {
             $dql = sprintf(
@@ -69,12 +69,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                         LEFT JOIN n.children AS collectionChildren
                         LEFT JOIN n.media AS collectionMedia
                         LEFT JOIN collectionParent.meta AS parentMeta
-                 WHERE n.lft BETWEEN :lft AND :rgt
-                   AND (n.depth <= :depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)
-                   AND n.id != :id',
-                $this->_entityName,
+                 WHERE (n.depth <= :depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)',
                 $this->_entityName
             );
+
+            if ($collection !== null) {
+                $dql .= ' AND n.lft BETWEEN :lft AND :rgt AND n.id != :id';
+            }
 
             if (array_key_exists('search', $filter) && $filter['search'] !== null) {
                 $dql .= ' AND collectionMeta.title LIKE :search';
@@ -88,10 +89,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query->setDQL($dql);
             $query->setParameter('maxDepth', intval($depth));
             $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
-            $query->setParameter('lft', $collection->getLft());
-            $query->setParameter('rgt', $collection->getRgt());
-            $query->setParameter('depth', $collection->getDepth());
-            $query->setParameter('id', $collection->getId());
+            $query->setParameter('depth', $collection !== null ? $collection->getDepth() : 0);
+
+            if ($collection !== null) {
+                $query->setParameter('lft', $collection->getLft());
+                $query->setParameter('rgt', $collection->getRgt());
+                $query->setParameter('id', $collection->getId());
+            }
 
             if (array_key_exists('search', $filter) && $filter['search'] !== null) {
                 $query->setParameter('search', '%' . $filter['search'] . '%');
@@ -110,48 +114,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             return new Paginator($query);
-        } catch (NoResultException $ex) {
-            return array();
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function findRootCollectionSet($offset, $limit, $search, $depth = 0)
-    {
-        try {
-            $dql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, collectionMedia, parentMeta, collectionChildren
-                 FROM %s AS n
-                        LEFT JOIN n.meta AS collectionMeta
-                        LEFT JOIN n.type AS collectionType
-                        LEFT JOIN n.parent AS collectionParent
-                        LEFT JOIN n.children AS collectionChildren
-                        LEFT JOIN n.media AS collectionMedia
-                        LEFT JOIN collectionParent.meta AS parentMeta
-                 WHERE (n.depth <= :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)',
-                $this->_entityName,
-                $this->_entityName
-            );
-
-            if ($search !== null) {
-                $dql .= ' AND collectionMeta.title LIKE :search';
-            }
-
-            $query = new Query($this->_em);
-            $query->setDQL($dql);
-            $query->setParameter('maxDepth', intval($depth));
-            $query->setParameter('maxDepthPlusOne', intval($depth) + 1);
-            if ($search !== null) {
-                $query->setParameter('search', '%' . $search . '%');
-            }
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
-            $query->setFirstResult($offset);
-            $query->setMaxResults($limit);
-
-            return new Paginator($query, true);
         } catch (NoResultException $ex) {
             return array();
         }
