@@ -701,7 +701,8 @@ class ContactController extends AbstractContactController
                     && $this->processFaxes($contact, $request->get('faxes', array()))
                     && $this->processTags($contact, $request->get('tags', array()))
                     && $this->processUrls($contact, $request->get('urls', array()))
-                    && $this->processCategories($contact, $request->get('categories', array())))
+                    && $this->processCategories($contact, $request->get('categories', array()))
+                    && $this->processBankAccounts($contact, $request->get('bankAccounts', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);
                 }

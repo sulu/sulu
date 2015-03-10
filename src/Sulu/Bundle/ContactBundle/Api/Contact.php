@@ -20,8 +20,10 @@ use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -707,6 +709,27 @@ class Contact extends ApiWrapper
     public function getTags()
     {
         return $this->entity->getTagNameArray();
+    }
+
+    /**
+     * Get bank accounts
+     *
+     * @return array
+     * @VirtualProperty
+     * @SerializedName("bankAccounts")
+     * @Groups({"fullContact"})
+     */
+    public function getBankAccounts()
+    {
+        $bankAccounts = array();
+        if ($this->entity->getBankAccounts()) {
+            foreach ($this->entity->getBankAccounts() as $bankAccount) {
+                /** @var BankAccountEntity $bankAccount */
+                $bankAccounts[] = new BankAccount($bankAccount);
+            }
+        }
+
+        return $bankAccounts;
     }
 
     /**

@@ -41,7 +41,7 @@ class BankAccount extends ApiWrapper
      * @return int
      * @VirtualProperty
      * @SerializedName("id")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     public function getId()
     {
@@ -67,7 +67,7 @@ class BankAccount extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("bic")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     public function getBic()
     {
@@ -93,7 +93,7 @@ class BankAccount extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("iban")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     public function getIban()
     {
@@ -119,7 +119,7 @@ class BankAccount extends ApiWrapper
      * @return boolean
      * @VirtualProperty
      * @SerializedName("public")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     public function getPublic()
     {
@@ -145,7 +145,7 @@ class BankAccount extends ApiWrapper
      * @return string
      * @VirtualProperty
      * @SerializedName("bankName")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     public function getBankName()
     {

@@ -54,6 +54,7 @@ class ContactRepository extends EntityRepository
             ->leftJoin('accountContacts.position', 'position')
             ->leftJoin('u.medias', 'medias')
             ->leftJoin('u.categories', 'categories')
+            ->leftJoin('u.bankAccounts', 'bankAccounts')
             ->addSelect('position')
             ->addSelect('title')
             ->addSelect('accountContacts')
@@ -78,6 +79,7 @@ class ContactRepository extends EntityRepository
             ->addSelect('urlType')
             ->addSelect('medias')
             ->addSelect('categories')
+            ->addSelect('bankAccounts')
             ->where('u.id=:id');
 
         $query = $qb->getQuery();

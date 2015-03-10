@@ -132,6 +132,11 @@ abstract class AbstractContactController extends RestController implements Class
                 $this->addTag($contact, $tag);
             }
         }
+
+        // process details
+        if (!is_null($request->get('bankAccounts'))) {
+            $this->processBankAccounts($contact, $request->get('bankAccounts', array()));
+        }
     }
 
     /**
@@ -160,7 +165,14 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addEmail($contact, $email);
         };
 
-        $result = $this->getRestHelper()->processSubEntities($contact->getEmails(), $emails, $get, $add, $update, $delete);
+        $result = $this->getRestHelper()->processSubEntities(
+            $contact->getEmails(),
+            $emails,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
         // check main
         $this->getContactManager()->setMainEmail($contact);
 
@@ -279,7 +291,14 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addCategories($contact, $category);
         };
 
-        $result = $this->getRestHelper()->processSubEntities($contact->getCategories(), $categories, $get, $add, null, $delete);
+        $result = $this->getRestHelper()->processSubEntities(
+            $contact->getCategories(),
+            $categories,
+            $get,
+            $add,
+            null,
+            $delete
+        );
 
         return $result;
     }
@@ -304,7 +323,7 @@ abstract class AbstractContactController extends RestController implements Class
         if (!$category) {
             throw new EntityNotFoundException($categoryEntity, $data['id']);
         } else {
-           $contact->addCategorie($category);
+            $contact->addCategorie($category);
         }
 
         return $success;
@@ -394,7 +413,14 @@ abstract class AbstractContactController extends RestController implements Class
             return $this->addPhone($contact, $phone);
         };
 
-        $result = $this->getRestHelper()->processSubEntities($contact->getPhones(), $phones, $get, $add, $update, $delete);
+        $result = $this->getRestHelper()->processSubEntities(
+            $contact->getPhones(),
+            $phones,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
 
         // check main
         $this->getContactManager()->setMainPhone($contact);
@@ -489,7 +515,14 @@ abstract class AbstractContactController extends RestController implements Class
             return true;
         };
 
-        $result = $this->getRestHelper()->processSubEntities($contact->getFaxes(), $faxes, $get, $add, $update, $delete);
+        $result = $this->getRestHelper()->processSubEntities(
+            $contact->getFaxes(),
+            $faxes,
+            $get,
+            $add,
+            $update,
+            $delete
+        );
         // check main
         $this->getContactManager()->setMainFax($contact);
 
@@ -880,7 +913,7 @@ abstract class AbstractContactController extends RestController implements Class
             $entity->setBankName($data['bankName']);
             $entity->setBic($data['bic']);
             $entity->setIban($data['iban']);
-            $entity->setPublic($data['public']);
+            $entity->setPublic(array_key_exists('public', $data) ? $data['public'] : false);
 
             $em->persist($entity);
             $contact->addBankAccount($entity);
@@ -943,7 +976,14 @@ abstract class AbstractContactController extends RestController implements Class
             return true;
         };
 
-        $result = $this->getRestHelper()->processSubEntities($this->getContactManager()->getAddressRelations($contact), $addresses, $getAddressId, $add, $update, $delete);
+        $result = $this->getRestHelper()->processSubEntities(
+            $this->getContactManager()->getAddressRelations($contact),
+            $addresses,
+            $getAddressId,
+            $add,
+            $update,
+            $delete
+        );
 
         // check if main exists, else take first address
         $this->checkAndSetMainAddress($this->getContactManager()->getAddressRelations($contact));
@@ -958,10 +998,10 @@ abstract class AbstractContactController extends RestController implements Class
      */
     protected function getPosition($id)
     {
-      if ($id) {
-          return $this->getDoctrine()->getRepository(self::$positionEntityName)->find($id);
-      }
+        if ($id) {
+            return $this->getDoctrine()->getRepository(self::$positionEntityName)->find($id);
+        }
 
-      return null;
+        return null;
     }
 }
