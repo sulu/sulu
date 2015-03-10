@@ -373,15 +373,19 @@ class PhpcrMapper extends RlpMapper
         $workspace->copy($absSrcPath, $absDestPath);
         $destNode = $routes->getNode(ltrim($dest, '/'));
         $destNode->setProperty('sulu:created', new DateTime());
+        $session->save();
+        $session->refresh(true);
 
         // change old route node to history
         $this->changePathToHistory($routeNode, $session, $absSrcPath, $absDestPath);
+        $session->save();
 
         // get all old routes (in old route tree)
         $qm = $workspace->getQueryManager();
         $sql = "SELECT *
-                FROM [sulu:path]
-                WHERE ISDESCENDANTNODE('" . $absSrcPath . "')";
+                FROM [nt:unstructured]
+                WHERE ISDESCENDANTNODE('" . $absSrcPath . "')
+                AND [jcr:mixinTypes] = 'sulu:path'";
 
         $query = $qm->createQuery($sql, 'JCR-SQL2');
         $result = $query->execute();

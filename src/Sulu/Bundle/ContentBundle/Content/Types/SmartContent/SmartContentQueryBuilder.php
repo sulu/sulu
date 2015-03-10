@@ -166,7 +166,10 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertiesSelect($locale, &$additionalFields)
     {
-        foreach ($this->propertiesConfig as $alias => $propertyName) {
+        foreach ($this->propertiesConfig as $parameter) {
+            $alias = $parameter->getName();
+            $propertyName = $parameter->getValue();
+
             if (strpos($propertyName, '.') !== false) {
                 $parts = explode('.', $propertyName);
 

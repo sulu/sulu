@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\SecurityBundle;
 
+use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AddContentNavigationPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\CurrentUserDataCompilerPass;
-use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\SecurityCheckerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -22,6 +22,6 @@ class SuluSecurityBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new CurrentUserDataCompilerPass());
-        $container->addCompilerPass(new SecurityCheckerCompilerPass());
+        $container->addCompilerPass(new AddContentNavigationPass());
     }
 }

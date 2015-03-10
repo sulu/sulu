@@ -263,7 +263,7 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritdoc}
      */
     public function toArray($depth = null)
     {
@@ -271,7 +271,7 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritDoc}
      */
     public function getStructure()
     {
@@ -279,7 +279,7 @@ class TranslatedProperty implements PropertyInterface
     }
 
     /**
-     * {@inheritdoc
+     * {@inheritDoc}
      */
     public function setStructure($structure)
     {

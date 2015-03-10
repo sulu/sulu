@@ -21,7 +21,7 @@ use Sulu\Bundle\TagBundle\Tag\Exception\TagAlreadyExistsException;
 use Sulu\Bundle\TagBundle\Tag\Exception\TagNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -157,11 +157,9 @@ class TagManager implements TagManagerInterface
 
             // update data
             $tag->setName($name);
-            $tag->setChanged(new \DateTime());
             $tag->setChanger($user);
 
             if (!$id) {
-                $tag->setCreated(new \DateTime());
                 $tag->setCreator($user);
                 $this->em->persist($tag);
             }

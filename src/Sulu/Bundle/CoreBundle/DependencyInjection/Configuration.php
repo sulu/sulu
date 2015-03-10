@@ -28,15 +28,16 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_core');
+        $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();
         $this->getPhpcrConfiguration($children);
         $this->getContentConfiguration($children);
         $this->getWebspaceConfiguration($children);
-        $this->getHttpCacheConfiguration($children);
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
         $this->getCacheConfiguration($children);
+        $this->getLocaleConfiguration($children);
         $children->end();
 
         return $treeBuilder;
@@ -48,6 +49,18 @@ class Configuration implements ConfigurationInterface
     private function getCoreConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sulu')->end();
+    }
+
+    /**
+     * @param NodeBuilder $rootNode
+     */
+    private function getLocaleConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('locales')
+            ->isRequired()
+            ->useAttributeAsKey('locale')
+            ->prototype('scalar')->end()
+        ->end();
     }
 
     /**
@@ -67,17 +80,6 @@ class Configuration implements ConfigurationInterface
                             ->defaultValue(300)
                         ->end()
                     ->end()
-                ->end()
-            ->end()
-        ->end();
-    }
-
-    private function getHttpCacheConfiguration(NodeBuilder $rootNode)
-    {
-        $rootNode->arrayNode('http_cache')
-            ->children()
-                ->scalarNode('type')
-                    ->defaultValue('SymfonyHttpCache')
                 ->end()
             ->end()
         ->end();
@@ -170,9 +172,6 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('route')
                             ->defaultValue('routes')
                         ->end()
-                        ->scalarNode('temp')
-                            ->defaultValue('temp')
-                        ->end()
                         ->scalarNode('snippet')
                             ->defaultValue('snippets')
                         ->end()
@@ -234,6 +233,9 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->scalarNode('snippet')
                                     ->defaultValue('default')
+                                ->end()
+                                ->scalarNode('homepage')
+                                    ->defaultValue('overview')
                                 ->end()
                             ->end()
                         ->end()

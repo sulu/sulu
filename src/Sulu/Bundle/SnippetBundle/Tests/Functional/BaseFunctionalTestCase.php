@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\StructureInterface;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
@@ -55,6 +56,18 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
             ));
         $this->hotel1 = $this->contentMapper->saveRequest($req);
 
+        // HOTELS (including page)
+        $req = ContentMapperRequest::create()
+            ->setType('snippet')
+            ->setTemplateKey('hotel')
+            ->setLocale('en')
+            ->setUserId(1)
+            ->setUuid($this->hotel1->getUuid())
+            ->setData(array(
+                'title' => 'Le grande budapest (en)'
+            ));
+        $this->hotel1 = $this->contentMapper->saveRequest($req);
+
         $req = ContentMapperRequest::create()
             ->setType('snippet')
             ->setTemplateKey('hotel')
@@ -76,11 +89,25 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
                 'title' => 'Hotels page',
                 'url' => '/hotels',
                 'hotels' => array(
-                    'ids' => array(
-                        $this->hotel1->getUuid(),
-                        $this->hotel2->getUuid(),
-                    ),
+                    $this->hotel1->getUuid(),
+                    $this->hotel2->getUuid(),
                 ),
+            ));
+
+        $hotels = $this->contentMapper->saveRequest($req);
+
+        $req = ContentMapperRequest::create()
+            ->setType('page')
+            ->setWebspaceKey('sulu_io')
+            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setTemplateKey('hotel_page')
+            ->setLocale('en')
+            ->setUserId(1)
+            ->setUuid($hotels->getUuid())
+            ->setIsShadow(true)
+            ->setShadowBaseLanguage('de')
+            ->setData(array(
+                'title' => 'Hotels'
             ));
 
         $this->contentMapper->saveRequest($req);

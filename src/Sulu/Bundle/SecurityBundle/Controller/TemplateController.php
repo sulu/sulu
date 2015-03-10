@@ -1,10 +1,11 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: mike
- * Date: 11.09.13
- * Time: 15:57
- * To change this template use File | Settings | File Templates.
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace Sulu\Bundle\SecurityBundle\Controller;

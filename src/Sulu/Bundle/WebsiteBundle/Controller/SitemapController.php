@@ -30,7 +30,13 @@ class SitemapController extends WebsiteController
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
         /** @var SitemapGeneratorInterface $sitemapGenerator */
         $sitemapGenerator = $this->get('sulu_website.sitemap');
-        $webspace = $requestAnalyzer->getCurrentWebspace();
+
+        $webspace = $requestAnalyzer->getWebspace();
+        $currentPortal = $requestAnalyzer->getPortal();
+        $defaultLocale = null;
+        if ($currentPortal !== null && ($defaultLocale = $currentPortal->getDefaultLocalization()) !== null) {
+            $defaultLocale = $defaultLocale->getLocalization();
+        }
 
         // remove empty first line
         // FIXME empty line in website kernel
@@ -41,7 +47,7 @@ class SitemapController extends WebsiteController
         $response->headers->set('Content-Type', 'text/xml');
 
         $localizations = array();
-        foreach ($requestAnalyzer->getCurrentPortal()->getLocalizations() as $localization) {
+        foreach ($requestAnalyzer->getPortal()->getLocalizations() as $localization) {
             $localizations[] = $localization->getLocalization();
         }
 
@@ -50,6 +56,7 @@ class SitemapController extends WebsiteController
             array(
                 'sitemap' => $sitemapGenerator->generateAllLocals($webspace->getKey(), true),
                 'locales' => $localizations,
+                'defaultLocale' => $defaultLocale,
                 'webspaceKey' => $webspace->getKey()
             ),
             $response

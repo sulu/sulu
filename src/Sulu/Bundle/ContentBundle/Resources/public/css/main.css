@@ -121,27 +121,51 @@
   line-height: 24px;
 }
 /* line 111, ../scss/modules/preview.scss */
+.sulu-preview-toolbar .right .refresh {
+  width: 30px;
+  overflow: hidden;
+  text-align: center;
+  padding-top: 5px;
+  height: 30px;
+  font-size: 18px;
+  padding-left: 2px;
+  line-height: 24px;
+  border-right: 1px solid #fff;
+}
+/* line 123, ../scss/modules/preview.scss */
+.sulu-preview-toolbar .right .start {
+  width: 30px;
+  overflow: hidden;
+  text-align: center;
+  padding-top: 5px;
+  height: 30px;
+  font-size: 18px;
+  padding-left: 2px;
+  line-height: 24px;
+  border-right: 1px solid #fff;
+}
+/* line 135, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions {
   border-right: 1px solid #fff;
   min-width: 125px;
 }
-/* line 114, ../scss/modules/preview.scss */
+/* line 139, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .drop-down-trigger {
   color: #fff;
   padding: 5px 10px;
 }
-/* line 119, ../scss/modules/preview.scss */
+/* line 144, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle {
   display: inline-block;
 }
-/* line 121, ../scss/modules/preview.scss */
+/* line 146, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-toggle::after {
   top: -1px;
   margin-left: 5px;
   margint-right: 0;
   border-top: 6px solid #fff;
 }
-/* line 129, ../scss/modules/preview.scss */
+/* line 154, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .right .resolutions .dropdown-menu {
   background: #21272E;
   color: #fff;
@@ -151,7 +175,7 @@
   border: 0;
   width: 100%;
 }
-/* line 141, ../scss/modules/preview.scss */
+/* line 166, ../scss/modules/preview.scss */
 .sulu-preview-toolbar .left {
   float: left;
   width: 30px;
@@ -166,18 +190,36 @@
 }
 
 @media only screen and (max-width: 780px) {
-  /* line 158, ../scss/modules/preview.scss */
+  /* line 183, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .resolutions {
     display: none;
   }
-  /* line 161, ../scss/modules/preview.scss */
+  /* line 186, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .new-window {
     border-radius: 0 0 0 2px;
   }
 }
-/* line 167, ../scss/modules/preview.scss */
+/* line 192, ../scss/modules/preview.scss */
 .hidden .sulu-preview-toolbar {
   display: none;
+}
+
+/* line 196, ../scss/modules/preview.scss */
+.v-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 101;
+  height: 40px;
+  width: 180px;
+}
+/* line 204, ../scss/modules/preview.scss */
+.v-center .btn {
+  margin-left: -90px;
+  margin-right: 90px;
+  overflow: hidden;
+  text-align: center;
+  color: #000000;
 }
 
 /* line 1, ../scss/modules/general.scss */
@@ -243,6 +285,11 @@
 #sulu-content-container .multiple-property .move::before {
   left: -18px;
   top: 2px;
+}
+
+/* line 62, ../scss/modules/general.scss */
+#changelog-container {
+  color: #999;
 }
 
 /* line 1, ../scss/modules/seo.scss */
@@ -451,6 +498,42 @@
 /* line 87, ../scss/modules/smart-content.scss */
 .smart-overlay-content .tag-list input {
   margin: 7px 0 0 0;
+}
+
+/**
+ * Copy locales
+ */
+/* line 5, ../scss/modules/node.scss */
+.copy-locales-overlay-content,
+.copy-locale-overlay-content {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 60px;
+}
+/* line 11, ../scss/modules/node.scss */
+.copy-locales-overlay-content label,
+.copy-locale-overlay-content label {
+  display: inline;
+  color: #000;
+}
+/* line 16, ../scss/modules/node.scss */
+.copy-locales-overlay-content label.disabled,
+.copy-locale-overlay-content label.disabled {
+  color: #999;
+  cursor: default;
+}
+/* line 21, ../scss/modules/node.scss */
+.copy-locales-overlay-content .info,
+.copy-locale-overlay-content .info {
+  font-size: 14px;
+  color: #999;
+}
+
+/* line 27, ../scss/modules/node.scss */
+#copy-locale-overlay-select {
+  margin-left: 20px;
+  margin-top: 10px;
+  width: 50%;
 }
 
 /* line 1, ../scss/modules/order-table.scss */

@@ -24,7 +24,7 @@ use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
@@ -56,7 +56,7 @@ class Contact extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("id")
-     * @Groups({"fullContact","partialContact"})
+     * @Groups({"fullContact","partialContact","select"})
      */
     public function getId()
     {
@@ -146,7 +146,7 @@ class Contact extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("fullName")
      * @return string
-     * @Groups({"fullContact","partialContact"})
+     * @Groups({"fullContact","partialContact","select"})
      */
     public function getFullName()
     {
@@ -242,19 +242,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Contact
-     */
-    public function setCreated($created)
-    {
-        $this->entity->setCreated($created);
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -265,19 +252,6 @@ class Contact extends ApiWrapper
     public function getCreated()
     {
         return $this->entity->getCreated();
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Contact
-     */
-    public function setChanged($changed)
-    {
-        $this->entity->setChanged($changed);
-
-        return $this;
     }
 
     /**

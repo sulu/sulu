@@ -10,11 +10,14 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use PHPCR\ItemNotFoundException;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\Structure;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -22,9 +25,6 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Post;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\Structure;
 
 /**
  * handles content nodes
@@ -361,12 +361,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
-
         $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
         $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
 
         $state = $this->getRequestParameter($request, 'state');
-        $type = $request->query->get('type') ? : 'page';
+        $type = $request->query->get('type') ?: 'page';
 
         if ($state !== null) {
             $state = intval($state);
@@ -402,6 +401,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
         $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $template = $this->getRequestParameter($request, 'template', true);
+        $isShadow = $this->getRequestParameter($request, 'shadowOn', false);
+        $shadowBaseLanguage = $this->getRequestParameter($request, 'shadowBaseLanguage', null);
+
         $data = $request->request->all();
 
         try {
@@ -414,7 +416,9 @@ class NodeController extends RestController implements ClassResourceInterface, S
                 $template,
                 $webspace,
                 $language,
-                $this->getUser()->getId()
+                $this->getUser()->getId(),
+                $isShadow,
+                $shadowBaseLanguage
             );
             $view = $this->view($result);
         } catch (RestException $ex) {
@@ -507,10 +511,8 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function postTriggerAction($uuid, Request $request)
     {
         // extract parameter
-        $language = $this->getLanguage($request);
         $webspace = $this->getWebspace($request);
         $action = $this->getRequestParameter($request, 'action', true);
-        $destination = $this->getRequestParameter($request, 'destination', true);
         $userId = $this->getUser()->getId();
 
         // prepare vars
@@ -521,23 +523,39 @@ class NodeController extends RestController implements ClassResourceInterface, S
         try {
             switch ($action) {
                 case 'move':
+                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
+                    $language = $this->getLanguage($request);
+
                     // call repository method
-                    $data = $repository->moveNode($uuid, $destination, $webspace, $language, $userId);
+                    $data = $repository->moveNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'copy':
+                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
+                    $language = $this->getLanguage($request);
+
                     // call repository method
-                    $data = $repository->copyNode($uuid, $destination, $webspace, $language, $userId);
+                    $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
+                    $position = (int) $this->getRequestParameter($request, 'position', true);
+                    $language = $this->getLanguage($request);
+
                     // call repository method
-                    $data = $repository->orderBefore($uuid, $destination, $webspace, $language, $userId);
+                    $data = $repository->orderAt($uuid, $position, $webspace, $language, $userId);
+                    break;
+                case 'copy-locale':
+                    $srcLocale = $this->getLanguage($request);
+                    $destLocale = $this->getRequestParameter($request, 'dest', true);
+
+                    // call repository method
+                    $data = $repository->copyLocale($uuid, $userId, $webspace, $srcLocale, explode(',', $destLocale));
                     break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
             }
 
             // prepare view
-            $view = $this->view($data, 200);
+            $view = $this->view($data, $data !== null ? 200 : 204);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
         }
@@ -560,7 +578,10 @@ class NodeController extends RestController implements ClassResourceInterface, S
     public function getSecurityContext()
     {
         $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer.admin');
+        $webspace = $requestAnalyzer->getWebspace();
 
-        return 'sulu.webspaces.' . $requestAnalyzer->getCurrentWebspace()->getKey();
+        if ($webspace) {
+            return 'sulu.webspaces.' . $webspace->getKey();
+        }
     }
 }

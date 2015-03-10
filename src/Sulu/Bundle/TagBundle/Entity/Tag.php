@@ -14,11 +14,12 @@ use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Groups;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Tag
  */
-class Tag extends ApiEntity
+class Tag extends ApiEntity implements AuditableInterface
 {
     /**
      * @var string
@@ -45,12 +46,12 @@ class Tag extends ApiEntity
     private $changed;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $creator;
 
@@ -100,19 +101,6 @@ class Tag extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Tag
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -120,19 +108,6 @@ class Tag extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Tag
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -148,10 +123,10 @@ class Tag extends ApiEntity
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return Tag
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -161,7 +136,7 @@ class Tag extends ApiEntity
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {
@@ -171,10 +146,10 @@ class Tag extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return Tag
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -184,7 +159,7 @@ class Tag extends ApiEntity
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {

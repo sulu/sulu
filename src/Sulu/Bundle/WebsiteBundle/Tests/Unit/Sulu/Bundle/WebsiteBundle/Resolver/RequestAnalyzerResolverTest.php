@@ -34,7 +34,11 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
 
         $this->prepareWebspaceManager();
 
-        $this->resolver = new RequestAnalyzerResolver($this->webspaceManager->reveal(), 'dev');
+        $this->resolver = new RequestAnalyzerResolver(
+            $this->webspaceManager->reveal(),
+            'dev',
+            array('analyticsKey' => 'UA-SULU-Test')
+        );
     }
 
     protected function prepareWebspaceManager()
@@ -85,14 +89,15 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
         $localization->setCountry('at');
 
         $requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\WebsiteRequestAnalyzer');
-        $requestAnalyzer->getCurrentWebspace()->willReturn($webspace);
+        $requestAnalyzer->getWebspace()->willReturn($webspace);
         $requestAnalyzer->getCurrentLocalization()->willReturn($localization);
-        $requestAnalyzer->getCurrentPortalUrl()->willReturn('sulu.io/de');
-        $requestAnalyzer->getCurrentResourceLocatorPrefix()->willReturn('/de');
-        $requestAnalyzer->getCurrentResourceLocator()->willReturn('/search');
-        $requestAnalyzer->getCurrentGetParameter()->willReturn(array('p' => 1));
-        $requestAnalyzer->getCurrentPostParameter()->willReturn(array());
-        $requestAnalyzer->getCurrentPortal()->willReturn($portal);
+        $requestAnalyzer->getPortalUrl()->willReturn('sulu.io/de');
+        $requestAnalyzer->getResourceLocatorPrefix()->willReturn('/de');
+        $requestAnalyzer->getResourceLocator()->willReturn('/search');
+        $requestAnalyzer->getGetParameters()->willReturn(array('p' => 1));
+        $requestAnalyzer->getPostParameters()->willReturn(array());
+        $requestAnalyzer->getPortal()->willReturn($portal);
+        $requestAnalyzer->getAnalyticsKey()->willReturn('analyticsKey');
 
         $result = $this->resolver->resolve($requestAnalyzer->reveal());
         $this->assertEquals(
@@ -105,7 +110,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                     'resourceLocatorPrefix' => '/de',
                     'resourceLocator' => '/search',
                     'get' => array('p' => 1),
-                    'post' => array()
+                    'post' => array(),
+                    'analyticsKey' => 'analyticsKey'
                 )
             ),
             $result
@@ -127,7 +133,8 @@ class RequestAnalyzerResolverTest extends ProphecyTestCase
                     'resourceLocatorPrefix' => '',
                     'resourceLocator' => '',
                     'get' => array(),
-                    'post' => array()
+                    'post' => array(),
+                    'analyticsKey' => 'UA-SULU-Test'
                 )
             ),
             $result

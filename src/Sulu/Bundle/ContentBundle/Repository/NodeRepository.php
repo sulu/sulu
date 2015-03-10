@@ -15,14 +15,15 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Webspace\Webspace;
 
 /**
@@ -163,8 +164,9 @@ class NodeRepository implements NodeRepositoryInterface
         $complete = true,
         $loadGhostContent = false
     ) {
-        if($webspaceKey)
-        $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
+        if ($webspaceKey) {
+            $structure = $this->getMapper()->load($uuid, $webspaceKey, $languageCode, $loadGhostContent);
+        }
 
         $result = $this->prepareNode($structure, $webspaceKey, $languageCode, 1, $complete);
         if ($breadcrumb) {
@@ -191,14 +193,24 @@ class NodeRepository implements NodeRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function saveIndexNode($data, $templateKey, $webspaceKey, $languageCode, $userId)
-    {
+    public function saveIndexNode(
+        $data,
+        $templateKey,
+        $webspaceKey,
+        $languageCode,
+        $userId,
+        $isShadow = false,
+        $shadowBaseLanguage = null
+    ) {
         $structure = $this->getMapper()->saveStartPage(
             $data,
             $templateKey,
             $webspaceKey,
             $languageCode,
-            $userId
+            $userId,
+            true,
+            $isShadow,
+            $shadowBaseLanguage
         );
 
         return $this->prepareNode($structure, $webspaceKey, $languageCode);
@@ -209,7 +221,8 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function deleteNode($uuid, $webspaceKey)
     {
-        $this->getMapper()->delete($uuid, $webspaceKey);
+        // TODO remove third parameter, and ask in UI if referenced node should be deleted
+        $this->getMapper()->delete($uuid, $webspaceKey, true);
     }
 
     /**
@@ -361,6 +374,7 @@ class NodeRepository implements NodeRepositoryInterface
             'path' => '/',
             'title' => $webspace->getName(),
             'hasSub' => true,
+            'publishedState' => true,
             '_embedded' => $embedded,
             '_links' => array(
                 'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
@@ -378,8 +392,7 @@ class NodeRepository implements NodeRepositoryInterface
         $preview = false,
         $api = false,
         $exclude = array()
-    )
-    {
+    ) {
         $limit = isset($filterConfig['limitResult']) ? $filterConfig['limitResult'] : null;
         $initParams = array('config' => $filterConfig);
         if ($exclude) {
@@ -387,7 +400,14 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         $this->queryBuilder->init($initParams);
-        $data = $this->queryExecutor->execute($webspaceKey, array($languageCode), $this->queryBuilder, true, -1, $limit);
+        $data = $this->queryExecutor->execute(
+            $webspaceKey,
+            array($languageCode),
+            $this->queryBuilder,
+            true,
+            -1,
+            $limit
+        );
 
         if ($api) {
             if (isset($filterConfig['dataSource'])) {
@@ -516,15 +536,16 @@ class NodeRepository implements NodeRepositoryInterface
                             'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
                             'path' => '/',
                             'title' => $webspace->getName(),
+                            'publishedState' => true,
                             'hasSub' => true,
                             '_embedded' => array(
                                 'nodes' => $this->prepareNodesTree(
-                                        $nodes,
-                                        $webspaceKey,
-                                        $languageCode,
-                                        false,
-                                        $excludeGhosts
-                                    )
+                                    $nodes,
+                                    $webspaceKey,
+                                    $languageCode,
+                                    false,
+                                    $excludeGhosts
+                                )
                             ),
                             '_links' => array(
                                 'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
@@ -656,5 +677,41 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (InvalidOrderPositionException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->copyLanguage($uuid, $userId, $webspaceKey, $srcLocale, $destLocales);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $srcLocale);
     }
 }

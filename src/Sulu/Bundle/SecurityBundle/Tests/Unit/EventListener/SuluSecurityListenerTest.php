@@ -14,6 +14,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
 class SuluSecurityListenerTest extends ProphecyTestCase
@@ -37,7 +38,7 @@ class SuluSecurityListenerTest extends ProphecyTestCase
     {
         parent::setUp();
 
-        $this->securityChecker = $this->prophesize('Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface');
+        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->securityListener = new SuluSecurityListener($this->securityChecker->reveal());
         $this->filterControllerEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterControllerEvent');
     }
@@ -132,6 +133,7 @@ class SuluSecurityListenerTest extends ProphecyTestCase
             array('POST', 'postAction', 'add'),
             array('POST', 'postMergeAction', 'edit'),
             array('PUT', 'putAction', 'edit'),
+            array('PATCH', 'patchAction', 'edit'),
             array('DELETE', 'deleteAction', 'delete'),
         );
     }

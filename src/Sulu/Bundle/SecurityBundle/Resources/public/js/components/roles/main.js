@@ -84,10 +84,30 @@ define([
                     }
 
                 }.bind(this),
-                error: function() {
+                error: function(model, response) {
+                    this.showErrorLabel(response.responseJSON.code);
                     this.sandbox.logger.log('An error occured while saving a role');
+
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'save-button');
                 }.bind(this)
             });
+        },
+
+        showErrorLabel: function(code) {
+            var translationKeyForError = '';
+            switch (code) {
+                case 1101:
+                    translationKeyForError = 'security.roles.error.non-unique';
+                    break;
+                default:
+                    break;
+            }
+
+            this.sandbox.emit('sulu.labels.error.show',
+                translationKeyForError,
+                'labels.error',
+                ''
+            );
         },
 
         // deletes the role with the id thrown with the sulu.role.delete event

@@ -16,6 +16,11 @@ sulu_admin.routes:
     defaults:
         _controller: SuluAdminBundle:Admin:bundles
 
+sulu_admin.config:
+    path: /config
+    defaults:
+        _controller: SuluAdminBundle:Admin:config
+
 sulu_admin.contexts:
     path: /contexts
     defaults:
@@ -24,6 +29,10 @@ sulu_admin.contexts:
 sulu_admin.login:
     path: /login
     defaults: { _controller: SuluAdminBundle:Security:login }
+
+sulu_admin.reset:
+    path: /reset/{token}
+    defaults: { _controller: SuluAdminBundle:Security:reset }
 
 sulu_admin.login_check:
     path: /login_check

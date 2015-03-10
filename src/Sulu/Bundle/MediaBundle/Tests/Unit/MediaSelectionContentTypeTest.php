@@ -157,14 +157,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     public function testRead()
     {
-        $container = new MediaSelectionContainer(
-            array('conf1' => 1, 'conf2' => 2),
-            'right',
-            array(1, 2, 3, 4),
-            'en',
-            null,
-            $this->mediaManager
-        );
+        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
@@ -192,7 +185,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                        $config
                     )
                 )
             )
@@ -200,7 +193,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will(
+            $this->returnValue(null)
+        );
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -214,15 +209,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     public function testReadPreview()
     {
-        $container = new MediaSelectionContainer(
-            array('conf1' => 1, 'conf2' => 2),
-            'right',
-            array(1, 2, 3, 4),
-            'en',
-            null,
-            $this->mediaManager
-        );
-
+        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
             array(),
@@ -249,7 +236,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                        $config
                     )
                 )
             )
@@ -257,7 +244,9 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will(
+            $this->returnValue(null)
+        );
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -281,14 +270,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     public function testReadWithType()
     {
-        $container = new MediaSelectionContainer(
-            array('conf1' => 1, 'conf2' => 2),
-            'right',
-            array(1, 2, 3, 4),
-            'en',
-            'document',
-            $this->mediaManager
-        );
+        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
@@ -316,7 +298,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                        $config
                     )
                 )
             )
@@ -324,7 +306,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -339,14 +321,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     public function testReadPreviewWithType()
     {
-        $container = new MediaSelectionContainer(
-            array('conf1' => 1, 'conf2' => 2),
-            'right',
-            array(1, 2, 3, 4),
-            'en',
-            'document',
-            $this->mediaManager
-        );
+        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
@@ -374,7 +349,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                        $config
                     )
                 )
             )
@@ -382,7 +357,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -407,14 +382,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     public function testReadWithMultipleTypes()
     {
-        $container = new MediaSelectionContainer(
-            array('conf1' => 1, 'conf2' => 2),
-            'right',
-            array(1, 2, 3, 4),
-            'en',
-            'document,image',
-            $this->mediaManager
-        );
+        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
@@ -442,7 +410,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                        $config
                     )
                 )
             )
@@ -450,7 +418,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(
@@ -465,14 +433,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
     public function testReadPreviewMultipleTypes()
     {
-        $container = new MediaSelectionContainer(
-            array('conf1' => 1, 'conf2' => 2),
-            'right',
-            array(1, 2, 3, 4),
-            'en',
-            'document,image',
-            $this->mediaManager
-        );
+        $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
             'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
@@ -500,7 +461,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
                     array(
                         'property',
                         '{}',
-                        '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}'
+                        $config
                     )
                 )
             )
@@ -508,7 +469,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 
         $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
 
-        $property->expects($this->any())->method('setValue')->with($container)->will($this->returnValue(null));
+        $property->expects($this->any())->method('setValue')->with(json_decode($config, true))->will($this->returnValue(null));
 
         $property->expects($this->any())->method('getParams')->will(
             $this->returnValue(

@@ -11,8 +11,6 @@
         <field name="middleName" type="string" column="middleName" length="60" nullable="true"/>
         <field name="lastName" type="string" column="lastName" length="60"/>
         <field name="birthday" type="date" column="birthday" nullable="true"/>
-        <field name="created" type="datetime" column="created"/>
-        <field name="changed" type="datetime" column="changed"/>
 
         <field name="salutation" type="string" column="salutation" length="255" nullable="true"/>
         <field name="formOfAddress" type="integer" column="formOfAddress" nullable="true"/>
@@ -38,16 +36,6 @@
 
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact"/>
 
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
-            <join-columns>
-                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
-            <join-columns>
-                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
         <many-to-one field="title" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactTitle">
             <join-columns>
                 <join-column name="idTitles" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>

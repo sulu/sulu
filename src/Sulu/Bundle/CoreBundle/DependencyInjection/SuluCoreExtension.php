@@ -35,6 +35,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $configs = $parameterBag->resolveValue($configs);
         $config = $this->processConfiguration(new Configuration(), $configs);
 
+        $container->setParameter('sulu_core.locales', $config['locales']);
+
         if (isset($config['phpcr'])) {
             $phpcrConfig = $config['phpcr'];
 
@@ -95,11 +97,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initWebspace($config['webspace'], $container, $loader);
         }
 
-        // Http Cache
-        if (isset($config['http_cache'])) {
-            $this->initHttpCache($config['http_cache'], $container, $loader);
-        }
-
         // Cache
         if (isset($config['cache'])) {
             $this->initCache($config['cache'], $container, $loader);
@@ -113,6 +110,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('rest.xml');
         $loader->load('build.xml');
         $loader->load('localization.xml');
+        $loader->load('persistence.xml');
     }
 
     /**
@@ -128,12 +126,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $webspaceConfig['request_analyzer']['priority']
         );
         $loader->load('webspace.xml');
-    }
-
-    private function initHttpCache($httpCacheConfig, ContainerBuilder $container, Loader\XmlFileLoader $loader)
-    {
-        $container->setParameter('sulu_core.http_cache.type', $httpCacheConfig['type']);
-        $loader->load('http-cache.xml');
     }
 
     /**
@@ -172,7 +164,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu.content.node_names.base', $contentConfig['node_names']['base']);
         $container->setParameter('sulu.content.node_names.content', $contentConfig['node_names']['content']);
         $container->setParameter('sulu.content.node_names.route', $contentConfig['node_names']['route']);
-        $container->setParameter('sulu.content.node_names.temp', $contentConfig['node_names']['temp']);
         $container->setParameter('sulu.content.node_names.snippet', $contentConfig['node_names']['snippet']);
 
         // Content Types
@@ -200,6 +191,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         // Default template
         $container->setParameter('sulu.content.structure.default_type.page', $contentConfig['structure']['default_type']['page']);
         $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
+        $container->setParameter('sulu.content.structure.default_type.homepage', $contentConfig['structure']['default_type']['homepage']);
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Template

@@ -10,33 +10,33 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use Doctrine\Common\Persistence\ObjectManager;
-
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
+use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
-use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
+use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
-use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Security\UserInterface;
-use Sulu\Component\Security\UserRepositoryInterface;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @package Sulu\Bundle\MediaBundle\Media\Manager
@@ -44,6 +44,7 @@ use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 class DefaultMediaManager implements MediaManagerInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
+    const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
     const ENTITY_NAME_MEDIATYPE = 'SuluMediaBundle:MediaType';
     const ENTITY_NAME_FILE = 'SuluMediaBundle:File';
     const ENTITY_NAME_FILEVERSION = 'SuluMediaBundle:FileVersion';
@@ -67,7 +68,7 @@ class DefaultMediaManager implements MediaManagerInterface
     private $collectionRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
     private $em;
 
@@ -133,9 +134,9 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * @param MediaRepositoryInterface $mediaRepository
-     * @param CollectionRepository $collectionRepository
+     * @param CollectionRepositoryInterface $collectionRepository
      * @param UserRepositoryInterface $userRepository
-     * @param ObjectManager $em
+     * @param EntityManager $em
      * @param StorageInterface $storage
      * @param FileValidatorInterface $validator
      * @param FormatManagerInterface $formatManager
@@ -147,9 +148,9 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
-        CollectionRepository $collectionRepository,
+        CollectionRepositoryInterface $collectionRepository,
         UserRepositoryInterface $userRepository,
-        ObjectManager $em,
+        EntityManager $em,
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
@@ -369,6 +370,23 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function getByIds(array $ids, $locale)
+    {
+        $media = array();
+        $mediaEntities = $this->mediaRepository->findMedia(array('pagination' => false, 'ids' => $ids));
+        $this->count = count($mediaEntities);
+        foreach ($mediaEntities as $mediaEntity) {
+            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        }
+
+        ksort($media);
+
+        return array_values($media);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function get($locale, $filter = array(), $limit = null, $offset = null)
     {
         $media = array();
@@ -420,7 +438,6 @@ class DefaultMediaManager implements MediaManagerInterface
             throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
         }
 
-        $mediaEntity->setChanged(new \DateTime());
         $mediaEntity->setChanger($user);
 
         $files = $mediaEntity->getFiles();
@@ -433,7 +450,6 @@ class DefaultMediaManager implements MediaManagerInterface
          */
         $file = $files[0]; // currently a media can only have one file
 
-        $file->setChanged(new \Datetime());
         $file->setChanger($user);
 
         $version = $file->getVersion();
@@ -466,7 +482,7 @@ class DefaultMediaManager implements MediaManagerInterface
                 $currentFileVersion->getStorageOptions()
             );
             $data['name'] = $uploadedFile->getClientOriginalName();
-            $data['size'] = $uploadedFile->getSize();
+            $data['size'] = intval($uploadedFile->getSize());
             $data['mimeType'] = $uploadedFile->getMimeType();
             $data['type'] = array(
                 'id' => $this->getMediaType($uploadedFile)
@@ -474,8 +490,6 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['version'] = $version;
 
             $fileVersion = clone($currentFileVersion);
-            $fileVersion->setChanged(new \Datetime());
-            $fileVersion->setCreated(new \Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
@@ -518,10 +532,11 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * Prepares data
-     *
      * @param UploadedFile $uploadedFile
-     * @param Array $data
-     * @param User $user
+     * @param array $data
+     * @param UserInterface $user
+     * @return Media
+     * @throws InvalidFileException
      */
     private function buildData($uploadedFile, $data, $user)
     {
@@ -547,33 +562,25 @@ class DefaultMediaManager implements MediaManagerInterface
 
     /**
      * Create a new media
-     * @param UploadedFile $uploadedFile
      * @param $data
-     * @param UserInterface $user
-     * @return MediaEntity
-     * @throws InvalidFileException
+     * @param $user
+     * @return Media
      */
     protected function createMedia($data, $user)
     {
         $mediaEntity = new MediaEntity();
         $mediaEntity->setCreator($user);
         $mediaEntity->setChanger($user);
-        $mediaEntity->setCreated(new \DateTime());
-        $mediaEntity->setChanged(new \DateTime());
 
         $file = new File();
         $file->setCreator($user);
         $file->setChanger($user);
-        $file->setCreated(new \DateTime());
-        $file->setChanged(new \DateTime());
         $file->setVersion(1);
         $file->setMedia($mediaEntity);
 
         $fileVersion = new FileVersion();
         $fileVersion->setCreator($user);
         $fileVersion->setChanger($user);
-        $fileVersion->setCreated(new \DateTime());
-        $fileVersion->setChanged(new \DateTime());
         $fileVersion->setVersion(1);
         $fileVersion->setFile($file);
 
@@ -596,12 +603,13 @@ class DefaultMediaManager implements MediaManagerInterface
     }
 
     /**
-     * @param SymfonyFile|null $uploadedFile
-     * @return object
+     * @param SymfonyFile $file
+     * @return integer
      */
     protected function getMediaType(SymfonyFile $file)
     {
         $mimeType = $file->getMimeType();
+        $name = null;
         foreach ($this->mediaTypes as $mediaType) {
             if (in_array($mimeType, $mediaType['mimeTypes']) || in_array('*', $mediaType['mimeTypes'])) {
                 $name = $mediaType['type'];
@@ -626,7 +634,7 @@ class DefaultMediaManager implements MediaManagerInterface
     protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
-            if ($value || ($attribute === 'tags' && $value !== null)) {
+            if ($value || ($attribute === 'tags' && $value !== null) || ($attribute === 'size' && $value !== null)) {
                 switch ($attribute) {
                     case 'size':
                         $media->setSize($value);
@@ -671,16 +679,18 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setProperties($value);
                         break;
                     case 'changed':
-                        $media->setChanged($value);
                         break;
                     case 'created':
-                        $media->setCreated($value);
                         break;
                     case 'changer':
-                        $media->setChanger($value);
+                        if ($value instanceof UserInterface) {
+                            $media->setChanger($value);
+                        }
                         break;
                     case 'creator':
-                        $media->setCreator($value);
+                        if ($value instanceof UserInterface) {
+                            $media->setCreator($value);
+                        }
                         break;
                     case 'mimeType':
                         $media->setMimeType($value);
@@ -764,6 +774,28 @@ class DefaultMediaManager implements MediaManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function move($id, $locale, $destCollection)
+    {
+        try {
+            $mediaEntity = $this->mediaRepository->findMediaById($id);
+
+            if ($mediaEntity === null) {
+                throw new MediaNotFoundException($id);
+            }
+
+            $mediaEntity->setCollection($this->em->getReference(self::ENTITY_NAME_COLLECTION, $destCollection));
+
+            $this->em->flush();
+
+            return $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+        } catch (DBALException $ex) {
+            throw new CollectionNotFoundException($destCollection);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function increaseDownloadCounter($fileVersionId)
     {
         $query = $this->em->createQueryBuilder()->update('SuluMediaBundle:FileVersion', 'fV')
@@ -779,7 +811,7 @@ class DefaultMediaManager implements MediaManagerInterface
      * @param Media $media
      * @return Media
      */
-    protected function addFormatsAndUrl(Media $media)
+    public function addFormatsAndUrl(Media $media)
     {
         $media->setFormats(
             $this->formatManager->getFormats(

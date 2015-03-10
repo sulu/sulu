@@ -2,7 +2,8 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\FaxType" table="co_fax_types">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\FaxType" table="co_fax_types"
+            repository-class="Sulu\Bundle\ContactBundle\Entity\FaxTypeRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

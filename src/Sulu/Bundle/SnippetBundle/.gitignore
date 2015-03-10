@@ -5,10 +5,6 @@
 /.sass-cache/
 *~
 
-# temp file / folders
-TEMP_*/
-TEMP_*.php
-
 # IDEs
 .idea/*
 *.iml

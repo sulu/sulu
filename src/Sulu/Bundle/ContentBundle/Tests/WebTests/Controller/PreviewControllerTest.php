@@ -59,8 +59,6 @@ class PreviewControllerTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
         $this->em->persist($contact);
 
         $emailType = new EmailType();
@@ -77,8 +75,6 @@ class PreviewControllerTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
-        $role1->setChanged(new DateTime());
-        $role1->setCreated(new DateTime());
         $this->em->persist($role1);
 
         $user = new User();
@@ -127,7 +123,7 @@ class PreviewControllerTest extends SuluTestCase
         $response = $client->getResponse()->getContent();
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertTrue(strpos($response, '<h1>Hello Hikaru Sulu</h1>') > -1);
+        $this->assertTrue(strpos($response, '<h1 property="title">Hello Hikaru Sulu</h1>') > -1);
     }
 
     public function testRenderHtml5()
@@ -147,7 +143,6 @@ class PreviewControllerTest extends SuluTestCase
         $client->request('POST', '/api/nodes?template=html5&webspace=sulu_io&language=en', $data);
         $response = json_decode($client->getResponse()->getContent());
 
-        $client->request('GET', '/content/preview/' . $response->id . '/start?webspace=sulu_io&language=en');
         $client->request('GET', '/content/preview/' . $response->id . '/render?webspace=sulu_io&language=en');
         $response = $client->getResponse()->getContent();
 

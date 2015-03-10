@@ -127,6 +127,30 @@ class AccountRepository extends EntityRepository
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function findByFilter(array $filter)
+    {
+        try {
+            $qb = $this->createQueryBuilder('account');
+
+            foreach ($filter as $key => $value) {
+                switch ($key) {
+                    case 'id':
+                        $qb->where('account.id IN (:ids)');
+                        $qb->setParameter('ids', $value);
+                        break;
+                }
+            }
+
+            $query = $qb->getQuery();
+            return $query->getResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
      * finds all accounts but only selects given fields
      * @param array $fields
      * @return array

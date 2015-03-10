@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_http_cache.proxy_client.varnish.class">FOS\HttpCache\ProxyClient\Varnish</parameter>
+        <parameter key="sulu_http_cache.proxy_client.symfony.class">Sulu\Component\HttpCache\ProxyClient\Symfony</parameter>
+    </parameters>
+
+    <services>
+
+        <!-- Varnish -->
+        <service id="sulu_http_cache.proxy_client.varnish"
+                 class="%sulu_http_cache.proxy_client.varnish.class%">
+            <argument>%sulu_http_cache.proxy_client.varnish.servers%</argument>
+            <argument>%sulu_http_cache.proxy_client.varnish.base_url%</argument>
+        </service>
+
+        <!-- Symfony Http Cache -->
+        <service id="sulu_http_cache.proxy_client.symfony"
+                 class="%sulu_http_cache.proxy_client.symfony.class%"/>
+
+    </services>
+
+</container>

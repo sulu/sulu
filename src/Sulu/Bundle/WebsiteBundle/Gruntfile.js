@@ -21,11 +21,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
-            public: {
-                files: [
-                    {expand: true, cwd: 'Resources/public', src: ['**', '!**/scss/**'], dest: '../../../../../../../web/bundles/suluwebsite/'}
-                ]
-            },
             hooks: {
                 files: [
                     {
@@ -48,15 +43,7 @@ module.exports = function (grunt) {
 
         clean: {
             options: { force: true },
-            hooks: ['.git/hooks/*'],
-            public: {
-                files: [
-                    {
-                        dot: true,
-                        src: ['../../../../../../../web/bundles/suluwebsite/']
-                    }
-                ]
-            }
+            hooks: ['.git/hooks/*']
         },
         watch: {
             options: {
@@ -110,15 +97,9 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('publish', [
-        'clean:public',
-        'copy:public'
-    ]);
-
     grunt.registerTask('build', [
         'uglify',
-        'replace:build',
-        'publish'
+        'replace:build'
     ]);
 
     grunt.registerTask('default', [

@@ -33,16 +33,16 @@ class SuluCollectorTest extends ProphecyTestCase
 
     public function testCollector()
     {
-        $this->requestAnalyzer->getCurrentPortal()->willReturn($this->portal);
-        $this->requestAnalyzer->getCurrentWebspace()->willReturn($this->webspace);
-        $this->requestAnalyzer->getCurrentSegment()->willReturn($this->segment);
-        $this->requestAnalyzer->getCurrentMatchType()->willReturn('match');
-        $this->requestAnalyzer->getCurrentRedirect()->willReturn('red');
-        $this->requestAnalyzer->getCurrentPortalUrl()->willReturn('/foo');
+        $this->requestAnalyzer->getPortal()->willReturn($this->portal);
+        $this->requestAnalyzer->getWebspace()->willReturn($this->webspace);
+        $this->requestAnalyzer->getSegment()->willReturn($this->segment);
+        $this->requestAnalyzer->getMatchType()->willReturn('match');
+        $this->requestAnalyzer->getRedirect()->willReturn('red');
+        $this->requestAnalyzer->getPortalUrl()->willReturn('/foo');
 
         $this->requestAnalyzer->getCurrentLocalization()->willReturn('de_de');
-        $this->requestAnalyzer->getCurrentResourceLocator()->willReturn('/asd');
-        $this->requestAnalyzer->getCurrentResourceLocatorPrefix()->willReturn('/asd/');
+        $this->requestAnalyzer->getResourceLocator()->willReturn('/asd');
+        $this->requestAnalyzer->getResourceLocatorPrefix()->willReturn('/asd/');
         $this->request->attributes->set('_route_params', array('structure' => $this->structure->reveal()));
 
         $this->dataCollector->collect($this->request, $this->response->reveal());

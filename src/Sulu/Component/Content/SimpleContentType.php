@@ -167,4 +167,12 @@ abstract class SimpleContentType implements ContentTypeInterface
     {
         return $property->getValue();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        return array();
+    }
 }

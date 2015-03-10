@@ -11,11 +11,12 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * FileVersion
  */
-class FileVersion
+class FileVersion implements AuditableInterface
 {
 
     /**
@@ -90,12 +91,12 @@ class FileVersion
     private $tags;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $creator;
 
@@ -249,19 +250,6 @@ class FileVersion
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return FileVersion
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -269,19 +257,6 @@ class FileVersion
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return FileVersion
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -470,10 +445,10 @@ class FileVersion
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return FileVersion
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -483,7 +458,7 @@ class FileVersion
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {
@@ -493,10 +468,10 @@ class FileVersion
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return FileVersion
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -506,7 +481,7 @@ class FileVersion
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {
@@ -520,26 +495,46 @@ class FileVersion
     {
         if ($this->id) {
             $this->id = null;
+            /** @var FileVersionMeta[] $newMetaList */
+            $newMetaList = array();
 
-            /**
-             * @var FileVersionMeta $meta
-             */
+            /** @var FileVersionContentLanguage[] $newContentLanguageList */
+            $newContentLanguageList = array();
+
+            /** @var FileVersionPublishLanguage[] $newPublishLanguageList */
+            $newPublishLanguageList = array();
+
+            /** @var FileVersionMeta $meta */
             foreach ($this->meta as $meta) {
-                $meta->setId(null);
+                $newMetaList[] = clone $meta;
             }
 
-            /**
-             * @var FileVersionContentLanguage $meta
-             */
+            $this->meta->clear();
+            foreach ($newMetaList as $newMeta) {
+                $newMeta->setFileVersion($this);
+                $this->addMeta($newMeta);
+            }
+
+            /** @var FileVersionContentLanguage $contentLanguage */
             foreach ($this->contentLanguages as $contentLanguage) {
-                $contentLanguage->setId(null);
+                $newContentLanguageList[] = clone $contentLanguage;
             }
 
-            /**
-             * @var FileVersionPublishLanguage $meta
-             */
+            $this->contentLanguages->clear();
+            foreach ($newContentLanguageList as $newContentLanguage) {
+                $newContentLanguage->setFileVersion($this);
+                $this->addContentLanguage($newContentLanguage);
+            }
+
+            /** @var FileVersionPublishLanguage $publishLanguage */
             foreach ($this->publishLanguages as $publishLanguage) {
-                $publishLanguage->setId(null);
+                $newPublishLanguageList[] = clone $publishLanguage;
+            }
+
+            $this->publishLanguages->clear();
+            foreach ($newPublishLanguageList as $newPublishLanguage) {
+                $newPublishLanguage->setFileVersion($this);
+                $this->addPublishLanguage($newPublishLanguage);
             }
         }
     }

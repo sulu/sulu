@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('phoneType')->defaultValue('1')->end()
                         ->scalarNode('phoneTypeMobile')->defaultValue('3')->end()
-                        ->scalarNode('phoneTypeIsdn')->defaultValue('4')->end()
+                        ->scalarNode('phoneTypeIsdn')->defaultValue('1')->end()
                         ->scalarNode('emailType')->defaultValue('1')->end()
                         ->scalarNode('addressType')->defaultValue('1')->end()
                         ->scalarNode('urlType')->defaultValue('1')->end()

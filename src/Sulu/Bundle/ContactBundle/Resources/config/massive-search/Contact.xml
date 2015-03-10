@@ -1,0 +1,15 @@
+<!-- /path/to/YourBundle/Resources/config/massive-search/Product.xml -->
+<massive-search-mapping xmlns="http://massiveart.com/schema/dic/massive-search-mapping">
+
+    <mapping class="Sulu\Bundle\ContactBundle\Entity\Contact">
+        <indexName>account</indexName>
+        <idField name="id"/>
+        <titleField name="name" />
+        <url expr="route('contact_edit', {'id': object.id}')" />
+        <fields>
+            <field name="title" type="string" />
+            <field name="body" type="string" />
+        </fields>
+    </mapping>
+
+</massive-search-mapping>

@@ -40,7 +40,7 @@ interface BlockPropertyInterface extends PropertyInterface
     /**
      * returns properties for given index
      * @param integer $index
-     * @return PropertyInterface[]
+     * @return BlockPropertyType
      */
     public function getProperties($index);
 
@@ -54,7 +54,7 @@ interface BlockPropertyInterface extends PropertyInterface
      * initiate new child with given type name
      * @param integer $index
      * @param string $typeName
-     * @return PropertyInterface[]
+     * @return BlockPropertyType
      */
     public function initProperties($index, $typeName);
 

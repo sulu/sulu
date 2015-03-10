@@ -142,7 +142,7 @@ input, select {
 }
 /* line 90, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed {
-  width: 480px;
+  width: 510px;
 }
 /* line 92, ../scss/modules/layout.scss */
 .content-column.fixed.small-fixed #content {
@@ -181,19 +181,19 @@ input, select {
     height: 0;
   }
 }
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1290px) {
   /* line 143, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
-    width: 690px;
+    width: 700px;
   }
 }
-@media only screen and (max-width: 990px) {
+@media only screen and (max-width: 1090px) {
   /* line 149, ../scss/modules/layout.scss */
   .has-visible-sidebar .content-column.fixed {
-    width: 480px;
+    width: 510px;
   }
 }
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 900px) {
   /* line 155, ../scss/modules/layout.scss */
   .sidebar-column.max {
     width: 0;
@@ -228,41 +228,200 @@ input, select {
     max-width: 900px;
   }
 }
-/* line 1, ../scss/modules/login.scss */
-#main.login {
+/* line 3, ../scss/modules/login.scss */
+.sulu-login {
   width: 100%;
   height: 100%;
+  background: #f1f1f1;
+  overflow: hidden;
+  position: relative;
 }
-
-/* line 5, ../scss/modules/login.scss */
-#login-wrapper {
+/* line 10, ../scss/modules/login.scss */
+.sulu-login .box {
+  width: 400px;
+  height: 430px;
+  background-color: #e9e9e9;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  border-radius: 3px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  box-shadow: rgba(0, 0, 0, 0.08) 3px 3px 0px 0px;
+  overflow: hidden;
+  transition: height 200ms;
+}
+/* line 27, ../scss/modules/login.scss */
+.sulu-login .box.larger {
+  height: 450px;
+}
+/* line 32, ../scss/modules/login.scss */
+.sulu-login .box .husky-validate-error .error-message {
+  height: 50px;
+}
+/* line 35, ../scss/modules/login.scss */
+.sulu-login .box .husky-validate-error.login .bottom-container span:not(.website-switch) {
+  color: black;
+}
+/* line 40, ../scss/modules/login.scss */
+.sulu-login .box .frames {
+  height: 100%;
+  width: 50px;
+  white-space: nowrap;
   position: relative;
   top: 0px;
-  left: 50%;
-  margin-left: -150px;
-  display: table;
-  width: 300px;
+  left: 0px;
+  transition: left 300ms;
+}
+/* line 50, ../scss/modules/login.scss */
+.sulu-login .box .frame {
   height: 100%;
+  width: 400px;
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+  position: relative;
+  padding: 0 50px;
 }
-
-/* line 14, ../scss/modules/login.scss */
-#login {
-  display: table-cell;
-  vertical-align: middle;
+/* line 61, ../scss/modules/login.scss */
+.sulu-login .box .inputs .form-element {
+  padding-left: 5px;
 }
-/* line 18, ../scss/modules/login.scss */
-#login .icon {
-  margin-bottom: 30px;
+/* line 67, ../scss/modules/login.scss */
+.sulu-login .box .error-message {
+  color: #ea524e;
+  display: block;
+  height: 0px;
+  overflow: hidden;
+  transition: height 200ms;
+}
+/* line 75, ../scss/modules/login.scss */
+.sulu-login .box .login-logo {
+  width: 100%;
+  height: 180px;
+  background: url("../img/logo.png") no-repeat center center;
+  background-size: auto 122px;
+  margin-bottom: 10px;
+}
+/* line 82, ../scss/modules/login.scss */
+.sulu-login .box .login-loader {
+  float: right;
+  margin: 20px 15px 0 0;
+}
+/* line 86, ../scss/modules/login.scss */
+.sulu-login .box .reset-mail-message .login-loader {
+  float: none;
+  margin-right: 0;
+  margin-left: 0;
+}
+/* line 91, ../scss/modules/login.scss */
+.sulu-login .box .btn.action {
+  float: right;
+  margin-top: 10px;
+  padding-left: 45px;
+  padding-right: 45px;
+}
+/* line 98, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  padding: 0 50px;
+}
+/* line 32, ../js/vendor/husky/scss/mixins.scss */
+.sulu-login .box .bottom-container:after {
+  clear: both;
+  content: ' ';
+  display: block;
+}
+/* line 106, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container span {
+  display: block;
+  padding: 10px 0 10px 10px;
+  cursor: pointer;
+  color: #999999;
+  float: right;
+}
+/* line 112, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container span:hover {
+  color: black;
+}
+/* line 116, ../scss/modules/login.scss */
+.sulu-login .box .bottom-container .website-switch {
+  float: left;
+  padding-left: 0;
+}
+/* line 123, ../scss/modules/login.scss */
+.sulu-login .box .reset-mail .bottom-container span:not(.website-switch) {
+  color: black;
+}
+/* line 128, ../scss/modules/login.scss */
+.sulu-login .box .reset-mail-message {
   text-align: center;
 }
-/* line 23, ../scss/modules/login.scss */
-#login #logo {
+/* line 130, ../scss/modules/login.scss */
+.sulu-login .box .reset-mail-message .message {
+  display: block;
+  color: #999999;
+  padding-bottom: 20px;
+}
+/* line 135, ../scss/modules/login.scss */
+.sulu-login .box .reset-mail-message .btn.action {
+  float: none;
+  margin: 0;
+  padding: 0 15px;
+}
+/* line 142, ../scss/modules/login.scss */
+.sulu-login .box label {
+  text-align: center;
+  padding-bottom: 5px;
+}
+/* line 148, ../scss/modules/login.scss */
+.sulu-login .background {
+  display: none;
+  position: absolute;
+}
+/* line 152, ../scss/modules/login.scss */
+.sulu-login .background .image {
+  position: relative;
+  display: block;
   width: 100%;
-  height: 120px;
-  background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjMwcHgiIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAwIDMwIDI0IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggMy4wLjEgKDc1OTcpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPlNsaWNlIDE8L3RpdGxlPgogICAgPGRlc2NyaXB0aW9uPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjcmlwdGlvbj4KICAgIDxkZWZzPgogICAgICAgIDxsaW5lYXJHcmFkaWVudCB4MT0iNDkuOTk5NTk2OCUiIHkxPSItMC4wMDAzNDQ2MDg1MjYlIiB4Mj0iNDkuOTk5NTk2OCUiIHkyPSIxMDAuMDAyNTUlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiM3QUM5NDMiIG9mZnNldD0iMCUiPjwvc3RvcD4KICAgICAgICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzNGQTlGNSIgb2Zmc2V0PSIxMDAlIj48L3N0b3A+CiAgICAgICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHNrZXRjaDp0eXBlPSJNU1BhZ2UiPgogICAgICAgIDxnIGlkPSIwMy1TdWx1LVNpZ25ldC1Db2xvcigyKSIgc2tldGNoOnR5cGU9Ik1TTGF5ZXJHcm91cCIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0xKSI+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yOS44NTUsMTMuNzg1IEMzMC4xMjgsMTMuMzQgMzAuMDA1LDEyLjcyNSAyOS41ODMsMTIuNDE4IEwyMi40ODksNy4yNjQgQzIyLjA2Nyw2Ljk1NyAyMS42NzcsNi4yODEgMjEuNjIyLDUuNzYyIEwyMS4xMjYsMS4wMzYgQzIxLjA3MiwwLjUxNyAyMC42MjIsMC4yMjggMjAuMTI3LDAuMzkzIEwwLjY0NSw2LjkwOCBDMC4xNSw3LjA3NCAtMC4xMTgsNy42MTMgMC4wNSw4LjEwOCBMMy43MzksMTguOTcxIEMzLjkwNywxOS40NjUgNC40NjIsMTkuOTYgNC45NzIsMjAuMDcgTDIyLjYxNiwyMy44ODUgQzIzLjEyNiwyMy45OTUgMjMuNzY3LDIzLjcyMSAyNC4wMzksMjMuMjc2IEwyOS44NTUsMTMuNzg1IEwyOS44NTUsMTMuNzg1IFogTTEzLjgwMyw4Ljk2MSBDMTMuNDk1LDkuMzgzIDEyLjgyNiw5LjYzNiAxMi4zMTYsOS41MjQgTDQuMDMyLDcuNzAyIEMzLjUyMiw3LjU5IDMuNTEsNy4zNjMgNC4wMDUsNy4xOTcgTDE3Ljc2OSwyLjU5NCBDMTguMjY0LDIuNDI4IDE4LjQxNywyLjYzOCAxOC4xMSwzLjA2IEwxMy44MDMsOC45NjEgTDEzLjgwMyw4Ljk2MSBaIE0xOS40MDUsMy41NTggQzE5LjcxMywzLjEzNiAyMC4wMDksMy4yMTYgMjAuMDY0LDMuNzM1IEwyMS43NTcsMTkuODggQzIxLjgxMSwyMC4zOTkgMjEuNjA1LDIwLjQ3OCAyMS4yOTksMjAuMDU1IEwxNC45MTMsMTEuMjQ0IEMxNC42MDcsMTAuODIxIDE0LjYwOCwxMC4xMzEgMTQuOTE2LDkuNzA5IEwxOS40MDUsMy41NTggTDE5LjQwNSwzLjU1OCBaIE0xLjkxNyw5LjQzOSBDMS43NDksOC45NDUgMi4wMjksOC42MzIgMi41MzksOC43NDQgTDEyLjIwOCwxMC44NzEgQzEyLjcxOCwxMC45ODMgMTMuMzg2LDExLjQyMSAxMy42OTIsMTEuODQzIEwyMC42NTYsMjEuNDUgQzIwLjk2MiwyMS44NzMgMjAuNzk2LDIyLjEyOCAyMC4yODUsMjIuMDE3IEw1Ljk5NiwxOC45MjIgQzUuNDg2LDE4LjgxMSA0LjkzMSwxOC4zMTcgNC43NjMsMTcuODIyIEwxLjkxNyw5LjQzOSBMMS45MTcsOS40MzkgWiBNMjIuMDA4LDkuNDQzIEMyMS45NTQsOC45MjQgMjIuMjU1LDguNzUgMjIuNjc3LDkuMDU3IEwyNy43OTQsMTIuNzc1IEMyOC4yMTYsMTMuMDgyIDI4LjMzOSwxMy42OTcgMjguMDY2LDE0LjE0MiBMMjMuODEsMjEuMDk4IEMyMy41MzgsMjEuNTQzIDIzLjI3LDIxLjQ4MyAyMy4yMTYsMjAuOTY0IEwyMi4wMDgsOS40NDMgTDIyLjAwOCw5LjQ0MyBaIiBpZD0iU2hhcGUiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPjwvcGF0aD4KICAgICAgICA8L2c+CiAgICA8L2c+Cjwvc3ZnPg==");
+  height: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-size: 120px 120px;
   background-position: center center;
+  filter: url(../img/blur.svg#blur);
+  -webkit-filter: blur(3px);
+  filter: blur(3px);
+  filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='3');
+  z-index: 10;
+}
+/* line 164, ../scss/modules/login.scss */
+.sulu-login .background .darkener {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.35;
+  transition: opacity 450ms;
+  z-index: 20;
+}
+/* line 178, ../scss/modules/login.scss */
+.sulu-login .background.active .darkener {
+  opacity: 0.15;
 }
 
 /* line 1, ../scss/modules/labels.scss */
@@ -273,6 +432,17 @@ input, select {
   left: 0;
   width: 100%;
   padding: 0 50px 0 50px;
+}
+
+/* line 10, ../scss/modules/labels.scss */
+.login #labels-container {
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -200px;
+  width: 400px;
+  padding: 0;
 }
 
 /* line 1, ../scss/modules/header.scss */
@@ -484,8 +654,14 @@ input, select {
 .sulu-sidebar .show-icon:hover .blue-icon {
   opacity: 1;
 }
+/* line 62, ../scss/modules/sidebar.scss */
+.sulu-sidebar hr {
+  border: 0;
+  height: 1px;
+  background: #ddd;
+}
 
-/* line 64, ../scss/modules/sidebar.scss */
+/* line 70, ../scss/modules/sidebar.scss */
 .sidebar-padding-50 > div {
   padding: 50px;
 }
@@ -542,4 +718,29 @@ input, select {
   padding-right: 5px;
   border-radius: 3px;
   line-height: 38px;
+}
+
+/** header options menu toggle **/
+/** ========================== **/
+/** only shown when parent has class
+    .option-dropdown-toggler
+**/
+/* line 7, ../scss/modules/headlines.scss */
+.options-dropdown-container {
+  display: none;
+}
+/* line 10, ../scss/modules/headlines.scss */
+.options-dropdown-container.is-active {
+  display: block;
+}
+/* line 13, ../scss/modules/headlines.scss */
+.options-dropdown-container span {
+  background-color: #f1f1f1;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* line 22, ../scss/modules/headlines.scss */
+.options-dropdown-toggler:hover .options-dropdown-container {
+  display: block;
 }

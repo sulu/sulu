@@ -1,4 +1,4 @@
-foo:
+sulu_snippet:
     resource: '@SuluSnippetBundle/Resources/config/routing_api.yml'
 
 sulu_media_website:

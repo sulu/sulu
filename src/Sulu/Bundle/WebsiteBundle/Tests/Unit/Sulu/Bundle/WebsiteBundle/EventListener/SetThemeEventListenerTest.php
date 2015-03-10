@@ -27,7 +27,7 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
     public function testEventListener()
     {
         $this->requestAnalyzer->expects($this->once())
-            ->method('getCurrentPortal')
+            ->method('getPortal')
             ->will($this->returnValue($this->portal));
         $this->portal->expects($this->once())
             ->method('getWebspace')
@@ -38,10 +38,20 @@ class SetThemeEventListenerTest extends \PHPUnit_Framework_TestCase
         $this->theme->expects($this->once())
             ->method('getKey')
             ->will($this->returnValue('test'));
-
         $this->activeTheme->expects($this->once())
             ->method('setName')
             ->with('test');
+
+        $this->listener->onKernelRequest($this->event);
+    }
+
+    public function testEventListenerNotMaster()
+    {
+        $this->requestAnalyzer->expects($this->once())
+            ->method('getPortal')
+            ->willReturn(null);
+        $this->webspace->expects($this->never())
+            ->method('getTheme');
 
         $this->listener->onKernelRequest($this->event);
     }

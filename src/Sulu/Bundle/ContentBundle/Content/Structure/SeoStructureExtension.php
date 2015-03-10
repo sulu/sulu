@@ -33,7 +33,8 @@ class SeoStructureExtension extends StructureExtension
         'keywords',
         'canonicalUrl',
         'noIndex',
-        'noFollow'
+        'noFollow',
+        'hideInSitemap'
     );
 
     /**
@@ -57,6 +58,7 @@ class SeoStructureExtension extends StructureExtension
         $this->saveProperty($node, $data, 'canonicalUrl');
         $this->saveProperty($node, $data, 'noIndex', false);
         $this->saveProperty($node, $data, 'noFollow', false);
+        $this->saveProperty($node, $data, 'hideInSitemap', false);
     }
 
     /**
@@ -70,7 +72,8 @@ class SeoStructureExtension extends StructureExtension
             'keywords' => $this->loadProperty($node, 'keywords'),
             'canonicalUrl' => $this->loadProperty($node, 'canonicalUrl'),
             'noIndex' => $this->loadProperty($node, 'noIndex', false),
-            'noFollow' => $this->loadProperty($node, 'noFollow', false)
+            'noFollow' => $this->loadProperty($node, 'noFollow', false),
+            'hideInSitemap' => $this->loadProperty($node, 'hideInSitemap', false)
         );
     }
 }

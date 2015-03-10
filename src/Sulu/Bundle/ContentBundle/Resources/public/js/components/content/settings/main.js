@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config'], function(AppConfig) {
+define(['app-config', 'sulusecurity/components/permissions/models/user'], function(AppConfig, User) {
 
     'use strict';
 
@@ -53,7 +53,6 @@ define(['app-config'], function(AppConfig) {
             if (this.data.enabledShadowLanguages[this.options.language] !== undefined) {
                 existingShadowForCurrentLanguage = this.data.enabledShadowLanguages[this.options.language];
             }
-
 
             // if there are no languages for whatever reason, show
             // an empty, disabled selection (otherwise the select is broken)
@@ -104,7 +103,7 @@ define(['app-config'], function(AppConfig) {
                         multipleSelect: false,
                         defaultLabel: this.sandbox.translate('sulu.content.form.settings.shadow.select_base_language'),
                         data: shadowsForSelect,
-                        preSelectedElements: [ selectedLanguage ]
+                        preSelectedElements: [selectedLanguage]
                     }
                 }
             ]);
@@ -161,6 +160,12 @@ define(['app-config'], function(AppConfig) {
                 this.sandbox.emit('husky.tabs.header.item.' + tabAction, 'tab-' + tabName);
             }.bind(this));
 
+            if (action === 'hide') {
+                this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
+            } else {
+                this.sandbox.emit('husky.toolbar.header.item.enable', 'state', false);
+            }
+
             this.sandbox.util.each(['show-in-navigation-container', 'settings-content-form-container'], function(i, formGroupId) {
                 if (action === 'hide') {
                     this.sandbox.dom.find('#' + formGroupId).hide();
@@ -199,6 +204,8 @@ define(['app-config'], function(AppConfig) {
 
                 this.updateTabVisibilityForShadowCheckbox(true);
 
+                this.updateChangelog(data);
+
                 this.sandbox.emit('sulu.preview.initialize');
             }.bind(this));
         },
@@ -209,6 +216,71 @@ define(['app-config'], function(AppConfig) {
             for (var i = 0, len = navContexts.length; i < len; i++) {
                 this.allNavContexts[navContexts[i].id] = navContexts[i].name;
             }
+        },
+
+        updateChangelog: function(data) {
+            var setCreator = function(fullName) {
+                    this.sandbox.dom.text('#created .name', fullName);
+                    creatorDef.resolve();
+                },
+                setChanger = function(fullName) {
+                    this.sandbox.dom.text('#changed .name', fullName);
+                    changerDef.resolve();
+                },
+                creator, creatorDef = this.sandbox.data.deferred(),
+                changer, changerDef = this.sandbox.data.deferred();
+
+            if (data.creator === data.changer) {
+                creator = new User({id: data.creator});
+
+                creator.fetch({
+                    global: false,
+
+                    success: function(model) {
+                        setChanger.call(this, model.get('fullName'));
+                        setCreator.call(this, model.get('fullName'));
+                    }.bind(this),
+
+                    error: function() {
+                        setChanger.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                        setCreator.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                    }.bind(this)
+                });
+            } else {
+                creator = new User({id: data.creator});
+                changer = new User({id: data.changer});
+
+                creator.fetch({
+                    global: false,
+
+                    success: function(model) {
+                        setCreator.call(this, model.get('fullName'));
+                    }.bind(this),
+
+                    error: function() {
+                        setCreator.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                    }.bind(this)
+                });
+
+                changer.fetch({
+                    global: false,
+
+                    success: function(model) {
+                        setChanger.call(this, model.get('fullName'));
+                    }.bind(this),
+
+                    error: function() {
+                        setChanger.call(this, this.sandbox.translate('sulu.content.form.settings.changelog.user-not-found'));
+                    }.bind(this)
+                });
+            }
+
+            this.sandbox.dom.text('#created .date', this.sandbox.date.format(data.created, true));
+            this.sandbox.dom.text('#changed .date', this.sandbox.date.format(data.changed, true));
+
+            this.sandbox.data.when([creatorDef, changerDef]).then(function() {
+                this.sandbox.dom.show('#changelog-container');
+            }.bind(this));
         },
 
         setData: function(data) {
@@ -248,6 +320,7 @@ define(['app-config'], function(AppConfig) {
 
             if (data.shadowOn) {
                 this.sandbox.dom.attr('#shadow_on_checkbox', 'checked', true);
+                this.sandbox.emit('husky.toolbar.header.item.disable', 'state', false);
             }
         },
 

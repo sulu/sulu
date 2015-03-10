@@ -68,7 +68,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
     public function sitemapUrlFunction($url, $locale = null, $webspaceKey = null)
     {
         if ($webspaceKey === null) {
-            $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+            $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         }
 
         if ($locale === null) {
@@ -96,7 +96,7 @@ class SitemapTwigExtension extends \Twig_Extension implements SitemapTwigExtensi
     public function sitemapFunction($locale = null, $webspaceKey = null)
     {
         if ($webspaceKey === null) {
-            $webspaceKey = $this->requestAnalyzer->getCurrentWebspace()->getKey();
+            $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();
         }
 
         if ($locale === null) {

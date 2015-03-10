@@ -28,6 +28,8 @@ use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 
 /**
@@ -851,6 +853,32 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertEquals('Test2', $nodes[3]['title']);
     }
 
+    public function testOrderAt()
+    {
+        $data = $this->prepareOrderBeforeData();
+
+        $result = $this->nodeRepository->orderAt($data[3]->getUuid(), 2, 'default', 'en', 2);
+        $this->assertEquals('Test4', $result['title']);
+        $this->assertEquals('/test4', $result['path']);
+        $this->assertEquals('/news/test4', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        $result = $this->nodeRepository->orderAt($data[0]->getUuid(), 4, 'default', 'en', 2);
+        $this->assertEquals('Test1', $result['title']);
+        $this->assertEquals('/test1', $result['path']);
+        $this->assertEquals('/news/test1', $result['url']);
+        $this->assertEquals(2, $result['changer']);
+
+        $test = $this->nodeRepository->getNodes(null, 'default', 'en');
+        $this->assertEquals(4, sizeof($test['_embedded']['nodes']));
+        $nodes = $test['_embedded']['nodes'];
+
+        $this->assertEquals('Test4', $nodes[0]['title']);
+        $this->assertEquals('Test2', $nodes[1]['title']);
+        $this->assertEquals('Test3', $nodes[2]['title']);
+        $this->assertEquals('Test1', $nodes[3]['title']);
+    }
+
     public function testOrderBeforeNonExistingSource()
     {
         $data = $this->prepareOrderBeforeData();
@@ -933,6 +961,75 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->assertFalse($nodes[0]['hasSub']);
     }
 
+    public function testCopyLocale()
+    {
+        $data = array(
+            'en' => array(
+                'title' => 'Example',
+                'url' => '/example'
+            )
+        );
+
+        $data['en'] = $this->mapper->save(
+            $data['en'],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', 'de');
+
+        $result = $this->mapper->load($data['en']->getUuid(), 'default', 'de')->toArray();
+        $this->assertEquals($data['en']->getUuid(), $result['id']);
+        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
+        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+    }
+
+    public function testCopyMultipleLocales()
+    {
+        $data = array(
+            'en' => array(
+                'title' => 'Example',
+                'url' => '/example'
+            )
+        );
+
+        $data['en'] = $this->mapper->save(
+            $data['en'],
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            StructureInterface::STATE_PUBLISHED
+        );
+
+        $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', array('de', 'de_at'));
+
+        $result = $this->mapper->load($data['en']->getUuid(), 'default', 'de')->toArray();
+        $this->assertEquals($data['en']->getUuid(), $result['id']);
+        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
+        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+
+        $result = $this->mapper->load($data['en']->getUuid(), 'default', 'de_at')->toArray();
+        $this->assertEquals($data['en']->getUuid(), $result['id']);
+        $this->assertEquals($data['en']->getPropertyValue('title'), $result['title']);
+        $this->assertEquals($data['en']->getPropertyValue('url'), $result['url']);
+        $this->assertContains('de', $result['concreteLanguages']);
+        $this->assertContains('en', $result['concreteLanguages']);
+    }
+
     protected function setUp()
     {
         $this->extensions = array(new TestExtension('test1', 'test1'));
@@ -949,6 +1046,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $this->webspace = new Webspace();
         $this->webspace->setName('Test');
         $this->webspace->setKey('default');
+        $this->webspace->setNavigation(new Navigation(array(new NavigationContext('main', array()))));
 
         $locale = new Localization();
         $locale->setLanguage('en');

@@ -15,6 +15,7 @@ use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
+use PHPCR\NodeInterface;
 
 /**
  * Interface of ContentMapper
@@ -32,8 +33,8 @@ interface ContentMapperInterface
      * @param string $uuid uuid of node if exists
      * @param string $parent uuid or path of parent node
      * @param int $state state of node
-     * @param null $isShadow
-     * @param null $shadowBaseLanguage
+     * @param bool|null $isShadow indicates that this node is a shadow for the base language
+     * @param string|null $shadowBaseLanguage base language for shadow
      *
      * @return StructureInterface
      *
@@ -82,10 +83,12 @@ interface ContentMapperInterface
      * @param string $languageCode Save data for given language
      * @param int $userId The id of the user who saves
      * @param bool $partialUpdate ignore missing property
+     * @param bool|null $isShadow indicates that this node is a shadow for the base language
+     * @param string|null $shadowBaseLanguage base language for shadow
      *
      * @throws \PHPCR\ItemExistsException if new title already exists
-     * @throws \Exception
-     *
+     * @throws \InvalidArgumentException if mandatory data is not valid or not passed
+     * 
      * @return StructureInterface
      */
     public function saveStartPage(
@@ -94,7 +97,9 @@ interface ContentMapperInterface
         $webspaceKey,
         $languageCode,
         $userId,
-        $partialUpdate = true
+        $partialUpdate = true,
+        $isShadow = null,
+        $shadowBaseLanguage = null
     );
 
     /**
@@ -127,6 +132,24 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
+
+    /**
+     * returns the data for the given node
+     * @param NodeInterface $contentNode The node for which to load the data
+     * @param string $languageCode The locale
+     * @param string $webspaceKey Key of the webspace
+     * @param boolean $excludeGhost Do not return Ghost structures (return null instead)
+     * @param boolean $loadGhostContent Load ghost content
+     * @param boolean $excludeShadow  Do not return shadow structures (return null instead)
+     */
+    public function loadByNode(
+        NodeInterface $contentNode,
+        $localization,
+        $webspaceKey = null,
+        $excludeGhost = true,
+        $loadGhostContent = false,
+        $excludeShadow = true
+    );
 
     /**
      * returns the data from the given id
@@ -215,7 +238,7 @@ interface ContentMapperInterface
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $webspaceKey);
+    public function delete($uuid, $webspaceKey, $dereference = false);
 
     /**
      * moves given node to a new parent node
@@ -245,10 +268,10 @@ interface ContentMapperInterface
      * @param $userId
      * @param $webspaceKey
      * @param $srcLanguageCode
-     * @param $destLanguageCode
+     * @param $destLanguageCodes
      * @return StructureInterface
      */
-    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCode);
+    public function copyLanguage($uuid, $userId, $webspaceKey, $srcLanguageCode, $destLanguageCodes);
 
     /**
      * order node with uuid before the node with beforeUuid
@@ -261,6 +284,21 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
+
+    /**
+     * brings a node with a given uuid into a given position
+     * @param string $uuid
+     * @param integer $position
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     *
+     * @throws \Sulu\Component\Content\Exception\InvalidOrderPositionException
+     * thrown if position is out of range
+     *
+     * @return StructureInterface
+     */
+    public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 
     /**
      * TRUE dont rename pages on save

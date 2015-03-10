@@ -11,6 +11,8 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -42,6 +44,14 @@ interface MediaManagerInterface
     public function getById($id, $locale);
 
     /**
+     * Returns the medias with the given ids in the specified order
+     * @param array $ids
+     * @param string $locale
+     * @return Media[]
+     */
+    public function getByIds(array $ids, $locale);
+
+    /**
      * Creates a new media or overrides an existing one
      * @param UploadedFile $uploadedFile
      * @param array $data The data of the category to save
@@ -55,6 +65,18 @@ interface MediaManagerInterface
      * @param int $id the id of the category to delete
      */
     public function delete($id);
+
+    /**
+     * Moves a media to a given collection
+     * @param int $id id of media
+     * @param string $locale the locale which the object will be returned
+     * @param int $destCollection id of destination collection
+     * @return Media
+     *
+     * @throws MediaNotFoundException
+     * @throws CollectionNotFoundException
+     */
+    public function move($id, $locale, $destCollection);
 
     /**
      * Return the FieldDescriptor by name
@@ -75,4 +97,12 @@ interface MediaManagerInterface
      * @return mixed
      */
     public function increaseDownloadCounter($fileVersionId);
+
+    /**
+     * Adds thumbnails and image urls
+     *
+     * @param Media $media
+     * @return Media
+     */
+    public function addFormatsAndUrl(Media $media);
 }

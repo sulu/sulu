@@ -18,6 +18,7 @@ use Sulu\Component\Content\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Structure\Snippet;
 
 /**
@@ -39,6 +40,11 @@ class SnippetContent extends ComplexContentType
      * @var StructureResolverInterface
      */
     protected $structureResolver;
+
+    /**
+     * @var array
+     */
+    private $snippetCache = array();
 
     /**
      * Constructor
@@ -73,31 +79,23 @@ class SnippetContent extends ComplexContentType
      * Set data to given property
      * @param array $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
      */
-    protected function setData(
-        $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode
-    )
+    protected function setData($data, PropertyInterface $property)
     {
-        $refs = isset($data['ids']) ? $data['ids'] : array();
-        $snippets = array();
+        $refs = isset($data) ? $data : array();
+        $ids = array();
+        if (is_array($refs)) {
+            foreach ($refs as $i => $ref) {
+                // see https://github.com/jackalope/jackalope/issues/248
+                if (UUIDHelper::isUUID($i)) {
+                    $ref = $i;
+                }
 
-        foreach ($refs as $i => $ref) {
-            // see https://github.com/jackalope/jackalope/issues/248
-            if (UUIDHelper::isUUID($i)) {
-                $ref = $i;
-            } else {
+                $ids[] = $ref;
             }
-
-            $snippets[] = $this->contentMapper->load($ref, $webspaceKey, $languageCode);
         }
 
-        $property->setValue($snippets);
+        $property->setValue($ids);
     }
 
     /**
@@ -106,7 +104,7 @@ class SnippetContent extends ComplexContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $refs = $node->getPropertyValueWithDefault($property->getName(), array());
-        $this->setData(array('ids' => $refs), $property, $webspaceKey, $languageCode);
+        $this->setData($refs, $property);
     }
 
     /**
@@ -114,7 +112,7 @@ class SnippetContent extends ComplexContentType
      */
     public function readForPreview($data, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $this->setData($data, $property, $webspaceKey, $languageCode);
+        $this->setData($data, $property);
     }
 
     /**
@@ -132,11 +130,9 @@ class SnippetContent extends ComplexContentType
         $snippetReferences = array();
         $values = $property->getValue();
 
-        $values = array_merge(array(
-            'ids' => array(),
-        ), $values);
+        $values = is_array($values) ? $values : array();
 
-        foreach ((array) $values['ids'] as $value) {
+        foreach ($values as $value) {
             if ($value instanceof Snippet) {
                 $snippetReferences[] = $value->getUuid();
             } elseif (is_array($value) && array_key_exists('uuid', $value) && UUIDHelper::isUUID($value['uuid'])) {
@@ -171,8 +167,7 @@ class SnippetContent extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array(
-        );
+        return array();
     }
 
     /**
@@ -180,20 +175,25 @@ class SnippetContent extends ComplexContentType
      */
     public function getViewData(PropertyInterface $property)
     {
-        $snippets = $property->getValue();
-        $viewData = array();
-
-        /** @var Snippet $snippet */
-        foreach ($snippets as $snippet) {
-            $resolved = $this->structureResolver->resolve($snippet);
-
-            // add template to view
-            $resolved['view']['template'] = $snippet->getKey();
-
-            $viewData[] = $resolved['view'];
+        /** @var Page $page */
+        $page = $property->getStructure();
+        $webspaceKey = $page->getWebspaceKey();
+        $locale = $page->getLanguageCode();
+        $shadowLocale = null;
+        if ($page->getIsShadow()) {
+            $shadowLocale = $page->getShadowBaseLanguage();
         }
 
-        return $viewData;
+        $refs = $property->getValue();
+        $contentData = array();
+
+        $ids = $this->getUuids($refs);
+
+        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
+            $contentData[] = $snippet['view'];
+        }
+
+        return $contentData;
     }
 
     /**
@@ -201,14 +201,68 @@ class SnippetContent extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        $snippets = $property->getValue();
-        $contentData = array();
+        /** @var Page $page */
+        $page = $property->getStructure();
+        $webspaceKey = $page->getWebspaceKey();
+        $locale = $page->getLanguageCode();
+        $shadowLocale = null;
+        if ($page->getIsShadow()) {
+            $shadowLocale = $page->getShadowBaseLanguage();
+        }
 
-        foreach ($snippets as $snippet) {
-            $resolved = $this->structureResolver->resolve($snippet);
-            $contentData[] = $resolved['content'];
+        $refs = $property->getValue();
+        $ids = $this->getUuids($refs);
+
+        $contentData = array();
+        foreach ($this->loadSnippets($ids, $webspaceKey, $locale, $shadowLocale) as $snippet) {
+            $contentData[] = $snippet['content'];
         }
 
         return $contentData;
+    }
+
+    /**
+     * load snippet and serialize them
+     *
+     * additionally cache it by id in this class
+     */
+    private function loadSnippets($ids, $webspaceKey, $locale, $shadowLocale = null)
+    {
+        $snippets = array();
+        foreach ($ids as $i => $ref) {
+            if (!array_key_exists($ref, $this->snippetCache)) {
+                $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+                if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
+                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
+                }
+                $resolved = $this->structureResolver->resolve($snippet);
+                $resolved['view']['template'] = $snippet->getKey();
+
+                $this->snippetCache[$ref] = $resolved;
+            }
+
+            $snippets[] = $this->snippetCache[$ref];
+        }
+
+        return $snippets;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $data = $property->getValue();
+
+        return $this->getUuids($data);
+    }
+
+    /**
+     * The data is not always normalized, so we normalize the data here.
+     */
+    private function getUuids($data)
+    {
+        $ids = is_array($data) ? $data : array();
+        return $ids;
     }
 }

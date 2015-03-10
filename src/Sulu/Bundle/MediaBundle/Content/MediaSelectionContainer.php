@@ -17,7 +17,6 @@ use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Container for Image selection, holds config for image selection and lazy loads images matches the ids
- * @package Sulu\Bundle\MediaBundle\Content
  */
 class MediaSelectionContainer implements ArrayableInterface
 {
@@ -90,7 +89,7 @@ class MediaSelectionContainer implements ArrayableInterface
     private function loadData($locale)
     {
         if (!empty($this->ids)) {
-            return $this->mediaManager->get($locale, array('ids' => $this->ids, 'paginator' => false));
+            return $this->mediaManager->getByIds($this->ids, $locale);
         } else {
             return array();
         }

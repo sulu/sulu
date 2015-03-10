@@ -24,6 +24,7 @@ class SuluMediaExtension extends Extension
 {
     const DEFAULT_FORMAT_NAME = '170x170';
     const DEFAULT_GHOST_SCRIPT_PATH = 'ghostscript';
+    const DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER = 'web';
 
     /**
      * {@inheritDoc}
@@ -35,6 +36,10 @@ class SuluMediaExtension extends Extension
 
         $container->setParameter('sulu_media.search.default_image_format', $config['search']['default_image_format']);
         $container->setParameter('sulu_media.format_manager.response_headers', $config['format_manager']['response_headers']);
+        $container->setParameter(
+            'sulu_media.format_manager.default_imagine_options',
+            $config['format_manager']['default_imagine_options']
+        );
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
@@ -46,7 +51,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
-        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
+        $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../' . $config['format_cache']['public_folder'] . '/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
         $container->setParameter('sulu_media.format_manager.mime_types', array(
@@ -71,7 +76,8 @@ class SuluMediaExtension extends Extension
                             'y' => '170',
                         )
                     )
-                )
+                ),
+                'options' => $config['format_manager']['default_imagine_options']
             ),
             '50x50' => array(
                 'name' => '50x50',
@@ -83,7 +89,8 @@ class SuluMediaExtension extends Extension
                             'y' => '50',
                         )
                     )
-                )
+                ),
+                'options' => $config['format_manager']['default_imagine_options']
             ),
             '150x100' => array(
                 'name' => '150x100',
@@ -95,7 +102,8 @@ class SuluMediaExtension extends Extension
                             'y' => '100',
                         )
                     )
-                )
+                ),
+                'options' => $config['format_manager']['default_imagine_options']
             ),
         ));
         $container->setParameter('sulu_media.media.types', array(

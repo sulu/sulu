@@ -50,7 +50,9 @@ class CollectionController extends RestController implements ClassResourceInterf
      */
     public function getFieldsAction()
     {
-        return $this->getCollectionManager()->getFieldDescriptors();
+        $fieldDescriptors = array_values($this->getCollectionManager()->getFieldDescriptors());
+
+        return $this->handleView($this->view($fieldDescriptors, 200));
     }
 
     /**

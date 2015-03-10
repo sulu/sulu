@@ -187,7 +187,7 @@ class AccountController extends AbstractContactController
         } else {
             $contactManager = $this->getContactManager();
             $locale = $this->getUser()->getLocale();
-            $contacts = $contactManager->findContactByAccountId($id, $locale);
+            $contacts = $contactManager->findContactsByAccountId($id, $locale, false);
             $list = new CollectionRepresentation($contacts, self::$contactEntityKey);
         }
         $view = $this->view($list, 200);
@@ -371,6 +371,17 @@ class AccountController extends AbstractContactController
     {
         $type = $request->get('type');
 
+        // define filters
+        $filter = array();
+        $ids = $request->get('ids');
+        if ($ids) {
+            if (is_array($ids)) {
+                $filter['id'] = $ids;
+            } else {
+                $filter['id'] = explode(',', $ids);
+            }
+        }
+
         if ($request->get('flat') == 'true') {
 
             /** @var RestHelperInterface $restHelper */
@@ -385,6 +396,18 @@ class AccountController extends AbstractContactController
                 $listBuilder->where($this->fieldDescriptors['type'], $type);
             }
 
+            if (json_decode($request->get('hasNoParent', null))) {
+                $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
+            }
+
+            foreach ($filter as $key => $value) {
+                if (is_array($value)) {
+                    $listBuilder->in($this->fieldDescriptors[$key], $value);
+                } else {
+                    $listBuilder->where($this->fieldDescriptors[$key], $value);
+                }
+            }
+
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
             $list = new ListRepresentation(
@@ -396,16 +419,40 @@ class AccountController extends AbstractContactController
                 $listBuilder->getLimit(),
                 $listBuilder->count()
             );
+            $view = $this->view($list, 200);
         } else {
             $accountManager = $this->getContactManager();
             $locale = $this->getUser()->getLocale();
-            $accounts = $accountManager->findAll($locale);
+            $accounts = $accountManager->findAll($locale, $filter);
             $list = new CollectionRepresentation($accounts, self::$entityKey);
+            $view = $this->view($list, 200);
+//          // FIXME: add serialization context for collection
+//            $view->setSerializationContext(
+//                SerializationContext::create()->setGroups(array('fullAccount', 'partialContact', 'partialMedia'))
+//            );
         }
 
-        $view = $this->view($list, 200);
-
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns fielddescriptor used for checking if account has no parent
+     * Will result in an error when added to the array of fielddescriptors
+     * because its just for checking if parent exists or not and does not
+     * point to a property of the parent
+     * @return DoctrineFieldDescriptor
+     */
+    protected function getFieldDescriptorForNoParent()
+    {
+        return new DoctrineFieldDescriptor(
+            'parent',
+            'parent',
+            self::$entityName,
+            'contact.accounts.company',
+            array(),
+            true,
+            false
+        );
     }
 
     /**
@@ -449,8 +496,6 @@ class AccountController extends AbstractContactController
             $this->setParent($request->get('parent'), $account);
 
             // set creator / changer
-            $account->setCreated(new DateTime());
-            $account->setChanged(new DateTime());
             $account->setCreator($this->getUser());
             $account->setChanger($this->getUser());
 
@@ -537,7 +582,6 @@ class AccountController extends AbstractContactController
                 $this->setParent($request->get('parent'), $account);
 
                 // set changed
-                $account->setChanged(new DateTime());
                 $user = $this->getUser();
                 $account->setChanger($user);
 
@@ -1090,7 +1134,8 @@ class AccountController extends AbstractContactController
             true,
             '',
             '',
-            '160px'
+            '160px', 
+            false
         );
 
         $this->accountContactFieldDescriptors['position'] = new DoctrineFieldDescriptor(
@@ -1345,7 +1390,9 @@ class AccountController extends AbstractContactController
             false,
             true,
             '',
-            '200px'
+            '200px',
+            '',
+            false
         );
 
         $this->fieldDescriptors['mainPhone'] = new DoctrineFieldDescriptor(
@@ -1468,6 +1515,20 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
+        );
+
+        // account-category
+        $this->fieldDescriptors['accountCategory'] = new DoctrineFieldDescriptor(
+            'category',
+            'accountCategory',
+            self::$accountCategoryEntityName,
+            'contacts.accounts.category',
+            array(
+                self::$accountCategoryEntityName => new DoctrineJoinDescriptor(
+                    self::$accountCategoryEntityName,
+                    self::$entityName . '.accountCategory'
+                ),
+            )
         );
     }
 }

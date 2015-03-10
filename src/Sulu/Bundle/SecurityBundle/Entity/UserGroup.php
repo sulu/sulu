@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * UserGroup
@@ -30,12 +31,12 @@ class UserGroup extends ApiEntity
     private $id;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     * @var UserInterface
      */
     private $user;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\Group
+     * @var Group
      */
     private $group;
 
@@ -86,10 +87,10 @@ class UserGroup extends ApiEntity
     /**
      * Set user
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\User $user
+     * @param UserInterface $user
      * @return UserGroup
      */
-    public function setUser(\Sulu\Bundle\SecurityBundle\Entity\User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
 
@@ -99,7 +100,7 @@ class UserGroup extends ApiEntity
     /**
      * Get user
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\User
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -109,10 +110,10 @@ class UserGroup extends ApiEntity
     /**
      * Set group
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $group
+     * @param Group $group
      * @return UserGroup
      */
-    public function setGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $group = null)
+    public function setGroup(Group $group = null)
     {
         $this->group = $group;
 
@@ -122,7 +123,7 @@ class UserGroup extends ApiEntity
     /**
      * Get group
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Group
+     * @return Group
      */
     public function getGroup()
     {

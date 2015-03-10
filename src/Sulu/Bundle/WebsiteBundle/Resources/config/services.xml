@@ -15,6 +15,7 @@
         <parameter key="sulu_website.twig.content.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension</parameter>
         <parameter key="sulu_website.twig.content.memoized.class">Sulu\Bundle\WebsiteBundle\Twig\Content\MemoizedContentTwigExtension</parameter>
         <parameter key="sulu_website.twig.Meta.class">Sulu\Bundle\WebsiteBundle\Twig\Meta\MetaTwigExtension</parameter>
+        <parameter key="sulu_website.twig.util.class">Sulu\Bundle\WebsiteBundle\Twig\Core\UtilTwigExtension</parameter>
         <parameter key="sulu_website.routing.portal_loader.class">Sulu\Bundle\WebsiteBundle\Routing\PortalLoader</parameter>
         <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
         <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
@@ -29,6 +30,7 @@
         <service id="sulu_website.admin" class="%sulu_website.admin.class%">
             <argument type="string">%sulu_admin.name%</argument>
             <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
 
         <!-- navigation mapper -->
@@ -117,6 +119,11 @@
             <tag name="twig.extension"/>
         </service>
 
+        <!-- twig extension: util -->
+        <service id="sulu_website.twig.util" class="%sulu_website.twig.util.class%">
+            <tag name="twig.extension"/>
+        </service>
+
         <!-- portal loader -->
         <service id="sulu_website.routing.portal_loader" class="%sulu_website.routing.portal_loader.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
@@ -139,6 +146,9 @@
         <service id="sulu_website.resolver.request_analyzer" class="%sulu_website.resolver.request_analyzer.class%">
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%kernel.environment%</argument>
+            <argument type="collection">
+                <argument type="string" key="analyticsKey">%sulu_website.preview_defaults.analytics_key%</argument>
+            </argument>
         </service>
 
     </services>

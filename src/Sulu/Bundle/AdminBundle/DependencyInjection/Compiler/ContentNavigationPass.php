@@ -30,7 +30,7 @@ abstract class ContentNavigationPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (null !== $this->tag && null !== $this->serviceName) {
+        if (null !== $this->tag && null !== $this->serviceName && $container->hasDefinition($this->serviceName)) {
             $contentNavigation = $container->getDefinition($this->serviceName);
 
             $taggedServices = $container->findTaggedServiceIds($this->tag);

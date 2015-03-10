@@ -13,11 +13,12 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Accessor;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Account
  */
-class Account extends ApiEntity
+class Account extends ApiEntity implements AuditableInterface
 {
 
     const TYPE_BASIC = 0;
@@ -64,19 +65,19 @@ class Account extends ApiEntity
     private $id;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      * @Exclude
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      * @Exclude
      */
     private $creator;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      * @Exclude
      */
     private $children;
@@ -335,19 +336,6 @@ class Account extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Account
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -355,19 +343,6 @@ class Account extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Account
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -398,10 +373,10 @@ class Account extends ApiEntity
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return Account
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -411,7 +386,7 @@ class Account extends ApiEntity
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {
@@ -421,10 +396,10 @@ class Account extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return Account
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -434,7 +409,7 @@ class Account extends ApiEntity
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {

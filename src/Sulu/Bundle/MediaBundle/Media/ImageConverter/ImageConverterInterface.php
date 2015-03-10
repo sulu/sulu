@@ -21,15 +21,9 @@ interface ImageConverterInterface
 {
     /**
      * Convert an image and return the tmpPath
-     * @param $originalPath
-     * @param $format
+     * @param string $originalPath
+     * @param array $formatOptions
      * @return ImageInterface
      */
-    public function convert($originalPath, $format);
-
-    /**
-     * Get all formats
-     * @return array
-     */
-    public function getFormats();
+    public function convert($originalPath, $formatOptions);
 }

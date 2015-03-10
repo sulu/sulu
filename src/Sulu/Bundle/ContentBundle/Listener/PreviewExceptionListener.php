@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Listener;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -32,10 +33,16 @@ class PreviewExceptionListener
      */
     private $templateName;
 
-    public function __construct(EngineInterface $templateEngine, $templateName = null)
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(EngineInterface $templateEngine, LoggerInterface $logger, $templateName = null)
     {
         $this->templateEngine = $templateEngine;
         $this->templateName = $templateName;
+        $this->logger = $logger;
     }
 
     /**
@@ -57,13 +64,17 @@ class PreviewExceptionListener
         $content = $previousContent !== null ? $previousContent->getContent() : '';
         $statusTexts = Response::$statusTexts;
         $statusText = isset($statusTexts[$code]) ? $statusTexts[$code] : '';
+        $exception = FlattenException::create($ex, $code);
+
+        // log exception
+        $this->logger->error(sprintf("%s (%s %s)", $ex->getMessage(), $code, $statusText));
 
         $responseContent = $this->templateEngine->render(
             $this->findTemplate(),
             array(
                 'status_code' => $code,
                 'status_text' => $statusText,
-                'exception' => FlattenException::create($ex, $code),
+                'exception' => $exception,
                 'logger' => null,
                 'currentContent' => $content,
             )

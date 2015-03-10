@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
-use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -62,6 +62,7 @@ class SuluSecurityListener
                 }
                 break;
             case 'PUT':
+            case 'PATCH':
                 $permission = 'edit';
                 break;
             case 'DELETE':

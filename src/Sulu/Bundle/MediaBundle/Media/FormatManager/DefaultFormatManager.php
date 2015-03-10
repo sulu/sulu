@@ -20,6 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\Exception\GhostScriptNotFoundException;
+use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
@@ -30,7 +31,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Media\FormatManager
+ * Sulu format manager for media
  */
 class DefaultFormatManager implements FormatManagerInterface
 {
@@ -86,6 +87,11 @@ class DefaultFormatManager implements FormatManagerInterface
     private $fileSystem;
 
     /**
+     * @var array
+     */
+    private $formats;
+
+    /**
      * @param MediaRepository $mediaRepository
      * @param StorageInterface $originalStorage
      * @param FormatCacheInterface $formatCache
@@ -94,6 +100,7 @@ class DefaultFormatManager implements FormatManagerInterface
      * @param string $saveImage
      * @param array $previewMimeTypes
      * @param array $responseHeaders
+     * @param array $formats
      */
     public function __construct(
         MediaRepository $mediaRepository,
@@ -103,7 +110,8 @@ class DefaultFormatManager implements FormatManagerInterface
         $ghostScriptPath,
         $saveImage,
         $previewMimeTypes,
-        $responseHeaders
+        $responseHeaders,
+        $formats
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->originalStorage = $originalStorage;
@@ -114,12 +122,13 @@ class DefaultFormatManager implements FormatManagerInterface
         $this->previewMimeTypes = $previewMimeTypes;
         $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
+        $this->formats = $formats;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function returnImage($id, $format)
+    public function returnImage($id, $formatName)
     {
         try {
             // load Media
@@ -137,6 +146,10 @@ class DefaultFormatManager implements FormatManagerInterface
                 if (!in_array($mimeType, $this->previewMimeTypes)) {
                     throw new InvalidMimeTypeForPreviewException($mimeType);
                 }
+
+                // get format options
+                $format = $this->getFormat($formatName);
+                $formatOptions = $format['options'];
 
                 // load Original
                 $uri = $this->originalStorage->load($fileName, $version, $storageOptions);
@@ -158,7 +171,10 @@ class DefaultFormatManager implements FormatManagerInterface
                 $imageExtension = $this->getImageExtension($fileName);
 
                 // get image
-                $image = $image->get($imageExtension, $this->getOptionsFromImage($image, $imageExtension));
+                $image = $image->get(
+                    $imageExtension,
+                    $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
+                );
 
                 // HTTP Status
                 $status = 200;
@@ -170,16 +186,16 @@ class DefaultFormatManager implements FormatManagerInterface
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
-                        $format
+                        $formatName
                     );
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($format, $this->getRealFileExtension($fileName));
+                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName));
             }
         } catch (MediaException $e) {
             // return default image
-            list($image, $status, $imageExtension) = $this->returnFallbackImage($format);
+            list($image, $status, $imageExtension) = $this->returnFallbackImage($formatName);
         }
 
         // clear temp files
@@ -190,6 +206,21 @@ class DefaultFormatManager implements FormatManagerInterface
 
         // return image
         return new Response($image, $status, $headers);
+    }
+
+    /**
+     * return the options for the given format
+     * @param $format
+     * @return array
+     * @throws ImageProxyInvalidImageFormat
+     */
+    protected function getFormat($format)
+    {
+        if (!isset($this->formats[$format])) {
+            throw new ImageProxyInvalidImageFormat('Format was not found');
+        }
+
+        return $this->formats[$format];
     }
 
     /**
@@ -207,7 +238,7 @@ class DefaultFormatManager implements FormatManagerInterface
             return $this->returnFallbackImage($format);
         }
 
-        $image = $this->converter->convert($placeholder, $format);
+        $image = $this->converter->convert($placeholder, $this->getFormat($format));
 
         $image = $image->get($imageExtension);
 
@@ -224,7 +255,7 @@ class DefaultFormatManager implements FormatManagerInterface
 
         $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
 
-        $image = $this->converter->convert($placeholder, $format);
+        $image = $this->converter->convert($placeholder, $this->getFormat($format));
 
         $image = $image->get($imageExtension);
 
@@ -258,16 +289,17 @@ class DefaultFormatManager implements FormatManagerInterface
     /**
      * @param ImageInterface $image
      * @param string $imageExtension
+     * @param array $formatOptions
      * @return array
      */
-    protected function getOptionsFromImage(ImageInterface $image, $imageExtension)
+    protected function getOptionsFromImage(ImageInterface $image, $imageExtension, $formatOptions)
     {
         $options = array();
         if (count($image->layers()) > 1 && $imageExtension == 'gif') {
             $options['animated'] = true;
         }
 
-        return $options;
+        return array_merge($options, $formatOptions);
     }
 
     /**
@@ -465,7 +497,7 @@ class DefaultFormatManager implements FormatManagerInterface
     {
         $formats = array();
 
-        foreach ($this->converter->getFormats() as $format) {
+        foreach ($this->formats as $format) {
             $formats[$format['name']] = $this->formatCache->getMediaUrl(
                 $id,
                 $this->replaceExtension($fileName, $this->getImageExtension($fileName)),

@@ -48,7 +48,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $content = array();
         $this->nodeMock
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('setProperty')
             ->will(
                 $this->returnCallback(
@@ -64,7 +64,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'keywords' => 'Test, Test1',
             'canonicalUrl' => 'http://www.google.at',
             'noIndex' => true,
-            'noFollow' => true
+            'noFollow' => true,
+            'hideInSitemap' => true
         );
         $this->extension->setLanguageCode('de', 'i18n', null);
         $this->extension->save($this->nodeMock, $data, 'default', 'de');
@@ -76,7 +77,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-keywords' => $data['keywords'],
                 'i18n:de-seo-canonicalUrl' => $data['canonicalUrl'],
                 'i18n:de-seo-noIndex' => $data['noIndex'],
-                'i18n:de-seo-noFollow' => $data['noFollow']
+                'i18n:de-seo-noFollow' => $data['noFollow'],
+                'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
             ),
             $content
         );
@@ -86,7 +88,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $content = array();
         $this->nodeMock
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('setProperty')
             ->will(
                 $this->returnCallback(
@@ -107,7 +109,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-keywords' => '',
                 'i18n:de-seo-canonicalUrl' => '',
                 'i18n:de-seo-noIndex' => false,
-                'i18n:de-seo-noFollow' => false
+                'i18n:de-seo-noFollow' => false,
+                'i18n:de-seo-hideInSitemap' => false,
             ),
             $content
         );
@@ -121,7 +124,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'keywords' => 'Test, Test1',
             'canonicalUrl' => 'http://www.google.at',
             'noIndex' => true,
-            'noFollow' => true
+            'noFollow' => true,
+            'hideInSitemap' => true,
         );
 
         $content = array(
@@ -130,10 +134,11 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
             'i18n:de-seo-keywords' => $data['keywords'],
             'i18n:de-seo-canonicalUrl' => $data['canonicalUrl'],
             'i18n:de-seo-noIndex' => $data['noIndex'],
-            'i18n:de-seo-noFollow' => $data['noFollow']
+            'i18n:de-seo-noFollow' => $data['noFollow'],
+            'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
         );
         $this->nodeMock
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('getPropertyValueWithDefault')
             ->will(
                 $this->returnCallback(
@@ -157,7 +162,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'i18n:de-seo-keywords' => $data['keywords'],
                 'i18n:de-seo-canonicalUrl' => $data['canonicalUrl'],
                 'i18n:de-seo-noIndex' => $data['noIndex'],
-                'i18n:de-seo-noFollow' => $data['noFollow']
+                'i18n:de-seo-noFollow' => $data['noFollow'],
+                'i18n:de-seo-hideInSitemap' => $data['hideInSitemap'],
             ),
             $content
         );
@@ -167,7 +173,7 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $content = array();
         $this->nodeMock
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(7))
             ->method('getPropertyValueWithDefault')
             ->will(
                 $this->returnCallback(
@@ -191,7 +197,8 @@ class SeoStructureExtensionTest extends \PHPUnit_Framework_TestCase
                 'keywords' => '',
                 'canonicalUrl' => '',
                 'noIndex' => false,
-                'noFollow' => false
+                'noFollow' => false,
+                'hideInSitemap' => false
             ),
             $result
         );

@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Types;
 
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;
 
 /**
@@ -42,10 +43,10 @@ class TextEditor extends SimpleContentType
     public function getDefaultParams()
     {
         return array(
-            'godMode' => false,
-            'tables' => true,
-            'links' => true,
-            'pasteFromWord' => true
+            'godMode' => new PropertyParameter('godMode', false),
+            'tables' => new PropertyParameter('tables', true),
+            'links' => new PropertyParameter('links', true),
+            'pasteFromWord' => new PropertyParameter('pasteFromWord', true)
         );
     }
 }

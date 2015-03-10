@@ -45,8 +45,6 @@ class RoleControllerTest extends SuluTestCase
         $role = new Role();
         $role->setName('Sulu Administrator');
         $role->setSystem('Sulu');
-        $role->setCreated(new DateTime());
-        $role->setChanged(new DateTime());
         $role->setSecurityType($this->securityType1);
         $this->em->persist($role);
         $this->role1 = $role;
@@ -54,8 +52,6 @@ class RoleControllerTest extends SuluTestCase
         $role2 = new Role();
         $role2->setName('Sulu Editor');
         $role2->setSystem('Sulu');
-        $role2->setCreated(new DateTime());
-        $role2->setChanged(new DateTime());
         $this->em->persist($role2);
         $this->role2 = $role2;
 

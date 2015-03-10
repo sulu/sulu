@@ -91,6 +91,9 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
         // overwrite the default values with the given options
         $this->options = array_merge($defaultOptions, $options);
+
+        // FIXME find better solution for default templates in bundle
+        $this->options['structure_paths'] = array_reverse($this->options['structure_paths']);
     }
 
     /**

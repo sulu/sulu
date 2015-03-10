@@ -1,3 +1,5 @@
+sudo: false
+
 language: php
 
 php:
@@ -22,3 +24,4 @@ matrix:
   allow_failures:
     - env: "SULU_ORM=mysql SULU_PHPCR=doctrine_dbal"
     - env: "SULU_ORM=postgres SULU_PHPCR=jackrabbit"
+

@@ -211,6 +211,12 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
+    /**
+     * @param $collectionId
+     * @param $limit
+     * @param $offset
+     * @return array
+     */
     public function findSupplierMedia($collectionId, $limit, $offset)
     {
         $sql = 'SELECT id, name FROM (

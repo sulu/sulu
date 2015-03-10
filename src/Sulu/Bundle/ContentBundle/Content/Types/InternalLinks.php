@@ -11,10 +11,13 @@
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
+use PHPCR\Util\UUIDHelper;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -75,7 +78,7 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = $node->getPropertyValueWithDefault($property->getName(), array());
 
         $this->setData($data, $property, $webspaceKey, $languageCode);
     }
@@ -98,25 +101,37 @@ class InternalLinks extends ComplexContentType
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $data = $property->getValue();
+        $uuids = isset($data) ? $data : array();
+
+        return $uuids;
+    }
+
+    /**
      * set data to property
      * @param string[] $data ids of images
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
      */
-    private function setData($data, PropertyInterface $property, $webspaceKey, $languageCode)
+    private function setData($data, PropertyInterface $property)
     {
-        $container = new InternalLinksContainer(
-            isset($data['ids']) ? $data['ids'] : array(),
-            $this->contentQueryExecutor,
-            $this->contentQueryBuilder,
-            array_merge($this->getDefaultParams(), $property->getParams()),
-            $this->logger,
-            $webspaceKey,
-            $languageCode
-        );
+        $refs = isset($data) ? $data : array();
+        $ids = array();
+        if (is_array($refs)) {
+            foreach ($refs as $i => $ref) {
+                // see https://github.com/jackalope/jackalope/issues/248
+                if (UUIDHelper::isUUID($i)) {
+                    $ref = $i;
+                }
 
-        $property->setValue($container);
+                $ids[] = $ref;
+            }
+        }
+
+        $property->setValue($ids);
     }
 
     /**
@@ -124,7 +139,7 @@ class InternalLinks extends ComplexContentType
      */
     public function getDefaultParams()
     {
-        return array('properties' => array());
+        return array('properties' => new PropertyParameter('properties', array(), 'collection'));
     }
 
     /**
@@ -143,24 +158,22 @@ class InternalLinks extends ComplexContentType
             $value = $value->toArray();
         }
 
-        // if whole container is pushed
-        if (isset($value['data'])) {
-            unset($value['data']);
-        }
-
-        if (isset($value['ids'])) {
+        if (isset($value)) {
             // remove not existing ids
             $session = $node->getSession();
-            $selectedNodes = $session->getNodesByIdentifier($value['ids']);
+            $selectedNodes = $session->getNodesByIdentifier($value);
             $ids = array();
             foreach ($selectedNodes as $selectedNode) {
+                if ($selectedNode->getIdentifier() === $node->getIdentifier()) {
+                    throw new \InvalidArgumentException('You are not allowed to link a page to itself!');
+                }
                 $ids[] = $selectedNode->getIdentifier();
             }
-            $value['ids'] = $ids;
+            $value = $ids;
         }
 
         // set value to node
-        $node->setProperty($property->getName(), json_encode($value));
+        $node->setProperty($property->getName(), $value, PropertyType::REFERENCE);
     }
 
     /**
@@ -173,7 +186,9 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $node->getProperty($property->getName())->remove();
+        if ($node->hasProperty($property->getName())) {
+            $node->getProperty($property->getName())->remove();
+        }
     }
 
     /**
@@ -189,6 +204,17 @@ class InternalLinks extends ComplexContentType
      */
     public function getContentData(PropertyInterface $property)
     {
-        return $property->getValue()->getData();
+        $data = $property->getValue();
+        $container = new InternalLinksContainer(
+            isset($data) ? $data : array(),
+            $this->contentQueryExecutor,
+            $this->contentQueryBuilder,
+            array_merge($this->getDefaultParams(), $property->getParams()),
+            $this->logger,
+            $property->getStructure()->getWebspaceKey(),
+            $property->getStructure()->getLanguageCode()
+        );
+
+        return $container->getData();
     }
 }

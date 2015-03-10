@@ -15,6 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\PathHelper;
+use PHPCR\Util\UUIDHelper;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -264,6 +265,19 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $templateKey = $snippet->getKey();
         $this->assertEquals('animal', $templateKey);
+    }
+
+    public function testLoadShallowStructureByNode()
+    {
+        $node = $this->session->getNode($this->snippet1OriginalPath);
+        $snippet = $this->contentMapper->loadShallowStructureByNode(
+            $node,
+            'de',
+            'sulu_io'
+        );
+
+        $this->assertEquals('animal', $snippet->getKey());
+        $this->assertTrue(UUIDHelper::isUUID($snippet->getUuid()));
     }
 
     /**

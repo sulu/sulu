@@ -67,7 +67,7 @@ define(function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/contact/template/contact/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'contactsFields', '/admin/api/contacts/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'contacts', '/admin/api/contacts/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
                     instanceName: 'contacts',
@@ -84,7 +84,7 @@ define(function() {
                             icons: [
                                 {
                                     icon: 'pencil',
-                                    column: 'fullName',
+                                    column: 'firstName',
                                     align: 'left',
                                     callback: function(id) {
                                         this.sandbox.emit('sulu.contacts.contacts.load', id);

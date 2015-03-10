@@ -31,14 +31,7 @@ define([
                 },
 
                 setValue: function(value) {
-                    var data = {
-                        ids: []
-                    };
-
-                    $.each(value, function (i, value) {
-                        data.ids.push(value.uuid);
-                    });
-                    App.dom.data($el, 'snippets', data);
+                    App.dom.data($el, 'snippets', value);
                 },
 
                 getValue: function() {

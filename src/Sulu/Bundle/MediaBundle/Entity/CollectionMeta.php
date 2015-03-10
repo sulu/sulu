@@ -36,7 +36,7 @@ class CollectionMeta
     private $id;
 
     /**
-     * @var \Sulu\Bundle\MediaBundle\Entity\Collection
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
     private $collection;
 
@@ -122,10 +122,10 @@ class CollectionMeta
     /**
      * Set collection
      *
-     * @param \Sulu\Bundle\MediaBundle\Entity\Collection $collection
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection
      * @return CollectionMeta
      */
-    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\Collection $collection)
+    public function setCollection(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection)
     {
         $this->collection = $collection;
 
@@ -135,7 +135,7 @@ class CollectionMeta
     /**
      * Get collection
      *
-     * @return \Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionInterface
      */
     public function getCollection()
     {

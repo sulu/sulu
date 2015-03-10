@@ -11,6 +11,7 @@ services:
         arguments: [%sulu_admin.name%]
         tags:
             - { name: sulu.admin }
+            - { name: sulu.context, context: admin }
     sulu_translate.import:
         class: %sulu_translate.import.class%
         arguments: ["@doctrine.orm.entity_manager", "@kernel"]

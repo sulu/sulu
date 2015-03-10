@@ -44,7 +44,6 @@ use JMS\Serializer\Annotation\Groups;
  */
 class Account extends ApiWrapper
 {
-
     /**
      * @param AccountEntity $account
      * @param string $locale The locale of this product
@@ -147,19 +146,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Account
-     */
-    public function setCreated($created)
-    {
-        $this->entity->setCreated($created);
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -170,19 +156,6 @@ class Account extends ApiWrapper
     public function getCreated()
     {
         return $this->entity->getCreated();
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Account
-     */
-    public function setChanged($changed)
-    {
-        $this->entity->setChanged($changed);
-
-        return $this;
     }
 
     /**
@@ -420,7 +393,7 @@ class Account extends ApiWrapper
      * @return integer
      * @VirtualProperty
      * @SerializedName("type")
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount", "partialAccount"})
      */
     public function getType()
     {

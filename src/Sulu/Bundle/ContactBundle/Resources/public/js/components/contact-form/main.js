@@ -124,7 +124,6 @@ define([
 
         bindCustomEvents = function() {
             this.sandbox.on('sulu.contact-form.add-collectionfilters', addCollectionFilters.bind(this));
-            this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
@@ -367,24 +366,6 @@ define([
             });
         },
 
-        addRequires = function(data) {
-            var tplNames = {
-                    email: 'email-tpl'
-                },
-                tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
-                emailSelector;
-
-            // TODO: set required to first email field
-
-            if (data.indexOf('email') !== -1) {
-                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});
-//                this.sandbox.dom.attr(emailSelector + ' *[data-type=husky-input]', 'data-validation-required','true');
-                this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
-                this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
-            }
-        },
-
         getDataById = function(array, id) {
             for (var i = -1, len = array.length; ++i < len;) {
                 if (array[i].id.toString() === id.toString()) {
@@ -624,7 +605,9 @@ define([
                             el: this.editFieldsData[i].$dropdown,
                             instanceName: this.editFieldsData[i].dropdownId,
                             data: this.editFieldsData[i].dropdownData,
-                            preSelectedElements: [this.editFieldsData[i].type.id]
+                            preSelectedElements: [this.editFieldsData[i].type.id],
+                            isNative: true,
+                            deselectField: this.sandbox.translate('select.no-choice')
                         }
                     }
                 ]);
@@ -686,7 +669,8 @@ define([
             // extend address data by additional variables
             this.sandbox.util.extend(true, data, {
                 translate: this.sandbox.translate,
-                countries: this.options.fieldTypes.countries
+                countries: this.options.fieldTypes.countries,
+                addressTypes: this.options.fieldTypes.address
             });
 
             addressTemplate = this.sandbox.util.template(AddressForm, data);
@@ -899,8 +883,10 @@ define([
                         singleSelect: true,
                         data: this.dropdownDataArray,
                         defaultLabels: this.sandbox.translate('public.please-choose'),
+                        deselectField: this.sandbox.translate('select.no-choice'),
                         instanceName: 'add-fields',
-                        container: ['#' + constants.fieldId, '#' + constants.fieldTypeId]
+                        container: ['#' + constants.fieldId, '#' + constants.fieldTypeId],
+                        isNative: true
                     }
                 }
             ]);

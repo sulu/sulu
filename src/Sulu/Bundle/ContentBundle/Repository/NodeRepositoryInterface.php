@@ -27,7 +27,14 @@ interface NodeRepositoryInterface
      * @param bool $excludeGhosts
      * @return array
      */
-    public function getNode($uuid, $webspaceKey, $languageCode, $breadcrumb = false, $complete = true, $excludeGhosts = false);
+    public function getNode(
+        $uuid,
+        $webspaceKey,
+        $languageCode,
+        $breadcrumb = false,
+        $complete = true,
+        $excludeGhosts = false
+    );
 
     /**
      * returns a list of nodes
@@ -40,7 +47,15 @@ interface NodeRepositoryInterface
      * @param bool $excludeGhosts
      * @return array
      */
-    public function getNodes($parent, $webspaceKey, $languageCode, $depth = 1, $flat = true, $complete = true, $excludeGhosts = false);
+    public function getNodes(
+        $parent,
+        $webspaceKey,
+        $languageCode,
+        $depth = 1,
+        $flat = true,
+        $complete = true,
+        $excludeGhosts = false
+    );
 
     /**
      * returns list of nodes with given ids
@@ -122,9 +137,19 @@ interface NodeRepositoryInterface
      * @param string $webspaceKey
      * @param string $languageCode
      * @param integer $userId
+     * @param bool $isShadow
+     * @param string $shadowBaseLanguage
      * @return array
      */
-    public function saveIndexNode($data, $templateKey, $webspaceKey, $languageCode, $userId);
+    public function saveIndexNode(
+        $data,
+        $templateKey,
+        $webspaceKey,
+        $languageCode,
+        $userId,
+        $isShadow = false,
+        $shadowBaseLanguage = null
+    );
 
     /**
      * removes given node
@@ -211,4 +236,24 @@ interface NodeRepositoryInterface
      * @return array
      */
     public function orderBefore($uuid, $beforeUuid, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * brings a given node into a given position
+     * @param string $uuid
+     * @param integer $position
+     * @param string $webspaceKey
+     * @param string $languageCode
+     * @param integer $userId
+     * @return array
+     */
+    public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId);
+
+    /**
+     * @param string $uuid
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $srcLocale
+     * @param string[] $destLocales
+     */
+    public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales);
 }

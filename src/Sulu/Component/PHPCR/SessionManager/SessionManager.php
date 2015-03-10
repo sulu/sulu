@@ -89,22 +89,6 @@ class SessionManager implements SessionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTempNode($webspaceKey, $alias)
-    {
-        $tempPath = '/' . $this->nodeNames['base'] . '/' . $webspaceKey . '/' . $this->nodeNames['temp'] . '';
-        $tempNode = $this->getSession()->getNode($tempPath, 2);
-
-        // create the node on the fly
-        if (!$tempNode->hasNode($alias)) {
-            $tempNode->addNode($alias);
-        }
-
-        return $tempNode->getNode($alias);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getSnippetNode($templateKey = null)
     {
         $snippetPath = '/' . $this->nodeNames['base'] . '/' . $this->nodeNames['snippet'];
@@ -114,7 +98,11 @@ class SessionManager implements SessionManagerInterface
             $nodePath = $snippetPath;
         }
 
-        $node = $this->getSession()->getNode($nodePath);
+        try {
+            $node = $this->getSession()->getNode($nodePath);
+        } catch (\PHPCR\PathNotFoundException $e) {
+            $node = $this->getSession()->getNode($snippetPath)->addNode($templateKey);
+        }
 
         return $node;
     }

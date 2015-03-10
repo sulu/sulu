@@ -58,6 +58,15 @@ define([], function() {
         },
 
         /**
+         * listens on and shows the sidebar-column
+         *
+         * @event sulu.sidebar.[INSTANCE_NAME].hide
+         */
+        SHOW_COLUMN = function() {
+            return createEventName.call(this, 'show');
+        },
+
+        /**
          * appends a widget to the sidebar
          *
          * @event sulu.sidebar.[INSTANCE_NAME].append-widget
@@ -158,6 +167,7 @@ define([], function() {
         bindCustomEvents: function() {
             this.sandbox.on(CHANGE_WIDTH.call(this), this.changeWidth.bind(this));
             this.sandbox.on(HIDE_COLUMN.call(this), this.hideColumn.bind(this));
+            this.sandbox.on(SHOW_COLUMN.call(this), this.showColumn.bind(this));
             this.sandbox.on(SET_WIDGET.call(this), this.setWidget.bind(this));
             this.sandbox.on(APPEND_WIDGET.call(this), this.appendWidget.bind(this));
             this.sandbox.on(PREPEND_WIDGET.call(this), this.prependWidget.bind(this));
@@ -241,6 +251,7 @@ define([], function() {
         hideColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector),
                 $parent = this.sandbox.dom.parent($column);
+            
             this.changeToFixedWidth();
             this.sandbox.dom.removeClass($parent, constants.visibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.noVisibleSidebarClass);
@@ -254,6 +265,7 @@ define([], function() {
         showColumn: function() {
             var $column = this.sandbox.dom.find(constants.columnSelector),
                 $parent = this.sandbox.dom.parent($column);
+
             this.sandbox.dom.removeClass($parent, constants.noVisibleSidebarClass);
             this.sandbox.dom.addClass($parent, constants.visibleSidebarClass);
             this.sandbox.dom.removeClass($column, constants.hiddenClass);

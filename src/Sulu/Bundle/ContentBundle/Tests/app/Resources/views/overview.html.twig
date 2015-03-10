@@ -1,0 +1,23 @@
+<html vocab="http://schema.org/" typeof="Content">
+<body>
+<div id="content" vocab="http://sulu.io/" typeof="Content">
+{% block content %}
+<h1 property="title">{{ content.title }}</h1>
+<h1 property="title">PREF: {{ content.title }}</h1>
+<div property="article">{{ content.article }}</div>
+<div property="block" typeof="collection">
+{% for block in content.block %}
+<div rel="block" typeof="block">
+<h1 property="title">{{ block.title }}</h1>
+<ul>
+{% for item in block.article %}
+<li property="article">{{ item }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+</div>
+</body>
+</html>

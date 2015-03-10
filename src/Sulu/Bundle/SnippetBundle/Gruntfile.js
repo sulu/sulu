@@ -17,37 +17,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
-            public: {
-                files: [
-                    {
-                        expand: true, 
-                        cwd: 'Resources/public', 
-                        src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../../web/bundles/sulusnippet/'
-                    }
-                ]
-            },
-            public_dev: {
-                files: [
-                    {
-                        expand: true, 
-                        cwd: 'Resources/public_dev', 
-                        src: ['**', '!**/scss/**'], 
-                        dest: '../../../../../../../web/bundles/sulusnippet/'
-                    }
-                ]
-            }
         },
         clean: {
-            options: { force: true },
-            public: {
-                files: [
-                    {
-                        dot: true,
-                        src: ['../../../../../../../web/bundles/sulusnippet/']
-                    }
-                ]
-            }
+            options: { force: true }
         },
         watch: {
             options: {
@@ -62,14 +34,26 @@ module.exports = function (grunt) {
                 tasks: ['publish']
             }
         },
-        uglify: min
+        uglify: min,
+        compass: {
+            dev: {
+                options: {
+                    sassDir: 'Resources/public/scss/',
+                    specify: ['Resources/public/scss/main.scss'],
+                    cssDir: 'Resources/public/css/',
+                    relativeAssets: false
+                }
+            }
+        },
+        cssmin: {
+            // TODO: options: { banner: '<%= meta.banner %>' },
+            compress: {
+                files: {
+                    'Resources/public/css/main.min.css': ['Resources/public/css/main.css']
+                }
+            }
+        }
     });
-
-    grunt.registerTask('publish', [
-        'clean:public',
-        'copy:public',
-        'copy:public_dev'
-    ]);
 
     grunt.registerTask('default', [
         'watch'
@@ -77,6 +61,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('build', [
         'uglify',
-        'publish'
+        'compass:dev',
+        'cssmin'
     ]);
 };

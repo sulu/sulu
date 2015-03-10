@@ -1,6 +1,6 @@
 <div class="grid-col-{{ property.colspan != "" ? property.colspan : '12' }} floating m-top-20">
     <div class="grid">
-        <div class="text-blocks-header">
+        <div id="text-block-header-{{ id|raw }}" class="text-blocks-header">
             <div id="sort-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right"><%= translate('sulu.content.sort.blocks') %></div>
             <div id="edit-text-blocks-{{ id|raw }}" tabindex="0" class="btn link text-blocks-toggle-btn pull-right hidden"><%= translate('sulu.content.edit.blocks') %></div>
             <div class="clear"></div>
@@ -40,9 +40,9 @@
                                 {% for child in type.childProperties %}
 
                                     {# get Type for property #}
-                                    {% set type = getType(child.contentTypeName) %}
+                                    {% set type = get_type(child.contentTypeName) %}
                                     {# get params for property #}
-                                    {% set params = getParams(child) %}
+                                    {% set params = get_params(child) %}
 
                                     {% if child is multiple %}
                                         {% include 'SuluContentBundle:Template:macros/multiple.html.twig' with {'property': child, 'params': params, 'type': type, 'id': id ~ '-' ~ child.name ~ '<~=index~>', 'webspaceKey': webspaceKey, 'languageCode': languageCode, 'userLocale': userLocale} only %}

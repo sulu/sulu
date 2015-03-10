@@ -22,8 +22,8 @@ class WebsiteIntegrationTest extends BaseTestCase
     {
         parent::setUp();
 
-        $this->indexStructure('Structure', '/structure');
         $this->client = $this->createWebsiteClient();
+        $this->indexStructure('Structure', '/structure');
     }
 
     public function testIntegration()

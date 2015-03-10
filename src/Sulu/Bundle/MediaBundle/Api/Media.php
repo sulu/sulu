@@ -24,7 +24,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -483,20 +483,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param DateTime|string $changed
-     * @return $this
-     */
-    public function setChanged($changed)
-    {
-        if (is_string($changed)) {
-            $changed = new \DateTime($changed);
-        }
-        $this->entity->setChanged($changed);
-
-        return $this;
-    }
-
-    /**
      * @VirtualProperty
      * @SerializedName("changed")
      * @return string
@@ -533,20 +519,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param DateTime|string $created
-     * @return $this
-     */
-    public function setCreated($created)
-    {
-        if (is_string($created)) {
-            $created = new \DateTime($created);
-        }
-        $this->entity->setCreated($created);
-
-        return $this;
-    }
-
-    /**
      * @VirtualProperty
      * @SerializedName("created")
      * @return mixed
@@ -562,7 +534,7 @@ class Media extends ApiWrapper
      */
     public function setCreator($creator)
     {
-        $this->entity->setChanger($creator);
+        $this->entity->setCreator($creator);
 
         return $this;
     }

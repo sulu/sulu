@@ -73,7 +73,7 @@ define([
         this.sandbox.dom.html(this.$el, template);
 
         // init list-toolbar and datagrid
-        this.sandbox.sulu.initListToolbarAndList.call(this, 'snippetsFields', '/admin/api/snippet/fields',
+        this.sandbox.sulu.initListToolbarAndList.call(this, 'snippets', '/admin/api/snippet/fields',
             {
                 el: this.$find('#list-toolbar-container'),
                 instanceName: 'snippets',

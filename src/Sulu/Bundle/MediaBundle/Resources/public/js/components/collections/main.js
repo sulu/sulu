@@ -12,8 +12,7 @@ define([
     'sulumedia/collection/medias',
     'sulumedia/model/collection',
     'sulumedia/model/media'
-],
-    function (Collections, Medias, Collection, Media) {
+], function (Collections, Medias, Collection, Media) {
 
         'use strict';
 
@@ -41,11 +40,23 @@ define([
              * listens on and deletes medias
              * @event sulu.media.collections.delete-media
              * @param ids {Array} array of ids of the media to delete
+             * @param afterConfirm {Function} callback to execute after modal has been confirmed
              * @param callback {Function} callback to execute after a media got deleted
              * @param noDialog {Boolean} if true no dialog will be shown
              */
             DELETE_MEDIA = function () {
                 return createEventName.call(this, 'delete-media');
+            },
+
+            /**
+             * listens on and move medias
+             * @event sulu.media.collections.move-media
+             * @param ids {Array} array of ids of the media to delete
+             * @param collection {Object} collection to move media into
+             * @param callback {Function} callback to execute after a media got moved
+             */
+            MOVE_MEDIA = function () {
+                return createEventName.call(this, 'move-media');
             },
 
             /**
@@ -282,6 +293,9 @@ define([
                 // delete media
                 this.sandbox.on(DELETE_MEDIA.call(this), this.deleteMedia.bind(this));
 
+                // move media
+                this.sandbox.on(MOVE_MEDIA.call(this), this.moveMedia.bind(this));
+
                 // delete collection
                 this.sandbox.on(DELETE_COLLECTION.call(this), this.deleteCollection.bind(this));
 
@@ -426,20 +440,25 @@ define([
             /**
              * Deletes an array of media
              * @param mediaIds {Array} array of media ids
+             * @param afterConfirm {Function} callback to execute after modal has been confirmed
              * @param callback {Function} callback to execute after deleting a media
              * @param noDialog {Boolean} if true no dialog box will be shown
              */
-            deleteMedia: function (mediaIds, callback, noDialog) {
+            deleteMedia: function (mediaIds, afterConfirm, callback, noDialog) {
                 var media,
+                    length = mediaIds.length,
+                    counter = 0,
+                    finished = false,
                     action = function () {
                         this.sandbox.util.foreach(mediaIds, function (id) {
                             media = this.getMediaModel(id);
                             media.destroy({
                                 success: function () {
+                                    finished = ++counter === length;
                                     if (typeof callback === 'function') {
-                                        callback(id);
+                                        callback(id, finished);
                                     } else {
-                                        this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id);
+                                        this.sandbox.emit(SINGLE_MEDIA_DELETED.call(this), id, finished);
                                     }
                                 }.bind(this),
                                 error: function () {
@@ -454,10 +473,33 @@ define([
                 } else {
                     this.sandbox.sulu.showDeleteDialog(function (confirmed) {
                         if (confirmed === true) {
+                            if (typeof afterConfirm === 'function') {
+                                afterConfirm();
+                            }
                             action();
                         }
                     }.bind(this));
                 }
+            },
+
+            /**
+             * Moves an array of media
+             * @param mediaIds {Array} array of media ids
+             * @param collection {Object} collection to move media to
+             * @param callback {Function} callback to execute after moving a media
+             */
+            moveMedia: function(mediaIds, collection, callback) {
+                this.sandbox.util.foreach(mediaIds, function(id) {
+                    this.sandbox.util.save('/admin/api/media/' + id + '?action=move&destination=' + collection.id, 'POST')
+                        .then(function() {
+                            if (typeof callback === 'function') {
+                                callback(id);
+                            }
+                        }.bind(this))
+                        .fail(function() {
+                            this.sandbox.logger.log('Error while moving a single media');
+                        }.bind(this));
+                }.bind(this));
             },
 
             /**
@@ -510,6 +552,7 @@ define([
                 var media;
                 // if media exists there is no need to fetch the media again - the local one is up to date
                 if (!this.medias.get(record)) {
+                    this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
                     media = this.getMediaModel(record);
                     media.fetch({
                         success: function (media) {
@@ -542,6 +585,7 @@ define([
                 // loop through ids - if model is already loaded take it else load it
                 this.sandbox.util.foreach(records, function (mediaId) {
                     if (!this.medias.get(mediaId)) {
+                        this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
                         media = this.getMediaModel(mediaId);
                         media.fetch({
                             success: function (media) {

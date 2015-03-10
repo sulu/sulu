@@ -278,9 +278,9 @@ define(
 
                 if (!!this.contact) {
                     this.setTitle();
-                    url = '/admin/api/activities?flat=true&contact=' + this.contact.id;
+                    url = '/admin/api/activities?sortBy=dueDate&sortOrder=asc&flat=true&contact=' + this.contact.id;
                 } else {
-                    url = '/admin/api/activities?flat=true&account=' + this.account.id;
+                    url = '/admin/api/activities?sortBy=dueDate&sortOrder=asc&flat=true&account=' + this.account.id;
                 }
 
                 // init list-toolbar and datagrid

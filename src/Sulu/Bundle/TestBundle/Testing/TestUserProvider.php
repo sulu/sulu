@@ -10,7 +10,9 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Entity\TestContact;
 use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -25,27 +27,57 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class TestUserProvider implements UserProviderInterface
 {
     /**
-     * @var TestUser
+     * @var UserInterface
      */
     private $user;
 
-    public function __construct(ObjectManager $em)
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $em)
     {
-        $this->user = $em->getRepository('Sulu\Bundle\TestBundle\Entity\TestUser')->findOneByUsername('test');
-        if (!$this->user) {
-            $contact = new TestContact();
+        $this->entityManager = $em;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser()
+    {
+        if ($this->user) {
+            return $this->user;
+        }
+
+        $user = $this->entityManager
+            ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+            ->findOneByUsername('test');
+
+        if (!$user) {
+            $contact = new Contact();
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
-            $em->persist($contact);
-            $this->user = new TestUser();
-            $this->user->setPassword('test');
-            $this->user->setUsername('test');
-            $this->user->setLocale('en');
-            $this->user->setContact($contact);
+            $this->entityManager->persist($contact);
 
-            $em->persist($this->user);
-            $em->flush($this->user);
+            $user = new User();
+            $this->setCredentials($user);
+            $user->setSalt('');
+            $user->setLocale('en');
+            $user->setContact($contact);
+            $this->entityManager->persist($user);
+        } else {
+            $this->setCredentials($user);
         }
+
+        $this->entityManager->flush();
+
+        $this->user = $user;
+
+        return $this->user;
     }
 
     /**
@@ -65,7 +97,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        return $this->user;
+        return $this->getUser();
     }
 
     /**
@@ -83,7 +115,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        return $this->user;
+        return $this->getUser();
     }
 
     /**
@@ -96,5 +128,15 @@ class TestUserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return $class === 'Sulu\Bundle\CoreBundle\Entity\TestUser';
+    }
+
+    /**
+     * Sets the standard credentials for the user
+     */
+    private function setCredentials(UserInterface $user)
+    {
+        $user->setUsername('test');
+        $user->setPassword('test');
+        $user->setSalt('');
     }
 }

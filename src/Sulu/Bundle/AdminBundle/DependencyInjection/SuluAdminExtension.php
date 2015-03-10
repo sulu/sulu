@@ -31,10 +31,11 @@ class SuluAdminExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter($this->getAlias() . '.name', $config['name']);
+        $container->setParameter($this->getAlias() . '.email', $config['email']);
         $container->setParameter($this->getAlias() . '.user_data_service', $config['user_data_service']);
         $container->setParameter($this->getAlias() . '.widget_groups', $config['widget_groups']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
     }
 }

@@ -2,7 +2,8 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="Sulu\Bundle\ContactBundle\Entity\EmailType" table="co_email_types">
+    <entity name="Sulu\Bundle\ContactBundle\Entity\EmailType" table="co_email_types"
+            repository-class="Sulu\Bundle\ContactBundle\Entity\EmailTypeRepository">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

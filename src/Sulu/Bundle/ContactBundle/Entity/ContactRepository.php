@@ -32,6 +32,7 @@ class ContactRepository extends EntityRepository
         $qb = $this->createQueryBuilder('u')
             ->leftJoin('u.accountContacts', 'accountContacts')
             ->leftJoin('accountContacts.account', 'account')
+            ->leftJoin('account.mainContact', 'mainContact')
             ->leftJoin('u.activities', 'activities')
             ->leftJoin('activities.activityStatus', 'activityStatus')
             ->leftJoin('u.contactAddresses', 'contactAddresses')
@@ -56,6 +57,7 @@ class ContactRepository extends EntityRepository
             ->addSelect('position')
             ->addSelect('title')
             ->addSelect('accountContacts')
+            ->addSelect('mainContact')
             ->addSelect('account')
             ->addSelect('urls')
             ->addSelect('partial tags.{id,name}')
@@ -221,13 +223,20 @@ class ContactRepository extends EntityRepository
      * @param $accountId
      * @param null $excludeContactId
      * @param bool $arrayResult
+     * @param bool $onlyFetchMainAccounts Defines if only main relations should be returned
      * @return array
      */
-    public function findByAccountId($accountId, $excludeContactId = null, $arrayResult = true)
+    public function findByAccountId($accountId, $excludeContactId = null, $arrayResult = true, $onlyFetchMainAccounts = true)
     {
-        $qb = $this->createQueryBuilder('c')
-            ->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true')
-            ->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
+        $qb = $this->createQueryBuilder('c');
+
+        // only fetch main accounts
+        if ($onlyFetchMainAccounts) {
+            $qb->join('c.accountContacts', 'accountContacts', 'WITH', 'accountContacts.main = true');
+        } else {
+            $qb->join('c.accountContacts', 'accountContacts');
+        }
+        $qb->join('accountContacts.account', 'account', 'WITH', 'account.id = :accountId')
             ->setParameter('accountId', $accountId);
 
         if (!is_null($excludeContactId)) {
@@ -315,15 +324,23 @@ class ContactRepository extends EntityRepository
             ->addSelect('accountContacts')
             ->addSelect('account');
 
-        // if needed add where statements
-        if (is_array($where) && sizeof($where) > 0) {
-            $qb = $this->addWhere($qb, $where, 'contact');
+        if (isset($where['id'])) {
+            $qb->andWhere('contact.id = :id');
+            $qb->setParameter('id', $where['id']);
+        }
+        if (isset($where['firstName'])) {
+            $qb->andWhere('contact.firstName = :firstName');
+            $qb->setParameter('firstName', $where['firstName']);
+        }
+        if (isset($where['lastName'])) {
+            $qb->andWhere('contact.lastName= :lastName');
+            $qb->setParameter('lastName', $where['lastName']);
         }
         if (!is_null($email)) {
             $qb->join('contact.emails', 'emails', 'WITH', 'emails.email = :email');
             $qb->setParameter('email', $email);
         }
-        if (!is_null($email)) {
+        if (!is_null($phone)) {
             $qb->join('contact.phones', 'phones', 'WITH', 'phones.phone = :phone');
             $qb->setParameter('phone', $phone);
         }
@@ -337,4 +354,33 @@ class ContactRepository extends EntityRepository
 
         return $result;
     }
+
+    /**
+     * find a contact by id
+     * @param $id
+     * @return mixed|null
+     */
+    public function findContactWithAccountsById($id)
+    {
+        // create basic query
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.accountContacts', 'accountContacts')
+            ->leftJoin('accountContacts.account', 'account')
+            ->addSelect('accountContacts')
+            ->addSelect('account')
+            ->where('c.id=:id')
+            ->orderBy('accountContacts.main', 'DESC');
+
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setParameter('id', $id);
+
+        try {
+            $contact = $query->getSingleResult();
+            return $contact;
+        } catch (NoResultException $nre) {
+            return null;
+        }
+    }
+
 }

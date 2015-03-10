@@ -70,6 +70,7 @@ define([
             this.user.set('username', data.user.username);
             this.user.set('contact', this.contact);
             this.user.set('locale', data.user.locale);
+            this.user.set('email', (!!data.user.email) ? data.user.email : null);
 
             if (!!data.user.password && data.user.password !== '') {
                 this.user.set('password', data.user.password);
@@ -118,13 +119,14 @@ define([
             }.bind(this));
 
             this.user.save(null, {
+                global: false,
                 success: function(model) {
                     this.sandbox.emit('sulu.user.permissions.saved', model.toJSON());
                 }.bind(this),
                 error: function(obj, resp) {
                     if (!!resp && !!resp.responseJSON && !!resp.responseJSON.message) {
                         this.sandbox.emit('sulu.labels.error.show',
-                            resp.responseJSON.message,
+                            this.gerErrorMessage(resp.responseJSON.code),
                             'labels.error',
                             ''
                         );
@@ -132,6 +134,23 @@ define([
                     }
                 }.bind(this)
             });
+        },
+
+        /**
+         * Takes a code and returns a an error string
+         * @param code
+         */
+        gerErrorMessage: function(code) {
+            if (code === 1004) {
+                return 'security.user.error.notUniqueEmail';
+            }
+            if (code === 1002) {
+                return 'security.user.error.missingPassword';
+            }
+            if (code === 1001) {
+                return 'security.user.error.notUnique';
+            }
+            return "";
         },
 
         // render form and load data

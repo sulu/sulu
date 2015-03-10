@@ -26,9 +26,6 @@
 
         <field name="corporation" type="string" column="corporation" length="255" nullable="true"/>
 
-        <field name="created" type="datetime" column="created"/>
-        <field name="changed" type="datetime" column="changed"/>
-
         <field name="disabled" type="integer" column="disabled" length="1" nullable="false"/>
         <field name="type" type="integer" column="type" nullable="false" />
 
@@ -56,17 +53,6 @@
         <many-to-one field="mainContact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
             <join-columns>
                 <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
-            <join-columns>
-                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
-            <join-columns>
-                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 

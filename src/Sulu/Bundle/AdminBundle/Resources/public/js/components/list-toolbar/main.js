@@ -315,6 +315,7 @@ define([], function() {
 
             var $container,
                 options = {
+                    groups: this.options.groups,
                     hasSearch: true,
                     data: this.options.template,
                     instanceName: this.options.instanceName,
@@ -323,6 +324,10 @@ define([], function() {
                         placeholderText: 'public.search'
                     }
                 };
+
+            if (this.options.hasOwnProperty('hasSearch')) {
+                options.hasSearch = this.options.hasSearch;
+            }
 
             // see if template has listener set
             if (this.options.listener) {

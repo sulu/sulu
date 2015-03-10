@@ -55,6 +55,37 @@ define(function() {
                     '<div id="child-table"/>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
+            },
+
+            openGhost: function() {
+                return [
+                    '<div class="copy-locale-overlay-content grid">',
+                    '   <div class="grid-row">',
+                    '       <p class="info">',
+                                this.sandbox.translate('content.contents.settings.copy-locale.info'),
+                    '       </p>',
+                    '   </div>',
+                    '   <div class="grid-row">',
+                    '       <div class="custom-checkbox">',
+                    '           <input type="radio" name="action" id="copy-locale-new" checked="checked"/>',
+                    '           <span class="icon"></span>',
+                    '       </div>',
+                    '       <label for="copy-locale-new">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.new'),
+                    '       </label>',
+                    '   </div>',
+                    '   <div class="grid-row">',
+                    '       <div class="custom-checkbox">',
+                    '           <input type="radio" name="action" id="copy-locale-copy"/>',
+                    '           <span class="icon"></span>',
+                    '       </div>',
+                    '       <label for="copy-locale-copy">',
+                    this.sandbox.translate('content.contents.settings.copy-locale.copy'),
+                    '       </label>',
+                    '       <div id="copy-locale-overlay-select" />',
+                    '   </div>',
+                    '</div>'
+                ].join('');
             }
         };
 
@@ -93,9 +124,13 @@ define(function() {
                 this.sandbox.emit('sulu.content.contents.new', parent);
             }, this);
 
-            this.sandbox.on('husky.column-navigation.node.edit', function(item) {
+            this.sandbox.on('husky.column-navigation.node.action', function(item) {
                 this.setLastSelected(item.id);
-                this.sandbox.emit('sulu.content.contents.load', item);
+                if (!item.type || item.type.name !== 'ghost') {
+                    this.sandbox.emit('sulu.content.contents.load', item);
+                } else {
+                    this.openGhost(item);
+                }
             }, this);
 
             this.sandbox.on('husky.column-navigation.node.selected', function(item) {
@@ -119,10 +154,19 @@ define(function() {
                     this.copySelected(selectedItem);
                 } else if (dropdownItem.id === DELETE_BUTTON_ID) {
                     this.deleteSelected(selectedItem);
-                } else if (dropdownItem.id === ORDER_BUTTON_ID) {
-                    this.orderSelected(selectedItem, columnItems);
                 }
             }.bind(this));
+
+            this.sandbox.on('husky.column-navigation.node.ordered', this.arrangeNode.bind(this));
+        },
+
+        /**
+         * Saves an arrangement of a node
+         * @param uuid - the uuid of the node
+         * @param position - the new position of the node
+         */
+        arrangeNode: function(uuid, position) {
+            this.sandbox.emit('sulu.content.contents.order', uuid, position);
         },
 
         /**
@@ -185,11 +229,11 @@ define(function() {
             }.bind(this));
 
             // wait for click on column navigation to send request
-            this.sandbox.once('husky.column-navigation.overlay.edit', editCallback);
+            this.sandbox.once('husky.column-navigation.overlay.action', editCallback);
 
             // wait for closing overlay to unbind events
             this.sandbox.once('husky.overlay.node.closed', function() {
-                this.sandbox.off('husky.column-navigation.overlay.edit', editCallback);
+                this.sandbox.off('husky.column-navigation.overlay.action', editCallback);
             }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
@@ -197,7 +241,7 @@ define(function() {
                 this.sandbox.emit('husky.overlay.node.set-position');
             }.bind(this));
 
-            this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation());
+            this.startOverlay('content.contents.settings.' + title + '.title', templates.columnNavigation(), false);
         },
 
         /**
@@ -209,43 +253,6 @@ define(function() {
                 this.restartColumnNavigation();
             }.bind(this));
             this.sandbox.emit('sulu.content.content.delete', item.id);
-        },
-
-        /**
-         * order item in his layer
-         * @param {Object} item
-         * @param {Array} columnItems
-         */
-        orderSelected: function(item, columnItems) {
-            // event listener for select click
-            this.sandbox.dom.one(this.$el, 'click', function(e) {
-                var $item = this.sandbox.dom.parent(e.currentTarget),
-                    id = this.sandbox.dom.data($item, 'id');
-
-                this.showOverlayLoader();
-                this.sandbox.emit('sulu.content.contents.order', item.id, id,
-                    function(data) {
-                        this.setLastSelected(data.id);
-
-                        this.restartColumnNavigation();
-                        this.sandbox.emit('husky.overlay.node.close');
-                    }.bind(this),
-                    function(error) {
-                        this.sandbox.logger.error(error);
-                        this.hideOverlayLoader();
-                    }.bind(this));
-
-                this.restartColumnNavigation();
-                this.sandbox.emit('husky.overlay.node.close');
-            }.bind(this), '#child-table .options-select');
-
-            // wait for overlay initialized to initialize overlay
-            this.sandbox.once('husky.overlay.node.opened', function() {
-                this.renderOverlayTable('#child-table', columnItems, item.id);
-                this.sandbox.emit('husky.overlay.node.set-position');
-            }.bind(this));
-
-            this.startOverlay('content.contents.settings.order.title', templates.table());
         },
 
         /**
@@ -279,10 +286,32 @@ define(function() {
          * start a new overlay
          * @param {String} titleKey translation key
          * @param {String} template template for the content
+         * @param {Boolean} okButton
+         * @param {undefined|String} instanceName
+         * @param {undefined|function} okCallback
          */
-        startOverlay: function(titleKey, template) {
-            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>');
+        startOverlay: function(titleKey, template, okButton, instanceName, okCallback) {
+            if (!instanceName) {
+                instanceName = 'node';
+            }
+
+            var $element = this.sandbox.dom.createElement('<div class="overlay-container"/>'),
+                buttons = [
+                    {
+                        type: 'cancel',
+                        align: 'right'
+                    }
+                ];
             this.sandbox.dom.append(this.$el, $element);
+
+            if (!!okButton) {
+                buttons.push({
+                    type: 'ok',
+                    align: 'left',
+                    text: this.sandbox.translate('content.contents.settings.' + instanceName + '.ok')
+                });
+            }
+
             this.sandbox.start([
                 {
                     name: 'overlay@husky',
@@ -292,17 +321,14 @@ define(function() {
                         cssClass: 'node',
                         el: $element,
                         container: this.$el,
-                        instanceName: 'node',
+                        instanceName: instanceName,
                         skin: 'wide',
                         slides: [
                             {
                                 title: this.sandbox.translate(titleKey),
                                 data: template,
-                                buttons: [
-                                    {
-                                        type: 'cancel'
-                                    }
-                                ]
+                                buttons: buttons,
+                                okCallback: okCallback
                             }
                         ]
                     }
@@ -315,7 +341,8 @@ define(function() {
          * @param {String} id of selected item
          */
         startOverlayColumnNavigation: function(id) {
-            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&webspace-node=true';
+            var url = '/admin/api/nodes{/id}?tree=true&webspace=' + this.options.webspace +
+                '&language=' + this.options.language + '&webspace-node=true';
 
             this.sandbox.start(
                 [
@@ -326,11 +353,12 @@ define(function() {
                             selected: id,
                             url: url.replace('{/id}', (!!id ? '/' + id : '')),
                             instanceName: 'overlay',
-                            editIcon: 'fa-check-circle',
+                            actionIcon: 'fa-check-circle',
                             resultKey: this.options.resultKey,
-                            showEdit: false,
+                            showOptions: false,
                             showStatus: false,
                             responsive: false,
+                            sortable: false,
                             skin: 'fixed-height-small'
                         }
                     }
@@ -402,7 +430,8 @@ define(function() {
                         data: [
                             {
                                 id: DELETE_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.delete')
+                                name: this.sandbox.translate('content.contents.settings.delete'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: 2,
@@ -410,20 +439,42 @@ define(function() {
                             },
                             {
                                 id: MOVE_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.move')
+                                name: this.sandbox.translate('content.contents.settings.move'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: COPY_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.copy')
+                                name: this.sandbox.translate('content.contents.settings.copy'),
+                                enabler: this.hasSelectedEnabler
                             },
                             {
                                 id: ORDER_BUTTON_ID,
-                                name: this.sandbox.translate('content.contents.settings.order')
+                                name: this.sandbox.translate('content.contents.settings.order'),
+                                mode: 'order',
+                                enabler: this.orderEnabler
                             }
                         ]
                     }
                 }
             ]);
+        },
+
+        /**
+         * Enabler for MOVE, COPY and DELETE
+         * @param column
+         * @returns {boolean}
+         */
+        hasSelectedEnabler: function(column) {
+            return !!column.hasSelected;
+        },
+
+        /**
+         * Enaber for ORDER
+         * @param column
+         * @returns {boolean}
+         */
+        orderEnabler: function(column) {
+            return column.numberItems > 1;
         },
 
         /**
@@ -463,9 +514,13 @@ define(function() {
          */
         getUrl: function() {
             if (this.getLastSelected() !== null) {
-                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                return '/admin/api/nodes/' + this.getLastSelected() + '?tree=true&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             } else {
-                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace + '&language=' + this.options.language + '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
+                return '/admin/api/nodes?depth=1&webspace=' + this.options.webspace +
+                    '&language=' + this.options.language +
+                    '&exclude-ghosts=' + (!this.showGhostPages ? 'true' : 'false');
             }
         },
 
@@ -474,8 +529,10 @@ define(function() {
          */
         render: function() {
             this.bindCustomEvents();
+            var url = 'text!/admin/content/template/content/column/' + this.options.webspace +
+                '/' + this.options.language + '.html';
 
-            require(['text!/admin/content/template/content/column/' + this.options.webspace + '/' + this.options.language + '.html'], function(template) {
+            require([url], function(template) {
                 var defaults = {
                         translate: this.sandbox.translate
                     },
@@ -506,6 +563,46 @@ define(function() {
                         el: '#show-ghost-pages',
                         checked: this.showGhostPages,
                         outline: true
+                    }
+                }
+            ]);
+        },
+
+        openGhost: function(item) {
+            this.startOverlay(
+                'content.contents.settings.copy-locale.title',
+                templates.openGhost.call(this), true, 'copy-locale-overlay',
+                function() {
+                    var copy = this.sandbox.dom.prop('#copy-locale-copy', 'checked'),
+                        src = this.sandbox.dom.data('#copy-locale-overlay-select', 'selectionValues'),
+                        dest = this.options.language;
+
+                    if (!!copy) {
+                        if (!src || src.length === 0) {
+                            return false;
+                        }
+
+                        this.sandbox.emit('sulu.content.contents.copy-locale', item.id, src[0], [dest], function() {
+                            this.sandbox.emit('sulu.content.contents.load', item);
+                        }.bind(this));
+                    } else {
+                        this.sandbox.emit('sulu.content.contents.load', item);
+                    }
+                }.bind(this)
+            );
+
+            this.sandbox.once('husky.select.copy-locale-to.selected.item', function() {
+                this.sandbox.dom.prop('#copy-locale-copy', 'checked', true)
+            }.bind(this));
+
+            this.sandbox.start([
+                {
+                    name: 'select@husky',
+                    options: {
+                        el: '#copy-locale-overlay-select',
+                        instanceName: 'copy-locale-to',
+                        defaultLabel: this.sandbox.translate('content.contents.settings.copy-locale.select-default'),
+                        data: item.concreteLanguages
                     }
                 }
             ]);

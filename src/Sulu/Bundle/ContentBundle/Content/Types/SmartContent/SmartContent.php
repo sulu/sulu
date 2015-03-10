@@ -15,10 +15,11 @@ use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -94,32 +95,12 @@ class SmartContent extends ComplexContentType
     /**
      * @param $data
      * @param PropertyInterface $property
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     * @param bool $preview
      */
     protected function setData(
         $data,
-        PropertyInterface $property,
-        $webspaceKey,
-        $languageCode,
-        $segmentKey,
-        $preview = false
+        PropertyInterface $property
     ) {
-        $smartContent = new SmartContentContainer(
-            $this->contentQuery,
-            $this->contentQueryBuilder,
-            $this->tagManager,
-            array_merge($this->getDefaultParams(), $property->getParams()),
-            $webspaceKey,
-            $languageCode,
-            $segmentKey,
-            $preview,
-            $this->stopwatch
-        );
-        $smartContent->setConfig($data === null || !is_array($data) ? array() : $data);
-        $property->setValue($smartContent);
+        $property->setValue($data);
     }
 
     /**
@@ -127,7 +108,10 @@ class SmartContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $data = json_decode($node->getPropertyValueWithDefault($property->getName(), '{}'), true);
+        $data = $node->getPropertyValueWithDefault($property->getName(), '{}');
+        if (is_string($data)) {
+            $data = json_decode($data, true);
+        }
 
         if (!empty($data['tags'])) {
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
@@ -197,8 +181,9 @@ class SmartContent extends ComplexContentType
     public function getDefaultParams()
     {
         $params = parent::getDefaultParams();
-        $params['page_parameter'] = 'p';
-        $params['properties'] = array();
+        $params['page_parameter'] = new PropertyParameter('page_parameter', 'p');
+        $params['properties'] = new PropertyParameter('properties', array(), 'collection');
+        $params['present_as'] = new PropertyParameter('present_as', array(), 'collection');
 
         return $params;
     }
@@ -209,19 +194,25 @@ class SmartContent extends ComplexContentType
     public function getViewData(PropertyInterface $property)
     {
         $this->getContentData($property);
-        $container = $property->getValue();
+        $config = $property->getValue();
 
-        if ($container instanceof SmartContentContainer) {
-            return array_merge(
-                $container->getConfig(),
-                array(
-                    'page' => $container->getPage(),
-                    'hasNextPage' => $container->getHasNextPage()
-                )
-            );
-        } else {
-            return array();
-        }
+        $config = array_merge(
+            array(
+                'dataSource' => null,
+                'includeSubFolders' => null,
+                'category' => null,
+                'tags' => array(),
+                'sortBy' => null,
+                'sortMethod' => null,
+                'presentAs' => null,
+                'limitResult' => null,
+                'page' => null,
+                'hasNextPage' => null,
+            ),
+            $config
+        );
+
+        return $config;
     }
 
     /**
@@ -234,31 +225,61 @@ class SmartContent extends ComplexContentType
             $property->getParams()
         );
 
-        $value = $property->getValue();
+        $data = $property->getValue();
 
-        // paginate
-        if ($value instanceof SmartContentContainer) {
-            $contentData = $this->loadData($value, $property, $params);
-        } else {
-            $contentData = array();
+        $container = new SmartContentContainer(
+            $this->contentQuery,
+            $this->contentQueryBuilder,
+            $this->tagManager,
+            $params,
+            $property->getStructure()->getWebspaceKey(),
+            $property->getStructure()->getLanguageCode(),
+            // TODO segmentkey
+            null,
+            $this->stopwatch
+        );
+        $container->setConfig($data === null || !is_array($data) ? array() : $data);
+        $pages = $this->loadData($container, $property, $params);
+
+        $data['page'] = $container->getPage();
+        $data['hasNextPage'] = $container->getHasNextPage();
+        $property->setValue($data);
+
+        return $pages;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getReferencedUuids(PropertyInterface $property)
+    {
+        $content = $this->getContentData($property);
+        $uuids = array();
+
+        foreach ($content as $page) {
+            $uuids[] = $page['uuid'];
         }
 
-        return $contentData;
+        return $uuids;
     }
 
     /**
      * load data from container
+     * @param SmartContentContainer $container
+     * @param PropertyInterface $property
+     * @param PropertyParameter[] $params
+     * @return array|\Sulu\Component\Content\StructureInterface[]
      */
     private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
     {
         if (isset($params['max_per_page'])) {
             // determine current page
-            $container->setPage($this->getCurrentPage($params['page_parameter']));
+            $container->setPage($this->getCurrentPage($params['page_parameter']->getValue()));
 
             $contentData = $this->getPagedContentData(
                 $container,
                 $container->getPage(),
-                intval($params['max_per_page']),
+                intval($params['max_per_page']->getValue()),
                 $property->getStructure()->getUuid()
             );
         } else {
@@ -277,6 +298,8 @@ class SmartContent extends ComplexContentType
 
     /**
      * determine current page from current request
+     * @param string $pageParameter
+     * @return int
      */
     private function getCurrentPage($pageParameter)
     {
@@ -327,6 +350,9 @@ class SmartContent extends ComplexContentType
 
     /**
      * Returns not paged content
+     * @param SmartContentContainer $container
+     * @param string $excludeUuid
+     * @return \Sulu\Component\Content\StructureInterface[]
      */
     private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)
     {

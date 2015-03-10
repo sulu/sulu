@@ -47,10 +47,10 @@ interface StructureExtensionInterface
 
     /**
      * Returns content data for given values
-     * @param mixed $value
+     * @param mixed $container
      * @return mixed
      */
-    public function getContentData($value);
+    public function getContentData($container);
 
     /**
      * returns name of extension

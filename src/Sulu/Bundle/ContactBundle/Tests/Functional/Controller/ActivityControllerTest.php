@@ -87,8 +87,6 @@ class ActivityControllerTest extends SuluTestCase
         $account->setName('Company');
         $account->setType(Account::TYPE_BASIC);
         $account->setDisabled(0);
-        $account->setCreated(new \DateTime());
-        $account->setChanged(new \DateTime());
         $account->setPlaceOfJurisdiction('Feldkirch');
 
         $this->account = $account;
@@ -107,8 +105,6 @@ class ActivityControllerTest extends SuluTestCase
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
@@ -146,8 +142,6 @@ class ActivityControllerTest extends SuluTestCase
         $activity->setActivityPriority($activityPriortiy);
         $activity->setActivityStatus($activityState);
         $activity->setStartDate(new \DateTime());
-        $activity->setCreated(new \DateTime());
-        $activity->setChanged(new \DateTime());
 
         $this->activity = $activity;
 
@@ -161,8 +155,6 @@ class ActivityControllerTest extends SuluTestCase
         $activity2->setActivityPriority($activityPriortiy);
         $activity2->setActivityStatus($activityState);
         $activity2->setStartDate(new \DateTime());
-        $activity2->setCreated(new \DateTime());
-        $activity2->setChanged(new \DateTime());
 
         $this->activity2 = $activity2;
 
@@ -630,7 +622,7 @@ class ActivityControllerTest extends SuluTestCase
 
         $client->request(
             'DELETE',
-            'api/activities/100'
+            'api/activities/666'
         );
 
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
@@ -645,5 +637,4 @@ class ActivityControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals(2, count($response->_embedded->activities));
     }
-
 }

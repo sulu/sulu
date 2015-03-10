@@ -15,7 +15,7 @@
         <field name="number" type="string" column="number" length="60"  nullable="true"/>
         <field name="addition" type="string" column="addition" length="60" nullable="true"/>
         <field name="zip" type="string" column="zip" length="60" nullable="true"/>
-        <field name="city" type="string" column="city" length="60"/>
+        <field name="city" type="string" column="city" length="60" nullable="true"/>
         <field name="state" type="string" column="state" length="60" nullable="true" />
 
         <field name="postboxNumber" type="string" column="postboxNumber" length="100" nullable="true" />

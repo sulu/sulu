@@ -22,6 +22,7 @@ class UrlTest extends ProphecyTestCase
             'segment' => 'def',
             'redirect' => 'def',
             'url' => 'foo',
+            'analyticsKey' => 'analytics',
         );
 
         $this->url->setUrl($expected['url']);
@@ -29,6 +30,7 @@ class UrlTest extends ProphecyTestCase
         $this->url->setCountry($expected['country']);
         $this->url->setSegment($expected['segment']);
         $this->url->setRedirect($expected['redirect']);
+        $this->url->setAnalyticsKey($expected['analyticsKey']);
 
         $this->assertEquals($expected, $this->url->toArray());
     }

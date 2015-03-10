@@ -85,7 +85,7 @@ define(function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/tag/template/tag/list'));
 
             // init list-toolbar and datagrid
-            this.sandbox.sulu.initListToolbarAndList.call(this, 'tagsFields', '/admin/api/tags/fields',
+            this.sandbox.sulu.initListToolbarAndList.call(this, 'tags', '/admin/api/tags/fields',
                 {
                     el: this.$find('#list-toolbar-container'),
                     template: 'default',
@@ -97,6 +97,7 @@ define(function() {
                     el: this.sandbox.dom.find('#tags-list', this.$el),
                     url: '/admin/api/tags?flat=true',
                     resultKey: 'tags',
+                    searchFields: ['name'],
                     viewOptions: {
                         table: {
                             editable: true,

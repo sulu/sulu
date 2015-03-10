@@ -28,13 +28,14 @@ use FOS\RestBundle\Controller\Annotations\Route;
 
 use Sulu\Bundle\TagBundle\Controller\Exception\ConstraintViolationException;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes tag available through
  * @package Sulu\Bundle\TagBundle\Controller
  */
-class TagController extends RestController implements ClassResourceInterface
+class TagController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
     protected static $entityName = 'SuluTagBundle:Tag';
 
@@ -288,7 +289,6 @@ class TagController extends RestController implements ClassResourceInterface
      */
     public function patchAction(Request $request)
     {
-
         try {
 
             $tags = array();
@@ -317,4 +317,11 @@ class TagController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.settings.tags';
+    }
 }

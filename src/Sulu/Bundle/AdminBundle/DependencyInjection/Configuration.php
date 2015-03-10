@@ -30,6 +30,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->root('sulu_admin')
             ->children()
                 ->scalarNode('name')->defaultValue('Sulu Admin')->end()
+                ->scalarNode('email')->isRequired()->end()
                 ->scalarNode('user_data_service')->defaultValue('sulu_security.user_manager')->end()
                 ->arrayNode('widget_groups')
                     ->prototype('array')
@@ -40,6 +41,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+            ->end()
             ->end();
 
         return $treeBuilder;

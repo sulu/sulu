@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
-
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -20,11 +20,12 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\Post;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes media available through a REST API
@@ -32,6 +33,8 @@ use FOS\RestBundle\Controller\Annotations\Post;
  */
 class MediaController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * @var string
      */
@@ -96,21 +99,23 @@ class MediaController extends RestController implements ClassResourceInterface, 
             $offset = ($request->get('page', 1) - 1) * $limit;
             $ids = $request->get('ids');
             $search = $request->get('search');
-            if ($ids !== null) {
-                $ids = explode(',', $ids);
-            }
             $types = $request->get('types');
             if ($types !== null) {
                 $types = explode(',', $types);
             }
 
             $mediaManager = $this->getMediaManager();
-            $media = $mediaManager->get($this->getLocale($request), array(
-                'collection' => $collection,
-                'ids' => $ids,
-                'types' => $types,
-                'search' => $search
-            ), $limit, $offset);
+
+            if ($ids !== null) {
+                $ids = explode(',', $ids);
+                $media = $mediaManager->getByIds($ids, $this->getLocale($request));
+            } else {
+                $media = $mediaManager->get($this->getLocale($request), array(
+                    'collection' => $collection,
+                    'types' => $types,
+                    'search' => $search
+                ), $limit, $offset);
+            }
 
             $all = $mediaManager->getCount();
 
@@ -151,19 +156,6 @@ class MediaController extends RestController implements ClassResourceInterface, 
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     * @Post("media/{id}")
-     */
-    public function fileVersionUpdateAction($id, Request $request)
-    {
-        return $this->saveEntity($id, $request);
-    }
-
-    /**
-     * Edits the existing media with the given id
-     * @param integer $id The id of the media to update
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function putAction($id, Request $request)
     {
@@ -188,6 +180,64 @@ class MediaController extends RestController implements ClassResourceInterface, 
         };
 
         $view = $this->responseDelete($id, $delete);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Trigger an action for given media. Action is specified over get-action parameter
+     * @Post("media/{id}")
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    public function postTriggerAction($id, Request $request)
+    {
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'move':
+                    return $this->moveEntity($id, $request);
+                    break;
+                case 'new-version':
+                    return $this->saveEntity($id, $request);
+                    break;
+                default:
+                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
+
+            return $this->handleView($view);
+        }
+    }
+
+    /**
+     * Move an entity to another collection
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    protected function moveEntity($id, Request $request)
+    {
+        try {
+            $locale = $this->getLocale($request);
+            $destination = $this->getRequestParameter($request, 'destination', true);
+            $mediaManager = $this->getMediaManager();
+
+            $media = $mediaManager->move(
+                $id,
+                $locale,
+                $destination
+            );
+
+            $view = $this->view($media, 200);
+        } catch (MediaNotFoundException $me) {
+            $view = $this->view($me->toArray(), 404);
+        } catch (MediaException $me) {
+            $view = $this->view($me->toArray(), 400);
+        }
 
         return $this->handleView($view);
     }

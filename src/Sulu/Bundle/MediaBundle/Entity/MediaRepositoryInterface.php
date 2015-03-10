@@ -9,6 +9,7 @@
  */
 
 namespace Sulu\Bundle\MediaBundle\Entity;
+
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -40,4 +41,12 @@ interface MediaRepositoryInterface
      * @return Media
      */
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId);
+
+    /**
+     * @param $collectionId
+     * @param $limit
+     * @param $offset
+     * @return mixed
+     */
+    public function findSupplierMedia($collectionId, $limit, $offset);
 }
