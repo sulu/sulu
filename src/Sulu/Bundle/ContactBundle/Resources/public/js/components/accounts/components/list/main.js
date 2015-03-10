@@ -9,20 +9,13 @@
 
 define([
     'mvc/relationalstore',
-    'app-config'
-], function(RelationalStore, AppConfig) {
+    'app-config',
+    'widget-groups'
+], function(RelationalStore, AppConfig, WidgetGroups) {
 
     'use strict';
 
     var bindCustomEvents = function() {
-            // navigate to edit account
-            this.sandbox.on('husky.datagrid.item.click', function(id) {
-                this.sandbox.emit(
-                    'sulu.sidebar.set-widget',
-                    '/admin/widget-groups/account-info?account=' + id
-                );
-            }, this);
-
             // delete clicked
             this.sandbox.on('sulu.list-toolbar.delete', function() {
                 this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
@@ -34,6 +27,16 @@ define([
             this.sandbox.on('sulu.list-toolbar.add', function() {
                 this.sandbox.emit('sulu.contacts.accounts.new');
             }, this);
+
+            if (WidgetGroups.exists('account-info')) {
+                // show sidebar for selected item
+                this.sandbox.on('husky.datagrid.item.click', function(id) {
+                    this.sandbox.emit(
+                        'sulu.sidebar.set-widget',
+                        '/admin/widget-groups/account-info?account=' + id
+                    );
+                }, this);
+            }
         },
 
         dataUrlAddition = '',
@@ -247,7 +250,7 @@ define([
                     contentFilters: {
                         // display account type name instead of type number
                         type: function(content) {
-                            if(!!content) {
+                            if (!!content) {
                                 return this.sandbox.translate(assocAccountTypes[content].translation);
                             } else {
                                 return '';

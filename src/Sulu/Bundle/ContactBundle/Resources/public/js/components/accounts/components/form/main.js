@@ -26,14 +26,16 @@ define(['config'], function(Config) {
 
         view: true,
 
-        layout: {
-            content: {
-                width: 'max'
-            },
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
-            }
+        layout: function() {
+            return {
+                content: {
+                    width: (WidgetGroups.exists('account-detail') ? 'max' : 'fixed')
+                },
+                sidebar: {
+                    width: 'fixed',
+                    cssClasses: 'sidebar-padding-50'
+                }
+            };
         },
 
         templates: ['/admin/contact/template/account/form'],
@@ -66,7 +68,7 @@ define(['config'], function(Config) {
             this.setHeaderBar(true);
             this.listenForChange();
 
-            if (!!this.options.data && !!this.options.data.id) {
+            if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('account-detail')) {
                 this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
             }
         },
@@ -106,12 +108,12 @@ define(['config'], function(Config) {
             options.value = !!data.parent ? data.parent : null;
             options.instanceName = 'companyAccount' + data.id,
 
-            this.sandbox.start([
-                {
-                    name: 'auto-complete@husky',
-                    options: options
-                }
-            ]);
+                this.sandbox.start([
+                    {
+                        name: 'auto-complete@husky',
+                        options: options
+                    }
+                ]);
 
             this.initForm(data);
 
@@ -246,7 +248,12 @@ define(['config'], function(Config) {
          */
         addDividerAndActionsForSelect: function(data) {
             data.push({divider: true});
-            data.push({id: -1, category: this.sandbox.translate('public.edit-entries'), callback: this.showCategoryOverlay.bind(this), updateLabel: false});
+            data.push({
+                id: -1,
+                category: this.sandbox.translate('public.edit-entries'),
+                callback: this.showCategoryOverlay.bind(this),
+                updateLabel: false
+            });
         },
 
         /**
@@ -555,14 +562,14 @@ define(['config'], function(Config) {
                 this.sandbox.dom.on('#contact-form', 'change', function() {
                     this.setHeaderBar(false);
                 }.bind(this), '.changeListener select, ' +
-                    '.changeListener input, ' +
-                    '.changeListener textarea');
+                '.changeListener input, ' +
+                '.changeListener textarea');
 
                 this.sandbox.dom.on('#contact-form', 'keyup', function() {
                     this.setHeaderBar(false);
                 }.bind(this), '.changeListener select, ' +
-                    '.changeListener input, ' +
-                    '.changeListener textarea');
+                '.changeListener input, ' +
+                '.changeListener textarea');
 
                 // if a field-type gets changed or a field gets deleted
                 this.sandbox.on('sulu.contact-form.changed', function() {
