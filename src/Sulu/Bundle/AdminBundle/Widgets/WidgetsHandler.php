@@ -88,10 +88,18 @@ class WidgetsHandler implements WidgetsHandlerInterface
             );
         }
 
-        // render template
-        return $this->templateEngine->render($this->template, array(
-            'widgets' => $widgets,
-            'parameters' => $parameters
-        ));
+        if (count($widgets) > 0) {
+            // render template
+            return $this->templateEngine->render(
+                $this->template,
+                array(
+                    'widgets' => $widgets,
+                    'parameters' => $parameters
+
+                )
+            );
+        }
+
+        return '';
     }
 }

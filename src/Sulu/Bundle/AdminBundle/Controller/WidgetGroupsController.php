@@ -36,12 +36,12 @@ class WidgetGroupsController extends Controller
         try {
             $groupAlias = str_replace('-', '_', $groupAlias);
 
-            return new Response(
-                $this->getWidgetsHandler()->renderWidgetGroup(
-                    $groupAlias,
-                    $request->query->all()
-                )
+            $content = $this->getWidgetsHandler()->renderWidgetGroup(
+                $groupAlias,
+                $request->query->all()
             );
+
+            return new Response($content, $content !== '' ? 200 : 204);
         } catch (WidgetException $ex) {
             return new Response($ex->getMessage());
         }
