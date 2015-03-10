@@ -28,7 +28,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
      */
     public function findCollectionById($id)
     {
-        $sql = sprintf(
+        $dql = sprintf(
             'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionMedia, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
@@ -42,7 +42,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         );
 
         $query = new Query($this->_em);
-        $query->setDQL($sql);
+        $query->setDQL($dql);
         $query->setParameter('id', $id);
         $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $result = $query->getResult();
