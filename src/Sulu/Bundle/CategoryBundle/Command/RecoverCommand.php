@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\CategoryBundle\Command;
 
@@ -13,7 +21,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * @package Sulu\Bundle\CategoryBundle\Command
+ * Command for recovering categories.
+ * This command is fixing wron left/right and depths (see -d) assignments of the categories tree
  */
 class RecoverCommand extends ContainerAwareCommand
 {
@@ -24,13 +33,13 @@ class RecoverCommand extends ContainerAwareCommand
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
-                'update tree'
+                'Force recovery of tree. Without it, an analysis of the tree is performed'
             )
             ->addOption(
-                'depth',
+                'fix-depth',
                 'd',
                 InputOption::VALUE_NONE,
-                'fix depth'
+                'Analyse depths of categories and fixes depth gaps as well as depths > 0 without a parent'
             );
     }
 
@@ -38,9 +47,7 @@ class RecoverCommand extends ContainerAwareCommand
     {
         $em = $this->getEntityManager();
         $force = $input->getOption('force');
-        $fixDepth = $input->getOption('depth');
-
-//        $import = $this->getContainer()->get('sulu_contact.import');
+        $fixDepth = $input->getOption('fix-depth');
 
         $repo = $this->getCategoryRepository();
         $verify = $repo->verify();
@@ -49,7 +56,7 @@ class RecoverCommand extends ContainerAwareCommand
 
         // fix nested tree
         if ($verify !== true) {
-            $output->writeln(sprintf('<comment>%s errors were found. Repair with --force</comment>', count($verify)));
+            $output->writeln(sprintf('<comment>%s errors were found.</comment>', count($verify)));
 
             if ($force) {
                 $repo->recover();
@@ -96,6 +103,10 @@ class RecoverCommand extends ContainerAwareCommand
                 $output->writeln('<info>No categories without parents detected<info>');
             }
         }
+        
+        if (!$force) {
+            $output->writeln(sprintf('Call this command with <info>--force</info> option to perform recovery.'));
+        }
 
         if ($success === true) {
             $output->writeln('<info>Recovery complete<info>');
@@ -103,9 +114,9 @@ class RecoverCommand extends ContainerAwareCommand
     }
     
     /**
-     * find number of categories where difference to parents depth > 1
+     * Find number of categories where difference to parents depth > 1
      *
-     * @return object
+     * @return int Number of affected rows
      */
     private function findInitialWrongDepthGap()
     {
@@ -154,22 +165,12 @@ class RecoverCommand extends ContainerAwareCommand
         if ($statement->execute()) {
             return $statement->rowCount();
         }
+
         return false;
-        
-//        // correct DQL
-//        $dql = "UPDATE SuluCategoryBundle:Category c2
-//                JOIN c2.parent c1
-//                SET c2.depth = c1.depth + 1
-//                WHERE (c2.depth - 1) <> c1.depth";
-//        $query = $this->getEntityManager()->createQuery($dql);
-//        $result = $query->execute();
-//        return $result;
     }
 
     /**
      * set every category where depth > 0 and has no parents to depth 0
-     *
-     * @return mixed
      */
     private function fixCategoriesWithoutParents()
     {
@@ -179,7 +180,7 @@ class RecoverCommand extends ContainerAwareCommand
             ->set('c2.depth', 0)
             ->where('c2.parent IS NULL AND depth != 0');
 
-        return $qb->getQuery()->execute();
+        $qb->getQuery()->execute();
     }
 
     /**
