@@ -109,9 +109,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $query->setParameter('locale', $filter['locale']);
             }
 
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
-
-            return $query->getResult();
+            return new Paginator($query);
         } catch (NoResultException $ex) {
             return array();
         }

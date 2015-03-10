@@ -77,14 +77,14 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         try {
             $locale = $this->getLocale($request);
-            $depth = $request->get('depth');
+            $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
 
             // filter children
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
-            $limit = $request->get('limit', $listRestHelper->getLimit());
-            $offset = ($request->get('page', 1) - 1) * $limit;
+            $limit = intval($request->get('limit', $listRestHelper->getLimit()));
+            $offset = intval(($request->get('page', 1) - 1)) * $limit;
             $search = $request->get('search', '');
 
             $filter = array(
