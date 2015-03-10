@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * BaseRole
@@ -116,19 +117,6 @@ abstract class BaseRole extends Role implements RoleInterface
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return BaseRole
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -136,19 +124,6 @@ abstract class BaseRole extends Role implements RoleInterface
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return BaseRole
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

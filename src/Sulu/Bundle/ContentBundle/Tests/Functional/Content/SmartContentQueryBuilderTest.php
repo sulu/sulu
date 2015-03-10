@@ -94,25 +94,19 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $this->tag1 = new Tag();
         $this->tag1->setName('test1');
-        $this->tag1->setChanged(new \DateTime());
         $this->tag1->setCreator($user);
-        $this->tag1->setCreated(new \DateTime());
         $this->tag1->setChanger($user);
         $em->persist($this->tag1);
 
         $this->tag2 = new Tag();
         $this->tag2->setName('test2');
-        $this->tag2->setChanged(new \DateTime());
         $this->tag2->setCreator($user);
-        $this->tag2->setCreated(new \DateTime());
         $this->tag2->setChanger($user);
         $em->persist($this->tag2);
 
         $this->tag3 = new Tag();
         $this->tag3->setName('test3');
-        $this->tag3->setChanged(new \DateTime());
         $this->tag3->setCreator($user);
-        $this->tag3->setCreated(new \DateTime());
         $this->tag3->setChanger($user);
         $em->persist($this->tag3);
 

@@ -31,15 +31,11 @@ class TagControllerTest extends SuluTestCase
 
         $tag1 = new Tag();
         $tag1->setName('tag1');
-        $tag1->setCreated(new \DateTime());
-        $tag1->setChanged(new \DateTime());
         $this->em->persist($tag1);
         $this->tag1 = $tag1;
 
         $tag2 = new Tag();
         $tag2->setName('tag2');
-        $tag2->setCreated(new \DateTime());
-        $tag2->setChanged(new \DateTime());
         $this->em->persist($tag2);
         $this->tag2 = $tag2;
 
@@ -241,14 +237,10 @@ class TagControllerTest extends SuluTestCase
     {
         $tag3 = new Tag();
         $tag3->setName('tag3');
-        $tag3->setCreated(new \DateTime());
-        $tag3->setChanged(new \DateTime());
         $this->em->persist($tag3);
 
         $tag4 = new Tag();
         $tag4->setName('tag4');
-        $tag4->setCreated(new \DateTime());
-        $tag4->setChanged(new \DateTime());
         $this->em->persist($tag4);
 
         $this->em->flush();

@@ -242,19 +242,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Contact
-     */
-    public function setCreated($created)
-    {
-        $this->entity->setCreated($created);
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -265,19 +252,6 @@ class Contact extends ApiWrapper
     public function getCreated()
     {
         return $this->entity->getCreated();
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Contact
-     */
-    public function setChanged($changed)
-    {
-        $this->entity->setChanged($changed);
-
-        return $this;
     }
 
     /**

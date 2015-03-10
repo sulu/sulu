@@ -18,22 +18,10 @@
         <field name="depth" type="integer" column="depth">
             <gedmo:tree-level/>
         </field>
-        <field name="created" type="datetime" column="created"/>
-        <field name="changed" type="datetime" column="changed"/>
 
         <many-to-one field="type" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionType" inversed-by="collections">
             <join-columns>
                 <join-column name="idCollectionTypes" referenced-column-name="id" nullable="false"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface">
-            <join-columns>
-                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\Authentication\UserInterface">
-            <join-columns>
-                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 

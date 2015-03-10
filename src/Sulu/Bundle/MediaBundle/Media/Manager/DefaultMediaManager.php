@@ -438,7 +438,6 @@ class DefaultMediaManager implements MediaManagerInterface
             throw new MediaNotFoundException('Media with the ID ' . $data['id'] . ' not found');
         }
 
-        $mediaEntity->setChanged(new \DateTime());
         $mediaEntity->setChanger($user);
 
         $files = $mediaEntity->getFiles();
@@ -451,7 +450,6 @@ class DefaultMediaManager implements MediaManagerInterface
          */
         $file = $files[0]; // currently a media can only have one file
 
-        $file->setChanged(new \Datetime());
         $file->setChanger($user);
 
         $version = $file->getVersion();
@@ -492,8 +490,6 @@ class DefaultMediaManager implements MediaManagerInterface
             $data['version'] = $version;
 
             $fileVersion = clone($currentFileVersion);
-            $fileVersion->setChanged(new \Datetime());
-            $fileVersion->setCreated(new \Datetime());
             $fileVersion->setChanger($user);
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
@@ -575,22 +571,16 @@ class DefaultMediaManager implements MediaManagerInterface
         $mediaEntity = new MediaEntity();
         $mediaEntity->setCreator($user);
         $mediaEntity->setChanger($user);
-        $mediaEntity->setCreated(new \DateTime());
-        $mediaEntity->setChanged(new \DateTime());
 
         $file = new File();
         $file->setCreator($user);
         $file->setChanger($user);
-        $file->setCreated(new \DateTime());
-        $file->setChanged(new \DateTime());
         $file->setVersion(1);
         $file->setMedia($mediaEntity);
 
         $fileVersion = new FileVersion();
         $fileVersion->setCreator($user);
         $fileVersion->setChanger($user);
-        $fileVersion->setCreated(new \DateTime());
-        $fileVersion->setChanged(new \DateTime());
         $fileVersion->setVersion(1);
         $fileVersion->setFile($file);
 
@@ -689,10 +679,8 @@ class DefaultMediaManager implements MediaManagerInterface
                         $media->setProperties($value);
                         break;
                     case 'changed':
-                        $media->setChanged($value);
                         break;
                     case 'created':
-                        $media->setCreated($value);
                         break;
                     case 'changer':
                         if ($value instanceof UserInterface) {
