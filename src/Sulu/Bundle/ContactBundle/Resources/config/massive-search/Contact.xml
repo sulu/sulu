@@ -4,8 +4,8 @@
     <mapping class="Sulu\Bundle\ContactBundle\Entity\Contact">
         <id property="id" />
         <title expr="join(' ', [object.getTitle(), object.getFirstName(), object.getLastName()])" />
-        <description expr="join(' ', map(object.getEmails(), 'el.getEmail()'))" />
-        <index name="admin_contact" />
+        <description expr="'&lt;p&gt;' ~ join(' ', map(object.getEmails(), 'el.getEmail()')) ~ '&lt;/p&gt;&lt;p&gt;' ~ (object.getMainAddress() ? join(',', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : '') ~ '&lt;/p&gt;'" />
+        <index name="contact" />
         <category name="contact" />
 
         <fields>

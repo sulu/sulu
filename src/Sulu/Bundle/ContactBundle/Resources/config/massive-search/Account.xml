@@ -5,6 +5,7 @@
         <id name="id" />
         <title property="name" />
         <category name="account" />
+        <description expr="'&lt;p&gt;' ~ join(' ', map(object.getEmails(), 'el.getEmail()')) ~ '&lt;/p&gt;&lt;p&gt;' ~ (object.getMainAddress() ? join(',', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : '') ~ '&lt;/p&gt;'" />
 
         <fields>
             <field name="name" type="string" />
