@@ -3,13 +3,13 @@
 <% _.each(sections, function(section) { %>
     <div class="search-results-section is-<%= section.category %>">
         <div class="search-results-section-header">
-            Assets
+            <%= translate(categoryTranslationMapping[section.category]) %> (<%= section.results.length %>)
         </div>
         <ul class="search-results-section-content">
             <% _.each(section.results, function(result) { %>
-            <li>
+            <li <% if (result.deepUrl) { %>data-url="<%= result.deepUrl %>"<% } %>>
                 <div class="search-results-thumb">
-                    <img src="http://lorempixel.com/50/50"/>
+                    <div class="<%= categoryIconMapping[section.category] %>"></div>
                 </div>
                 <div class="search-results-description">
                     <div class="search-results-title"><%= result.title %></div>

@@ -18,6 +18,10 @@
         &:first-child {
             border-top: 0;
         }
+
+        &[data-url]:hover {
+            cursor: pointer;
+        }
     }
 }
 
@@ -33,10 +37,19 @@
 
 .search-results-thumb {
     float: left;
+    min-width: 50px;
     margin-right: 10px;
+    text-align: center;
 
     img {
         display: block;
+    }
+
+    [class*="fa-"] {
+        font-size: 24px;
+        color: #999999;
+        position: relative;
+        top: 5px;
     }
 }
 

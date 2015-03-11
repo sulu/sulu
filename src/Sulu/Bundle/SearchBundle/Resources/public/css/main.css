@@ -23,49 +23,62 @@
 .search-results-section-content > li:first-child {
   border-top: 0;
 }
+/* line 22, ../scss/modules/search-results.scss */
+.search-results-section-content > li[data-url]:hover {
+  cursor: pointer;
+}
 
-/* line 24, ../scss/modules/search-results.scss */
+/* line 28, ../scss/modules/search-results.scss */
 .search-results-section {
   margin-top: 40px;
 }
-/* line 28, ../scss/modules/search-results.scss */
+/* line 32, ../scss/modules/search-results.scss */
 .search-results-section.is-contacts .search-results-thumb img {
   border-radius: 100%;
 }
 
-/* line 34, ../scss/modules/search-results.scss */
+/* line 38, ../scss/modules/search-results.scss */
 .search-results-thumb {
   float: left;
+  min-width: 50px;
   margin-right: 10px;
+  text-align: center;
 }
-/* line 38, ../scss/modules/search-results.scss */
+/* line 44, ../scss/modules/search-results.scss */
 .search-results-thumb img {
   display: block;
 }
+/* line 48, ../scss/modules/search-results.scss */
+.search-results-thumb [class*="fa-"] {
+  font-size: 24px;
+  color: #999999;
+  position: relative;
+  top: 5px;
+}
 
-/* line 43, ../scss/modules/search-results.scss */
+/* line 56, ../scss/modules/search-results.scss */
 .search-results-description {
   overflow: hidden;
 }
 
-/* line 47, ../scss/modules/search-results.scss */
+/* line 60, ../scss/modules/search-results.scss */
 .search-results-section-header {
   margin-bottom: 5px;
   font-size: 16px;
   color: #999;
 }
 
-/* line 53, ../scss/modules/search-results.scss */
+/* line 66, ../scss/modules/search-results.scss */
 .search-results-details {
   font-size: 12px;
   color: #999999;
 }
-/* line 57, ../scss/modules/search-results.scss */
+/* line 70, ../scss/modules/search-results.scss */
 .search-results-details p {
   margin: 0;
 }
 
-/* line 62, ../scss/modules/search-results.scss */
+/* line 75, ../scss/modules/search-results.scss */
 .search-results-loader-container {
   margin: 50px 0 0;
 }
@@ -128,7 +141,7 @@
   width: 100%;
   border: 0;
   font-size: 24px;
-  padding: 10px 70px 10px 10px;
+  padding: 12px 70px 10px 10px;
   border-radius: 0 2px 2px 0;
 }
 /* line 59, ../scss/modules/dropdown-input.scss */

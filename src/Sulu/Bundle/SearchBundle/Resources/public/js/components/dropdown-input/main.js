@@ -128,6 +128,8 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
             });
             
             this.$el.html(tpl);
+            this.storeSelectors();
+            this.updatePlaceHolder();
             this.createDropdown();
         },
 
@@ -154,6 +156,25 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
         },
 
         /**
+         * @method updatePlaceHolder
+         */
+        updatePlaceHolder: function() {
+            var selected;
+
+            if (this.selectedElement !== void 0) {
+                selected = this.selectedElement;
+            } else {
+                selected = this.options.preSelectedElement;
+            }
+
+            selected = _.where(this.options.data, { id: parseInt(selected, 10) })[0];
+            
+            this.$input.attr({
+                'placeholder': selected.placeholder || ''
+            });
+        },
+
+        /**
          * @method dropdownChangeHandler
          * @param {Object} item
          */
@@ -164,6 +185,8 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
                 value: this.$input.val(),
                 selectedElement: this.selectedElement
             });
+
+            this.updatePlaceHolder();
         },
 
         /**
