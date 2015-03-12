@@ -15,11 +15,12 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Accessor;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Contact
  */
-class Contact extends ApiEntity
+class Contact extends ApiEntity implements AuditableInterface
 {
 
     /**
@@ -386,19 +387,6 @@ class Contact extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Contact
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -406,19 +394,6 @@ class Contact extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Contact
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

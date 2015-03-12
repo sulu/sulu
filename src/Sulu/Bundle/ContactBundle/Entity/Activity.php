@@ -4,11 +4,12 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Activity
  */
-class Activity extends ApiEntity
+class Activity extends ApiEntity implements AuditableInterface
 {
     /**
      * @var string
@@ -180,19 +181,6 @@ class Activity extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Activity
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -200,19 +188,6 @@ class Activity extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Activity
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

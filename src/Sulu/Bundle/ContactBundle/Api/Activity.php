@@ -23,6 +23,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * The Activity class which will be exported to the API
@@ -160,19 +161,6 @@ class Activity extends ApiWrapper
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Activity
-     */
-    public function setCreated($created)
-    {
-        $this->entity->setCreated($created);
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -183,19 +171,6 @@ class Activity extends ApiWrapper
     public function getCreated()
     {
         return $this->entity->getCreated();
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Activity
-     */
-    public function setChanged($changed)
-    {
-        $this->entity->setChanged($changed);
-
-        return $this;
     }
 
     /**

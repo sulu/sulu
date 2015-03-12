@@ -94,8 +94,6 @@ class CreateUserCommand extends ContainerAwareCommand
         $contact = new Contact();
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
-        $contact->setCreated($now);
-        $contact->setChanged($now);
 
         $em->persist($contact);
         $em->flush();

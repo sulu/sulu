@@ -64,17 +64,28 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Return the ID of the test user (which is provided / created
+     * Return the test user (which is provided / created
      * by the test_user_provider in this Bundle at runtime)
      *
      * @return TestUser
      */
-    protected function getTestUserId()
+    protected function getTestUser()
     {
         $user = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
             ->findOneByUsername('test');
 
-        return $user->getId();
+        return $user;
+    }
+
+    /**
+     * Return the ID of the test user (which is provided / created
+     * by the test_user_provider in this Bundle at runtime)
+     *
+     * @return int
+     */
+    protected function getTestUserId()
+    {
+        return $this->getTestUser()->getId();
     }
 
     /**
@@ -177,5 +188,4 @@ abstract class SuluTestCase extends BaseTestCase
             $em->getConnection()->executeUpdate("SET foreign_key_checks = 1;");
         }
     }
-
 }

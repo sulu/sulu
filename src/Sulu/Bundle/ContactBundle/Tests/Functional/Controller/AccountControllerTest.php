@@ -62,24 +62,18 @@ class AccountControllerTest extends SuluTestCase
         $account->setName('Company');
         $account->setType(Account::TYPE_BASIC);
         $account->setDisabled(0);
-        $account->setCreated(new DateTime());
-        $account->setChanged(new DateTime());
         $account->setPlaceOfJurisdiction('Feldkirch');
 
         $parentAccount = new Account();
         $parentAccount->setName('Parent');
         $parentAccount->setType(Account::TYPE_BASIC);
         $parentAccount->setDisabled(0);
-        $parentAccount->setCreated(new DateTime());
-        $parentAccount->setChanged(new DateTime());
         $parentAccount->setPlaceOfJurisdiction('Feldkirch');
 
         $childAccount = new Account();
         $childAccount->setName('Child');
         $childAccount->setType(Account::TYPE_BASIC);
         $childAccount->setDisabled(0);
-        $childAccount->setCreated(new DateTime());
-        $childAccount->setChanged(new DateTime());
         $childAccount->setPlaceOfJurisdiction('Feldkirch');
         $childAccount->setParent($parentAccount);
 
@@ -168,8 +162,6 @@ class AccountControllerTest extends SuluTestCase
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
@@ -271,8 +263,6 @@ class AccountControllerTest extends SuluTestCase
     {
         $account = new Account();
         $account->setName('test');
-        $account->setChanged(new DateTime());
-        $account->setCreated(new DateTime());
 
         $this->em->persist($account);
         $this->em->flush();
@@ -1367,8 +1357,6 @@ class AccountControllerTest extends SuluTestCase
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
         $this->em->persist($contact);
@@ -1418,8 +1406,6 @@ class AccountControllerTest extends SuluTestCase
         // modify test data
         $acc = new Account();
         $acc->setName("Test Account");
-        $acc->setChanged(new \DateTime());
-        $acc->setCreated(new \DateTime());
         $this->em->persist($acc);
 
         // add 5 contacts to account
@@ -1428,8 +1414,6 @@ class AccountControllerTest extends SuluTestCase
             $contact->setFirstName("Vorname " . $i);
             $contact->setLastName("Nachname " . $i);
             $contact->setMiddleName("Mittelname " . $i);
-            $contact->setCreated(new \DateTime());
-            $contact->setChanged(new \DateTime());
             $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
             $this->em->persist($contact);
@@ -1445,8 +1429,6 @@ class AccountControllerTest extends SuluTestCase
         // add subaccount to $this->account
         $subacc = new Account();
         $subacc->setName("Subaccount");
-        $subacc->setChanged(new \DateTime());
-        $subacc->setCreated(new \DateTime());
         $subacc->setParent($this->account);
 
         $this->em->persist($subacc);
@@ -1490,8 +1472,6 @@ class AccountControllerTest extends SuluTestCase
             $contact->setFirstName("Vorname " . $i);
             $contact->setLastName("Nachname " . $i);
             $contact->setMiddleName("Mittelname " . $i);
-            $contact->setCreated(new \DateTime());
-            $contact->setChanged(new \DateTime());
             $contact->setDisabled(0);
             $contact->setFormOfAddress(0);
             $this->em->persist($contact);
@@ -1536,8 +1516,6 @@ class AccountControllerTest extends SuluTestCase
         for ($i = 0; $i < 5; $i++) {
             $childAccount = new Account();
             $childAccount->setName("child num#" . $i);
-            $childAccount->setChanged(new \DateTime());
-            $childAccount->setCreated(new \DateTime());
             $childAccount->setParent($this->account);
 
             $this->em->persist($childAccount);

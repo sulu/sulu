@@ -129,8 +129,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
             $this->setParent($group);
 
-            $group->setCreated(new \DateTime());
-            $group->setChanged(new \DateTime());
 
             $roles = $request->get('roles');
             if (!empty($roles)) {
@@ -175,7 +173,6 @@ class GroupController extends RestController implements ClassResourceInterface, 
 
                 $this->setParent($group);
 
-                $group->setChanged(new \DateTime());
 
                 if (!$this->processRoles($group, $request->get('roles', array()))) {
                     throw new RestException('Could not update dependencies!');

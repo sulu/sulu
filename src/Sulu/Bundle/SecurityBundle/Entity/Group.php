@@ -13,11 +13,12 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Group
  */
-class Group extends ApiEntity
+class Group extends ApiEntity implements AuditableInterface
 {
     /**
      * @var integer
@@ -187,19 +188,6 @@ class Group extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Group
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -207,19 +195,6 @@ class Group extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Group
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

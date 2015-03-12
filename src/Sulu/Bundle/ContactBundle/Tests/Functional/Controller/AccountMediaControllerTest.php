@@ -67,8 +67,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->account->setName('Company');
         $this->account->setType(Account::TYPE_BASIC);
         $this->account->setDisabled(0);
-        $this->account->setCreated(new DateTime());
-        $this->account->setChanged(new DateTime());
         $this->account->setPlaceOfJurisdiction('Feldkirch');
 
         $urlType = new UrlType();
@@ -136,8 +134,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $contact->setFirstName("Vorname");
         $contact->setLastName("Nachname");
         $contact->setMiddleName("Mittelname");
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 
@@ -196,15 +192,11 @@ class AccountMediaControllerTest extends SuluTestCase
         $audioType->setDescription('This is an audio');
 
         $media = new Media();
-        $media->setCreated(new DateTime());
-        $media->setChanged(new DateTime());
         $media->setType($imageType);
 
         $this->media = $media;
 
         $media2 = new Media();
-        $media2->setCreated(new DateTime());
-        $media2->setChanged(new DateTime());
         $media2->setType($imageType);
 
         $this->media2 = $media2;
@@ -214,21 +206,15 @@ class AccountMediaControllerTest extends SuluTestCase
         // create file
         $file = new File();
         $file->setVersion(1);
-        $file->setCreated(new DateTime());
-        $file->setChanged(new DateTime());
         $file->setMedia($media);
 
         $file2 = new File();
         $file2->setVersion(1);
-        $file2->setCreated(new DateTime());
-        $file2->setChanged(new DateTime());
         $file2->setMedia($media2);
 
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setCreated(new DateTime());
-        $fileVersion->setChanged(new DateTime());
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -240,8 +226,6 @@ class AccountMediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setCreated(new DateTime());
-        $fileVersion->setChanged(new DateTime());
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file2);
@@ -275,8 +259,6 @@ class AccountMediaControllerTest extends SuluTestCase
 
         $collection->setStyle(json_encode($style));
 
-        $collection->setCreated(new DateTime());
-        $collection->setChanged(new DateTime());
 
         // Create Collection Type
         $collectionType = new CollectionType();

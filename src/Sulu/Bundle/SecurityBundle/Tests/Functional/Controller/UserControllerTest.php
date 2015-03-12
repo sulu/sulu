@@ -42,8 +42,6 @@ class UserControllerTest extends SuluTestCase
         $contact1 = new Contact();
         $contact1->setFirstName('Max');
         $contact1->setLastName('Mustermann');
-        $contact1->setCreated(new DateTime());
-        $contact1->setChanged(new DateTime());
         $contact1->addEmail($email1);
         $this->em->persist($contact1);
         $this->contact1 = $contact1;
@@ -56,8 +54,6 @@ class UserControllerTest extends SuluTestCase
         $contact2 = new Contact();
         $contact2->setFirstName("Max");
         $contact2->setLastName("Muster");
-        $contact2->setCreated(new DateTime());
-        $contact2->setChanged(new DateTime());
         $contact2->addEmail($email);
         $this->em->persist($contact2);
         $this->contact2 = $contact2;
@@ -65,8 +61,6 @@ class UserControllerTest extends SuluTestCase
         $contact3 = new Contact();
         $contact3->setFirstName("Disabled");
         $contact3->setLastName("User");
-        $contact3->setCreated(new DateTime());
-        $contact3->setChanged(new DateTime());
         $contact3->addEmail($email);
         $this->em->persist($contact3);
         $this->contact3 = $contact3;
@@ -76,16 +70,12 @@ class UserControllerTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
-        $role1->setChanged(new DateTime());
-        $role1->setCreated(new DateTime());
         $this->em->persist($role1);
         $this->role1 = $role1;
 
         $role2 = new Role();
         $role2->setName('Role2');
         $role2->setSystem('Sulu');
-        $role2->setChanged(new DateTime());
-        $role2->setCreated(new DateTime());
         $this->em->persist($role2);
         $this->role2 = $role2;
 
@@ -150,8 +140,6 @@ class UserControllerTest extends SuluTestCase
         $group1->setLft(0);
         $group1->setRgt(0);
         $group1->setDepth(0);
-        $group1->setCreated(new DateTime());
-        $group1->setChanged(new DateTime());
         $this->em->persist($group1);
         $this->group1 = $group1;
 
@@ -160,8 +148,6 @@ class UserControllerTest extends SuluTestCase
         $group2->setLft(0);
         $group2->setRgt(0);
         $group2->setDepth(0);
-        $group2->setCreated(new DateTime());
-        $group2->setChanged(new DateTime());
         $this->em->persist($group2);
         $this->group2 = $group2;
 

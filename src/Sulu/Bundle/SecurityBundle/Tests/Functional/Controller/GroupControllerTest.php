@@ -46,23 +46,17 @@ class GroupControllerTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Sulu Administrator');
         $role1->setSystem('Sulu');
-        $role1->setCreated($datetime);
-        $role1->setChanged($datetime);
         $this->em->persist($role1);
         $this->role1 = $role1;
 
         $role2 = new Role();
         $role2->setName('Sulu Manager');
         $role2->setSystem('Sulu');
-        $role2->setCreated($datetime);
-        $role2->setChanged($datetime);
         $this->em->persist($role2);
         $this->role2 = $role2;
 
         $group1 = new Group();
         $group1->setName('Group1');
-        $group1->setCreated($datetime);
-        $group1->setChanged($datetime);
         $group1->addRole($role1);
         $group1->addRole($role2);
         $this->em->persist($group1);
@@ -70,8 +64,6 @@ class GroupControllerTest extends SuluTestCase
 
         $group2 = new Group();
         $group2->setName('Group2');
-        $group2->setCreated($datetime);
-        $group2->setChanged($datetime);
         $group2->addRole($role1);
         $this->em->persist($group2);
         $this->group2 = $group2;
