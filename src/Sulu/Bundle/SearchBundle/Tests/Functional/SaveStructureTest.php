@@ -34,11 +34,6 @@ class SaveStructureTest extends BaseTestCase
         $this->assertEquals('About Us', $document->getTitle());
         $this->assertEquals('/about-us', $document->getUrl());
         $this->assertEquals(null, $document->getDescription());
-
-        // ensure metadataload listener was called
-        $metadataListener = $this->getContainer()->get('structure_metadata_load_listener');
-        $this->assertInstanceOf('Sulu\Component\Content\StructureInterface', $metadataListener->structure);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata', $metadataListener->indexMetadata);
     }
 
     public function testSaveStructureWithBlocks()

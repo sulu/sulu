@@ -153,11 +153,6 @@ class StructureDriver implements AdvancedDriverInterface
             'field' => $this->factory->makeMetadataField('webspaceKey')
         ));
 
-        $this->eventDispatcher->dispatch(
-            SuluSearchEvents::STRUCTURE_LOAD_METADATA,
-            new StructureMetadataLoadEvent($structure, $indexMeta)
-        );
-
         $classMetadata->addIndexMetadata('_default', $indexMeta);
 
 

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\EventListener;
+namespace Sulu\Bundle\SearchBundle\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Event\ContentNodeEvent;
@@ -23,6 +23,9 @@ use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
  */
 class ContentMapperSubscriber implements EventSubscriberInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public static function getSubscribedEvents()
     {
         return array(

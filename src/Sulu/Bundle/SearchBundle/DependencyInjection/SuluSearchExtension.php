@@ -35,6 +35,12 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
                 ),
             ),
         ));
+
+        $container->prependExtensionConfig('massive_search', array(
+            'services' => array(
+                'factory' => 'sulu_search.search.factory',
+            ),
+        ));
     }
 
     /**
