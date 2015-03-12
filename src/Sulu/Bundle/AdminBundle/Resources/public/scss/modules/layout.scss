@@ -6,6 +6,12 @@
   min-width: 50px + $contentMinWidth;
 }
 
+.content-container {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
 .content-column {
   height: 100%;
   position: relative;

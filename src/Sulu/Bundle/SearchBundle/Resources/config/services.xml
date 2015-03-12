@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="sulu_search.admin.class">Sulu\Bundle\SearchBundle\Admin\SuluSearchAdmin</parameter>
+    </parameters>
+    <services>
+        <!-- admin class -->
+        <service id="sulu_search.admin" class="%sulu_search.admin.class%">
+            <tag name="sulu.admin"/>
+            <tag name="sulu.context" context="admin"/>
+            <argument>%sulu_admin.name%</argument>
+        </service>
+    </services>
+</container>

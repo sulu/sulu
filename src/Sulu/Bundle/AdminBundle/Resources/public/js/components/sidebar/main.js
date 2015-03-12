@@ -221,7 +221,7 @@ define([], function() {
                 // make sure the column is not the last child of its parent. To enable
                 // other containers to take the max width
                 this.sandbox.dom.detach($column);
-                this.sandbox.dom.after(this.sandbox.dom.find('.navigation-column', $parent), $column);
+                this.sandbox.dom.append($parent, $column);
             }
         },
 

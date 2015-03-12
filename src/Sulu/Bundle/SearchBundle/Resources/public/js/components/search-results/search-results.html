@@ -1,0 +1,26 @@
+<% if (sections.length) { %>
+
+<% _.each(sections, function(section) { %>
+    <div class="search-results-section is-<%= section.category %>">
+        <div class="search-results-section-header">
+            <%= translate(categoryTranslationMapping[section.category]) %> (<%= section.results.length %>)
+        </div>
+        <ul class="search-results-section-content">
+            <% _.each(section.results, function(result) { %>
+            <li <% if (result.deepUrl) { %>data-url="<%= result.deepUrl %>"<% } %>>
+                <div class="search-results-thumb">
+                    <div class="<%= categoryIconMapping[section.category] %>"></div>
+                </div>
+                <div class="search-results-description">
+                    <div class="search-results-title"><%= result.title %></div>
+                    <div class="search-results-details">
+                        <div><%= result.description %></div>
+                    </div>
+                </div>
+            </li>
+            <% }) %>
+        </ul>
+    </div>
+<% }) %>
+
+<% } %>

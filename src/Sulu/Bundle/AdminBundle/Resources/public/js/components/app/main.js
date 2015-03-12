@@ -184,7 +184,7 @@ define(function() {
                 }
             });
             router = new AppRouter();
-
+            console.log();
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
                     this.sandbox.mvc.Store.reset();
