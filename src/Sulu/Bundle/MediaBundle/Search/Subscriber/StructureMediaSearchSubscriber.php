@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Search;
+namespace Sulu\Bundle\MediaBundle\Search\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
@@ -22,7 +22,7 @@ use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
  * This subscriber populates the image URL field
  * when a Structure containing an image field is indexed.
  */
-class MediaSearchSubscriber implements EventSubscriberInterface
+class StructureMediaSearchSubscriber implements EventSubscriberInterface
 {
     /**
      * @var MediaManagerInterface
