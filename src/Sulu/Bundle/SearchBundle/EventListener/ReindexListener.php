@@ -92,17 +92,13 @@ class ReindexListener
         $filter = $event->getFilter();
         $session = $this->sessionManager->getSession();
 
-        if ($purge) {
-            $output->writeln('<comment>Purging index</comment>: ' . $this->structureIndexName);
-            $this->searchManager->purge($this->structureIndexName);
-        }
-
         $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" OR [jcr:mixinTypes] = "sulu:snippet"';
         $queryManager = $session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $res = $query->execute();
 
         $count = array();
+        $purged = false;
 
         /** @var Row $row */
         foreach ($res->getRows() as $row) {
@@ -110,7 +106,6 @@ class ReindexListener
 
             $locales = $this->nodeHelper->getLanguagesForNode($node);
 
-            var_dump($node->getName());
             foreach ($locales as $locale) {
                 $structure = $this->contentMapper->loadByNode($node, $locale);
                 $structureClass = get_class($structure);
@@ -124,6 +119,12 @@ class ReindexListener
 
                 if ($filter && !preg_match('{' . $filter . '}', get_class($structure))) {
                     continue;
+                }
+
+                if ($purge && false === $purged) {
+                    $output->writeln('<comment>Purging index</comment>: ' . $this->structureIndexName);
+                    $this->searchManager->purge($this->structureIndexName);
+                    $purged = true;
                 }
 
                 try {
@@ -145,6 +146,10 @@ class ReindexListener
         }
 
         foreach ($count as $className => $stats) {
+            if ($stats['indexed'] == 0 && $stats['deindexed'] == 0) {
+                continue;
+            }
+
             $output->writeln(sprintf(
                 '<comment>Content</comment>: %s <info>%s</info> indexed, <info>%s</info> deindexed',
                 $className,
