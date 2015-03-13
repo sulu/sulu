@@ -109,8 +109,9 @@ class ReindexListener
             $node = $row->getNode('a');
 
             $locales = $this->nodeHelper->getLanguagesForNode($node);
-            foreach ($locales as $locale) {
 
+            var_dump($node->getName());
+            foreach ($locales as $locale) {
                 $structure = $this->contentMapper->loadByNode($node, $locale);
                 $structureClass = get_class($structure);
 
@@ -133,7 +134,8 @@ class ReindexListener
                         $this->searchManager->deindex($structure, $locale);
                         $count[$structureClass]['deindexed']++;
                     }
-                } catch (\Exception $exc) {
+                } catch (\Exception $e) {
+                    throw $e;
                     $output->writeln(
                         '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
                         ', locale: ' . $locale . '): ' . $exc->getMessage() . '</error>'

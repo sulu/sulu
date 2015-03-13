@@ -63,13 +63,14 @@ class MediaSearchSubscriberTest extends ProphecyTestCase
         $this->fileVersion->getFile()->willReturn($this->file->reveal());
         $this->file->getMedia()->willReturn($this->media->reveal());
         $this->indexMetadata->getClassMetadata()->willReturn($this->metadata);
-        $this->metadata->reflection = $this->reflection->reveal();
+        $this->metadata->reflection = $this->reflection;
     }
 
     public function testNotMedia()
     {
-        $this->metadata->getName()->willReturn('Foo');
+        $this->indexMetadata->getName()->willReturn('Foo');
         $this->event->getSubject()->willReturn(new \stdClass);
+        $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(false);
         $this->fileVersionMeta->getFileVersion()->shouldNotBeCalled();
 
         $this->subscriber->handlePreIndex($this->event->reveal());

@@ -89,6 +89,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         $locale = $subject->getLanguageCode();
 
         if (!$data) {
+            $document->setImageUrl(null);
             return;
         }
 
