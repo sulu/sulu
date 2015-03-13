@@ -45,9 +45,6 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
 
     /**
      * {@inheritDoc}
-
-    /**
-     * {@inheritDoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -59,7 +56,6 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         $loader->load('metadata.xml');
         $loader->load('search.xml');
         $loader->load('build.xml');
-        $loader->load('services.xml');
 
         if ($container->hasParameter('sulu.context') && 'website' == $container->getParameter('sulu.context')) {
             $loader->load('website.xml');

@@ -409,6 +409,21 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     'is_shadow' => false,
                     'language' => 'de',
+                    'shadow_base_language' => null,
+                ),
+                array(
+                    'is_shadow' => true,
+                    'language' => 'en',
+                    'shadow_base_language' => 'de_at'
+                ),
+                array(
+                    'exception' => 'Attempting to make language "en" a shadow of a non-concrete language "de_at". Concrete languages are "de"'
+                ),
+            ),
+            array(
+                array(
+                    'is_shadow' => false,
+                    'language' => 'de',
                     'shadow_base_language' => 'fr'
                 ),
                 null,
@@ -424,21 +439,6 @@ class ContentMapperTest extends PhpcrTestCase
                 array(
                     'exception' => 'shadow of itself',
                 )
-            ),
-            array(
-                array(
-                    'is_shadow' => false,
-                    'language' => 'de',
-                    'shadow_base_language' => null,
-                ),
-                array(
-                    'is_shadow' => true,
-                    'language' => 'en',
-                    'shadow_base_language' => 'de_at'
-                ),
-                array(
-                    'exception' => 'Attempting to make language "en" a shadow of a non-concrete language "de_at". Concrete languages are "de"'
-                ),
             ),
             array(
                 array(
@@ -529,6 +529,7 @@ class ContentMapperTest extends PhpcrTestCase
                 $node['is_shadow'],
                 $node['shadow_base_language']
             );
+
         }
 
         $this->assertFalse($structures[0]->getIsShadow());
