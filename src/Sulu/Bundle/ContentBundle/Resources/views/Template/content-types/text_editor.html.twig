@@ -1,36 +1,41 @@
 <textarea id="{{ id|raw }}"
-          data-property='{{ property|json_encode }}'
-          class="form-element hidden"
-          data-type="textEditor"
-          data-type-instance-name="{{ id|raw }}"
-          data-aura-component="ckeditor@husky"
-          data-aura-height="300"
-{% if params.godMode.value is defined and params.godMode.value == true %}
-          data-aura-god-mode="true"
-{% else %}
-          data-aura-god-mode="false"
-{% endif %}
+        data-property='{{ property|json_encode }}'
+        class="form-element hidden"
+        data-type="textEditor"
+        data-type-instance-name="{{ id|raw }}"
+        data-aura-component="ckeditor@husky"
+        data-aura-height="300"
 {% if params.tables.value is defined and params.tables.value == true %}
-          data-aura-table-enabled="true"
+        data-aura-table-enabled="true"
 {% else %}
-          data-aura-table-enabled="false"
+        data-aura-table-enabled="false"
+{% endif %}
+{% if params.iframe.value is defined and params.iframe.value == true %}
+        data-aura-iframe-enabled="true"
+{% else %}
+        data-aura-iframe-enabled="false"
+{% endif %}
+{% if params.script.value is defined and params.script.value == true %}
+        data-aura-script-enabled="true"
+{% else %}
+        data-aura-script-enabled="false"
 {% endif %}
 {% if params.links.value is defined and params.links.value == true %}
-          data-aura-links-enabled="true"
+        data-aura-links-enabled="true"
 {% else %}
-          data-aura-links-enabled="false"
+        data-aura-links-enabled="false"
 {% endif %}
 {% if params.pasteFromWord.value is defined and params.pasteFromWord.value == true %}
-          data-aura-paste-from-word="true"
+        data-aura-paste-from-word="true"
 {% else %}
-          data-aura-paste-from-word="false"
+        data-aura-paste-from-word="false"
 {% endif %}
-          data-mapper-property="{{ property.name }}"
-          data-aura-instance-name="{{ id|raw }}"
-          placeholder="{{ property.getPlaceholder(userLocale) }}"
+        data-mapper-property="{{ property.name }}"
+        data-aura-instance-name="{{ id|raw }}"
+        placeholder="{{ property.getPlaceholder(userLocale) }}"
 {% if property.mandatory %}
-          data-validation-required="true"
+        data-validation-required="true"
 {% endif %}
-          ></textarea>
+        ></textarea>
 
 <div class="block-content" data-sort-mode-id="{{ id|raw }}"></div>
