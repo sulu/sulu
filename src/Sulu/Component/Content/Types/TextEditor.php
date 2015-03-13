@@ -45,8 +45,8 @@ class TextEditor extends SimpleContentType
         return array(
             'tables' => new PropertyParameter('tables', true),
             'links' => new PropertyParameter('links', true),
-            'script' => new PropertyParameter('script', true),
-            'iframe' => new PropertyParameter('iframe', true),
+            'scripts' => new PropertyParameter('scripts', true),
+            'iframes' => new PropertyParameter('iframes', true),
             'height' => new PropertyParameter('height', 300),
             'maxHeight' => new PropertyParameter('maxHeight', 500),
             'enterMode' => new PropertyParameter('enterMode', null),
