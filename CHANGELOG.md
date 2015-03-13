@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-master
+    * HOTFIX      #917 [ContentBundle]  Added webspace and locale to page in smart-content to load snippet in correct language
+
 * 0.16.1 (2015-02-27)
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
     * HOTFIX      #880 [AdminBundle]     Fixed user link if user and contact has not the same id
