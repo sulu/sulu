@@ -4,7 +4,15 @@
         data-type="textEditor"
         data-type-instance-name="{{ id|raw }}"
         data-aura-component="ckeditor@husky"
-        data-aura-height="300"
+{% if params.height.value is defined and params.height.value is not empty %}
+        data-aura-height="{{ params.height.value }}"
+{% endif %}
+    {% if params.maxHeight.value is defined and params.maxHeight.value is not empty %}
+        data-aura-max-height="{{ params.maxHeight.value }}"
+    {% endif %}
+{% if params.enterMode.value is defined and params.enterMode.value is not empty %}
+        data-aura-enter-mode="{{ params.enterMode.value }}"
+{% endif %}
 {% if params.tables.value is defined and params.tables.value == true %}
         data-aura-table-enabled="true"
 {% else %}

@@ -47,6 +47,9 @@ class TextEditor extends SimpleContentType
             'links' => new PropertyParameter('links', true),
             'script' => new PropertyParameter('script', true),
             'iframe' => new PropertyParameter('iframe', true),
+            'height' => new PropertyParameter('height', 300),
+            'maxHeight' => new PropertyParameter('maxHeight', 500),
+            'enterMode' => new PropertyParameter('enterMode', null),
             'pasteFromWord' => new PropertyParameter('pasteFromWord', true)
         );
     }
