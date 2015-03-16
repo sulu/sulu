@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * Sulu search controller
@@ -54,9 +56,10 @@ class SearchController
     public function searchAction(Request $request)
     {
         $query = $request->query->get('q');
-        $category = $request->query->get('category') ? : null;
-        $locale = $request->query->get('locale') ? : null;
-
+        $category = $request->query->get('category', null);
+        $locale = $request->query->get('locale', null);
+        $page = $request->query->get('page', 1);
+        $pageSize = $request->query->get('page_size', 50);
         $query = $this->searchManager->createSearch($query);
 
         if ($locale) {
@@ -69,7 +72,19 @@ class SearchController
 
         $hits = $query->execute();
 
-        $view = View::create($hits);
+        $adapter = new ArrayAdapter($hits);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($pageSize);
+        $pager->setCurrentPage($page);
+
+        $result = array(
+            'page' => $pager->getCurrentPage(),
+            'page_count' => $pager->getNbPages(),
+            'page_size' => $pager->getMaxPerPage(),
+            'result' => $pager->getCurrentPageResults()
+        );
+
+        $view = View::create($result);
         $context = SerializationContext::create();
         $context->enableMaxDepthChecks();
         $context->setSerializeNull(true);

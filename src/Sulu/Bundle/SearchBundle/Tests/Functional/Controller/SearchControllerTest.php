@@ -74,7 +74,20 @@ class SearchControllerTest extends SuluTestCase
     {
         $product = new Product();
         $product->id = 6;
-        $product->title = 'Product X';
+        $product->title = 'Product Xeon';
+        $product->body = 'To be or not to be, that is the question';
+        $product->url = '/foobar';
+        $product->locale = 'fr';
+        $product->created = new \DateTime('2015-04-10T00:00:00+00:00');
+        $product->changed = new \DateTime('2015-04-12T00:00:00+00:00');
+        $product->changer = $this->user;
+        $product->creator = $this->user;
+
+        $this->searchManager->index($product);
+
+        $product = new Product();
+        $product->id = 7;
+        $product->title = 'Car Xeon';
         $product->body = 'To be or not to be, that is the question';
         $product->url = '/foobar';
         $product->locale = 'fr';
@@ -108,50 +121,94 @@ class SearchControllerTest extends SuluTestCase
     {
         return array(
             array(
-                'Hello',
-                null,
-                'de',
                 array(
-                    array(
-                        'id' => null,
-                        'document' => array(
-                            'id' => 1234,
-                            'title' => 'Hello',
-                            'description' => null,
-                            'url' => '/',
-                            'locale' => 'de',
-                            'imageUrl' => null,
-                            'category' => 'page',
-                            'created' => '2015-04-10T00:00:00+00:00',
-                            'changed' => '2015-04-12T00:00:00+00:00',
-                            'creatorName' => 'dantleech',
-                            'changerName' => 'dantleech',
+                    'q' => 'Hello',
+                    'locale' => 'de',
+                ),
+                array(
+                    'page' => 1,
+                    'page_size' => 50,
+                    'page_count' => 1,
+                    'result' => array(
+                        array(
+                            'id' => null,
+                            'document' => array(
+                                'id' => 1234,
+                                'title' => 'Hello',
+                                'description' => null,
+                                'url' => '/',
+                                'locale' => 'de',
+                                'imageUrl' => null,
+                                'category' => 'page',
+                                'created' => '2015-04-10T00:00:00+00:00',
+                                'changed' => '2015-04-12T00:00:00+00:00',
+                                'creatorName' => 'dantleech',
+                                'changerName' => 'dantleech',
+                            ),
+                            'score' => -1,
                         ),
-                        'score' => -1,
                     ),
                 ),
             ),
             array(
-                'Product',
-                array('product'),
-                'fr',
                 array(
-                    array(
-                        'id' => null,
-                        'document' => array(
-                            'id' => 6,
-                            'title' => 'Product X',
-                            'description' => 'To be or not to be, that is the question',
-                            'url' => '/foobar',
-                            'locale' => 'fr',
-                            'imageUrl' => null,
-                            'category' => 'test_products',
-                            'created' => '2015-04-10T00:00:00+00:00',
-                            'changed' => '2015-04-12T00:00:00+00:00',
-                            'creatorName' => 'dantleech',
-                            'changerName' => 'dantleech',
+                    'q' => 'Product', 
+                    'indexes' => array('Product'), 
+                    'locale' => 'fr',
+                ),
+                array(
+                    'page' => 1,
+                    'page_size' => 50,
+                    'page_count' => 1,
+                    'result' => array(
+                        array(
+                            'id' => null,
+                            'document' => array(
+                                'id' => 6,
+                                'title' => 'Product Xeon',
+                                'description' => 'To be or not to be, that is the question',
+                                'url' => '/foobar',
+                                'locale' => 'fr',
+                                'imageUrl' => null,
+                                'category' => 'test_products',
+                                'created' => '2015-04-10T00:00:00+00:00',
+                                'changed' => '2015-04-12T00:00:00+00:00',
+                                'creatorName' => 'dantleech',
+                                'changerName' => 'dantleech',
+                            ),
+                            'score' => -1,
                         ),
-                        'score' => -1,
+                    ),
+                ),
+            ),
+            array(
+                array(
+                    'q' => 'Xeon', 
+                    'page_size' => 1,
+                    'page' => 2,
+                ),
+                array(
+                    'page' => 2,
+                    'page_size' => 1,
+                    'page_count' => 2,
+                    'result' => array(
+                        array(
+                            'id' => null,
+                            'document' => array(
+                                'id' => 7,
+                                'title' => 'Car Xeon',
+                                'description' => 'To be or not to be, that is the question',
+                                'url' => '/foobar',
+                                'locale' => 'fr',
+                                'imageUrl' => null,
+                                'category' => 'test_products',
+                                'created' => '2015-04-10T00:00:00+00:00',
+                                'changed' => '2015-04-12T00:00:00+00:00',
+                                'creatorName' => 'dantleech',
+                                'changerName' => 'dantleech',
+                            ),
+                            'score' => -1,
+                        ),
                     ),
                 ),
             ),
@@ -161,18 +218,14 @@ class SearchControllerTest extends SuluTestCase
     /**
      * @dataProvider provideSearch
      */
-    public function testSearch($query, $indexes = null, $locale = null, $expectedResult)
+    public function testSearch($params, $expectedResult)
     {
-        foreach ($expectedResult as &$hitResult) {
+        foreach ($expectedResult['result'] as &$hitResult) {
             $hitResult['document']['creatorId'] = $this->user->getId();
             $hitResult['document']['changerId'] = $this->user->getId();
         }
 
-        $this->client->request('GET', '/search/query', array(
-            'q' => $query,
-            'indexes' => $indexes,
-            'locale' => $locale,
-        ));
+        $this->client->request('GET', '/search/query', $params);
 
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
