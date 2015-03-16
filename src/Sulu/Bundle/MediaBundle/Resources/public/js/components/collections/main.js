@@ -216,6 +216,14 @@ define([
                     throw 'display type wrong';
                 }
                 this.startMediaEdit();
+
+                if (!!this.options.mediaId) {
+                    this.sandbox.once('sulu.media-edit.initialized', function() {
+                        this.editMedia(this.options.mediaId);
+
+                        this.sandbox.emit('husky.tabs.header.option.unset', 'mediaId');
+                    }.bind(this));
+                }
             }.bind(this));
 
             this.renderMoveOverlay();

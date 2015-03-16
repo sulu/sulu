@@ -77,13 +77,26 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         try {
             $locale = $this->getLocale($request);
-            $depth = $request->get('depth');
+            $depth = intval($request->get('depth', 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
+
+            // filter children
+            $listRestHelper = $this->get('sulu_core.list_rest_helper');
+            $limit = $listRestHelper->getLimit();
+            $offset = $listRestHelper->getOffset();
+            $search = $listRestHelper->getSearchPattern();
+
+            $filter = array(
+                'limit' => $limit,
+                'offset' => $offset,
+                'search' => $search
+            );
+
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb) {
-                    return $collectionManager->getById($id, $locale, $depth, $breadcrumb);
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter) {
+                    return $collectionManager->getById($id, $locale, $depth, $breadcrumb, $filter);
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
@@ -108,9 +121,9 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
-            $limit = $request->get('limit', $listRestHelper->getLimit());
-            $offset = ($request->get('page', 1) - 1) * $limit;
-            $search = $request->get('search');
+            $limit = $listRestHelper->getLimit();
+            $offset = $listRestHelper->getOffset();
+            $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();
@@ -127,7 +140,13 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $sortBy !== null ? array($sortBy => $sortOrder) : array()
                 );
             } else {
-                $collections = $collectionManager->getTree($this->getLocale($request), $depth);
+                $collections = $collectionManager->getTree(
+                    $this->getLocale($request),
+                    $offset,
+                    $limit,
+                    $search,
+                    $depth
+                );
             }
 
             $all = $collectionManager->getCount();

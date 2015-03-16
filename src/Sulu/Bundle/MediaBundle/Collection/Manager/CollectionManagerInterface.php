@@ -26,9 +26,11 @@ interface CollectionManagerInterface
      * @param int $id the id of the collection
      * @param int $locale the locale which the collection should be return
      * @param int $depth if depth > 1 children will returned also
+     * @param bool $breadcrumb if true breadcrumb will be appended
+     * @param array $filter array of cafeteria's
      * @return Collection
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false);
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array());
 
     /**
      * Returns collections with a given parent and/or a given depth-level
@@ -45,10 +47,13 @@ interface CollectionManagerInterface
     /**
      * Returns collections from root with given depth
      * @param string $locale the locale which the collection should be return
+     * @param int $offset
+     * @param int $limit
+     * @param string $search
      * @param int $depth maximum depth for query
-     * @return Collection[]
+     * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */
-    public function getTree($locale, $depth = 0);
+    public function getTree($locale, $offset, $limit, $search, $depth = 0);
 
     /**
      * Returns a collection count
