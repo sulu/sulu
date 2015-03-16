@@ -71,16 +71,25 @@ abstract class ContentNavigation
 
         foreach ($this->navigationItems as $navigationItem) {
             if (null === $contentType || in_array($contentType, $navigationItem->getGroups())) {
-                $navigationItems[] = $navigationItem->toArray();
+                if ($navigationItem->getPosition() === null) {
+                    $navigationItems[] = $navigationItem->toArray();
+                } else {
+                    array_splice(
+                        $navigationItems,
+                        $navigationItem->getPosition() - 1,
+                        0,
+                        array($navigationItem->toArray())
+                    );
+                }
             }
         }
 
         $navigation = array(
-            'id'            => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
-            'title'         => $this->getName(),
-            'header'        => $this->getHeader(),
+            'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
+            'title' => $this->getName(),
+            'header' => $this->getHeader(),
             'displayOption' => $this->getDisplayOption(),
-            'items'         => $navigationItems
+            'items' => $navigationItems
         );
 
         return $navigation;

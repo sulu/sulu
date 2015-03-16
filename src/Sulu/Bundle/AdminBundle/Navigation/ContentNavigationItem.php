@@ -76,8 +76,11 @@ class ContentNavigationItem
     private $resetStore;
 
     /**
-     * @param $name
+     * Defines position
+     * @var integer
      */
+    private $position;
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -230,6 +233,22 @@ class ContentNavigationItem
     }
 
     /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
      * Returns an array representation of the content navigation item
      * @return array
      */
@@ -244,6 +263,7 @@ class ContentNavigationItem
             'componentOptions' => $this->getComponentOptions(),
             'disabled' => $this->getDisabled(),
             'resetStore' => $this->getResetStore(),
+            'position' => $this->getPosition()
         );
 
         return $array;

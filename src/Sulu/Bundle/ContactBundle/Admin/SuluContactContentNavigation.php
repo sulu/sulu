@@ -31,15 +31,6 @@ class SuluContactContentNavigation extends ContentNavigation
         $details->setComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
 
-        // activities
-        $activities = new ContentNavigationItem('content-navigation.contacts.activities');
-        $activities->setAction('activities');
-        $activities->setGroups(array('contact'));
-        $activities->setComponent('contacts@sulucontact');
-        $activities->setComponentOptions(array('display'=>'activities'));
-        $activities->setDisplay(array('edit'));
-        $this->addNavigationItem($activities);
-
         // documents
         $documents = new ContentNavigationItem('content-navigation.contacts.documents');
         $documents->setAction('documents');
@@ -59,15 +50,6 @@ class SuluContactContentNavigation extends ContentNavigation
         $details->setComponent('accounts@sulucontact');
         $details->setComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
-
-        // activities
-        $activities = new ContentNavigationItem('content-navigation.contacts.activities');
-        $activities->setAction('activities');
-        $activities->setGroups(array('account'));
-        $activities->setComponent('accounts@sulucontact');
-        $activities->setComponentOptions(array('display'=>'activities'));
-        $activities->setDisplay(array('edit'));
-        $this->addNavigationItem($activities);
 
         // contacts
         $contacts = new ContentNavigationItem('content-navigation.contact.accounts.contacts');
