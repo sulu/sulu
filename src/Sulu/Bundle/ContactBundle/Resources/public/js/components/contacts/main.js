@@ -539,6 +539,33 @@ define([
             this.sandbox.on(instance + '.save', function(data) {
                 this.itemSaved(data, url, instance);
             }.bind(this));
+        },
+
+        /**
+         * @var ids - array of ids to delete
+         * @var callback - callback function returns true or false if data got deleted
+         */
+        confirmDeleteDialog: function(callbackFunction) {
+            // check if callback is a function
+            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
+                throw 'callback is not a function';
+            }
+
+            // show warning dialog
+            this.sandbox.emit('sulu.overlay.show-warning',
+                'sulu.overlay.be-careful',
+                'sulu.overlay.delete-desc',
+
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
+
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
+            );
         }
     };
 });

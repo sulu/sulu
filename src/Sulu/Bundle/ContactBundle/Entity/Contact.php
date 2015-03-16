@@ -22,7 +22,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 class Contact extends ApiEntity implements AuditableInterface
 {
-
     /**
      * @var string
      */
@@ -73,12 +72,6 @@ class Contact extends ApiEntity implements AuditableInterface
      * @var \Doctrine\Common\Collections\Collection
      */
     private $locales;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
-     */
-    private $activities;
 
     /**
      * @var \Sulu\Component\Security\Authentication\UserInterface
@@ -183,11 +176,6 @@ class Contact extends ApiEntity implements AuditableInterface
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     */
-    private $assignedActivities;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
     private $contactAddresses;
@@ -208,7 +196,6 @@ class Contact extends ApiEntity implements AuditableInterface
     public function __construct()
     {
         $this->locales = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
@@ -447,39 +434,6 @@ class Contact extends ApiEntity implements AuditableInterface
     public function getLocales()
     {
         return $this->locales;
-    }
-
-    /**
-     * Add activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return Contact
-     */
-    public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities[] = $activities;
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     */
-    public function removeActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities->removeElement($activities);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActivities()
-    {
-        return $this->activities;
     }
 
     /**
@@ -1111,39 +1065,6 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     * @return Contact
-     */
-    public function addAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities[] = $assignedActivities;
-
-        return $this;
-    }
-
-    /**
-     * Remove assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     */
-    public function removeAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities->removeElement($assignedActivities);
-    }
-
-    /**
-     * Get assignedActivities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAssignedActivities()
-    {
-        return $this->assignedActivities;
-    }
-
-    /**
      * Returns the main address
      *
      * @return mixed
@@ -1226,57 +1147,11 @@ class Contact extends ApiEntity implements AuditableInterface
     {
         return $this->categories;
     }
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $bankAccounts;
-
-
-    /**
-     * Add activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return Contact
-     */
-    public function addActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities[] = $activities;
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     */
-    public function removeActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities->removeElement($activities);
-    }
-
-    /**
-     * Add assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     * @return Contact
-     */
-    public function addAssignedActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities[] = $assignedActivities;
-
-        return $this;
-    }
-
-    /**
-     * Remove assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     */
-    public function removeAssignedActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities->removeElement($assignedActivities);
-    }
 
     /**
      * Add contactAddresses
@@ -1350,7 +1225,7 @@ class Contact extends ApiEntity implements AuditableInterface
     /**
      * Get bankAccounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getBankAccounts()
     {

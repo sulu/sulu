@@ -20,7 +20,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 class Account extends ApiEntity implements AuditableInterface
 {
-
     const TYPE_BASIC = 0;
     const TYPE_LEAD = 1;
     const TYPE_CUSTOMER = 2;
@@ -184,12 +183,6 @@ class Account extends ApiEntity implements AuditableInterface
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     private $responsiblePerson;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
-     */
-    private $activities;
 
     /**
      * @var string
@@ -1080,17 +1073,6 @@ class Account extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return Account
-     */
-    public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities[] = $activities;
-    }
-
-    /**
      * Get mainContact
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Contact
@@ -1157,26 +1139,6 @@ class Account extends ApiEntity implements AuditableInterface
         $this->mainFax = $mainFax;
 
         return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     */
-    public function removeActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities->removeElement($activities);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActivities()
-    {
-        return $this->activities;
     }
 
     /**
@@ -1383,28 +1345,5 @@ class Account extends ApiEntity implements AuditableInterface
     public function removeChild(\Sulu\Bundle\ContactBundle\Entity\Account $children)
     {
         $this->children->removeElement($children);
-    }
-
-    /**
-     * Add activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return Account
-     */
-    public function addActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities[] = $activities;
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     */
-    public function removeActivity(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities->removeElement($activities);
     }
 }

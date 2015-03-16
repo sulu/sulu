@@ -71,7 +71,7 @@ define([
                 };
             },
 
-            templates: ['/admin/contact/template/contact/activities'],
+            templates: ['/admin/activity/template/contact/activities'],
 
             initialize: function() {
 
@@ -282,7 +282,7 @@ define([
                 var url;
                 this.sandbox.dom.html(
                     this.$el,
-                    this.renderTemplate('/admin/contact/template/contact/activities'
+                    this.renderTemplate('/admin/activity/template/contact/activities'
                     ));
 
                 if (!!this.contact) {

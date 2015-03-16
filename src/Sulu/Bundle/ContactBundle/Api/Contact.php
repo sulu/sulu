@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContactBundle\Api;
 
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
-use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;
 use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
@@ -927,47 +926,6 @@ class Contact extends ApiWrapper
     public function getMainUrl()
     {
         return $this->entity->getMainUrl();
-    }
-
-    /**
-     * Add assignedActivities
-     *
-     * @param ActivityEntity $assignedActivities
-     * @return Contact
-     */
-    public function addAssignedActivitie(ActivityEntity $assignedActivities)
-    {
-        $this->entity->addAssignedActivitie($assignedActivities);
-    }
-
-    /**
-     * Remove assignedActivities
-     *
-     * @param ActivityEntity $assignedActivities
-     */
-    public function removeAssignedActivitie(ActivityEntity $assignedActivities)
-    {
-        $this->entity->removeAssignedActivitie($assignedActivities);
-    }
-
-    /**
-     * Get assignedActivities
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("assignedActivities")
-     * @Groups({"fullContact"})
-     */
-    public function getAssignedActivities()
-    {
-        $entities = array();
-        if ($this->entity->getAssignedActivities()) {
-            foreach ($this->entity->getAssignedActivities() as $entity) {
-                $entities[] = new Activity($entity, $this->locale);
-            }
-        }
-
-        return $entities;
     }
 
     /**

@@ -26,10 +26,6 @@ sulu_contact.termsofdelivers:
     type: rest
     resource: Sulu\Bundle\ContactBundle\Controller\TermsOfDeliveryController
 
-sulu_contact.activities:
-    type: rest
-    resource: Sulu\Bundle\ContactBundle\Controller\ActivityController
-
 sulu_contact.account_medias:
     type: rest
     parent: sulu_contact.accounts
