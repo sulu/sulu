@@ -19,7 +19,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class PermissionVoterTest extends \PHPUnit_Framework_TestCase
+class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 {
 
     protected $permissions = array(
@@ -38,7 +38,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
     protected $token;
 
     /**
-     * @var PermissionVoter
+     * @var SecurityContextVoter
      */
     protected $voter;
 
@@ -79,7 +79,7 @@ class PermissionVoterTest extends \PHPUnit_Framework_TestCase
             ->method('getUser')
             ->will($this->returnValue($user));
 
-        $this->voter = new PermissionVoter($this->permissions);
+        $this->voter = new SecurityContextVoter($this->permissions);
     }
 
     public function testPositiveVote()

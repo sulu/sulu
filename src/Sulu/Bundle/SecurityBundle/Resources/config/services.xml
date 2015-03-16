@@ -24,7 +24,7 @@
         <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
         <parameter key="sulu_security.admin.content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation</parameter>
         <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
-        <parameter key="sulu_security.permission_voter.class">Sulu\Component\Security\Authorization\PermissionVoter</parameter>
+        <parameter key="sulu_security.permission_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
         <parameter key="sulu_security.role_repository.class">Sulu\Bundle\SecurityBundle\Entity\RoleRepository</parameter>
         <parameter key="sulu_security.user_repository.class">Sulu\Component\Security\Authentication\UserRepository</parameter>
         <parameter key="sulu_security.user_repository_factory.class">Sulu\Component\Security\Authentication\UserRepositoryFactory</parameter>

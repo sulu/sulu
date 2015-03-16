@@ -20,7 +20,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class PermissionVoter implements VoterInterface
+class SecurityContextVoter implements VoterInterface
 {
     /**
      * The permissions avaiable, defined by config
