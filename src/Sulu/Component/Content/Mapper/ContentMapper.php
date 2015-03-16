@@ -2342,6 +2342,9 @@ class ContentMapper implements ContentMapperInterface
             null
         );
 
+        $property->getStructure()->setLanguageCode($locale);
+        $property->getStructure()->setWebspaceKey($webspaceKey);
+
         return $contentType->getContentData($property);
     }
 

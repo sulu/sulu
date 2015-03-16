@@ -1083,7 +1083,12 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->sessionManager,
             $this->userManager,
             $this->webspaceManager,
-            new SmartContentQueryBuilder($this->structureManager, $this->webspaceManager, $this->sessionManager, $this->languageNamespace),
+            new SmartContentQueryBuilder(
+                $this->structureManager,
+                $this->webspaceManager,
+                $this->sessionManager,
+                $this->languageNamespace
+            ),
             new ContentQueryExecutor($this->sessionManager, $this->mapper),
             new NullLogger()
         );
@@ -1228,56 +1233,39 @@ class NodeRepositoryTest extends PhpcrTestCase
             array('overview', 'asdf', 'asdf', 2400)
         );
 
-        $method = new ReflectionMethod(
-            get_class($structureMock), 'addChild'
-        );
+        $method = new ReflectionMethod(get_class($structureMock), 'addChild');
 
+        $property = new Property('title', 'title', 'text_line', false, true, 1, 1, array());
+        $property->setStructure($structureMock);
         $method->setAccessible(true);
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property('title', 'title', 'text_line', false, true, 1, 1, array())
-            )
-        );
+        $method->invokeArgs($structureMock, array($property));
 
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property(
-                    'url',
-                    'url',
-                    'resource_locator',
-                    false,
-                    true,
-                    1,
-                    1,
-                    array(),
-                    array(new PropertyTag('sulu.rlp', 1))
-                )
-            )
+        $property = new Property(
+            'url',
+            'url',
+            'resource_locator',
+            false,
+            true,
+            1,
+            1,
+            array(),
+            array(new PropertyTag('sulu.rlp', 1))
         );
+        $property->setStructure($structureMock);
+        $method->invokeArgs($structureMock, array($property));
 
         if ($type == 1) {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property('tags', 'tags', 'text_line', false, false, 2, 10)
-                )
-            );
+            $property = new Property('tags', 'tags', 'text_line', false, false, 2, 10);
+            $property->setStructure($structureMock);
+            $method->invokeArgs($structureMock, array($property));
 
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property('article', 'article', 'text_area')
-                )
-            );
+            $property = new Property('article', 'article', 'text_area');
+            $property->setStructure($structureMock);
+            $method->invokeArgs($structureMock, array($property));
         } elseif ($type == 2) {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property('blog', 'blog', 'text_area')
-                )
-            );
+            $property = new Property('blog', 'blog', 'text_area');
+            $property->setStructure($structureMock);
+            $method->invokeArgs($structureMock, array($property));
         }
 
         return $structureMock;
