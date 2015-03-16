@@ -72,7 +72,7 @@ abstract class ContentNavigation
         foreach ($this->navigationItems as $navigationItem) {
             if (null === $contentType || in_array($contentType, $navigationItem->getGroups())) {
                 if ($navigationItem->getPosition() === null ||
-                    $navigationItem->getPosition() >= count($navigationItems) - 1
+                    $navigationItem->getPosition() >= count($navigationItems)
                 ) {
                     $navigationItems[] = $navigationItem->toArray();
                 } else {
