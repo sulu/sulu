@@ -816,6 +816,7 @@ class DefaultMediaManager implements MediaManagerInterface
      */
     public function addFormatsAndUrl(Media $media)
     {
+        // Set Formats
         $media->setFormats(
             $this->formatManager->getFormats(
                 $media->getId(),
@@ -825,16 +826,20 @@ class DefaultMediaManager implements MediaManagerInterface
             )
         );
 
-        $media->setUrl(
-            $this->getUrl($media->getId(), $media->getName(), $media->getVersion())
-        );
-
+        // Set Version Urls
         $versionUrls = array();
         foreach ($media->getVersions() as $version) {
             $versionUrls[$version] = $this->getUrl($media->getId(), $media->getName(), $version);
         }
 
         $media->setVersionUrls($versionUrls);
+
+        // Set Current Url
+        if (isset($versionUrls[$media->getVersion()])) {
+            $media->setUrl($versionUrls[$media->getVersion()]);
+        } else {
+            $media->setUrl($this->getUrl($media->getId(), $media->getName(), $media->getVersion()));
+        }
 
         return $media;
     }
