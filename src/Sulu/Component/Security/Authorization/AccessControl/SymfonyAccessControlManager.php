@@ -51,10 +51,10 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         $updated = false;
-        foreach ($acl->getObjectAces() as $ace) {
+        foreach ($acl->getObjectAces() as $id => $ace) {
             /** @var EntryInterface $ace */
             if ($ace->getSecurityIdentity()->equals($sid)) {
-                $acl->updateObjectAce($ace->getId(), $this->maskConverter->convertPermissionsToNumber($permissions));
+                $acl->updateObjectAce($id, $this->maskConverter->convertPermissionsToNumber($permissions));
                 $updated = true;
             }
         }
