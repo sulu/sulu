@@ -9,12 +9,11 @@
 
 define([
     'sulucontact/model/contact',
-    'sulucontact/model/activity',
     'sulucontact/model/title',
     'sulucontact/model/position',
     'sulucategory/model/category',
     'contactsutil/delete-dialog'
-], function(Contact, Activity, Title, Position, Category, DeleteDialog) {
+], function(Contact, Title, Position, Category, DeleteDialog) {
 
     'use strict';
 
