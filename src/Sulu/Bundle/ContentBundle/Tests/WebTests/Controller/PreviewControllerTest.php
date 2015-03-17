@@ -59,8 +59,6 @@ class PreviewControllerTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
         $this->em->persist($contact);
 
         $emailType = new EmailType();
@@ -77,8 +75,6 @@ class PreviewControllerTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
-        $role1->setChanged(new DateTime());
-        $role1->setCreated(new DateTime());
         $this->em->persist($role1);
 
         $user = new User();

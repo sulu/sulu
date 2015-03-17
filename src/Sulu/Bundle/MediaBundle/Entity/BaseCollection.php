@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * BaseCollection
@@ -221,19 +222,6 @@ abstract class BaseCollection implements CollectionInterface
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return CollectionInterface
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -241,19 +229,6 @@ abstract class BaseCollection implements CollectionInterface
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return CollectionInterface
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

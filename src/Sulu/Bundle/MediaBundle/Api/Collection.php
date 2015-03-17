@@ -372,20 +372,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @param DateTime|string $changed
-     * @return $this
-     */
-    public function setChanged($changed)
-    {
-        if (is_string($changed)) {
-            $changed = new \DateTime($changed);
-        }
-        $this->entity->setChanged($changed);
-
-        return $this;
-    }
-
-    /**
      * @VirtualProperty
      * @SerializedName("changed")
      * @return string
@@ -419,20 +405,6 @@ class Collection extends ApiWrapper
         }
 
         return null;
-    }
-
-    /**
-     * @param \DateTime|string $created
-     * @return $this
-     */
-    public function setCreated($created)
-    {
-        if (is_string($created)) {
-            $created = new \DateTime($created);
-        }
-        $this->entity->setCreated($created);
-
-        return $this;
     }
 
     /**

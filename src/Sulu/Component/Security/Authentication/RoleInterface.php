@@ -10,11 +10,13 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Sulu\Component\Persistence\Model\AuditableInterface;
+
 /**
  * Defines the interface for a role
  * @package Sulu\Bundle\SecurityBundle\Entity
  */
-interface RoleInterface
+interface RoleInterface extends AuditableInterface
 {
     /**
      * Set name
@@ -47,27 +49,11 @@ interface RoleInterface
     public function getSystem();
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return RoleInterface
-     */
-    public function setCreated($created);
-
-    /**
      * Get created
      *
      * @return \DateTime
      */
     public function getCreated();
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return RoleInterface
-     */
-    public function setChanged($changed);
 
     /**
      * Get changed

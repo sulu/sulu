@@ -128,7 +128,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
             $wrappers = $categoryManager->getApiObjects($categories, $this->getLocale($request));
             $list = new CollectionRepresentation($wrappers, self::$entityKey);
         }
-        $view = $this->view($list, 200);
+       $view = $this->view($list, 200);
 
         return $this->handleView($view);
     }

@@ -73,6 +73,6 @@ class CompleteDataCommand extends ContainerAwareCommand
             return;
         }
 
-        $output->writeln('Data Completion complete');
+        $output->writeln("\nData Completion finished");
     }
 }

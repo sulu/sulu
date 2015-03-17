@@ -8,8 +8,6 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <field name="created" type="datetime" column="created"/>
-        <field name="changed" type="datetime" column="changed"/>
         <field name="version" type="integer" column="version" />
         <one-to-many field="fileVersions" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" mapped-by="file">
             <cascade>
@@ -19,16 +17,6 @@
         <many-to-one field="media" target-entity="Sulu\Bundle\MediaBundle\Entity\Media" inversed-by="files">
             <join-columns>
                 <join-column name="idMedia" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface">
-            <join-columns>
-                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\Authentication\UserInterface">
-            <join-columns>
-                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
 
