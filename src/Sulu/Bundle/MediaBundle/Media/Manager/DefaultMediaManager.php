@@ -654,6 +654,9 @@ class DefaultMediaManager implements MediaManagerInterface
                     case 'url':
                         $media->setUrl($value);
                         break;
+                    case 'versionUrls':
+                        $media->setVersionUrls($value);
+                        break;
                     case 'formats':
                         $media->setFormats($value);
                         break;
@@ -825,6 +828,13 @@ class DefaultMediaManager implements MediaManagerInterface
         $media->setUrl(
             $this->getUrl($media->getId(), $media->getName(), $media->getVersion())
         );
+
+        $versionUrls = array();
+        foreach ($media->getVersions() as $version) {
+            $versionUrls[$version] = $this->getUrl($media->getId(), $media->getName(), $version);
+        }
+
+        $media->setVersionUrls($versionUrls);
 
         return $media;
     }

@@ -38,6 +38,10 @@ class Media extends ApiWrapper
      * @var string
      */
     protected $url;
+    /**
+     * @var array
+     */
+    protected $versionUrls = array();
 
     /**
      * @var array
@@ -462,6 +466,26 @@ class Media extends ApiWrapper
     public function setFormats($formats)
     {
         $this->formats = $formats;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("versionUrls")
+     * @return array
+     */
+    public function getVersionUrls()
+    {
+        return $this->versionUrls;
+    }
+
+    /**
+     * @param string $versionUrls
+     * @return $this
+     */
+    public function setVersionUrls($versionUrls)
+    {
+        $this->versionUrls = $versionUrls;
+        return $this;
     }
 
     /**
