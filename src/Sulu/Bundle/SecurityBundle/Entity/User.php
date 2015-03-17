@@ -39,6 +39,16 @@ class User extends BaseUser
     private $userSettings;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Add userRoles
      *
      * @param UserRole $userRoles
@@ -69,6 +79,21 @@ class User extends BaseUser
     public function getUserRoles()
     {
         return $this->userRoles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        $roles = parent::getRoles();
+
+        foreach ($this->getUserRoles() as $userRole) {
+            /** @var UserRole $userRole */
+            $roles[] = $userRole->getRole()->getIdentifier();
+        }
+
+        return $roles;
     }
 
     /**
@@ -168,15 +193,4 @@ class User extends BaseUser
     {
         return $this->getContact()->getFullName();
     }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
 }

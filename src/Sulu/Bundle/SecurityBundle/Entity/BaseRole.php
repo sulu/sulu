@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\Security\Core\Role\Role;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * BaseRole
@@ -215,6 +214,9 @@ abstract class BaseRole extends Role implements RoleInterface
         return $this->securityType;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getIdentifier()
     {
         return 'SULU_ROLE_' . strtoupper($this->getName());
