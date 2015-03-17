@@ -45,3 +45,22 @@
 .media-edit-loader {
   margin: 50px 0;
 }
+
+/* line 5, ../scss/modules/media-edit.scss */
+.media-edit-versions-links {
+  border-top: 2px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+/* line 10, ../scss/modules/media-edit.scss */
+.media-edit-versions-link {
+  color: black;
+  display: block;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+  text-decoration: none;
+}
+/* line 16, ../scss/modules/media-edit.scss */
+.media-edit-versions-link.active {
+  font-weight: bold;
+}

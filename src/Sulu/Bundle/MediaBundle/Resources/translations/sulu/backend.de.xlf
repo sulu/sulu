@@ -114,6 +114,18 @@
                 <source>sulu.media.edit.loading</source>
                 <target>Medien werden geladen</target>
             </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
+                <source>sulu.media.history</source>
+                <target>History</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22259" resname="sulu.media.version">
+                <source>sulu.media.version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22260" resname="sulu.media.version.active">
+                <source>sulu.media.version.active</source>
+                <target>aktiv</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

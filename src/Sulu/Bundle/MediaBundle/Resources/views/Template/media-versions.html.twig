@@ -1,0 +1,17 @@
+<form id="media-versions">
+    <div class="grid">
+        <div class="grid-row">
+            <div class="media-edit-versions-links">
+                <% _.each(media.versionUrls, function(url, versionNumber) { %>
+                    <a class="media-edit-versions-link <% if (versionNumber == media.version) { %>active<% } %>" href="<%= url %>" target="_blank">
+                        <%= translate('sulu.media.version') %> <%= versionNumber %>
+                        <% if (versionNumber == media.version) { %>
+                            (<%= translate('sulu.media.version.active') %>)
+                            </strong>
+                        <% } %>
+                    </a>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</form>

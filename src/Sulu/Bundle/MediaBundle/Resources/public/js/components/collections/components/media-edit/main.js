@@ -21,6 +21,7 @@ define(function () {
 
         defaults = {
             infoKey: 'public.info',
+            versionsKey: 'sulu.media.history',
             multipleEditTitle: 'sulu.media.multiple-edit.title',
             loadingTitle: 'sulu.media.edit.loading',
             instanceName: ''
@@ -28,6 +29,7 @@ define(function () {
 
         constants = {
             infoFormSelector: '#media-info',
+            versionsFormSelector: '#media-versions',
             multipleEditFormSelector: '#media-multiple-edit',
             dropzoneSelector: '#file-version-change',
             multipleEditDescSelector: '.media-description',
@@ -74,6 +76,7 @@ define(function () {
 
         templates: [
             '/admin/media/template/media/info',
+            '/admin/media/template/media/versions',
             '/admin/media/template/media/multiple-edit'
         ],
 
@@ -94,6 +97,8 @@ define(function () {
 
             // stores info-tab html
             this.$info = null;
+            // stores version-tab html
+            this.$versions = null;
             // stores the multiple edit-form
             this.$multiple = null;
             this.startLoadingOverlay();
@@ -193,6 +198,9 @@ define(function () {
             this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
                 media: this.media
             }));
+            this.$versions = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/versions', {
+                media: this.media
+            }));
             this.startSingleOverlay();
         },
 
@@ -259,7 +267,8 @@ define(function () {
                         el: $container,
                         title: this.media.title,
                         tabs: [
-                            {title: this.sandbox.translate(this.options.infoKey), data: this.$info}
+                            {title: this.sandbox.translate(this.options.infoKey), data: this.$info},
+                            {title: this.sandbox.translate(this.options.versionsKey), data: this.$versions}
                         ],
                         languageChanger: {
                             locales: ['en', 'de'],
