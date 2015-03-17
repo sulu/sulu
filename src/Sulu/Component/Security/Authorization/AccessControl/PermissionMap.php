@@ -36,7 +36,7 @@ class PermissionMap implements PermissionMapInterface
             return null;
         }
 
-         return $this->permissions[$permission];
+         return array($this->permissions[$permission]);
     }
 
     /**
