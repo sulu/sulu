@@ -30397,6 +30397,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
         /**
          * Selects or deselects a record with a given id
+         * @param recordId {Number|String} the id of the record to select or deselect
+         */
+        selectRecord: function(recordId) {
+            this.toggleSelectRecord(recordId, true);
+        },
+
+        /**
+         * Selects or deselects a record with a given id
          * @param id {Number|String} the id of the record to select or deselect
          * @param select {Boolean} true to select false to deselect
          */
@@ -30556,6 +30564,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
  * @param {Function} [destroy] function to destroy the view and unbind events
+ * @param {Boolean} [unselectOnBackgroundClick] should the items be deselcted on docuemnt click
  */
 define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
@@ -30565,7 +30574,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             large: false,
             fadeInDuration: 400,
             largeThumbnailFormat: '170x170',
-            smallThumbnailFormat: '50x50'
+            smallThumbnailFormat: '50x50',
+            unselectOnBackgroundClick: true
         },
 
         constants = {
@@ -30666,7 +30676,11 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             this.data = data;
 
             this.renderThumbnails(this.data.embedded);
-            this.sandbox.dom.on('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName, this.unselectAll.bind(this));
+            this.sandbox.dom.on('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName, function() {
+                if (this.options.unselectOnBackgroundClick) {
+                    this.unselectAll();
+                }
+            }.bind(this));
             this.rendered = true;
         },
 
@@ -30779,6 +30793,21 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
                 this.selectItem(id);
             }.bind(this));
+        },
+
+        /**
+         * Selects a record with a given id
+         * @param recordId {Number|String} the id of the record to select or deselect
+         */
+        selectRecord: function(recordId) {
+            this.selectItem(recordId, false);
+        },
+
+        /**
+         * Deselects all records
+         */
+        deselectAllRecords: function() {
+            this.unselectAll();
         },
 
         /**
@@ -31743,6 +31772,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
             },
 
             /**
+             * listens on and update the selected state of the given items
+             * @event husky.datagrid.selected.update
+             * @param {Array} ids of all items that should be selected
+             */
+            SELECTED_UPDATE = function() {
+                return this.createEventName('selected.update');
+            },
+
+            /**
              * raised when data was saved
              * @event husky.datagrid.data.saved
              * @param {Object} data returned
@@ -32647,6 +32685,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.on(MEDIUM_LOADER_SHOW.call(this), this.showMediumLoader.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
 
+                this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
+
                 this.startColumnOptionsListener();
                 this.startSearchListener();
             },
@@ -32847,6 +32887,18 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 // emit events with selected data
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.selectedItems.length);
                 this.setSelectedItemsToData();
+            },
+
+            /**
+             * Returns the ids of all selected items
+             * @param selection {Array} list of selected items
+             */
+            updateSelection: function(selection) {
+                this.gridViews[this.viewId].deselectAllRecords();
+                
+                for (i = -1, length = selection.length; ++i < length;) {
+                    this.gridViews[this.viewId].selectRecord(selection[i]);
+                }
             },
 
             /**
@@ -43731,6 +43783,7 @@ define('husky_components/data-navigation/list-view',[], function() {
  * @param {String} [options.childrenLinkKey] - key of children link in object
  * @param {String} [options.showAddButton] - Indicates if add button should be rendered
  * @param {Object} [options.translates] Holds the translates
+ * @param {Bool} [options.globalEvents] Should global events be sent
  */
 define('__component__$data-navigation@husky',[
     'husky_components/data-navigation/list-view'
@@ -43750,6 +43803,7 @@ define('__component__$data-navigation@husky',[
             searchKey: 'search',
             limit: 20,
             showAddButton: true,
+            globalEvents: true,
             translates: {
                 noData: 'No Data',
                 title: 'Data',
@@ -44273,7 +44327,9 @@ define('__component__$data-navigation@husky',[
 
             this.openParentHandler(event).then(function() {
                 this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                if (this.options.globalEvents) {
+                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                }
             }.bind(this));
         },
 
@@ -44296,7 +44352,9 @@ define('__component__$data-navigation@husky',[
 
             this.openChildrenHandler(event).then(function() {
                 this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                if (this.options.globalEvents) {
+                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                }
             }.bind(this));
         },
 

@@ -2,6 +2,77 @@
 // Media Selection
 // --------------------------------------------------
 
+.media-selection-overlay-container,
+.media-selection-overlay {
+  width: 900px !important;
+}
+
+.media-selection-overlay-container {
+  .overlay-header {
+    display: none;
+  }
+
+  .overlay-content {
+    height: 400px;
+    margin: 0;
+    background-color: #f1f1f1;
+  }
+
+  .overlay-footer {
+    display: none;
+  }
+
+  .data-navigation {
+    padding-top: 0;
+  }
+
+  .husky-thumbnails {
+    .item.large {
+      margin-right: 24px;
+    }
+
+    .item.large:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+
+  .fa-cloud-download {
+    display: none !important;
+  }
+
+  .selected-elements {
+    display: none;
+  }
+}
+
+.media-selection-overlay {
+  height: 100%;
+}
+
+.media-selection-overlay-navigation-container {
+  width: 250px;
+  height: 100%;
+}
+
+.media-selection-overlay-toolbar-container {
+  margin-bottom: 10px;
+}
+
+.media-selection-overlay-content {
+  height: 100%;
+  overflow: auto;
+  padding: 10px 20px;
+  position: relative;
+}
+
+.media-selection-overlay-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
 .media-selection-overlay-add {
     .heading {
         width: 100%;
@@ -15,4 +86,8 @@
     .overlay-loader {
       margin: 20px 0;
     }
+}
+
+.media-selection-overlay-dropzone-container {
+  display: none;
 }
