@@ -214,4 +214,9 @@ abstract class BaseRole extends Role implements RoleInterface
     {
         return $this->securityType;
     }
+
+    public function getIdentifier()
+    {
+        return 'SULU_ROLE_' . strtoupper($this->getName());
+    }
 }
