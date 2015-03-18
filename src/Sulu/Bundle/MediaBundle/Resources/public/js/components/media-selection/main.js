@@ -217,8 +217,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 if (collection) {
                     collectionId = collection.id;
                     this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.enable', 'add');
+                    this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.enable');
                 } else {
                     this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.disable', 'add');
+                    this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.disable');
                 }
 
                 this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.url.update', { collection: collectionId });
@@ -284,6 +286,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
                 this.setData(data);
                 reloadGridGroup.call(this)
+            }.bind(this));
+
+            this.sandbox.on('husky.overlay.dropzone-media-selection-ovelay.' + this.options.instanceName + '.opened', function() {
+                this.$el.find('.media-selection-overlay-container').addClass('dropzone-overlay-opened');
+            }.bind(this));
+
+            this.sandbox.on('husky.overlay.dropzone-media-selection-ovelay.' + this.options.instanceName + '.closed', function() {
+                this.$el.find('.media-selection-overlay-container').removeClass('dropzone-overlay-opened');
             }.bind(this));
         },
 
@@ -513,70 +523,128 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     }
                 ]);
 
-                this.sandbox.sulu.initListToolbarAndList.call(this, 'mediaOverlay', '/admin/api/media/fields',
-                {
-                    el: this.$el.find('.media-selection-overlay-toolbar-container'),
-                    instanceName: 'media-selection-ovelay.' + this.options.instanceName,
-                    template: [
+                this.sandbox.sulu.initListToolbarAndList.call(
+                    this, 
+                    'mediaOverlay', 
+                    [
                         {
-                            id: 'add',
-                            icon: 'plus-circle',
+                            name: 'id',
+                            translation: 'public.id',
                             disabled: true,
-                            callback: function() {
-                                this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.open-data-source');
-                            }.bind(this)
+                            default: false,
+                            sortable: true,
+                            type: '',
+                            width: '50px',
+                            minWidth: '',
+                            editable: false,
+                            class: ''
                         },
                         {
-                            id: 'change',
-                            icon: 'th-large',
-                            itemsOption: {
-                                markable: true
-                            },
-                            items: [
-                                {
-                                    id: 'small-thumbnails',
-                                    title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.thumbnail-small');
-                                    }.bind(this)
-                                },
-                                {
-                                    id: 'big-thumbnails',
-                                    title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.thumbnail-large');
-                                    }.bind(this)
-                                },
-                                {
-                                    id: 'table',
-                                    title: this.sandbox.translate('sulu.list-toolbar.table'),
-                                    callback: function() {
-                                        this.sandbox.emit('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.table');
-                                    }.bind(this)
-                                }
-                            ]
+                            name: 'thumbnails',
+                            translation: 'media.media.thumbnails',
+                            disabled: false,
+                            default: true,
+                            sortable: true,
+                            type: 'thumbnails',
+                            width: '',
+                            minWidth: '',
+                            editable: false,
+                            class: ''
+                        },
+                        {
+                            name: 'title',
+                            translation: 'public.title',
+                            disabled: false,
+                            default: false,
+                            sortable: true,
+                            type: 'title',
+                            width: '',
+                            minWidth: '',
+                            editable: false,
+                            class: ''
+                        },
+                        {
+                            name: 'size',
+                            translation: 'media.media.size',
+                            disabled: false,
+                            default: true,
+                            sortable: true,
+                            type: 'bytes',
+                            width: '',
+                            minWidth: '',
+                            editable: false,
+                            class: ''
                         }
                     ],
-                    inHeader: false
-                },
-                {
-                    el: this.$el.find('.media-selection-overlay-datagrid-container'),
-                    url: '/admin/api/media',
-                    view: 'thumbnail',
-                    resultKey: 'media',
-                    instanceName: 'media-selection-ovelay.' + this.options.instanceName,
-                    preselected: this.getData().ids,
-                    viewOptions: {
-                        table: {
-                            fullWidth: false,
-                            rowClickSelect: true
+                    {
+                        el: this.$el.find('.media-selection-overlay-toolbar-container'),
+                        instanceName: 'media-selection-ovelay.' + this.options.instanceName,
+                        template: [
+                            {
+                                id: 'add',
+                                icon: 'plus-circle',
+                                disabled: true,
+                                callback: function() {
+                                    this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.open-data-source');
+                                }.bind(this)
+                            },
+                            {
+                                id: 'change',
+                                icon: 'th-large',
+                                itemsOption: {
+                                    markable: true
+                                },
+                                items: [
+                                    {
+                                        id: 'small-thumbnails',
+                                        title: this.sandbox.translate('sulu.list-toolbar.small-thumbnails'),
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.thumbnail-small');
+                                        }.bind(this)
+                                    },
+                                    {
+                                        id: 'big-thumbnails',
+                                        title: this.sandbox.translate('sulu.list-toolbar.big-thumbnails'),
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.thumbnail-large');
+                                        }.bind(this)
+                                    },
+                                    {
+                                        id: 'table',
+                                        title: this.sandbox.translate('sulu.list-toolbar.table'),
+                                        callback: function() {
+                                            this.sandbox.emit('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.table');
+                                        }.bind(this)
+                                    }
+                                ]
+                            }
+                        ],
+                        inHeader: false
+                    },
+                    {
+                        el: this.$el.find('.media-selection-overlay-datagrid-container'),
+                        url: '/admin/api/media',
+                        view: 'thumbnail',
+                        resultKey: 'media',
+                        instanceName: 'media-selection-ovelay.' + this.options.instanceName,
+                        preselected: this.getData().ids,
+                        viewOptions: {
+                            table: {
+                                fullWidth: false,
+                                rowClickSelect: true
+                            },
+                            thumbnail: {
+                                large: false,
+                                unselectOnBackgroundClick: false
+                            }
                         },
-                        thumbnail: {
-                            large: false,
-                            unselectOnBackgroundClick: false
+                        paginationOptions: {
+                            dropdown: {
+                                verticalAlignment: 'top'
+                            }
                         }
                     }
-                });
+                );
                 
                 this.sandbox.start([
                     {
@@ -586,7 +654,9 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             url: '/admin/api/media',
                             method: 'POST',
                             paramName: 'fileVersion',
-                            instanceName: 'media-selection-ovelay.' + this.options.instanceName
+                            instanceName: 'media-selection-ovelay.' + this.options.instanceName,
+                            dropzoneEnabled: false,
+                            cancelUploadOnOverlayClick: true
                         }
                     }
                 ]);
