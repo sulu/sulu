@@ -11175,19 +11175,18 @@ a.btn-black, a.btn-highlight {
 
 /* line 29, ../scss/modules/data-navigation.scss */
 .data-navigation-list-container {
-  border-top: 1px solid #21272E;
-  height: calc(100% - 10px);
+  height: calc(100% - 100px);
   overflow: scroll;
   position: relative;
 }
 
-/* line 36, ../scss/modules/data-navigation.scss */
+/* line 35, ../scss/modules/data-navigation.scss */
 .data-navigation-list {
   width: 100%;
   height: 100%;
   background-color: #111417;
 }
-/* line 41, ../scss/modules/data-navigation.scss */
+/* line 40, ../scss/modules/data-navigation.scss */
 .data-navigation-list.is-animated {
   position: absolute;
   top: 0;
@@ -11195,8 +11194,9 @@ a.btn-black, a.btn-highlight {
   z-index: 5;
 }
 
-/* line 49, ../scss/modules/data-navigation.scss */
+/* line 48, ../scss/modules/data-navigation.scss */
 .data-navigation-list-footer {
+  border-top: 1px solid #21272E;
   padding: 10px 0;
   text-align: center;
 }
