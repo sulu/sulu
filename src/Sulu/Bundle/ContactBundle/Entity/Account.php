@@ -244,6 +244,20 @@ class Account extends ApiEntity implements AuditableInterface
     }
 
     /**
+     * setId
+     *
+     * @param integer $id
+     *
+     * @return Account
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set lft
      *
      * @param integer $lft
