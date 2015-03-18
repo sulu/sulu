@@ -430,6 +430,22 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
+     * returns addresses from account or contact
+     *
+     * @param Account\Contact $entity
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    private function getAddresses($entity)
+    {
+        if ($entity instanceof Account) {
+            return $entity->getAccountAddresses();
+        } elseif($entity instanceof Contact) {
+            return $entity->getContactAddresses();
+        } 
+        return null;
+    }
+
+    /**
      * Returns an address by callback-condition
      *
      * @param Account|Contact $entity
@@ -440,7 +456,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
     {
-        $addresses = $this->getAddressRelations($entity);
+        
+        $addresses = $this->getAddresses($entity);
         $address = null;
         $main = null;
 
