@@ -85,6 +85,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             '<div class="fa-times media-selection-overlay-close"></div>',
                             '<div class="media-selection-overlay-dropzone-container"></div>',
                             '<div class="media-selection-overlay-toolbar-container"></div>',
+                            '<div class="media-selection-overlay-content-title">' + options.contentDefaultTitle + '</div>',
                             '<div class="media-selection-overlay-datagrid-container"></div>',
                     '   </div>',
                     '</div>'
@@ -212,10 +213,13 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
 
             this.sandbox.on('husky.data-navigation.' + this.options.instanceName + '.select', function(collection) {
-                var collectionId = null;
+                var collectionId, 
+                    collectionTitle = this.sandbox.translate('media-selection.overlay.all-images');
 
                 if (collection) {
                     collectionId = collection.id;
+                    collectionTitle = collection.title;
+
                     this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.enable', 'add');
                     this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.enable');
                 } else {
@@ -225,6 +229,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
                 this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.url.update', { collection: collectionId });
                 changeUploadCollection.call(this, collectionId);
+                this.$el.find('.media-selection-overlay-content-title').html(collectionTitle);
             }.bind(this));
 
             // change datagrid to table
@@ -489,7 +494,9 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         slides: [
                             {
                                 title: this.sandbox.translate(this.options.translations.addImages),
-                                data: templates.mediaSelection()
+                                data: templates.mediaSelection({
+                                    contentDefaultTitle: this.sandbox.translate('media-selection.overlay.all-images')
+                                })
                             }
                         ]
                     }
