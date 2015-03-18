@@ -25,16 +25,13 @@ class NavigationController extends Controller
 
     /**
      * Returns content navigation for content form
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contentAction(Request $request)
+    public function contentAction()
     {
         if ($this->has(self::SERVICE_NAME)) {
             /** @var ContentNavigation $contentNavigation */
             $contentNavigation = $this->get(self::SERVICE_NAME);
-            $uuid = $request->get('uuid');
-            $contentNavigation->generate($uuid !== 'index');
 
             return new JsonResponse($contentNavigation->toArray('content'));
         } else {
