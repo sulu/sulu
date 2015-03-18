@@ -454,9 +454,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
             }
             if ($force) {
                 // return main or first address
-                if ($main !== null ) {
-                    return $main;
-                } else {
+                if ($main === null && $accountAddresses->first()) {
                     return $accountAddresses->first()->getAddress();
                 }
             }
