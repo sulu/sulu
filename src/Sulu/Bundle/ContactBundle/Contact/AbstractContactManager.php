@@ -439,7 +439,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     {
         if ($entity instanceof Account) {
             return $entity->getAccountAddresses();
-        } elseif($entity instanceof Contact) {
+        } elseif ($entity instanceof Contact) {
             return $entity->getContactAddresses();
         } 
         return null;
