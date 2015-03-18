@@ -194,16 +194,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("mediaNumber")
-     * @return int
-     */
-    public function getMediaNumber()
-    {
-        return count($this->entity->getMedia());
-    }
-
-    /**
      * @param Collection $parent
      * @return $this
      */

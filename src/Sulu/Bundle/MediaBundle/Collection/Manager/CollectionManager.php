@@ -144,9 +144,11 @@ class CollectionManager implements CollectionManagerInterface
         );
 
         $collections = [];
-        foreach ($collectionSet as $entity) {
+        /** @var CollectionEntity[] $entities */
+        $entities = iterator_to_array($collectionSet);
+        foreach ($entities as $entity) {
             if ($entity->getParent() === null) {
-                $collections[] = $this->getApiEntity($entity, $locale, $collectionSet);
+                $collections[] = $this->getApiEntity($entity, $locale, $entities);
             }
         }
 
@@ -273,16 +275,6 @@ class CollectionManager implements CollectionManagerInterface
             false,
             true,
             'thumbnails'
-        );
-        $this->fieldDescriptors['mediaNumber'] = new DoctrineFieldDescriptor(
-            'mediaNumber',
-            'mediaNumber',
-            self::$entityName,
-            'mediaNumber',
-            array(),
-            false,
-            true,
-            'count'
         );
 
         return $this->fieldDescriptors;

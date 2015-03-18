@@ -44293,6 +44293,7 @@ define('__component__$data-navigation@husky',[
     return {
 
         page: 1,
+        loading: false,
 
         /**
          * @method initialize
@@ -44383,7 +44384,7 @@ define('__component__$data-navigation@husky',[
         loadNextPage: function() {
             var def = this.sandbox.data.deferred();
 
-            if (!!this.data.hasNextPage) {
+            if (!!this.data.hasNextPage && !this.loading) {
                 this.showLoader();
 
                 this.page++;
@@ -44476,10 +44477,16 @@ define('__component__$data-navigation@husky',[
          */
         load: function(url) {
             this.page = 1;
+            this.loading = true;
 
             return this.sandbox.util.load(this.getUrl(url))
                 .then(this.parse.bind(this))
-                .then(this.hideSearch.bind(this));
+                .then(this.hideSearch.bind(this))
+                .then(function(data) {
+                    this.loading = false;
+
+                    return data;
+                }.bind(this));
         },
 
         hideLoader: function() {

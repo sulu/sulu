@@ -29,13 +29,12 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function findCollectionById($id)
     {
         $dql = sprintf(
-            'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionMedia, collectionChildren
+            'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
                         LEFT JOIN n.children AS collectionChildren
-                        LEFT JOIN n.media AS collectionMedia
                         LEFT JOIN collectionParent.meta AS parentMeta
                  WHERE n.id = :id',
             $this->_entityName
@@ -61,13 +60,12 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $dql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionMedia, collectionChildren
+                'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
                         LEFT JOIN n.children AS collectionChildren
-                        LEFT JOIN n.media AS collectionMedia
                         LEFT JOIN collectionParent.meta AS parentMeta
                  WHERE (n.depth <= :depth + :maxDepth OR collectionChildren.depth <= :maxDepthPlusOne)',
                 $this->_entityName
@@ -113,6 +111,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $query->setParameter('locale', $filter['locale']);
             }
 
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             return new Paginator($query);
         } catch (NoResultException $ex) {
             return array();
@@ -136,8 +135,6 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.children', 'children')
-                ->leftJoin('children.media', 'childrenMedia')
-                ->leftJoin('collection.media', 'media')
                 /*
                 ->leftJoin('collection.creator', 'creator')
                 ->leftJoin('creator.contact', 'creatorContact')
@@ -147,15 +144,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->addSelect('collectionMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
-                ->addSelect('children')
-                ->addSelect('childrenMedia')
+                ->addSelect('children');
                 /*
                 ->addSelect('creator')
                 ->addSelect('changer')
                 ->addSelect('creatorContact')
                 ->addSelect('changerContact')
                 */
-                ->addSelect('media');
 
             if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
                 foreach ($sortBy as $column => $order) {
@@ -190,6 +185,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $query->setParameter('search', '%' . $search . '%');
             }
 
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             return new Paginator($query);
         } catch (NoResultException $ex) {
             return null;
@@ -217,6 +213,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query->setDQL($sql);
             $query->setParameter('id', $id);
 
+            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             return $query->getResult();
         } catch (NoResultException $ex) {
             return array();

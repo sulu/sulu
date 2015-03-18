@@ -288,6 +288,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
+            $data['locale'] = $this->getLocale($request);
             $collection = $collectionManager->save($data, $this->getUser()->getId());
 
             $view = $this->view($collection, 200);

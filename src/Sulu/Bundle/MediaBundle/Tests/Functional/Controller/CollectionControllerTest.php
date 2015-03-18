@@ -115,7 +115,6 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals($style, $response->style);
         $this->assertEquals('This Description is only for testing', $response->description);
         $this->assertNotNull($response->id);
-        $this->assertEquals(0, $response->mediaNumber);
         $this->assertCount(0, $response->_embedded->collections);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Test Collection', $response->title);
