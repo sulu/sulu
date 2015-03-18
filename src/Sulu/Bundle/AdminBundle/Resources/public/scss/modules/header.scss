@@ -40,7 +40,7 @@
             @include single-transition(opacity, $transitionDuration);
         }
         .h1 {
-          float: left;
+            float: left;
         }
         .title-color {
             display: none;
@@ -63,19 +63,19 @@
         width: 100%;
 
         &::after {
-           content: ".";
-           display: block;
-           clear: both;
-           visibility: hidden;
-           line-height: 0;
-           height: 0;
+            content: ".";
+            display: block;
+            clear: both;
+            visibility: hidden;
+            line-height: 0;
+            height: 0;
         }
 
         .bottom-content {
             float: left;
             line-height: 29px;
             * {
-              color: $white;
+                color: $white;
             }
         }
     }
@@ -83,7 +83,7 @@
     .tabs {
         height: $tabsHeight;
         .tabs-container {
-          @include single-transition(padding, $shrinkAnimationDuration);
+            @include single-transition(padding, $shrinkAnimationDuration);
         }
     }
 
@@ -95,37 +95,39 @@
 
     // add top space to the content-container beneath the header
     & + .page {
-      margin-top: $headerHeight;
-      padding-bottom: $headerHeight
+        margin-top: $headerHeight;
+        padding-bottom: $headerHeight
     }
     &.has-tabs + .page {
-      margin-top: $headerHeight + $tabsHeight;
-      padding-bottom: $headerHeight + $tabsHeight;
+        margin-top: $headerHeight + $tabsHeight;
+        padding-bottom: $headerHeight + $tabsHeight;
     }
 }
 
 .sulu-header-background {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  background: $blue;
-  height: $headerHeight;
-  width: 100%;
-  &.has-tabs {
-    height: $headerHeight + $tabsHeight;
-    border-bottom: $tabsHeight solid $white;
-  }
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: $blue;
+    height: $headerHeight;
+    width: 100%;
+    z-index: -1;
+
+    &.has-tabs {
+        height: $headerHeight + $tabsHeight;
+        border-bottom: $tabsHeight solid $white;
+    }
 }
 
 .small-fixed {
-  .sulu-header .inner {
-    margin-left: $contentPaddingLeftSmall;
-    margin-right: $contentPaddingRightSmall;
-  }
-  .tabs-container {
-    padding-left: $contentPaddingLeftSmall;
-  }
-  .sulu-header .back {
-    opacity: 0;
-  }
+    .sulu-header .inner {
+        margin-left: $contentPaddingLeftSmall;
+        margin-right: $contentPaddingRightSmall;
+    }
+    .tabs-container {
+        padding-left: $contentPaddingLeftSmall;
+    }
+    .sulu-header .back {
+        opacity: 0;
+    }
 }

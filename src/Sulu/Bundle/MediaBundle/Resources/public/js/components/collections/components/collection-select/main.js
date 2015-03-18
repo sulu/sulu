@@ -12,7 +12,11 @@ define(function() {
     'use strict';
 
     var defaults = {
-            instanceName: 'collection-select'
+            instanceName: 'collection-select',
+            title: '',
+            rootCollection: false,
+            disableIds: [],
+            disabledChildren: false
         },
 
         templates = {
@@ -23,7 +27,7 @@ define(function() {
 
             columnNavigation: function() {
                 return [
-                    '<div id="child-column-navigation"/>',
+                    '<div id="child-column-navigation"></div>',
                     '<div id="wait-container" style="margin-top: 50px; margin-bottom: 200px; display: none;"></div>'
                 ].join('');
             }
@@ -48,6 +52,14 @@ define(function() {
         },
 
         /**
+         * Restart overlay content
+         * @event sulu.media.collection-select.close
+         */
+        RESTART = function() {
+            return createEventName.call(this, 'restart');
+        },
+
+        /**
          * Selected
          * @event sulu.media.collection-select.selected
          */
@@ -65,6 +77,8 @@ define(function() {
         };
 
     return {
+        $columnNavigationContainer: '#child-column-navigation',
+        $columnNavigation: '#child-column-navigation .container',
 
         /**
          * Initializes the collections list
@@ -89,10 +103,14 @@ define(function() {
                 this.sandbox.emit(createEventName.call(this, 'close', 'husky.overlay.'));
             }.bind(this));
 
-            // wait for overlay initialized to initialize overlay
-            this.sandbox.once(createEventName.call(this, 'initialized', 'husky.overlay.'), function() {
-                this.startOverlayColumnNavigation();
+            this.sandbox.on(RESTART.call(this), function() {
+                this.sandbox.stop(this.$columnNavigation);
+
+                this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
             }.bind(this));
+
+            // wait for overlay initialized to initialize overlay
+            this.sandbox.once(createEventName.call(this, 'opened', 'husky.overlay.'), this.startOverlayColumnNavigation.bind(this));
 
             // wait for column navigation edit click
             this.sandbox.on(createEventName.call(this, 'action', 'husky.column-navigation.'), function(item) {
@@ -100,7 +118,7 @@ define(function() {
             }.bind(this));
 
             // adjust position of overlay after column-navigation has initialized
-            this.sandbox.once(createEventName.call(this, 'initialized', 'husky.column-navigation.'), function() {
+            this.sandbox.on(createEventName.call(this, 'initialized', 'husky.column-navigation.'), function() {
                 this.sandbox.emit(createEventName.call(this, 'set-position', 'husky.overlay.'));
             }.bind(this));
         },
@@ -148,22 +166,47 @@ define(function() {
          * initialize column navigation
          */
         startOverlayColumnNavigation: function() {
+            this.sandbox.dom.append(this.$columnNavigationContainer, '<div class="container"/>');
+
+            var options = {
+                el: this.$columnNavigation,
+                instanceName: this.options.instanceName,
+                actionIcon: 'fa-check-circle',
+                resultKey: 'collections',
+                showOptions: false,
+                showStatus: false,
+                responsive: false,
+                sortable: false,
+                skin: 'fixed-height-small',
+                disableIds: this.options.disableIds,
+                disabledChildren: this.options.disabledChildren
+            };
+
+            if (!!this.options.rootCollection) {
+                options.prefilledData = {
+                    '_embedded': {
+                        'collections': [
+                            {
+                                'id': 'root',
+                                'title': this.sandbox.translate('navigation.media.collections'),
+                                'hasSub': true,
+                                '_links': {
+                                    'children': {'href': '/admin/api/collections'}
+                                },
+                                '_embedded': {'collections': []}
+                            }
+                        ]
+                    }
+                };
+            } else {
+                options.url = '/admin/api/collections';
+            }
+
             this.sandbox.start(
                 [
                     {
                         name: 'column-navigation@husky',
-                        options: {
-                            el: '#child-column-navigation',
-                            url: '/admin/api/collections',
-                            instanceName: this.options.instanceName,
-                            actionIcon: 'fa-check-circle',
-                            resultKey: 'collections',
-                            showOptions: false,
-                            showStatus: false,
-                            responsive: false,
-                            sortable: false,
-                            skin: 'fixed-height-small'
-                        }
+                        options: options
                     }
                 ]
             );

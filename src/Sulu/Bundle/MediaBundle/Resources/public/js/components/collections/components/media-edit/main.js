@@ -65,6 +65,14 @@ define(function () {
             return createEventName.call(this, 'closed');
         },
 
+        /**
+         * raised when component is initialized
+         * @event sulu.media-edit.closed
+         */
+        INITIALIZED = function () {
+            return createEventName.call(this, 'initialized');
+        },
+
         /** returns normalized event names */
         createEventName = function (postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -97,6 +105,8 @@ define(function () {
             // stores the multiple edit-form
             this.$multiple = null;
             this.startLoadingOverlay();
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**

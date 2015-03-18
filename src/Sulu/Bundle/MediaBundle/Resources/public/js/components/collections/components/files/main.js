@@ -50,6 +50,9 @@ define(function() {
         view: true,
 
         layout: {
+            navigation: {
+                collapsed: true
+            },
             content: {
                 width: 'max'
             }
@@ -66,10 +69,20 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
+            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
+            this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
+
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
 
             this.bindCustomEvents();
             this.render();
+        },
+
+        /**
+         * Deconstructor
+         */
+        remove: function() {
+            this.sandbox.stop(constants.dropzoneSelector);
         },
 
         /**
@@ -138,8 +151,29 @@ define(function() {
             // edit media
             this.sandbox.on('sulu.list-toolbar.edit', this.editMedia.bind(this));
 
-            // selected collection
+            // move
             this.sandbox.on('sulu.media.collection-select.move-media.selected', this.moveMedia.bind(this));
+
+            // change the editing language
+            this.sandbox.on('sulu.header.toolbar.language-changed', this.changeLanguage.bind(this));
+        },
+
+        /**
+         * Changes the editing language
+         * @param locale {string} the new locale to edit the collection in
+         */
+        changeLanguage: function(locale) {
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
+            this.sandbox.emit(
+                'sulu.media.collections.reload-collection',
+                this.options.data.id, {locale: locale.id, breadcrumb:'true'},
+                function(collection) {
+                    this.options.data = collection;
+                    this.setHeaderInfos();
+                    this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
+                }.bind(this)
+            );
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.id);
         },
 
         /**
@@ -171,7 +205,6 @@ define(function() {
          */
         deleteMedia: function() {
             this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-
                 this.sandbox.emit('sulu.media.collections.delete-media', ids,
                     function() {
                         this.sandbox.emit('husky.datagrid.medium-loader.show');
@@ -181,9 +214,9 @@ define(function() {
                             this.sandbox.emit('husky.datagrid.medium-loader.hide');
                         }
                         this.sandbox.emit('husky.datagrid.record.remove', mediaId);
+                        this.sandbox.emit('husky.data-navigation.collections.reload');
                     }.bind(this)
                 );
-
             }.bind(this));
         },
 
@@ -225,12 +258,27 @@ define(function() {
          * like breadcrumb or title
          */
         setHeaderInfos: function() {
-            this.sandbox.emit('sulu.header.set-title', this.options.data.title);
-            this.sandbox.emit('sulu.header.set-breadcrumb', [
+            var breadcrumb = [
                 {title: 'navigation.media'},
-                {title: 'media.collections.title', event: 'sulu.media.collections.list'},
-                {title: this.options.data.title}
-            ]);
+                {
+                    title: 'media.collections.title',
+                    event: 'husky.data-navigation.collections.set-url',
+                    eventArgs: '/admin/api/collections'
+                }
+            ], i, len, data = this.options.data._embedded.breadcrumb || [];
+
+            for (i = 0, len = data.length; i < len; i++) {
+                breadcrumb.push({
+                    title: data[i].title,
+                    event: 'sulu.media.collections.breadcrumb-navigate',
+                    eventArgs: data[i]
+                });
+            }
+
+            breadcrumb.push({title: this.options.data.title});
+
+            this.sandbox.emit('sulu.header.set-title', this.options.data.title);
+            this.sandbox.emit('sulu.header.set-breadcrumb', breadcrumb);
         },
 
         /**
@@ -259,7 +307,9 @@ define(function() {
                 name: 'collections/components/collection-select@sulumedia',
                 options: {
                     el: this.$find(constants.moveSelector),
-                    instanceName: 'move-media'
+                    instanceName: 'move-media',
+                    title: this.sandbox.translate('sulu.media.move.overlay-title'),
+                    disableIds: [this.options.data.id]
                 }
             }]);
         },
@@ -312,7 +362,7 @@ define(function() {
                             position: 30,
                             items: [
                                 {
-                                    id: 'move',
+                                    id: 'media-move',
                                     title: this.sandbox.translate('sulu.media.move'),
                                     callback: function() {
                                         this.startMoveMediaOverlay();
@@ -354,7 +404,7 @@ define(function() {
                             ]
                         }
                     ],
-                    inHeader: true
+                    inHeader: false
                 },
                 {
                     el: this.$find(constants.datagridSelector),
@@ -380,7 +430,7 @@ define(function() {
             this.sandbox.emit('sulu.list-toolbar.' + this.options.instanceName + '.edit.state-change', enable);
             this.sandbox.emit(
                 'husky.toolbar.' + this.options.instanceName + '.item.' + (!!enable ? 'enable' : 'disable'),
-                'move',
+                'media-move',
                 false
             );
         },
@@ -394,6 +444,7 @@ define(function() {
                 files[i].selected = true;
             }
             this.sandbox.emit('husky.datagrid.records.add', files, this.scrollToBottom.bind(this));
+            this.sandbox.emit('husky.data-navigation.collections.reload');
         },
 
         /**

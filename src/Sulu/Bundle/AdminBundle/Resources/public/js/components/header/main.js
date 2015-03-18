@@ -881,16 +881,18 @@ define([], function () {
          */
         setBreadcrumb: function (crumbs) {
             if (!!crumbs && !!crumbs.length) {
-                var $breadcrumb = this.sandbox.dom.createElement('<ul class="breadcrumb"/>');
+                var $breadcrumb = this.sandbox.dom.createElement('<ul class="breadcrumb"/>'), $item;
 
                 this.sandbox.util.foreach(crumbs, function (crumb) {
                     if (!!crumb.title) {
-                        this.sandbox.dom.append($breadcrumb, this.sandbox.util.template(templates.breadcrumbItem)({
+                        $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.breadcrumbItem)({
                             title: this.sandbox.translate(crumb.title),
                             link: (!!crumb.link) ? crumb.link : '#',
                             event: (!!crumb.event) ? crumb.event : '',
                             inactive: (!crumb.link && !crumb.event) ? true : false
                         }));
+                        $item.find('a').data('eventArgs', (!!crumb.eventArgs) ? crumb.eventArgs : {});
+                        this.sandbox.dom.append($breadcrumb, $item);
                     }
                 }.bind(this));
 

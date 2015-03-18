@@ -51,6 +51,22 @@ class Collection extends BaseCollection
     }
 
     /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    }
+
+    /**
      * Set parent
      *
      * @param \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent
@@ -161,15 +177,5 @@ class Collection extends BaseCollection
     public function removeChildren(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children)
     {
         $this->children->removeElement($children);
-    }
-
-    /**
-     * Get children
-     *
-     * @return \Doctrine\Common\Collections\CollectionInterface
-     */
-    public function getChildren()
-    {
-        return $this->children;
     }
 }

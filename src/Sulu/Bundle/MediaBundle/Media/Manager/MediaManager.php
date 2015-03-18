@@ -39,9 +39,9 @@ use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Media\Manager
+ * Default implementation of media manager
  */
-class DefaultMediaManager implements MediaManagerInterface
+class MediaManager implements MediaManagerInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
     const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';

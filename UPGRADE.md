@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Media
+
+Fill up the database column `me_collection_meta.locale` with the translated language like: `de` or `en`. If you
+know you have only added collections in only one language you can use following sql statement:
+
+```sql
+UPDATE `me_collection_meta` SET `locale` = 'de';
+``
+
 ### Security
 
 The names of some classes have changed like shown in the following table:
