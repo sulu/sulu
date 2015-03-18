@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #732 [All]             Automatic mapping and assignation of changer, creator, changed and changer.
     * FEATURE     #891 [All]             Added (css) class property to field descriptors, updated husky and fixed an issue when merging settings with matchings
     * FEATURE     #884 [MediaBundle]     Loaders on media delete and media edit
     * BUGFIX      #884 [AdminBundle]     Fix for login displacement issues
@@ -10,9 +11,11 @@ CHANGELOG for Sulu
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
+    * BUGFIX      #905 [ContactBundle]   Added Functionality for completing contact addresses
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
-    * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all 
+    * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all
                                          account-addresses in database. 'app/console sulu:contacts:data:complete -d state'
+    * BUGFIX      #908 [CategoryBundle]  Added script for recovering categories nested tree (fixing left/right and depths)
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
     * FEATURE     #838 [AdminBundle]     Login UI
@@ -20,6 +23,7 @@ CHANGELOG for Sulu
     * FEATURE     #812 [MediaBundle]     Implemented move collections
     * FEATURE     #805 [MediaBundle]     Implementing media move
     * FEATURE     #909 [MediaBundle]     Added scroll down pagination for collection
+    * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
 
 * dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id

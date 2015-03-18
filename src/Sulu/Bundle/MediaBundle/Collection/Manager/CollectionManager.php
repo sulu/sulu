@@ -396,12 +396,6 @@ class CollectionManager implements CollectionManagerInterface
                         $type = $this->getTypeById($value['id']);
                         $collection->setType($type);
                         break;
-                    case 'changed':
-                        $collection->setChanged($value);
-                        break;
-                    case 'created':
-                        $collection->setCreated($value);
-                        break;
                     case 'changer':
                         $collection->setChanger($value);
                         break;

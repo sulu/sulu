@@ -51,8 +51,6 @@ class ContactMediaControllerTest extends SuluTestCase
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
         $contact->setPosition('CEO');
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
         $contact->setFormOfAddress(1);
         $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
         $contact->setDisabled(0);
@@ -72,16 +70,12 @@ class ContactMediaControllerTest extends SuluTestCase
         $account->setRgt(1);
         $account->setDepth(0);
         $account->setName('Musterfirma');
-        $account->setCreated(new DateTime());
-        $account->setChanged(new DateTime());
 
         $account1 = new Account();
         $account1->setLft(0);
         $account1->setRgt(1);
         $account1->setDepth(0);
         $account1->setName('Musterfirma');
-        $account1->setCreated(new DateTime());
-        $account1->setChanged(new DateTime());
 
         $phoneType = new PhoneType();
         $phoneType->setName('Private');
@@ -191,15 +185,11 @@ class ContactMediaControllerTest extends SuluTestCase
         $audioType->setDescription('This is an audio');
 
         $media = new Media();
-        $media->setCreated(new DateTime());
-        $media->setChanged(new DateTime());
         $media->setType($imageType);
 
         $this->media = $media;
 
         $media2 = new Media();
-        $media2->setCreated(new DateTime());
-        $media2->setChanged(new DateTime());
         $media2->setType($imageType);
 
         $this->media2 = $media2;
@@ -209,21 +199,15 @@ class ContactMediaControllerTest extends SuluTestCase
         // create file
         $file = new File();
         $file->setVersion(1);
-        $file->setCreated(new DateTime());
-        $file->setChanged(new DateTime());
         $file->setMedia($media);
 
         $file2 = new File();
         $file2->setVersion(1);
-        $file2->setCreated(new DateTime());
-        $file2->setChanged(new DateTime());
         $file2->setMedia($media2);
 
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setCreated(new DateTime());
-        $fileVersion->setChanged(new DateTime());
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -235,8 +219,6 @@ class ContactMediaControllerTest extends SuluTestCase
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setCreated(new DateTime());
-        $fileVersion->setChanged(new DateTime());
         $fileVersion->setName('photo.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file2);
@@ -270,8 +252,6 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $collection->setStyle(json_encode($style));
 
-        $collection->setCreated(new DateTime());
-        $collection->setChanged(new DateTime());
 
         // Create Collection Type
         $collectionType = new CollectionType();

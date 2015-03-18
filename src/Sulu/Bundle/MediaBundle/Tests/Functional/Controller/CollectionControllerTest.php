@@ -47,9 +47,6 @@ class CollectionControllerTest extends SuluTestCase
 
         $collection->setStyle(json_encode($style));
 
-        $collection->setCreated(new DateTime());
-        $collection->setChanged(new DateTime());
-
         // Create Collection Type
         $collectionType = new CollectionType();
         $collectionType->setName($typeName);

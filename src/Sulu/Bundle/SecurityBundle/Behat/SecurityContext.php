@@ -124,9 +124,6 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $role = new Role();
         $role->setName($name);
         $role->setSystem($system);
-        $role->setCreated(new \DateTime());
-        $role->setChanged(new \DateTime());
-
         $pool = $this->getContainer()->get('sulu_admin.admin_pool');
         $securityContexts = $pool->getSecurityContexts();
 

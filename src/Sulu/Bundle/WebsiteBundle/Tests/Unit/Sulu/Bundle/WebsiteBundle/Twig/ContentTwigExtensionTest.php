@@ -36,8 +36,6 @@ class TestStructure extends Structure
         $this->setUuid($uuid);
         $this->setCreator($userId);
         $this->setChanger($userId);
-        $this->setCreated(new \DateTime());
-        $this->setChanged(new \DateTime());
 
         $this->addChild(new Property('title', array(), 'text_line'));
         $this->getProperty('title')->setValue($title);
@@ -165,8 +163,6 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         // metadata
         $this->assertEquals(1, $result['creator']);
         $this->assertEquals(1, $result['changer']);
-        $this->assertInstanceOf('\DateTime', $result['created']);
-        $this->assertInstanceOf('\DateTime', $result['changed']);
 
         // content
         $this->assertEquals(array('title' => 'test'), $result['content']);
@@ -195,8 +191,6 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         // metadata
         $this->assertEquals(1, $result['creator']);
         $this->assertEquals(1, $result['changer']);
-        $this->assertInstanceOf('\DateTime', $result['created']);
-        $this->assertInstanceOf('\DateTime', $result['changed']);
 
         // content
         $this->assertEquals(array('title' => 'test'), $result['content']);

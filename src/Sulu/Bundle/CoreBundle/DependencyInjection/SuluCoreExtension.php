@@ -110,6 +110,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('rest.xml');
         $loader->load('build.xml');
         $loader->load('localization.xml');
+        $loader->load('persistence.xml');
     }
 
     /**
@@ -190,6 +191,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         // Default template
         $container->setParameter('sulu.content.structure.default_type.page', $contentConfig['structure']['default_type']['page']);
         $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
+        $container->setParameter('sulu.content.structure.default_type.homepage', $contentConfig['structure']['default_type']['homepage']);
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Template

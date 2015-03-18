@@ -430,34 +430,51 @@ abstract class AbstractContactManager implements ContactManagerInterface
     }
 
     /**
+     * returns addresses from account or contact
+     *
+     * @param Account\Contact $entity
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    private function getAddresses($entity)
+    {
+        if ($entity instanceof Account) {
+            return $entity->getAccountAddresses();
+        } elseif ($entity instanceof Contact) {
+            return $entity->getContactAddresses();
+        } 
+        return null;
+    }
+
+    /**
      * Returns an address by callback-condition
+     *
      * @param Account|Contact $entity
+     * @param callable $conditionCallback
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
      * @return mixed
      */
     public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
     {
-        $accountAddresses = $entity->getAccountAddresses();
+        
+        $addresses = $this->getAddresses($entity);
         $address = null;
         $main = null;
 
-        if (!is_null($accountAddresses)) {
+        if (!is_null($addresses)) {
             /** @var AccountAddress $accountAddress */
-            foreach ($accountAddresses as $accountAddress) {
-                if ($conditionCallback($accountAddress->getAddress())) {
-                    return $accountAddress->getAddress();
+            foreach ($addresses as $address) {
+                if ($conditionCallback($address->getAddress())) {
+                    return $address->getAddress();
                 }
-                if ($accountAddress->getMain()) {
-                    $main = $accountAddress->getAddress();
+                if ($address->getMain()) {
+                    $main = $address->getAddress();
                 }
             }
             if ($force) {
                 // return main or first address
-                if ($main !== null ) {
-                    return $main;
-                } else {
-                    return $accountAddresses->first()->getAddress();
+                if ($main === null && $addresses->first()) {
+                    return $addresses->first()->getAddress();
                 }
             }
         }

@@ -230,6 +230,8 @@ class CategoryManager implements CategoryManagerInterface
                 return $this->createCategory($data, $this->getUser($userId));
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
+            // FIXME: This hides any exceptions thrown by DBAL. 
+            //        See https://github.com/sulu-cmf/sulu/issues/871
             throw new KeyNotUniqueException();
         }
     }
@@ -312,8 +314,6 @@ class CategoryManager implements CategoryManagerInterface
         $categoryEntity = new CategoryEntity();
         $categoryEntity->setCreator($user);
         $categoryEntity->setChanger($user);
-        $categoryEntity->setCreated(new \DateTime());
-        $categoryEntity->setChanged(new \DateTime());
 
         $categoryWrapper = $this->getApiObject($categoryEntity, $data['locale']);
         $categoryWrapper->setName($data['name']);
@@ -349,7 +349,6 @@ class CategoryManager implements CategoryManagerInterface
             throw new EntityNotFoundException($categoryEntity, $data['id']);
         }
 
-        $categoryEntity->setChanged(new \DateTime());
         $categoryEntity->setChanger($user);
 
         $categoryWrapper = $this->getApiObject($categoryEntity, $data['locale']);

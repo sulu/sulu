@@ -32,7 +32,6 @@ class RemoveForeignContextServicesPass implements CompilerPassInterface
         }
 
         $taggedServices = $container->findTaggedServiceIds(self::SULU_CONTEXT_TAG);
-
         $context = $container->getParameter('sulu.context');
 
         foreach ($taggedServices as $id => $attributes) {

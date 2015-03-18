@@ -459,7 +459,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
             $this->processActivityData($activity, $request);
 
             $activity->setCreator($this->getUser());
-            $activity->setCreated(new \DateTime());
 
             $em->persist($activity);
             $em->flush();
@@ -615,7 +614,6 @@ class ActivityController extends RestController implements ClassResourceInterfac
         }
 
         // changer and changed
-        $activity->setChanged(new \DateTime());
         $activity->setChanger($this->getUser());
     }
 

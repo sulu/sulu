@@ -90,8 +90,6 @@ class CreateUserCommandTest extends SuluTestCase
         $role = new Role();
         $role->setName($roleName);
         $role->setSystem('Sulu');
-        $role->setCreated($now);
-        $role->setChanged($now);
 
         $em->persist($role);
         $em->flush();

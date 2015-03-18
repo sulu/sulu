@@ -2,10 +2,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use Sulu\Component\Persistence\Model\AuditableInterface;
+
 /**
  * Category
  */
-class Category
+class Category implements AuditableInterface
 {
     /**
      * @var integer
@@ -83,6 +85,20 @@ class Category
     }
 
     /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Category
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set lft
      *
      * @param integer $lft
@@ -152,19 +168,6 @@ class Category
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Category
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -172,19 +175,6 @@ class Category
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Category
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

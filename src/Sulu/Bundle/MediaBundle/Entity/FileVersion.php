@@ -11,11 +11,12 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * FileVersion
  */
-class FileVersion
+class FileVersion implements AuditableInterface
 {
 
     /**
@@ -249,19 +250,6 @@ class FileVersion
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return FileVersion
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -269,19 +257,6 @@ class FileVersion
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return FileVersion
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**

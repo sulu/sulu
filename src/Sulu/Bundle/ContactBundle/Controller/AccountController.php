@@ -496,8 +496,6 @@ class AccountController extends AbstractContactController
             $this->setParent($request->get('parent'), $account);
 
             // set creator / changer
-            $account->setCreated(new DateTime());
-            $account->setChanged(new DateTime());
             $account->setCreator($this->getUser());
             $account->setChanger($this->getUser());
 
@@ -584,7 +582,6 @@ class AccountController extends AbstractContactController
                 $this->setParent($request->get('parent'), $account);
 
                 // set changed
-                $account->setChanged(new DateTime());
                 $user = $this->getUser();
                 $account->setChanger($user);
 
