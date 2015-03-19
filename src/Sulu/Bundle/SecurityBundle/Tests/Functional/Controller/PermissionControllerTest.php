@@ -46,7 +46,7 @@ class PermissionControllerTest extends SuluTestCase
     public function providePermissionData()
     {
         return array(
-            array('1', 'Acme\Example', array('add' => 'true', 'view' => true, 'delete' => false, 'edit' => 'false'))
+            array('1', 'Acme\Example', array('add' => 'true', 'view' => true, 'delete' => false, 'edit' => 'false')),
         );
     }
 
@@ -96,5 +96,31 @@ class PermissionControllerTest extends SuluTestCase
                 );
             }
         }
+    }
+
+    public function provideWrongPermissionData()
+    {
+        return array(
+            array(null, null, null),
+            array('1', null, array()),
+            array(null, 'Acme\Example', array()),
+            array('1', 'Acme\Example', null),
+        );
+    }
+
+    /**
+     * @dataProvider provideWrongPermissionData
+     */
+    public function testPostActionWithWrongData($id, $class, $permissions)
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/permissions', array(
+            'id' => $id,
+            'class' => $class,
+            'permissions' => $permissions
+        ));
+
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
     }
 }

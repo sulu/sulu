@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Component\Rest\Exception\MissingParameterException;
+use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,27 +51,43 @@ class PermissionController implements ClassResourceInterface
 
     public function postAction(Request $request)
     {
-        $objectIdentifier = $request->get('id');
-        $class = $request->get('class');
+        try {
+            $objectIdentifier = $request->get('id');
+            $class = $request->get('class');
+            $permissions = $request->get('permissions');
 
-        $permissions = $request->get('permissions');
-        foreach ($permissions as $permission) {
-            array_walk($permission['permissions'], function (&$permissionLine) {
-                $permissionLine = $permissionLine === 'true' || $permissionLine === true;
-            });
+            if (!$objectIdentifier) {
+                throw new MissingParameterException(static::class, 'id');
+            }
 
-            $this->accessControlManager->setPermissions(
-                $class,
-                $objectIdentifier,
-                $this->roleRepository->findRoleById($permission['role']['id']),
-                $permission['permissions']
-            );
+            if (!$class) {
+                throw new MissingParameterException(static::class, 'class');
+            }
+
+            if (!is_array($permissions)) {
+                throw new RestException('The "permissions" must be passed as an array');
+            }
+
+            foreach ($permissions as $permission) {
+                array_walk($permission['permissions'], function (&$permissionLine) {
+                    $permissionLine = $permissionLine === 'true' || $permissionLine === true;
+                });
+
+                $this->accessControlManager->setPermissions(
+                    $class,
+                    $objectIdentifier,
+                    $this->roleRepository->findRoleById($permission['role']['id']),
+                    $permission['permissions']
+                );
+            }
+
+            return $this->viewHandler->handle(View::create(array(
+                'id' => $objectIdentifier,
+                'class' => $class,
+                'permissions' => $permissions
+            )));
+        } catch (RestException $exc) {
+            return $this->viewHandler->handle(View::create($exc->toArray(), 400));
         }
-
-        return $this->viewHandler->handle(View::create(array(
-            'id' => $objectIdentifier,
-            'class' => $class,
-            'permissions' => $permissions
-        )));
     }
 }
