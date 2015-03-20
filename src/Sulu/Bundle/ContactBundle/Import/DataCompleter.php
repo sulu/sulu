@@ -29,7 +29,7 @@ class DataCompleter
      * geocode API
      * @var string
      */
-    private static $geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+    private static $geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
     /**
      * options
@@ -175,6 +175,7 @@ class DataCompleter
         if ($keepExtension) {
             $filename .= '.' . $parts['extension'];
         }
+
         return $filename;
     }
 
@@ -205,7 +206,7 @@ class DataCompleter
 
     /**
      * gets ids of all records for the specific entity
-     * 
+     *
      * @param $entityRepository
      * @return array
      */
@@ -220,7 +221,7 @@ class DataCompleter
         }
 
         $ids = $qb->getQuery()->getScalarResult();
-     
+
         return array_column($ids, 'id');
     }
 
@@ -288,7 +289,10 @@ class DataCompleter
 
             // identify state by zip and country
             if ($zip && $country) {
-                $state = $this->getStateByApiCall(array($zip, $country));
+                $state = $this->getStateByApiCall(array(
+                    'postal_code' => $zip,
+                    'country' => $country
+                ));
                 if ($state) {
                     $address->setState($state);
                 }
@@ -335,7 +339,6 @@ class DataCompleter
                     }
 
                     $callback($data);
-
                 }
             } catch (\Exception $e) {
                 $this->debug(sprintf("ERROR while processing data row %d: %s \n", $row, $e->getMessage()));
@@ -405,6 +408,7 @@ class DataCompleter
         // FIXME: this is a workaround for a google geocode bug: austrian state names are only properly returned in
         //      short_name. for all other countries take long_name
         $resultKey = in_array('Austria', $data) ? 'short_name' : 'long_name';
+
         return $this->getDataByApiCall($data, array($this, 'getDataFromApiResultByKey'), array('administrative_area_level_1', $resultKey));
     }
 
@@ -424,6 +428,7 @@ class DataCompleter
                 }
             }
         }
+
         return null;
     }
 
@@ -440,11 +445,13 @@ class DataCompleter
         $dataArray = array(),
         callable $resultCallback,
         $callbackData = array()
-    ) {
+    )
+    {
         // limit api calls per second
         if ($this->lastApiCallTime == time()) {
             if ($this->lastApiCallCount >= static::API_CALL_LIMIT_PER_SECOND) {
                 sleep(static::API_CALL_SLEEP_TIME);
+
                 return $this->getDataByApiCall($dataArray, $resultCallback);
             }
             $this->lastApiCallCount++;
@@ -455,17 +462,50 @@ class DataCompleter
 
         // remove null values
         $params = array_filter($dataArray);
+
+        // get restrictions from data
+        $restrictionParams = array();
+        foreach ($params as $key => $value) {
+            // all associative data are restrictive keys!
+            if (!is_int($key)) {
+                if ($value) {
+                    $restrictionParams[$key] = $value;
+                    unset($params[$key]);
+                }
+            }
+        }
+        // create conditions array
+        $restrictionParams = implode('|', array_map(
+                function ($v, $k) {
+                    return $k . ':' . $v;
+                },
+                $restrictionParams,
+                array_keys($restrictionParams)
+            )
+        );
+        if (strlen($restrictionParams) > 0) {
+            $urlParams[] = 'components=' . $restrictionParams;
+        }
+
         // create string
         $params = implode(',', $params);
         // avoid spaces
-        $urlparams = urlencode($params);
+        $params = urlencode($params);
+        // add address= parameters
+        if (strlen($params) > 0) {
+            $urlParams[] = 'address=' . $params;
+        }
 
-        $apiResult = json_decode(file_get_contents(static::$geocode_url . $urlparams . '&language=' . $this->locale));
+        // add language
+        $urlParams[] = 'language=' . $this->locale;
+
+        $apiResult = json_decode(file_get_contents(static::$geocode_url . implode('&', $urlParams)));
 
         $results = $apiResult->results;
 
         if (count($results) === 0) {
             $this->debug(sprintf("ERROR: No valid data found at data %d (by api)", $this->currentRow, $params));
+
             return null;
         }
 
@@ -478,6 +518,7 @@ class DataCompleter
 
         if (!$data) {
             $this->debug(sprintf("ERROR: No data found in result for data %d", $this->currentRow));
+
             return null;
         }
 
@@ -521,6 +562,7 @@ class DataCompleter
         }
 
         $index = array_search($key, $this->headerData);
+
         return $index;
     }
 
@@ -536,6 +578,7 @@ class DataCompleter
         if (($index = $this->getColumnIndex($key)) !== false) {
             return $data[$index];
         }
+
         return null;
     }
 
