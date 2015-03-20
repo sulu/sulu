@@ -827,18 +827,30 @@ class DefaultMediaManager implements MediaManagerInterface
         );
 
         // Set Version Urls
-        $versionUrls = array();
-        foreach ($media->getVersions() as $version) {
-            $versionUrls[$version] = $this->getUrl($media->getId(), $media->getName(), $version);
+        $versionData = array();
+        foreach ($media->getFile()->getFileVersions() as $fileVersion) {
+            $versionData[$fileVersion->getVersion()] = array();
+            $versionData[$fileVersion->getVersion()]['url'] = $this->getUrl(
+                $media->getId(),
+                $fileVersion->getName(),
+                $fileVersion->getVersion()
+            );
         }
 
-        $media->setVersionUrls($versionUrls);
+        $media->setAdditionalVersionData($versionData);
 
         // Set Current Url
-        if (isset($versionUrls[$media->getVersion()])) {
-            $media->setUrl($versionUrls[$media->getVersion()]);
+        if (
+            isset($versionUrls[$media->getVersion()])
+            && isset($versionUrls[$media->getVersion()]['url'])
+        ) {
+            $media->setUrl($versionUrls[$media->getVersion()]['url']);
         } else {
-            $media->setUrl($this->getUrl($media->getId(), $media->getName(), $media->getVersion()));
+            $media->setUrl($this->getUrl(
+                $media->getId(),
+                $media->getName(),
+                $media->getVersion()
+            ));
         }
 
         return $media;

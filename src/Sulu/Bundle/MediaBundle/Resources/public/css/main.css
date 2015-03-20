@@ -64,3 +64,8 @@
 .media-edit-versions-link.active {
   font-weight: bold;
 }
+
+/* line 21, ../scss/modules/media-edit.scss */
+.media-edit-versions-created {
+  float: right;
+}

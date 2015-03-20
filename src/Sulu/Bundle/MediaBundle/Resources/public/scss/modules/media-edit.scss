@@ -3,17 +3,21 @@
 }
 
 .media-edit-versions-links {
-  border-top: 2px solid #ccc;
-  border-bottom: 1px solid #ccc;
+    border-top: 2px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 .media-edit-versions-link {
-  color: black;
-  display: block;
-  padding: 10px 0;
-  border-bottom: 1px solid #ccc;
-  text-decoration: none;
-  &.active {
-    font-weight: bold;
-  }
+    color: black;
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    text-decoration: none;
+    &.active {
+        font-weight: bold;
+    }
+}
+
+.media-edit-versions-created {
+    float: right;
 }

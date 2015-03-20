@@ -138,6 +138,12 @@ class MediaException extends Exception
      */
     const EXCEPTION_FILENAME_ALREADY_EXISTS = 5020;
 
+    /**
+     * @var int
+     * @description this exception code is thrown when the file is not found
+     */
+    const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
+
     public function toArray()
     {
         return array(
