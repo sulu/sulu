@@ -30,6 +30,7 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
 
     /**
      * @Given I expect a data grid to appear
+     * @Given I wait for a data grid to appear
      */
     public function iExpectADataGridToAppear()
     {
