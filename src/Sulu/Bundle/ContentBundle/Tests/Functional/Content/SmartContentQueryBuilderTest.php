@@ -29,7 +29,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class SmartContentQueryBuilderTest extends SuluTestCase
 {
-
     /**
      * @var ContentQueryExecutor
      */
@@ -381,7 +380,6 @@ class SmartContentQueryBuilderTest extends SuluTestCase
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
-
         $builder = new SmartContentQueryBuilder(
             $this->structureManager,
             $this->webspaceManager,
