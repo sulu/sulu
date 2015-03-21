@@ -25,3 +25,7 @@ matrix:
     - env: "SULU_ORM=mysql SULU_PHPCR=doctrine_dbal"
     - env: "SULU_ORM=postgres SULU_PHPCR=jackrabbit"
 
+notifications:
+  slack:
+    secure: "Gd3/1e0pBKvJv1UhWpBkWijJpmSWlarg6uPBJO0h4z1IpkZjd++jOjhmOQ7n+yMfuapQuJTcVOK0yIWu7orJoGAKFkBlMEIrLk1xMAG9phjjMLUO0FWgcQ3eVW5mTyfMBtClz4OL5wXckw17ohtXHDK8qnI0Hz9Qj8Rqgf2OZhM="
+
