@@ -2357,7 +2357,6 @@ class ContentMapperTest extends PhpcrTestCase
 
         $this->mapper->copyLanguage($data[1]->getUuid(), 1, 'default', 'de', 'en');
 
-
         $result = $this->mapper->load($data[0]->getUuid(), 'default', 'en');
         $this->assertEquals('test-en', $result->getPropertyValue('title'));
         $this->assertEquals('/test-en', $result->getPropertyValue('url'));
