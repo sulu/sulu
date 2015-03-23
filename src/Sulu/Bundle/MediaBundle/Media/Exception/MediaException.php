@@ -18,85 +18,86 @@ use Exception;
 class MediaException extends Exception
 {
     /**
-     * this exception code is thrown when $_FILES['error'] > 0
+     * Used when $_FILES['error'] > 0
      *
      * @var int
      */
     const EXCEPTION_CODE_UPLOAD_ERROR = 5001;
 
     /**
-     * this exception code is thrown when the uploaded file was not found
+     * The uploaded file was not found
      *
      * @var int
      */
     const EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND = 5002;
 
     /**
-     * this exception code is thrown when the file is bigger as the max file size in the config
+     * The file is bigger as the max file size in the config
      *
      * @var int
      */
     const EXCEPTION_CODE_MAX_FILE_SIZE = 5003;
 
     /**
-     * this exception code is thrown when the file type is not supported
+     * The file mime type is not supported
      *
      * @var int
      */
     const EXCEPTION_CODE_BLOCKED_FILE_TYPE = 5004;
 
     /**
-     * this exception code is thrown when the file type is not supported
+     * The collection was not found
      *
      * @var int
      */
     const EXCEPTION_CODE_COLLECTION_NOT_FOUND = 5005;
 
     /**
-     * this exception code is thrown when the file version to update was not found
+     * The file version was not found.
      *
      * @var int
      */
     const EXCEPTION_CODE_FILE_VERSION_NOT_FOUND = 5006;
 
     /**
-     * this exception code is thrown when the file has not the correct media type as the followed file versions
+     * The file has not the correct media type as the followed file versions
      *
      * @var int
      */
     const EXCEPTION_CODE_INVALID_MEDIA_TYPE = 5007;
 
     /**
-     * image id was not found in request
+     * Image id was not found in request
      *
      * @var int
      */
     const EXCEPTION_CODE_IMAGE_PROXY_MEDIA_ID_NOT_FOUND = 5008;
 
     /**
-     * media not loaded by proxy id
+     * Media not loaded by proxy id
      *
      * @var int
      */
     const EXCEPTION_CODE_IMAGE_PROXY_MEDIA_NOT_FOUND = 5009;
 
     /**
-     * original image not found
+     * Original image not found
      *
      * @var int
      */
     const EXCEPTION_CODE_IMAGE_PROXY_ORIGINAL_NOT_FOUND = 5010;
 
     /**
-     * the image url was not found
+     * The image url was not found
      *
      * @var int
      */
     const EXCEPTION_CODE_IMAGE_PROXY_URL_NOT_FOUND = 5011;
 
     /**
+     * The image url was not valid
+     *
      * @var int
-     * @description the image url was not valid
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_URL = 5012;
 
@@ -108,54 +109,56 @@ class MediaException extends Exception
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_IMAGE_FORMAT = 5013;
 
     /**
-     * the configured format options are invalid
+     * The configured format options are invalid
      *
      * @var int
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_FORMAT_OPTIONS = 5014;
 
     /**
-     * the media was not found
+     * The media was not found
      *
      * @var int
      */
     const EXCEPTION_CODE_MEDIA_NOT_FOUND = 5015;
 
     /**
-     * the collection type was not found
+     * The collection type was not found
      *
      * @var int
      */
     const EXCEPTION_CODE_COLLECTION_TYPE_NOT_FOUND = 5016;
 
     /**
-     * the media type was not found
+     * The media type was not found
      *
      * @var int
      */
     const EXCEPTION_CODE_MEDIA_TYPE_NOT_FOUND = 5017;
 
     /**
-     * no previews are generated for this extension
+     * No previews are generated for this extension
      *
      * @var int
      */
     const EXCEPTION_INVALID_MIMETYPE_FOR_PREVIEW = 5018;
 
     /**
+     * Ghostscript was not found at location
+     *
      * @var int
-     * @description ghostscript was not found at location
      */
     const EXCEPTION_CODE_GHOST_SCRIPT_NOT_FOUND = 5019;
 
     /**
+     * A file with this name exists
+     *
      * @var int
-     * @description a file with this name exists
      */
     const EXCEPTION_FILENAME_ALREADY_EXISTS = 5020;
 
     /**
-     * this exception code is thrown when the file is not found
+     * File is not found in media object
      *
      * @var int
      */
