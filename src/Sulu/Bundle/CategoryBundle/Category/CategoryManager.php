@@ -24,13 +24,12 @@ use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
 /**
  * Responsible for centralized Category Management
- * @package Sulu\Bundle\CategoryBundle\Category
  */
 class CategoryManager implements CategoryManagerInterface
 {
-    protected static $categoryEntityName = 'SuluCategoryBundle:Category';
+    public static $categoryEntityName = 'SuluCategoryBundle:Category';
 
-    protected static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
+    public static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
 
     /**
      * @var ObjectManager
@@ -202,6 +201,16 @@ class CategoryManager implements CategoryManagerInterface
     public function findById($id)
     {
         return $this->categoryRepository->findCategoryById($id);
+    }
+
+    /**
+     * Returns a category with a given key
+     * @param string $key the key of the category
+     * @return CategoryEntity
+     */
+    public function findByKey($key)
+    {
+        return $this->categoryRepository->findCategoryByKey($key);
     }
 
     /**
