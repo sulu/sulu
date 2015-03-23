@@ -11196,12 +11196,11 @@ a.btn-black, a.btn-highlight {
 
 /* line 48, ../scss/modules/data-navigation.scss */
 .data-navigation-list-footer {
-  border-top: 1px solid #21272E;
   padding: 10px 0;
   text-align: center;
 }
 
-/* line 54, ../scss/modules/data-navigation.scss */
+/* line 53, ../scss/modules/data-navigation.scss */
 .data-navigation-items {
   height: 100%;
   min-height: calc(100% - 150px);
@@ -11210,7 +11209,7 @@ a.btn-black, a.btn-highlight {
   list-style: none;
   overflow: auto;
 }
-/* line 62, ../scss/modules/data-navigation.scss */
+/* line 61, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li {
   position: relative;
   height: 50px;
@@ -11221,24 +11220,24 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
   cursor: pointer;
 }
-/* line 72, ../scss/modules/data-navigation.scss */
+/* line 71, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li:hover {
   background-color: #21272E;
 }
-/* line 76, ../scss/modules/data-navigation.scss */
+/* line 75, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li:focus {
   outline: 0;
 }
-/* line 80, ../scss/modules/data-navigation.scss */
+/* line 79, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li.not-selectable {
   cursor: default;
 }
-/* line 83, ../scss/modules/data-navigation.scss */
+/* line 82, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li.not-selectable:hover {
   background-color: initial;
 }
 
-/* line 90, ../scss/modules/data-navigation.scss */
+/* line 89, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name {
   display: inline-block;
   width: calc(100% - 45px);
@@ -11246,7 +11245,7 @@ a.btn-black, a.btn-highlight {
   overflow: hidden;
   padding-left: 5px;
 }
-/* line 97, ../scss/modules/data-navigation.scss */
+/* line 96, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name .fa-chevron-right {
   position: absolute;
   right: 10px;
@@ -11255,7 +11254,7 @@ a.btn-black, a.btn-highlight {
   color: #999;
 }
 
-/* line 106, ../scss/modules/data-navigation.scss */
+/* line 105, ../scss/modules/data-navigation.scss */
 .data-navigation-item-thumb {
   position: relative;
   top: 6px;
@@ -11269,15 +11268,15 @@ a.btn-black, a.btn-highlight {
   background-repeat: no-repeat;
 }
 
-/* line 119, ../scss/modules/data-navigation.scss */
+/* line 118, ../scss/modules/data-navigation.scss */
 .data-navigation-back {
   height: 50px;
 }
-/* line 122, ../scss/modules/data-navigation.scss */
+/* line 121, ../scss/modules/data-navigation.scss */
 .data-navigation-back:focus {
   outline: 0;
 }
-/* line 126, ../scss/modules/data-navigation.scss */
+/* line 125, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back {
   position: absolute;
   font-size: 14px;
@@ -11288,12 +11287,12 @@ a.btn-black, a.btn-highlight {
   padding-top: 17px;
   padding-left: 22px;
 }
-/* line 137, ../scss/modules/data-navigation.scss */
+/* line 136, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back:hover {
   background-color: #21272E;
   padding-bottom: 5px;
 }
-/* line 143, ../scss/modules/data-navigation.scss */
+/* line 142, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-text {
   margin-left: 60px;
   padding-right: 20px;
@@ -11302,14 +11301,14 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
 }
 
-/* line 154, ../scss/modules/data-navigation.scss */
+/* line 153, ../scss/modules/data-navigation.scss */
 .data-navigation-add .fa-plus-circle {
   margin-right: 5px;
   float: left;
   font-size: 16px;
 }
 
-/* line 161, ../scss/modules/data-navigation.scss */
+/* line 160, ../scss/modules/data-navigation.scss */
 .data-navigation-loader-container {
   position: absolute;
   width: 100%;
@@ -11319,14 +11318,14 @@ a.btn-black, a.btn-highlight {
   padding: 4px 0;
 }
 
-/* line 170, ../scss/modules/data-navigation.scss */
+/* line 169, ../scss/modules/data-navigation.scss */
 .data-navigation-info {
   text-align: center;
   line-height: 50px;
   height: calc(100% - 150px);
 }
 
-/* line 176, ../scss/modules/data-navigation.scss */
+/* line 175, ../scss/modules/data-navigation.scss */
 .data-navigation-info-empty {
   color: #999;
   font-size: 14px;
