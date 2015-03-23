@@ -46,7 +46,55 @@ class PermissionControllerTest extends SuluTestCase
     public function providePermissionData()
     {
         return array(
-            array('1', 'Acme\Example', array('add' => 'true', 'view' => true, 'delete' => false, 'edit' => 'false')),
+            array(
+                '1',
+                'Acme\Example',
+                array(
+                    'add' => 'true',
+                    'view' => true,
+                    'delete' => false,
+                    'edit' => 'false',
+                    'archive' => false,
+                    'live' => false,
+                    'security' => false
+                )
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider providePermissionData
+     */
+    public function testGetAction($id, $class, $permissions)
+    {
+        $client = $this->createAuthenticatedClient();
+
+        $client->request('POST', '/api/permissions', array(
+            'id' => $id,
+            'type' => $class,
+            'permissions' => array(
+                'SULU_ROLE_ADMINISTRATOR' => $permissions
+            )
+        ));
+
+        $client->request('GET', '/api/permissions?id=' . $id . '&type=' . $class);
+
+        $response = json_decode($client->getResponse()->getContent(), true);
+
+        array_walk($permissions, function (&$permissionLine) {
+            $permissionLine = $permissionLine === 'true' || $permissionLine === true;
+        });
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(
+            array(
+                'id' => $id,
+                'type' => $class,
+                'permissions' => array(
+                    'SULU_ROLE_ADMINISTRATOR' => $permissions
+                )
+            ),
+            $response
         );
     }
 
@@ -61,12 +109,7 @@ class PermissionControllerTest extends SuluTestCase
             'id' => $id,
             'type' => $class,
             'permissions' => array(
-                array(
-                    'role' => array(
-                        'id' => $this->role->getId()
-                    ),
-                    'permissions' => $permissions
-                )
+                'SULU_ROLE_ADMINISTRATOR' => $permissions
             )
         ));
 
@@ -74,10 +117,16 @@ class PermissionControllerTest extends SuluTestCase
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
-        $this->assertEquals($id, $response['id']);
-        $this->assertEquals($class, $response['type']);
-        $this->assertEquals($this->role->getId(), $response['permissions'][0]['role']['id']);
-        $this->assertEquals($permissions, $response['permissions'][0]['permissions']);
+        $this->assertEquals(
+            array(
+                'id' => $id,
+                'type' => $class,
+                'permissions' => array(
+                    'SULU_ROLE_ADMINISTRATOR' => $permissions
+                )
+            ),
+            $response
+        );
 
         $acl = $this->aclProvider->findAcl(new ObjectIdentity($id, $class));
         $sid = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');

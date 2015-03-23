@@ -409,6 +409,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     {
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
+        $roleData['identifier'] = $role->getIdentifier();
         $roleData['system'] = $role->getSystem();
         $roleData['permissions'] = array();
 

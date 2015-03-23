@@ -16,6 +16,7 @@ use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Symfony\Component\Security\Acl\Domain\Entry;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
+use Symfony\Component\Security\Acl\Model\EntryInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface as SymfonySecurityIdentityInterface;
@@ -63,6 +64,34 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
             $this->aclProvider->reveal(),
             $this->maskConverter->reveal()
         );
+    }
+
+    public function testGetPermissions()
+    {
+        $this->securityIdentity->getRole()->willReturn('SULU_ROLE_ADMINISTRATOR');
+
+        $ace1 = $this->prophesize(EntryInterface::class);
+        $ace1->getSecurityIdentity()->willReturn($this->securityIdentity->reveal());
+        $ace1->getMask()->willReturn(64);
+
+        $this->acl->getObjectAces()->willReturn(array($ace1->reveal()));
+
+        $this->maskConverter->convertPermissionsToArray(64)->willReturn(array('view' => true));
+
+        $this->aclProvider->findAcl(Argument::any())->willReturn($this->acl->reveal());
+
+        $permissions = $this->accessControlManager->getPermissions('Acme\Example', '1');
+
+        $this->assertEquals(true, $permissions['SULU_ROLE_ADMINISTRATOR']['view']);
+    }
+
+    public function testGetPermissionsNotAvailable()
+    {
+        $this->aclProvider->findAcl(Argument::any())->willThrow(AclNotFoundException::class);
+
+        $permissions = $this->accessControlManager->getPermissions('Acme\Example', '1');
+
+        $this->assertEquals(array(), $permissions);
     }
 
     public function testSetPermissionsWithExistingAcl()

@@ -39,10 +39,10 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function setPermissions($class, $identifier, SecurityIdentityInterface $securityIdentity, $permissions)
+    public function setPermissions($type, $identifier, $securityIdentity, $permissions)
     {
-        $oid = new ObjectIdentity($identifier, $class);
-        $sid = new RoleSecurityIdentity($securityIdentity->getIdentifier());
+        $oid = new ObjectIdentity($identifier, $type);
+        $sid = new RoleSecurityIdentity($securityIdentity);
 
         try {
             $acl = $this->aclProvider->findAcl($oid);
@@ -70,5 +70,29 @@ class SymfonyAccessControlManager implements AccessControlManagerInterface
         }
 
         $this->aclProvider->updateAcl($acl);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPermissions($type, $identifier)
+    {
+        $oid = new ObjectIdentity($identifier, $type);
+
+        try {
+            $acl = $this->aclProvider->findAcl($oid);
+        } catch (AclNotFoundException $exc) {
+            return array();
+        }
+
+        $permissions = array();
+
+        foreach ($acl->getObjectAces() as $ace) {
+            /** @var EntryInterface $ace */
+            $permissions[$ace->getSecurityIdentity()->getRole()] =
+                $this->maskConverter->convertPermissionsToArray($ace->getMask());
+        }
+
+        return $permissions;
     }
 }
