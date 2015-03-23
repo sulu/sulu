@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Media\Exception
+ * Exception which is thrown when file is not found in media
  */
 class FileNotFoundException extends MediaException
 {
@@ -20,6 +20,6 @@ class FileNotFoundException extends MediaException
      */
     public function __construct($id)
     {
-        parent::__construct('File from the Media with ID ' . $id . ' not found', self::EXCEPTION_CODE_FILE_NOT_FOUND);
+        parent::__construct('File from the Media with ID "' . $id . '" not found', self::EXCEPTION_CODE_FILE_NOT_FOUND);
     }
 }

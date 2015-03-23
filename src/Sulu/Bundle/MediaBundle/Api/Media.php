@@ -280,7 +280,7 @@ class Media extends ApiWrapper
         $versions = array();
         /** @var FileVersion $fileVersion */
         foreach ($this->getFile()->getFileVersions() as $fileVersion) {
-            $versionData = array();;
+            $versionData = array();
             if (isset($this->additionalVersionData[$fileVersion->getVersion()])) {
                 $versionData = $this->additionalVersionData[$fileVersion->getVersion()];
             }
@@ -701,6 +701,7 @@ class Media extends ApiWrapper
             $this->file = $file;
             return $this->file;
         }
+
         throw new FileNotFoundException($this->entity->getId(), $this->version);
     }
 

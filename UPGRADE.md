@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### Media API Object
+
+The media API Object the versions attribute changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).
+
 ### Security
 
 The names of some classes have changed like shown in the following table:
