@@ -845,12 +845,6 @@ class DefaultMediaManager implements MediaManagerInterface
             && isset($versionUrls[$media->getVersion()]['url'])
         ) {
             $media->setUrl($versionUrls[$media->getVersion()]['url']);
-        } else {
-            $media->setUrl($this->getUrl(
-                $media->getId(),
-                $media->getName(),
-                $media->getVersion()
-            ));
         }
 
         return $media;
