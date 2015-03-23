@@ -648,7 +648,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
-        $this->assertCount(2, (array)$response->versions);
+        $this->assertCount(2, (array) $response->versions);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
@@ -698,7 +698,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(1, $response->version);
-        $this->assertCount(1, (array)$response->versions);
+        $this->assertCount(1, (array) $response->versions);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
@@ -748,7 +748,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
-        $this->assertCount(2, (array)$response->versions);
+        $this->assertCount(2, (array) $response->versions);
     }
 
     /**
