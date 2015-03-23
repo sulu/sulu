@@ -15,8 +15,11 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Put;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\CategoryBundle\Category\CategoryListRepresentation;
+use Sulu\Bundle\CategoryBundle\Category\CategoryManager;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -119,7 +122,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
     public function getChildrenAction(Request $request, $key)
     {
         if ($request->get('flat') == 'true') {
-            $list = $this->getCategoryListRepresentation($request);
+            $list = $this->getCategoryListRepresentation($request, $key);
         } else {
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder');
@@ -272,7 +275,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param Request $request
      * @return CategoryListRepresentation
      */
-    protected function getCategoryListRepresentation(Request $request)
+    protected function getCategoryListRepresentation(Request $request, $parentKey = null)
     {
         /** @var RestHelperInterface $restHelper */
         $restHelper = $this->getRestHelper();
@@ -292,6 +295,10 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addField($this->getManager()->getFieldDescriptor('hasChildren'));
 
         $listBuilder->addGroupBy($this->getManager()->getFieldDescriptor('id'));
+
+        if ($parentKey !== null) {
+            $this->appendParent($parentKey, $listBuilder);
+        }
 
         // FIXME: don't do this.
         $listBuilder->limit(100000);
@@ -315,6 +322,29 @@ class CategoryController extends RestController implements ClassResourceInterfac
         );
 
         return $list;
+    }
+
+    /**
+     * append parent selector to listbuilder
+     * @param $parentKey
+     * @param DoctrineListBuilder $listBuilder
+     */
+    protected function appendParent($parentKey, DoctrineListBuilder $listBuilder)
+    {
+        $manager = $this->getManager();
+        $parentEntity = $manager->findByKey($parentKey);
+
+        $listBuilder->between(
+            new DoctrineFieldDescriptor(
+                'lft',
+                'lft',
+                CategoryManager::$categoryEntityName,
+                'public.lft',
+                array(),
+                true
+            ),
+            array($parentEntity->getLft() + 1, $parentEntity->getRgt())
+        );
     }
 
     /**
