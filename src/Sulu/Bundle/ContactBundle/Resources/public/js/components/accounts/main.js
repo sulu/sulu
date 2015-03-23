@@ -17,6 +17,7 @@ define([
     'sulucontact/model/email',
     'sulucontact/model/emailType',
     'sulumedia/model/media',
+    'sulucategory/model/category',
     'accountsutil/delete-dialog'
 ], function(
     Account,
@@ -28,6 +29,7 @@ define([
     Email,
     EmailType,
     Media,
+    Category,
     DeleteDialog) {
 
     'use strict';
@@ -490,6 +492,13 @@ define([
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
 
             this.account.set(data);
+
+            this.account.get('categories').reset();
+            this.sandbox.util.foreach(data.categories,function(id){
+                var category = Category.findOrCreate({id: id});
+                this.account.get('categories').add(category);
+            }.bind(this));
+
             this.account.save(null, {
                 // on success save contacts id
                 success: function(response) {

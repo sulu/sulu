@@ -22,8 +22,9 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/termsOfDelivery',
     'sulucontact/model/termsOfPayment',
-    'sulucontact/model/accountMedia'
-], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountContact, BankAccount, Contact, TermsOfDelivery, TermsOfPayment, Media) {
+    'sulucontact/model/accountMedia',
+    'sulucategory/model/category'
+], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountContact, BankAccount, Contact, TermsOfDelivery, TermsOfPayment, Media, Category) {
 
     'use strict';
 
@@ -45,7 +46,8 @@ define([
                 termsOfDelivery: null,
                 responsiblePerson: null,
                 mainContact: null,
-                medias: []
+                medias: [],
+                categories: []
             };
         }, relations: [
             {
@@ -106,6 +108,11 @@ define([
                 type: HasMany,
                 key: 'medias',
                 relatedModel: Media
+            },
+            {
+                type: HasMany,
+                key: 'categories',
+                relatedModel: Category
             }
         ]
     });

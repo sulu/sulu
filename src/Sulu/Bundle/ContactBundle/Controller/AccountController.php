@@ -123,7 +123,7 @@ class AccountController extends AbstractContactController
 
             $view->setSerializationContext(
                 SerializationContext::create()->setGroups(
-                    array('fullAccount', 'partialContact', 'partialMedia', 'partialTag')
+                    array('fullAccount', 'partialContact', 'partialMedia', 'partialTag', 'fullCategory')
                 )
             );
         } catch (EntityNotFoundException $enfe) {
@@ -494,6 +494,9 @@ class AccountController extends AbstractContactController
             // set parent
             $this->setParent($request->get('parent'), $account);
 
+            // process categories
+            $this->processCategories($account, $request->get('categories', array()));
+
             // set creator / changer
             $account->setCreator($this->getUser());
             $account->setChanger($this->getUser());
@@ -592,6 +595,7 @@ class AccountController extends AbstractContactController
                     && $this->processAddresses($account, $request->get('addresses', array()))
                     && $this->processTags($account, $request->get('tags', array()))
                     && $this->processNotes($account, $request->get('notes', array()))
+                    && $this->processCategories($account, $request->get('categories', array()))
                     && $this->processBankAccounts($account, $request->get('bankAccounts', array())))
                 ) {
                     throw new RestException('Updating dependencies is not possible', 0);

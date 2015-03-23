@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
+use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Doctrine\Entity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
@@ -1139,5 +1140,25 @@ class Account extends ApiWrapper
         }
 
         return $medias;
+    }
+
+    /**
+     * Get categories
+     *
+     * @return Category[]
+     * @VirtualProperty
+     * @SerializedName("categories")
+     * @Groups({"fullAccount"})
+     */
+    public function getCategories()
+    {
+        $entities = array();
+        if ($this->entity->getCategories()) {
+            foreach ($this->entity->getCategories() as $category) {
+                $entities[] = new Category($category, $this->locale);
+            }
+        }
+
+        return $entities;
     }
 }

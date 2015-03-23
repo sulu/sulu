@@ -79,9 +79,6 @@ define(['widget-groups'], function(WidgetGroups) {
             this.bindCustomEvents();
         },
 
-        /**
-         * Inits the select for the account category
-         */
         initTermsSelect: function(formData) {
 
             this.preselectedTermsOfPaymentId =

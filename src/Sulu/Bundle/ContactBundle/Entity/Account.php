@@ -1320,4 +1320,69 @@ class Account extends ApiEntity implements AuditableInterface
     {
         $this->children->removeElement($children);
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $categories;
+
+
+    /**
+     * Add categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @return Account
+     */
+    public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @return Account
+     *
+     * FIXME someone needs this ugly methods .... (restcontroller)
+     */
+    public function addCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     */
+    public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     *
+     * FIXME someone needs this ugly methods .... (restcontroller)
+     */
+    public function removeCategorie(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
 }

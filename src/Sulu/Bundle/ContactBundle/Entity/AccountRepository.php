@@ -62,6 +62,8 @@ class AccountRepository extends NestedTreeRepository
     {
         try {
             $qb = $this->createQueryBuilder('account')
+                ->leftJoin('account.categories', 'categories')
+                ->leftJoin('categories.translations', 'categoryTranslations')
                 ->leftJoin('account.accountAddresses', 'accountAddresses')
                 ->leftJoin('accountAddresses.address', 'addresses')
                 ->leftJoin('addresses.country', 'country')
@@ -84,6 +86,8 @@ class AccountRepository extends NestedTreeRepository
                 ->leftJoin('account.mainContact', 'mainContact')
                 ->leftJoin('account.medias', 'medias')
                 ->addSelect('mainContact')
+                ->addSelect('categories')
+                ->addSelect('categoryTranslations')
                 ->addSelect('partial tags.{id, name}')
                 ->addSelect('bankAccounts')
                 ->addSelect('accountAddresses')

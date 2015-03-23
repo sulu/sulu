@@ -184,9 +184,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             }
         },
 
-        /**
-         * Inits the select for the account category
-         */
         initResponsibleContactSelect: function(formData) {
             var preselectedResponsibleContactId = !!formData.responsiblePerson ? formData.responsiblePerson.id : null;
             this.responsiblePersons = null;
@@ -308,7 +305,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
         },
 
         initForm: function(data) {
-
             this.numberOfAddresses = data.addresses.length;
             this.updateAddressesAddIcon(this.numberOfAddresses);
 
@@ -343,7 +339,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
             this.sandbox.form.setData(this.form, data).then(function() {
-                this.sandbox.start(this.form);
+                this.sandbox.start('#contact-fields');
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                 this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();

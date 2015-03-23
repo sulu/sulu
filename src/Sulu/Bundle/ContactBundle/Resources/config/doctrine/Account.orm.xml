@@ -79,6 +79,20 @@
             </join-columns>
         </many-to-one>
 
+        <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
+            <join-table name="co_account_categories">
+                <join-columns>
+                    <join-column name="idAccounts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="idCategories" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
+                </inverse-join-columns>
+            </join-table>
+            <order-by>
+                <order-by-field name="id" direction="ASC"/>
+            </order-by>
+        </many-to-many>
+
         <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\Media">
             <join-table name="co_account_medias">
                 <join-columns>
