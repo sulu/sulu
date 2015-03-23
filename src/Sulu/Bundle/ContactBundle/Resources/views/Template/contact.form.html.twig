@@ -5,7 +5,8 @@
         <div class="grid-row small">
             <div class="grid-col-6">
                 <div class="form-group">
-                    <label for="form-of-address" class="required"><%=translate('contact.contacts.formOfAddress')%></label>
+                    <label for="form-of-address"
+                           class="required"><%=translate('contact.contacts.formOfAddress')%></label>
 
                     <div id="form-of-address"
                          data-aura-component="select@husky"
@@ -144,21 +145,20 @@
             <label class="top p-top-10"><%= translate('contact.contacts.categories.label') %></label>
 
             <div id="categories">
-                <div
-                        data-aura-component="datagrid@husky"
-                        data-aura-url="/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc"
-                        data-aura-result-key="categories"
-                        data-aura-pagination="false"
-                        data-aura-instance-name="categories"
-                        data-aura-children-property-name="hasChildren"
-                        data-aura-resize-listeners="false"
-                        data-aura-view-options='{"table":{"openPathToSelectedChildren":"true","noItemsText":"sulu.category.no-categories-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
-                        data-aura-matchings='[{"name":"name","content":"Name"},{"name":"id","disabled":true},{"name":"children","disabled":true},{"name":"parent","disabled":true}]'
-                        data-form="true"
-                        data-type="categoryList"
-                        data-mapper-property="categories"
-                        data-aura-only-select-leaves="true"
-                        id="categoriesList">
+                <div data-aura-component="datagrid@husky"
+                     data-aura-url="{{ categoryUrl }}"
+                     data-aura-result-key="categories"
+                     data-aura-pagination="false"
+                     data-aura-instance-name="categories"
+                     data-aura-children-property-name="hasChildren"
+                     data-aura-resize-listeners="false"
+                     data-aura-view-options='{"table":{"openPathToSelectedChildren":"true","noItemsText":"sulu.category.no-categories-available","showHead":false,"cssClass":"white-box","selectItem":{"type":"checkbox","inFirstCell":true}}}'
+                     data-aura-matchings='[{"name":"name","content":"Name"},{"name":"id","disabled":true},{"name":"children","disabled":true},{"name":"parent","disabled":true}]'
+                     data-form="true"
+                     data-type="categoryList"
+                     data-mapper-property="categories"
+                     data-aura-only-select-leaves="false"
+                     id="categoriesList">
                 </div>
             </div>
         </div>

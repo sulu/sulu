@@ -49,6 +49,14 @@ class SuluContactExtension extends Extension
             'sulu_contact.form_of_address',
             $config['form_of_address']
         );
+        $container->setParameter(
+            'sulu_contact.contact_form.category_root',
+            $config['form']['contact']['category_root']
+        );
+        $container->setParameter(
+            'sulu_contact.account_form.category_root',
+            $config['form']['account']['category_root']
+        );
     }
 
     /**

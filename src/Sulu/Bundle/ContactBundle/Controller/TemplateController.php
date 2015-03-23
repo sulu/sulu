@@ -52,6 +52,9 @@ class TemplateController extends RestController
             $data['form_of_address'][] = $el;
         }
 
+        $categoryRoot = $this->container->getParameter('sulu_contact.contact_form.category_root');
+        $data['categoryUrl'] = $this->getCategoryUrl($categoryRoot);
+
         return $this->render('SuluContactBundle:Template:contact.form.html.twig', $data);
     }
 
@@ -61,7 +64,27 @@ class TemplateController extends RestController
      */
     public function accountFormAction()
     {
-        return $this->render('SuluContactBundle:Template:account.form.html.twig', $this->getRenderArray());
+        $categoryRoot = $this->container->getParameter('sulu_contact.account_form.category_root');
+
+        return $this->render(
+            'SuluContactBundle:Template:account.form.html.twig',
+            array_merge(array('categoryUrl' => $this->getCategoryUrl($categoryRoot)), $this->getRenderArray())
+        );
+    }
+
+    private function getCategoryUrl($key)
+    {
+        if ($key !== null) {
+            return $this->generateUrl(
+                'get_category_children',
+                array('key' => $key, 'flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc')
+            );
+        } else {
+            return $this->generateUrl(
+                'get_categories',
+                array('flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc')
+            );
+        }
     }
 
     /**
