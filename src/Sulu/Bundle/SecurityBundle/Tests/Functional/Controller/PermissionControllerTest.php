@@ -59,7 +59,7 @@ class PermissionControllerTest extends SuluTestCase
 
         $client->request('POST', '/api/permissions', array(
             'id' => $id,
-            'class' => $class,
+            'type' => $class,
             'permissions' => array(
                 array(
                     'role' => array(
@@ -75,7 +75,7 @@ class PermissionControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         $this->assertEquals($id, $response['id']);
-        $this->assertEquals($class, $response['class']);
+        $this->assertEquals($class, $response['type']);
         $this->assertEquals($this->role->getId(), $response['permissions'][0]['role']['id']);
         $this->assertEquals($permissions, $response['permissions'][0]['permissions']);
 
@@ -117,7 +117,7 @@ class PermissionControllerTest extends SuluTestCase
 
         $client->request('POST', '/api/permissions', array(
             'id' => $id,
-            'class' => $class,
+            'type' => $class,
             'permissions' => $permissions
         ));
 

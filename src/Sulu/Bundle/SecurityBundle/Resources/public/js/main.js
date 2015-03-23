@@ -13,7 +13,7 @@ require.config({
     }
 });
 
-define(function() {
+define(['config'], function(Config) {
 
     'use strict';
 
@@ -23,6 +23,26 @@ define(function() {
 
         initialize: function(app) {
             var sandbox = app.sandbox;
+
+            Config.set(
+                'sulusecurity.permissions',
+                [
+                    {value: 'view', icon: 'eye'},
+                    {value: 'add', icon: 'plus-circle'},
+                    {value: 'edit', icon: 'pencil'},
+                    {value: 'delete', icon: 'trash-o'}
+                ]
+            );
+
+            Config.set(
+                'sulusecurity.permission_titles',
+                [
+                    'security.permissions.view',
+                    'security.permissions.add',
+                    'security.permissions.edit',
+                    'security.permissions.delete'
+                ]
+            );
 
             app.components.addSource('sulusecurity', '/bundles/sulusecurity/js/components');
 

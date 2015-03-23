@@ -53,7 +53,7 @@ class PermissionController implements ClassResourceInterface
     {
         try {
             $objectIdentifier = $request->get('id');
-            $class = $request->get('class');
+            $class = $request->get('type');
             $permissions = $request->get('permissions');
 
             if (!$objectIdentifier) {
@@ -83,7 +83,7 @@ class PermissionController implements ClassResourceInterface
 
             return $this->viewHandler->handle(View::create(array(
                 'id' => $objectIdentifier,
-                'class' => $class,
+                'type' => $class,
                 'permissions' => $permissions
             )));
         } catch (RestException $exc) {

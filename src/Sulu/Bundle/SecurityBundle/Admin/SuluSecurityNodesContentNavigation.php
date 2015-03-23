@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Component\Content\Structure;
 
 class SuluSecurityNodesContentNavigation implements ContentNavigationInterface
 {
@@ -22,8 +23,8 @@ class SuluSecurityNodesContentNavigation implements ContentNavigationInterface
         $permissions = new ContentNavigationItem('Permissions');
         $permissions->setAction('permissions');
         $permissions->setDisplay(array('edit'));
-        $permissions->setComponent('nodes@sulusecurity');
-        $permissions->setComponentOptions(array('display' => 'form'));
+        $permissions->setComponent('permission-tab@sulusecurity');
+        $permissions->setComponentOptions(array('display' => 'form', 'type' => Structure::class));
         $permissions->setGroups(array('content'));
 
         $this->navigation[] = $permissions;

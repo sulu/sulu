@@ -50,4 +50,9 @@ class TemplateController extends Controller
     {
         return $this->render('SuluSecurityBundle:Template:role.list.html.twig');
     }
+
+    public function permissionTabFormAction()
+    {
+        return $this->render('SuluSecurityBundle:Template:permission-tab.form.html.twig');
+    }
 }
