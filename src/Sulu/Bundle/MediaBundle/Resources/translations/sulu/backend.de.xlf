@@ -116,7 +116,7 @@
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
                 <source>sulu.media.history</source>
-                <target>History</target>
+                <target>Verlauf</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22259" resname="sulu.media.version">
                 <source>sulu.media.version</source>
