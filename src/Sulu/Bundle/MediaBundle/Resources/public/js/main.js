@@ -59,6 +59,12 @@ define({
                 return;
             }
 
+            this.sandbox.on('husky.data-navigation.collections.select', function(item) {
+                if (item === null) {
+                    this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
+                }
+            }.bind(this));
+
             this.sandbox.on('husky.data-navigation.collections.add', function(item) {
                 var $element = this.sandbox.dom.createElement('<div id="collection-add"/>'),
                     parentId = !!item && !!item.id ? item.id : null;

@@ -79,7 +79,7 @@ define(function() {
                             }
                         },
                         noBack: true
-                    })
+                    });
                 }.bind(this));
 
             return def;

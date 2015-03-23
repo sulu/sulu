@@ -186,6 +186,14 @@ define([
             return createEventName.call(this, 'breadcrumb-navigate');
         },
 
+         /**
+         * navigate to a collection when breadcrumb where clicked on root item
+         * @event sulu.media.collections.breadcrumb-navigate.root
+         */
+        BREADCRUMB_NAVIGATE_ROOT = function() {
+            return createEventName.call(this, 'breadcrumb-navigate.root');
+        },
+
         /** returns normalized event names */
         createEventName = function(postFix) {
             return namespace + postFix;
@@ -349,6 +357,13 @@ define([
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
 
                 var url = '/admin/api/collections/' + item.id + '?depth=1';
+                this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+            }.bind(this));
+
+            this.sandbox.on(BREADCRUMB_NAVIGATE_ROOT.call(this), function() {
+                this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
+
+                var url = '/admin/api/collections';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
         },

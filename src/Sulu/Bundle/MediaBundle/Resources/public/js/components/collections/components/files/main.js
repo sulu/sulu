@@ -262,8 +262,7 @@ define(function() {
                 {title: 'navigation.media'},
                 {
                     title: 'media.collections.title',
-                    event: 'husky.data-navigation.collections.set-url',
-                    eventArgs: '/admin/api/collections'
+                    event: 'sulu.media.collections.breadcrumb-navigate.root'
                 }
             ], i, len, data = this.options.data._embedded.breadcrumb || [];
 
