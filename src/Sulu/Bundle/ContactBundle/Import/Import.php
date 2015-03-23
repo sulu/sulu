@@ -10,13 +10,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Import;
 
-use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
@@ -88,7 +86,6 @@ class Import
     protected $contactEntityName = 'SuluContactBundle:Contact';
     protected $accountEntityName = 'SuluContactBundle:Account';
     protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
     protected $tagEntityName = 'SuluTagBundle:Tag';
     protected $titleEntityName = 'SuluContactBundle:ContactTitle';
     protected $positionEntityName = 'SuluContactBundle:Position';
@@ -369,7 +366,6 @@ class Import
         $this->loadTags();
         $this->loadTitles();
         $this->loadPositions();
-        $this->loadAccountCategories();
     }
 
     /**
@@ -712,10 +708,6 @@ class Import
             $account->setType($this->mapAccountType($data['account_type']));
         }
 
-        if ($this->checkData('account_category', $data)) {
-            $this->addCategory($data['account_category'], $account);
-        }
-
         // process emails, phones, faxes, urls and notes
         $this->processTags($data, $account);
         $this->processEmails($data, $account);
@@ -971,25 +963,6 @@ class Import
             }
         }
         return $text;
-    }
-
-    /**
-     * lookup if category already exists, otherwise, it will be created
-     * @param $categoryName
-     * @param Account $account
-     */
-    protected function addCategory($categoryName, Account $account)
-    {
-        $categoryName = trim($categoryName);
-        if (array_key_exists($categoryName, $this->accountCategories)) {
-            $category = $this->accountCategories[$categoryName];
-        } else {
-            $category = new AccountCategory();
-            $category->setCategory($categoryName);
-            $this->em->persist($category);
-            $this->accountCategories[$category->getCategory()] = $category;
-        }
-        $account->setAccountCategory($category);
     }
 
     /**
@@ -1620,15 +1593,6 @@ class Import
         }
 
         return array_merge($this->defaults, $associativeData);
-    }
-
-    protected function loadAccountCategories()
-    {
-        $categories = $this->em->getRepository($this->accountCategoryEntityName)->findAll();
-        /** @var AccountCategory $category */
-        foreach ($categories as $category) {
-            $this->accountCategories[$category->getCategory()] = $category;
-        }
     }
 
     protected function loadTags()

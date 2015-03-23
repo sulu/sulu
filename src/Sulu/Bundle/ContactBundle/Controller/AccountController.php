@@ -51,7 +51,6 @@ class AccountController extends AbstractContactController
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $contactEntityKey = 'contacts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
-    protected static $accountCategoryEntityName = 'SuluContactBundle:AccountCategory';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
     protected static $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
@@ -492,10 +491,6 @@ class AccountController extends AbstractContactController
             }
             $account->setDisabled($disabled);
 
-            // set category
-            // FIXME: check if accountcategory with given value exists
-            $this->setCategory($request->get('accountCategory'), $account);
-
             // set parent
             $this->setParent($request->get('parent'), $account);
 
@@ -582,10 +577,6 @@ class AccountController extends AbstractContactController
                     $account->setUid($request->get('uid'));
                 }
 
-                // set category
-                // FIXME: check if accountcategory with given value exists
-                $this->setCategory($request->get('accountCategory'), $account);
-
                 // set parent
                 $this->setParent($request->get('parent'), $account);
 
@@ -648,27 +639,6 @@ class AccountController extends AbstractContactController
             $account->setParent($parent);
         } else {
             $account->setParent(null);
-        }
-    }
-
-    /**
-     * set category to account
-     *
-     * @param array $categoryData
-     * @param AccountEntity $account
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     */
-    public function setCategory($categoryData, AccountEntity $account)
-    {
-        $categoryId = $categoryData['id'];
-        if (!is_null($categoryId) && !empty($categoryId)) {
-            /** @var @var AccountCategoryEntity $category */
-            $category = $this->getDoctrine()->getRepository(self::$accountCategoryEntityName)->find($categoryId);
-            if (!is_null($category)) {
-                $account->setAccountCategory($category);
-            } else {
-                throw new EntityNotFoundException(self::$accountCategoryEntityName, $categoryId);
-            }
         }
     }
 
@@ -1524,20 +1494,6 @@ class AccountController extends AbstractContactController
             'contact.accounts.placeOfJurisdiction',
             array(),
             true
-        );
-
-        // account-category
-        $this->fieldDescriptors['accountCategory'] = new DoctrineFieldDescriptor(
-            'category',
-            'accountCategory',
-            self::$accountCategoryEntityName,
-            'contacts.accounts.category',
-            array(
-                self::$accountCategoryEntityName => new DoctrineJoinDescriptor(
-                    self::$accountCategoryEntityName,
-                    self::$entityName . '.accountCategory'
-                ),
-            )
         );
     }
 }

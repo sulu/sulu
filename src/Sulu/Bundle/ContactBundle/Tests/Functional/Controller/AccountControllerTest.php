@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -28,7 +27,6 @@ use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\FaxType;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
-use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AccountControllerTest extends SuluTestCase
@@ -193,11 +191,6 @@ class AccountControllerTest extends SuluTestCase
         $this->em->persist($faxType);
         $this->em->persist($fax);
         $this->em->persist($contact);
-
-        $accountCategory = new AccountCategory();
-        $accountCategory->setCategory("Test");
-        $this->accountCategory = $accountCategory;
-        $this->em->persist($accountCategory);
 
         $this->em->flush();
     }
@@ -528,10 +521,6 @@ class AccountControllerTest extends SuluTestCase
                 'notes' => array(
                     array('value' => 'Note 1'),
                     array('value' => 'Note 2')
-                ),
-                'accountCategory' => array(
-                    'id' => $this->accountCategory->getId(),
-                    'category' => 'test'
                 )
             )
         );
@@ -555,7 +544,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
-        $this->assertNotNull($response->accountCategory->id);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
         $this->assertEquals(true,$response->addresses[0]->primaryAddress);
@@ -583,7 +571,6 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Musterstate', $response->addresses[0]->state);
         $this->assertEquals('Note 1', $response->notes[0]->value);
         $this->assertEquals('Note 2', $response->notes[1]->value);
-        $this->assertNotNull($response->accountCategory->id);
 
         $this->assertEquals(true,$response->addresses[0]->billingAddress);
         $this->assertEquals(true,$response->addresses[0]->primaryAddress);

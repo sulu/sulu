@@ -14,7 +14,6 @@ use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Doctrine\Entity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory as AccountCategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
@@ -547,19 +546,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set accountCategory
-     *
-     * @param AccountCategoryEntity $accountCategory
-     * @return Account
-     */
-    public function setAccountCategory(AccountCategoryEntity $accountCategory = null)
-    {
-        $this->entity->setAccountCategory($accountCategory);
-
-        return $this;
-    }
-
-    /**
      * Set registerNumber
      *
      * @param string $registerNumber
@@ -596,19 +582,6 @@ class Account extends ApiWrapper
         $this->entity->addBankAccount($bankAccount);
 
         return $this;
-    }
-
-    /**
-     * Get accountCategory
-     *
-     * @return AccountCategoryEntity
-     * @VirtualProperty
-     * @SerializedName("accountCategory")
-     * @Groups({"fullAccount"})
-     */
-    public function getAccountCategory()
-    {
-        return $this->entity->getAccountCategory();
     }
 
     /**

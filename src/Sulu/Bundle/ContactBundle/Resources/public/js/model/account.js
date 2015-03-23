@@ -17,14 +17,13 @@ define([
     'sulucontact/model/url',
     'sulucontact/model/note',
     'mvc/hasone',
-    'sulucontact/model/accountCategory',
     'sulucontact/model/accountContact',
     'sulucontact/model/bankAccount',
     'sulucontact/model/contact',
     'sulucontact/model/termsOfDelivery',
     'sulucontact/model/termsOfPayment',
     'sulucontact/model/accountMedia'
-], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount, Contact, TermsOfDelivery, TermsOfPayment, Media) {
+], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountContact, BankAccount, Contact, TermsOfDelivery, TermsOfPayment, Media) {
 
     'use strict';
 
@@ -83,11 +82,6 @@ define([
                 type: HasMany,
                 key: 'accountContacts',
                 relatedModel: AccountContact
-            },
-            {
-                type: HasOne,
-                key: 'accountCategory',
-                relatedModel: AccountCategory
             },
             {
                 type: HasOne,
