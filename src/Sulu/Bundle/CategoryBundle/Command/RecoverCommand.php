@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Command;
 
-use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

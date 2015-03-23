@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Command;
 
-use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,7 +25,7 @@ class AccountRecoverCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('sulu:accounts:recover')
+        $this->setName('sulu:contacts:accounts:recover')
             ->addOption(
                 'force',
                 'f',
