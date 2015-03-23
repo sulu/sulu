@@ -11,16 +11,12 @@ define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 
-    var bankAccountForm = '#bank-account-form',
+    var formSelector = '#bank-account-form',
 
         defaults = {
             headline: 'contact.accounts.title'
         },
         constants = {
-            bankAccountsId: '#bankAccounts',
-            bankAccountAddId: '#bank-account-add',
-            addBankAccountsWrapper: '.grid-row',
-
             overlayIdTermsOfPayment: 'overlayContainerTermsOfPayment',
             overlayIdTermsOfDelivery: 'overlayContainerTermsOfDelivery',
             overlaySelectorTermsOfPayment: '#overlayContainerTermsOfPayment',
@@ -28,15 +24,6 @@ define(['widget-groups'], function(WidgetGroups) {
 
             cgetTermsOfDeliveryURL: 'api/termsofdeliveries',
             cgetTermsOfPaymentURL: 'api/termsofpayments'
-        },
-
-        customTemplates = {
-            addBankAccountsIcon: [
-                '<div class="grid-row">',
-                '    <div class="grid-col-12">',
-                '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
-                '   </div>',
-                '</div>'].join('')
         };
 
     return {
@@ -140,7 +127,7 @@ define(['widget-groups'], function(WidgetGroups) {
 
         initForm: function(data) {
             var formObject = this.sandbox.form.create(this.form);
-            this.initBankAccountHandling(data);
+            this.initFormHandling(data);
 
             formObject.initialized.then(function() {
                 this.setFormData(data);
@@ -192,17 +179,6 @@ define(['widget-groups'], function(WidgetGroups) {
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.contacts.accounts.list');
             }, this);
-
-            this.sandbox.on('sulu.contact-form.added.bank-account', function() {
-                this.numberOfBankAccounts++;
-                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
-            }, this);
-
-            this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
-                this.numberOfBankAccounts--;
-                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
-            }, this);
-
         },
 
         submit: function() {
@@ -255,20 +231,12 @@ define(['widget-groups'], function(WidgetGroups) {
             }.bind(this));
         },
 
-        //FIXME Following code should be moved (partially) to a component (more abstract contact-form component)
-
-        /**
-         * Initializes the component responsible for handling bank accounts
-         */
-        initBankAccountHandling: function(data) {
-            this.numberOfBankAccounts = data.bankAccounts.length;
-            this.updateBankAccountAddIcon(this.numberOfBankAccounts);
-
+        initFormHandling: function(data) {
             // when  contact-form is initalized
             this.sandbox.on('sulu.contact-form.initialized', function() {
 
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
-                var formObject = this.sandbox.form.create(bankAccountForm);
+                var formObject = this.sandbox.form.create(formSelector);
                 formObject.initialized.then(function() {
                     this.setFormData(data);
                 }.bind(this));
@@ -284,23 +252,6 @@ define(['widget-groups'], function(WidgetGroups) {
                     }
                 }
             ]);
-        },
-
-        /**
-         * Adds or removes icon to add bank accounts depending on the number of bank accounts
-         * @param numberOfBankAccounts
-         */
-        updateBankAccountAddIcon: function(numberOfBankAccounts) {
-            var $addIcon = this.sandbox.dom.find(constants.bankAccountAddId),
-                addIcon;
-
-            if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
-                addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
-                this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
-            } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
-                this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
-            }
         }
-
     };
 });

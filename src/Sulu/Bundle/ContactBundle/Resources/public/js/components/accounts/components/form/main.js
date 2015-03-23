@@ -19,7 +19,19 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
         constants = {
             tagsId: '#tags',
             addressAddId: '#address-add',
-            addAddressWrapper: '.grid-row'
+            addAddressWrapper: '.grid-row',
+
+            bankAccountsId: '#bankAccounts',
+            bankAccountAddSelector: '.bank-account-add'
+        },
+
+        customTemplates = {
+            addBankAccountsIcon: [
+                '<div class="grid-row">',
+                '    <div class="grid-col-12">',
+                '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
+                '   </div>',
+                '</div>'].join('')
         };
 
     return {
@@ -431,6 +443,10 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
         setFormData: function(data) {
             // add collection filters to form
             this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
+
+            this.numberOfBankAccounts = data.bankAccounts.length;
+            this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+
             this.sandbox.form.setData(this.form, data).then(function() {
                 this.sandbox.start(this.form);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
@@ -519,6 +535,16 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
                 this.sandbox.emit('husky.select.account-category.update', data, selected);
             }, this);
+
+            this.sandbox.on('sulu.contact-form.added.bank-account', function() {
+                this.numberOfBankAccounts++;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+            }, this);
+
+            this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
+                this.numberOfBankAccounts--;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+            }, this);
         },
 
         /**
@@ -598,6 +624,22 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     this.setHeaderBar(false);
                 }
             }.bind(this));
+        },
+
+        /**
+         * Adds or removes icon to add bank accounts depending on the number of bank accounts
+         * @param numberOfBankAccounts
+         */
+        updateBankAccountAddIcon: function(numberOfBankAccounts) {
+            var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
+                addIcon;
+
+            if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
+                addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
+                this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+            } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
+                this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
+            }
         }
     };
 });

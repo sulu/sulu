@@ -18,13 +18,25 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             tagsId: '#tags',
             addressAddId: '#address-add',
             addAddressWrapper: '.grid-row',
-            addressesSelector: '#addresses'
+            addressesSelector: '#addresses',
+
+            bankAccountsId: '#bankAccounts',
+            bankAccountAddSelector: '.bank-account-add'
         },
 
         setHeaderToolbar = function() {
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
             });
+        },
+
+        customTemplates = {
+            addBankAccountsIcon: [
+                '<div class="grid-row">',
+                '    <div class="grid-col-12">',
+                '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
+                '   </div>',
+                '</div>'].join('')
         };
 
     return (function() {
@@ -186,6 +198,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             },
 
             setFormData: function(data, startForm) {
+                this.numberOfBankAccounts = data.bankAccounts.length;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
@@ -306,6 +320,16 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     if (!this.sandbox.dom.find('#' + this.companyInstanceName).val()) {
                         this.enablePositionDropdown(false);
                     }
+                }, this);
+
+                this.sandbox.on('sulu.contact-form.added.bank-account', function() {
+                    this.numberOfBankAccounts++;
+                    this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+                }, this);
+
+                this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
+                    this.numberOfBankAccounts--;
+                    this.updateBankAccountAddIcon(this.numberOfBankAccounts);
                 }, this);
 
             },
@@ -499,6 +523,22 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 this.initializeDropDownListender(
                     'position-select',
                     'api/contact/positions');
+            },
+
+            /**
+             * Adds or removes icon to add bank accounts depending on the number of bank accounts
+             * @param numberOfBankAccounts
+             */
+            updateBankAccountAddIcon: function(numberOfBankAccounts) {
+                var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
+                    addIcon;
+
+                if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
+                    addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
+                    this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+                } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
+                    this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
+                }
             }
         };
     })();

@@ -913,7 +913,7 @@ abstract class AbstractContactController extends RestController implements Class
             $entity->setBankName($data['bankName']);
             $entity->setBic($data['bic']);
             $entity->setIban($data['iban']);
-            $entity->setPublic(array_key_exists('public', $data) ? $data['public'] : false);
+            $entity->setPublic($this->getBooleanValue((array_key_exists('public', $data) ? $data['public'] : false)));
 
             $em->persist($entity);
             $contact->addBankAccount($entity);
@@ -935,7 +935,7 @@ abstract class AbstractContactController extends RestController implements Class
         $entity->setBankName($data['bankName']);
         $entity->setBic($data['bic']);
         $entity->setIban($data['iban']);
-        $entity->setPublic($this->getBooleanValue($data['public']));
+        $entity->setPublic($this->getBooleanValue((array_key_exists('public', $data) ? $data['public'] : false)));
 
         return $success;
     }
