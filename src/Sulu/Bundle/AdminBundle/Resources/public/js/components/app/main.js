@@ -308,7 +308,7 @@ define(function() {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
-            }.bind(this), 1500));
+            }.bind(this), 1000));
 
             // content tabs event
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
