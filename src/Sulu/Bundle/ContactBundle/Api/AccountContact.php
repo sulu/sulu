@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use JMS\Serializer\Annotation\VirtualProperty;

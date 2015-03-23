@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 

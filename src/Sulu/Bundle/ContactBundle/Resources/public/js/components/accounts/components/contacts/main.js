@@ -11,8 +11,9 @@ define([
     'mvc/relationalstore',
     'text!sulucontact/components/accounts/components/contacts/contact-relation.form.html',
     'text!sulucontact/components/accounts/components/contacts/contact.form.html',
-    'config'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config) {
+    'config',
+    'widget-groups'
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups) {
 
     'use strict';
 

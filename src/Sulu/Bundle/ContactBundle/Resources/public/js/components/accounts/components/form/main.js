@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config'], function(Config) {
+define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
     'use strict';
 
