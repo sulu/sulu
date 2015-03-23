@@ -112,6 +112,14 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     {
                         name: 'auto-complete@husky',
                         options: options
+                    },
+                    {
+                        name: 'input@husky',
+                        options: {
+                            el: '#vat',
+                            instanceName:'vat-input',
+                            value: !!data.uid ? data.uid : ''
+                        }
                     }
                 ]);
 

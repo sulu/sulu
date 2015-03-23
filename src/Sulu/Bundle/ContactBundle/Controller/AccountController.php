@@ -480,6 +480,10 @@ class AccountController extends AbstractContactController
 
             $this->setResponsiblePerson($em, $account, $request->get('responsiblePerson'));
 
+            if (!is_null($request->get('uid'))) {
+                $account->setUid($request->get('uid'));
+            }
+
             $account->setType($request->get('type', 0));
 
             $disabled = $request->get('disabled');
@@ -573,6 +577,10 @@ class AccountController extends AbstractContactController
                 }
 
                 $this->setResponsiblePerson($em, $account, $request->get('responsiblePerson'));
+
+                if (!is_null($request->get('uid'))) {
+                    $account->setUid($request->get('uid'));
+                }
 
                 // set category
                 // FIXME: check if accountcategory with given value exists

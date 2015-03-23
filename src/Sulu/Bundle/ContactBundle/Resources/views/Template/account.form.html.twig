@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="grid-row">
+        <div class="grid-row small">
             <div class="grid-col-6">
                 <div class="form-group">
                     <label for="deactivated"><%=translate('public.locked')%></label>
@@ -56,5 +56,17 @@
             </div>
         </div>
 
+        <div class="grid-row">
+            <div class="grid-col-6">
+                <div class="form-group">
+                    <label for="vat"><%=translate('contact.accounts.uid')%></label>
+
+                    <div id="vat"
+                         data-form="true"
+                         data-type="vat-input"
+                         data-mapper-property="uid"></div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
