@@ -95,11 +95,6 @@ define([
                 relatedModel: TermsOfPayment
             },
             {
-                type: HasOne,
-                key: 'responsiblePerson',
-                relatedModel: Contact
-            },
-            {
                 key: 'mainContact',
                 relatedModel: Contact
             },
