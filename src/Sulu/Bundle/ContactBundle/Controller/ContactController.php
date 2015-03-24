@@ -15,8 +15,8 @@ use FOS\RestBundle\Controller\Annotations\Get;
 use Hateoas\Configuration\Exclusion;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
-use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact as ApiContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Fax;
 use Sulu\Bundle\ContactBundle\Entity\Email;
@@ -46,7 +46,6 @@ class ContactController extends AbstractContactController
      */
     protected static $entityName = 'SuluContactBundle:Contact';
     protected static $entityKey = 'contacts';
-    protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $titleEntityName = 'SuluContactBundle:ContactTitle';
     protected static $positionEntityName = 'SuluContactBundle:Position';
@@ -139,7 +138,7 @@ class ContactController extends AbstractContactController
         $this->fieldDescriptors['account'] = new DoctrineFieldDescriptor(
             'name',
             'account',
-            self::$accountEntityName,
+            $this->getAccountEntityName(),
             'contact.contacts.company',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
@@ -147,8 +146,8 @@ class ContactController extends AbstractContactController
                         self::$entityName . '.accountContacts',
                         self::$accountContactEntityName . '.main = true', 'LEFT'
                     ),
-                self::$accountEntityName => new DoctrineJoinDescriptor(
-                        self::$accountEntityName,
+                $this->getAccountEntityName() => new DoctrineJoinDescriptor(
+                        $this->getAccountEntityName(),
                         self::$accountContactEntityName . '.account'
                     )
             ),
@@ -591,13 +590,13 @@ class ContactController extends AbstractContactController
                 $parentData['id'] != 'null' &&
                 $parentData['id'] != ''
             ) {
-                /** @var Account $parent */
+                /** @var AccountInterface $parent */
                 $parent = $this->getDoctrine()
-                    ->getRepository(self::$accountEntityName)
+                    ->getRepository($this->getAccountEntityName())
                     ->findAccountById($parentData['id']);
 
                 if (!$parent) {
-                    throw new EntityNotFoundException(self::$accountEntityName, $parentData['id']);
+                    throw new EntityNotFoundException($this->getAccountEntityName(), $parentData['id']);
                 }
 
                 // Set position on contact
@@ -768,5 +767,10 @@ class ContactController extends AbstractContactController
         }
 
         return $contacts;
+    }
+
+    private function getAccountEntityName()
+    {
+        return $this->container->getParameter('sulu_contact.account.entity');
     }
 }

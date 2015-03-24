@@ -26,9 +26,9 @@ class ContactManager extends AbstractContactManager
     protected $contactEntity = 'SuluContactBundle:Contact';
     protected $tagManager;
 
-    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager, $accountEntityName)
     {
-        parent::__construct($em);
+        parent::__construct($em, $accountEntityName);
         $this->tagManager = $tagManager;
     }
 
@@ -156,13 +156,12 @@ class ContactManager extends AbstractContactManager
         ) {
             $accountId = $data['account']['id'];
 
-            /** @var Account $account */
             $account = $this->em
-                ->getRepository(self::$accountEntityName)
+                ->getRepository($this->accountEntity)
                 ->findAccountById($accountId);
 
             if (!$account) {
-                throw new EntityNotFoundException(self::$accountEntityName, $accountId);
+                throw new EntityNotFoundException($this->accountEntity, $accountId);
             }
 
             // get position

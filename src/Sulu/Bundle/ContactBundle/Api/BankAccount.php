@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Doctrine\Entity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
-use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Component\Rest\ApiWrapper;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;

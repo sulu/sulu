@@ -53,8 +53,6 @@ interface ContactManagerInterface
      */
     public function unsetMain($arrayCollection);
 
-//    public function addAccountContact($account, $contact);
-
     /**
      * sets main email, based on emails that are set on entity
      * @param $entity

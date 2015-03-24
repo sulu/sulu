@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sulu\Component\Rest\RestController;
 
 class TemplateController extends RestController

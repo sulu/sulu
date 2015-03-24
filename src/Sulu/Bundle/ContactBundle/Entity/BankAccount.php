@@ -130,10 +130,10 @@ class BankAccount
     /**
      * Add accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $accounts
      * @return BankAccount
      */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function addAccount(AccountInterface $accounts)
     {
         $this->accounts[] = $accounts;
 
@@ -143,9 +143,9 @@ class BankAccount
     /**
      * Remove accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $accounts
      */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function removeAccount(AccountInterface $accounts)
     {
         $this->accounts->removeElement($accounts);
     }

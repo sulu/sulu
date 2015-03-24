@@ -16,6 +16,7 @@
         <parameter key="sulu_contact.user_repository.entity">SuluSecurityBundle:User</parameter>
         <parameter key="sulu_contact.account.entity">SuluContactBundle:Account</parameter>
         <parameter key="sulu_contact.account_repository.class">Sulu\Bundle\ContactBundle\Entity\AccountRepository</parameter>
+        <parameter key="sulu_contact.account_factory.class">Sulu\Bundle\ContactBundle\Contact\AccountFactory</parameter>
         <parameter key="sulu_contact.contact.entity">SuluContactBundle:Contact</parameter>
         <parameter key="sulu_contact.contact_repository.class">Sulu\Bundle\ContactBundle\Entity\ContactRepository</parameter>
     </parameters>
@@ -32,9 +33,11 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_contact.account_manager"/>
             <argument type="service" id="sulu_contact.contact_manager"/>
+            <argument type="service" id="sulu_contact.account_factory"/>
             <argument>%sulu_contact.defaults%</argument>
             <argument>%sulu_contact.account_types%</argument>
             <argument>%sulu_contact.form_of_address%</argument>
+            <argument>%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.data_completer" class="%sulu_contact.data_completer.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
@@ -76,5 +79,7 @@
             <argument type="service" id="sulu_contact.twig.cache"/>
             <argument type="service" id="sulu_contact.user_repository"/>
         </service>
+
+        <service id="sulu_contact.account_factory" class="%sulu_contact.account_factory.class%"/>
     </services>
 </container>

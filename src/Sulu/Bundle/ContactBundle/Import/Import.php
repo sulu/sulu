@@ -14,8 +14,10 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
+use Sulu\Bundle\ContactBundle\Contact\AccountFactoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
@@ -31,7 +33,6 @@ use Sulu\Bundle\ContactBundle\Import\Exception\ImportException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * configures and executes an import for contact and account data from a CSV file
@@ -81,10 +82,9 @@ class Import
 
     /**
      * define entity names
-     * @var string
      */
     protected $contactEntityName = 'SuluContactBundle:Contact';
-    protected $accountEntityName = 'SuluContactBundle:Account';
+    protected $accountEntityName;
     protected $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected $tagEntityName = 'SuluTagBundle:Tag';
     protected $titleEntityName = 'SuluContactBundle:ContactTitle';
@@ -130,7 +130,7 @@ class Import
      */
     protected $configDefaults;
     /**
-     * Account Types
+     * AccountInterface Types
      * @var $configAccountTypes
      */
     protected $configAccountTypes;
@@ -295,30 +295,39 @@ class Import
      * @var array
      */
     protected $invalidNewLineCharacters = array();
+    /**
+     * @var AccountFactoryInterface
+     */
+    private $accountFactory;
 
     /**
      * @param EntityManager $em
      * @param $accountManager
      * @param $contactManager
+     * @param AccountFactoryInterface $accountFactory
      * @param $configDefaults
      * @param $configAccountTypes
      * @param $configFormOfAddress
+     * @param $accountEntityName
      */
     public function __construct(
         EntityManager $em,
         $accountManager,
         $contactManager,
+        AccountFactoryInterface $accountFactory,
         $configDefaults,
         $configAccountTypes,
-        $configFormOfAddress
-    )
-    {
+        $configFormOfAddress,
+        $accountEntityName
+    ) {
         $this->em = $em;
         $this->configDefaults = $configDefaults;
         $this->configAccountTypes = $configAccountTypes;
         $this->configFormOfAddress = $configFormOfAddress;
         $this->accountManager = $accountManager;
         $this->contactManager = $contactManager;
+        $this->accountFactory = $accountFactory;
+        $this->accountEntityName = $accountEntityName;
     }
 
     /**
@@ -450,7 +459,7 @@ class Import
         $createContact = function ($data, $row) {
             return $this->createContact($data, $row);
         };
-        $postFlushContact = function($data, $row, $result) {
+        $postFlushContact = function ($data, $row, $result) {
             return call_user_func(array($this, 'postFlushCreateContact'), $data, $row, $result);
         };
 
@@ -465,7 +474,7 @@ class Import
     protected function postFlushCreateContact($data, $row, $contact)
     {
     }
-    
+
     /**
      * Loads the CSV Files and the Entities for the import
      * @param string $filename path to file
@@ -511,14 +520,16 @@ class Import
 
                     // get associativeData
                     $associativeData = $this->mapRowToAssociativeArray($data, $this->headerData);
-                    
+
                     // check if row contains data that should be excluded
                     $exclude = $this->rowContainsExlcudeData($associativeData, $key, $value);
                     if (!$exclude) {
                         // call callback function
                         $result = $callback($associativeData, $row);
                     } else {
-                        $this->debug(sprintf("Exclude data row %d due to exclude condition %s = %s \n", $row, $key, $value));
+                        $this->debug(
+                            sprintf("Exclude data row %d due to exclude condition %s = %s \n", $row, $key, $value)
+                        );
                     }
 
                     if ($flushOnEveryRow) {
@@ -580,29 +591,32 @@ class Import
     {
         if (count($this->excludeConditions) > 0) {
             // iterate through all defined exclude conditions
-            foreach($this->excludeConditions as $key => $value) {
+            foreach ($this->excludeConditions as $key => $value) {
                 if (isset($data[$key])) {
                     // if condition is an array - compare with every value
                     if (is_array($value)) {
-                        foreach($value as $childValue) {
+                        foreach ($value as $childValue) {
                             if ($this->compareStrings($childValue, $data[$key])) {
                                 $conditionKey = $key;
                                 $conditionValue = $value;
+
                                 return true;
                             }
                         }
-                    // else if simple value - just compare
+                        // else if simple value - just compare
                     } else {
                         // if match
                         if ($this->compareStrings($value, $data[$key])) {
                             $conditionKey = $key;
                             $conditionValue = $value;
+
                             return true;
                         }
                     }
                 }
             }
         }
+
         return false;
     }
 
@@ -625,10 +639,11 @@ class Import
     /**
      * creates a new account Entity
      * @param null $externalId
-     * @return Account
+     * @return AccountInterface
      */
-    protected function createNewAccount($externalId = null) {
-        $account = new Account();
+    protected function createNewAccount($externalId = null)
+    {
+        $account = $this->accountFactory->create();
         if ($externalId) {
             $account->setExternalId($externalId);
         }
@@ -641,7 +656,7 @@ class Import
      * creates an account for given row data
      * @param $data
      * @param $row
-     * @return Account
+     * @return AccountInterface
      * @throws \Exception
      */
     protected function createAccount($data, $row)
@@ -650,7 +665,9 @@ class Import
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
                 $this->accountExternalIds[] = null;
-                throw new \Exception('no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file');
+                throw new \Exception(
+                    'no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file'
+                );
             }
             $externalId = $data[$this->idMappings['account_id']];
 
@@ -664,8 +681,7 @@ class Import
                 $this->getAccountManager()->deleteAllRelations($account);
             }
             $this->accountExternalIds[] = $externalId;
-        }
-        // otherwise just create a new account
+        } // otherwise just create a new account
         else {
             $account = $this->createNewAccount();
         }
@@ -866,7 +882,7 @@ class Import
         // add tags
         $tagPrefix = $prefix . 'tag';
         $this->checkAndAddTag($tagPrefix, $data, $entity);
-        
+
         for ($i = 0, $len = 10; ++$i < $len;) {
             $index = $tagPrefix . $i;
             $this->checkAndAddTag($index, $data, $entity);
@@ -942,7 +958,7 @@ class Import
         if (sizeof($noteValues) > 0) {
             $noteText = implode("\n", $noteValues);
             $noteText = $this->replaceInvalidNewLineCharacters($noteText);
-            
+
             $note = new Note();
             $note->setValue($noteText);
             $this->em->persist($note);
@@ -958,10 +974,11 @@ class Import
     protected function replaceInvalidNewLineCharacters($text)
     {
         if (count($this->invalidNewLineCharacters) > 0) {
-            foreach($this->invalidNewLineCharacters as $character) {
+            foreach ($this->invalidNewLineCharacters as $character) {
                 $text = str_replace($character, "\n", $text);
             }
         }
+
         return $text;
     }
 
@@ -1027,7 +1044,8 @@ class Import
      * @param $data
      * @param $entity
      */
-    protected function createAddresses($data, $entity) {
+    protected function createAddresses($data, $entity)
+    {
         // add urls
         $first = true;
         for ($i = 0, $len = 10; ++$i < $len;) {
@@ -1110,7 +1128,7 @@ class Import
 
         // define if this is a normal address or just a postbox address
         $isNormalAddress = $addAddress;
-        
+
         // postbox
         if ($this->checkData($prefix . 'postbox', $data)) {
             $address->setPostboxNumber($data[$prefix . 'postbox']);
@@ -1192,7 +1210,8 @@ class Import
      * @param $value
      * @return bool
      */
-    protected function getBoolValue($value) {
+    protected function getBoolValue($value)
+    {
         if ($value == true ||
             strtolower($value) === 'y' ||
             strtolower($value) === 'j' ||
@@ -1200,6 +1219,7 @@ class Import
         ) {
             return true;
         }
+
         return false;
     }
 
@@ -1218,7 +1238,7 @@ class Import
                 if ($this->checkData($prefix . 'iban', $data)) {
                     $bank->setIban($data[$prefix . 'iban']);
                 } else {
-                    throw new ImportException('no Iban provided for entity with id '. $entity->getId());
+                    throw new ImportException('no Iban provided for entity with id ' . $entity->getId());
                 }
 
                 if ($this->checkData($prefix . 'bic', $data)) {
@@ -1370,9 +1390,11 @@ class Import
      */
     private function mainRelationExists($entity)
     {
-        return $entity->getAccountContacts()->exists(function ($index, $entity) {
-            return $entity->getMain() === true;
-        });
+        return $entity->getAccountContacts()->exists(
+            function ($index, $entity) {
+                return $entity->getMain() === true;
+            }
+        );
     }
 
     /**
@@ -1411,7 +1433,13 @@ class Import
 
             if (!$account) {
                 // throw new \Exception('could not find '.$data['contact_parent_id'].' in accounts');
-                $this->debug(sprintf("Could not assign contact at row %d to %s. (account could not be found)\n", $row, $data[$index]));
+                $this->debug(
+                    sprintf(
+                        "Could not assign contact at row %d to %s. (account could not be found)\n",
+                        $row,
+                        $data[$index]
+                    )
+                );
             } else {
 
                 // check if relation already exists
@@ -1419,9 +1447,10 @@ class Import
                 if (!$this->em->getUnitOfWork()->isScheduledForInsert($contact)) {
                     $accountContact = $this->em
                         ->getRepository($this->accountContactEntityName)
-                        ->findOneBy(array(
-                            'account' => $account,
-                            'contact' => $contact
+                        ->findOneBy(
+                            array(
+                                'account' => $account,
+                                'contact' => $contact
                             )
                         );
                 }
@@ -1529,7 +1558,7 @@ class Import
         if ($this->checkData('account_parent_id', $data)) {
             // get account
             $externalId = $this->getExternalId($data, $row);
-            /** @var Account $account */
+            /** @var AccountInterface $account */
             $account = $this->getAccountByKey($externalId);
 
             if (!$account) {
@@ -1746,7 +1775,7 @@ class Import
 
     /**
      * @param $key
-     * @return Account|null
+     * @return AccountInterface|null
      */
     public function getAccountByKey($key)
     {
@@ -1939,7 +1968,9 @@ class Import
     {
         if (array_key_exists('account_id', $this->idMappings)) {
             if (!array_key_exists($this->idMappings['account_id'], $data)) {
-                throw new \Exception('no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file');
+                throw new \Exception(
+                    'no key ' + $this->idMappings['account_id'] + ' found in column definition of accounts file'
+                );
             }
             $externalId = $data[$this->idMappings['account_id']];
         } else {
@@ -1970,6 +2001,7 @@ class Import
     {
         return $this->contactManager;
     }
+
     /**
      * @return AbstractContactManager
      */

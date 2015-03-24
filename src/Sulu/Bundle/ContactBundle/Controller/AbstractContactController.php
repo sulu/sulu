@@ -21,7 +21,6 @@ use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\ContactBundle\Entity\UrlType as UrlTypeEntity;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
-use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\RestController;

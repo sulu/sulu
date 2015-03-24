@@ -11,11 +11,10 @@
 namespace Sulu\Bundle\ContactBundle\Api;
 
 use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
-use Doctrine\Entity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -46,10 +45,10 @@ use JMS\Serializer\Annotation\Groups;
 class Account extends ApiWrapper
 {
     /**
-     * @param AccountEntity $account
+     * @param AccountInterface $account
      * @param string $locale The locale of this product
      */
-    public function __construct(AccountEntity $account, $locale)
+    public function __construct(AccountInterface $account, $locale)
     {
         $this->entity = $account;
         $this->locale = $locale;
@@ -175,10 +174,10 @@ class Account extends ApiWrapper
     /**
      * Set parent
      *
-     * @param AccountEntity $parent
+     * @param AccountInterface $parent
      * @return Account
      */
-    public function setParent(AccountEntity $parent = null)
+    public function setParent(AccountInterface $parent = null)
     {
         $this->entity->setParent($parent);
 
@@ -188,7 +187,7 @@ class Account extends ApiWrapper
     /**
      * Get parent
      *
-     * @return AccountEntity
+     * @return AccountInterface
      * @VirtualProperty
      * @SerializedName("parent")
      * @Groups({"fullAccount"})

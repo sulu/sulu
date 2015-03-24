@@ -10,23 +10,20 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Accessor;
-use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Account
  */
-class Account extends ApiEntity implements AuditableInterface
+class Account extends BaseAccount implements AuditableInterface, AccountInterface
 {
     const TYPE_BASIC = 0;
     const TYPE_LEAD = 1;
     const TYPE_CUSTOMER = 2;
     const TYPE_SUPPLIER = 3;
-
-    const ENABLED = 0;
-    const DISABLED = 1;
 
     /**
      * @var integer
@@ -44,45 +41,13 @@ class Account extends ApiEntity implements AuditableInterface
     private $depth;
 
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var \DateTime
-     */
-    private $created;
-
-    /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
-     * @var integer
-     */
-    private $id;
-
-    /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
-     * @Exclude
-     */
-    private $changer;
-
-    /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
-     * @Exclude
-     */
-    private $creator;
-
-    /**
-     * @var \Sulu\Component\Security\Authentication\UserInterface
+     * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
     private $children;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Account
+     * @var AccountInterface
      */
     private $parent;
 
@@ -124,26 +89,6 @@ class Account extends ApiEntity implements AuditableInterface
     private $type = self::TYPE_BASIC;
 
     /**
-     * @var string
-     */
-    private $corporation;
-
-    /**
-     * @var integer
-     */
-    private $disabled = self::ENABLED;
-
-    /**
-     * @var string
-     */
-    private $uid;
-
-    /**
-     * @var string
-     */
-    private $registerNumber;
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $bankAccounts;
@@ -160,54 +105,9 @@ class Account extends ApiEntity implements AuditableInterface
     private $accountContacts;
 
     /**
-     * @var string
-     */
-    private $placeOfJurisdiction;
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment
-     */
-    private $termsOfPayment;
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
-     */
-    private $termsOfDelivery;
-
-    /**
-     * @var string
-     */
-    private $number;
-
-    /**
      * @var \Sulu\Bundle\ContactBundle\Entity\Contact
      */
     private $responsiblePerson;
-
-    /**
-     * @var string
-     */
-    private $externalId;
-
-    /**
-     * @var string
-     */
-    private $mainEmail;
-
-    /**
-     * @var string
-     */
-    private $mainPhone;
-
-    /**
-     * @var string
-     */
-    private $mainFax;
-
-    /**
-     * @var string
-     */
-    private $mainUrl;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -225,29 +125,16 @@ class Account extends ApiEntity implements AuditableInterface
      */
     public function __construct()
     {
-        $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->addresses = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->phones = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->tags = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accountContacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accountAddresses = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * setId
-     *
-     * @param integer $id
-     *
-     * @return Account
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
+        $this->children = new ArrayCollection();
+        $this->urls = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
+        $this->phones = new ArrayCollection();
+        $this->emails = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->faxes = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->accountContacts = new ArrayCollection();
+        $this->accountAddresses = new ArrayCollection();
     }
 
     /**
@@ -320,116 +207,12 @@ class Account extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Account
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get created
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
-    }
-
-    /**
-     * Get changed
-     *
-     * @return \DateTime
-     */
-    public function getChanged()
-    {
-        return $this->changed;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    private $mainContact;
-
-    /**
-     * Set changer
-     *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
-     * @return Account
-     */
-    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
-    {
-        $this->changer = $changer;
-
-        return $this;
-    }
-
-    /**
-     * Get changer
-     *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
-     */
-    public function getChanger()
-    {
-        return $this->changer;
-    }
-
-    /**
-     * Set creator
-     *
-     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
-     * @return Account
-     */
-    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
-    {
-        $this->creator = $creator;
-
-        return $this;
-    }
-
-    /**
-     * Get creator
-     *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
-     */
-    public function getCreator()
-    {
-        return $this->creator;
-    }
-
-    /**
      * Set parent
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $parent
+     * @param AccountInterface $parent
      * @return Account
      */
-    public function setParent(\Sulu\Bundle\ContactBundle\Entity\Account $parent = null)
+    public function setParent(AccountInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -439,7 +222,7 @@ class Account extends ApiEntity implements AuditableInterface
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account
+     * @return AccountInterface
      */
     public function getParent()
     {
@@ -581,10 +364,10 @@ class Account extends ApiEntity implements AuditableInterface
     /**
      * Add children
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @param AccountInterface $children
      * @return Account
      */
-    public function addChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    public function addChildren(AccountInterface $children)
     {
         $this->children[] = $children;
 
@@ -594,9 +377,9 @@ class Account extends ApiEntity implements AuditableInterface
     /**
      * Remove children
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @param AccountInterface $children
      */
-    public function removeChildren(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    public function removeChildren(AccountInterface $children)
     {
         $this->children->removeElement($children);
     }
@@ -668,75 +451,6 @@ class Account extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set corporation
-     *
-     * @param string $corporation
-     * @return Account
-     */
-    public function setCorporation($corporation)
-    {
-        $this->corporation = $corporation;
-
-        return $this;
-    }
-
-    /**
-     * Get corporation
-     *
-     * @return string
-     */
-    public function getCorporation()
-    {
-        return $this->corporation;
-    }
-
-    /**
-     * Set disabled
-     *
-     * @param integer $disabled
-     * @return Account
-     */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = $disabled;
-
-        return $this;
-    }
-
-    /**
-     * Get disabled
-     *
-     * @return integer
-     */
-    public function getDisabled()
-    {
-        return $this->disabled;
-    }
-
-    /**
-     * Set uid
-     *
-     * @param string $uid
-     * @return Account
-     */
-    public function setUid($uid)
-    {
-        $this->uid = $uid;
-
-        return $this;
-    }
-
-    /**
-     * Get uid
-     *
-     * @return string
-     */
-    public function getUid()
-    {
-        return $this->uid;
-    }
-
-    /**
      * Add faxes
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes
@@ -757,29 +471,6 @@ class Account extends ApiEntity implements AuditableInterface
     public function removeFaxe(\Sulu\Bundle\ContactBundle\Entity\Fax $faxes)
     {
         $this->faxes->removeElement($faxes);
-    }
-
-    /**
-     * Set registerNumber
-     *
-     * @param string $registerNumber
-     * @return Account
-     */
-    public function setRegisterNumber($registerNumber)
-    {
-        $this->registerNumber = $registerNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get registerNumber
-     *
-     * @return string
-     */
-    public function getRegisterNumber()
-    {
-        return $this->registerNumber;
     }
 
     /**
@@ -898,121 +589,6 @@ class Account extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set placeOfJurisdiction
-     *
-     * @param string $placeOfJurisdiction
-     * @return Account
-     */
-    public function setPlaceOfJurisdiction($placeOfJurisdiction)
-    {
-        $this->placeOfJurisdiction = $placeOfJurisdiction;
-
-        return $this;
-    }
-
-    /**
-     * Get placeOfJurisdiction
-     *
-     * @return string
-     */
-    public function getPlaceOfJurisdiction()
-    {
-        return $this->placeOfJurisdiction;
-    }
-
-    /**
-     * Set termsOfPayment
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment
-     * @return Account
-     */
-    public function setTermsOfPayment(\Sulu\Bundle\ContactBundle\Entity\TermsOfPayment $termsOfPayment = null)
-    {
-        $this->termsOfPayment = $termsOfPayment;
-
-        return $this;
-    }
-
-    /**
-     * Get termsOfPayment
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment
-     */
-    public function getTermsOfPayment()
-    {
-        return $this->termsOfPayment;
-    }
-
-    /**
-     * Set termsOfDelivery
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery
-     * @return Account
-     */
-    public function setTermsOfDelivery(\Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery $termsOfDelivery = null)
-    {
-        $this->termsOfDelivery = $termsOfDelivery;
-
-        return $this;
-    }
-
-    /**
-     * Get termsOfDelivery
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
-     */
-    public function getTermsOfDelivery()
-    {
-        return $this->termsOfDelivery;
-    }
-
-    /**
-     * Set number
-     *
-     * @param string $number
-     * @return Account
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
-
-        return $this;
-    }
-
-    /**
-     * Get number
-     *
-     * @return string
-     */
-    public function getNumber()
-    {
-        return $this->number;
-    }
-
-    /**
-     * Set externalId
-     *
-     * @param string $externalId
-     * @return Account
-     */
-    public function setExternalId($externalId)
-    {
-        $this->externalId = $externalId;
-
-        return $this;
-    }
-
-    /**
-     * Get externalId
-     *
-     * @return string
-     */
-    public function getExternalId()
-    {
-        return $this->externalId;
-    }
-
-    /**
      * Set responsiblePerson
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Contact $responsiblePerson
@@ -1024,19 +600,6 @@ class Account extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Set mainContact
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $mainContact
-     * @return Account
-     */
-    public function setMainContact(\Sulu\Bundle\ContactBundle\Entity\Contact $mainContact = null)
-    {
-        $this->mainContact = $mainContact;
-
-        return $this;
-    }
-
-    /**
      * Get responsiblePerson
      *
      * @return \Sulu\Bundle\ContactBundle\Entity\Contact
@@ -1044,108 +607,6 @@ class Account extends ApiEntity implements AuditableInterface
     public function getResponsiblePerson()
     {
         return $this->responsiblePerson;
-    }
-
-    /**
-     * Get mainContact
-     *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
-     */
-    public function getMainContact()
-    {
-        return $this->mainContact;
-    }
-
-    /**
-     * Set mainEmail
-     *
-     * @param string $mainEmail
-     * @return Account
-     */
-    public function setMainEmail($mainEmail)
-    {
-        $this->mainEmail = $mainEmail;
-
-        return $this;
-    }
-
-    /**
-     * Get mainEmail
-     *
-     * @return string
-     */
-    public function getMainEmail()
-    {
-        return $this->mainEmail;
-    }
-
-    /**
-     * Set mainPhone
-     *
-     * @param string $mainPhone
-     * @return Account
-     */
-    public function setMainPhone($mainPhone)
-    {
-        $this->mainPhone = $mainPhone;
-
-        return $this;
-    }
-
-    /**
-     * Get mainPhone
-     *
-     * @return string
-     */
-    public function getMainPhone()
-    {
-        return $this->mainPhone;
-    }
-
-    /**
-     * Set mainFax
-     *
-     * @param string $mainFax
-     * @return Account
-     */
-    public function setMainFax($mainFax)
-    {
-        $this->mainFax = $mainFax;
-
-        return $this;
-    }
-
-    /**
-     * Get mainFax
-     *
-     * @return string
-     */
-    public function getMainFax()
-    {
-        return $this->mainFax;
-    }
-
-    /**
-     * Set mainUrl
-     *
-     * @param string $mainUrl
-     * @return Account
-     */
-    public function setMainUrl($mainUrl)
-    {
-        $this->mainUrl = $mainUrl;
-
-        return $this;
-    }
-
-    /**
-     * Get mainUrl
-     *
-     * @return string
-     */
-    public function getMainUrl()
-    {
-        return $this->mainUrl;
     }
 
     /**
@@ -1301,10 +762,10 @@ class Account extends ApiEntity implements AuditableInterface
     /**
      * Add children
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @param AccountInterface $children
      * @return Account
      */
-    public function addChild(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    public function addChild(AccountInterface $children)
     {
         $this->children[] = $children;
 
@@ -1314,9 +775,9 @@ class Account extends ApiEntity implements AuditableInterface
     /**
      * Remove children
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $children
+     * @param AccountInterface $children
      */
-    public function removeChild(\Sulu\Bundle\ContactBundle\Entity\Account $children)
+    public function removeChild(AccountInterface $children)
     {
         $this->children->removeElement($children);
     }

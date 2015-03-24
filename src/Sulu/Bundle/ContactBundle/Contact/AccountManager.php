@@ -13,9 +13,8 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
-use Sulu\Bundle\ContactBundle\Api\Contact as ContactEntity;
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -25,14 +24,13 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
  */
 class AccountManager extends AbstractContactManager
 {
-    protected $accountEntity = 'SuluContactBundle:Account';
     protected $contactEntity = 'SuluContactBundle:Contact';
     protected $addressEntity = 'SuluContactBundle:Address';
     protected $tagManager;
 
-    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager)
+    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager, $accountEntityName)
     {
-        parent::__construct($em);
+        parent::__construct($em, $accountEntityName);
         $this->tagManager = $tagManager;
     }
 
@@ -67,7 +65,7 @@ class AccountManager extends AbstractContactManager
     /**
      * removes the address relation from a contact and also deletes the address if it has no more relations
      *
-     * @param AccountEntity $account
+     * @param AccountInterface $account
      * @param AccountAddressEntity $accountAddress
      * @return mixed|void
      * @throws \Exception
@@ -88,8 +86,8 @@ class AccountManager extends AbstractContactManager
         $isMain = $accountAddress->getMain();
 
         // remove relation
-        $address->removeAccountAddresse($accountAddress);
-        $account->removeAccountAddresse($accountAddress);
+        $address->removeAccountAddress($accountAddress);
+        $account->removeAccountAddress($accountAddress);
 
         // if was main, set a new one
         if ($isMain) {
