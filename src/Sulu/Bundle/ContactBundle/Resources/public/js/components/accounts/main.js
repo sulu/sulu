@@ -354,24 +354,6 @@ define([
             });
         },
 
-        /**
-         * loads system members
-         */
-        getSystemMembers: function() {
-            this.sandbox.util.load('api/contacts?bySystem=true')
-                .then(function(response) {
-                    this.responsiblePersons = response._embedded.contacts;
-                    this.sandbox.util.foreach(this.responsiblePersons, function(el) {
-                        var contact = Contact.findOrCreate(el);
-                        el = contact.toJSON();
-                    }.bind(this));
-                    this.dfdSystemContacts.resolve();
-                }.bind(this))
-                .fail(function(textStatus, error) {
-                    this.sandbox.logger.error(textStatus, error);
-                }.bind(this));
-        },
-
         // sets main contact
         setMainContact: function(id) {
             // set mainContact

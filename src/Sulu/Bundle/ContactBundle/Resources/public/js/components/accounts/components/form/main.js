@@ -184,37 +184,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             }
         },
 
-        initResponsibleContactSelect: function(formData) {
-            var preselectedResponsibleContactId = !!formData.responsiblePerson ? formData.responsiblePerson.id : null;
-            this.responsiblePersons = null;
-
-            this.sandbox.util.load(this.contactBySystemURL)
-                .then(function(response) {
-
-                    this.responsiblePersons = response._embedded.contacts;
-
-                    this.sandbox.start([
-                        {
-                            name: 'select@husky',
-                            options: {
-                                el: '#responsiblePerson',
-                                instanceName: 'responsible-person',
-                                multipleSelect: false,
-                                defaultLabel: this.sandbox.translate('dropdown.please-choose'),
-                                valueName: 'fullName',
-                                repeatSelect: false,
-                                preSelectedElements: [preselectedResponsibleContactId],
-                                data: this.responsiblePersons
-                            }
-                        }
-                    ]);
-
-                }.bind(this))
-                .fail(function(textStatus, error) {
-                    this.sandbox.logger.error(textStatus, error);
-                }.bind(this));
-        },
-
         /**
          * is getting called when template is initialized
          * @param defaultTypes
@@ -314,7 +283,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 var formObject = this.sandbox.form.create(this.form);
                 formObject.initialized.then(function() {
                     this.setFormData(data);
-                    this.initResponsibleContactSelect(data);
                 }.bind(this));
             }.bind(this));
 
@@ -485,13 +453,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 this.sandbox.on('sulu.contact-form.changed', function() {
                     this.setHeaderBar(false);
                 }.bind(this));
-            }.bind(this));
-
-            this.sandbox.on('husky.select.responsible-person.selected.item', function(id) {
-                if (id > 0) {
-                    this.selectedResponsiblePerson = id;
-                    this.setHeaderBar(false);
-                }
             }.bind(this));
         },
 
