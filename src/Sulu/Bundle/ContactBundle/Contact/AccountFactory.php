@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
-use Sulu\Bundle\ContactBundle\Entity\BaseAccount;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
  * factory to encapsulate account creation
@@ -30,7 +30,7 @@ class AccountFactory
     /**
      * {@inheritdoc}
      */
-    public function createApiEntity(BaseAccount $account, $locale)
+    public function createApiEntity(AccountInterface $account, $locale)
     {
         return new AccountApi($account, $locale);
     }

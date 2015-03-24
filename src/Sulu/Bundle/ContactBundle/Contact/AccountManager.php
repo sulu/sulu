@@ -28,10 +28,20 @@ class AccountManager extends AbstractContactManager
     protected $addressEntity = 'SuluContactBundle:Address';
     protected $tagManager;
 
-    public function __construct(ObjectManager $em, TagmanagerInterface $tagManager, $accountEntityName)
-    {
+    /**
+     * @var AccountFactory
+     */
+    private $accountFactory;
+
+    public function __construct(
+        ObjectManager $em,
+        TagmanagerInterface $tagManager,
+        AccountFactory $accountFactory,
+        $accountEntityName
+    ) {
         parent::__construct($em, $accountEntityName);
         $this->tagManager = $tagManager;
+        $this->accountFactory = $accountFactory;
     }
 
     /**
@@ -127,7 +137,7 @@ class AccountManager extends AbstractContactManager
             throw new EntityNotFoundException($this->accountEntity, $id);
         }
 
-        return new Account($account, $locale, $this->tagManager);
+        return $this->accountFactory->createApiEntity($account, $locale);
     }
 
     /**
@@ -147,9 +157,8 @@ class AccountManager extends AbstractContactManager
         if (!$account) {
             throw new EntityNotFoundException($this->accountEntity, $id);
         }
-        $acc = new Account($account, $locale, $this->tagManager);
 
-        return $acc;
+        return $this->accountFactory->createApiEntity($account, $locale);
     }
 
     /**
@@ -161,7 +170,12 @@ class AccountManager extends AbstractContactManager
      */
     public function findContactsByAccountId($id, $locale, $onlyFetchMainAccounts = false)
     {
-        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId($id, null, false, $onlyFetchMainAccounts);
+        $contactsEntities = $this->em->getRepository($this->contactEntity)->findByAccountId(
+            $id,
+            null,
+            false,
+            $onlyFetchMainAccounts
+        );
         $contacts = [];
         if ($contactsEntities) {
             foreach ($contactsEntities as $contact) {
@@ -190,11 +204,12 @@ class AccountManager extends AbstractContactManager
         $accounts = [];
         if ($accountEntities) {
             foreach ($accountEntities as $account) {
-                $accounts[] = new Account($account, $locale, $this->tagManager);
+                $accounts[] = $this->accountFactory->createApiEntity($account, $locale);
             }
         } else {
             return null;
         }
+
         return $accounts;
     }
 
@@ -207,7 +222,7 @@ class AccountManager extends AbstractContactManager
     public function getAccount($account, $locale)
     {
         if ($account) {
-            return new Account($account, $locale, $this->tagManager);
+            return $this->accountFactory->createApiEntity($account, $locale);
         } else {
             return null;
         }

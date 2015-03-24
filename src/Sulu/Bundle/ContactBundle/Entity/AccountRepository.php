@@ -14,12 +14,13 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Massive\Bundle\ContactBundle\Entity\AccountRepository as SuluAccountRepository;
 
 /**
  * Repository for the Codes, implementing some additional functions
  * for querying objects
  */
-class AccountRepository extends NestedTreeRepository
+class AccountRepository extends SuluAccountRepository
 {
     /**
      * Searches for accounts with a specific contact
@@ -29,7 +30,12 @@ class AccountRepository extends NestedTreeRepository
     public function findOneByContactId($contactId)
     {
         $qb = $this->createQueryBuilder('a')
-            ->join('a.accountContacts', 'accountContacts', 'WITH', 'accountContacts.idContacts = :contactId AND accountContacts.main = TRUE')
+            ->join(
+                'a.accountContacts',
+                'accountContacts',
+                'WITH',
+                'accountContacts.idContacts = :contactId AND accountContacts.main = TRUE'
+            )
             ->setParameter('contactId', $contactId);
         $query = $qb->getQuery();
 
@@ -82,7 +88,6 @@ class AccountRepository extends NestedTreeRepository
                 ->leftJoin('account.tags', 'tags')
                 ->leftJoin('account.termsOfDelivery', 'termsOfDelivery')
                 ->leftJoin('account.termsOfPayment', 'termsOfPayment')
-                ->leftJoin('account.responsiblePerson', 'responsiblePerson')
                 ->leftJoin('account.mainContact', 'mainContact')
                 ->leftJoin('account.medias', 'medias')
                 ->addSelect('mainContact')
@@ -106,7 +111,6 @@ class AccountRepository extends NestedTreeRepository
                 ->addSelect('notes')
                 ->addSelect('termsOfDelivery')
                 ->addSelect('termsOfPayment')
-                ->addSelect('responsiblePerson')
                 ->addSelect('medias')
                 ->where('account.id = :accountId');
 
@@ -147,6 +151,7 @@ class AccountRepository extends NestedTreeRepository
             }
 
             $query = $qb->getQuery();
+
             return $query->getResult();
         } catch (NoResultException $ex) {
             return null;
@@ -209,8 +214,8 @@ class AccountRepository extends NestedTreeRepository
                 ->leftJoin('emails.accounts', 'emailsAccounts')
                 ->leftJoin('account.notes', 'notes')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
-                ->leftJoin('account.accountContacts','accountContacts')
-                ->leftJoin('accountContacts.contact','contacts')
+                ->leftJoin('account.accountContacts', 'accountContacts')
+                ->leftJoin('accountContacts.contact', 'contacts')
                 ->leftJoin('account.mainContact', 'mainContact')
                 ->leftJoin('accountContacts.position', 'position')
                 ->addSelect('position')
@@ -265,8 +270,8 @@ class AccountRepository extends NestedTreeRepository
         try {
             $qb = $this->createQueryBuilder('account')
                 ->leftJoin('account.children', 'children')
-                ->leftJoin('account.accountContacts','accountContacts')
-                ->leftJoin('accountContacts.contact','contacts')
+                ->leftJoin('account.accountContacts', 'accountContacts')
+                ->leftJoin('accountContacts.contact', 'contacts')
                 ->select('count(DISTINCT children.id) AS numChildren')
                 ->addSelect('count(DISTINCT contacts.id) AS numContacts')
                 ->where('account.id = :accountId');
@@ -291,8 +296,8 @@ class AccountRepository extends NestedTreeRepository
         try {
             $qb = $this->createQueryBuilder('account')
                 ->leftJoin('account.children', 'children')
-                ->leftJoin('account.accountContacts','accountContacts')
-                ->leftJoin('accountContacts.contact','contacts')
+                ->leftJoin('account.accountContacts', 'accountContacts')
+                ->leftJoin('accountContacts.contact', 'contacts')
                 ->select('account')
                 ->addSelect('children')
                 ->addSelect('accountContacts')

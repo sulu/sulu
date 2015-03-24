@@ -825,19 +825,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set responsiblePerson
-     *
-     * @param ContactEntity $responsiblePerson
-     * @return Account
-     */
-    public function setResponsiblePerson(ContactEntity $responsiblePerson = null)
-    {
-        $this->entity->setResponsiblePerson($responsiblePerson);
-
-        return $this;
-    }
-
-    /**
      * Set mainContact
      *
      * @param ContactEntity $mainContact
@@ -848,21 +835,6 @@ class Account extends ApiWrapper
         $this->entity->setMainContact($mainContact);
 
         return $this;
-    }
-
-    /**
-     * Get responsiblePerson
-     *
-     * @return Account
-     * @VirtualProperty
-     * @SerializedName("responsiblePerson")
-     * @Groups({"fullAccount"})
-     */
-    public function getResponsiblePerson()
-    {
-        if ($this->entity->getResponsiblePerson()) {
-            return new Contact($this->entity->getResponsiblePerson(), $this->locale);
-        }
     }
 
     /**

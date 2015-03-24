@@ -48,7 +48,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             layout: function() {
                 return {
                     content: {
-                        width: (WidgetGroups.exists('contact-detail') ? 'max' : 'fixed')
+                        width: (WidgetGroups.exists('contact-detail') && !!this.options.data && !!this.options.data.id ? 'max' : 'fixed')
                     },
                     sidebar: {
                         width: 'fixed',

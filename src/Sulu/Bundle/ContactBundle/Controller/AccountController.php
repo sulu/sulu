@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\Annotations\Post;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
@@ -466,40 +466,7 @@ class AccountController extends AbstractContactController
 
             $em = $this->getDoctrine()->getManager();
 
-            $account = $this->get('sulu_contact.account_factory')->create();
-
-            $account->setName($request->get('name'));
-
-            $account->setCorporation($request->get('corporation'));
-
-            $this->setResponsiblePerson($em, $account, $request->get('responsiblePerson'));
-
-            if (!is_null($request->get('uid'))) {
-                $account->setUid($request->get('uid'));
-            }
-
-            $account->setType($request->get('type', 0));
-
-            $disabled = $request->get('disabled');
-            if (is_null($disabled)) {
-                $disabled = false;
-            }
-            $account->setDisabled($disabled);
-
-            // set parent
-            $this->setParent($request->get('parent'), $account);
-
-            // process categories
-            $this->processCategories($account, $request->get('categories', array()));
-
-            // set creator / changer
-            $account->setCreator($this->getUser());
-            $account->setChanger($this->getUser());
-
-            // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
-            $this->addNewContactRelations($account, $request);
-
-            $this->processTerms($request, $account);
+            $account = $this->doPost($request);
 
             $em->persist($account);
 
@@ -523,18 +490,48 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
-    private function setResponsiblePerson(ObjectManager $em, AccountInterface $account, $responsiblePerson)
+    /**
+     * maps data from request to a new account
+     * @param Request $request
+     * @return AccountInterface
+     * @throws EntityNotFoundException
+     */
+    protected function doPost(Request $request)
     {
-        if (!!$responsiblePerson) {
-            $id = $responsiblePerson['id'];
-            /* @var ContactEntity $contact */
-            $contact = $em->getRepository(self::$contactEntityName)->find($id);
+        $account = $this->get('sulu_contact.account_factory')->create();
 
-            if (!$contact) {
-                throw new EntityNotFoundException(self::$contactEntityName, $id);
-            }
-            $account->setResponsiblePerson($contact);
+        $account->setName($request->get('name'));
+
+        $account->setCorporation($request->get('corporation'));
+
+        if (!is_null($request->get('uid'))) {
+            $account->setUid($request->get('uid'));
         }
+
+        $account->setType($request->get('type', 0));
+
+        $disabled = $request->get('disabled');
+        if (is_null($disabled)) {
+            $disabled = false;
+        }
+        $account->setDisabled($disabled);
+
+        // set parent
+        $this->setParent($request->get('parent'), $account);
+
+        // process categories
+        $this->processCategories($account, $request->get('categories', array()));
+
+        // set creator / changer
+        $account->setCreator($this->getUser());
+        $account->setChanger($this->getUser());
+
+        // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
+        $this->addNewContactRelations($account, $request);
+
+        $this->processTerms($request, $account);
+
+        return $account;
     }
 
     /**
@@ -559,44 +556,7 @@ class AccountController extends AbstractContactController
 
                 $em = $this->getDoctrine()->getManager();
 
-                // set name
-                $account->setName($request->get('name'));
-                $account->setCorporation($request->get('corporation'));
-
-                // set disabled
-                $disabled = $request->get('disabled');
-                if (!is_null($disabled)) {
-                    $account->setDisabled($disabled);
-                }
-
-                $this->setResponsiblePerson($em, $account, $request->get('responsiblePerson'));
-
-                if (!is_null($request->get('uid'))) {
-                    $account->setUid($request->get('uid'));
-                }
-
-                // set parent
-                $this->setParent($request->get('parent'), $account);
-
-                // set changed
-                $user = $this->getUser();
-                $account->setChanger($user);
-
-                // process details
-                if (!($this->processUrls($account, $request->get('urls', array()))
-                    && $this->processEmails($account, $request->get('emails', array()))
-                    && $this->processFaxes($account, $request->get('faxes', array()))
-                    && $this->processPhones($account, $request->get('phones', array()))
-                    && $this->processAddresses($account, $request->get('addresses', array()))
-                    && $this->processTags($account, $request->get('tags', array()))
-                    && $this->processNotes($account, $request->get('notes', array()))
-                    && $this->processCategories($account, $request->get('categories', array()))
-                    && $this->processBankAccounts($account, $request->get('bankAccounts', array())))
-                ) {
-                    throw new RestException('Updating dependencies is not possible', 0);
-                }
-
-                $this->processTerms($request, $account);
+                $this->doPut($account, $request);
 
                 $em->flush();
 
@@ -617,6 +577,46 @@ class AccountController extends AbstractContactController
         }
 
         return $this->handleView($view);
+    }
+
+    protected function doPut(AccountInterface $account, Request $request)
+    {
+        // set name
+        $account->setName($request->get('name'));
+        $account->setCorporation($request->get('corporation'));
+
+        // set disabled
+        $disabled = $request->get('disabled');
+        if (!is_null($disabled)) {
+            $account->setDisabled($disabled);
+        }
+
+        if (!is_null($request->get('uid'))) {
+            $account->setUid($request->get('uid'));
+        }
+
+        // set parent
+        $this->setParent($request->get('parent'), $account);
+
+        // set changed
+        $user = $this->getUser();
+        $account->setChanger($user);
+
+        // process details
+        if (!($this->processUrls($account, $request->get('urls', array()))
+            && $this->processEmails($account, $request->get('emails', array()))
+            && $this->processFaxes($account, $request->get('faxes', array()))
+            && $this->processPhones($account, $request->get('phones', array()))
+            && $this->processAddresses($account, $request->get('addresses', array()))
+            && $this->processTags($account, $request->get('tags', array()))
+            && $this->processNotes($account, $request->get('notes', array()))
+            && $this->processCategories($account, $request->get('categories', array()))
+            && $this->processBankAccounts($account, $request->get('bankAccounts', array())))
+        ) {
+            throw new RestException('Updating dependencies is not possible', 0);
+        }
+
+        $this->processTerms($request, $account);
     }
 
     /**

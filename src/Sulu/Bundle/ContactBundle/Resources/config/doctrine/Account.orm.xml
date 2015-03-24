@@ -33,12 +33,6 @@
             <gedmo:tree-parent/>
         </many-to-one>
 
-        <many-to-one field="responsiblePerson" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact">
-            <join-columns>
-                <join-column name="idResponsiblePerson" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-
         <many-to-many field="categories" target-entity="Sulu\Bundle\CategoryBundle\Entity\Category">
             <join-table name="co_account_categories">
                 <join-columns>
