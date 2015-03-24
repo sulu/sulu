@@ -27,13 +27,18 @@ class NavigationController extends Controller
      * Returns content navigation for content form
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function contentAction()
+    public function contentAction(Request $request)
     {
         if ($this->has(self::SERVICE_NAME)) {
             /** @var ContentNavigation $contentNavigation */
             $contentNavigation = $this->get(self::SERVICE_NAME);
 
-            return new JsonResponse($contentNavigation->toArray('content'));
+            return new JsonResponse(
+                $contentNavigation->toArray(
+                    'content',
+                    array('securityContext' => 'sulu.webspaces.' . $request->get('webspace'))
+                )
+            );
         } else {
             // return empty navigation
             return new JsonResponse(array());

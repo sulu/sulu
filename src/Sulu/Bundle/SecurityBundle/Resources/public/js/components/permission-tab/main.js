@@ -17,7 +17,8 @@ define([], function() {
                     options: {
                         el: $form,
                         id: this.options.id,
-                        type: this.options.type
+                        type: this.options.type,
+                        securityContext: this.options.securityContext
                     }
                 };
 

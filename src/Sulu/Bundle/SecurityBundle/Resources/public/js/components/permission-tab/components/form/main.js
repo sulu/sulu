@@ -69,7 +69,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                         }.bind(this));
 
                         // set the data from the permissions
-                        if (permissionResponseData.hasOwnProperty(role.identifier)) {
+                        if (permissionResponseData.permissions.hasOwnProperty(role.identifier)) {
                             // if object permissions already exists set from role data
                             this.sandbox.util.each(
                                 permissionResponseData.permissions[role.identifier],
@@ -80,7 +80,16 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
                             );
                         } else {
                             // if no object permission exists yet set the context permissions as defaults
-                            matrixRoleData.push(false, false, false, false);
+                            var contextPermissions = findContextPermissions.call(
+                                this,
+                                this.options.securityContext,
+                                role
+                            );
+
+                            this.sandbox.util.each(contextPermissions, function (index, value) {
+                                data[index] = value;
+                                matrixRoleData.push(value);
+                            });
                         }
 
                         permissionData.permissions[role.identifier] = data;
@@ -128,6 +137,20 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
         listenForChange = function() {
             this.sandbox.on('husky.matrix.changed', setHeaderBar.bind(this, false));
+        },
+
+        findContextPermissions = function(context, role) {
+            var permissions = [];
+
+            this.sandbox.util.each(role.permissions, function(index, permission) {
+                if (permission.context === context) {
+                    permissions = permission.permissions;
+
+                    return false;
+                }
+            });
+
+            return permissions;
         };
 
     return {
