@@ -14,129 +14,155 @@ use Exception;
 
 /**
  * This Exception is thrown when a Uploaded File is not valid
- * @package Sulu\Bundle\MediaBundle\Media\Exception
  */
 class MediaException extends Exception
 {
     /**
+     * Used when $_FILES['error'] > 0
+     *
      * @var int
-     * @description this exception code is thrown when $_FILES['error'] > 0
      */
     const EXCEPTION_CODE_UPLOAD_ERROR = 5001;
 
     /**
+     * The uploaded file was not found
+     *
      * @var int
-     * @description this exception code is thrown when the uploaded file was not found
      */
     const EXCEPTION_CODE_UPLOADED_FILE_NOT_FOUND = 5002;
 
     /**
+     * The file is bigger as the max file size in the config
+     *
      * @var int
-     * @description this exception code is thrown when the file is bigger as the max file size in the config
      */
     const EXCEPTION_CODE_MAX_FILE_SIZE = 5003;
 
     /**
+     * The file mime type is not supported
+     *
      * @var int
-     * @description this exception code is thrown when the file type is not supported
      */
     const EXCEPTION_CODE_BLOCKED_FILE_TYPE = 5004;
 
     /**
+     * The collection was not found
+     *
      * @var int
-     * @description this exception code is thrown when the file type is not supported
      */
     const EXCEPTION_CODE_COLLECTION_NOT_FOUND = 5005;
 
     /**
+     * The file version was not found.
+     *
      * @var int
-     * @description this exception code is thrown when the file version to update was not found
      */
     const EXCEPTION_CODE_FILE_VERSION_NOT_FOUND = 5006;
 
     /**
+     * The file has not the correct media type as the followed file versions
+     *
      * @var int
-     * @description this exception code is thrown when the file has not the correct media type as the followed file versions
      */
     const EXCEPTION_CODE_INVALID_MEDIA_TYPE = 5007;
 
     /**
+     * Image id was not found in request
+     *
      * @var int
-     * @description image id was not found in request
      */
     const EXCEPTION_CODE_IMAGE_PROXY_MEDIA_ID_NOT_FOUND = 5008;
 
     /**
+     * Media not loaded by proxy id
+     *
      * @var int
-     * @description media not loaded by proxy id
      */
     const EXCEPTION_CODE_IMAGE_PROXY_MEDIA_NOT_FOUND = 5009;
 
     /**
+     * Original image not found
+     *
      * @var int
-     * @description original image not found
      */
     const EXCEPTION_CODE_IMAGE_PROXY_ORIGINAL_NOT_FOUND = 5010;
 
     /**
+     * The image url was not found
+     *
      * @var int
-     * @description the image url was not found
      */
     const EXCEPTION_CODE_IMAGE_PROXY_URL_NOT_FOUND = 5011;
 
     /**
+     * The image url was not valid
+     *
      * @var int
-     * @description the image url was not valid
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_URL = 5012;
 
     /**
+     * the image format was not found
+     *
      * @var int
-     * @description the image format was not found
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_IMAGE_FORMAT = 5013;
 
     /**
+     * The configured format options are invalid
+     *
      * @var int
-     * @description the configured format options are invalid
      */
     const EXCEPTION_CODE_IMAGE_PROXY_INVALID_FORMAT_OPTIONS = 5014;
 
     /**
+     * The media was not found
+     *
      * @var int
-     * @description the media was not found
      */
     const EXCEPTION_CODE_MEDIA_NOT_FOUND = 5015;
 
     /**
+     * The collection type was not found
+     *
      * @var int
-     * @description the collection type was not found
      */
     const EXCEPTION_CODE_COLLECTION_TYPE_NOT_FOUND = 5016;
 
     /**
+     * The media type was not found
+     *
      * @var int
-     * @description the media type was not found
      */
     const EXCEPTION_CODE_MEDIA_TYPE_NOT_FOUND = 5017;
 
     /**
+     * No previews are generated for this extension
+     *
      * @var int
-     * @description no previews are generated for this extension
      */
     const EXCEPTION_INVALID_MIMETYPE_FOR_PREVIEW = 5018;
 
     /**
+     * Ghostscript was not found at location
+     *
      * @var int
-     * @description ghostscript was not found at location
      */
     const EXCEPTION_CODE_GHOST_SCRIPT_NOT_FOUND = 5019;
 
     /**
+     * A file with this name exists
+     *
      * @var int
-     * @description a file with this name exists
      */
     const EXCEPTION_FILENAME_ALREADY_EXISTS = 5020;
+
+    /**
+     * File is not found in media object
+     *
+     * @var int
+     */
+    const EXCEPTION_CODE_FILE_NOT_FOUND = 5021;
 
     public function toArray()
     {
