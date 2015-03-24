@@ -7,18 +7,19 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config'], function(Config) {
+define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
 
     'use strict';
 
-    var permissions = Config.get('sulusecurity.permissions'),
+    var permissionUrl = '/admin/api/permissions',
+        permissions = Config.get('sulusecurity.permissions'),
         permissionTitles = Config.get('sulusecurity.permission_titles'),
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         permissionData = {
             id: null,
             type: null,
-            permissions: []
+            permissions: {}
         },
 
         bindCustomEvents = function() {
@@ -39,72 +40,82 @@ define(['config'], function(Config) {
 
             this.sandbox.dom.append(matrixContainerSelector, $matrix);
 
-            this.sandbox.util.ajax({
-                url: '/admin/api/roles'
-            }).done(function(data) {
-                var verticalCaptions = data._embedded.roles.map(function(value) {
-                        return value.name;
-                    }),
+            var roles = new Roles();
+            this.sandbox.data.when(
+                roles.fetch(),
+                this.sandbox.util.ajax({
+                    url: [permissionUrl, '?type=', permissionData.type, '&id=', permissionData.id].join('')
+                })
+            ).done(
+                function(roleResponse, permissionResponse) {
+                    roles = roles.toJSON();
 
-                    verticalValues = data._embedded.roles.map(function(value) {
-                        var data = {
-                            role: {
-                                id: value.id
-                            },
-                            permissions: {}
-                        };
+                    var permissionResponseData = permissionResponse[0],
+                        matrixData = [],
+                        verticalCaptions = [],
+                        verticalValues = [];
 
+                    // set the data for all available roles
+                    this.sandbox.util.each(roles, function(index, role) {
+                        var data = {}, matrixRoleData = [];
+
+                        // set the captions and values for the matrix
+                        verticalCaptions.push(role.name);
+                        verticalValues.push(role.identifier);
+
+                        // initialize the data
                         this.sandbox.util.each(permissions, function(index, permission) {
-                            data.permissions[permission.value] = false;
-                        });
+                            data[permission.value] = false;
+                        }.bind(this));
 
-                        permissionData.permissions.push(data);
-
-                        return {
-                            id: value.id
+                        // set the data from the permissions
+                        if (permissionResponseData.hasOwnProperty(role.identifier)) {
+                            // if object permissions already exists set from role data
+                            this.sandbox.util.each(
+                                permissionResponseData.permissions[role.identifier],
+                                function(index, value) {
+                                    data[index] = value;
+                                    matrixRoleData.push(value);
+                                }
+                            );
+                        } else {
+                            // if no object permission exists yet set the context permissions as defaults
+                            matrixRoleData.push(false, false, false, false);
                         }
+
+                        permissionData.permissions[role.identifier] = data;
+                        matrixData[index] = matrixRoleData;
                     }.bind(this));
 
-                this.sandbox.start([
-                    {
-                        name: 'matrix@husky',
-                        options: {
-                            el: matrixSelector,
-                            captions: {
-                                type: this.sandbox.translate('security.roles'),
-                                horizontal: this.sandbox.translate('security.roles.permissions'),
-                                all: this.sandbox.translate('security.roles.all'),
-                                none: this.sandbox.translate('security.roles.none'),
-                                vertical: verticalCaptions
-                            },
-                            values: {
-                                vertical: verticalValues,
-                                horizontal: permissions,
-                                titles: this.sandbox.translateArray(permissionTitles)
-                            },
-                            data: [
-                                [true, true, true, true]
-                            ]
+                    this.sandbox.start([
+                        {
+                            name: 'matrix@husky',
+                            options: {
+                                el: matrixSelector,
+                                captions: {
+                                    type: this.sandbox.translate('security.roles'),
+                                    horizontal: this.sandbox.translate('security.roles.permissions'),
+                                    all: this.sandbox.translate('security.roles.all'),
+                                    none: this.sandbox.translate('security.roles.none'),
+                                    vertical: verticalCaptions
+                                },
+                                values: {
+                                    vertical: verticalValues,
+                                    horizontal: permissions,
+                                    titles: this.sandbox.translateArray(permissionTitles)
+                                },
+                                data: matrixData
+                            }
                         }
-                    }
-                ]);
+                    ]);
 
-                this.sandbox.dom.removeClass($matrix, 'loading');
-            }.bind(this));
+                    this.sandbox.dom.removeClass($matrix, 'loading');
+                }.bind(this)
+            );
         },
 
         changePermission = function(data) {
-            setPermission.call(this, data.section, data.value, data.activated);
-        },
-
-        setPermission = function(section, value, activated) {
-            this.sandbox.util.each(permissionData.permissions, function(index, permission) {
-                if (permission.role.id == section.id) {
-                    permission.permissions[value] = activated;
-
-                    return false;
-                }
-            });
+            permissionData.permissions[data.section][data.value] = data.activated;
         },
 
         save = function() {

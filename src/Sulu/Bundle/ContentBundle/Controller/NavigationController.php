@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -14,6 +14,9 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Component\Content\Structure;
 
+/**
+ * Adds a permission tab to the form for editing pages
+ */
 class SuluSecurityNodesContentNavigation implements ContentNavigationInterface
 {
     private $navigation = array();
@@ -24,12 +27,20 @@ class SuluSecurityNodesContentNavigation implements ContentNavigationInterface
         $permissions->setAction('permissions');
         $permissions->setDisplay(array('edit'));
         $permissions->setComponent('permission-tab@sulusecurity');
-        $permissions->setComponentOptions(array('display' => 'form', 'type' => Structure::class));
+        $permissions->setComponentOptions(
+            array(
+                'display' => 'form',
+                'type' => Structure::class
+            )
+        );
         $permissions->setGroups(array('content'));
 
         $this->navigation[] = $permissions;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getNavigationItems()
     {
         return $this->navigation;

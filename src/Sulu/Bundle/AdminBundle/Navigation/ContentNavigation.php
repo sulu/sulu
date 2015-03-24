@@ -12,7 +12,6 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 
 /**
  * This class contains the content navigation represented as tabs in the forms from the admin
- * @package Sulu\Bundle\AdminBundle\Admin
  */
 abstract class ContentNavigation
 {

@@ -74,5 +74,4 @@ define(['config'], function(Config) {
             });
         }
     };
-
 });
