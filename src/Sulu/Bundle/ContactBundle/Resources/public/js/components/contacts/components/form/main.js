@@ -36,7 +36,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 '    <div class="grid-col-12">',
                 '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
                 '   </div>',
-                '</div>'].join('')
+                '</div>'
+            ].join('')
         };
 
     return (function() {
@@ -64,7 +65,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     '    <div class="grid-col-12">',
                     '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
                     '   </div>',
-                    '</div>'].join('')
+                    '</div>'
+                ].join('')
             },
 
             initialize: function() {
@@ -198,7 +200,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             },
 
             setFormData: function(data, startForm) {
-                this.numberOfBankAccounts = data.bankAccounts.length;
+                this.numberOfBankAccounts = !!data.bankAccounts ? data.bankAccounts.length : 0;
                 this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
                 // add collection filters to form

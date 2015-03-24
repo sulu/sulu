@@ -335,7 +335,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             // add collection filters to form
             this.sandbox.emit('sulu.contact-form.add-collectionfilters', this.form);
 
-            this.numberOfBankAccounts = data.bankAccounts.length;
+            this.numberOfBankAccounts = !!data.bankAccounts ? data.bankAccounts.length : 0;
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
             this.sandbox.form.setData(this.form, data).then(function() {

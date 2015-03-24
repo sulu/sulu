@@ -27,6 +27,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -51,12 +52,16 @@ class ContactController extends AbstractContactController
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressEntityName = 'SuluContactBundle:Address';
     protected static $contactAddressEntityName = 'SuluContactBundle:ContactAddress';
-    
+
     // serialization groups for contact
     protected static $contactSerializationGroups = array(
-        'fullContact', 'partialAccount', 'partialTag', 'partialMedia', 'partialCategory'
+        'fullContact',
+        'partialAccount',
+        'partialTag',
+        'partialMedia',
+        'partialCategory'
     );
-    
+
     /**
      * @var string
      */
@@ -75,8 +80,14 @@ class ContactController extends AbstractContactController
 
     protected $accountContactFieldDescriptors;
 
-    // TODO: move field descriptors to a manager
-    public function __construct()
+    public function setContainer(ContainerInterface $container = null)
+    {
+        parent::setContainer($container);
+
+        $this->initFieldDescriptors();
+    }
+
+    private function initFieldDescriptors()
     {
         $this->fieldDescriptors = array();
 
@@ -142,14 +153,14 @@ class ContactController extends AbstractContactController
             'contact.contacts.company',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                        self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts',
-                        self::$accountContactEntityName . '.main = true', 'LEFT'
-                    ),
+                    self::$accountContactEntityName,
+                    self::$entityName . '.accountContacts',
+                    self::$accountContactEntityName . '.main = true', 'LEFT'
+                ),
                 $this->getAccountEntityName() => new DoctrineJoinDescriptor(
-                        $this->getAccountEntityName(),
-                        self::$accountContactEntityName . '.account'
-                    )
+                    $this->getAccountEntityName(),
+                    self::$accountContactEntityName . '.account'
+                )
             ),
             false,
             true
@@ -162,14 +173,14 @@ class ContactController extends AbstractContactController
             'contact.address.city',
             array(
                 self::$contactAddressEntityName => new DoctrineJoinDescriptor(
-                        self::$contactAddressEntityName,
-                        self::$entityName . '.contactAddresses',
-                        self::$contactAddressEntityName . '.main = true', 'LEFT'
-                    ),
+                    self::$contactAddressEntityName,
+                    self::$entityName . '.contactAddresses',
+                    self::$contactAddressEntityName . '.main = true', 'LEFT'
+                ),
                 self::$addressEntityName => new DoctrineJoinDescriptor(
-                        self::$addressEntityName,
-                        self::$contactAddressEntityName . '.address'
-                    )
+                    self::$addressEntityName,
+                    self::$contactAddressEntityName . '.address'
+                )
             ),
             false,
             true
@@ -264,9 +275,9 @@ class ContactController extends AbstractContactController
             'public.title',
             array(
                 self::$titleEntityName => new DoctrineJoinDescriptor(
-                        self::$titleEntityName,
-                        self::$entityName . '.title'
-                    )
+                    self::$titleEntityName,
+                    self::$entityName . '.title'
+                )
             ),
             true
         );
@@ -296,13 +307,13 @@ class ContactController extends AbstractContactController
             'contact.contacts.position',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                        self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
-                    ),
+                    self::$accountContactEntityName,
+                    self::$entityName . '.accountContacts'
+                ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
-                        self::$positionEntityName,
-                        self::$accountContactEntityName . '.position'
-                    )
+                    self::$positionEntityName,
+                    self::$accountContactEntityName . '.position'
+                )
             ),
             true
         );
@@ -332,13 +343,13 @@ class ContactController extends AbstractContactController
             'contact.contacts.position',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                        self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
-                    ),
+                    self::$accountContactEntityName,
+                    self::$entityName . '.accountContacts'
+                ),
                 self::$positionEntityName => new DoctrineJoinDescriptor(
-                        self::$positionEntityName,
-                        self::$accountContactEntityName . '.position'
-                    )
+                    self::$positionEntityName,
+                    self::$accountContactEntityName . '.position'
+                )
             ),
             false,
             true
@@ -352,9 +363,9 @@ class ContactController extends AbstractContactController
             'contact.contacts.main-contact',
             array(
                 self::$accountContactEntityName => new DoctrineJoinDescriptor(
-                        self::$accountContactEntityName,
-                        self::$entityName . '.accountContacts'
-                    ),
+                    self::$accountContactEntityName,
+                    self::$entityName . '.accountContacts'
+                ),
             ),
             false,
             true,
@@ -389,7 +400,7 @@ class ContactController extends AbstractContactController
     {
         $serializationGroups = array();
         $locale = $this->getLocale($request);
-        
+
         if ($request->get('flat') == 'true') {
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->getRestHelper();
@@ -414,10 +425,11 @@ class ContactController extends AbstractContactController
             if ($request->get('bySystem') == true) {
                 $contacts = $this->getContactsByUserSystem();
                 $serializationGroups[] = 'select';
-               
+
             } else {
                 $contacts = $this->getDoctrine()->getRepository(self::$entityName)->findAll();
-                $serializationGroups = array_merge($serializationGroups, 
+                $serializationGroups = array_merge(
+                    $serializationGroups,
                     static::$contactSerializationGroups
                 );
             }
@@ -426,12 +438,12 @@ class ContactController extends AbstractContactController
             foreach ($contacts as $contact) {
                 $apiContacts[] = new ApiContact($contact, $locale);
             }
-            
+
             $exclusion = null;
             if (count($serializationGroups) > 0) {
-                $exclusion = new Exclusion($serializationGroups);    
+                $exclusion = new Exclusion($serializationGroups);
             }
-            
+
             $list = new CollectionRepresentation($apiContacts, self::$entityKey, null, $exclusion, $exclusion);
         }
 
@@ -445,7 +457,7 @@ class ContactController extends AbstractContactController
                 )
             );
         }
-        
+
         return $this->handleView($view);
     }
 

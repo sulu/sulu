@@ -64,10 +64,12 @@
         <service id="sulu_contact.account_manager" class="%sulu_contact.account_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.contact_manager" class="%sulu_contact.contact_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_tag.tag_manager"/>
+            <argument type="string">%sulu_contact.account.entity%</argument>
         </service>
         <service id="sulu_contact.user_repository" class="%sulu_contact.user_repository.class%"
                  factory-method="getRepository" factory-service="doctrine">

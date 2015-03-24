@@ -48,7 +48,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function __construct(ObjectManager $em, $accountEntityName)
     {
         $this->em = $em;
-        $this->$accountEntity = $accountEntityName;
+        $this->accountEntity = $accountEntityName;
     }
 
     /**

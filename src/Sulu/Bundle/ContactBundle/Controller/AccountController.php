@@ -24,6 +24,7 @@ use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
@@ -74,8 +75,10 @@ class AccountController extends AbstractContactController
     protected $accountContactFieldDescriptors;
     protected $accountAddressesFieldDescriptors;
 
-    public function __construct()
+    public function setContainer(ContainerInterface $container = null)
     {
+        parent::setContainer($container);
+
         $this->initFieldDescriptors();
         $this->initAccountContactFieldDescriptors();
         $this->initAccountAddressesFieldDescriptors();
