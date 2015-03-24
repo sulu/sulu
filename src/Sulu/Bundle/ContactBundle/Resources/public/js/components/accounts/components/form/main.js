@@ -128,7 +128,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                         name: 'input@husky',
                         options: {
                             el: '#vat',
-                            instanceName:'vat-input',
+                            instanceName: 'vat-input',
                             value: !!data.uid ? data.uid : ''
                         }
                     }
@@ -282,7 +282,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 // set form data
                 var formObject = this.sandbox.form.create(this.form);
                 formObject.initialized.then(function() {
-                    this.setFormData(data);
+                    this.formInitializedHandler(data);
                 }.bind(this));
             }.bind(this));
 
@@ -297,6 +297,10 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                     }
                 }
             ]);
+        },
+
+        formInitializedHandler: function(data) {
+            this.setFormData(data);
         },
 
         setFormData: function(data) {
