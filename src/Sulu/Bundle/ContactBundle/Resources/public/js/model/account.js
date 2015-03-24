@@ -44,7 +44,6 @@ define([
                 accountContacts: [],
                 termsOfPayment: null,
                 termsOfDelivery: null,
-                responsiblePerson: null,
                 mainContact: null,
                 medias: [],
                 categories: []
