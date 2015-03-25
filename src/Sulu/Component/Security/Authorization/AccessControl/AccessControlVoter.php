@@ -13,6 +13,7 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
+use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityRetrievalStrategyInterface;
 use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
@@ -55,6 +56,10 @@ class AccessControlVoter extends AclVoter
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
+        if (!$object instanceof ObjectIdentityInterface) {
+            return VoterInterface::ACCESS_ABSTAIN;
+        }
+
         try {
             $this->aclProvider->findAcl($object); // only called to check if acl exists
             return parent::vote($token, $object, array($attributes['permission']));
