@@ -96,6 +96,7 @@
 
         <service id="sulu_security.security_context_voter" class="%sulu_security.security_context_voter.class%" public="false">
             <argument>%permissions%</argument>
+            <argument type="service" id="security.acl.provider"/>
             <tag name="security.voter"/>
         </service>
 

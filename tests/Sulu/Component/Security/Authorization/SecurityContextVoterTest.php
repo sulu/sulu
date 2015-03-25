@@ -10,16 +10,21 @@
 
 namespace Sulu\Component\Security\Authorization;
 
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
+use Symfony\Component\Security\Acl\Model\AclProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
+class SecurityContextVoterTest extends ProphecyTestCase
 {
 
     protected $permissions = array(
@@ -41,6 +46,11 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
      * @var SecurityContextVoter
      */
     protected $voter;
+
+    /**
+     * @var AclProviderInterface
+     */
+    protected $aclProvider;
 
     public function setUp()
     {
@@ -74,19 +84,20 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
         $group->addChildren($nestedGroup);
         $user->addUserGroup($userGroup);
 
-        $this->token = $this->getMock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $this->token->expects($this->any())
-            ->method('getUser')
-            ->will($this->returnValue($user));
+        $this->token = $this->prophesize(TokenInterface::class);
+        $this->token->getUser()->willReturn($user);
 
-        $this->voter = new SecurityContextVoter($this->permissions);
+        $this->aclProvider = $this->prophesize(AclProviderInterface::class);
+        $this->aclProvider->findAcl(Argument::any())->willReturn(true);
+
+        $this->voter = new SecurityContextVoter($this->permissions, $this->aclProvider->reveal());
     }
 
     public function testPositiveVote()
     {
         $access = $this->voter->vote(
-            $this->token,
-            new SecurityContext('sulu.security.roles'),
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles'),
             array(
                 'permission' => 'view'
             )
@@ -98,8 +109,8 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     public function testNegativeVote()
     {
         $access = $this->voter->vote(
-            $this->token,
-            new SecurityContext('sulu.security.roles'),
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles'),
             array(
                 'permission' => 'security'
             )
@@ -111,8 +122,8 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     public function testPositiveGroupVote()
     {
         $access = $this->voter->vote(
-            $this->token,
-            new SecurityContext('sulu.security.groups'),
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.groups'),
             array(
                 'permission' => 'view'
             )
@@ -124,8 +135,8 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     public function testNegativeGroupVote()
     {
         $access = $this->voter->vote(
-            $this->token,
-            new SecurityContext('sulu.security.groups'),
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.groups'),
             array(
                 'permission' => 'security'
             )
@@ -137,8 +148,8 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     public function testPositiveNestedGroupVote()
     {
         $access = $this->voter->vote(
-            $this->token,
-            new SecurityContext('sulu.security.groups.nested'),
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.groups.nested'),
             array(
                 'permission' => 'view'
             )
@@ -150,13 +161,41 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
     public function testNegativeNestedGroupVote()
     {
         $access = $this->voter->vote(
-            $this->token,
-            new SecurityContext('sulu.security.groups.nested'),
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.groups.nested'),
             array(
                 'permission' => 'security'
             )
         );
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+    }
+
+    public function testAbstainWhenAclExistsVote()
+    {
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.groups', new ObjectIdentity('Sulu\Bundle\Security\Entity\Group', '1')),
+            array(
+                'permission' => 'view'
+            )
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $access);
+    }
+
+    public function testPositiveVoteWhenAclNotExistsVote()
+    {
+        $this->aclProvider->findAcl(Argument::any())->willThrow(AclNotFoundException::class);
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.groups', new ObjectIdentity('Sulu\Bundle\SecurityBundle\Group', '1')),
+            array(
+                'permission' => 'view'
+            )
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
     }
 }

@@ -17,6 +17,9 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
+use Symfony\Component\Security\Acl\Model\AclProviderInterface;
+use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -26,11 +29,17 @@ class SecurityContextVoter implements VoterInterface
      * The permissions avaiable, defined by config
      * @var array
      */
-    protected $permissions;
+    private $permissions;
 
-    public function __construct($permissions)
+    /**
+     * @var AclProviderInterface
+     */
+    private $aclProvider;
+
+    public function __construct($permissions, AclProviderInterface $aclProvider)
     {
         $this->permissions = $permissions;
+        $this->aclProvider = $aclProvider;
     }
 
     /**
@@ -56,7 +65,27 @@ class SecurityContextVoter implements VoterInterface
      */
     public function supportsClass($class)
     {
-        return $class === SecurityContext::class || is_subclass_of($class, SecurityContext::class);
+        return $class === SecurityCondition::class || is_subclass_of($class, SecurityCondition::class);
+    }
+
+    /**
+     * Tests if there is an access control list for the given object
+     * @param ObjectIdentityInterface $object The object to lookup in the access control system
+     * @return bool Returns true if an access control list exists for the given object, otherwise false
+     */
+    public function existsAcl($object)
+    {
+        if (!$object instanceof ObjectIdentityInterface) {
+            return false;
+        }
+
+        try {
+            $this->aclProvider->findAcl($object);
+
+            return true;
+        } catch (AclNotFoundException $exc) {
+            return false;
+        }
     }
 
     /**
@@ -66,7 +95,7 @@ class SecurityContextVoter implements VoterInterface
      * ACCESS_GRANTED, ACCESS_DENIED, or ACCESS_ABSTAIN.
      *
      * @param TokenInterface $token      A TokenInterface instance
-     * @param SecurityContext $object     The object to secure
+     * @param SecurityCondition $object     The object to secure
      * @param array $attributes An array of attributes associated with the method being invoked
      * @return integer either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
      */
@@ -76,10 +105,10 @@ class SecurityContextVoter implements VoterInterface
         /** @var User $user */
         $user = $token->getUser();
 
-        // if not our attribute or class, we can't decide
         if (!is_object($object) ||
             !$this->supportsClass(get_class($object)) ||
-            !$this->supportsAttribute($attributes)
+            !$this->supportsAttribute($attributes) ||
+            $this->existsAcl($object->getObjectIdentity())
         ) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
@@ -105,7 +134,7 @@ class SecurityContextVoter implements VoterInterface
 
     /**
      * Checks if the given group has the permission to execute the desired task
-     * @param SecurityContext $object
+     * @param SecurityCondition $object
      * @param array $attributes
      * @param Group $group
      * @param array $locales
@@ -136,7 +165,7 @@ class SecurityContextVoter implements VoterInterface
 
     /**
      * Checks if the given set of permissions grants to execute the desired task
-     * @param SecurityContext $object
+     * @param SecurityCondition $object
      * @param array $attributes
      * @param Collection $permissions
      * @param array $locales
@@ -156,7 +185,7 @@ class SecurityContextVoter implements VoterInterface
 
     /**
      * Checks if the combination of permission and userrole is allowed for the given attributes
-     * @param SecurityContext $object
+     * @param SecurityCondition $object
      * @param array $attributes
      * @param Permission $permission
      * @param array|null $locales

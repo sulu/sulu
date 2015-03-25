@@ -58,7 +58,7 @@ class SecurityChecker extends AbstractSecurityChecker
         }
 
         if (is_string($subject)) {
-            $subject = new SecurityContext($subject);
+            $subject = new SecurityCondition($subject);
         }
 
         $granted = $this->authorizationChecker->isGranted($attributes, $subject);

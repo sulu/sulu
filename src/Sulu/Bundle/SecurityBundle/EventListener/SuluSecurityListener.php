@@ -12,6 +12,7 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -41,7 +42,6 @@ class SuluSecurityListener
     public function onKernelController(FilterControllerEvent $event)
     {
         $controller = $event->getController();
-        $request = $event->getRequest();
 
         if (
             !$controller[0] instanceof SecuredControllerInterface &&
@@ -49,6 +49,9 @@ class SuluSecurityListener
         ) {
             return;
         }
+
+        $request = $event->getRequest();
+        $locale = $controller[0]->getLocale($event->getRequest());
 
         // find appropriate permission type for request
         $permission = '';
@@ -73,22 +76,26 @@ class SuluSecurityListener
                 break;
         }
 
-        // check permission
-        if ($controller[0] instanceof SecuredControllerInterface) {
-            $locale = $controller[0]->getLocale($event->getRequest());
-            $subject = $controller[0]->getSecurityContext();
-
-            $this->securityChecker->checkPermission($subject, $permission, $locale);
-        }
-
+        $securityContext = null;
+        $objectIdentity = null;
         $id = $request->get('id') ?: $request->get('uuid');
+
         if ($controller[0] instanceof SecuredObjectControllerInterface && $id) {
             $objectIdentity = new ObjectIdentity(
                 $id,
                 $controller[0]->getSecuredClass()
             );
-
-            $this->securityChecker->checkPermission($objectIdentity, $permission);
         }
+
+        // check permission
+        if ($controller[0] instanceof SecuredControllerInterface) {
+            $securityContext = $controller[0]->getSecurityContext();
+        }
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition($securityContext, $objectIdentity),
+            $permission,
+            $locale
+        );
     }
 } 

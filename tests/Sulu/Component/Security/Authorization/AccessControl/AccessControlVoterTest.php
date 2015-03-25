@@ -12,6 +12,7 @@ namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTestCase;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
@@ -77,7 +78,11 @@ class AccessControlVoterTest extends ProphecyTestCase
 
         $this->assertEquals(
             VoterInterface::ACCESS_ABSTAIN,
-            $this->accessControlVoter->vote($this->token->reveal(), new ObjectIdentity('1', 'Acme\Example'), array())
+            $this->accessControlVoter->vote(
+                $this->token->reveal(),
+                new SecurityCondition('acme_example', new ObjectIdentity('1', 'Acme\Example')),
+                array()
+            )
         );
     }
 }

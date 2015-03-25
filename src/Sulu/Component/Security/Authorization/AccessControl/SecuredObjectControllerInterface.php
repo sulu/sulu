@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * This interface has to be implemented by controller, which want to check security on per-object basis.
  */
@@ -20,4 +22,11 @@ interface SecuredObjectControllerInterface
      * @return string
      */
     public function getSecuredClass();
+
+    /**
+     * Returns the locale for the given request
+     * @param Request $request
+     * @return string
+     */
+    public function getLocale(Request $request);
 }
