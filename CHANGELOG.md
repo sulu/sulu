@@ -11,6 +11,7 @@ CHANGELOG for Sulu
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
+    * ENHANCEMENT #942 [ContactBundle]   Changed max characters of street from 60 to 150
     * BUGFIX      #905 [ContactBundle]   Added Functionality for completing contact addresses
     * FEATURE     #940 [ContactBundle]   Added command for fixing nested tree of accounts sulu:contacts:accounts:recover
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
