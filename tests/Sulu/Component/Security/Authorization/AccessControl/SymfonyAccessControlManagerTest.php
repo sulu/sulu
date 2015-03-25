@@ -15,6 +15,7 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Symfony\Component\Security\Acl\Domain\Entry;
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\EntryInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclInterface;
@@ -56,7 +57,7 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
 
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
 
-        $this->securityIdentity = $this->prophesize(SecurityIdentityInterface::class);
+        $this->securityIdentity = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');
 
         $this->acl = $this->prophesize(MutableAclInterface::class);
 
@@ -68,10 +69,8 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
 
     public function testGetPermissions()
     {
-        $this->securityIdentity->getRole()->willReturn('SULU_ROLE_ADMINISTRATOR');
-
         $ace1 = $this->prophesize(EntryInterface::class);
-        $ace1->getSecurityIdentity()->willReturn($this->securityIdentity->reveal());
+        $ace1->getSecurityIdentity()->willReturn($this->securityIdentity);
         $ace1->getMask()->willReturn(64);
 
         $this->acl->getObjectAces()->willReturn(array($ace1->reveal()));
@@ -114,7 +113,7 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $this->accessControlManager->setPermissions(
             'Acme\Example',
             '1',
-            $this->securityIdentity->reveal(),
+            $this->securityIdentity,
             array('view')
         );
     }
@@ -132,7 +131,7 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $this->accessControlManager->setPermissions(
             'Acme\Example',
             '1',
-            $this->securityIdentity->reveal(),
+            $this->securityIdentity,
             array('view')
         );
     }
@@ -150,7 +149,7 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $this->accessControlManager->setPermissions(
             'Acme\Example',
             '1',
-            $this->securityIdentity->reveal(),
+            $this->securityIdentity,
             array('view')
         );
     }
