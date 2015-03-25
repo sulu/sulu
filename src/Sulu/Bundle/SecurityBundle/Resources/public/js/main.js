@@ -30,7 +30,8 @@ define(['config'], function(Config) {
                     {value: 'view', icon: 'eye'},
                     {value: 'add', icon: 'plus-circle'},
                     {value: 'edit', icon: 'pencil'},
-                    {value: 'delete', icon: 'trash-o'}
+                    {value: 'delete', icon: 'trash-o'},
+                    {value: 'security', icon: 'unlock-alt'}
                 ]
             );
 
@@ -40,7 +41,8 @@ define(['config'], function(Config) {
                     'security.permissions.view',
                     'security.permissions.add',
                     'security.permissions.edit',
-                    'security.permissions.delete'
+                    'security.permissions.delete',
+                    'security.permissions.security'
                 ]
             );
 
