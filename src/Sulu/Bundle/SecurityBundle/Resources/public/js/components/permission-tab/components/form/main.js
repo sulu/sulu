@@ -19,6 +19,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         permissionData = {
             id: null,
             type: null,
+            securityContext: null,
             permissions: {}
         },
 
@@ -163,6 +164,7 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
         initialize: function() {
             permissionData.id = this.options.id;
             permissionData.type = this.options.type;
+            permissionData.securityContext = this.options.securityContext;
 
             render.call(this);
             initializeMatrix.call(this);

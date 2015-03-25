@@ -17,6 +17,7 @@ use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -30,6 +31,11 @@ class PermissionController implements ClassResourceInterface
     private $accessControlManager;
 
     /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
+    /**
      * @var RoleRepositoryInterface
      */
     private $roleRepository;
@@ -41,10 +47,12 @@ class PermissionController implements ClassResourceInterface
 
     public function __construct(
         AccessControlManagerInterface $accessControlManager,
+        SecurityCheckerInterface $securityChecker,
         RoleRepositoryInterface $roleRepository,
         ViewHandlerInterface $viewHandler
     ) {
         $this->accessControlManager = $accessControlManager;
+        $this->securityChecker = $securityChecker;
         $this->roleRepository = $roleRepository;
         $this->viewHandler = $viewHandler;
     }
@@ -83,6 +91,7 @@ class PermissionController implements ClassResourceInterface
             $identifier = $request->get('id');
             $type = $request->get('type');
             $permissions = $request->get('permissions');
+            $securityContext = $request->get('securityContext');
 
             if (!$identifier) {
                 throw new MissingParameterException(static::class, 'id');
@@ -94,6 +103,10 @@ class PermissionController implements ClassResourceInterface
 
             if (!is_array($permissions)) {
                 throw new RestException('The "permissions" must be passed as an array');
+            }
+
+            if ($securityContext) {
+                $this->securityChecker->checkPermission($securityContext, 'security');
             }
 
             foreach ($permissions as $securityIdentity => $permission) {

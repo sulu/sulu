@@ -107,6 +107,7 @@
 
         <service id="sulu_security.permission_controller" class="%sulu_security.permission_controller.class%">
             <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu_security.role_repository"/>
             <argument type="service" id="fos_rest.view_handler"/>
             <tag name="sulu.context" context="admin"/>
