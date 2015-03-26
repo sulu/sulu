@@ -19,6 +19,9 @@ CHANGELOG for Sulu
     * BUGFIX      #973 [All]             Added handling of anonymous user token
     * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
+    * BUGFIX      #601 [WebsiteBundle]   Fix Redirect url with query string correctly
+    * BUGFIX      #600 [WebsiteBundle]   Fix Redirect url with trailing slash
+    * BUGFIX      #945 [WebsiteBundle]   Fix Redirect url with query string correctly and trailing slash
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
     * BUGFIX      #922 [ContentBundle]   Fixed URL Generation after copying language of a child node
