@@ -10,13 +10,12 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\HttpCache\Handler\AggregateHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 
-class AggregateHandlerTest extends ProphecyTestCase
+class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var HandlerInterface

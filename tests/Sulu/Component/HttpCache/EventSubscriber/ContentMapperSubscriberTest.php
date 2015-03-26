@@ -10,13 +10,12 @@
 
 namespace Sulu\Component\HttpCache\EventListener;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\HttpCache\EventSubscriber\ContentMapperSubscriber;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 
-class ContentMapperSubscriberTest extends ProphecyTestCase
+class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContentMapperSubscriber
