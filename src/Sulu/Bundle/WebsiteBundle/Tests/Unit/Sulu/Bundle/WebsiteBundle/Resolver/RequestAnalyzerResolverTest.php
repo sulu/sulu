@@ -9,14 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Webspace;
 
-class RequestAnalyzerResolverTest extends ProphecyTestCase
+class RequestAnalyzerResolverTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RequestAnalyzerResolver

@@ -2,9 +2,8 @@
 
 namespace Sulu\Component\Localization;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class LocalizationTest extends ProphecyTestCase
+class LocalizationTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

@@ -3,10 +3,9 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\DataCollector;
 
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class SuluCollectorTest extends ProphecyTestCase
+class SuluCollectorTest extends \PHPUnit_Framework_TestCase
 {
     protected $requestAnalyzer;
     protected $request;

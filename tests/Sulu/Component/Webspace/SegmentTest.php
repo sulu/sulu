@@ -2,10 +2,9 @@
 
 namespace Sulu\Component\Segment;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Segment;
 
-class SegmentTest extends ProphecyTestCase
+class SegmentTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

@@ -12,7 +12,6 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
@@ -42,7 +41,7 @@ class TestStructure extends Structure
     }
 }
 
-class ContentTwigExtensionTest extends ProphecyTestCase
+class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var StructureResolverInterface
