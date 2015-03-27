@@ -18,12 +18,12 @@ interface CollectionRepositoryInterface
 {
     /**
      * Finds a collection set starting by given ID and depth
-     * @param Collection $collection
+     * @param CollectionInterface $collection
      * @param int $depth
      * @param array $filter
      * @return Collection[]
      */
-    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null);
+    public function findCollectionSet($depth = 0, $filter = array(), CollectionInterface $collection = null);
 
     /**
      * Finds the collection with a given id

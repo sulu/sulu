@@ -17,6 +17,7 @@ use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -563,13 +564,13 @@ class CollectionManager implements CollectionManagerInterface
 
     /**
      * prepare an api entity
-     * @param CollectionEntity $entity
+     * @param CollectionInterface $entity
      * @param string $locale
      * @param CollectionEntity[] $entities nested set
      * @param array $breadcrumbEntities
      * @return Collection
      */
-    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumbEntities = null)
+    protected function getApiEntity(CollectionInterface $entity, $locale, $entities = null, $breadcrumbEntities = null)
     {
         $apiEntity = new Collection($entity, $locale);
 

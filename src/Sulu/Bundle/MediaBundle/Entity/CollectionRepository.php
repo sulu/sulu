@@ -56,7 +56,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null)
+    public function findCollectionSet($depth = 0, $filter = array(), CollectionInterface $collection = null)
     {
         try {
             $dql = sprintf(
