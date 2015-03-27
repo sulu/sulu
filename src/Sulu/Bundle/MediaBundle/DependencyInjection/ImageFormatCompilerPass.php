@@ -54,20 +54,25 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
         $activeTheme = $this->container->get('liip_theme.active_theme');
         $bundles = $this->container->getParameter('kernel.bundles');
+        $asseticBundles = $this->container->getParameterBag()->resolveValue($this->container->getParameter('assetic.bundles'));
+        $configFolderFiles = $this->container->getParameter('sulu_media.format_manager.config_files');
+        $defaultFolder = '/config/image-formats.xml';
 
         foreach ($activeTheme->getThemes() as $theme) {
-            foreach ($bundles as $bundle => $class) {
-                $reflector = new \ReflectionClass($class);
-                if ($reflector->getFileName() &&
-                    file_exists(
-                        dirname($reflector->getFileName()) . '/Resources/themes/' . $theme . '/config/image-formats.xml'
-                    )
-                ) {
-                    $themePath = dirname($reflector->getFileName())
-                        . '/Resources/themes/' . $theme . '/config/image-formats.xml';
+            foreach ($asseticBundles as $bundleName) {
+                $reflector = new \ReflectionClass($bundles[$bundleName]);
+                $configPath = $defaultFolder;
+                if (isset($configFolderFiles[$theme])) {
+                    $configPath = $configFolderFiles[$theme];
+                }
+                $fullPath = dirname($reflector->getFileName())
+                    . '/Resources/themes/' . $theme . '/' . ltrim($configPath, '/');;
 
-                    $folder = dirname($themePath);
-                    $fileName = basename($themePath);
+                if ($reflector->getFileName() &&
+                    file_exists($fullPath)
+                ) {
+                    $folder = dirname($fullPath);
+                    $fileName = basename($fullPath);
 
                     $locator = new FileLocator($folder);
                     $loader = new XmlFormatLoader($locator);
