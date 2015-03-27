@@ -14,6 +14,7 @@
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\CommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
+        <parameter key="sulu_media.image.command.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CropCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
@@ -71,9 +72,11 @@
 
         <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%" />
         <service id="sulu_media.image.command.scale" class="%sulu_media.image.command.scale.class%" />
+        <service id="sulu_media.image.command.crop" class="%sulu_media.image.command.crop.class%" />
 
         <service id="%sulu_media.image.command.prefix%scale" alias="sulu_media.image.command.scale" />
         <service id="%sulu_media.image.command.prefix%resize" alias="sulu_media.image.command.resize" />
+        <service id="%sulu_media.image.command.prefix%crop" alias="sulu_media.image.command.crop" />
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
             <argument type="service" id="sulu_media.media_repository" />

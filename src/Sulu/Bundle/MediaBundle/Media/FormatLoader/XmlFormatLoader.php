@@ -92,7 +92,13 @@ class XmlFormatLoader extends FileLoader
                     $parameters = array();
                     $parameterNodes = $this->xpath->query('x:parameters/x:parameter', $commandNode);
                     foreach ($parameterNodes as $parameterNode) {
-                        $parameters[$parameterNode->attributes->getNamedItem('name')->nodeValue] = $parameterNode->nodeValue;
+                        $value = $parameterNode->nodeValue;
+                        if ($value === 'true') {
+                            $value = true;
+                        } elseif ($value === 'false') {
+                            $value = false;
+                        }
+                        $parameters[$parameterNode->attributes->getNamedItem('name')->nodeValue] = $value;
                     }
 
                     $command = array(
