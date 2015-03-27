@@ -80,7 +80,7 @@ class AccessControlVoterTest extends ProphecyTestCase
             VoterInterface::ACCESS_ABSTAIN,
             $this->accessControlVoter->vote(
                 $this->token->reveal(),
-                new SecurityCondition('acme_example', new ObjectIdentity('1', 'Acme\Example')),
+                new SecurityCondition('acme_example', null, '1', 'Acme\Example'),
                 array()
             )
         );

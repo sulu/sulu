@@ -15,7 +15,6 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -51,7 +50,6 @@ class SuluSecurityListener
         }
 
         $request = $event->getRequest();
-        $locale = $controller[0]->getLocale($event->getRequest());
 
         // find appropriate permission type for request
         $permission = '';
@@ -77,14 +75,12 @@ class SuluSecurityListener
         }
 
         $securityContext = null;
-        $objectIdentity = null;
-        $id = $request->get('id') ?: $request->get('uuid');
+        $locale = $controller[0]->getLocale($event->getRequest());
+        $objectType = null;
+        $objectId = $request->get('id') ?: $request->get('uuid');
 
-        if ($controller[0] instanceof SecuredObjectControllerInterface && $id) {
-            $objectIdentity = new ObjectIdentity(
-                $id,
-                $controller[0]->getSecuredClass()
-            );
+        if ($controller[0] instanceof SecuredObjectControllerInterface && $objectId) {
+            $objectType = $controller[0]->getSecuredClass();
         }
 
         // check permission
@@ -93,9 +89,8 @@ class SuluSecurityListener
         }
 
         $this->securityChecker->checkPermission(
-            new SecurityCondition($securityContext, $objectIdentity),
-            $permission,
-            $locale
+            new SecurityCondition($securityContext, $locale, $objectType, $objectId),
+            $permission
         );
     }
 } 

@@ -17,6 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
@@ -73,14 +74,14 @@ class SecurityContextVoter implements VoterInterface
      * @param ObjectIdentityInterface $object The object to lookup in the access control system
      * @return bool Returns true if an access control list exists for the given object, otherwise false
      */
-    public function existsAcl($object)
+    public function existsAcl($objectId, $objectType)
     {
-        if (!$object instanceof ObjectIdentityInterface) {
+        if ($objectId === null || $objectType === null) {
             return false;
         }
 
         try {
-            $this->aclProvider->findAcl($object);
+            $this->aclProvider->findAcl(new ObjectIdentity($objectId, $objectType));
 
             return true;
         } catch (AclNotFoundException $exc) {
@@ -108,7 +109,7 @@ class SecurityContextVoter implements VoterInterface
         if (!is_object($object) ||
             !$this->supportsClass(get_class($object)) ||
             !$this->supportsAttribute($attributes) ||
-            $this->existsAcl($object->getObjectIdentity())
+            $this->existsAcl($object->getObjectId(), $object->getObjectType())
         ) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
@@ -197,7 +198,7 @@ class SecurityContextVoter implements VoterInterface
 
         $hasPermission = $permission->getPermissions() & $this->permissions[$attributes['permission']];
 
-        $hasLocale = !(isset($attributes['locale']) && is_array($locales)) || in_array($attributes['locale'], $locales);
+        $hasLocale = !($object->getLocale() != null && is_array($locales)) || in_array($object->getLocale(), $locales);
 
         return $hasContext && $hasPermission && $hasLocale;
     }

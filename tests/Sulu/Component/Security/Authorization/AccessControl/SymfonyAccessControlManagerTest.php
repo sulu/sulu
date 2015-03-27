@@ -15,6 +15,7 @@ use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Symfony\Component\Security\Acl\Domain\Entry;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\EntryInterface;
@@ -67,7 +68,18 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         );
     }
 
-    public function testGetPermissions()
+    public static function provideObjectIdentifiers()
+    {
+        return array(
+            array('1', 'Acme\Example', null, '1'),
+            array('1', 'Acme\Example', 'de', '1'),
+        );
+    }
+
+    /**
+     * @dataProvider provideObjectIdentifiers
+     */
+    public function testGetPermissions($objectId, $objectType, $locale, $objectIdentifier)
     {
         $ace1 = $this->prophesize(EntryInterface::class);
         $ace1->getSecurityIdentity()->willReturn($this->securityIdentity);
@@ -77,23 +89,31 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
 
         $this->maskConverter->convertPermissionsToArray(64)->willReturn(array('view' => true));
 
-        $this->aclProvider->findAcl(Argument::any())->willReturn($this->acl->reveal());
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
+            ->willReturn($this->acl->reveal());
 
-        $permissions = $this->accessControlManager->getPermissions('Acme\Example', '1');
+        $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
 
         $this->assertEquals(true, $permissions['SULU_ROLE_ADMINISTRATOR']['view']);
     }
 
-    public function testGetPermissionsNotAvailable()
+    /**
+     * @dataProvider provideObjectIdentifiers
+     */
+    public function testGetPermissionsNotAvailable($objectId, $objectType, $locale, $objectIdentifier)
     {
-        $this->aclProvider->findAcl(Argument::any())->willThrow(AclNotFoundException::class);
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
+            ->willThrow(AclNotFoundException::class);
 
-        $permissions = $this->accessControlManager->getPermissions('Acme\Example', '1');
+        $permissions = $this->accessControlManager->getPermissions($objectType, $objectId, $locale);
 
         $this->assertEquals(array(), $permissions);
     }
 
-    public function testSetPermissionsWithExistingAcl()
+    /**
+     * @dataProvider provideObjectIdentifiers
+     */
+    public function testSetPermissionsWithExistingAcl($objectId, $objectType, $locale, $objectIdentifier)
     {
         $symfonySecurityIdentity = $this->prophesize(SymfonySecurityIdentityInterface::class);
         $symfonySecurityIdentity->equals(Argument::any())->willReturn(true);
@@ -102,7 +122,8 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $ace->getSecurityIdentity()->willReturn($symfonySecurityIdentity);
         $ace->getId()->willReturn(0);
 
-        $this->aclProvider->findAcl(Argument::cetera())->willReturn($this->acl->reveal())->shouldBeCalled();
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
+            ->willReturn($this->acl->reveal())->shouldBeCalled();
         $this->aclProvider->createAcl(Argument::cetera())->shouldNotBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
@@ -111,17 +132,22 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $this->acl->updateObjectAce(0, Argument::any())->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
-            'Acme\Example',
-            '1',
+            $objectType,
+            $objectId,
             $this->securityIdentity,
-            array('view')
+            array('view'),
+            $locale
         );
     }
 
-    public function testSetPermissionsWithExistingAclWithoutAce()
+    /**
+     * @dataProvider provideObjectIdentifiers
+     */
+    public function testSetPermissionsWithExistingAclWithoutAce($objectId, $objectType, $locale, $objectIdentifier)
     {
-        $this->aclProvider->findAcl(Argument::cetera())->willReturn($this->acl->reveal())->shouldBeCalled();
-        $this->aclProvider->createAcl(Argument::cetera())->shouldNotBeCalled();
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))
+            ->willReturn($this->acl->reveal())->shouldBeCalled();
+        $this->aclProvider->createAcl(new ObjectIdentity($objectIdentifier, $objectType))->shouldNotBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
         $this->acl->getObjectAces()->willReturn(array());
@@ -129,17 +155,22 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
-            'Acme\Example',
-            '1',
+            $objectType,
+            $objectId,
             $this->securityIdentity,
-            array('view')
+            array('view'),
+            $locale
         );
     }
 
-    public function testSetPermissionsWithoutExistingAcl()
+    /**
+     * @dataProvider provideObjectIdentifiers
+     */
+    public function testSetPermissionsWithoutExistingAcl($objectId, $objectType, $locale, $objectIdentifier)
     {
-        $this->aclProvider->findAcl(Argument::cetera())->willThrow(AclNotFoundException::class);
-        $this->aclProvider->createAcl(Argument::cetera())->willReturn($this->acl->reveal())->shouldBeCalled();
+        $this->aclProvider->findAcl(new ObjectIdentity($objectIdentifier, $objectType))->willThrow(AclNotFoundException::class);
+        $this->aclProvider->createAcl(new ObjectIdentity($objectIdentifier, $objectType))
+            ->willReturn($this->acl->reveal())->shouldBeCalled();
         $this->aclProvider->updateAcl($this->acl->reveal())->shouldBeCalled();
 
         $this->acl->getObjectAces()->willReturn(array());
@@ -147,10 +178,11 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         $this->acl->insertObjectAce(Argument::cetera())->shouldBeCalled();
 
         $this->accessControlManager->setPermissions(
-            'Acme\Example',
-            '1',
+            $objectType,
+            $objectId,
             $this->securityIdentity,
-            array('view')
+            array('view'),
+            $locale
         );
     }
 }

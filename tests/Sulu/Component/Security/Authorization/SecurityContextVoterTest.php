@@ -175,7 +175,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
     {
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', new ObjectIdentity('Sulu\Bundle\Security\Entity\Group', '1')),
+            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\Security\Entity\Group', '1'),
             array(
                 'permission' => 'view'
             )
@@ -190,7 +190,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
 
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', new ObjectIdentity('Sulu\Bundle\SecurityBundle\Group', '1')),
+            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
             array(
                 'permission' => 'view'
             )

@@ -11,6 +11,8 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Psr\Log\LoggerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
@@ -53,16 +55,23 @@ class AccessControlVoter extends AclVoter
 
     /**
      * {@inheritdoc}
+     * @param SecurityCondition $object
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if (!$object instanceof ObjectIdentityInterface) {
+        if (!$object instanceof SecurityCondition) {
+            return VoterInterface::ACCESS_ABSTAIN;
+        }
+
+        if ($object->getObjectType() === null || $object->getObjectId() === null) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
         try {
-            $this->aclProvider->findAcl($object); // only called to check if acl exists
-            return parent::vote($token, $object, array($attributes['permission']));
+            $objectIdentity = new ObjectIdentity($object->getObjectId(), $object->getObjectType());
+            $this->aclProvider->findAcl($objectIdentity); // only called to check if acl exists
+
+            return parent::vote($token, $objectIdentity, array($attributes['permission']));
         } catch (AclNotFoundException $exc) {
             return VoterInterface::ACCESS_ABSTAIN;
         }

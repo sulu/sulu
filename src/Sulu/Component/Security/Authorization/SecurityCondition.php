@@ -9,7 +9,6 @@
  */
 
 namespace Sulu\Component\Security\Authorization;
-use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
 
 /**
  * The class which describes the necessary permissions to access a certain element
@@ -24,19 +23,35 @@ class SecurityCondition
     private $securityContext;
 
     /**
-     * The identity of the object which will be accessed, null if not a certain element but an area is accessed
-     * @var ObjectIdentityInterface
+     * The type of the object which will be accessed, null if not a certain element but an area is accessed
+     * @var string
      */
-    private $objectIdentity;
+    private $objectType;
+
+    /**
+     * The id of the object which will be accessed, null if not a certain element but an area is accessed
+     * @var mixed
+     */
+    private $objectId;
+
+    /**
+     * The locale in which the object or context will be accessed
+     * @var string
+     */
+    private $locale;
 
     /**
      * @param string $securityContext The string representation of the security context
-     * @param ObjectIdentityInterface $objectIdentity The identity of the object to be accessed
+     * @param string $locale The locale which will be accessed
+     * @param string $objectType The type of the object to be accessed
+     * @param mixed $objectId The id of the object
      */
-    public function __construct($securityContext, ObjectIdentityInterface $objectIdentity = null)
+    public function __construct($securityContext, $locale = null, $objectType = null, $objectId = null)
     {
         $this->securityContext = $securityContext;
-        $this->objectIdentity = $objectIdentity;
+        $this->locale = $locale;
+        $this->objectType = $objectType;
+        $this->objectId = $objectId;
     }
 
     /**
@@ -49,11 +64,29 @@ class SecurityCondition
     }
 
     /**
-     * Returns the identity of the object to access or null, if not a certain object is accessed
-     * @return ObjectIdentityInterface
+     * Returns the type of the object
+     * @return string
      */
-    public function getObjectIdentity()
+    public function getObjectType()
     {
-        return $this->objectIdentity;
+        return $this->objectType;
     }
-} 
+
+    /**
+     * Returns the id of the object
+     * @return mixed
+     */
+    public function getObjectId()
+    {
+        return $this->objectId;
+    }
+
+    /**
+     * Returns the locale in which the security
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+}

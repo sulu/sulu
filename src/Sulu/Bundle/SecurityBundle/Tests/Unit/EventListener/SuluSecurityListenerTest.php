@@ -62,7 +62,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $this->filterControllerEvent->getRequest()->willReturn($request);
 
         $this->securityChecker->checkPermission(
-            new SecurityCondition(null, new ObjectIdentity('1', 'Acme\Example')),
+            new SecurityCondition(null, null, 'Acme\Example', '1'),
             'view',
             null
         )->shouldBeCalled();
@@ -88,7 +88,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
         $this->securityChecker->checkPermission(
-            new SecurityCondition('security.context', new ObjectIdentity('1', 'Acme\Example')),
+            new SecurityCondition('security.context', null, 'Acme\Example', '1'),
             Argument::cetera(),
             null
         )->shouldBeCalled();
@@ -176,7 +176,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
-        $this->securityChecker->checkPermission(Argument::any(), Argument::any(), 'de')->shouldHaveBeenCalled();
+        $this->securityChecker->checkPermission(Argument::any(), Argument::any())->shouldHaveBeenCalled();
     }
 
     public static function provideMethodActionMapping()
