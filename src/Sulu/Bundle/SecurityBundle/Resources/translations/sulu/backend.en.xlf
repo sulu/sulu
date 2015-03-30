@@ -30,6 +30,10 @@
                 <source>security.roles.title</source>
                 <target>Permissions</target>
             </trans-unit>
+            <trans-unit id="5e201470bf51b79a16ef61543d22b1df" resname="security.roles">
+                <source>security.roles</source>
+                <target>Role</target>
+            </trans-unit>
             <trans-unit id="ae201470bf51b79a16ef61543d22b1df" resname="security.roles.name">
                 <source>security.roles.name</source>
                 <target>Role title</target>
