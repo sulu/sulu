@@ -14,7 +14,11 @@ BC-Breaks are:
 
  * AccountCategory replaced with standard Categories here is a migration needed
  
-Additionally the Account has no `type` anymore. This column has to be removed from `co_accounts` table.
+For a database upgrade you have to do following steps:
+
+* The Account has no `type` anymore. This column has to be removed from `co_accounts` table.
+* The table `co_account_categories` has to be removed manually.
+* `app/console doctrine:schema:update --force`
 
 ### Security
 
