@@ -23,7 +23,7 @@ class SuluTestKernel extends SuluKernel
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
