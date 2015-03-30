@@ -40,3 +40,8 @@ sulu_contact:
             id: 1
             name: female
             translation: contact.contacts.formOfAddress.female
+
+doctrine:
+    orm:
+        resolve_target_entities:
+            Sulu\Bundle\ContactBundle\Entity\AccountInterface: Sulu\Bundle\ContactBundle\Entity\Account

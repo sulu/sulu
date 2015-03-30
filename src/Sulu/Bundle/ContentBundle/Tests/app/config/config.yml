@@ -1,10 +1,3 @@
-framework:
-    profiler:
-        enabled: true
-
-swiftmailer:
-    disable_delivery: true
-
 doctrine:
     orm:
         resolve_target_entities:
