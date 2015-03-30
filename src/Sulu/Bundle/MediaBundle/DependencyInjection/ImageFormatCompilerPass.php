@@ -72,16 +72,18 @@ class ImageFormatCompilerPass implements CompilerPassInterface
                     $configPath
                 );
 
-                $folder = dirname($fullPath);
-                $fileName = basename($fullPath);
+                if (file_exists($fullPath)) {
+                    $folder = dirname($fullPath);
+                    $fileName = basename($fullPath);
 
-                $locator = new FileLocator($folder);
-                $loader = new XmlFormatLoader($locator);
-                $loader->setDefaultOptions($defaultOptions);
-                $themeFormats = $loader->load($fileName);
-                foreach ($themeFormats as $format) {
-                    if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
-                        $activeFormats[$format['name']] = $format;
+                    $locator = new FileLocator($folder);
+                    $loader = new XmlFormatLoader($locator);
+                    $loader->setDefaultOptions($defaultOptions);
+                    $themeFormats = $loader->load($fileName);
+                    foreach ($themeFormats as $format) {
+                        if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
+                            $activeFormats[$format['name']] = $format;
+                        }
                     }
                 }
             }
