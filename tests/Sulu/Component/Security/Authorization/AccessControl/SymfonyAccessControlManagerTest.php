@@ -11,7 +11,6 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Symfony\Component\Security\Acl\Domain\Entry;
@@ -23,7 +22,7 @@ use Symfony\Component\Security\Acl\Model\MutableAclInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\SecurityIdentityInterface as SymfonySecurityIdentityInterface;
 
-class SymfonyAccessControlManagerTest extends ProphecyTestCase
+class SymfonyAccessControlManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SymfonyAccessControlManager
@@ -55,11 +54,8 @@ class SymfonyAccessControlManagerTest extends ProphecyTestCase
         parent::setUp();
 
         $this->aclProvider = $this->prophesize(MutableAclProviderInterface::class);
-
         $this->maskConverter = $this->prophesize(MaskConverterInterface::class);
-
         $this->securityIdentity = new RoleSecurityIdentity('SULU_ROLE_ADMINISTRATOR');
-
         $this->acl = $this->prophesize(MutableAclInterface::class);
 
         $this->accessControlManager = new SymfonyAccessControlManager(

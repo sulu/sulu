@@ -11,9 +11,7 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Security\Authorization\SecurityCondition;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 use Symfony\Component\Security\Acl\Model\ObjectIdentityRetrievalStrategyInterface;
@@ -22,7 +20,7 @@ use Symfony\Component\Security\Acl\Permission\PermissionMapInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class AccessControlVoterTest extends ProphecyTestCase
+class AccessControlVoterTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AccessControlVoter

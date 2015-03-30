@@ -10,11 +10,8 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use Sulu\Component\Security\Authentication\SecurityIdentityInterface;
-
 /**
  * Defines methods for assigning security to objects
- * @package Sulu\Component\Security\Authorization\AccessControl
  */
 interface AccessControlManagerInterface
 {

@@ -55,7 +55,6 @@ class AccessControlVoter extends AclVoter
 
     /**
      * {@inheritdoc}
-     * @param SecurityCondition $object
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {

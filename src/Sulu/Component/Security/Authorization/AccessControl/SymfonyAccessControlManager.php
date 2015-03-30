@@ -18,6 +18,10 @@ use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\EntryInterface;
 use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
 
+/**
+ * An implementation of Sulu's AccessControlManagerInterface, which is using the ACL component of Symfony.
+ * Responsible for setting the permissions on a specific object.
+ */
 class SymfonyAccessControlManager implements AccessControlManagerInterface
 {
     /**

@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -43,9 +44,9 @@ class User extends BaseUser
      */
     public function __construct()
     {
-        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userRoles = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+        $this->userSettings = new ArrayCollection();
     }
 
     /**
@@ -74,7 +75,7 @@ class User extends BaseUser
     /**
      * Get userRoles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUserRoles()
     {
@@ -121,7 +122,7 @@ class User extends BaseUser
 
     /**
      * Get userGroups
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUserGroups()
     {

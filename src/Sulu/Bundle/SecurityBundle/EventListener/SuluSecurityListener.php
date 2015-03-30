@@ -40,11 +40,12 @@ class SuluSecurityListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $controller = $event->getController();
+        $controllerDefinition = $event->getController();
+        $controller = $controllerDefinition[0];
 
         if (
-            !$controller[0] instanceof SecuredControllerInterface &&
-            !$controller[0] instanceof SecuredObjectControllerInterface
+            !$controller instanceof SecuredControllerInterface &&
+            !$controller instanceof SecuredObjectControllerInterface
         ) {
             return;
         }
@@ -59,7 +60,7 @@ class SuluSecurityListener
                 $permission = 'view';
                 break;
             case 'POST':
-                if ($controller[1] == 'postAction') { // means that the ClassResourceInterface has to be used
+                if ($controllerDefinition[1] == 'postAction') { // means that the ClassResourceInterface has to be used
                     $permission = 'add';
                 } else {
                     $permission = 'edit';
@@ -75,17 +76,17 @@ class SuluSecurityListener
         }
 
         $securityContext = null;
-        $locale = $controller[0]->getLocale($event->getRequest());
+        $locale = $controller->getLocale($event->getRequest());
         $objectType = null;
         $objectId = $request->get('id') ?: $request->get('uuid');
 
-        if ($controller[0] instanceof SecuredObjectControllerInterface && $objectId) {
-            $objectType = $controller[0]->getSecuredClass();
+        if ($controller instanceof SecuredObjectControllerInterface && $objectId) {
+            $objectType = $controller->getSecuredClass();
         }
 
         // check permission
-        if ($controller[0] instanceof SecuredControllerInterface) {
-            $securityContext = $controller[0]->getSecurityContext();
+        if ($controller instanceof SecuredControllerInterface) {
+            $securityContext = $controller->getSecurityContext();
         }
 
         $this->securityChecker->checkPermission(

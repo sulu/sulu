@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -28,6 +29,11 @@ class PermissionControllerTest extends SuluTestCase
      * @var MutableAclProviderInterface
      */
     private $aclProvider;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
     public function setUp()
     {

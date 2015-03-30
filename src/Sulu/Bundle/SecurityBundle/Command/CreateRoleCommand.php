@@ -81,7 +81,7 @@ class CreateRoleCommand extends ContainerAwareCommand
             $permission = new Permission();
             $permission->setRole($role);
             $permission->setContext($securityContext);
-            $permission->setPermissions(121);
+            $permission->setPermissions(127);
             $role->addPermission($permission);
         }
 

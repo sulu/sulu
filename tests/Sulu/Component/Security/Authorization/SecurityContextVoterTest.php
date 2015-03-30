@@ -23,7 +23,7 @@ use Symfony\Component\Security\Acl\Model\AclProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class SecurityContextVoterTest extends ProphecyTestCase
+class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
 {
     protected $permissions = array(
         'view' => 64,

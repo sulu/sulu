@@ -12,7 +12,6 @@ namespace Sulu\Component\Security\Authorization;
 
 /**
  * The class which describes the necessary permissions to access a certain element
- * @package Sulu\Bundle\SecurityBundle\Security
  */
 class SecurityCondition
 {
@@ -40,12 +39,6 @@ class SecurityCondition
      */
     private $locale;
 
-    /**
-     * @param string $securityContext The string representation of the security context
-     * @param string $locale The locale which will be accessed
-     * @param string $objectType The type of the object to be accessed
-     * @param mixed $objectId The id of the object
-     */
     public function __construct($securityContext, $locale = null, $objectType = null, $objectId = null)
     {
         $this->securityContext = $securityContext;
@@ -82,7 +75,7 @@ class SecurityCondition
     }
 
     /**
-     * Returns the locale in which the security
+     * Returns the locale in which the security has to be checked
      * @return string
      */
     public function getLocale()

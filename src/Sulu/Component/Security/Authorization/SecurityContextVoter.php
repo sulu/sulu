@@ -44,10 +44,7 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Checks if the voter supports the given attribute.
-     *
-     * @param string $attribute An attribute
-     * @return Boolean true if this Voter supports the attribute, false otherwise
+     * {@inheritdoc}
      */
     public function supportsAttribute($attribute)
     {
@@ -55,10 +52,7 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Checks if the voter supports the given class.
-     *
-     * @param string $class A class name
-     * @return Boolean true if this Voter can process the class
+     * {@inheritdoc}
      */
     public function supportsClass($class)
     {
@@ -86,15 +80,7 @@ class SecurityContextVoter implements VoterInterface
     }
 
     /**
-     * Returns the vote for the given parameters.
-     *
-     * This method must return one of the following constants:
-     * ACCESS_GRANTED, ACCESS_DENIED, or ACCESS_ABSTAIN.
-     *
-     * @param TokenInterface $token      A TokenInterface instance
-     * @param SecurityCondition $object     The object to secure
-     * @param array $attributes An array of attributes associated with the method being invoked
-     * @return integer either ACCESS_GRANTED, ACCESS_ABSTAIN, or ACCESS_DENIED
+     * {@inheritdoc}
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
@@ -147,7 +133,7 @@ class SecurityContextVoter implements VoterInterface
     /**
      * Checks if the given group has the permission to execute the desired task
      * @param SecurityCondition $object
-     * @param integer $attributes
+     * @param integer $attribute
      * @param Group $group
      * @param array $locales
      * @return bool
