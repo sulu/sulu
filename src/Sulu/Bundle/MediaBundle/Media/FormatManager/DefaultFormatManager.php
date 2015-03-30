@@ -171,7 +171,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 $imageExtension = $this->getImageExtension($fileName);
 
                 // get image
-                $image = $image->get(
+                $responseContent = $image->get(
                     $imageExtension,
                     $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
                 );
@@ -182,7 +182,7 @@ class DefaultFormatManager implements FormatManagerInterface
                 // save image
                 if ($this->saveImage) {
                     $this->formatCache->save(
-                        $this->createTmpFile($image),
+                        $this->createTmpFile($responseContent),
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
@@ -191,24 +191,23 @@ class DefaultFormatManager implements FormatManagerInterface
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName), $e);
+                list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName), $e);
             }
+            $responseMimeType = 'image/' . $imageExtension;
         } catch (MediaException $e) {
-            // clear temp files
-            $this->clearTempFiles();
-
-            // return error message
-            return new Response($e->getCode() . ': ' . $e->getMessage(), 404, 'text/plain');
+            $responseContent = $e->getCode() . ': ' . $e->getMessage();
+            $status = 404;
+            $responseMimeType = 'text/plain';
         }
 
         // clear temp files
         $this->clearTempFiles();
 
         // set header
-        $headers = $this->getResponseHeaders($imageExtension);
+        $headers = $this->getResponseHeaders($responseMimeType);
 
         // return image
-        return new Response($image, $status, $headers);
+        return new Response($responseContent, $status, $headers);
     }
 
     /**
@@ -252,10 +251,10 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param $imageExtension
+     * @param $mimeType
      * @return array
      */
-    protected function getResponseHeaders($imageExtension = '')
+    protected function getResponseHeaders($mimeType = '')
     {
         $headers = array();
 
@@ -268,8 +267,8 @@ class DefaultFormatManager implements FormatManagerInterface
             }
         }
 
-        if (!empty($imageExtension)) {
-            $headers['Content-Type'] = 'image/' . $imageExtension;
+        if (!empty($mimeType)) {
+            $headers['Content-Type'] = $mimeType;
         }
 
         return $headers;
