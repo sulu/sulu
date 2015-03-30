@@ -32,6 +32,7 @@
         "stof/doctrine-extensions-bundle": "1.1.*",
         "symfony-cmf/routing-bundle": "1.2.*",
         "symfony/symfony": "2.6.*",
+        "symfony/assetic-bundle": "~2.3",
         "willdurand/hateoas-bundle": "0.3.*",
         "symfony/swiftmailer-bundle": "~2.3"
     },
