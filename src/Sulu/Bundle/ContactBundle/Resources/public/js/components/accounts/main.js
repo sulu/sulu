@@ -461,10 +461,9 @@ define([
             this.sandbox.emit('sulu.router.navigate', 'contacts/contacts/edit:' + id + '/details');
         },
 
-        add: function(type) {
+        add: function() {
             // TODO: show loading icon
-            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add/type:' + type);
-
+            this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/add');
         },
 
         delAccounts: function(ids) {
