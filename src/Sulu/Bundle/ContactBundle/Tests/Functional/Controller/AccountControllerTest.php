@@ -2042,50 +2042,8 @@ class AccountControllerTest extends SuluTestCase
                 return true;
             }
 
-        return false;
+            return false;
         };
-    }
-
-    public function testTriggerAction()
-    {
-
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'POST',
-            '/api/accounts/' . $this->account->getId() .'?action=convertAccountType&type=lead'
-        );
-
-        $response = json_decode($client->getResponse()->getContent());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-
-        $this->assertEquals($this->account->getId(), $response->id);
-        $this->assertEquals(1, $response->type);
-
-    }
-
-    public function testTriggerActionUnknownTrigger()
-    {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'POST',
-            '/api/accounts/' . $this->account->getId() .'?action=xyz&type=lead'
-        );
-
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
-    }
-
-    public function testTriggerActionUnknownEntity()
-    {
-        $client = $this->createAuthenticatedClient();
-
-        $client->request(
-            'POST',
-            '/api/accounts/999?action=convertAccountType&type=lead'
-        );
-
-        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
     public function testGetAccountsWithNoParent(){

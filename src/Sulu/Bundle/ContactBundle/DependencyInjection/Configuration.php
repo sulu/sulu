@@ -59,25 +59,6 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('account_types')
-                    ->useAttributeAsKey('title')
-                    ->prototype('array')
-                        ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('id')->end()
-                            ->scalarNode('name')->end()
-                            ->scalarNode('translation')->end()
-                            ->arrayNode('tabs')
-                                ->useAttributeAsKey('name')
-                                ->prototype('scalar')->defaultValue('false')->end()
-                            ->end()
-                            ->arrayNode('convertableTo')
-                                ->useAttributeAsKey('name')
-                                ->prototype('scalar')->defaultValue('false')->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
                 ->arrayNode('form_of_address')
                     ->useAttributeAsKey('title')
                     ->prototype('array')
@@ -89,12 +70,8 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
         return $treeBuilder;
     }
 }

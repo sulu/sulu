@@ -39,11 +39,6 @@ class SuluContactExtension extends Extension
             $config['defaults']
         );
 
-        $container->setParameter(
-            'sulu_contact.account_types',
-            $config['account_types']
-        );
-
         $this->setDefaultForFormOfAddress($config);
         $container->setParameter(
             'sulu_contact.form_of_address',

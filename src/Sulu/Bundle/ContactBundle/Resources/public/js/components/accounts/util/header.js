@@ -57,7 +57,7 @@ define(['app-config'], function(AppConfig) {
             var typeInfo, compareAttribute, i, type,
                 accountType = 0,
                 accountTypes,
-                section = AppConfig.getSection('sulu-contact'); // get account types
+                section = AppConfig.getSection('massive-contact'); // get account types
 
             if (!section || section.length > 0 || !section.hasOwnProperty('accountTypes')) {
                 return false;
@@ -186,7 +186,7 @@ define(['app-config'], function(AppConfig) {
         setHeader: function(account, accountTypeName) {
 
             var accountType,
-                accountTypes = AppConfig.getSection('sulu-contact').accountTypes;
+                accountTypes = AppConfig.getSection('massive-contact').accountTypes;
 
             // parse to json
             account = account.toJSON();

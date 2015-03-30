@@ -48,7 +48,7 @@ define([
         getTabsOptions = function() {
             var items, i, index, type,
                 accountTypes,
-                contactSection = AppConfig.getSection('sulu-contact'),
+                contactSection = AppConfig.getSection('massive-contact'),
                 accountType,
                 preselect;
 
@@ -177,7 +177,7 @@ define([
                 dataUrlAddition = '',
                 accountType,
             // get account types
-                accountTypes = AppConfig.getSection('sulu-contact').accountTypes,
+                accountTypes = AppConfig.getSection('massive-contact').accountTypes,
                 assocAccountTypes = {};
 
             // create LUT for accountTypes
