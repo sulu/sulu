@@ -10,7 +10,7 @@
     "authors": [
         {
             "name": "Sulu Community",
-            "homepage": "https://github.com/sulu-cmf/sulu/contributors"
+            "homepage": "https://github.com/sulu-io/sulu/contributors"
         }
     ],
     "require": {
