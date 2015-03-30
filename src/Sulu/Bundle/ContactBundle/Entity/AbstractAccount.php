@@ -79,11 +79,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     protected $faxes;
 
     /**
-     * @var integer
-     */
-    protected $type;
-
-    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     protected $bankAccounts;
@@ -387,29 +382,6 @@ class AbstractAccount extends BaseAccount implements AuditableInterface, Account
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     * @return Account
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

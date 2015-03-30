@@ -10,8 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
-use FOS\RestBundle\Controller\Annotations\Post;
+use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
@@ -23,15 +22,14 @@ use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliveryEntity;
 use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes accounts available through a REST API
@@ -363,8 +361,6 @@ class AccountController extends AbstractContactController
      */
     public function cgetAction(Request $request)
     {
-        $type = $request->get('type');
-
         // define filters
         $filter = array();
         $ids = $request->get('ids');
@@ -377,31 +373,10 @@ class AccountController extends AbstractContactController
         }
 
         if ($request->get('flat') == 'true') {
-
             /** @var RestHelperInterface $restHelper */
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
-            /** @var DoctrineListBuilderFactory $factory */
-            $factory = $this->get('sulu_core.doctrine_list_builder_factory');
-
-            $listBuilder = $factory->create($this->getAccountEntityName());
-
-            if ($type) {
-                $listBuilder->where($this->fieldDescriptors['type'], $type);
-            }
-
-            if (json_decode($request->get('hasNoParent', null))) {
-                $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
-            }
-
-            foreach ($filter as $key => $value) {
-                if (is_array($value)) {
-                    $listBuilder->in($this->fieldDescriptors[$key], $value);
-                } else {
-                    $listBuilder->where($this->fieldDescriptors[$key], $value);
-                }
-            }
-
+            $listBuilder = $this->generateFlatListBuilder($request, $filter);
             $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
 
             $list = new ListRepresentation(
@@ -427,6 +402,33 @@ class AccountController extends AbstractContactController
         }
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @param $filter
+     */
+    protected function generateFlatListBuilder(Request $request, $filter)
+    {
+
+        /** @var DoctrineListBuilderFactory $factory */
+        $factory = $this->get('sulu_core.doctrine_list_builder_factory');
+
+        $listBuilder = $factory->create($this->getAccountEntityName());
+
+        if (json_decode($request->get('hasNoParent', null))) {
+            $listBuilder->where($this->getFieldDescriptorForNoParent(), null);
+        }
+
+        foreach ($filter as $key => $value) {
+            if (is_array($value)) {
+                $listBuilder->in($this->fieldDescriptors[$key], $value);
+            } else {
+                $listBuilder->where($this->fieldDescriptors[$key], $value);
+            }
+        }
+
+        return $listBuilder;
     }
 
     /**
@@ -507,8 +509,6 @@ class AccountController extends AbstractContactController
         if (!is_null($request->get('uid'))) {
             $account->setUid($request->get('uid'));
         }
-
-        $account->setType($request->get('type', 0));
 
         $disabled = $request->get('disabled');
         if (is_null($disabled)) {
@@ -1134,7 +1134,7 @@ class AccountController extends AbstractContactController
         );
     }
 
-    private function initFieldDescriptors()
+    protected function initFieldDescriptors()
     {
 
         $this->fieldDescriptors = array();
@@ -1286,18 +1286,6 @@ class AccountController extends AbstractContactController
             true,
             false,
             'date'
-        );
-
-        $this->fieldDescriptors['type'] = new DoctrineFieldDescriptor(
-            'type',
-            'type',
-            $this->getAccountEntityName(),
-            'contact.accounts.type',
-            array(),
-            true,
-            false,
-            '',
-            '150px'
         );
 
         $this->fieldDescriptors['disabled'] = new DoctrineFieldDescriptor(

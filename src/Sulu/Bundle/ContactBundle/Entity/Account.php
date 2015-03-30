@@ -15,11 +15,4 @@ namespace Sulu\Bundle\ContactBundle\Entity;
  */
 class Account extends AbstractAccount
 {
-    const TYPE_BASIC = 0;
-    const TYPE_LEAD = 1;
-    const TYPE_CUSTOMER = 2;
-    const TYPE_SUPPLIER = 3;
-
-    // default value
-    protected $type = self::TYPE_BASIC;
 }

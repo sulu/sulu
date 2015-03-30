@@ -428,21 +428,6 @@ interface AccountInterface
     public function getChildren();
 
     /**
-     * Set type
-     *
-     * @param integer $type
-     * @return Account
-     */
-    public function setType($type);
-
-    /**
-     * Get type
-     *
-     * @return integer
-     */
-    public function getType();
-
-    /**
      * Add faxes
      *
      * @param \Sulu\Bundle\ContactBundle\Entity\Fax $faxes

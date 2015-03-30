@@ -16,8 +16,6 @@
             <gedmo:tree-level/>
         </field>
 
-        <field name="type" type="integer" column="type" nullable="false" />
-
         <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="account"/>
 
         <one-to-many field="accountAddresses" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountAddress" mapped-by="account"/>

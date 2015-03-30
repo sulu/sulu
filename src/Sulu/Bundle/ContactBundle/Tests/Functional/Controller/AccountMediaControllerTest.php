@@ -64,7 +64,6 @@ class AccountMediaControllerTest extends SuluTestCase
     {
         $this->account = new Account();
         $this->account->setName('Company');
-        $this->account->setType(Account::TYPE_BASIC);
         $this->account->setDisabled(0);
         $this->account->setPlaceOfJurisdiction('Feldkirch');
 
