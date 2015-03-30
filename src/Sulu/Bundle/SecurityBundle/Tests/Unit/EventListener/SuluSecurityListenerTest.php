@@ -11,13 +11,12 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-class SuluSecurityListenerTest extends ProphecyTestCase
+class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SecurityListener

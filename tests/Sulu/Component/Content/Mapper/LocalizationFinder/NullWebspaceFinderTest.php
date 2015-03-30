@@ -2,9 +2,8 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class NullWebspaceFinderTest extends ProphecyTestCase
+class NullWebspaceFinderTest extends \PHPUnit_Framework_TestCase
 {
     private $node;
     private $finder;

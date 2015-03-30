@@ -12,13 +12,12 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager;
 
-class DefaultFormatManagerTest extends ProphecyTestCase
+class DefaultFormatManagerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {

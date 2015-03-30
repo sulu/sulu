@@ -2,10 +2,9 @@
 
 namespace Sulu\Component\Url;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Url;
 
-class UrlTest extends ProphecyTestCase
+class UrlTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

@@ -10,9 +10,8 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class AuthenticationEntryPointTest extends ProphecyTestCase
+class AuthenticationEntryPointTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AuthenticationEntryPoint

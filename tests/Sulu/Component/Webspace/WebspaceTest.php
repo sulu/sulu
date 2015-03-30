@@ -2,10 +2,9 @@
 
 namespace Sulu\Component\Webspace;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Localization\Localization;
 
-class WebspaceTest extends ProphecyTestCase
+class WebspaceTest extends \PHPUnit_Framework_TestCase
 {
 
     /**

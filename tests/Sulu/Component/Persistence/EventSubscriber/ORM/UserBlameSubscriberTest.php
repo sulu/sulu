@@ -10,10 +10,9 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 
-class UserBlameSubscriberTest extends ProphecyTestCase
+class UserBlameSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
