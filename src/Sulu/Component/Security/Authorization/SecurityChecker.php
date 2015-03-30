@@ -49,9 +49,7 @@ class SecurityChecker extends AbstractSecurityChecker
             return true;
         }
 
-        $attributes = array(
-            'permission' => $permission
-        );
+        $attributes = array($permission);
 
         if (is_string($subject)) {
             $subject = new SecurityCondition($subject);

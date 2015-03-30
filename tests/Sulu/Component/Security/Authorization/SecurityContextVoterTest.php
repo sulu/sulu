@@ -18,7 +18,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserGroup;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Model\AclProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -26,7 +25,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SecurityContextVoterTest extends ProphecyTestCase
 {
-
     protected $permissions = array(
         'view' => 64,
         'add' => 32,
@@ -36,6 +34,41 @@ class SecurityContextVoterTest extends ProphecyTestCase
         'live' => 2,
         'security' => 1
     );
+
+    /**
+     * @var User
+     */
+    protected $user;
+
+    /**
+     * @var UserRole
+     */
+    protected $userRole;
+
+    /**
+     * @var Role
+     */
+    protected $role;
+
+    /**
+     * @var Permission
+     */
+    protected $permission;
+
+    /**
+     * @var UserGroup
+     */
+    protected $userGroup;
+
+    /**
+     * @var Group
+     */
+    protected $group;
+
+    /**
+     * @var Group
+     */
+    protected $nestedGroup;
 
     /**
      * @var TokenInterface
@@ -54,38 +87,38 @@ class SecurityContextVoterTest extends ProphecyTestCase
 
     public function setUp()
     {
-        $user = new User();
-        $userRole = new UserRole();
-        $role = new Role();
-        $permission = new Permission();
-        $permission->setPermissions(122);
-        $permission->setContext('sulu.security.roles');
-        $role->addPermission($permission);
-        $userRole->setRole($role);
-        $user->addUserRole($userRole);
+        $this->user = new User();
+        $this->userRole = new UserRole();
+        $this->role = new Role();
+        $this->permission = new Permission();
+        $this->permission->setPermissions(122);
+        $this->permission->setContext('sulu.security.roles');
+        $this->role->addPermission($this->permission);
+        $this->userRole->setRole($this->role);
+        $this->user->addUserRole($this->userRole);
 
-        $userGroup = new UserGroup();
-        $group = new Group();
-        $role = new Role();
-        $permission = new Permission();
-        $permission->setPermissions(122);
-        $permission->setContext('sulu.security.groups');
-        $role->addPermission($permission);
-        $group->addRole($role);
-        $userGroup->setGroup($group);
+        $this->userGroup = new UserGroup();
+        $this->group = new Group();
+        $this->role = new Role();
+        $this->permission = new Permission();
+        $this->permission->setPermissions(122);
+        $this->permission->setContext('sulu.security.groups');
+        $this->role->addPermission($this->permission);
+        $this->group->addRole($this->role);
+        $this->userGroup->setGroup($this->group);
 
-        $nestedGroup = new Group();
-        $role = new Role();
-        $permission = new Permission();
-        $permission->setPermissions(122);
-        $permission->setContext('sulu.security.groups.nested');
-        $role->addPermission($permission);
-        $nestedGroup->addRole($role);
-        $group->addChildren($nestedGroup);
-        $user->addUserGroup($userGroup);
+        $this->nestedGroup = new Group();
+        $this->role = new Role();
+        $this->permission = new Permission();
+        $this->permission->setPermissions(122);
+        $this->permission->setContext('sulu.security.groups.nested');
+        $this->role->addPermission($this->permission);
+        $this->nestedGroup->addRole($this->role);
+        $this->group->addChildren($this->nestedGroup);
+        $this->user->addUserGroup($this->userGroup);
 
         $this->token = $this->prophesize(TokenInterface::class);
-        $this->token->getUser()->willReturn($user);
+        $this->token->getUser()->willReturn($this->user);
 
         $this->aclProvider = $this->prophesize(AclProviderInterface::class);
         $this->aclProvider->findAcl(Argument::any())->willReturn(true);
@@ -98,9 +131,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles'),
-            array(
-                'permission' => 'view'
-            )
+            array('view')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
@@ -111,9 +142,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.roles'),
-            array(
-                'permission' => 'security'
-            )
+            array('security')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
@@ -124,9 +153,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups'),
-            array(
-                'permission' => 'view'
-            )
+            array('view')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
@@ -137,9 +164,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups'),
-            array(
-                'permission' => 'security'
-            )
+            array('security')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
@@ -150,9 +175,7 @@ class SecurityContextVoterTest extends ProphecyTestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups.nested'),
-            array(
-                'permission' => 'view'
-            )
+            array('view')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
@@ -163,39 +186,85 @@ class SecurityContextVoterTest extends ProphecyTestCase
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups.nested'),
-            array(
-                'permission' => 'security'
-            )
+            array('security')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
     }
 
-    public function testAbstainWhenAclExistsVote()
+    public function testAbstainWhenAclExistsWithoutLocalizationVote()
     {
         $access = $this->voter->vote(
             $this->token->reveal(),
             new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\Security\Entity\Group', '1'),
-            array(
-                'permission' => 'view'
-            )
+            array('view')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $access);
     }
 
-    public function testPositiveVoteWhenAclNotExistsVote()
+    public function testPositiveWhenAclExistsVote()
+    {
+        $this->userRole->setLocale('["de"]');
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles', 'de', 'Sulu\Bundle\Security\Entity\Group', '1'),
+            array('view')
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+    }
+
+    public function testNegativeWhenAclExistsVote()
+    {
+        $this->userRole->setLocale('["en"]');
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles', 'de', 'Sulu\Bundle\SecurityBundle\Group', '1'),
+            array('view')
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+    }
+
+    public function testPositiveWhenAclNotExistsVote()
     {
         $this->aclProvider->findAcl(Argument::any())->willThrow(AclNotFoundException::class);
 
         $access = $this->voter->vote(
             $this->token->reveal(),
-            new SecurityCondition('sulu.security.groups', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
-            array(
-                'permission' => 'view'
-            )
+            new SecurityCondition('sulu.security.roles', null, 'Sulu\Bundle\SecurityBundle\Group', '1'),
+            array('view')
         );
 
         $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+    }
+
+    public function testPositiveVoteWithMultipleAttributes()
+    {
+        $this->aclProvider->findAcl(Argument::any())->willThrow(AclNotFoundException::class);
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles', null),
+            array('view', 'add')
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+    }
+
+    public function testNegativeVoteWithMultipleAttributes()
+    {
+        $this->aclProvider->findAcl(Argument::any())->willThrow(AclNotFoundException::class);
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles', null),
+            array('view', 'security')
+        );
+
+        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
     }
 }

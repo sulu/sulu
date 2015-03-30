@@ -49,7 +49,7 @@ class SecurityCheckerTest extends \PHPUnit_Framework_TestCase
     public function testIsGrantedContext()
     {
         $this->authorizationChecker->isGranted(
-            array('permission' => 'view'),
+            array('view'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(true);
 
@@ -63,7 +63,7 @@ class SecurityCheckerTest extends \PHPUnit_Framework_TestCase
         $object = new \stdClass();
 
         $this->authorizationChecker->isGranted(
-            array('permission' => 'view'),
+            array('view'),
             $object
         )->willReturn(true);
 
@@ -88,7 +88,7 @@ class SecurityCheckerTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->authorizationChecker->isGranted(
-            array('permission' => 'view'),
+            array('view'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(false);
 

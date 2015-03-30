@@ -71,7 +71,7 @@ class AccessControlVoter extends AclVoter
             $objectIdentity = new ObjectIdentity($object->getObjectId(), $object->getObjectType());
             $this->aclProvider->findAcl($objectIdentity); // only called to check if acl exists
 
-            return parent::vote($token, $objectIdentity, array($attributes['permission']));
+            return parent::vote($token, $objectIdentity, $attributes);
         } catch (AclNotFoundException $exc) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
