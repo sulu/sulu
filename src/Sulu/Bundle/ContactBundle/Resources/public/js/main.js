@@ -14,11 +14,20 @@ require.config({
         'type/bic-input': '../../sulucontact/js/input-type/bic-input',
         'type/vat-input': '../../sulucontact/js/input-type/vat-input',
         'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
-        'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog'
+        'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
+
+        'aura_extensions/iban': '../../sulucontact/js/aura_extensions/iban',
+        'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
+        'type/iban-input': '../../sulucontact/js/input-type/iban-input',
+    },
+    shim: {
+        'vendor/iban-converter': {
+            exports: 'IBAN'
+        }
     }
 });
 
-define(['config'], function(Config) {
+define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
 
     'use strict';
 
@@ -27,6 +36,8 @@ define(['config'], function(Config) {
         name: "Sulu Contact Bundle",
 
         initialize: function(app) {
+
+            IbanExtension.initialize(app);
 
             var sandbox = app.sandbox;
 
