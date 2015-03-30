@@ -65,49 +65,38 @@ define([
             this.bindCustomEvents();
             this.bindSidebarEvents();
             this.account = null;
-            this.accountType = null;
-            this.accountTypes = null;
 
             if (this.options.display === 'list') {
                 this.renderList();
-
             } else if (this.options.display === 'form') {
-                this.renderForm().then(function() {
-                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                    }.bind(this)
-                );
+                this.renderForm().then(this.setHeader.bind(this));
             } else if (this.options.display === 'contacts') {
                 this.renderComponent(
                     'accounts/components/',
                     this.options.display,
                     'accounts-form-container', {}
-                ).then(function() {
-                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                    }.bind(this)
-                );
+                ).then(this.setHeader.bind(this));
             } else if (this.options.display === 'financials') {
                 this.renderComponent(
                     'accounts/components/',
                     this.options.display,
                     'accounts-form-container',
                     {}
-                ).then(function() {
-                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                    }.bind(this)
-                );
+                ).then(this.setHeader.bind(this));
             } else if (this.options.display === 'documents') {
                 this.renderComponent(
                     '',
                     this.options.display,
                     'documents-form',
                     {type: 'account'}
-                ).then(function() {
-                        AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-                    }.bind(this)
-                );
+                ).then(this.setHeader.bind(this));
             } else {
                 throw 'display type wrong';
             }
+        },
+
+        setHeader: function() {
+            AccountsUtilHeader.setHeader.call(this, this.account);
         },
 
         bindCustomEvents: function() {
@@ -154,21 +143,6 @@ define([
                     true
                 );
             }, this);
-
-            this.sandbox.on('sulu.contacts.account.types', function(data) {
-                this.accountType = data.accountType;
-                this.accountTypes = data.accountTypes;
-            }.bind(this));
-
-            this.sandbox.on('sulu.contacts.account.get.types', function(callback) {
-                if (typeof callback === 'function') {
-                    callback(this.accountType, this.accountTypes);
-                }
-            }.bind(this));
-
-            this.sandbox.on('sulu.contacts.account.convert', function(data) {
-                this.convertAccount(data);
-            }.bind(this));
 
             // handling of terms of delivery/payment eventlistener
             this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTerms.bind(this, 'delivery'));
@@ -412,58 +386,6 @@ define([
             }.bind(this));
         },
 
-        /**
-         * Converts an account
-         */
-        convertAccount: function(data) {
-            this.confirmConversionDialog(function(wasConfirmed) {
-                if (wasConfirmed) {
-                    this.account.set({type: data.id});
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.sandbox.util.ajax('/admin/api/accounts/' + this.account.id + '?action=convertAccountType&type=' + data.name, {
-
-                        type: 'POST',
-
-                        success: function(response) {
-                            var model = response;
-                            this.sandbox.emit('sulu.header.toolbar.item.enable', 'options-button');
-
-                            // update tabs and breadcrumb
-                            this.sandbox.emit('sulu.contacts.accounts.saved', model);
-                            AccountsUtilHeader.setHeader.call(this, this.account, this.options.accountType);
-
-                            // update toolbar
-                            this.sandbox.emit('sulu.account.type.converted');
-                        }.bind(this),
-
-                        error: function() {
-                            this.sandbox.logger.log("error while saving profile");
-                        }.bind(this)
-                    });
-                }
-            }.bind(this));
-        },
-
-        /**
-         * @var ids - array of ids to delete
-         * @var callback - callback function returns true or false if data got deleted
-         */
-        confirmConversionDialog: function(callbackFunction) {
-
-            // check if callback is a function
-            if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
-                throw 'callback is not a function';
-            }
-
-            // show dialog
-            this.sandbox.emit('sulu.overlay.show-warning',
-                'sulu.overlay.be-careful',
-                'contact.accounts.type.conversion.message',
-                callbackFunction.bind(this, false),
-                callbackFunction.bind(this, true)
-            );
-        },
-
         // show confirmation and delete account
         del: function() {
             DeleteDialog.showForSingle(this.sandbox, this.account, this.options.id);
@@ -561,8 +483,7 @@ define([
                 {
                     name: 'accounts/components/list@sulucontact',
                     options: {
-                        el: $list,
-                        accountType: this.options.accountType ? this.options.accountType : null
+                        el: $list
                     }
                 }
             ]);
@@ -619,7 +540,6 @@ define([
 
             if (!!this.options.id) {
                 this.account = new Account({id: this.options.id});
-                //account = this.getModel(this.options.id);
                 this.account.fetch({
                     success: function(model) {
                         this.sandbox.start([
@@ -633,14 +553,17 @@ define([
                     }.bind(this)
                 });
             } else {
-                accTypeId = AccountsUtilHeader.getAccountTypeIdByTypeName.call(this, this.options.accountType);
-                this.account.set({type: accTypeId});
-                this.sandbox.start([
-                    {name: 'accounts/components/form@sulucontact', options: { el: $form, data: this.account.toJSON()}}
-                ]);
-                dfd.resolve();
+                this.renderCreateForm(dfd, $form);
             }
             return dfd.promise();
+        },
+
+        renderCreateForm: function(dfd, $form) {
+            this.sandbox.start([
+                {name: 'accounts/components/form@sulucontact', options: {el: $form, data: this.account.toJSON()}}
+            ]);
+
+            dfd.resolve();
         },
 
         showDeleteConfirmation: function(ids) {

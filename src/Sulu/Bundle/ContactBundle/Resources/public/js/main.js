@@ -113,30 +113,12 @@ define(['config'], function(Config) {
                 }
             });
 
-            // list all accounts
-            sandbox.mvc.routes.push({
-                route: 'contacts/accounts/type::typeid',
-                callback: function(accountType) {
-                    this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="list" data-aura-account-type="' + accountType + '" />');
-                }
-            });
-
             //show for a new account
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/add',
                 callback: function() {
                     this.html(
                         '<div data-aura-component="accounts/components/content@sulucontact"/>'
-                    );
-                }
-            });
-
-            //show for a new account
-            sandbox.mvc.routes.push({
-                route: 'contacts/accounts/add/type::id',
-                callback: function(accountType) {
-                    this.html(
-                            '<div data-aura-component="accounts/components/content@sulucontact" data-aura-account-type="' + accountType + '" />'
                     );
                 }
             });

@@ -75,7 +75,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.contactBySystemURL = 'api/contacts?bySystem=true';
 
             this.render();
-            this.getAccountTypeData();
             this.setHeaderBar(true);
             this.listenForChange();
 
@@ -86,13 +85,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
         initSidebar: function(url, id) {
             this.sandbox.emit('sulu.sidebar.set-widget', url + id);
-        },
-
-        getAccountTypeData: function() {
-            this.sandbox.emit('sulu.contacts.account.get.types', function(accountType, accountTypes) {
-                this.accountType = accountType;
-                this.accountTypes = accountTypes;
-            }.bind(this));
         },
 
         render: function() {
@@ -106,8 +98,6 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.titleField = this.$find('#name');
 
             data = this.initContactData();
-            this.accountType = null;
-            this.accountTypes = null;
 
             excludeItem = [];
             if (!!this.options.data.id) {
