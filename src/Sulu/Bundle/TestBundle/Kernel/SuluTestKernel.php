@@ -17,13 +17,13 @@ class SuluTestKernel extends SuluKernel
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new \Liip\ThemeBundle\LiipThemeBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new \Symfony\Bundle\MonologBundle\MonologBundle(),
             new \Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
 
             // Sulu
             new \Sulu\Bundle\CoreBundle\SuluCoreBundle(),
