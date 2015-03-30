@@ -262,39 +262,24 @@ class NavigationTest extends PhpcrTestCase
         );
 
         $method->setAccessible(true);
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property(
-                    'title',
-                    '',
-                    'text_line',
-                    true,
-                    true,
-                    1,
-                    1,
-                    array()
-                )
-            )
-        );
+        $property = new Property('title', '', 'text_line', true, true, 1, 1, array());
+        $property->setStructure($structureMock);
+        $method->invokeArgs($structureMock, array($property));
 
         if ($rlp) {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property(
-                        'url',
-                        '',
-                        'resource_locator',
-                        true,
-                        true,
-                        1,
-                        1,
-                        array(),
-                        array(new PropertyTag('sulu.rlp', 1))
-                    )
-                )
+            $property = new Property(
+                'url',
+                '',
+                'resource_locator',
+                true,
+                true,
+                1,
+                1,
+                array(),
+                array(new PropertyTag('sulu.rlp', 1))
             );
+            $property->setStructure($structureMock);
+            $method->invokeArgs($structureMock, array($property));
         }
 
         return $structureMock;
@@ -695,8 +680,10 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private $languageNamespace;
 
-    public function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
-    {
+    public function __construct(
+        StructureManagerInterface $structureManager,
+        ContentTypeManagerInterface $contentTypeManager
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
     }
@@ -737,7 +724,11 @@ class ExcerptStructureExtension extends StructureExtension
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
                 $node,
-                new TranslatedProperty($property, $languageCode . '-' . $this->additionalPrefix, $this->languageNamespace),
+                new TranslatedProperty(
+                    $property,
+                    $languageCode . '-' . $this->additionalPrefix,
+                    $this->languageNamespace
+                ),
                 $webspaceKey,
                 $languageCode,
                 null // segmentkey
