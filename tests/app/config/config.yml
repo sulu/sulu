@@ -1,6 +1,3 @@
-massive_search:
-    adapter_id: massive_search.adapter.test
-
 doctrine:
     orm:
         resolve_target_entities:
