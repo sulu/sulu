@@ -191,11 +191,14 @@ class DefaultFormatManager implements FormatManagerInterface
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName));
+                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName), $e);
             }
         } catch (MediaException $e) {
-            // return default image
-            list($image, $status, $imageExtension) = $this->returnFallbackImage($formatName);
+            // clear temp files
+            $this->clearTempFiles();
+
+            // return error message
+            return new Response($e->getCode() . ': ' . $e->getMessage(), 404, 'text/plain');
         }
 
         // clear temp files
@@ -224,18 +227,21 @@ class DefaultFormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $format
-     * @param string $fileExtension
-     * @return Response
+     * @param $format
+     * @param $fileExtension
+     * @param MediaException $e
+     * @return array
+     * @throws ImageProxyInvalidImageFormat
+     * @throws MediaException
      */
-    protected function returnFileExtensionIcon($format, $fileExtension)
+    protected function returnFileExtensionIcon($format, $fileExtension, $e)
     {
         $imageExtension = 'png';
 
         $placeholder = dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png';
 
         if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png')) {
-            return $this->returnFallbackImage($format);
+            throw $e;
         }
 
         $image = $this->converter->convert($placeholder, $this->getFormat($format));
@@ -243,23 +249,6 @@ class DefaultFormatManager implements FormatManagerInterface
         $image = $image->get($imageExtension);
 
         return array($image, 200, $imageExtension);
-    }
-
-    /**
-     * @param string $format
-     * @return Response
-     */
-    protected function returnFallbackImage($format)
-    {
-        $imageExtension = 'png';
-
-        $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
-
-        $image = $this->converter->convert($placeholder, $this->getFormat($format));
-
-        $image = $image->get($imageExtension);
-
-        return array($image, 404, $imageExtension);
     }
 
     /**
