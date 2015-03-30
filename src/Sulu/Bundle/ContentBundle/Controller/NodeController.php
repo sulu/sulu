@@ -572,8 +572,7 @@ class NodeController extends RestController
     }
 
     /**
-     * Returns the SecurityContext required for the controller
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {
@@ -586,11 +585,18 @@ class NodeController extends RestController
     }
 
     /**
-     * Returns the class name of the object to check
-     * @return string
+     * {@inheritdoc}
      */
     public function getSecuredClass()
     {
         return Structure::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredObjectId(Request $request)
+    {
+        return $request->get('uuid');
     }
 }

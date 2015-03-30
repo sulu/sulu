@@ -55,7 +55,7 @@ class SuluSecurityListener
         // find appropriate permission type for request
         $permission = '';
 
-        switch ($event->getRequest()->getMethod()) {
+        switch ($request->getMethod()) {
             case 'GET':
                 $permission = 'view';
                 break;
@@ -76,12 +76,13 @@ class SuluSecurityListener
         }
 
         $securityContext = null;
-        $locale = $controller->getLocale($event->getRequest());
+        $locale = $controller->getLocale($request);
         $objectType = null;
-        $objectId = $request->get('id') ?: $request->get('uuid');
+        $objectId = null;
 
-        if ($controller instanceof SecuredObjectControllerInterface && $objectId) {
+        if ($controller instanceof SecuredObjectControllerInterface) {
             $objectType = $controller->getSecuredClass();
+            $objectId = $controller->getSecuredObjectId($request);
         }
 
         // check permission

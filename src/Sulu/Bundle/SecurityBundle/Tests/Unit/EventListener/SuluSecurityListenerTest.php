@@ -20,7 +20,6 @@ use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
 
 class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -52,14 +51,15 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
     {
         $controller = $this->prophesize(SecuredObjectControllerInterface::class);
         $controller->getSecuredClass()->willReturn('Acme\Example');
+        $controller->getSecuredObjectId(Argument::any())->willReturn('1');
         $controller->getLocale(Argument::any())->willReturn(null);
 
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller));
-        $this->filterControllerEvent->getRequest()->willReturn($request);
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
 
         $this->securityChecker->checkPermission(
             new SecurityCondition(null, null, 'Acme\Example', '1'),
@@ -76,22 +76,23 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $controller->willImplement(SecuredObjectControllerInterface::class);
         $controller->getSecuredClass()->willReturn('Acme\Example');
         $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getSecuredObjectId(Argument::any())->willReturn('1');
         $controller->getLocale(Argument::any())->willReturn(null);
 
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
-        $this->filterControllerEvent->getController()->willReturn(array($controller));
-        $this->filterControllerEvent->getRequest()->willReturn($request);
-
-        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
 
         $this->securityChecker->checkPermission(
             new SecurityCondition('security.context', null, 'Acme\Example', '1'),
             Argument::cetera(),
             null
         )->shouldBeCalled();
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
     }
 
     public function testRestController()

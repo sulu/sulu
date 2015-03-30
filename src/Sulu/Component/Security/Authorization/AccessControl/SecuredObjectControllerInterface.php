@@ -24,6 +24,13 @@ interface SecuredObjectControllerInterface
     public function getSecuredClass();
 
     /**
+     * Returns the id of the object to check
+     * @param Request $request
+     * @return string
+     */
+    public function getSecuredObjectId(Request $request);
+
+    /**
      * Returns the locale for the given request
      * @param Request $request
      * @return string
