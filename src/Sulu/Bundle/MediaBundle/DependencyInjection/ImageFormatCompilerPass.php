@@ -55,33 +55,33 @@ class ImageFormatCompilerPass implements CompilerPassInterface
         $activeTheme = $this->container->get('liip_theme.active_theme');
         $bundles = $this->container->getParameter('kernel.bundles');
         $asseticBundles = $this->container->getParameterBag()->resolveValue($this->container->getParameter('assetic.bundles'));
-        $configFolderFiles = $this->container->getParameter('sulu_media.format_manager.config_files');
-        $defaultFolder = '/config/image-formats.xml';
+        $configPaths = $this->container->getParameter('sulu_media.format_manager.config_files');
+        $defaultConfigPath = 'config/image-formats.xml';
 
         foreach ($activeTheme->getThemes() as $theme) {
             foreach ($asseticBundles as $bundleName) {
                 $reflector = new \ReflectionClass($bundles[$bundleName]);
-                $configPath = $defaultFolder;
-                if (isset($configFolderFiles[$theme])) {
-                    $configPath = $configFolderFiles[$theme];
+                $configPath = $defaultConfigPath;
+                if (isset($configPaths[$theme])) {
+                    $configPath = $configPaths[$theme];
                 }
-                $fullPath = dirname($reflector->getFileName())
-                    . '/Resources/themes/' . $theme . '/' . ltrim($configPath, '/');;
+                $fullPath = sprintf(
+                    '%s/Resources/themes/%s/%s',
+                    dirname($reflector->getFileName()),
+                    $theme,
+                    $configPath
+                );
 
-                if ($reflector->getFileName() &&
-                    file_exists($fullPath)
-                ) {
-                    $folder = dirname($fullPath);
-                    $fileName = basename($fullPath);
+                $folder = dirname($fullPath);
+                $fileName = basename($fullPath);
 
-                    $locator = new FileLocator($folder);
-                    $loader = new XmlFormatLoader($locator);
-                    $loader->setDefaultOptions($defaultOptions);
-                    $themeFormats = $loader->load($fileName);
-                    foreach ($themeFormats as $format) {
-                        if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
-                            $activeFormats[$format['name']] = $format;
-                        }
+                $locator = new FileLocator($folder);
+                $loader = new XmlFormatLoader($locator);
+                $loader->setDefaultOptions($defaultOptions);
+                $themeFormats = $loader->load($fileName);
+                foreach ($themeFormats as $format) {
+                    if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
+                        $activeFormats[$format['name']] = $format;
                     }
                 }
             }
