@@ -271,10 +271,10 @@ define([
         layout: function() {
             return {
                 content: {
-                    width: (WidgetGroups.exists('account-detail') ? 'max' : 'fixed')
+                    width: 'fixed'
                 },
                 sidebar: {
-                    width: 'fixed',
+                    width: 'max',
                     cssClasses: 'sidebar-padding-50'
                 }
             };

@@ -41,10 +41,10 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
         layout: function() {
             return {
                 content: {
-                    width: (WidgetGroups.exists('account-detail') && !!this.options.data && !!this.options.data.id ? 'max' : 'fixed')
+                    width: 'fixed'
                 },
                 sidebar: {
-                    width: 'fixed',
+                    width: 'max',
                     cssClasses: 'sidebar-padding-50'
                 }
             };
