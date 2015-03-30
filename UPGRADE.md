@@ -13,6 +13,8 @@ CRM-Components moved to a new bundle. If you enable the new Bundle everything sh
 BC-Breaks are:
 
  * AccountCategory replaced with standard Categories here is a migration needed
+ 
+Additionally the Account has no `type` anymore. This column has to be removed from `co_accounts` table.
 
 ### Security
 
