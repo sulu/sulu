@@ -224,7 +224,7 @@ define([
             this.html($form);
             this.sandbox.start([
                 {
-                    name: 'permissions/components/form@sulusecurity',
+                    name: 'users/components/form@sulusecurity',
                     options: {
                         el: $form,
                         data: data

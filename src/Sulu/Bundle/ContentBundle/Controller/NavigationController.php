@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Controller;
 
-use Sulu\Bundle\AdminBundle\Admin\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,6 @@ class NavigationController extends Controller
 
     /**
      * Returns content navigation for content form
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function contentAction(Request $request)
@@ -33,10 +32,13 @@ class NavigationController extends Controller
         if ($this->has(self::SERVICE_NAME)) {
             /** @var ContentNavigation $contentNavigation */
             $contentNavigation = $this->get(self::SERVICE_NAME);
-            $uuid = $request->get('uuid');
-            $contentNavigation->generate($uuid !== 'index');
 
-            return new JsonResponse($contentNavigation->toArray('content'));
+            return new JsonResponse(
+                $contentNavigation->toArray(
+                    'content',
+                    array('securityContext' => 'sulu.webspaces.' . $request->get('webspace'))
+                )
+            );
         } else {
             // return empty navigation
             return new JsonResponse(array());

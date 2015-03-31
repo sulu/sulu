@@ -12,9 +12,8 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 
 /**
  * This class contains the content navigation represented as tabs in the forms from the admin
- * @package Sulu\Bundle\AdminBundle\Admin
  */
-abstract class ContentNavigation
+abstract class ContentNavigation implements ContentNavigationInterface
 {
     protected $id;
 
@@ -65,7 +64,7 @@ abstract class ContentNavigation
         return $this->navigationItems;
     }
 
-    public function toArray($contentType = null)
+    public function toArray($contentType = null, array $options = array())
     {
         $navigationItems = array();
 
@@ -74,13 +73,13 @@ abstract class ContentNavigation
                 if ($navigationItem->getPosition() === null ||
                     $navigationItem->getPosition() >= count($navigationItems)
                 ) {
-                    $navigationItems[] = $navigationItem->toArray();
+                    $navigationItems[] = $navigationItem->toArray($options);
                 } else {
                     array_splice(
                         $navigationItems,
                         $navigationItem->getPosition() - 1,
                         0,
-                        array($navigationItem->toArray())
+                        array($navigationItem->toArray($options))
                     );
                 }
             }

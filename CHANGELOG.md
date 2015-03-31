@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundle
     * FEATURE     #732 [All]             Automatic mapping and assignation of changer, creator, changed and changer.

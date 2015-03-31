@@ -2,6 +2,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -39,6 +40,16 @@ class User extends BaseUser
     private $userSettings;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->userRoles = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+        $this->userSettings = new ArrayCollection();
+    }
+
+    /**
      * Add userRoles
      *
      * @param UserRole $userRoles
@@ -64,11 +75,26 @@ class User extends BaseUser
     /**
      * Get userRoles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUserRoles()
     {
         return $this->userRoles;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        $roles = parent::getRoles();
+
+        foreach ($this->getUserRoles() as $userRole) {
+            /** @var UserRole $userRole */
+            $roles[] = $userRole->getRole()->getIdentifier();
+        }
+
+        return $roles;
     }
 
     /**
@@ -96,7 +122,7 @@ class User extends BaseUser
 
     /**
      * Get userGroups
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUserGroups()
     {
@@ -168,15 +194,4 @@ class User extends BaseUser
     {
         return $this->getContact()->getFullName();
     }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
 }
