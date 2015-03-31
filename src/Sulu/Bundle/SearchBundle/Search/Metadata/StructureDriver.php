@@ -45,31 +45,41 @@ class StructureDriver implements AdvancedDriverInterface
     private $eventDispatcher;
 
     /**
-     * @var string
-     */
-    private $structureIndexName;
-
-    /**
      * @var StructureManagerInterface
      */
     private $structureManager;
 
     /**
+     * @var string
+     */
+    private $pageIndexName;
+
+    /**
+     * @var string
+     */
+    private $snippetIndexName;
+
+    /**
      * @param Factory $factory
      * @param EventDispatcherInterface $eventDispatcher
-     * @param mixed $structureIndexName Name of the index to use for the stucture
+     * @param StructureManagerInterface $structureManager
+     * @param string $pageIndexName
+     * @param string $snippetIndexName
      */
     public function __construct(
         Factory $factory,
         EventDispatcherInterface $eventDispatcher,
         StructureManagerInterface $structureManager,
-        $structureIndexName = 'content'
+        $pageIndexName = 'page',
+        $snippetIndexName = 'snippet'
     )
     {
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
         $this->structureManager = $structureManager;
-        $this->structureIndexName = $structureIndexName;
+        $this->pageIndexName = $pageIndexName;
+        $this->snippetIndexName = $snippetIndexName;
+        $this->pageIndexName = $pageIndexName;
     }
 
     /**
@@ -94,16 +104,17 @@ class StructureDriver implements AdvancedDriverInterface
         $classMetadata = $this->factory->makeClassMetadata($class->name);
 
         $indexMeta = $this->factory->makeIndexMetadata();
-        $indexMeta->setIndexName($this->structureIndexName);
         $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
 
         if ($structure instanceof Page) {
             $indexMeta->setCategoryName('page');
+            $indexMeta->setIndexName($this->pageIndexName);
         }
 
         if ($structure instanceof Snippet) {
             $indexMeta->setCategoryName('snippet');
+            $indexMeta->setIndexName($this->snippetIndexName);
         }
 
         foreach ($structure->getProperties(true) as $property) {

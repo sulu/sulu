@@ -2,4 +2,5 @@ massive_search:
     adapter: test
 
 sulu_search:
-    structure_index_name: content_admin
+    page_index_name: content_admin
+    snippet_index_name: content_admin

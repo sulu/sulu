@@ -26,9 +26,13 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->root('sulu_search')
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('structure_index_name')
+                ->scalarNode('page_index_name')
                     ->info('Name of the search index to use for structures (this should change depending on the sulu context)')
-                    ->defaultValue('content')->end()
+                    ->defaultValue('page')
+                ->end()
+                ->scalarNode('snippet_index_name')
+                    ->info('Name of the search index to use for structures (this should change depending on the sulu context)')
+                    ->defaultValue('snippet')
                 ->end()
             ->end();
 

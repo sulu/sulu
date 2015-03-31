@@ -42,6 +42,11 @@ class Document extends BaseDocument
     protected $changerId;
 
     /**
+     * @var array
+     */
+    protected $properties;
+
+    /**
      * @return string
      */
     public function getCreated() 
@@ -135,5 +140,30 @@ class Document extends BaseDocument
     public function setCreatorId($creatorId)
     {
         $this->creatorId = $creatorId;
+    }
+
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * Called by the JMS Serializer before the document is serialized for the
+     * web API.
+     *
+     * Here we remove all system fields (which are available in the body
+     * of the document anyway).
+     */
+    public function removeSystemFields()
+    {
+        $skipFields = array();
+        foreach ($this->fields as $key => $field) {
+            // remove system fields
+            if (substr($key, 0, 2) == '__') {
+                continue;
+            }
+
+            $this->properties[$key] = $field->getValue();
+        }
     }
 }

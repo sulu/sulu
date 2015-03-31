@@ -60,7 +60,12 @@ class ReindexListener
     /**
      * @var string
      */
-    private $structureIndexName;
+    private $pageIndexName;
+
+    /**
+     * @var string
+     */
+    private $snippetIndexName;
 
     public function __construct(
         SessionManagerInterface $sessionManager,
@@ -69,7 +74,8 @@ class ReindexListener
         WebspaceManagerInterface $webspaceManager,
         StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper,
-        $structureIndexName
+        $pageIndexName,
+        $snippetIndexName
     )
     {
         $this->sessionManager = $sessionManager;
@@ -78,7 +84,8 @@ class ReindexListener
         $this->webspaceManager = $webspaceManager;
         $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
-        $this->structureIndexName = $structureIndexName;
+        $this->pageIndexName = $pageIndexName;
+        $this->snippetIndexName = $snippetIndexName;
     }
 
     /**
@@ -122,8 +129,11 @@ class ReindexListener
                 }
 
                 if ($purge && false === $purged) {
-                    $output->writeln('<comment>Purging index</comment>: ' . $this->structureIndexName);
-                    $this->searchManager->purge($this->structureIndexName);
+                    foreach (array($this->pageIndexName, $this->snippetIndexName) as $structureIndexName) {
+                        $output->writeln('<comment>Purging index</comment>: ' . $structureIndexName);
+                        $this->searchManager->purge($structureIndexName);
+                    }
+
                     $purged = true;
                 }
 
