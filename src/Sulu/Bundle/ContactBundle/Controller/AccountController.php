@@ -697,7 +697,7 @@ class AccountController extends AbstractContactController
         }
 
         // check if mainContact is set
-        if ($mainContactRequest = $request->get('mainContact') !== null) {
+        if (($mainContactRequest = $request->get('mainContact')) !== null) {
             $mainContact = $entityManager->getRepository(self::$contactEntityName)->find($mainContactRequest['id']);
             if ($mainContact) {
                 $account->setMainContact($mainContact);
