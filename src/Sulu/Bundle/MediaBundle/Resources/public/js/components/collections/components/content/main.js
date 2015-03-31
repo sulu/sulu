@@ -67,7 +67,9 @@ define(function() {
                     ],
                     parentTemplate: 'save',
                     languageChanger: {
-                        url: '/admin/api/languages',
+                        url: '/admin/api/localizations',
+                        resultKey: 'localizations',
+                        titleAttribute: 'localization',
                         preSelected: this.locale
                     }
                 },
