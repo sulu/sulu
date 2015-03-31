@@ -149,7 +149,6 @@
             <trans-unit id="243d88cf2f64652633a5ca2169f22260" resname="sulu.media.version.active">
                 <source>sulu.media.version.active</source>
                 <target>active</target>
->>>>>>> a66eb2c428584760e27f9c3917fc606e42281eae
             </trans-unit>
         </body>
     </file>
