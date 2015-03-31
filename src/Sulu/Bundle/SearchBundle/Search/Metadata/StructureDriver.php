@@ -140,6 +140,14 @@ class StructureDriver implements AdvancedDriverInterface
             }
         }
 
+        $indexMeta->addFieldMapping(
+            $property->getName(),
+            array(
+                'type' => 'string',
+                'field' => $this->factory->makeMetadataField($property->getName()),
+            )
+        );
+
         if ($structure->hasTag('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
             $indexMeta->setUrlField($this->factory->makeMetadataField($prop->getName()));
@@ -159,7 +167,7 @@ class StructureDriver implements AdvancedDriverInterface
         }
 
         // index the webspace
-        $indexMeta->addFieldMapping('webspaceKey', array(
+        $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
             'field' => $this->factory->makeMetadataField('webspaceKey')
         ));
