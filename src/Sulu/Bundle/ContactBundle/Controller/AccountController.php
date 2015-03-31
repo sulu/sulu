@@ -506,12 +506,12 @@ class AccountController extends AbstractContactController
 
         $account->setCorporation($request->get('corporation'));
 
-        if (!is_null($request->get('uid'))) {
+        if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
         }
 
         $disabled = $request->get('disabled');
-        if (is_null($disabled)) {
+        if ($disabled === null) {
             $disabled = false;
         }
         $account->setDisabled($disabled);
@@ -587,11 +587,11 @@ class AccountController extends AbstractContactController
 
         // set disabled
         $disabled = $request->get('disabled');
-        if (!is_null($disabled)) {
+        if ($disabled !== null) {
             $account->setDisabled($disabled);
         }
 
-        if (!is_null($request->get('uid'))) {
+        if ($request->get('uid') !== null) {
             $account->setUid($request->get('uid'));
         }
 
@@ -661,22 +661,22 @@ class AccountController extends AbstractContactController
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             } else {
 
-                if (!is_null($request->get('uid'))) {
+                if ($request->get('uid') !== null) {
                     $account->setUid($request->get('uid'));
                 }
-                if (!is_null($request->get('registerNumber'))) {
+                if ($request->get('registerNumber') !== null) {
                     $account->setRegisterNumber($request->get('registerNumber'));
                 }
-                if (!is_null($request->get('number'))) {
+                if ($request->get('number') !== null) {
                     $account->setNumber($request->get('number'));
                 }
 
-                if (!is_null($request->get('placeOfJurisdiction'))) {
+                if ($request->get('placeOfJurisdiction') !== null) {
                     $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
                 }
 
                 // check if mainContact is set
-                if (!is_null($mainContactRequest = $request->get('mainContact'))) {
+                if ($mainContactRequest = $request->get('mainContact') !== null) {
                     $mainContact = $em->getRepository(self::$contactEntityName)->find($mainContactRequest['id']);
                     if ($mainContact) {
                         $account->setMainContact($mainContact);
@@ -684,7 +684,7 @@ class AccountController extends AbstractContactController
                 }
 
                 // process details
-                if (!is_null($request->get('bankAccounts'))) {
+                if ($request->get('bankAccounts') !== null) {
                     $this->processBankAccounts($account, $request->get('bankAccounts', array()));
                 }
 
@@ -720,7 +720,7 @@ class AccountController extends AbstractContactController
      */
     protected function processTerms(Request $request, AccountInterface $account)
     {
-        if (!is_null($request->get('termsOfPayment'))) {
+        if ($request->get('termsOfPayment') !== null) {
             $id = $request->get('termsOfPayment')['id'];
             /** @var TermsOfPaymentEntity $termsOfPayment */
             $termsOfPayment = $this->getDoctrine()
@@ -733,7 +733,7 @@ class AccountController extends AbstractContactController
             $account->setTermsOfPayment($termsOfPayment);
         }
 
-        if (!is_null($request->get('termsOfDelivery'))) {
+        if ($request->get('termsOfDelivery') !== null) {
             $id = $request->get('termsOfDelivery')['id'];
             /** @var TermsOfDeliveryEntity $termsOfDelivery */
             $termsOfDelivery = $this->getDoctrine()
@@ -781,7 +781,7 @@ class AccountController extends AbstractContactController
             }
 
             // remove related contacts if removeContacts is true
-            if (!is_null($request->get('removeContacts')) &&
+            if ($request->get('removeContacts') !== null &&
                 $request->get('removeContacts') == "true"
             ) {
                 foreach ($account->getAccountContacts() as $accountContact) {
@@ -857,7 +857,7 @@ class AccountController extends AbstractContactController
             $slicedContacts = array();
             $accountContacts = $account->getAccountContacts();
             $numContacts = 0;
-            if (!is_null($accountContacts)) {
+            if ($accountContacts !== null) {
                 foreach ($accountContacts as $accountContact) {
                     /** @var AccountContactEntity $accountContact */
                     $contactId = $accountContact->getContact()->getId();
