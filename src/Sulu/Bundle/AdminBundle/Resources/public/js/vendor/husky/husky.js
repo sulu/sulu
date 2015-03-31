@@ -30643,6 +30643,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
         /**
          * Selects or deselects a record with a given id
+         * @param recordId {Number|String} the id of the record to select or deselect
+         */
+        selectRecord: function(recordId) {
+            this.toggleSelectRecord(recordId, true);
+        },
+
+        /**
+         * Selects or deselects a record with a given id
          * @param id {Number|String} the id of the record to select or deselect
          * @param select {Boolean} true to select false to deselect
          */
@@ -30802,6 +30810,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
  * @param {Function} [initialize] function which gets called once at the start of the view
  * @param {Function} [render] function to render data
  * @param {Function} [destroy] function to destroy the view and unbind events
+ * @param {Boolean} [unselectOnBackgroundClick] should the items be deselcted on docuemnt click
  */
 define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
 
@@ -30812,6 +30821,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             fadeInDuration: 400,
             largeThumbnailFormat: '170x170',
             smallThumbnailFormat: '50x50',
+            unselectOnBackgroundClick: true,
             selectable: true
         },
 
@@ -30915,7 +30925,11 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             this.data = data;
 
             this.renderThumbnails(this.data.embedded);
-            this.sandbox.dom.on('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName, this.unselectAll.bind(this));
+            this.sandbox.dom.on('body', 'click.grid-thumbnails.' + this.datagrid.options.instanceName, function() {
+                if (this.options.unselectOnBackgroundClick) {
+                    this.unselectAll();
+                }
+            }.bind(this));
             this.rendered = true;
         },
 
@@ -31035,6 +31049,21 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                     this.selectItem(id);
                 }.bind(this));
             }
+        },
+
+        /**
+         * Selects a record with a given id
+         * @param recordId {Number|String} the id of the record to select or deselect
+         */
+        selectRecord: function(recordId) {
+            this.selectItem(recordId, false);
+        },
+
+        /**
+         * Deselects all records
+         */
+        deselectAllRecords: function() {
+            this.unselectAll();
         },
 
         /**
@@ -31673,6 +31702,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         setParentDropDown: true,
                         instanceName: this.datagrid.options.instanceName + '-pagination-dropdown',
                         alignment: 'right',
+                        verticalAlignment: this.options.verticalAlignment,
                         data: data
                     }
                 }
@@ -31700,6 +31730,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         setParentDropDown: true,
                         instanceName: this.datagrid.options.instanceName + '-pagination-dropdown-show',
                         alignment: 'left',
+                        verticalAlignment: this.options.verticalAlignment,
                         data: data
                     }
                 }
@@ -32000,6 +32031,15 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              */
             ALL_SELECT = function() {
                 return this.createEventName('all.select');
+            },
+
+            /**
+             * listens on and update the selected state of the given items
+             * @event husky.datagrid.selected.update
+             * @param {Array} ids of all items that should be selected
+             */
+            SELECTED_UPDATE = function() {
+                return this.createEventName('selected.update');
             },
 
             /**
@@ -32907,6 +32947,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 this.sandbox.on(MEDIUM_LOADER_SHOW.call(this), this.showMediumLoader.bind(this));
                 this.sandbox.on(MEDIUM_LOADER_HIDE.call(this), this.hideMediumLoader.bind(this));
 
+                this.sandbox.on(SELECTED_UPDATE.call(this), this.updateSelection.bind(this));
+
                 this.startColumnOptionsListener();
                 this.startSearchListener();
             },
@@ -33109,6 +33151,18 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 // emit events with selected data
                 this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.selectedItems.length);
                 this.setSelectedItemsToData();
+            },
+
+            /**
+             * Returns the ids of all selected items
+             * @param selection {Array} list of selected items
+             */
+            updateSelection: function(selection) {
+                this.gridViews[this.viewId].deselectAllRecords();
+                
+                for (i = -1, length = selection.length; ++i < length;) {
+                    this.gridViews[this.viewId].selectRecord(selection[i]);
+                }
             },
 
             /**
@@ -33553,6 +33607,7 @@ define('__component__$dropdown@husky',[], function() {
             excludeItems: [], // items to filter,
             instanceName: 'undefined',  // instance name
             alignment: 'left',  // alignment of the arrow and the box
+            verticalAlignment: 'bottom', // alignment of the box
             translateLabels: true   // translate labels withe globalize
         };
 
@@ -33599,6 +33654,11 @@ define('__component__$dropdown@husky',[], function() {
             // check alginment
             if (this.options.alignment === 'right') {
                 this.sandbox.dom.addClass(this.$dropDown, 'dropdown-align-right');
+            }
+
+            // check vertical alginment
+            if (this.options.verticalAlignment === 'top') {
+                this.sandbox.dom.addClass(this.$dropDown, 'dropdown-align-top');
             }
 
             // bind dom elements
@@ -43007,6 +43067,8 @@ define('__component__$toggler@husky',[], function() {
  * @params {Boolean} [options.showOverlay] if true the dropzone will be displayed in an overlay if its not visible any more or the passed scroll-top is reached
  * @params {String} [options.skin] skin class for the dropzone. currently available: 'small' or '' (default)
  * @params {Boolean} [options.keepFilesAfterSuccess] True to not slide the files away after uploading them successfully
+ * @params {Boolean} [options.dropzoneEnabled] Should the dropzone be enabled initially
+ * @params {Boolean} [options.cancelUploadOnOverlayClick] Cancel the upload process when the user clicks on the overlay background
  */
 define('__component__$dropzone@husky',[], function () {
 
@@ -43036,7 +43098,9 @@ define('__component__$dropzone@husky',[], function () {
             fadeOutDelay: 1500, //ms
             showOverlay: true,
             keepFilesAfterSuccess: false,
-            skin: ''
+            skin: '',
+            dropzoneEnabled: true,
+            cancelUploadOnOverlayClick: false
         },
 
         constants = {
@@ -43080,13 +43144,13 @@ define('__component__$dropzone@husky',[], function () {
          * namespace for events
          * @type {string}
          */
-            eventNamespace = 'husky.dropzone.',
+        eventNamespace = 'husky.dropzone.',
 
         /**
          * raised after initialization process
          * @event husky.dropzone.<instance-name>.initialize
          */
-            INITIALIZED = function () {
+        INITIALIZED = function () {
             return createEventName.call(this, 'initialized');
         },
 
@@ -43095,7 +43159,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.uploading
          * @param {Object} the file
          */
-            UPLOADING = function () {
+        UPLOADING = function () {
             return createEventName.call(this, 'uploading');
         },
 
@@ -43105,7 +43169,7 @@ define('__component__$dropzone@husky',[], function () {
          * @param {Object} the file
          * @param {Object} the response
          */
-            SUCCESS = function () {
+        SUCCESS = function () {
             return createEventName.call(this, 'success');
         },
 
@@ -43113,7 +43177,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and opens the data-source folder-overlay
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-            OPEN_DATA_SOURCE = function () {
+        OPEN_DATA_SOURCE = function () {
             return createEventName.call(this, 'open-data-source');
         },
 
@@ -43121,7 +43185,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and prevents an overlay with the dropzone from poping up
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-            LOCK_POPUP = function () {
+        LOCK_POPUP = function () {
             return createEventName.call(this, 'lock-popup');
         },
 
@@ -43129,7 +43193,7 @@ define('__component__$dropzone@husky',[], function () {
          * listens on and enables overlays with the dropzone to pop up
          * @event husky.dropzone.<instance-name>.open-data-source
          */
-            UNLOCK_POPUP = function () {
+        UNLOCK_POPUP = function () {
             return createEventName.call(this, 'unlock-popup');
         },
 
@@ -43138,7 +43202,7 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.files-added
          * @param {Array} all newly added files
          */
-            FILES_ADDED = function () {
+        FILES_ADDED = function () {
             return createEventName.call(this, 'files-added');
         },
 
@@ -43147,12 +43211,28 @@ define('__component__$dropzone@husky',[], function () {
          * @event husky.dropzone.<instance-name>.change-url
          * @param {String} the new url
          */
-            CHANGE_URL = function () {
+        CHANGE_URL = function () {
             return createEventName.call(this, 'change-url');
         },
 
+        /**
+         * listens on and enable the dropzone
+         * @event husky.dropzone.<instance-name>.enable
+         */
+        UPLOAD_ENABLE = function() {
+            return createEventName.call(this, 'enable');
+        },
+
+        /**
+         * listens on and disable the dropzone
+         * @event husky.dropzone.<instance-name>.disable
+         */
+        UPLOAD_DISABLE = function() {
+            return createEventName.call(this, 'disable');
+        },
+
         /** returns normalized event names */
-            createEventName = function (postFix) {
+        createEventName = function (postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
         };
 
@@ -43167,6 +43247,7 @@ define('__component__$dropzone@husky',[], function () {
             // merge defaults, type defaults and options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.dropzone = null;
+            this.dropzoneEnabled = this.options.dropzoneEnabled;
             this.$dropzone = null;
             this.lastUploadedFile = null;
             this.overlayOpened = false;
@@ -43196,12 +43277,24 @@ define('__component__$dropzone@husky',[], function () {
                     this.openOverlay();
                 }.bind(this));
                 this.sandbox.dom.on(this.sandbox.dom.$document, 'drop', function(event) {
-                    this.addFiles(event.originalEvent.dataTransfer.files);
+                    if (this.dropzoneEnabled) {                        
+                        this.addFiles(event.originalEvent.dataTransfer.files);
+                    }
                 }.bind(this));
             }
             this.sandbox.dom.on(this.sandbox.dom.$document, 'dragover drop', function(event) {
                 this.sandbox.dom.preventDefault(event);
             }.bind(this));
+
+            if (this.options.cancelUploadOnOverlayClick) {
+                this.$el.on('click', '.husky-overlay-container.dropzone', function() {
+                    if (this.overlayOpened === true) {
+                        this.sandbox.emit('husky.overlay.dropzone-'+ this.options.instanceName +'.close');
+                    }
+                    this.sandbox.dom.removeClass(this.$dropzone, constants.droppedClass);
+                    this.dropzone.removeAllFiles();
+                }.bind(this));
+            }
         },
 
         /**
@@ -43216,6 +43309,16 @@ define('__component__$dropzone@husky',[], function () {
             // change the url
             this.sandbox.on(CHANGE_URL.call(this), function(url) {
                 this.url = url;
+            }.bind(this));
+
+            this.sandbox.on(UPLOAD_DISABLE.call(this), function() {
+                this.dropzoneEnabled = false;
+                this.dropzone.disable();
+            }.bind(this));
+
+            this.sandbox.on(UPLOAD_ENABLE.call(this), function() {
+                this.dropzoneEnabled = true;
+                this.dropzone.enable();
             }.bind(this));
 
             if (this.options.showOverlay) {
@@ -43234,7 +43337,7 @@ define('__component__$dropzone@husky',[], function () {
          */
         openOverlay: function () {
             // open the overlay only if it's not already opened and if the dropzone is not visible
-            if (this.overlayOpened === false && this.lockPopUp === false) {
+            if (this.overlayOpened === false && this.lockPopUp === false && this.dropzoneEnabled) {
                 // set height of components element to prevent the site from jumping
                 this.sandbox.dom.height(this.$el, this.sandbox.dom.outerHeight(this.$el));
 
@@ -44053,6 +44156,7 @@ define('husky_components/data-navigation/list-view',[], function() {
  * @param {String} [options.childrenLinkKey] - key of children link in object
  * @param {String} [options.showAddButton] - Indicates if add button should be rendered
  * @param {Object} [options.translates] Holds the translates
+ * @param {Bool} [options.globalEvents] Should global events be sent
  */
 define('__component__$data-navigation@husky',[
     'husky_components/data-navigation/list-view'
@@ -44072,6 +44176,7 @@ define('__component__$data-navigation@husky',[
             searchKey: 'search',
             limit: 20,
             showAddButton: true,
+            globalEvents: true,
             translates: {
                 noData: 'No Data',
                 title: 'Data',
@@ -44602,7 +44707,9 @@ define('__component__$data-navigation@husky',[
 
             this.openParentHandler(event).then(function() {
                 this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                if (this.options.globalEvents) {
+                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                }
             }.bind(this));
         },
 
@@ -44625,7 +44732,9 @@ define('__component__$data-navigation@husky',[
 
             this.openChildrenHandler(event).then(function() {
                 this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                if (this.options.globalEvents) {
+                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
+                }
             }.bind(this));
         },
 
