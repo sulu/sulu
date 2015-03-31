@@ -20,7 +20,7 @@ Feature: Content type media selection
 
     Scenario: Select some medias
         Given I am editing a page of type "media_page"
-        And I click the add icon
+        When I click the add icon
         And I click on the element "#media-selection-media-grid-group .entity-title"
         And I click on the element "#media-selection-media-grid-group .custom-checkbox input"
         And I click the tick button

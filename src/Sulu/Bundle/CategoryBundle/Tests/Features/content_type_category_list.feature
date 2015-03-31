@@ -17,8 +17,8 @@ Feature: Category content type
 
     Scenario: Select categories
         Given the category "Foobar Category" exists
-        And I am editing a page of type "category_page"
+        When I am editing a page of type "category_page"
         And I expect the aura component "category_list_test" to appear
-        And I expect to see "Foobar Category"
+        Then I expect to see "Foobar Category"
         # Checkbox has no name or ID, testing not practical:
         # https://github.com/sulu-cmf/sulu/issues/573
