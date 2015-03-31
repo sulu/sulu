@@ -82,11 +82,11 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     '<div class="media-selection-overlay">',
                     '   <div class="media-selection-overlay-navigation-container pull-left"></div>',
                     '   <div class="media-selection-overlay-content">',
-                            '<div class="fa-times media-selection-overlay-close"></div>',
-                            '<div class="media-selection-overlay-dropzone-container"></div>',
-                            '<div class="media-selection-overlay-toolbar-container"></div>',
-                            '<div class="media-selection-overlay-content-title">' + options.contentDefaultTitle + '</div>',
-                            '<div class="media-selection-overlay-datagrid-container"></div>',
+                    '       <div class="fa-times media-selection-overlay-close"></div>',
+                    '       <div class="media-selection-overlay-dropzone-container"></div>',
+                    '       <div class="media-selection-overlay-toolbar-container"></div>',
+                    '       <div class="media-selection-overlay-content-title">' + options.contentDefaultTitle + '</div>',
+                    '       <div class="media-selection-overlay-datagrid-container"></div>',
                     '   </div>',
                     '</div>'
                 ].join('');
@@ -153,6 +153,34 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         },
 
         /**
+         * Handler method for the data navigation select event
+         * @method dataNavigationSelectHandler
+         * @param {Object} collection
+         */
+        dataNavigationSelectHandler = function(collection) {
+            var collectionId, 
+                collectionTitle = this.sandbox.translate('media-selection.overlay.all-images');
+
+            if (collection) {
+                collectionId = collection.id;
+                collectionTitle = collection.title;
+
+                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.enable', 'add');
+                this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.enable');
+            } else {
+                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.disable', 'add');
+                this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.disable');
+            }
+
+            this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.url.update', { 
+                collection: collectionId,
+                page: 1
+            });
+            changeUploadCollection.call(this, collectionId);
+            this.$el.find('.media-selection-overlay-content-title').html(collectionTitle);
+        },
+
+        /**
          * custom event handling
          */
         bindCustomEvents = function() {
@@ -212,25 +240,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 this.sandbox.emit(RECORD_DESELECTED.call(this), id);
             }.bind(this));
 
-            this.sandbox.on('husky.data-navigation.' + this.options.instanceName + '.select', function(collection) {
-                var collectionId, 
-                    collectionTitle = this.sandbox.translate('media-selection.overlay.all-images');
-
-                if (collection) {
-                    collectionId = collection.id;
-                    collectionTitle = collection.title;
-
-                    this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.enable', 'add');
-                    this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.enable');
-                } else {
-                    this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.disable', 'add');
-                    this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.disable');
-                }
-
-                this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.url.update', { collection: collectionId });
-                changeUploadCollection.call(this, collectionId);
-                this.$el.find('.media-selection-overlay-content-title').html(collectionTitle);
-            }.bind(this));
+            this.sandbox.on('husky.data-navigation.' + this.options.instanceName + '.select', dataNavigationSelectHandler.bind(this));
 
             // change datagrid to table
             this.sandbox.on('sulu.list-toolbar.media-selection-ovelay.' + this.options.instanceName + '.change.table', function() {
@@ -299,6 +309,11 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
             this.sandbox.on('husky.overlay.dropzone-media-selection-ovelay.' + this.options.instanceName + '.closed', function() {
                 this.$el.find('.media-selection-overlay-container').removeClass('dropzone-overlay-opened');
+            }.bind(this));
+
+            this.sandbox.on('husky.overlay.' + this.options.instanceName + '.add.opened', function() {
+                var selectedItems = this.getData().ids || [];
+                this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.selected.update', selectedItems);
             }.bind(this));
         },
 
@@ -502,11 +517,6 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     }
                 }
             ]);
-
-            this.sandbox.on('husky.overlay.' + this.options.instanceName + '.add.opened', function() {
-                var selectedItems = this.getData().ids || [];
-                this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.selected.update', selectedItems);
-            }.bind(this));
 
             this.sandbox.once('husky.overlay.' + this.options.instanceName + '.add.opened', function() {
                 

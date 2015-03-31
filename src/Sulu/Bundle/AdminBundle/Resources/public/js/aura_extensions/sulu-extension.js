@@ -441,7 +441,7 @@
                         this.sandbox.on('husky.datagrid.data.sort', function(data) {
                             this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
-                };
+                    };
 
                 if (url) {
                     this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
