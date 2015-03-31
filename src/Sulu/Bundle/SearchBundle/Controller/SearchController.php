@@ -81,7 +81,9 @@ class SearchController
             'page' => $pager->getCurrentPage(),
             'page_count' => $pager->getNbPages(),
             'page_size' => $pager->getMaxPerPage(),
-            'result' => $pager->getCurrentPageResults()
+            'totals' => $this->getCategoryTotals($hits),
+            'total' => count($hits),
+            'result' => $pager->getCurrentPageResults(),
         );
 
         $view = View::create($result);
@@ -103,5 +105,21 @@ class SearchController
         return $this->viewHandler->handle(
             View::create($this->searchManager->getCategoryNames())
         );
+    }
+
+    private function getCategoryTotals($hits)
+    {
+        $categoryNames = $this->searchManager->getCategoryNames();
+        $categoryCount = array_combine(
+            $categoryNames,
+            array_fill(0, count($categoryNames), 0)
+        );
+
+        foreach ($hits as $hit) {
+            $category = $hit->getDocument()->getCategory();
+            $categoryCount[$category]++;
+        }
+
+        return $categoryCount;
     }
 }
