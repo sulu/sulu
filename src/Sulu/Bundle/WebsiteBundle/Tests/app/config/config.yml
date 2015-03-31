@@ -1,4 +1,0 @@
-doctrine:
-    orm:
-        resolve_target_entities:
-            Sulu\Bundle\ContactBundle\Entity\AccountInterface: Sulu\Bundle\ContactBundle\Entity\Account
