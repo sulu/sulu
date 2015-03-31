@@ -6,7 +6,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SuluSecurityContentNavigation implements ContentNavigationInterface
+class SuluSecurityContactsContentNavigation implements ContentNavigationInterface
 {
     private $navigation = array();
 
@@ -15,7 +15,7 @@ class SuluSecurityContentNavigation implements ContentNavigationInterface
         if ($securityChecker->hasPermission('sulu.security.users', 'view')) {
             $permissions = new ContentNavigationItem('content-navigation.security.permissions');
             $permissions->setAction('permissions');
-            $permissions->setComponent('permissions@sulusecurity');
+            $permissions->setComponent('users@sulusecurity');
             $permissions->setComponentOptions(array('display' => 'form'));
             $permissions->setDisplay(array('edit'));
             $permissions->setGroups(array('contact'));

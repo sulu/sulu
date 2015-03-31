@@ -16,12 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Add all services with given tag to the bundle content navigation
- *
- * @package Sulu\Bundle\AdminBundle\DependencyInjection\Compiler
  */
 abstract class ContentNavigationPass implements CompilerPassInterface
 {
-
     protected $tag = null;
     protected $serviceName = null;
 
