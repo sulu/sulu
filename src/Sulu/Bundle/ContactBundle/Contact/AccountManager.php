@@ -132,9 +132,9 @@ class AccountManager extends AbstractContactManager
      */
     public function getById($id, $locale)
     {
-        $account = $this->em->getRepository($this->accountEntity)->findAccountById($id);
+        $account = $this->em->getRepository($this->accountEntityName)->findAccountById($id);
         if (!$account) {
-            throw new EntityNotFoundException($this->accountEntity, $id);
+            throw new EntityNotFoundException($this->accountEntityName, $id);
         }
 
         return $this->accountFactory->createApiEntity($account, $locale);
@@ -151,11 +151,11 @@ class AccountManager extends AbstractContactManager
     public function getByIdAndInclude($id, $locale, $includes)
     {
         $account = $this->em
-            ->getRepository($this->accountEntity)
+            ->getRepository($this->accountEntityName)
             ->findAccountById($id, in_array('contacts', $includes));
 
         if (!$account) {
-            throw new EntityNotFoundException($this->accountEntity, $id);
+            throw new EntityNotFoundException($this->accountEntityName, $id);
         }
 
         return $this->accountFactory->createApiEntity($account, $locale);
@@ -197,9 +197,9 @@ class AccountManager extends AbstractContactManager
     public function findAll($locale, $filter = null)
     {
         if ($filter) {
-            $accountEntities = $this->em->getRepository($this->accountEntity)->findByFilter($filter);
+            $accountEntities = $this->em->getRepository($this->accountEntityName)->findByFilter($filter);
         } else {
-            $accountEntities = $this->em->getRepository($this->accountEntity)->findAll();
+            $accountEntities = $this->em->getRepository($this->accountEntityName)->findAll();
         }
         $accounts = [];
         if ($accountEntities) {

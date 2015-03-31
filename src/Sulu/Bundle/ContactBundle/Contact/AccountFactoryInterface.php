@@ -13,6 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
+/**
+ * Interface for account factory which creates entities and api entities
+ */
 interface AccountFactoryInterface
 {
     /**

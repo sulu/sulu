@@ -133,7 +133,7 @@ abstract class AbstractContactController extends RestController implements Class
         }
 
         // process details
-        if (!is_null($request->get('bankAccounts'))) {
+        if ($request->get('bankAccounts') !== null) {
             $this->processBankAccounts($contact, $request->get('bankAccounts', array()));
         }
     }

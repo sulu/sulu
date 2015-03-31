@@ -157,11 +157,11 @@ class ContactManager extends AbstractContactManager
             $accountId = $data['account']['id'];
 
             $account = $this->em
-                ->getRepository($this->accountEntity)
+                ->getRepository($this->accountEntityName)
                 ->findAccountById($accountId);
 
             if (!$account) {
-                throw new EntityNotFoundException($this->accountEntity, $accountId);
+                throw new EntityNotFoundException($this->accountEntityName, $accountId);
             }
 
             // get position
