@@ -467,7 +467,6 @@ abstract class AbstractContactManager implements ContactManagerInterface
      */
     public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
     {
-
         $addresses = $this->getAddresses($entity);
         $address = null;
         $main = null;

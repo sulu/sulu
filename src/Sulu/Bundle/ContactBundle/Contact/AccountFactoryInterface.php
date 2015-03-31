@@ -19,7 +19,7 @@ interface AccountFactoryInterface
      * Creates a new empty account
      * @return AccountInterface
      */
-    public function create();
+    public function createEntity();
 
     /**
      * Creates a new api entity out of an account

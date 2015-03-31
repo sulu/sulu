@@ -17,12 +17,12 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 /**
  * factory to encapsulate account creation
  */
-class AccountFactory
+class AccountFactory implements AccountFactoryInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function createEntity()
     {
         return new AccountEntity();
     }

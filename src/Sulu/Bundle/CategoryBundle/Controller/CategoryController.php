@@ -297,7 +297,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
         $listBuilder->addGroupBy($this->getManager()->getFieldDescriptor('id'));
 
         if ($parentKey !== null) {
-            $this->appendParent($parentKey, $listBuilder);
+            $this->addParentSelector($parentKey, $listBuilder);
         }
 
         // FIXME: don't do this.
@@ -329,7 +329,7 @@ class CategoryController extends RestController implements ClassResourceInterfac
      * @param $parentKey
      * @param DoctrineListBuilder $listBuilder
      */
-    protected function appendParent($parentKey, DoctrineListBuilder $listBuilder)
+    protected function addParentSelector($parentKey, DoctrineListBuilder $listBuilder)
     {
         $manager = $this->getManager();
         $parentEntity = $manager->findByKey($parentKey);

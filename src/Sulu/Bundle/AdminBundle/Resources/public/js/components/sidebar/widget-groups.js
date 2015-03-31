@@ -12,7 +12,6 @@
  * @class WidgetGroups
  * @constructor
  */
-
 define(['config'], function(Config) {
 
     'use strict';

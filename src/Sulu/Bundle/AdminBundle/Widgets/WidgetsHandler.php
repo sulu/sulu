@@ -108,6 +108,6 @@ class WidgetsHandler implements WidgetsHandlerInterface
             );
         }
 
-        return '';
+        return null;
     }
 }

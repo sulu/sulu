@@ -16,7 +16,6 @@
  * @param {String} [options.instanceName] The instance name of the sidebar
  * @param {String} [options.url] Url to initially load content from
  */
-
 define([], function() {
 
     'use strict';
@@ -344,7 +343,7 @@ define([], function() {
                     var $widget;
                     this.emptySidebar(false);
                     this.loadWidget(url).then(function(widget) {
-                        if (widget === undefined || widget.length === '') {
+                        if (widget === undefined || widget === '') {
                             this.sandbox.dom.css(this.$el, 'display', 'none');
                             return;
                         }

@@ -500,7 +500,7 @@ class AccountController extends AbstractContactController
      */
     protected function doPost(Request $request)
     {
-        $account = $this->get('sulu_contact.account_factory')->create();
+        $account = $this->get('sulu_contact.account_factory')->createEntity();
 
         $account->setName($request->get('name'));
 
