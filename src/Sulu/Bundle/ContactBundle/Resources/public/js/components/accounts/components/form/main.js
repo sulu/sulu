@@ -67,6 +67,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
             this.form = '#contact-form';
+            this.formContactFields = '#contact-fields';
+
             this.saved = true;
             this.autoCompleteInstanceName = 'contacts-';
 
@@ -303,7 +305,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
             this.sandbox.form.setData(this.form, data).then(function() {
-                this.sandbox.start('#contact-fields');
+                this.sandbox.start(this.formContactFields);
                 this.sandbox.emit('sulu.contact-form.add-required', ['email']);
                 this.sandbox.emit('sulu.contact-form.content-set');
                 this.dfdFormIsSet.resolve();

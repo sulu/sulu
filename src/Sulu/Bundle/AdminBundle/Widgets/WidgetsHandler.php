@@ -103,7 +103,6 @@ class WidgetsHandler implements WidgetsHandlerInterface
                 array(
                     'widgets' => $widgets,
                     'parameters' => $parameters
-
                 )
             );
         }
