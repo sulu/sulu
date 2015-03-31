@@ -156,7 +156,6 @@ class Document extends BaseDocument
      */
     public function removeSystemFields()
     {
-        $skipFields = array();
         foreach ($this->fields as $key => $field) {
             // remove system fields
             if (substr($key, 0, 2) == '__') {

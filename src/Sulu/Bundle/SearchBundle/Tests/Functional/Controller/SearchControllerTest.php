@@ -144,10 +144,15 @@ class SearchControllerTest extends SuluTestCase
                                 'changed' => '2015-04-12T00:00:00+00:00',
                                 'creatorName' => 'dantleech',
                                 'changerName' => 'dantleech',
+                                'properties' => array(),
                             ),
                             'score' => -1,
                         ),
                     ),
+                    'totals' => array(
+                        'page' => 1,
+                    ),
+                    'total' => 1,
                 ),
             ),
             array(
@@ -179,6 +184,12 @@ class SearchControllerTest extends SuluTestCase
                             'score' => -1,
                         ),
                     ),
+                    'totals' => array(
+                        'test_products' => 1,
+                    ),
+                    'total' => 1,
+                    'properties' => array(
+                    ),
                 ),
             ),
             array(
@@ -209,6 +220,12 @@ class SearchControllerTest extends SuluTestCase
                             ),
                             'score' => -1,
                         ),
+                    ),
+                    'totals' => array(
+                        'test_products' => 1,
+                    ),
+                    'total' => 1,
+                    'properties' => array(
                     ),
                 ),
             ),
