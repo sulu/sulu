@@ -61,17 +61,6 @@ class SuluContactContentNavigation extends ContentNavigation
         $contacts->setDisplay(array('edit'));
         $this->addNavigationItem($contacts);
 
-        // financial infos
-        $item = new ContentNavigationItem('navigation.financials');
-        $item->setAction('financials');
-        $item->setId('financials');
-        $item->setDisabled(true);
-        $item->setGroups(array('account'));
-        $item->setComponent('accounts@sulucontact');
-        $item->setComponentOptions(array('display'=>'financials'));
-        $item->setDisplay(array('edit'));
-        $this->addNavigationItem($item);
-
         // documents
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');

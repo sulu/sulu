@@ -32,17 +32,5 @@
                 <join-column name="idContactsMain" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-
-        <many-to-one field="termsOfPayment" target-entity="Sulu\Bundle\ContactBundle\Entity\TermsOfPayment">
-            <join-columns>
-                <join-column name="idTermsOfPayment" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-
-        <many-to-one field="termsOfDelivery" target-entity="Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery">
-            <join-columns>
-                <join-column name="idTermsOfDelivery" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
     </mapped-superclass>
 </doctrine-mapping>

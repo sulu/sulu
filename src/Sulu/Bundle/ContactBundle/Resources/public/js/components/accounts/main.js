@@ -12,8 +12,6 @@ define([
     'sulucontact/model/contact',
     'sulucontact/model/accountContact',
     'accountsutil/header',
-    'sulucontact/model/termsOfPayment',
-    'sulucontact/model/termsOfDelivery',
     'sulucontact/model/email',
     'sulucontact/model/emailType',
     'sulumedia/model/media',
@@ -24,8 +22,6 @@ define([
     Contact,
     AccountContact,
     AccountsUtilHeader,
-    TermsOfPayment,
-    TermsOfDelivery,
     Email,
     EmailType,
     Media,
@@ -34,31 +30,6 @@ define([
 
     'use strict';
 
-    var templates = {
-        dialogEntityFoundTemplate: [
-            '<p><%= foundMessage %>:</p>',
-            '<% if (typeof list !== "undefined") { %>',
-            '<ul><%= list %></ul>',
-            '<% } %>',
-            '<% if (typeof numChildren !== "undefined" && numChildren > 3 && typeof andMore !== "undefined") { %>',
-            '<p><%= andMore %></p>',
-            '<% } %>',
-            '<p><%= description %></p>',
-            '<% if (typeof checkboxText !== "undefined") { %>',
-            '<p>',
-            '   <label for="overlay-checkbox">',
-            '       <div class="custom-checkbox">',
-            '           <input type="checkbox" id="overlay-checkbox" class="form-element" />',
-            '           <span class="icon"></span>',
-            '       </div>',
-            '       <%= checkboxText %>',
-            '</label>',
-            '</p>',
-            '<% } %>'
-        ].join('')
-
-    };
-
     return {
 
         initialize: function() {
@@ -66,6 +37,10 @@ define([
             this.bindSidebarEvents();
             this.account = null;
 
+            this.renderByDisplay();
+        },
+
+        renderByDisplay: function() {
             if (this.options.display === 'list') {
                 this.renderList();
             } else if (this.options.display === 'form') {
@@ -75,13 +50,6 @@ define([
                     'accounts/components/',
                     this.options.display,
                     'accounts-form-container', {}
-                ).then(this.setHeader.bind(this));
-            } else if (this.options.display === 'financials') {
-                this.renderComponent(
-                    'accounts/components/',
-                    this.options.display,
-                    'accounts-form-container',
-                    {}
                 ).then(this.setHeader.bind(this));
             } else if (this.options.display === 'documents') {
                 this.renderComponent(
@@ -127,9 +95,6 @@ define([
             // set main contact
             this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
 
-            // saves financial infos
-            this.sandbox.on('sulu.contacts.accounts.financials.save', this.saveFinancials.bind(this));
-
             // load list view
             this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
                 var typeString = '';
@@ -143,12 +108,6 @@ define([
                     true
                 );
             }, this);
-
-            // handling of terms of delivery/payment eventlistener
-            this.sandbox.on('husky.select.terms-of-delivery.delete', this.deleteTerms.bind(this, 'delivery'));
-            this.sandbox.on('husky.select.terms-of-payment.delete', this.deleteTerms.bind(this, 'payment'));
-            this.sandbox.on('husky.select.terms-of-delivery.save', this.saveTerms.bind(this, 'delivery'));
-            this.sandbox.on('husky.select.terms-of-payment.save', this.saveTerms.bind(this, 'payment'));
 
             // handling documents
             this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
@@ -236,61 +195,6 @@ define([
                         this.sandbox.emit('sulu.contacts.contacts.medias.saved', medias);
                     }
                 }.bind(this));
-            }
-        },
-
-        deleteTerms: function(termsKey, ids) {
-            var condition, clazz, instanceName;
-            if (!!ids && ids.length > 0) {
-
-                if (termsKey === 'delivery') {
-                    clazz = TermsOfDelivery;
-                    instanceName = 'terms-of-delivery';
-                } else if (termsKey === 'payment') {
-                    clazz = TermsOfPayment;
-                    instanceName = 'terms-of-payment';
-                }
-
-                this.sandbox.util.each(ids, function(index, id) {
-                    condition = clazz.findOrCreate({id: id});
-                    condition.destroy({
-                        error: function() {
-                            this.sandbox.emit(
-                                    'husky.select.' + instanceName + '.revert'
-                            );
-                        }.bind(this)
-                    });
-                }.bind(this));
-            }
-        },
-
-        saveTerms: function(termsKey, data) {
-            var instanceName, urlSuffix;
-
-            if (!!data && data.length > 0) {
-                if (termsKey === 'delivery') {
-                    urlSuffix = 'termsofdeliveries';
-                    instanceName = 'terms-of-delivery';
-                } else if (termsKey === 'payment') {
-                    urlSuffix = 'termsofpayments';
-                    instanceName = 'terms-of-payment';
-                }
-
-                this.sandbox.util.save(
-                        '/admin/api/' + urlSuffix,
-                    'PATCH',
-                    data)
-                    .then(function(response) {
-                        this.sandbox.emit('husky.select.' + instanceName + '.update',
-                            response,
-                            null,
-                            true);
-                    }.bind(this)).fail(function(status, error) {
-                        this.sandbox.emit(
-                                'husky.select.' + instanceName + '.save.revert'
-                        );
-                        this.sandbox.logger.error(status, error);
-                    }.bind(this));
             }
         },
 
@@ -419,38 +323,6 @@ define([
             });
         },
 
-        // saves financial infos
-        saveFinancials: function(data) {
-            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-
-            this.account.set(data);
-
-            // set correct backbone models
-            if (!!data.termsOfPayment) {
-                this.account.set(
-                    'termsOfPayment',
-                    TermsOfPayment.findOrCreate({id: data.termsOfPayment})
-                );
-            }
-            if (!!data.termsOfDelivery) {
-                this.account.set(
-                    'termsOfDelivery',
-                    TermsOfDelivery.findOrCreate({id: data.termsOfDelivery})
-                );
-            }
-
-            this.account.save(null, {
-                patch: true,
-                success: function(response) {
-                    var model = response.toJSON();
-                    this.sandbox.emit('sulu.contacts.accounts.financials.saved', model);
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving profile");
-                }.bind(this)
-            });
-        },
-
         load: function(id) {
             // TODO: show loading icon
             this.sandbox.emit('sulu.router.navigate', 'contacts/accounts/edit:' + id + '/details');
@@ -495,8 +367,9 @@ define([
          * @param containerId
          * @param params additional params
          * @returns {*}
+         * @param namespace
          */
-        renderComponent: function(path, componentName, containerId, params) {
+        renderComponent: function(path, componentName, containerId, params, namespace) {
             var $form = this.sandbox.dom.createElement('<div id="' + containerId + '"/>'),
                 dfd = this.sandbox.data.deferred();
 
@@ -509,7 +382,7 @@ define([
                         this.account = model;
                         this.sandbox.start([
                             {
-                                name: path + componentName + '@sulucontact',
+                                name: path + componentName + '@' + (!!namespace ? namespace : 'sulucontact'),
                                 options: {
                                     el: $form,
                                     data: model.toJSON(),

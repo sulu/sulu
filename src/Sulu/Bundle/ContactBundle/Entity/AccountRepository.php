@@ -84,8 +84,6 @@ class AccountRepository extends NestedTreeRepository
                 ->leftJoin('faxes.faxType', 'faxType')
                 ->leftJoin('account.bankAccounts', 'bankAccounts')
                 ->leftJoin('account.tags', 'tags')
-                ->leftJoin('account.termsOfDelivery', 'termsOfDelivery')
-                ->leftJoin('account.termsOfPayment', 'termsOfPayment')
                 ->leftJoin('account.mainContact', 'mainContact')
                 ->leftJoin('account.medias', 'medias')
                 ->addSelect('mainContact')
@@ -107,8 +105,6 @@ class AccountRepository extends NestedTreeRepository
                 ->addSelect('faxes')
                 ->addSelect('faxType')
                 ->addSelect('notes')
-                ->addSelect('termsOfDelivery')
-                ->addSelect('termsOfPayment')
                 ->addSelect('medias')
                 ->where('account.id = :accountId');
 

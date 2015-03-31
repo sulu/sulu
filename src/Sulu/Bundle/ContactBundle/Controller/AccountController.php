@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
@@ -18,8 +19,6 @@ use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\Address as AddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliveryEntity;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
@@ -44,8 +43,6 @@ class AccountController extends AbstractContactController
     protected static $contactEntityKey = 'contacts';
     protected static $contactEntityName = 'SuluContactBundle:Contact';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
-    protected static $termsOfPaymentEntityName = 'SuluContactBundle:TermsOfPayment';
-    protected static $termsOfDeliveryEntityName = 'SuluContactBundle:TermsOfDelivery';
     protected static $emailEntityName = 'SuluContactBundle:Email';
     protected static $phoneEntityName = 'SuluContactBundle:Phone';
     protected static $urlEntityName = 'SuluContactBundle:Url';
@@ -529,8 +526,6 @@ class AccountController extends AbstractContactController
         // add urls, phones, emails, tags, bankAccounts, notes, addresses,..
         $this->addNewContactRelations($account, $request);
 
-        $this->processTerms($request, $account);
-
         return $account;
     }
 
@@ -579,6 +574,13 @@ class AccountController extends AbstractContactController
         return $this->handleView($view);
     }
 
+    /**
+     * processes given entity for put
+     * @param AccountInterface $account
+     * @param Request $request
+     * @throws EntityNotFoundException
+     * @throws RestException
+     */
     protected function doPut(AccountInterface $account, Request $request)
     {
         // set name
@@ -615,8 +617,6 @@ class AccountController extends AbstractContactController
         ) {
             throw new RestException('Updating dependencies is not possible', 0);
         }
-
-        $this->processTerms($request, $account);
     }
 
     /**
@@ -660,35 +660,7 @@ class AccountController extends AbstractContactController
             if (!$account) {
                 throw new EntityNotFoundException($this->getAccountEntityName(), $id);
             } else {
-
-                if ($request->get('uid') !== null) {
-                    $account->setUid($request->get('uid'));
-                }
-                if ($request->get('registerNumber') !== null) {
-                    $account->setRegisterNumber($request->get('registerNumber'));
-                }
-                if ($request->get('number') !== null) {
-                    $account->setNumber($request->get('number'));
-                }
-
-                if ($request->get('placeOfJurisdiction') !== null) {
-                    $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
-                }
-
-                // check if mainContact is set
-                if ($mainContactRequest = $request->get('mainContact') !== null) {
-                    $mainContact = $em->getRepository(self::$contactEntityName)->find($mainContactRequest['id']);
-                    if ($mainContact) {
-                        $account->setMainContact($mainContact);
-                    }
-                }
-
-                // process details
-                if ($request->get('bankAccounts') !== null) {
-                    $this->processBankAccounts($account, $request->get('bankAccounts', array()));
-                }
-
-                $this->processTerms($request, $account);
+                $this->doPatch($account, $request, $em);
 
                 $em->flush();
 
@@ -712,37 +684,38 @@ class AccountController extends AbstractContactController
     }
 
     /**
-     * Processes terms of delivery and terms of payment for an account
-     *
-     * @param Request $request
+     * process geiven entity for patch
      * @param AccountInterface $account
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @param Request $request
+     * @param ObjectManager $entityManager
      */
-    protected function processTerms(Request $request, AccountInterface $account)
+    protected function doPatch(AccountInterface $account, Request $request, ObjectManager $entityManager)
     {
-        if ($request->get('termsOfPayment') !== null) {
-            $id = $request->get('termsOfPayment')['id'];
-            /** @var TermsOfPaymentEntity $termsOfPayment */
-            $termsOfPayment = $this->getDoctrine()
-                ->getRepository(self::$termsOfPaymentEntityName)
-                ->find($id);
-
-            if (!$termsOfPayment) {
-                throw new EntityNotFoundException(self::$termsOfPaymentEntityName, $id);
-            }
-            $account->setTermsOfPayment($termsOfPayment);
+        if ($request->get('uid') !== null) {
+            $account->setUid($request->get('uid'));
+        }
+        if ($request->get('registerNumber') !== null) {
+            $account->setRegisterNumber($request->get('registerNumber'));
+        }
+        if ($request->get('number') !== null) {
+            $account->setNumber($request->get('number'));
         }
 
-        if ($request->get('termsOfDelivery') !== null) {
-            $id = $request->get('termsOfDelivery')['id'];
-            /** @var TermsOfDeliveryEntity $termsOfDelivery */
-            $termsOfDelivery = $this->getDoctrine()
-                ->getRepository(self::$termsOfDeliveryEntityName)
-                ->find($id);
-            if (!$termsOfDelivery) {
-                throw new EntityNotFoundException(self::$termsOfDeliveryEntityName, $id);
+        if ($request->get('placeOfJurisdiction') !== null) {
+            $account->setPlaceOfJurisdiction($request->get('placeOfJurisdiction'));
+        }
+
+        // check if mainContact is set
+        if ($mainContactRequest = $request->get('mainContact') !== null) {
+            $mainContact = $entityManager->getRepository(self::$contactEntityName)->find($mainContactRequest['id']);
+            if ($mainContact) {
+                $account->setMainContact($mainContact);
             }
-            $account->setTermsOfDelivery($termsOfDelivery);
+        }
+
+        // process details
+        if ($request->get('bankAccounts') !== null) {
+            $this->processBankAccounts($account, $request->get('bankAccounts', array()));
         }
     }
 

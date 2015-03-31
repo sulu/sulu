@@ -22,8 +22,6 @@ use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
 use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliveryEntity;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
@@ -692,58 +690,6 @@ class Account extends ApiWrapper
     public function getPlaceOfJurisdiction()
     {
         return $this->entity->getPlaceOfJurisdiction();
-    }
-
-    /**
-     * Set termsOfPayment
-     *
-     * @param TermsOfPaymentEntity $termsOfPayment
-     * @return Account
-     */
-    public function setTermsOfPayment(TermsOfPaymentEntity $termsOfPayment = null)
-    {
-        $this->entity->setTermsOfPayment($termsOfPayment);
-
-        return $this;
-    }
-
-    /**
-     * Get termsOfPayment
-     *
-     * @return TermsOfPaymentEntity
-     * @VirtualProperty
-     * @SerializedName("termsOfPayment")
-     * @Groups({"fullAccount"})
-     */
-    public function getTermsOfPayment()
-    {
-        return $this->entity->getTermsOfPayment();
-    }
-
-    /**
-     * Set termsOfDelivery
-     *
-     * @param TermsOfDeliveryEntity $termsOfDelivery
-     * @return Account
-     */
-    public function setTermsOfDelivery(TermsOfDeliveryEntity $termsOfDelivery = null)
-    {
-        $this->entity->setTermsOfDelivery($termsOfDelivery);
-
-        return $this;
-    }
-
-    /**
-     * Get termsOfDelivery
-     *
-     * @return TermsOfDeliveryEntity
-     * @VirtualProperty
-     * @SerializedName("termsOfDelivery")
-     * @Groups({"fullAccount"})
-     */
-    public function getTermsOfDelivery()
-    {
-        return $this->entity->getTermsOfDelivery();
     }
 
     /**

@@ -253,26 +253,6 @@ interface AccountInterface
     public function setMainContact($mainContact);
 
     /**
-     * @return TermsOfPayment
-     */
-    public function getTermsOfPayment();
-
-    /**
-     * @param TermsOfPayment $termsOfPayment
-     */
-    public function setTermsOfPayment($termsOfPayment);
-
-    /**
-     * @return TermsOfDelivery
-     */
-    public function getTermsOfDelivery();
-
-    /**
-     * @param TermsOfDelivery $termsOfDelivery
-     */
-    public function setTermsOfDelivery($termsOfDelivery);
-
-    /**
      * Set lft
      *
      * @param integer $lft

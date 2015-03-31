@@ -112,16 +112,6 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     private $mainContact;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfPayment
-     */
-    private $termsOfPayment;
-
-    /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery
-     */
-    private $termsOfDelivery;
-
-    /**
      * Set name
      *
      * @param string $name
@@ -485,37 +475,5 @@ abstract class BaseAccount extends ApiEntity implements AuditableInterface, Acco
     public function setMainContact($mainContact)
     {
         $this->mainContact = $mainContact;
-    }
-
-    /**
-     * @return TermsOfPayment
-     */
-    public function getTermsOfPayment()
-    {
-        return $this->termsOfPayment;
-    }
-
-    /**
-     * @param TermsOfPayment $termsOfPayment
-     */
-    public function setTermsOfPayment($termsOfPayment)
-    {
-        $this->termsOfPayment = $termsOfPayment;
-    }
-
-    /**
-     * @return TermsOfDelivery
-     */
-    public function getTermsOfDelivery()
-    {
-        return $this->termsOfDelivery;
-    }
-
-    /**
-     * @param TermsOfDelivery $termsOfDelivery
-     */
-    public function setTermsOfDelivery($termsOfDelivery)
-    {
-        $this->termsOfDelivery = $termsOfDelivery;
     }
 }
