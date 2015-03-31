@@ -167,7 +167,7 @@ class StructureDriver implements AdvancedDriverInterface
         }
 
         // index the webspace
-        $indexMeta->addFieldMapping('webspaceKey', array(
+        $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
             'field' => $this->factory->makeMetadataField('webspaceKey')
         ));
