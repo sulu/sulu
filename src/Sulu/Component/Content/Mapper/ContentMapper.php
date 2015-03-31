@@ -510,7 +510,9 @@ class ContentMapper implements ContentMapperInterface
                             'property' => $property
                         );
                     } else {
-                        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
+                        $translatedProperty = new TranslatedProperty(
+                            $property, $languageCode, $this->languageNamespace
+                        );
                         // TODO find a better why for change Types (same hack is used in BlockContentType:write )
                         $type->remove(
                             $node,
@@ -1234,7 +1236,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadShallowStructureByNode(NodeInterface $contentNode, $localization, $webspaceKey)
     {
-        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ? : Structure::TYPE_PAGE;
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
         $nodeType = $contentNode->getPropertyValueWithDefault(
@@ -1290,7 +1292,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ? : Structure::TYPE_PAGE;
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
         // START: getAvailableLocalization
@@ -1638,7 +1640,11 @@ class ContentMapper implements ContentMapperInterface
             $propertyTranslator = $this->createPropertyTranslator($localization);
             $statePropertyName = $propertyTranslator->getName('state');
 
-            if ($node->getPropertyValueWithDefault($statePropertyName, Structure::STATE_TEST) === Structure::STATE_PUBLISHED) {
+            if ($node->getPropertyValueWithDefault(
+                    $statePropertyName,
+                    Structure::STATE_TEST
+                ) === Structure::STATE_PUBLISHED
+            ) {
                 // set default value
                 $property->setValue(null);
                 $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
@@ -1701,10 +1707,27 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
+        $parentNode = $this->getSession()->getNodeByIdentifier($structure->getUuid())->getParent();
+        $resourceLocator = $this->getResourceLocator();
 
         $data = $structure->toArray(true);
+        foreach ($destLanguageCodes as $destLanguageCode) {
+            if ($structure->hasTag('sulu.rlp')) {
+                $parentUrl = $resourceLocator->getResourceLocatorByUuid(
+                    $parentNode->getIdentifier(),
+                    $webspaceKey,
+                    $destLanguageCode
+                );
+                $rlp = $this->getResourceLocator()->getStrategy()->generate(
+                    $structure->getPropertyValue('title'),
+                    $parentUrl,
+                    $webspaceKey,
+                    $destLanguageCode
+                );
 
-        foreach($destLanguageCodes as $destLanguageCode) {
+                $data[$structure->getPropertyByTagName('sulu.rlp')->getName()] = $rlp;
+            }
+
             $this->save(
                 $data,
                 $structure->getKey(),
@@ -1777,10 +1800,14 @@ class ContentMapper implements ContentMapperInterface
         if ($position === $countSiblings) {
             $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
             $parent->orderBefore($siblings[$position - 1]->getName(), $subject->getName());
-        } else if ($oldPosition < $position) {
-            $parent->orderBefore($subject->getName(), $siblings[$position]->getName());
-        } else if ($oldPosition > $position) {
-            $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
+        } else {
+            if ($oldPosition < $position) {
+                $parent->orderBefore($subject->getName(), $siblings[$position]->getName());
+            } else {
+                if ($oldPosition > $position) {
+                    $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
+                }
+            }
         }
 
         // set changer of node in specific language
@@ -2282,9 +2309,9 @@ class ContentMapper implements ContentMapperInterface
                 if (!isset($fieldsData[$field['target']])) {
                     $fieldsData[$field['target']] = array();
                 }
-                $target = & $fieldsData[$field['target']];
+                $target = &$fieldsData[$field['target']];
             } else {
-                $target = & $fieldsData;
+                $target = &$fieldsData;
             }
 
             // create target
