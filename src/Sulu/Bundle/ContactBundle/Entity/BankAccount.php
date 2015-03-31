@@ -41,6 +41,11 @@ class BankAccount
     private $accounts;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -182,11 +187,6 @@ class BankAccount
     {
         return $this->bankName;
     }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $contacts;
-
 
     /**
      * Add contacts

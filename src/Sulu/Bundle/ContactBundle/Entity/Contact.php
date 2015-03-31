@@ -191,6 +191,16 @@ class Contact extends ApiEntity implements AuditableInterface
     private $categories;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $urls;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bankAccounts;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -628,11 +638,6 @@ class Contact extends ApiEntity implements AuditableInterface
     {
         return $this->faxes;
     }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $urls;
 
     /**
      * Add urls
@@ -1147,11 +1152,6 @@ class Contact extends ApiEntity implements AuditableInterface
     {
         return $this->categories;
     }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $bankAccounts;
 
     /**
      * Add contactAddresses

@@ -31,7 +31,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 '    <div class="grid-col-12">',
                 '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
                 '   </div>',
-                '</div>'].join('')
+                '</div>'
+            ].join('')
         };
 
     return {
@@ -58,7 +59,8 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
                 '    <div class="grid-col-12">',
                 '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
                 '   </div>',
-                '</div>'].join('')
+                '</div>'
+            ].join('')
         },
 
         initialize: function() {
@@ -109,20 +111,20 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
             options.value = !!data.parent ? data.parent : null;
             options.instanceName = 'companyAccount' + data.id,
 
-                this.sandbox.start([
-                    {
-                        name: 'auto-complete@husky',
-                        options: options
-                    },
-                    {
-                        name: 'input@husky',
-                        options: {
-                            el: '#vat',
-                            instanceName: 'vat-input',
-                            value: !!data.uid ? data.uid : ''
-                        }
+            this.sandbox.start([
+                {
+                    name: 'auto-complete@husky',
+                    options: options
+                },
+                {
+                    name: 'input@husky',
+                    options: {
+                        el: '#vat',
+                        instanceName: 'vat-input',
+                        value: !!data.uid ? data.uid : ''
                     }
-                ]);
+                }
+            ]);
 
             this.initForm(data);
 
