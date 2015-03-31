@@ -28,9 +28,9 @@ Feature: Snippet content type
 
     Scenario: Snippet select
         Given I am editing a page of type "snippet_page"
-        And I click the add icon
+        When I click the add icon
         And I click on the element "#snippet-content-snippet-column-navigation th input"
         And I click the tick button
         And I click the save icon
         Then I expect a success notification to appear
-        Then I expect to see "Penguin"
+        And I expect to see "Penguin"

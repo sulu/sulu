@@ -16,13 +16,13 @@ Feature: Email content type
 
     Scenario: Enter a valid email
         Given I am editing a page of type "email_page"
-        And I fill in "husky-input-email" with "daniel@dantleech.com"
+        When I fill in "husky-input-email" with "daniel@dantleech.com"
         And I click the save icon
         Then I expect a success notification to appear
 
     Scenario Outline: Enter a invalid email
         Given I am editing a page of type "email_page"
-        And I fill in "husky-input-email" with "<email>"
+        When I fill in "husky-input-email" with "<email>"
         And I click the save icon
         Then there should be 1 form errors
         Examples:
