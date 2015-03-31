@@ -12,9 +12,8 @@ namespace Sulu\Component\Cache;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class MemoizeTest extends ProphecyTestCase
+class MemoizeTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var MemoizeInterface

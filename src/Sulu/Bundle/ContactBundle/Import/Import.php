@@ -1565,6 +1565,7 @@ class Import
             // get parent account
             $parent = $this->getAccountByKey($data['account_parent_id']);
             $account->setParent($parent);
+            $parent->addChildren($account);
         }
     }
 

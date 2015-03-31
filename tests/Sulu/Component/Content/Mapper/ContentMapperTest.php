@@ -115,7 +115,7 @@ class ContentMapperTest extends PhpcrTestCase
         $method->invokeArgs(
             $structureMock,
             array(
-                new Property(
+                ($property = new Property(
                     'title',
                     '',
                     'text_line',
@@ -124,49 +124,55 @@ class ContentMapperTest extends PhpcrTestCase
                     1,
                     1,
                     array()
-                )
+                ))
             )
         );
+        $property->setStructure($structureMock);
 
         if ($url) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property(
+                    ($property = new Property(
                         'url', '', 'resource_locator', false, true, 1, 1, array(), array(new PropertyTag('sulu.rlp', 1))
-                    )
+                    ))
                 )
             );
+            $property->setStructure($structureMock);
         }
 
         if ($type == 1) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('tags', '', 'text_line', false, true, 10, 2)
+                    ($property = new Property('tags', '', 'text_line', false, true, 10, 2))
                 )
             );
+            $property->setStructure($structureMock);
 
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('article', '', 'text_area', false, true)
+                    ($property = new Property('article', '', 'text_area', false, true))
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 2) {
             // not translated
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', '', 'text_area', false, false)
+                    ($property = new Property('blog', '', 'text_area', false, false))
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 3) {
             $blockProperty = new BlockProperty('block1', '', 'default', false, true, 10, 2);
             $type = new BlockPropertyType('default', '');
             $type->addChild(new Property('title', '', 'text_line', false, true));
             $type->addChild(new Property('article', '', 'text_area', false, true));
             $blockProperty->addType($type);
+            $blockProperty->setStructure($structureMock);
 
             $method->invokeArgs(
                 $structureMock,
@@ -178,13 +184,14 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', '', 'text_line', true, true)
+                    ($property = new Property('blog', '', 'text_line', true, true))
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 5) {
             $section = new SectionProperty('test', array(), '6');
             $section->addChild(
-                new Property(
+                ($property = new Property(
                     'blog',
                     '',
                     'text_line',
@@ -193,8 +200,9 @@ class ContentMapperTest extends PhpcrTestCase
                     1,
                     1,
                     array()
-                )
+                ))
             );
+            $property->setStructure($structureMock);
 
             $method->invokeArgs(
                 $structureMock,
@@ -206,14 +214,15 @@ class ContentMapperTest extends PhpcrTestCase
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('blog', '', 'text_line', true, true)
+                    ($property = new Property('blog', '', 'text_line', true, true))
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 7) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property(
+                    ($property = new Property(
                         'internal',
                         '',
                         'text_line',
@@ -224,13 +233,15 @@ class ContentMapperTest extends PhpcrTestCase
                         array(),
                         array(new PropertyTag('sulu.rlp', 1))
                     )
+                    )
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 8) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property(
+                    ($property = new Property(
                         'external',
                         '',
                         'text_line',
@@ -240,27 +251,30 @@ class ContentMapperTest extends PhpcrTestCase
                         1,
                         array(),
                         array(new PropertyTag('sulu.rlp', 1))
-                    )
+                    ))
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 9) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property(
+                    ($property = new Property(
                         'internal', // same as internal link to test content type switch
                         '',
                         'snippet'
-                    )
+                    ))
                 )
             );
+            $property->setStructure($structureMock);
         } elseif ($type == 10) {
             $method->invokeArgs(
                 $structureMock,
                 array(
-                    new Property('article', '', 'text_area', false, true)
+                    ($property = new Property('article', '', 'text_area', false, true))
                 )
             );
+            $property->setStructure($structureMock);
         }
 
         return $structureMock;
@@ -2885,7 +2899,8 @@ class ContentMapperTest extends PhpcrTestCase
     /**
      * @return StructureInterface[]
      */
-    private function prepareOrderAtData() {
+    private function prepareOrderAtData()
+    {
         $data = array(
             array(
                 'title' => 'Page-1',
@@ -3185,7 +3200,8 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-2/sub-1', $result[2]->getPath());
     }
 
-    public function testOrderAt() {
+    public function testOrderAt()
+    {
         $data = $this->prepareOrderAtData();
 
         $result = $this->mapper->orderAt($data[2]->getUuid(), 3, 17, 'default', 'en');
@@ -3200,7 +3216,8 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1/page-1-4', $result[3]->getPath());
     }
 
-    public function testOrderAtToLast() {
+    public function testOrderAtToLast()
+    {
         $data = $this->prepareOrderAtData();
 
         $result = $this->mapper->orderAt($data[2]->getUuid(), 4, 1, 'default', 'en');
@@ -3517,6 +3534,91 @@ class ContentMapperTest extends PhpcrTestCase
                 ) . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString()
             );
         }
+    }
+
+    public function testRowToArraySetLocaleWebspace()
+    {
+        $queryResult = $this->getMock('PHPCR\Query\QueryResultInterface');
+        $row = $this->getMock('Jackalope\Query\Row', array(), array(), '', false);
+        $node = $this->getMock('PHPCR\NodeInterface', array(), array(), '', false);
+        $parentNode = $this->getMock('PHPCR\NodeInterface', array(), array(), '', false);
+
+        $property = $this->getMock('Sulu\Component\Content\Property', array(), array(), '', false);
+        $structure = $this->getMock('Sulu\Component\Content\Structure', array(), array(), '', false);
+
+        $queryResult->expects($this->any())
+            ->method('getRows')
+            ->willReturn(array($row));
+
+        $row->expects($this->any())
+            ->method('getNode')
+            ->willReturn($node);
+
+        $row->expects($this->any())
+            ->method('getPath')
+            ->willReturn('/test');
+
+        $node->expects($this->any())
+            ->method('hasProperty')
+            ->willReturn(true);
+
+        $node->expects($this->any())
+            ->method('getPropertyValue')
+            ->willReturnCallback(
+                function ($propertyName) {
+                    switch ($propertyName) {
+                        case 'i18n:en-state':
+                            return Structure::STATE_PUBLISHED;
+                            break;
+                        case 'i18n:en-template':
+                            return 'overview';
+                            break;
+                        default:
+                            return 'fake';
+                            break;
+                    }
+                }
+            );
+
+        $node->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn('123-123-123');
+
+        $node->expects($this->any())
+            ->method('getParent')
+            ->willReturn($parentNode);
+
+        $parentNode->expects($this->any())
+            ->method('getIdentifier')
+            ->willReturn('312-312-312');
+
+        $property->expects($this->any())
+            ->method('getStructure')
+            ->willReturn($structure);
+
+        $property->expects($this->any())
+            ->method('getContentTypeName')
+            ->willReturn('text_line');
+
+        $structure->expects($this->exactly(1))
+            ->method('setLanguageCode')
+            ->with($this->equalTo('en'));
+
+        $structure->expects($this->exactly(1))
+            ->method('setWebspaceKey')
+            ->with($this->equalTo('default'));
+
+        $this->mapper->convertQueryResultToArray(
+            $queryResult,
+            'default',
+            array('en'),
+            array(
+                'en' => array(
+                    array('name' => 'test', 'property' => $property)
+                )
+            ),
+            1
+        );
     }
 }
 

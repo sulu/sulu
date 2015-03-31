@@ -8,10 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Command;
+namespace Sulu\Bundle\ContactBundle\Command;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,14 +18,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command for recovering categories.
- * This command is fixing wrong left/right and depths (see -d) assignments of the categories tree
+ * Command for recovering nested tree of accounts.
+ * This command is fixing wrong left/right and depths (see -d) assignments of the nested tree
  */
-class RecoverCommand extends ContainerAwareCommand
+class AccountRecoverCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('sulu:categories:recover')
+        $this->setName('sulu:contacts:accounts:recover')
             ->addOption(
                 'force',
                 'f',
@@ -37,7 +36,7 @@ class RecoverCommand extends ContainerAwareCommand
                 'fix-depth',
                 'd',
                 InputOption::VALUE_NONE,
-                'Analyse depths of categories and fixes depth gaps as well as depths > 0 without a parent'
+                'Analyse depths of nodes and fixes depth gaps as well as depths > 0 without a parent'
             );
     }
 
@@ -55,7 +54,7 @@ class RecoverCommand extends ContainerAwareCommand
         $force = $input->getOption('force');
         $fixDepth = $input->getOption('fix-depth');
 
-        $repo = $this->getCategoryRepository();
+        $repo = $this->getEntityRepository();
         $verify = $repo->verify();
 
         $success = false;
@@ -70,20 +69,20 @@ class RecoverCommand extends ContainerAwareCommand
                 $success = true;
             }
         } else {
-            $output->writeln('<info>Your categories are fine. No errors found.<info>');
+            $output->writeln('<info>Your tree is fine. No errors found.<info>');
         }
 
         // fix depths if -depth is defined
         if ($fixDepth) {
 
-            // fix categories without parents
-            $numberParentLess = $this->findCategoriesWithoutParents();
+            // fix nodes without parents
+            $numberParentLess = $this->findNodesWithoutParents();
             if ($numberParentLess > 0) {
                 $output->writeln(
-                    sprintf('<comment>%s categories without parent were found.</comment>', $numberParentLess)
+                    sprintf('<comment>%s nodes without parent were found.</comment>', $numberParentLess)
                 );
                 if ($force) {
-                    $this->fixCategoriesWithoutParents();
+                    $this->fixNodesWithoutParents();
                     $success = true;
                     $em->flush();
                 }
@@ -105,7 +104,7 @@ class RecoverCommand extends ContainerAwareCommand
                     $em->flush();
                 }
             } else {
-                $output->writeln('<info>No categories without parents detected<info>');
+                $output->writeln('<info>No nodes without parents detected<info>');
             }
         }
 
@@ -119,14 +118,14 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Find number of categories where difference to parents depth > 1
+     * Find number of nodes where difference to parents depth > 1
      *
      * @return int Number of affected rows
      */
     private function findInitialWrongDepthGap()
     {
-        // get categories where difference to parents depth > 1
-        $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
+        // get nodes where difference to parents depth > 1
+        $qb = $this->getEntityRepository()->createQueryBuilder('c2')
             ->select('count(c2.id) as results')
             ->join('c2.parent', 'c1')
             ->where('(c2.depth - 1) <> c1.depth');
@@ -136,14 +135,14 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Find number of categories that have no parent but depth > 0
+     * Find number of nodes that have no parent but depth > 0
      *
-     * @return int Number of categories without a parent
+     * @return int Number of nodes without a parent
      */
-    private function findCategoriesWithoutParents()
+    private function findNodesWithoutParents()
     {
-        // get categories that have no parent but depth > 0
-        $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
+        // get nodes that have no parent but depth > 0
+        $qb = $this->getEntityRepository()->createQueryBuilder('c2')
             ->select('count(c2.id)')
             ->leftJoin('c2.parent', 'c1')
             ->where('c2.depth <> 0 AND c2.parent IS NULL');
@@ -152,16 +151,16 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Fix categories where difference to parents depth
+     * Fix nodes where difference to parents depth
      *
      * @return int|bool Number of affected rows
      */
     private function fixWrongDepthGap()
     {
         // FIXME: convert this native query to DQL (once its possible to join within UPDATE statement)
-        // fix categories where difference to parents depth > 1
-        $sql = "UPDATE ca_categories c2
-                JOIN ca_categories c1 ON c2.idCategoriesParent = c1.id
+        // fix nodes where difference to parents depth > 1
+        $sql = "UPDATE co_accounts c2
+                JOIN co_accounts c1 ON c2.idAccountsParent = c1.id
                 SET c2.depth = (c1.depth + 1)
                 WHERE ( c2.depth - 1 ) <> c1.depth";
 
@@ -174,12 +173,12 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * Set every category where depth > 0 and has no parents to depth 0
+     * Set every node where depth > 0 and has no parents to depth 0
      */
-    private function fixCategoriesWithoutParents()
+    private function fixNodesWithoutParents()
     {
-        // fix categories that have no parent but depth > 0
-        $qb = $this->getCategoryRepository()->createQueryBuilder('c2')
+        // fix nodes that have no parent but depth > 0
+        $qb = $this->getEntityRepository()->createQueryBuilder('c2')
             ->update()
             ->set('c2.depth', 0)
             ->where('c2.parent IS NULL AND depth != 0');
@@ -196,10 +195,10 @@ class RecoverCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return CategoryRepository
+     * @return EntityRepository
      */
-    private function getCategoryRepository()
+    private function getEntityRepository()
     {
-        return $this->getContainer()->get('sulu_category.category_repository');
+        return $this->getContainer()->get('sulu_contact.account_repository');
     }
 }

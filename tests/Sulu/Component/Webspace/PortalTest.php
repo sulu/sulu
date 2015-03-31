@@ -10,9 +10,8 @@
 
 namespace Sulu\Component\Webspace;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class PortalTest extends ProphecyTestCase
+class PortalTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Portal

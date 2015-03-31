@@ -47,6 +47,15 @@ class TemplateController extends Controller
     }
 
     /**
+     * renders template for the media info-view
+     * @return Response
+     */
+    public function mediaVersionsAction()
+    {
+        return $this->render('SuluMediaBundle:Template:media-versions.html.twig');
+    }
+
+    /**
      * renders template for the new-collection-form
      * @return Response
      */

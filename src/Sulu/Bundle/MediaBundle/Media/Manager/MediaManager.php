@@ -654,6 +654,9 @@ class MediaManager implements MediaManagerInterface
                     case 'url':
                         $media->setUrl($value);
                         break;
+                    case 'versionUrls':
+                        $media->setVersionUrls($value);
+                        break;
                     case 'formats':
                         $media->setFormats($value);
                         break;
@@ -813,6 +816,7 @@ class MediaManager implements MediaManagerInterface
      */
     public function addFormatsAndUrl(Media $media)
     {
+        // Set Formats
         $media->setFormats(
             $this->formatManager->getFormats(
                 $media->getId(),
@@ -822,9 +826,26 @@ class MediaManager implements MediaManagerInterface
             )
         );
 
-        $media->setUrl(
-            $this->getUrl($media->getId(), $media->getName(), $media->getVersion())
-        );
+        // Set Version Urls
+        $versionData = array();
+        foreach ($media->getFile()->getFileVersions() as $fileVersion) {
+            $versionData[$fileVersion->getVersion()] = array();
+            $versionData[$fileVersion->getVersion()]['url'] = $this->getUrl(
+                $media->getId(),
+                $fileVersion->getName(),
+                $fileVersion->getVersion()
+            );
+        }
+
+        $media->setAdditionalVersionData($versionData);
+
+        // Set Current Url
+        if (
+            isset($versionUrls[$media->getVersion()])
+            && isset($versionUrls[$media->getVersion()]['url'])
+        ) {
+            $media->setUrl($versionUrls[$media->getVersion()]['url']);
+        }
 
         return $media;
     }

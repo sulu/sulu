@@ -10,14 +10,13 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\PropertyInterface;
 use Psr\Log\LoggerInterface;
 
-class InternalLinksTest extends ProphecyTestCase
+class InternalLinksTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ContentQueryExecutorInterface
