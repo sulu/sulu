@@ -11,29 +11,28 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use DateTime;
-use FOS\RestBundle\Controller\Annotations\Get;
 use Hateoas\Configuration\Exclusion;
+use Hateoas\Representation\CollectionRepresentation;
 use JMS\Serializer\SerializationContext;
-use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Api\Contact as ApiContact;
+use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
-use Sulu\Bundle\ContactBundle\Entity\Contact;
-use Sulu\Bundle\ContactBundle\Entity\Fax;
-use Sulu\Bundle\ContactBundle\Entity\Email;
-use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Address;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Email;
+use Sulu\Bundle\ContactBundle\Entity\Fax;
+use Sulu\Bundle\ContactBundle\Entity\Phone;
 use Sulu\Bundle\ContactBundle\Entity\Url;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes contacts available through a REST API
@@ -80,11 +79,22 @@ class ContactController extends AbstractContactController
 
     protected $accountContactFieldDescriptors;
 
-    public function setContainer(ContainerInterface $container = null)
+    protected function getFieldDescriptors()
     {
-        parent::setContainer($container);
+        if ($this->fieldDescriptors === null) {
+            $this->initFieldDescriptors();
+        }
 
-        $this->initFieldDescriptors();
+        return $this->fieldDescriptors;
+    }
+
+    protected function getAccountContactFieldDescriptors()
+    {
+        if ($this->accountContactFieldDescriptors === null) {
+            $this->initFieldDescriptors();
+        }
+
+        return $this->accountContactFieldDescriptors;
     }
 
     private function initFieldDescriptors()
@@ -382,11 +392,11 @@ class ContactController extends AbstractContactController
     public function fieldsAction(Request $request)
     {
         if (!!$request->get('accountContacts')) {
-            return $this->handleView($this->view(array_values($this->accountContactFieldDescriptors), 200));
+            return $this->handleView($this->view(array_values($this->getAccountContactFieldDescriptors()), 200));
         }
 
         // default contacts list
-        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
     }
 
     /**
@@ -410,7 +420,7 @@ class ContactController extends AbstractContactController
 
             $listBuilder = $factory->create(self::$entityName);
 
-            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),

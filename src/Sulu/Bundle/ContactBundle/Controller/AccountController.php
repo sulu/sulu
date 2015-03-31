@@ -70,15 +70,6 @@ class AccountController extends AbstractContactController
     protected $accountContactFieldDescriptors;
     protected $accountAddressesFieldDescriptors;
 
-    public function setContainer(ContainerInterface $container = null)
-    {
-        parent::setContainer($container);
-
-        $this->initFieldDescriptors();
-        $this->initAccountContactFieldDescriptors();
-        $this->initAccountAddressesFieldDescriptors();
-    }
-
     /**
      * returns all fields that can be used by list
      *
@@ -87,7 +78,7 @@ class AccountController extends AbstractContactController
     public function fieldsAction()
     {
         // default contacts list
-        return $this->handleView($this->view(array_values($this->fieldDescriptors), 200));
+        return $this->handleView($this->view(array_values($this->getFieldDescriptors()), 200));
     }
 
     /**
@@ -148,9 +139,9 @@ class AccountController extends AbstractContactController
 
             $listBuilder = $factory->create($this->getAccountEntityName());
 
-            $restHelper->initializeListBuilder($listBuilder, $this->accountContactFieldDescriptors);
+            $restHelper->initializeListBuilder($listBuilder, $this->getAccountContactFieldDescriptors());
 
-            $listBuilder->where($this->fieldDescriptors['id'], $id);
+            $listBuilder->where($this->getFieldDescriptors()['id'], $id);
 
             // FIXME could be removed when field descriptor with expression is implemented and used
             $values = $listBuilder->execute();
@@ -204,9 +195,9 @@ class AccountController extends AbstractContactController
 
             $listBuilder = $factory->create($this->getAccountEntityName());
 
-            $restHelper->initializeListBuilder($listBuilder, $this->accountAddressesFieldDescriptors);
+            $restHelper->initializeListBuilder($listBuilder, $this->getAccountAddressesFieldDescriptors());
 
-            $listBuilder->where($this->fieldDescriptors['id'], $id);
+            $listBuilder->where($this->getFieldDescriptors()['id'], $id);
 
             $values = $listBuilder->execute();
 
@@ -374,7 +365,7 @@ class AccountController extends AbstractContactController
             $restHelper = $this->get('sulu_core.doctrine_rest_helper');
 
             $listBuilder = $this->generateFlatListBuilder($request, $filter);
-            $restHelper->initializeListBuilder($listBuilder, $this->fieldDescriptors);
+            $restHelper->initializeListBuilder($listBuilder, $this->getFieldDescriptors());
 
             $list = new ListRepresentation(
                 $listBuilder->execute(),
@@ -419,9 +410,9 @@ class AccountController extends AbstractContactController
 
         foreach ($filter as $key => $value) {
             if (is_array($value)) {
-                $listBuilder->in($this->fieldDescriptors[$key], $value);
+                $listBuilder->in($this->getFieldDescriptors()[$key], $value);
             } else {
-                $listBuilder->where($this->fieldDescriptors[$key], $value);
+                $listBuilder->where($this->getFieldDescriptors()[$key], $value);
             }
         }
 
@@ -887,6 +878,33 @@ class AccountController extends AbstractContactController
     protected function getContactManager()
     {
         return $this->get('sulu_contact.account_manager');
+    }
+
+    protected function getFieldDescriptors()
+    {
+        if ($this->fieldDescriptors === null) {
+            $this->initFieldDescriptors();
+        }
+
+        return $this->fieldDescriptors;
+    }
+
+    protected function getAccountContactFieldDescriptors()
+    {
+        if ($this->accountContactFieldDescriptors === null) {
+            $this->initAccountContactFieldDescriptors();
+        }
+
+        return $this->accountContactFieldDescriptors;
+    }
+
+    protected function getAccountAddressesFieldDescriptors()
+    {
+        if ($this->accountAddressesFieldDescriptors === null) {
+            $this->initAccountAddressesFieldDescriptors();
+        }
+
+        return $this->accountAddressesFieldDescriptors;
     }
 
     /**
