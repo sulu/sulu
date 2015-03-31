@@ -49,6 +49,7 @@ define([
             this.dropDownEntries = [];
             this.enabledCategories = [];
             this.categoriesStore = {};
+            this.totals = {};
             this.state = {
                 page: 1,
                 pageCount: 1,
@@ -230,10 +231,11 @@ define([
             this.state.pageCount = response.pageCount;
             this.state.loading = false;
             this.state.hasNextPage = response.page < response.page_count;
+            this.totals = response.totals;
 
             data.forEach(function(entry) {
                 category = entry.document.category;
-                deepUrl = this.getEntryDeepUrl(category, entry);
+                deepUrl = this.getEntryDeepUrl(category, entry.document);
                 entry.document.deepUrl = deepUrl;
 
                 if (!preparedData[category]) {
@@ -315,7 +317,18 @@ define([
          */
         urlTemplateMapping: {
             page: function(data) {
-                return this.sandbox.urlManager.getUrl('contentDetail', data);
+                if (data.url === '/') {
+                    // startpage
+                    return this.sandbox.urlManager.getUrl('startpage', {
+                        id: data.id,
+                        webspace: 'sulu_io'
+                    });
+                } else {
+                    return this.sandbox.urlManager.getUrl('contentDetail', {
+                        id: data.id,
+                        webspace: 'sulu_io'
+                    });
+                }
             },
 
             contact: function(data) {
@@ -327,8 +340,10 @@ define([
             },
 
             media: function(data) {
-                data.collectionId = null;
-                return this.sandbox.urlManager.getUrl('mediaDetail', data);
+                return this.sandbox.urlManager.getUrl('mediaDetail', {
+                    id: data.id,
+                    collectionId: data.properties.collection_id
+                });
             },
 
             snippet: function(data) {
@@ -362,6 +377,7 @@ define([
             return this.searchResultsTpl({
                 sections: sections,
                 categories: this.categories,
+                totals: this.totals,
                 categoryIconMapping: this.categoryIconMapping,
                 translate: this.sandbox.translate
             });

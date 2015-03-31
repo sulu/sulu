@@ -31,7 +31,8 @@ define({
 
         app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
         
-        sandbox.urlManager.setUrl('contentDetail', 'content/contents/sulu_io/<%= languageCode %>/edit:<%= id %>/content');
+        sandbox.urlManager.setUrl('contentDetail', 'content/contents/<%= webspace %>/<%= languageCode %>/edit:<%= id %>/content');
+        sandbox.urlManager.setUrl('startpage', 'content/contents/<%= webspace %>/edit:index/details');
 
         function getContentLanguage() {
             return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;
