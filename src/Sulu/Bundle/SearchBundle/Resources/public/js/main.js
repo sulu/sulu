@@ -32,30 +32,29 @@ define({
                 return;
             }
 
-            this.sandbox.on('husky.navigation.item.select', function(params) {
+            this.sandbox.on('husky.navigation.item.select', function() {
                 this.sandbox.emit('sulu.data-overlay.hide');
+            }.bind(this));
 
-                // Create dom container for data overlay
-                if (params.action === 'search') {
-                    if (!dataOverlayStarted) {
-                        $element = this.sandbox.dom.createElement('<div class="data-overlay-container"/>');
+            this.sandbox.on('husky.navigation.item.event.search', function() {
+                if (!dataOverlayStarted) {
+                    $element = this.sandbox.dom.createElement('<div class="data-overlay-container"/>');
 
-                        App.dom.append('.content-container', $element);
-                        App.start([
-                            {
-                                name: 'data-overlay@suluadmin',
-                                options: {
-                                    el: '.data-overlay-container',
-                                    component: 'search-results@sulusearch'
-                                }
+                    App.dom.append('.content-container', $element);
+                    App.start([
+                        {
+                            name: 'data-overlay@suluadmin',
+                            options: {
+                                el: '.data-overlay-container',
+                                component: 'search-results@sulusearch'
                             }
-                        ]).then(function() {
-                            dataOverlayStarted = true;
-                            sandbox.emit('sulu.data-overlay.show');
-                        });
-                    } else {
-                        this.sandbox.emit('sulu.data-overlay.show');
-                    }
+                        }
+                    ]).then(function() {
+                        dataOverlayStarted = true;
+                        sandbox.emit('sulu.data-overlay.show');
+                    });
+                } else {
+                    this.sandbox.emit('sulu.data-overlay.show');
                 }
             }.bind(this));
         });

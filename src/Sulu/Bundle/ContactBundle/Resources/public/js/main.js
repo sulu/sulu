@@ -30,6 +30,9 @@ define(['config'], function(Config) {
 
             var sandbox = app.sandbox;
 
+            sandbox.urlManager.setUrl('contactDetail', 'contacts/contacts/edit:<%= id %>/details');
+            sandbox.urlManager.setUrl('accountDetail', 'contacts/accounts/edit:<%= id %>/details');
+
             Config.set('sulucontact.components.autocomplete.default.contact', {
                 remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName&limit=25',
                 getParameter: 'search',

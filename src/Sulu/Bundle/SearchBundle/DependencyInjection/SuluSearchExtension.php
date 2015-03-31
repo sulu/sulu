@@ -53,6 +53,7 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_search.structure_index_name', $config['structure_index_name']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
         $loader->load('metadata.xml');
         $loader->load('search.xml');
         $loader->load('build.xml');

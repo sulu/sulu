@@ -766,10 +766,9 @@ input, select {
 /* line 12, ../scss/modules/data-overlay.scss */
 .data-overlay {
   height: 100%;
-  overflow: auto;
 }
 
-/* line 17, ../scss/modules/data-overlay.scss */
+/* line 16, ../scss/modules/data-overlay.scss */
 .data-overlay-close {
   position: absolute;
   right: 12px;
@@ -779,7 +778,7 @@ input, select {
   background-color: transparent;
 }
 
-/* line 26, ../scss/modules/data-overlay.scss */
+/* line 25, ../scss/modules/data-overlay.scss */
 .data-overlay-content {
-  padding: 50px 0;
+  height: 100%;
 }

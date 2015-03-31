@@ -30,7 +30,7 @@ class SuluSearchAdmin extends Admin
 
         $search = new NavigationItem('navigation.search');
         $search->setIcon('search');
-        $search->setAction('search');
+        $search->setEvent('search');
 
         $section->addChild($search);
 

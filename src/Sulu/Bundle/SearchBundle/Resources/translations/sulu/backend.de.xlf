@@ -2,25 +2,53 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
     <file source-language="de" datatype="plaintext" original="file.ext">
         <body>
-            <trans-unit id="1" resname="search-overlay.category.contacts.title">
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2d34h" resname="search-overlay.category.contacts.title">
                 <source>search-overlay.category.contacts.title</source>
                 <target>Kontakte</target>
             </trans-unit>
-            <trans-unit id="2" resname="search-overlay.category.pages.title">
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2dh4b" resname="search-overlay.category.pages.title">
                 <source>search-overlay.category.pages.title</source>
                 <target>Seiten</target>
             </trans-unit>
-            <trans-unit id="3" resname="search-overlay.category.everything.title">
+            <trans-unit id="e4b14069a8a085ede2092hf5acb2dh4b" resname="search-overlay.placeholder.pages">
+                <source>search-overlay.placeholder.pages</source>
+                <target>Seiten durchsuchen...</target>
+            </trans-unit>
+            <trans-unit id="e4b1406d7ka085ede200b7f5acb2d39e" resname="search-overlay.category.everything.title">
                 <source>search-overlay.category.everything.title</source>
                 <target>Alles</target>
             </trans-unit>
-            <trans-unit id="4" resname="search-overlay.placeholder.everything">
+            <trans-unit id="e4b1428ja8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder.everything">
                 <source>search-overlay.placeholder.everything</source>
                 <target>Alles durchsuchen...</target>
             </trans-unit>
-            <trans-unit id="5" resname="search-overlay.placeholder.contacts">
+            <trans-unit id="e4blol69a8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder.contacts">
                 <source>search-overlay.placeholder.contacts</source>
                 <target>Kontakte durchsuchen...</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45b7f5acb2d39e" resname="search-overlay.category.accounts.title">
+                <source>search-overlay.category.accounts.title</source>
+                <target>Unternehmen</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45sds5acb2d39e" resname="search-overlay.placeholder.accounts">
+                <source>search-overlay.placeholder.accounts</source>
+                <target>Unternehmen durchsuchen...</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecjsgtf5acb2d39e" resname="search-overlay.category.media.title">
+                <source>search-overlay.category.media.title</source>
+                <target>Medien</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085e2kt45sds5acb2d39e" resname="search-overlay.placeholder.media">
+                <source>search-overlay.placeholder.media</source>
+                <target>Medien durchsuchen...</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edecd67tf5acb2d39e" resname="search-overlay.category.snippet.title">
+                <source>search-overlay.category.snippet.title</source>
+                <target>Snippets</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085e2kt4sdws5acb2d39e" resname="search-overlay.placeholder.snippet">
+                <source>search-overlay.placeholder.snippet</source>
+                <target>Snippets durchsuchen...</target>
             </trans-unit>
         </body>
     </file>

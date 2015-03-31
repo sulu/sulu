@@ -1,3 +1,9 @@
+.search-results-wrapper {
+    height: 100%;
+    padding: 50px 0 0;
+    overflow: auto;
+}
+
 .search-results-container {
     width: 550px;
     margin: 0 auto;
@@ -38,6 +44,7 @@
 .search-results-thumb {
     float: left;
     min-width: 50px;
+    min-height: 30px;
     margin-right: 10px;
     text-align: center;
 
@@ -46,11 +53,15 @@
     }
 
     [class*="fa-"] {
-        font-size: 24px;
+        font-size: 20px;
         color: #999999;
         position: relative;
         top: 5px;
     }
+}
+
+.search-results-thumb-image {
+    width: 50px;
 }
 
 .search-results-description {
