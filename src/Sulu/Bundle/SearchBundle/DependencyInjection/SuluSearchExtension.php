@@ -29,8 +29,12 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
             'metadata' => array(
                 'directories' => array(
                     array(
-                        'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer',
+                        'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer/massive',
                         'namespace_prefix' => 'Massive\Bundle\SearchBundle\Search',
+                    ),
+                    array(
+                        'path' => realpath(__DIR__ . '/..') . '/Resources/config/serializer/sulu',
+                        'namespace_prefix' => 'Sulu\Bundle\SearchBundle\Search',
                     ),
                 ),
             ),
@@ -50,7 +54,8 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter('sulu_search.structure_index_name', $config['structure_index_name']);
+        $container->setParameter('sulu_search.page_index_name', $config['page_index_name']);
+        $container->setParameter('sulu_search.snippet_index_name', $config['snippet_index_name']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

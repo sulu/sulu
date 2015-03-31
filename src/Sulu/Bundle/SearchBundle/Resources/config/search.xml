@@ -50,7 +50,8 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu.content.structure_manager" />
             <argument type="service" id="sulu.util.node_helper" />
-            <argument>%sulu_search.structure_index_name%</argument>
+            <argument>%sulu_search.page_index_name%</argument>
+            <argument>%sulu_search.snippet_index_name%</argument>
             <argument>%sulu.content.node_names.base%</argument>
             <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
         </service>

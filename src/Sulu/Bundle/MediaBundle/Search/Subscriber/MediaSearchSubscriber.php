@@ -19,6 +19,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
 /**
  * This subscriber populates the image URL field
@@ -38,14 +39,22 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     protected $searchImageFormat;
 
     /**
+     * @var Factory
+     */
+    protected $factory;
+
+    /**
      * @param MediaManagerInterface $mediaManager
+     * @param Factory $factory Massive search factory
      * @param $searchImageFormat
      */
     public function __construct(
         MediaManagerInterface $mediaManager,
+        Factory $factory,
         $searchImageFormat
     ) {
         $this->mediaManager = $mediaManager;
+        $this->factory = $factory;
         $this->searchImageFormat = $searchImageFormat;
     }
 
@@ -84,6 +93,13 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         $media = $file->getMedia();
 
         $document->setImageUrl($this->getImageUrl($media, $locale));
+
+        if ($collection = $media->getCollection()) {
+            $document->addField($this->factory->makeField(
+                'collection_id',
+                $collection->getId()
+            ));
+        }
     }
 
     /**

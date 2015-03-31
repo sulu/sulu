@@ -15,6 +15,7 @@
 
         <service id="sulu_media.search.subscriber.media" class="%sulu_media.search.subscriber.media.class%" >
             <argument type="service" id="sulu_media.media_manager" />
+            <argument type="service" id="massive_search.factory" />
             <argument>%sulu_media.search.default_image_format%</argument>
             <tag name="kernel.event_subscriber" />
         </service>
