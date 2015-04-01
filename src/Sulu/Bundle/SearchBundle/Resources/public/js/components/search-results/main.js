@@ -321,12 +321,12 @@ define([
                     // startpage
                     return this.sandbox.urlManager.getUrl('startpage', {
                         id: data.id,
-                        webspace: 'sulu_io'
+                        webspace: data.properties.webspace_key
                     });
                 } else {
                     return this.sandbox.urlManager.getUrl('contentDetail', {
                         id: data.id,
-                        webspace: 'sulu_io'
+                        webspace: data.properties.webspace_key
                     });
                 }
             },
