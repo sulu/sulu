@@ -45,7 +45,7 @@ define(function() {
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
             this.saved = true;
 
-            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
+            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1&sortBy=title';
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.bindCustomEvents();

@@ -86,6 +86,8 @@ class CollectionController extends RestController implements ClassResourceInterf
             $limit = $listRestHelper->getLimit();
             $offset = $listRestHelper->getOffset();
             $search = $listRestHelper->getSearchPattern();
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder', 'ASC');
 
             $filter = array(
                 'limit' => $limit,
@@ -95,8 +97,15 @@ class CollectionController extends RestController implements ClassResourceInterf
 
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter) {
-                    return $collectionManager->getById($id, $locale, $depth, $breadcrumb, $filter);
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
+                    return $collectionManager->getById(
+                        $id,
+                        $locale,
+                        $depth,
+                        $breadcrumb,
+                        $filter,
+                        $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                    );
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
@@ -145,7 +154,8 @@ class CollectionController extends RestController implements ClassResourceInterf
                     $offset,
                     $limit,
                     $search,
-                    $depth
+                    $depth,
+                    $sortBy !== null ? array($sortBy => $sortOrder) : array()
                 );
             }
 

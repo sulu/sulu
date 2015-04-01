@@ -71,7 +71,7 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var url = '/admin/api/collections';
+            var url = '/admin/api/collections?sortBy=title';
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
@@ -105,7 +105,7 @@ define(function() {
                     'media/collections/edit:' + item.collection + '/files/edit:' + id
                 );
 
-                var url = '/admin/api/collections/' + item.collection + '?depth=1';
+                var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
         },

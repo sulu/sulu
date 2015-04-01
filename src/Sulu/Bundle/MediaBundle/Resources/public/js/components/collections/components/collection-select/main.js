@@ -191,7 +191,7 @@ define(function() {
                                 'title': this.sandbox.translate('navigation.media.collections'),
                                 'hasSub': true,
                                 '_links': {
-                                    'children': {'href': '/admin/api/collections?limit=9999'}
+                                    'children': {'href': '/admin/api/collections?sortBy=title&limit=9999'}
                                 },
                                 '_embedded': {'collections': []}
                             }
@@ -199,7 +199,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections';
+                options.url = '/admin/api/collections?sortBy=title';
             }
 
             this.sandbox.start(

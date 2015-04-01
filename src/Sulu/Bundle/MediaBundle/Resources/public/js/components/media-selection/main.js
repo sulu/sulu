@@ -531,8 +531,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             el: this.$el.find('.media-selection-overlay-navigation-container'),
                             resultKey: 'collections',
                             showAddButton: false,
-                            rootUrl: '/admin/api/collections',
-                            url: '/admin/api/collections',
+                            rootUrl: '/admin/api/collections?sortBy=title',
+                            url: '/admin/api/collections?sortBy=title',
                             nameKey: 'title',
                             instanceName: this.options.instanceName,
                             globalEvents: false
