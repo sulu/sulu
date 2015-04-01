@@ -7,22 +7,12 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['config'], function(Config) {
 
     'use strict';
 
-    var permissions = [
-            {value: 'view', icon: 'eye'},
-            {value: 'add', icon: 'plus-circle'},
-            {value: 'edit', icon: 'pencil'},
-            {value: 'delete', icon: 'trash-o'}
-        ],
-        permissionTitles = [
-            'security.permissions.view',
-            'security.permissions.add',
-            'security.permissions.edit',
-            'security.permissions.delete'
-        ],
+    var permissions = Config.get('sulusecurity.permissions'),
+        permissionTitles = Config.get('sulusecurity.permission_titles'),
         permissionData,
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',

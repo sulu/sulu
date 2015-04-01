@@ -116,7 +116,7 @@
             </trans-unit>
             <trans-unit id="2745c23db7c8055c84ecba422b39e8e6" resname="contact.contacts.title">
                 <source>contact.contacts.title</source>
-                <target>Person</target>
+                <target>People</target>
             </trans-unit>
             <trans-unit id="bce12aa0a40b4a95a3bfc133a6bf286f" resname="contact.contacts.contactTitle">
                 <source>contact.contacts.contactTitle</source>
@@ -136,7 +136,7 @@
             </trans-unit>
             <trans-unit id="df7167eb3863f47cc66e7541f97cbd68" resname="contact.contacts.company">
                 <source>contact.contacts.company</source>
-                <target>Company</target>
+                <target>Organization</target>
             </trans-unit>
             <trans-unit id="404f1373fa1b569869be6f77a3cf1430" resname="contact.form.addEmail">
                 <source>contact.form.addEmail</source>
@@ -164,7 +164,7 @@
             </trans-unit>
             <trans-unit id="00b38c566108f89bff15e8738ed312d4" resname="contact.address.zip">
                 <source>contact.address.zip</source>
-                <target>Postal Code</target>
+                <target>Zip</target>
             </trans-unit>
             <trans-unit id="9dc2ecd9f28d79e1a41998d972350aa0" resname="contact.address.city">
                 <source>contact.address.city</source>
@@ -192,7 +192,7 @@
             </trans-unit>
             <trans-unit id="21739fb59ce76aa58404d9fc613ba40d" resname="email.home">
                 <source>email.home</source>
-                <target>Home</target>
+                <target>Private</target>
             </trans-unit>
             <trans-unit id="9c0bd43954c93c8e2cbfe94ecdd649c7" resname="email.work">
                 <source>email.work</source>
@@ -200,7 +200,7 @@
             </trans-unit>
             <trans-unit id="1eddecabfe3e3149071096c39a2069b1" resname="phone.home">
                 <source>phone.home</source>
-                <target>Home</target>
+                <target>Private</target>
             </trans-unit>
             <trans-unit id="2ae8f62c2530b4303646d95f70bfa62e" resname="phone.work">
                 <source>phone.work</source>
@@ -212,7 +212,7 @@
             </trans-unit>
             <trans-unit id="e7f59f60cc850de26922b29a1dcc3826" resname="address.home">
                 <source>address.home</source>
-                <target>Home</target>
+                <target>Private</target>
             </trans-unit>
             <trans-unit id="4b006ce36bf3e4f6bb24fd13e8dc29a9" resname="address.work">
                 <source>address.work</source>
@@ -228,11 +228,11 @@
             </trans-unit>
             <trans-unit id="690fa3a0e9c39771d51fd5e8a8ae8a04" resname="contact.accounts.title">
                 <source>contact.accounts.title</source>
-                <target>Account</target>
+                <target>Organization</target>
             </trans-unit>
             <trans-unit id="a4190eb0ddea6a4a416c5568a137c6f6" resname="contact.accounts.name">
                 <source>contact.accounts.name</source>
-                <target>Company</target>
+                <target>Organization</target>
             </trans-unit>
             <trans-unit id="201e6a9adc585674ad3871e2ed7425a0" resname="contact.accounts.website">
                 <source>contact.accounts.website</source>
@@ -280,7 +280,7 @@
             </trans-unit>
             <trans-unit id="b819087c400da29fa73c69eb259d6fbe" resname="navigation.contacts.companies">
                 <source>navigation.contacts.companies</source>
-                <target>Accounts</target>
+                <target>Organizations</target>
             </trans-unit>
             <trans-unit id="883c0562a1ae3578239d1803dfe61292" resname="navigation.webspaces">
                 <source>navigation.webspaces</source>
@@ -580,7 +580,7 @@
             </trans-unit>
             <trans-unit id="4926f85302370f0c0e5381e2c08797d8" resname="contact.account.add-basic">
                 <source>contact.account.add-basic</source>
-                <target>Create new account</target>
+                <target>Create new organization</target>
             </trans-unit>
             <trans-unit id="88eebe41010b0d017b51a2d8aa74d91d" resname="contact.account.add-lead">
                 <source>contact.account.add-lead</source>
@@ -644,7 +644,7 @@
             </trans-unit>
             <trans-unit id="069f3fbf0731ab7dbc2d8627334aad5f" resname="url.home">
                 <source>url.home</source>
-                <target>Home</target>
+                <target>Private</target>
             </trans-unit>
             <trans-unit id="57f4d7b8b30c684e992e01b8d1df4d90" resname="sulu.overlay.be-careful">
                 <source>sulu.overlay.be-careful</source>
@@ -1030,7 +1030,7 @@
             </trans-unit>
             <trans-unit id="642c992f1929c9e633a5ce2178d2219c" resname="contact.accounts.type.conversion.message">
                 <source>contact.accounts.type.conversion.message</source>
-                <target>The operation you are about to do will convert this account. This is not undoable! Please think
+                <target>The operation you are about to do will convert this organization. This is not undoable! Please think
                     about it and accept or decline.
                 </target>
             </trans-unit>
@@ -1228,7 +1228,7 @@
             </trans-unit>
             <trans-unit id="643d99fa2964652633a5ca2169f22238" resname="fax.home">
                 <source>fax.home</source>
-                <target>Home</target>
+                <target>Private</target>
             </trans-unit>
             <trans-unit id="643d99fa2964652633a5ca2169f22239" resname="contact.accounts.contact-remove">
                 <source>contact.accounts.contact-remove</source>
@@ -1239,8 +1239,8 @@
                 <target>Add contact to company</target>
             </trans-unit>
             <trans-unit id="643d99fa2964652633a5ca2169f22241" resname="contact.accounts.corporation">
-                <source>labels.success.category-delete-desc</source>
-                <target>Corporation</target>
+                <source>contact.accounts.corporation</source>
+                <target>Add-on</target>
             </trans-unit>
             <trans-unit id="643d99fa2964652633a5ca2169f22242" resname="dropdown.no-selection">
                 <source>labels.success.category-delete-desc</source>
@@ -1273,10 +1273,6 @@
             <trans-unit id="d42cd92f1c29c9e456a5ce2178d22198" resname="sulu.preview.smartphone">
                 <source>sulu.preview.smartphone</source>
                 <target>Smartphone</target>
-            </trans-unit>
-            <trans-unit id="c50af528fc331350142c0b4720e29a8a" resname="contact.accounts.responsiblePerson">
-                <source>contact.accounts.responsiblePerson</source>
-                <target>Responsible</target>
             </trans-unit>
             <trans-unit id="c964588d92c25e70ec2d7f9be4e28ebc" resname="select.edit-entries">
                 <source>select.edit-entries</source>

@@ -16,6 +16,6 @@ Feature: Phone content type
 
     Scenario: Enter a valid phone number
         Given I am editing a page of type "phone_page"
-        And I fill in "husky-input-phone" with "00331234123123"
+        When I fill in "husky-input-phone" with "00331234123123"
         And I click the save icon
         Then I expect a success notification to appear

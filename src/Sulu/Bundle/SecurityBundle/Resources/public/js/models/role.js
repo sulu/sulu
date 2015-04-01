@@ -18,6 +18,7 @@ define(['mvc/relationalmodel', 'mvc/hasmany', './permission'], function(relation
             return {
                 name: '',
                 system: '',
+                identifier: '',
                 permissions: []
             };
         }, relations: [
