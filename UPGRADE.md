@@ -11,6 +11,10 @@ know you have only added collections in only one language you can use following 
 UPDATE `me_collection_meta` SET `locale` = 'de';
 ``
 
+### Media API Object
+
+The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).
+
 ### Security
 
 The names of some classes have changed like shown in the following table:

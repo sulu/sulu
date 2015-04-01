@@ -2,12 +2,11 @@
 
 namespace Sulu\Component\Content\Mapper\LocalizationFinder;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
 /**
  * Chain localization finder
  */
-class ChainFinderTest extends ProphecyTestCase
+class ChainFinderTest extends \PHPUnit_Framework_TestCase
 {
     private $finder1;
     private $finder2;

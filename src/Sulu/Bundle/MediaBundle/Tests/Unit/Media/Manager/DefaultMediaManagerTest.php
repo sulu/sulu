@@ -11,14 +11,13 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 
-class DefaultMediaManagerTest extends ProphecyTestCase
+class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var MediaManager

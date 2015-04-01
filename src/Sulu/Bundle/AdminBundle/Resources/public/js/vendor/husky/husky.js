@@ -30821,7 +30821,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
             fadeInDuration: 400,
             largeThumbnailFormat: '170x170',
             smallThumbnailFormat: '50x50',
-            unselectOnBackgroundClick: true
+            unselectOnBackgroundClick: true,
+            selectable: true
         },
 
         constants = {
@@ -30854,10 +30855,12 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 '       <span class="' + constants.titleClass + '"><%= title %></span><br />',
                 '       <span class="' + constants.descriptionClass + '"><%= description %></span>',
                 '   </div>',
+                '<% if (!!selectable) { %>',
                 '   <div class="' + constants.checkboxClass + ' custom-checkbox no-spacing">',
                 '       <input type="checkbox"<% if (!!checked) { %> checked<% } %>/>',
                 '       <span class="icon"></span>',
                 '   </div>',
+                '<% } %>',
                 '   <div class="fa-' + constants.downloadIcon + ' ' + constants.downloadClass + '"></div>',
                 '</div>'
             ].join('')
@@ -30998,7 +31001,8 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                     title: this.sandbox.util.cropMiddle(title, 24),
                     description: this.sandbox.util.cropMiddle(description, 32),
                     styleClass: (this.options.large === true) ? constants.largeClass : constants.smallClass,
-                    checked: !!this.datagrid.itemIsSelected.call(this.datagrid, record.id)
+                    checked: !!this.datagrid.itemIsSelected.call(this.datagrid, record.id),
+                    selectable: this.options.selectable
                 })
             );
             if (this.datagrid.itemIsSelected.call(this.datagrid, record.id)) {
@@ -31027,7 +31031,11 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
         bindThumbnailDomEvents: function(id) {
             this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
                 this.sandbox.dom.stopPropagation(event);
-                this.toggleItemSelected(id);
+                if (!!this.options.selectable) {
+                    this.toggleItemSelected(id);
+                } else {
+                    this.selectItem(id);
+                }
             }.bind(this));
 
             this.sandbox.dom.on(this.$thumbnails[id], 'click', function(event) {
@@ -31035,10 +31043,12 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.downloadHandler(id);
             }.bind(this), '.' + constants.downloadClass);
 
-            this.sandbox.dom.on(this.$thumbnails[id], 'dblclick', function() {
-                this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
-                this.selectItem(id);
-            }.bind(this));
+            if (!!this.options.selectable) {
+                this.sandbox.dom.on(this.$thumbnails[id], 'dblclick', function() {
+                    this.datagrid.emitItemClickedEvent.call(this.datagrid, id);
+                    this.selectItem(id);
+                }.bind(this));
+            }
         },
 
         /**
@@ -31074,12 +31084,16 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          * @param onlyView {Boolean} if true the selection only affects this view and not the data array
          */
         selectItem: function(id, onlyView) {
-            this.sandbox.dom.addClass(this.$thumbnails[id], constants.selectedClass);
-            if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
-                this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', true);
-            }
-            if (onlyView !== true) {
-                this.datagrid.setItemSelected.call(this.datagrid, id);
+            if (!!this.options.selectable) {
+                this.sandbox.dom.addClass(this.$thumbnails[id], constants.selectedClass);
+                if (!this.sandbox.dom.is(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), ':checked')) {
+                    this.sandbox.dom.prop(this.sandbox.dom.find('input[type="checkbox"]', this.$thumbnails[id]), 'checked', true);
+                }
+                if (onlyView !== true) {
+                    this.datagrid.setItemSelected.call(this.datagrid, id);
+                }
+            } else {
+                this.datagrid.emitItemClickedEvent(id);
             }
         },
 
@@ -33081,7 +33095,9 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @param id {Number|String} id to emit with the event
              */
             emitItemClickedEvent: function(id) {
-                this.sandbox.emit(ITEM_CLICK.call(this), id);
+                var itemIndex = this.getRecordIndexById(id);
+
+                this.sandbox.emit(ITEM_CLICK.call(this), id, this.data.embedded[itemIndex]);
             },
 
             /**
@@ -35703,7 +35719,12 @@ define('__component__$toolbar@husky',[],function() {
                     if (!!item.itemsOption && !!item.itemsOption.url) {
                         this.sandbox.util.load(item.itemsOption.url)
                             .then(function(result) {
-                                handleRequestedItems.call(this, result[this.options.itemsRequestKey], item.id);
+                                var data = result[this.options.itemsRequestKey];
+                                if (!!item.itemsOption.resultKey) {
+                                    data = data[item.itemsOption.resultKey];
+                                }
+
+                                handleRequestedItems.call(this, data, item.id);
                                 dfd.resolve();
                             }.bind(this))
                             .fail(function(result) {
@@ -44293,6 +44314,7 @@ define('__component__$data-navigation@husky',[
     return {
 
         page: 1,
+        loading: false,
 
         /**
          * @method initialize
@@ -44383,7 +44405,7 @@ define('__component__$data-navigation@husky',[
         loadNextPage: function() {
             var def = this.sandbox.data.deferred();
 
-            if (!!this.data.hasNextPage) {
+            if (!!this.data.hasNextPage && !this.loading) {
                 this.showLoader();
 
                 this.page++;
@@ -44476,10 +44498,16 @@ define('__component__$data-navigation@husky',[
          */
         load: function(url) {
             this.page = 1;
+            this.loading = true;
 
             return this.sandbox.util.load(this.getUrl(url))
                 .then(this.parse.bind(this))
-                .then(this.hideSearch.bind(this));
+                .then(this.hideSearch.bind(this))
+                .then(function(data) {
+                    this.loading = false;
+
+                    return data;
+                }.bind(this));
         },
 
         hideLoader: function() {

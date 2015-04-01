@@ -22,6 +22,10 @@ sulu_media.template.media.info:
     pattern: /template/media/info.html
     defaults: { _controller: SuluMediaBundle:Template:mediaInfo }
 
+sulu_media.template.media.versions:
+    pattern: /template/media/versions.html
+    defaults: { _controller: SuluMediaBundle:Template:mediaVersions }
+
 sulu_media.template.media.multiple_edit:
     pattern: /template/media/multiple-edit.html
     defaults: { _controller: SuluMediaBundle:Template:multipleEdit }

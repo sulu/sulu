@@ -76,7 +76,7 @@ define(function() {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale.id, breadcrumb:'true'},
+                this.options.data.id, {locale: locale.id, breadcrumb: 'true'},
                 function(collection) {
                     this.options.data = collection;
                     this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
@@ -120,7 +120,10 @@ define(function() {
         setHeaderInfos: function() {
             var breadcrumb = [
                 {title: 'navigation.media'},
-                {title: 'media.collections.title'}
+                {
+                    title: 'media.collections.title',
+                    event: 'sulu.media.collections.breadcrumb-navigate.root'
+                }
             ], i, len, data = this.options.data._embedded.breadcrumb || [];
 
             for (i = 0, len = data.length; i < len; i++) {
@@ -145,7 +148,7 @@ define(function() {
                 var data = this.sandbox.form.getData('#' + constants.settingsFormId);
                 this.options.data = this.sandbox.util.extend(true, {}, this.options.data, data);
                 this.options.data.parent = this.options.data._embedded.parent ? this.options.data._embedded.parent.id : null;
-                
+
                 this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
                 this.sandbox.once('sulu.media.collections.collection-changed', this.savedCallback.bind(this));
                 this.sandbox.emit('sulu.media.collections.save-collection', this.options.data);

@@ -2,10 +2,9 @@
 
 namespace Sulu\Component\Environment;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Environment;
 
-class EnvironmentTest extends ProphecyTestCase
+class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
