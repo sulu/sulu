@@ -43277,7 +43277,7 @@ define('__component__$dropzone@husky',[], function () {
                     this.openOverlay();
                 }.bind(this));
                 this.sandbox.dom.on(this.sandbox.dom.$document, 'drop', function(event) {
-                    if (this.dropzoneEnabled) {                        
+                    if (this.dropzoneEnabled) {
                         this.addFiles(event.originalEvent.dataTransfer.files);
                     }
                 }.bind(this));
@@ -43569,6 +43569,11 @@ define('__component__$dropzone@husky',[], function () {
                 arrReturn.push(files[i].response);
             }
             return arrReturn;
+        },
+
+        remove: function() {
+            this.dropzone.disable();
+            this.dropzone.destroy();
         }
     };
 
