@@ -610,24 +610,25 @@ define([
          * @param record {Number|String} id of the media to edit
          */
         editSingleMedia: function(record) {
-            var media;
-            // if media exists there is no need to fetch the media again - the local one is up to date
-            if (!this.medias.get(record)) {
-                this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
-                media = this.getMediaModel(record);
-                media.fetch({
-                    success: function(media) {
-                        // forward media to media-edit component
-                        this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
-                    }.bind(this),
-                    error: function() {
-                        this.sandbox.logger.log('Error while fetching a single media');
-                    }.bind(this)
-                });
-            } else {
-                media = this.getMediaModel(record);
-                this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
-            }
+            this.getLocale().then(function(locale) {
+                var media = this.medias.get(record);
+                if (!media || media.get('locale') !== locale) {
+                    this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
+                    media = this.getMediaModel(record);
+                    media.fetch({
+                        data: {locale: locale},
+                        success: function(media) {
+                            // forward media to media-edit component
+                            this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
+                        }.bind(this),
+                        error: function() {
+                            this.sandbox.logger.log('Error while fetching a single media');
+                        }.bind(this)
+                    });
+                } else {
+                    this.sandbox.emit('sulu.media-edit.edit', media.toJSON());
+                }
+            }.bind(this));
         },
 
         /**
@@ -636,31 +637,34 @@ define([
          */
         editMultipleMedia: function(records) {
             var mediaList = [],
-                media,
                 action = function() {
                     if (mediaList.length === records.length) {
                         this.sandbox.emit('sulu.media-edit.edit', mediaList);
                     }
                 }.bind(this);
 
-            // loop through ids - if model is already loaded take it else load it
-            this.sandbox.util.foreach(records, function(mediaId) {
-                if (!this.medias.get(mediaId)) {
-                    this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
-                    media = this.getMediaModel(mediaId);
-                    media.fetch({
-                        success: function(media) {
-                            mediaList.push(media.toJSON());
-                            action();
-                        }.bind(this),
-                        error: function() {
-                            this.sandbox.logger.log('Error while fetching a single media');
-                        }.bind(this)
-                    });
-                } else {
-                    mediaList.push(this.getMediaModel(mediaId).toJSON());
-                    action();
-                }
+            this.getLocale().then(function(locale) {
+                    // loop through ids - if model is already loaded take it else load it
+                this.sandbox.util.foreach(records, function(mediaId) {
+                    var media = this.medias.get(mediaId);
+                    if (!media || media.get('locale') !== locale) {
+                        this.sandbox.emit('sulu.media-edit.loading'); // start loading overlay
+                        media = this.getMediaModel(mediaId);
+                        media.fetch({
+                            data: {locale: locale},
+                            success: function(media) {
+                                mediaList.push(media.toJSON());
+                                action();
+                            }.bind(this),
+                            error: function() {
+                                this.sandbox.logger.log('Error while fetching a single media');
+                            }.bind(this)
+                        });
+                    } else {
+                        mediaList.push(this.getMediaModel(mediaId).toJSON());
+                        action();
+                    }
+                }.bind(this));
             }.bind(this));
         },
 

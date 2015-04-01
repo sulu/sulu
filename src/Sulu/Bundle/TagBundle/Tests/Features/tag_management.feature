@@ -9,7 +9,7 @@ Feature: Manage tags
     Scenario: Add tags
         Given I am on "/admin/#settings/tags"
         And I expect the "husky.datagrid.view.rendered" event
-        And I click the add icon
+        When I click the add icon
         And I fill in the selector "table input" with "Tag One"
         And I press enter on "input.editable-input"
         And I expect the "husky.datagrid.updated" event
@@ -27,9 +27,9 @@ Feature: Manage tags
             | bar |
             | baz |
         And I am on "/admin/#settings/tags"
-        And I click on the element "table th input"
+        When I click on the element "table th input"
         And I click the trash icon
-        Then I expect a confirmation dialog to appear
-        Then I confirm
+        And I expect a confirmation dialog to appear
+        And I confirm
         And I wait a second
         Then I should not see "bar"

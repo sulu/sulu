@@ -31,15 +31,6 @@ class SuluContactContentNavigation extends ContentNavigation
         $details->setComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
 
-        // activities
-        $activities = new ContentNavigationItem('content-navigation.contacts.activities');
-        $activities->setAction('activities');
-        $activities->setGroups(array('contact'));
-        $activities->setComponent('contacts@sulucontact');
-        $activities->setComponentOptions(array('display'=>'activities'));
-        $activities->setDisplay(array('edit'));
-        $this->addNavigationItem($activities);
-
         // documents
         $documents = new ContentNavigationItem('content-navigation.contacts.documents');
         $documents->setAction('documents');
@@ -60,15 +51,6 @@ class SuluContactContentNavigation extends ContentNavigation
         $details->setComponentOptions(array('display'=>'form'));
         $this->addNavigationItem($details);
 
-        // activities
-        $activities = new ContentNavigationItem('content-navigation.contacts.activities');
-        $activities->setAction('activities');
-        $activities->setGroups(array('account'));
-        $activities->setComponent('accounts@sulucontact');
-        $activities->setComponentOptions(array('display'=>'activities'));
-        $activities->setDisplay(array('edit'));
-        $this->addNavigationItem($activities);
-
         // contacts
         $contacts = new ContentNavigationItem('content-navigation.contact.accounts.contacts');
         $contacts->setAction('contacts');
@@ -78,17 +60,6 @@ class SuluContactContentNavigation extends ContentNavigation
         $contacts->setComponentOptions(array('display'=>'contacts'));
         $contacts->setDisplay(array('edit'));
         $this->addNavigationItem($contacts);
-
-        // financial infos
-        $item = new ContentNavigationItem('navigation.financials');
-        $item->setAction('financials');
-        $item->setId('financials');
-        $item->setDisabled(true);
-        $item->setGroups(array('account'));
-        $item->setComponent('accounts@sulucontact');
-        $item->setComponentOptions(array('display'=>'financials'));
-        $item->setDisplay(array('edit'));
-        $this->addNavigationItem($item);
 
         // documents
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');

@@ -598,4 +598,40 @@ class Address
     {
         return $this->note;
     }
+
+    /**
+     * Add contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @return Address
+     */
+    public function addContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses[] = $contactAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Add accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     * @return Address
+     */
+    public function addAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses[] = $accountAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove accountAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses
+     */
+    public function removeAccountAddress(\Sulu\Bundle\ContactBundle\Entity\AccountAddress $accountAddresses)
+    {
+        $this->accountAddresses->removeElement($accountAddresses);
+    }
 }
