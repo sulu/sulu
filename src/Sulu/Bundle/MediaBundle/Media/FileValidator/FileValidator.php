@@ -17,7 +17,10 @@ use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileNotSetException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class DefaultFileValidator implements FileValidatorInterface
+/**
+ * Default implementation of file validator
+ */
+class FileValidator implements FileValidatorInterface
 {
     /**
      * @var array

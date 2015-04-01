@@ -158,4 +158,9 @@ interface CollectionInterface extends AuditableInterface
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */
     public function getType();
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $children
+     */
+    public function setChildren($children);
 }

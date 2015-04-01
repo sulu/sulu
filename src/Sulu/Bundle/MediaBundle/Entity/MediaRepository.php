@@ -87,6 +87,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $types = array_key_exists('types', $filter) ? $filter['types'] : null;
             $paginator = array_key_exists('paginator', $filter) ? $filter['paginator'] : true;
             $search = array_key_exists('search', $filter) ? $filter['search'] : null;
+            $orderBy = array_key_exists('orderBy', $filter) ? $filter['orderBy'] : null;
+            $orderSort = array_key_exists('orderSort', $filter) ? $filter['orderSort'] : null;
 
             // if empty array of ids is requested return empty array of medias
             if ($ids !== null && sizeof($ids) === 0) {
@@ -133,6 +135,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
             if ($search !== null) {
                 $qb->andWhere('fileVersionMeta.title LIKE :search');
+            }
+
+            if ($orderBy !== null) {
+                $qb->addOrderBy($orderBy, $orderSort);
             }
 
             if ($limit !== null) {
@@ -205,6 +211,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
             // TODO: Extend ResultSetMapping and remove findMediaById
             $partialMedia = $query->getSingleResult();
+
             return $this->findMediaById($partialMedia->getId());
         } catch (NoResultException $ex) {
             return null;
@@ -254,6 +261,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $query->setParameter('collectionId', (int)$collectionId);
         $query->setParameter('limit', (int)$limit);
         $query->setParameter('offset', (int)$offset);
-        return ['media'=>$query->getResult(), 'count'=>$count['count']];
+
+        return ['media' => $query->getResult(), 'count' => $count['count']];
     }
 }

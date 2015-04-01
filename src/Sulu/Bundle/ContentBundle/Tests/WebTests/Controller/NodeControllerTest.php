@@ -547,7 +547,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertTrue($items[1]->hasSub);
 
         // get subitems (remove /admin for test environment)
-        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
+        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children->href));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded->nodes;
@@ -559,7 +559,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertTrue($items[1]->hasSub);
 
         // get subitems (remove /admin for test environment)
-        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
+        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children->href));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded->nodes;

@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #935 [MediaBundle]     Added new media selection
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
@@ -25,6 +26,10 @@ CHANGELOG for Sulu
     * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
     * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
     * FEATURE     #838 [AdminBundle]     Login UI
+    * FEATURE     #812 [MediaBundle]     Added nested collection API and UI
+    * FEATURE     #812 [MediaBundle]     Implemented move collections
+    * FEATURE     #805 [MediaBundle]     Implementing media move
+    * FEATURE     #909 [MediaBundle]     Added scroll down pagination for collection
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
     * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
 
@@ -76,7 +81,6 @@ CHANGELOG for Sulu
     * FEATURE     #820 [ContactBundle]   Contact-Import: define multiple tags: 'account_tag1 ..n'
     * FEATURE     #810 [ContactBundle]   Added command line tool for detecting missing country codes in import csv files
                                          that uses google geo api for finding the correct country code
-    * FEATURE     #805 [MediaBundle]     Implementing media move
     * FEATURE     #792 [ContactBundle]   Added widget to show all companys of contact
     * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed
                                          due to the symfony 2.6 changes to symlinks

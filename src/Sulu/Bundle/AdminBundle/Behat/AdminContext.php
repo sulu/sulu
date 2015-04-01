@@ -58,7 +58,8 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
      */
     public function iExpectAnOverlayToAppear()
     {
-        $this->getSession()->wait(5000,
+        $this->getSession()->wait(
+            5000,
             "document.querySelector('.husky-overlay-container')"
         );
     }
@@ -179,9 +180,11 @@ EOT;
     {
         $script = "$(\"li[data-id='delete-button']\")";
 
-        $this->waitForAuraEvents(array(
-            'husky.toolbar.header.item.show'
-        ));
+        $this->waitForAuraEvents(
+            array(
+                'husky.toolbar.header.item.show'
+            )
+        );
 
         $this->getSession()->executeScript($script . '.click();');
     }
@@ -212,7 +215,7 @@ EOT;
 
     /**
      * Select a value from husky select list
-     * 
+     *
      * @Given I select :itemValue from the husky :selectListClass
      */
     public function iSelectFromTheHusky($itemValue, $selectListClass)
@@ -257,6 +260,14 @@ EOT;
     public function iClickTheButton($text)
     {
         $this->clickByTitle('.btn', $text);
+    }
+
+    /**
+     * @Then I click the ":id" navigation item
+     */
+    public function iClickTheNavigationItem($id)
+    {
+        $this->clickSelector('#' . $id);
     }
 
     /**
@@ -307,9 +318,13 @@ EOT;
     {
         $errorCount = $this->getSession()->evaluateScript("$('.husky-validate-error').length");
         if ($errorCount != $expectedErrorCount) {
-            throw new \Exception(sprintf(
-                'Was expecting "%s" form errors, but got "%s"', $expectedErrorCount, $errorCount
-            ));
+            throw new \Exception(
+                sprintf(
+                    'Was expecting "%s" form errors, but got "%s"',
+                    $expectedErrorCount,
+                    $errorCount
+                )
+            );
         }
     }
 
@@ -320,11 +335,14 @@ EOT;
     {
         $selector1 = 'div[data-instance-name=\\"' . $name . '\\"]';
         $selector2 = 'div[data-aura-instance-name=\\"' . $name . '\\"]';
-        $this->getSession()->wait(self::LONG_WAIT_TIME, sprintf(
-            '$(\'%s\').children().length > 0 || $(\'%s\').children().length > 0',
-            $selector1,
-            $selector2
-        ));
+        $this->getSession()->wait(
+            self::LONG_WAIT_TIME,
+            sprintf(
+                '$(\'%s\').children().length > 0 || $(\'%s\').children().length > 0',
+                $selector1,
+                $selector2
+            )
+        );
         $this->assertAtLeastOneSelectors(array($selector1, $selector2));
     }
 
@@ -332,16 +350,16 @@ EOT;
      * Fill in the named husky field. Husky fields may not use standard HTML
      * inputs, so they need some special handling.
      *
-     * @param string $name Name of field to fill in 
+     * @param string $name Name of field to fill in
      * @param string $value Value to fill in
      * @param string $parentSelector Optional parent selector
      */
     private function fillInHuskyField($name, $value, $parentSelector = '')
     {
         foreach (array(
-            'data-aura-instance-name',
-            'data-mapper-property'
-        ) as $propertyName) {
+                     'data-aura-instance-name',
+                     'data-mapper-property'
+                 ) as $propertyName) {
             $script = <<<EOT
 var el = $('%s[%s="%s"]').data('element');
 
@@ -355,6 +373,7 @@ EOT;
             $script = sprintf($script, $parentSelector, $propertyName, $name, $value);
             try {
                 $this->getSession()->executeScript($script);
+
                 return;
             } catch (UnknownError $e) {
                 // catch wrapped javascript exception, could not find element
