@@ -601,8 +601,8 @@ define([], function () {
                     this,
                     this.options.toolbarLanguageChanger.url,
                     this.options.toolbarLanguageChanger.callback,
-                    this.options.toolbarLanguageChanger.resultKey ? this.options.toolbarLanguageChanger.resultKey : null,
-                    this.options.toolbarLanguageChanger.titleAttribute ? this.options.toolbarLanguageChanger.titleAttribute : null
+                    this.options.toolbarLanguageChanger.resultKey || null,
+                    this.options.toolbarLanguageChanger.titleAttribute || null
                 );
             } else if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.data) {
                 languageChanger = toolbarTemplates.languageChangerData.call(
