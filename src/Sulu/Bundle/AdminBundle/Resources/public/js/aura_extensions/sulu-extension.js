@@ -366,23 +366,18 @@
             /**
              * initializes sulu list-toolbar with column options and datagrid
              * @param key {String} Settings key
-             * @param url {String} Url to load fields from
+             * @param fields {String | Object} Url to load fields from or the fieldsObject
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
                     pageSizeKey = key + 'PageSize',
                     limit = this.sandbox.sulu.getUserSetting(pageSizeKey),
-                    order = this.sandbox.sulu.getUserSetting(orderKey);
-
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
-                    this,
-                    fieldsKey,
-                    ['translation', 'default', 'editable', 'validation', 'width', 'type'],
-                    url,
-                    function(data) {
+                    order = this.sandbox.sulu.getUserSetting(orderKey),
+                    url = (typeof fields === 'string') ? fields : null,
+                    callback = function(data) {
                         var toolbarDefaults = {
                                 columnOptions: {
                                     data: data,
@@ -446,8 +441,19 @@
                         this.sandbox.on('husky.datagrid.data.sort', function(data) {
                             this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
-                    }.bind(this)
-                );
+                    };
+
+                if (url) {
+                    this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
+                        this,
+                        fieldsKey,
+                        ['translation', 'default', 'editable', 'validation', 'width', 'type'],
+                        url,
+                        callback.bind(this)
+                    );
+                } else {
+                    callback.call(this, fields);
+                }
             };
 
             /**
