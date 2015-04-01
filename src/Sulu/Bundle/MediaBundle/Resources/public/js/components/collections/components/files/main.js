@@ -172,6 +172,7 @@ define(function() {
                     this.setHeaderInfos();
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
                     this.sandbox.emit('husky.datagrid.url.update', {locale: this.options.data.locale});
+                    this.options.locale = this.options.data.locale;
                 }.bind(this)
             );
             this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.localization);

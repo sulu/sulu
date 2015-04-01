@@ -174,7 +174,8 @@ define(function () {
          */
         startLoadingOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div class="'+ constants.loadingClass +'"/>'),
-                $loader = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'" />')
+                $loader = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'" />');
+            
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.once('husky.overlay.media-edit.loading.opened', function () {
                 this.sandbox.start([
