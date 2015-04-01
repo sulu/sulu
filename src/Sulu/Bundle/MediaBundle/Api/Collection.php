@@ -31,7 +31,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "all",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999  }
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999 }
  *      )
  * )
  * @Relation(

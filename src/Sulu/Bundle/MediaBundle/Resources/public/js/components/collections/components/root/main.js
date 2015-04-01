@@ -71,7 +71,7 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var url = '/admin/api/collections';
+            var url = '/admin/api/collections?sortBy=title';
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
@@ -89,13 +89,13 @@ define(function() {
 
             // change datagrid to thumbnail small
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']);
+                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']['thViewOptions']);
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']);
+                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']['thViewOptions']);
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
 
@@ -105,7 +105,7 @@ define(function() {
                     'media/collections/edit:' + item.collection + '/files/edit:' + id
                 );
 
-                var url = '/admin/api/collections/' + item.collection + '?depth=1';
+                var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
         },
@@ -174,6 +174,7 @@ define(function() {
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
                     view: listViews[this.listView].name,
                     resultKey: 'media',
+                    sortable: false,
                     viewOptions: {
                         table: {
                             selectItem: true,

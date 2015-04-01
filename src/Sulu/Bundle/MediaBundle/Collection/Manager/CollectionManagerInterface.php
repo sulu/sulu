@@ -30,7 +30,7 @@ interface CollectionManagerInterface
      * @param array $filter array of cafeteria's
      * @return Collection
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array());
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array(), $sortBy = array());
 
     /**
      * Returns collections with a given parent and/or a given depth-level
@@ -51,9 +51,10 @@ interface CollectionManagerInterface
      * @param int $limit
      * @param string $search
      * @param int $depth maximum depth for query
+     * @param array $sortBy
      * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0);
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array());
 
     /**
      * Returns a collection count

@@ -189,7 +189,10 @@ define([], function() {
                                 data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
                                 hidden: false,
                                 instanceName: this.options.instanceName,
-                                trigger: '.toggle'
+                                trigger: '.toggle',
+                                header: {
+                                    title: this.sandbox.translate('list-toolbar.column-options.title')
+                                }
                             }
                         }
                     ]);

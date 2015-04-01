@@ -531,8 +531,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             el: this.$el.find('.media-selection-overlay-navigation-container'),
                             resultKey: 'collections',
                             showAddButton: false,
-                            rootUrl: '/admin/api/collections',
-                            url: '/admin/api/collections',
+                            rootUrl: '/admin/api/collections?sortBy=title',
+                            url: '/admin/api/collections?sortBy=title',
                             nameKey: 'title',
                             instanceName: this.options.instanceName,
                             globalEvents: false
@@ -640,11 +640,12 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
-                        url: '/admin/api/media',
+                        url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
                         view: 'thumbnail',
                         resultKey: 'media',
                         instanceName: 'media-selection-ovelay.' + this.options.instanceName,
                         preselected: this.getData().ids,
+                        sortable: false,
                         viewOptions: {
                             table: {
                                 fullWidth: false,

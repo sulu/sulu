@@ -98,7 +98,7 @@ define(function() {
         moveCollection: function(collection) {
             this.sandbox.emit('sulu.media.collections.move', this.options.id, collection,
                 function() {
-                    var url = '/admin/api/collections/' + this.options.id + '?depth=1';
+                    var url = '/admin/api/collections/' + this.options.id + '?depth=1&sortBy=title';
 
                     this.sandbox.emit('husky.data-navigation.collections.set-url', url);
                     this.sandbox.emit('sulu.labels.success.show', 'labels.success.collection-move-desc', 'labels.success');

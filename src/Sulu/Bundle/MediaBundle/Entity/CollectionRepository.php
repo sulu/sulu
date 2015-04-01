@@ -56,7 +56,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null)
+    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null, $sortBy = array())
     {
         try {
             $dql = sprintf(
@@ -81,6 +81,14 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
             if (array_key_exists('locale', $filter)) {
                 $dql .= ' AND collectionMeta.locale = :locale';
+            }
+
+            if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
+                $orderBy = array();
+                foreach ($sortBy as $column => $order) {
+                    $orderBy[] = 'collectionMeta.' . $column . ' ' . (strtolower($order) === 'asc' ? 'ASC' : 'DESC');
+                }
+                $dql .= ' ORDER BY '. implode(', ', $orderBy);
             }
 
             $query = new Query($this->_em);

@@ -97,14 +97,14 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array())
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array(), $sortBy = array())
     {
         $collectionEntity = $this->collectionRepository->findCollectionById($id);
         if ($collectionEntity === null) {
             throw new CollectionNotFoundException($id);
         }
         $filter['locale'] = $locale;
-        $collectionChildren = $this->collectionRepository->findCollectionSet($depth, $filter, $collectionEntity);
+        $collectionChildren = $this->collectionRepository->findCollectionSet($depth, $filter, $collectionEntity, $sortBy);
 
         $breadcrumbEntities = null;
         if ($breadcrumb) {
@@ -134,11 +134,13 @@ class CollectionManager implements CollectionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getTree($locale, $offset, $limit, $search, $depth = 0)
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array())
     {
         $collectionSet = $this->collectionRepository->findCollectionSet(
             $depth,
-            array('offset' => $offset, 'limit' => $limit, 'search' => $search)
+            array('offset' => $offset, 'limit' => $limit, 'search' => $search),
+            null,
+            $sortBy
         );
 
         $collections = [];

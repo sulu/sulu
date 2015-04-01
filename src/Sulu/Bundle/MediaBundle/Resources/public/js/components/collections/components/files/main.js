@@ -69,7 +69,7 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1';
+            var url = '/admin/api/collections/' + this.options.data.id + '?depth=1&sortBy=title';
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
@@ -409,9 +409,10 @@ define(function() {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?locale=' + this.options.data.locale + '&collection=' + this.options.data.id,
+                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + this.options.data.locale + '&collection=' + this.options.data.id,
                     view: listViews[this.listView].name,
                     resultKey: 'media',
+                    sortable: false,
                     viewOptions: {
                         table: {
                             fullWidth: false,
