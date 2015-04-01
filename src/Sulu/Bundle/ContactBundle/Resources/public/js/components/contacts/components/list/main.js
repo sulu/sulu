@@ -7,29 +7,30 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 
     var bindCustomEvents = function() {
-            // navigate to edit contact
+        // delete clicked
+        this.sandbox.on('sulu.list-toolbar.delete', function() {
+            this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
+                this.sandbox.emit('sulu.contacts.contacts.delete', ids);
+            }.bind(this));
+        }, this);
+
+        // add clicked
+        this.sandbox.on('sulu.list-toolbar.add', function() {
+            this.sandbox.emit('sulu.contacts.contacts.new');
+        }, this);
+
+        if (WidgetGroups.exists('contact-info')) {
+            // show sidebar for selected item
             this.sandbox.on('husky.datagrid.item.click', function(item) {
                 this.sandbox.emit('sulu.sidebar.set-widget', '/admin/widget-groups/contact-info?contact=' + item);
             }, this);
-
-            // delete clicked
-            this.sandbox.on('sulu.list-toolbar.delete', function() {
-                this.sandbox.emit('husky.datagrid.items.get-selected', function(ids) {
-                    this.sandbox.emit('sulu.contacts.contacts.delete', ids);
-                }.bind(this));
-            }, this);
-
-            // add clicked
-            this.sandbox.on('sulu.list-toolbar.add', function() {
-                this.sandbox.emit('sulu.contacts.contacts.new');
-            }, this);
-
-        };
+        }
+    };
 
     return {
         view: true,

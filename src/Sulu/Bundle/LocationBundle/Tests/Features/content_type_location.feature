@@ -17,7 +17,7 @@ Feature: Location content type
     Scenario: Enter some text in a text area
         Given I am editing a page of type "location_page"
         And I expect the aura component "location" to appear
-        And I click the gears icon
+        When I click the gears icon
         And I expect an overlay to appear
         And I fill in husky field "title" with "My Location" in the overlay
         And I fill in husky field "street" with "Dornbirn Straße" in the overlay

@@ -41,6 +41,11 @@ class BankAccount
     private $accounts;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $contacts;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -130,10 +135,10 @@ class BankAccount
     /**
      * Add accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $accounts
      * @return BankAccount
      */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function addAccount(AccountInterface $accounts)
     {
         $this->accounts[] = $accounts;
 
@@ -143,9 +148,9 @@ class BankAccount
     /**
      * Remove accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $accounts
      */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function removeAccount(AccountInterface $accounts)
     {
         $this->accounts->removeElement($accounts);
     }
@@ -181,5 +186,38 @@ class BankAccount
     public function getBankName()
     {
         return $this->bankName;
+    }
+
+    /**
+     * Add contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     * @return BankAccount
+     */
+    public function addContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts[] = $contacts;
+
+        return $this;
+    }
+
+    /**
+     * Remove contacts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contacts
+     */
+    public function removeContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contacts)
+    {
+        $this->contacts->removeElement($contacts);
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
     }
 }

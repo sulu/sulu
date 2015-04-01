@@ -41,7 +41,7 @@ class SecurityChecker extends AbstractSecurityChecker
     /**
      * {@inheritDoc}
      */
-    public function hasPermission($subject, $permission, $locale = null)
+    public function hasPermission($subject, $permission)
     {
         if (!$subject || !$this->tokenStorage->getToken()) {
             // if there is no subject the operation is allowed, since we have nothing to check against
@@ -49,16 +49,10 @@ class SecurityChecker extends AbstractSecurityChecker
             return true;
         }
 
-        $attributes = array(
-            'permission' => $permission
-        );
-
-        if ($locale !== null) {
-            $attributes['locale'] = $locale;
-        }
+        $attributes = array($permission);
 
         if (is_string($subject)) {
-            $subject = new SecurityContext($subject);
+            $subject = new SecurityCondition($subject);
         }
 
         $granted = $this->authorizationChecker->isGranted($attributes, $subject);

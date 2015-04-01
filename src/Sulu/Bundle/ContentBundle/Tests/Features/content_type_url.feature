@@ -16,13 +16,13 @@ Feature: Url content type
 
     Scenario: Enter a valid url
         Given I am editing a page of type "url_page"
-        And I fill in "husky-input-url" with "foobar.com/asd"
+        When I fill in "husky-input-url" with "foobar.com/asd"
         And I click the save icon
         Then I expect a success notification to appear
 
     Scenario Outline: Enter a invalid url
         Given I am editing a page of type "url_page"
-        And I fill in "husky-input-url" with "<url>"
+        When I fill in "husky-input-url" with "<url>"
         And I click the save icon
         Then there should be 1 form errors
         Examples:

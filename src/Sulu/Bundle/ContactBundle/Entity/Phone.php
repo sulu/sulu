@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+
 /**
  * Phone
  */
@@ -148,12 +149,12 @@ class Phone
     /**
      * Add accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $account
      * @return Phone
      */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function addAccount(AccountInterface $account)
     {
-        $this->accounts[] = $accounts;
+        $this->accounts[] = $account;
 
         return $this;
     }
@@ -161,11 +162,11 @@ class Phone
     /**
      * Remove accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $account
      */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function removeAccount(AccountInterface $account)
     {
-        $this->accounts->removeElement($accounts);
+        $this->accounts->removeElement($account);
     }
 
     /**

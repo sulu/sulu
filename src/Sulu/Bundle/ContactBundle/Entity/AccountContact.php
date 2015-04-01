@@ -23,7 +23,7 @@ class AccountContact
     private $contact;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Account
+     * @var AccountInterface
      */
     private $account;
 
@@ -91,10 +91,10 @@ class AccountContact
     /**
      * Set account
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $account
+     * @param AccountInterface $account
      * @return AccountContact
      */
-    public function setAccount(\Sulu\Bundle\ContactBundle\Entity\Account $account)
+    public function setAccount(AccountInterface $account)
     {
         $this->account = $account;
 
@@ -104,7 +104,7 @@ class AccountContact
     /**
      * Get account
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Account
+     * @return AccountInterface
      */
     public function getAccount()
     {
