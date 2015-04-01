@@ -191,7 +191,7 @@ define(function() {
                                 'title': this.sandbox.translate('navigation.media.collections'),
                                 'hasSub': true,
                                 '_links': {
-                                    'children': {'href': '/admin/api/collections'}
+                                    'children': {'href': '/admin/api/collections?limit=9999'}
                                 },
                                 '_embedded': {'collections': []}
                             }
