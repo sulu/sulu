@@ -76,7 +76,7 @@ define(function() {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale.id, breadcrumb: 'true'},
+                this.options.data.id, {locale: locale.localization, breadcrumb: 'true'},
                 function(collection) {
                     this.options.data = collection;
                     this.sandbox.form.setData('#' + constants.settingsFormId, this.options.data);
@@ -84,7 +84,7 @@ define(function() {
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
                 }.bind(this)
             );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.id);
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.localization);
         },
 
         /**

@@ -38,51 +38,43 @@ define(function() {
 
     return {
         header: function() {
-            var def = this.sandbox.data.deferred();
-            this.sandbox.util.load('/admin/api/localizations')
-                .then(function(data) {
-                    var localizations = data.map(function(localization) {
-                        return {
-                            id: localization.localization,
-                            title: localization.localization
-                        };
-                    });
+            // init locale
+            this.locale = this.sandbox.sulu.user.locale;
 
-                    def.resolve({
-                        tabs: {
-                            url: '/admin/media/navigation/collection'
-                        },
-                        toolbar: {
-                            template: [
+            return {
+                tabs: {
+                    url: '/admin/media/navigation/collection'
+                },
+                toolbar: {
+                    template: [
+                        {
+                            id: 'settings',
+                            icon: 'gear',
+                            position: 30,
+                            items: [
                                 {
-                                    id: 'settings',
-                                    icon: 'gear',
-                                    position: 30,
-                                    items: [
-                                        {
-                                            id: 'collection-move',
-                                            title: this.sandbox.translate('sulu.collection.move'),
-                                            callback: this.startMoveCollectionOverlay.bind(this)
-                                        },
-                                        {
-                                            id: 'delete',
-                                            title: this.sandbox.translate('sulu.collections.delete-collection'),
-                                            callback: this.deleteCollection.bind(this)
-                                        }
-                                    ]
+                                    id: 'collection-move',
+                                    title: this.sandbox.translate('sulu.collection.move'),
+                                    callback: this.startMoveCollectionOverlay.bind(this)
+                                },
+                                {
+                                    id: 'delete',
+                                    title: this.sandbox.translate('sulu.collections.delete-collection'),
+                                    callback: this.deleteCollection.bind(this)
                                 }
-                            ],
-                            parentTemplate: 'save',
-                            languageChanger: {
-                                data: localizations,
-                                preSelected: this.options.locale
-                            }
-                        },
-                        noBack: true
-                    });
-                }.bind(this));
-
-            return def;
+                            ]
+                        }
+                    ],
+                    parentTemplate: 'save',
+                    languageChanger: {
+                        url: '/admin/api/localizations',
+                        resultKey: 'localizations',
+                        titleAttribute: 'localization',
+                        preSelected: this.locale
+                    }
+                },
+                noBack: true
+            };
         },
 
         /**
@@ -118,7 +110,6 @@ define(function() {
         },
 
         initialize: function() {
-            this.locale = this.sandbox.sulu.user.locale;
             this.bindCustomEvents();
         },
 

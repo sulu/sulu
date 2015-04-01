@@ -166,14 +166,16 @@ define(function() {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'language');
             this.sandbox.emit(
                 'sulu.media.collections.reload-collection',
-                this.options.data.id, {locale: locale.id, breadcrumb:'true'},
+                this.options.data.id, {locale: locale.localization, breadcrumb: 'true'},
                 function(collection) {
                     this.options.data = collection;
                     this.setHeaderInfos();
                     this.sandbox.emit('sulu.header.toolbar.item.enable', 'language', false);
+                    this.sandbox.emit('husky.datagrid.url.update', {locale: this.options.data.locale});
+                    this.options.locale = this.options.data.locale;
                 }.bind(this)
             );
-            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.id);
+            this.sandbox.emit('sulu.media.collections-edit.set-locale', locale.localization);
         },
 
         /**
@@ -407,7 +409,7 @@ define(function() {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?collection=' + this.options.data.id,
+                    url: '/admin/api/media?locale=' + this.options.data.locale + '&collection=' + this.options.data.id,
                     view: listViews[this.listView].name,
                     resultKey: 'media',
                     viewOptions: {

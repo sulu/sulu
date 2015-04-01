@@ -416,7 +416,11 @@ define(['app-config'], function(AppConfig) {
                 }
             ]);
 
-            this.sandbox.util.load(constants.localizationsUrl, null, 'json').then(this.renderRoles.bind(this));
+            this.sandbox.util.load(constants.localizationsUrl, null, 'json')
+                .then(function(response) {
+                    return response._embedded.localizations;
+                })
+                .then(this.renderRoles.bind(this));
         },
 
         renderRoles: function (localizations) {

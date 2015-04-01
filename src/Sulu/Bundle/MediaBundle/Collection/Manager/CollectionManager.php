@@ -92,8 +92,6 @@ class CollectionManager implements CollectionManagerInterface
         $this->mediaRepository = $mediaRepository;
         $this->formatManager = $formatManager;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
-
-        $this->initializeFieldDescriptors();
     }
 
     /**
@@ -285,6 +283,10 @@ class CollectionManager implements CollectionManagerInterface
      */
     public function getFieldDescriptors()
     {
+        if ($this->fieldDescriptors === null) {
+            $this->initializeFieldDescriptors();
+        }
+
         return $this->fieldDescriptors;
     }
 
