@@ -22,7 +22,6 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  */
 class Contact extends ApiEntity implements AuditableInterface
 {
-
     /**
      * @var string
      */
@@ -73,12 +72,6 @@ class Contact extends ApiEntity implements AuditableInterface
      * @var \Doctrine\Common\Collections\Collection
      */
     private $locales;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
-     */
-    private $activities;
 
     /**
      * @var \Sulu\Component\Security\Authentication\UserInterface
@@ -183,11 +176,6 @@ class Contact extends ApiEntity implements AuditableInterface
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     */
-    private $assignedActivities;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
     private $contactAddresses;
@@ -203,12 +191,21 @@ class Contact extends ApiEntity implements AuditableInterface
     private $categories;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $urls;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bankAccounts;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->locales = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
@@ -450,39 +447,6 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return Contact
-     */
-    public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities[] = $activities;
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     */
-    public function removeActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities->removeElement($activities);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActivities()
-    {
-        return $this->activities;
-    }
-
-    /**
      * Set changer
      *
      * @param \Sulu\Component\Security\Authentication\UserInterface $changer
@@ -674,11 +638,6 @@ class Contact extends ApiEntity implements AuditableInterface
     {
         return $this->faxes;
     }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $urls;
 
     /**
      * Add urls
@@ -1111,39 +1070,6 @@ class Contact extends ApiEntity implements AuditableInterface
     }
 
     /**
-     * Add assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     * @return Contact
-     */
-    public function addAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities[] = $assignedActivities;
-
-        return $this;
-    }
-
-    /**
-     * Remove assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     */
-    public function removeAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities->removeElement($assignedActivities);
-    }
-
-    /**
-     * Get assignedActivities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAssignedActivities()
-    {
-        return $this->assignedActivities;
-    }
-
-    /**
      * Returns the main address
      *
      * @return mixed
@@ -1225,5 +1151,84 @@ class Contact extends ApiEntity implements AuditableInterface
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Add contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @return Contact
+     */
+    public function addContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses[] = $contactAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @return Contact
+     */
+    public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     */
+    public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Add bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @return Contact
+     */
+    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts[] = $bankAccounts;
+
+        return $this;
+    }
+
+    /**
+     * Remove bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     */
+    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts->removeElement($bankAccounts);
+    }
+
+    /**
+     * Get bankAccounts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
     }
 }

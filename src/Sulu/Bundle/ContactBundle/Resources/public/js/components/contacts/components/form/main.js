@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['config'], function(Config) {
+define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
     'use strict';
 
@@ -18,13 +18,26 @@ define(['config'], function(Config) {
             tagsId: '#tags',
             addressAddId: '#address-add',
             addAddressWrapper: '.grid-row',
-            addressesSelector: '#addresses'
+            addressesSelector: '#addresses',
+
+            bankAccountsId: '#bankAccounts',
+            bankAccountAddSelector: '.bank-account-add'
         },
 
         setHeaderToolbar = function() {
             this.sandbox.emit('sulu.header.set-toolbar', {
                 template: 'default'
             });
+        },
+
+        customTemplates = {
+            addBankAccountsIcon: [
+                '<div class="grid-row">',
+                '    <div class="grid-col-12">',
+                '       <span id="bank-account-add" class="fa-plus-circle icon bank-account-add clickable pointer m-left-140"></span>',
+                '   </div>',
+                '</div>'
+            ].join('')
         };
 
     return (function() {
@@ -32,11 +45,16 @@ define(['config'], function(Config) {
 
             view: true,
 
-            layout: {
-                sidebar: {
-                    width: 'fixed',
-                    cssClasses: 'sidebar-padding-50'
-                }
+            layout: function() {
+                return {
+                    content: {
+                        width: 'fixed'
+                    },
+                    sidebar: {
+                        width: 'max',
+                        cssClasses: 'sidebar-padding-50'
+                    }
+                };
             },
 
             templates: ['/admin/contact/template/contact/form'],
@@ -47,7 +65,8 @@ define(['config'], function(Config) {
                     '    <div class="grid-col-12">',
                     '       <span id="address-add" class="fa-plus-circle icon address-add clickable pointer m-left-140"></span>',
                     '   </div>',
-                    '</div>'].join('')
+                    '</div>'
+                ].join('')
             },
 
             initialize: function() {
@@ -71,7 +90,7 @@ define(['config'], function(Config) {
                 setHeaderToolbar.call(this);
                 this.listenForChange();
 
-                if (!!this.options.data && !!this.options.data.id) {
+                if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('contact-detail')) {
                     this.initSidebar(
                         '/admin/widget-groups/contact-detail?contact=',
                         this.options.data.id
@@ -181,12 +200,14 @@ define(['config'], function(Config) {
             },
 
             setFormData: function(data, startForm) {
+                this.numberOfBankAccounts = !!data.bankAccounts ? data.bankAccounts.length : 0;
+                this.updateBankAccountAddIcon(this.numberOfBankAccounts);
 
                 // add collection filters to form
                 this.sandbox.emit('sulu.contact-form.add-collectionfilters', form);
                 this.sandbox.form.setData(form, data).then(function() {
 
-                    if(!!startForm){
+                    if (!!startForm) {
                         this.sandbox.start(form);
                     } else {
                         this.sandbox.start('#contact-fields');
@@ -301,6 +322,16 @@ define(['config'], function(Config) {
                     if (!this.sandbox.dom.find('#' + this.companyInstanceName).val()) {
                         this.enablePositionDropdown(false);
                     }
+                }, this);
+
+                this.sandbox.on('sulu.contact-form.added.bank-account', function() {
+                    this.numberOfBankAccounts++;
+                    this.updateBankAccountAddIcon(this.numberOfBankAccounts);
+                }, this);
+
+                this.sandbox.on('sulu.contact-form.removed.bank-account', function() {
+                    this.numberOfBankAccounts--;
+                    this.updateBankAccountAddIcon(this.numberOfBankAccounts);
                 }, this);
 
             },
@@ -454,14 +485,14 @@ define(['config'], function(Config) {
                     this.sandbox.dom.on('#contact-form', 'change', function() {
                         this.setHeaderBar(false);
                     }.bind(this), '.changeListener select, ' +
-                        '.changeListener input, ' +
-                        '.changeListener textarea');
+                    '.changeListener input, ' +
+                    '.changeListener textarea');
 
                     this.sandbox.dom.on('#contact-form', 'keyup', function() {
                         this.setHeaderBar(false);
                     }.bind(this), '.changeListener select, ' +
-                        '.changeListener input, ' +
-                        '.changeListener textarea');
+                    '.changeListener input, ' +
+                    '.changeListener textarea');
 
                     this.sandbox.on('sulu.contact-form.changed', function() {
                         this.setHeaderBar(false);
@@ -476,8 +507,8 @@ define(['config'], function(Config) {
 
                     // enabel position dropdown only if something got selected
                     this.companySelected = 'husky.auto-complete.' +
-                        this.companyInstanceName +
-                        '.select';
+                    this.companyInstanceName +
+                    '.select';
                     this.sandbox.on(this.companySelected, function() {
                         this.enablePositionDropdown(true);
                     }.bind(this));
@@ -494,6 +525,22 @@ define(['config'], function(Config) {
                 this.initializeDropDownListender(
                     'position-select',
                     'api/contact/positions');
+            },
+
+            /**
+             * Adds or removes icon to add bank accounts depending on the number of bank accounts
+             * @param numberOfBankAccounts
+             */
+            updateBankAccountAddIcon: function(numberOfBankAccounts) {
+                var $addIcon = this.sandbox.dom.find(constants.bankAccountAddSelector, this.$el),
+                    addIcon;
+
+                if (!!numberOfBankAccounts && numberOfBankAccounts > 0 && $addIcon.length === 0) {
+                    addIcon = this.sandbox.dom.createElement(customTemplates.addBankAccountsIcon);
+                    this.sandbox.dom.after(this.sandbox.dom.find(constants.bankAccountsId), addIcon);
+                } else if (numberOfBankAccounts === 0 && $addIcon.length > 0) {
+                    this.sandbox.dom.remove(this.sandbox.dom.closest($addIcon, constants.addBankAccountsWrapper));
+                }
             }
         };
     })();

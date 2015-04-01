@@ -70,16 +70,27 @@ abstract class ContentNavigation implements ContentNavigationInterface
 
         foreach ($this->navigationItems as $navigationItem) {
             if (null === $contentType || in_array($contentType, $navigationItem->getGroups())) {
-                $navigationItems[] = $navigationItem->toArray($options);
+                if ($navigationItem->getPosition() === null ||
+                    $navigationItem->getPosition() >= count($navigationItems)
+                ) {
+                    $navigationItems[] = $navigationItem->toArray($options);
+                } else {
+                    array_splice(
+                        $navigationItems,
+                        $navigationItem->getPosition() - 1,
+                        0,
+                        array($navigationItem->toArray($options))
+                    );
+                }
             }
         }
 
         $navigation = array(
-            'id'            => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
-            'title'         => $this->getName(),
-            'header'        => $this->getHeader(),
+            'id' => ($this->getId() != null) ? $this->getId() : uniqid(), //FIXME don't use uniqid()
+            'title' => $this->getName(),
+            'header' => $this->getHeader(),
             'displayOption' => $this->getDisplayOption(),
-            'items'         => $navigationItems
+            'items' => $navigationItems
         );
 
         return $navigation;

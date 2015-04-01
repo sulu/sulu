@@ -11,20 +11,17 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use FOS\RestBundle\Controller\Annotations\Get;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RestController;
-use FOS\RestBundle\Controller\Annotations\RouteResource;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes positions available through a REST API
  * Used RouteResource annotation to prevent automatic parenting of rest controllers
- * @package Sulu\Bundle\ContactBundle\Controller
  */
 class PositionController extends RestController implements ClassResourceInterface
 {

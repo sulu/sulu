@@ -85,10 +85,22 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     protected $inFields = array();
 
     /**
+     * The fields which will be used for between-clauses
+     * @var array
+     */
+    protected $betweenFields = array();
+
+    /**
      * The values for the in-clauses
      * @var array
      */
     protected $inValues = array();
+
+    /**
+     * The values for the between-clauses
+     * @var array
+     */
+    protected $betweenValues = array();
 
     /**
      * The page the resulting query will be returning
@@ -212,6 +224,15 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     {
         $this->inFields[$fieldDescriptor->getName()] = $fieldDescriptor;
         $this->inValues[$fieldDescriptor->getName()] = $values;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values)
+    {
+        $this->betweenFields[$fieldDescriptor->getName()] = $fieldDescriptor;
+        $this->betweenValues[$fieldDescriptor->getName()] = $values;
     }
 
     /**

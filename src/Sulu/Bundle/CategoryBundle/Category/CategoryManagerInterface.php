@@ -49,6 +49,13 @@ interface CategoryManagerInterface
     public function findById($id);
 
     /**
+     * Returns a category with a given key
+     * @param string $key the key of the category
+     * @return CategoryEntity
+     */
+    public function findByKey($key);
+
+    /**
      * Returns the categories with the given ids
      * @param $ids
      * @return Category
