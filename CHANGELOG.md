@@ -2,7 +2,6 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-<<<<<<< HEAD
     * ENHANCEMENT #797 [SearchBundle]    Rebuild command removed, now hooks into massive:search:index:rebuild
     * ENHANCEMENT #797 [ContactBundle]   Contacts and Accounts have massive search mappings
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
