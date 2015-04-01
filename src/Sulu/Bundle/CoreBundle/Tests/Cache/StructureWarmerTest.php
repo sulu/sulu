@@ -2,10 +2,9 @@
 
 namespace Sulu\Bundle\CoreBundle\Tests\Cache;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 
-class StructureWarmerTest extends ProphecyTestCase
+class StructureWarmerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

@@ -210,6 +210,11 @@ class DoctrineListBuilder extends AbstractListBuilder
             $this->addIns($this->inFields, $this->inValues);
         }
 
+        // set between
+        if (!empty($this->betweenFields)) {
+            $this->addBetweens($this->betweenFields, $this->betweenValues);
+        }
+
         if ($this->search != null) {
             $searchParts = array();
             foreach ($this->searchFields as $searchField) {
@@ -237,6 +242,26 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         $this->queryBuilder->andWhere('(' . implode(' AND ', $inParts) . ')');
+    }
+
+    /**
+     * adds where statements for in-clauses
+     * @param array $betweenFields
+     * @param array $betweenValues
+     */
+    protected function addBetweens(array $betweenFields, array $betweenValues)
+    {
+        $betweenParts = array();
+        foreach ($betweenFields as $betweenField) {
+            $betweenParts[] = $betweenField->getSelect() .
+                ' BETWEEN :' . $betweenField->getName() . '1'.
+                ' AND :' . $betweenField->getName() . '2';
+            $values = $betweenValues[$betweenField->getName()];
+            $this->queryBuilder->setParameter($betweenField->getName() . '1', $values[0]);
+            $this->queryBuilder->setParameter($betweenField->getName() . '2', $values[1]);
+        }
+
+        $this->queryBuilder->andWhere('(' . implode(' AND ', $betweenParts) . ')');
     }
 
     /**

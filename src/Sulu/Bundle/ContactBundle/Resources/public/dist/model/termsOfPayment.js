@@ -1,1 +1,0 @@
-define(["mvc/relationalmodel"],function(a){"use strict";return a({urlRoot:"/admin/api/termsofpayments",defaults:function(){return{id:null,terms:""}}})});

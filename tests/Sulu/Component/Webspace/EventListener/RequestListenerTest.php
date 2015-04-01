@@ -11,12 +11,11 @@
 namespace Sulu\Component\Webspace\EventListener;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-class RequestListenerTest extends ProphecyTestCase
+class RequestListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var RequestListener

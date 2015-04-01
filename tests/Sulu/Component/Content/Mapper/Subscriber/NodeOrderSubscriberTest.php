@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Content\Mapper\Subscriber;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Sulu\Component\Content\ContentEvents;
@@ -10,7 +9,7 @@ use PHPCR\PropertyType;
 use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Prophecy\Argument;
 
-class NodeOrderSubscriberTest extends ProphecyTestCase
+class NodeOrderSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     protected $subscriber;
 

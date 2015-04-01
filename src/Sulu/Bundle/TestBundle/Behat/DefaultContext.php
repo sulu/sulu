@@ -87,6 +87,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
 
     /**
      * @Then I expect to see ":text"
+     * @Given I wait to see ":text"
      */
     public function iExpectToSee($text)
     {

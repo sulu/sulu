@@ -10,12 +10,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class AuthenticationHandlerTest extends ProphecyTestCase
+class AuthenticationHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AuthenticationHandler

@@ -2,8 +2,13 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+<<<<<<< HEAD
     * ENHANCEMENT #797 [SearchBundle]    Rebuild command removed, now hooks into massive:search:index:rebuild
     * ENHANCEMENT #797 [ContactBundle]   Contacts and Accounts have massive search mappings
+    * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
+    * FEATURE     #931 [MediaBundle]     Version History Tab
+    * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
+    * BUGFIX      #922 [ContentBundle]   Fixed URL Generation after copying language of a child node
     * FEATURE     #732 [All]             Automatic mapping and assignation of changer, creator, changed and changer.
     * FEATURE     #891 [All]             Added (css) class property to field descriptors, updated husky and fixed an issue when merging settings with matchings
     * FEATURE     #884 [MediaBundle]     Loaders on media delete and media edit
@@ -13,7 +18,9 @@ CHANGELOG for Sulu
     * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
     * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
     * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
+    * ENHANCEMENT #942 [ContactBundle]   Changed max characters of street from 60 to 150
     * BUGFIX      #905 [ContactBundle]   Added Functionality for completing contact addresses
+    * FEATURE     #940 [ContactBundle]   Added command for fixing nested tree of accounts sulu:contacts:accounts:recover
     * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
     * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all
                                          account-addresses in database. 'app/console sulu:contacts:data:complete -d state'
@@ -22,6 +29,7 @@ CHANGELOG for Sulu
     * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
     * FEATURE     #838 [AdminBundle]     Login UI
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
+    * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
 
 * dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id

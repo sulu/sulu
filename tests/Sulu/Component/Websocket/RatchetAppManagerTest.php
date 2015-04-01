@@ -10,9 +10,8 @@
 
 namespace Sulu\Component\Websocket;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class RatchetAppManagerTest extends ProphecyTestCase
+class RatchetAppManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructor()
     {

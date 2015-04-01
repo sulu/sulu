@@ -85,6 +85,20 @@ class Category implements AuditableInterface
     }
 
     /**
+     * Set id
+     *
+     * @param integer $id
+     *
+     * @return Category
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * Set lft
      *
      * @param integer $lft

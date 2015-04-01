@@ -10,9 +10,8 @@
 
 namespace Sulu\Component\Websocket\MessageDispatcher;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class MessageDispatcherTest extends ProphecyTestCase
+class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
