@@ -175,16 +175,23 @@ define(function() {
         initializeRouter: function() {
             var AppRouter = this.sandbox.mvc.Router({
                 routes: {
+                    '/': 'dashboardAction',
+
                     // Default
                     '*actions': 'defaultAction'
                 },
+
+                dashboardAction: function() {
+                    console.log('LOOOOOOOOOOOOOOL');
+                    this.html('<div data-aura-component="dashboard@suluadmin"/>');
+                }.bind(this),
 
                 defaultAction: function() {
                     // We have no matching route
                 }
             });
             router = new AppRouter();
-            console.log();
+
             this.sandbox.util._.each(this.sandbox.mvc.routes, function(route) {
                 router.route(route.route, function() {
                     this.sandbox.mvc.Store.reset();
