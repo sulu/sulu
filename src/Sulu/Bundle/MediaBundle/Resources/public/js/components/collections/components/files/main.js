@@ -409,9 +409,10 @@ define(function() {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?locale=' + this.options.data.locale + '&collection=' + this.options.data.id,
+                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC&locale=' + this.options.data.locale + '&collection=' + this.options.data.id,
                     view: listViews[this.listView].name,
                     resultKey: 'media',
+                    sortable: false,
                     viewOptions: {
                         table: {
                             fullWidth: false,

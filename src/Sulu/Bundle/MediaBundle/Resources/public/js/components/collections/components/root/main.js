@@ -171,9 +171,10 @@ define(function() {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media',
+                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
                     view: listViews[this.listView].name,
                     resultKey: 'media',
+                    sortable: false,
                     viewOptions: {
                         table: {
                             selectItem: true,
