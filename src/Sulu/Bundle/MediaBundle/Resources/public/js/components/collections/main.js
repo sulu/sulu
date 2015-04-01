@@ -571,7 +571,7 @@ define([
                     collection.destroy({
                         success: function() {
                             this.sandbox.sulu.unlockDeleteSuccessLabel();
-                            var url = '/admin/api/collections' + (!!this.options.data._embedded.parent ? '/' + this.options.data._embedded.parent.id + '?depth=1&&sortBy=title' : '?&sortBy=title');
+                            var url = '/admin/api/collections' + (!!this.options.data._embedded.parent ? '/' + this.options.data._embedded.parent.id + '?depth=1&sortBy=title' : '?sortBy=title');
                             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
 
                             if (!!this.options.data._embedded.parent) {
