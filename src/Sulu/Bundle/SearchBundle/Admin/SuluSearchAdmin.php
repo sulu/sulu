@@ -20,7 +20,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SuluSearchAdmin extends Admin
 {
-
     public function __construct($title) {
         $rootNavigationItem = new NavigationItem($title);
 
