@@ -89,13 +89,13 @@ define(function() {
 
             // change datagrid to thumbnail small
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']);
+                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']['thViewOptions']);
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']);
+                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']['thViewOptions']);
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
 
