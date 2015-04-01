@@ -171,7 +171,7 @@ define(function() {
                 },
                 {
                     el: this.$find(constants.datagridSelector),
-                    url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
+                    url: '/admin/api/media',
                     view: listViews[this.listView].name,
                     resultKey: 'media',
                     viewOptions: {

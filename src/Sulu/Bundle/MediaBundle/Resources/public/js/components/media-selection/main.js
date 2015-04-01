@@ -640,7 +640,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
-                        url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
+                        url: '/admin/api/media',
                         view: 'thumbnail',
                         resultKey: 'media',
                         instanceName: 'media-selection-ovelay.' + this.options.instanceName,
