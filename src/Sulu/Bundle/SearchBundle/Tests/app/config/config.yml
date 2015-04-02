@@ -1,8 +1,9 @@
 massive_search:
     adapter: test
 
-sulu_search:
-    mapping:
-        Sulu\Component\Content\Structure\Page:
-            index: page
-            category: page
+sulu_content:
+    search:
+        mapping:
+            Sulu\Component\Content\Structure\Page:
+                index: page
+                category: page

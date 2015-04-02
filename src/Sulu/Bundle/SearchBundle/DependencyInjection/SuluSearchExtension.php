@@ -52,19 +52,12 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('metadata.xml');
         $loader->load('search.xml');
         $loader->load('build.xml');
 
         if ($container->hasParameter('sulu.context') && 'website' == $container->getParameter('sulu.context')) {
             $loader->load('website.xml');
         }
-
-        $container->setParameter('sulu_search.mapping', $config['mapping']);
     }
 }
