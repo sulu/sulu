@@ -166,8 +166,6 @@ class Document extends BaseDocument
             $properties['creator_id']
         );
 
-        $this->properties['webspace_key'] = 'sulu_io';
-
         foreach ($properties as $key => $field) {
             // remove system fields
             if (substr($key, 0, 2) == '__') {

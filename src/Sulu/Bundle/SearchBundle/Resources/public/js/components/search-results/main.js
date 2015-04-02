@@ -48,7 +48,7 @@ define([
             this.searchResultsTpl = this.sandbox.util.template(searchResultsTpl);
             this.dropDownEntries = [];
             this.enabledCategories = [];
-            this.categories = [];
+            this.categories = {};
             this.categoriesStore = {};
             this.totals = {};
             this.state = {
@@ -101,12 +101,12 @@ define([
          */
         addCategory: function(category) {
             var categoryEntry = {
-                'id': 'all',
+                'id': category,
                 'name': this.sandbox.translate('search-overlay.category.' + category + '.title'),
-                'placeholder': this.sandbox.translate('search-overlay.placeholder.everything.' + category)
+                'placeholder': this.sandbox.translate('search-overlay.placeholder.' + category)
             };
 
-            this.categies.push(categoryEntry);
+            this.categories[category] = categoryEntry;
             this.enabledCategories.push(categoryEntry);
         },
 

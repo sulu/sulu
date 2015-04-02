@@ -83,15 +83,19 @@
 
 /* line 77, ../scss/modules/search-results.scss */
 .search-results-details {
+  width: 250px;
+  white-space: nowrap;
   font-size: 12px;
   color: #999999;
 }
-/* line 81, ../scss/modules/search-results.scss */
+/* line 83, ../scss/modules/search-results.scss */
 .search-results-details p {
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* line 86, ../scss/modules/search-results.scss */
+/* line 90, ../scss/modules/search-results.scss */
 .search-results-loader-container {
   margin: 50px 0 0;
 }

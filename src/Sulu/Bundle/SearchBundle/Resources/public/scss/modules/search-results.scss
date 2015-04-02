@@ -75,11 +75,15 @@
 }
 
 .search-results-details {
+    width: 250px;
+    white-space: nowrap;
     font-size: 12px;
     color: #999999;
 
     p {
         margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
