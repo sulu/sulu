@@ -48,6 +48,7 @@ define([
             this.searchResultsTpl = this.sandbox.util.template(searchResultsTpl);
             this.dropDownEntries = [];
             this.enabledCategories = [];
+            this.categories = [];
             this.categoriesStore = {};
             this.totals = {};
             this.state = {
@@ -59,7 +60,6 @@ define([
                 query: ''
             };
 
-            this.setCategories();
             this.loadCategories().then(function() {
                 this.render();
                 this.startInfiniteScroll();
@@ -96,6 +96,21 @@ define([
         },
 
         /**
+         * @method addCategory
+         * @param {String} category
+         */
+        addCategory: function(category) {
+            var categoryEntry = {
+                'id': 'all',
+                'name': this.sandbox.translate('search-overlay.category.' + category + '.title'),
+                'placeholder': this.sandbox.translate('search-overlay.placeholder.everything.' + category)
+            };
+
+            this.categies.push(categoryEntry);
+            this.enabledCategories.push(categoryEntry);
+        },
+
+        /**
          * @method startInfiniteScroll
          */
         startInfiniteScroll: function() {
@@ -104,62 +119,13 @@ define([
         },
 
         /**
-         * Set categories in a method because of the 'this' context
-         * @method setCategories
-         */
-        setCategories: function() {
-            this.categories = {
-                'all': {
-                    'id': 'all',
-                    'name': this.sandbox.translate('search-overlay.category.everything.title'),
-                    'placeholder': this.sandbox.translate('search-overlay.placeholder.everything')
-                },
-
-                'media': {
-                    'id': 'media',
-                    'name': this.sandbox.translate('search-overlay.category.media.title'),
-                    'placeholder': this.sandbox.translate('search-overlay.placeholder.media')
-                },
-
-                'contact': {
-                    'id': 'contact',
-                    'name': this.sandbox.translate('search-overlay.category.contacts.title'),
-                    'placeholder': this.sandbox.translate('search-overlay.placeholder.contacts')
-                },
-
-                'account': {
-                    'id': 'account',
-                    'name': this.sandbox.translate('search-overlay.category.accounts.title'),
-                    'placeholder': this.sandbox.translate('search-overlay.placeholder.accounts')
-                },
-
-                'page': {
-                    'id': 'page',
-                    'name': this.sandbox.translate('search-overlay.category.pages.title'),
-                    'placeholder': this.sandbox.translate('search-overlay.placeholder.pages')
-                },
-
-                'snippet': {
-                    'id': 'snippet',
-                    'name': this.sandbox.translate('search-overlay.category.snippet.title'),
-                    'placeholder': this.sandbox.translate('search-overlay.placeholder.snippet')
-                }
-            };
-        },
-
-        /**
          * @method loadCategories
          */
         loadCategories: function() {
             return this.sandbox.util.load(this.options.enabledCategoriesUrl)
                 .then(function(data) {
-                    var enabledCategory;
-                    this.enabledCategories.push(this.categories['all']);
-
-                    data.forEach(function(category) {
-                        enabledCategory = this.categories[category];
-                        this.enabledCategories.push(enabledCategory);
-                    }.bind(this));
+                    this.addCategory('all');
+                    data.forEach(this.addCategory.bind(this));
                 }.bind(this));
         },
 
