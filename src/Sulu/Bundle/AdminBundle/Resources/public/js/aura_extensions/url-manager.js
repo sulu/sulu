@@ -41,11 +41,11 @@
                         return null;
                     }
 
-                    _.extend(data, { languageCode: AppConfig.getUser().locale }, {});
-
                     if (urlEntry.handler) {
                         data = urlEntry.handler.call(this, data);
                     }
+
+                    _.extend(data, { languageCode: AppConfig.getUser().locale }, {});
 
                     urlTemplate = urlEntry.template;
 
