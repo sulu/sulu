@@ -92,7 +92,8 @@ class ReindexListener
         $filter = $event->getFilter();
         $session = $this->sessionManager->getSession();
 
-        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:content"';
+        // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
+        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"';
         $queryManager = $session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $res = $query->execute();
