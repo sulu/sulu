@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<massive-search-mapping xmlns="http://massive.io/schema/dic/massive-search-mapping">
+<massive-search-mapping xmlns="http://massiveart.io/schema/dic/massive-search-mapping">
 
     <mapping class="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
         <id property="id" />

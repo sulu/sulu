@@ -30,7 +30,6 @@ use Sulu\Component\Content\Structure;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
- * @package Sulu\Bundle\SearchBundle\Metadata
  */
 class StructureDriver implements AdvancedDriverInterface
 {
@@ -101,11 +100,11 @@ class StructureDriver implements AdvancedDriverInterface
         /** @var StructureInterface $structure */
         $structure = $class->newInstance();
 
-        $classMetadata = $this->factory->makeClassMetadata($class->name);
+        $classMetadata = $this->factory->createClassMetadata($class->name);
 
-        $indexMeta = $this->factory->makeIndexMetadata();
-        $indexMeta->setIdField($this->factory->makeMetadataField('uuid'));
-        $indexMeta->setLocaleField($this->factory->makeMetadataField('languageCode'));
+        $indexMeta = $this->factory->createIndexMetadata();
+        $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
+        $indexMeta->setLocaleField($this->factory->createMetadataField('languageCode'));
 
         if ($structure instanceof Page) {
             $indexMeta->setCategoryName('page');
@@ -132,7 +131,7 @@ class StructureDriver implements AdvancedDriverInterface
                     array(
                         'type' => 'complex',
                         'mapping' => $propertyMapping,
-                        'field' => $this->factory->makeMetadataField($property->getName()),
+                        'field' => $this->factory->createMetadataField($property->getName()),
                     )
                 );
             } else {
@@ -144,24 +143,24 @@ class StructureDriver implements AdvancedDriverInterface
             $property->getName(),
             array(
                 'type' => 'string',
-                'field' => $this->factory->makeMetadataField($property->getName()),
+                'field' => $this->factory->createMetadataField($property->getName()),
             )
         );
 
         if ($structure->hasTag('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
-            $indexMeta->setUrlField($this->factory->makeMetadataField($prop->getName()));
+            $indexMeta->setUrlField($this->factory->createMetadataField($prop->getName()));
         }
 
         if (!$indexMeta->getTitleField()) {
             $prop = $structure->getProperty('title');
-            $indexMeta->setTitleField($this->factory->makeMetadataField($prop->getName()));
+            $indexMeta->setTitleField($this->factory->createMetadataField($prop->getName()));
 
             $indexMeta->addFieldMapping(
                 $prop->getName(),
                 array(
                     'type' => 'string',
-                    'field' => $this->factory->makeMetadataField($prop->getName())
+                    'field' => $this->factory->createMetadataField($prop->getName())
                 )
             );
         }
@@ -169,7 +168,7 @@ class StructureDriver implements AdvancedDriverInterface
         // index the webspace
         $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
-            'field' => $this->factory->makeMetadataField('webspaceKey')
+            'field' => $this->factory->createMetadataProperty('webspaceKey')
         ));
 
         $classMetadata->addIndexMetadata('_default', $indexMeta);
@@ -187,21 +186,21 @@ class StructureDriver implements AdvancedDriverInterface
             if ($metadata instanceof IndexMetadata && isset($tagAttributes['role'])) {
                 switch ($tagAttributes['role']) {
                     case 'title':
-                        $metadata->setTitleField($this->factory->makeMetadataField($property->getName()));
+                        $metadata->setTitleField($this->factory->createMetadataField($property->getName()));
                         $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->makeMetadataField($property->getName()), 
+                            'field' => $this->factory->createMetadataField($property->getName()), 
                             'type' => 'string',
                         ));
                         break;
                     case 'description':
-                        $metadata->setDescriptionField($this->factory->makeMetadataField($property->getName()));
+                        $metadata->setDescriptionField($this->factory->createMetadataField($property->getName()));
                         $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->makeMetadataField($property->getName()),
+                            'field' => $this->factory->createMetadataField($property->getName()),
                             'type' => 'string',
                         ));
                         break;
                     case 'image':
-                        $metadata->setImageUrlField($this->factory->makeMetadataField($property->getName()));
+                        $metadata->setImageUrlField($this->factory->createMetadataField($property->getName()));
                         break;
                     default:
                         throw new \InvalidArgumentException(
@@ -217,7 +216,7 @@ class StructureDriver implements AdvancedDriverInterface
                     $property->getName(),
                     array(
                         'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                        'field' => $this->factory->makeMetadataField($property->getName()), 
+                        'field' => $this->factory->createMetadataField($property->getName()), 
                     )
                 );
             }

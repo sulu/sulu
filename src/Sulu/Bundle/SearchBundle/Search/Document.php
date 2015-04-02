@@ -156,7 +156,17 @@ class Document extends BaseDocument
      */
     public function removeSystemFields()
     {
-        foreach ($this->fields as $key => $field) {
+        $properties = $this->fields;
+        unset(
+            $properties['created'],
+            $properties['changed'],
+            $properties['changer'],
+            $properties['changer_id'],
+            $properties['creator'],
+            $properties['creator_id']
+        );
+
+        foreach ($properties as $key => $field) {
             // remove system fields
             if (substr($key, 0, 2) == '__') {
                 continue;
