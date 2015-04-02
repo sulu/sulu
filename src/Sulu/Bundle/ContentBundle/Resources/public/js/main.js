@@ -31,8 +31,22 @@ define({
 
         app.components.addSource('sulucontent', '/bundles/sulucontent/js/components');
         
-        sandbox.urlManager.setUrl('contentDetail', 'content/contents/<%= webspace %>/<%= languageCode %>/edit:<%= id %>/content');
-        sandbox.urlManager.setUrl('startpage', 'content/contents/<%= webspace %>/edit:index/details');
+        sandbox.urlManager.setUrl('page', 
+            function(data) {
+                if (data.url === '/') {
+                    // startpage
+                    return 'content/contents/<%= webspace %>/edit:index/details';
+                } else {
+                    return 'content/contents/<%= webspace %>/<%= languageCode %>/edit:<%= id %>/content';
+                }
+            },
+            function(data) {
+                return {
+                    id: data.id,
+                    webspace: data.properties.webspace_key
+                };
+            }
+        );
 
         function getContentLanguage() {
             return sandbox.sulu.getUserSetting('contentLanguage') || sandbox.sulu.user.locale;

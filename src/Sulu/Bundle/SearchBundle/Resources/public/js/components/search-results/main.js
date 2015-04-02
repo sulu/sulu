@@ -302,53 +302,9 @@ define([
          * @param {Object} data
          */
         getEntryDeepUrl: function(category, data) {
-            var handler = this.urlTemplateMapping[category],
-                deepUrl = null;
-
-            if (handler) {
-                deepUrl = handler.call(this, data);
-            }
+            var deepUrl = this.sandbox.urlManager.getUrl(category, data);
 
             return deepUrl;
-        },
-
-        /**
-         * @type {Object}
-         */
-        urlTemplateMapping: {
-            page: function(data) {
-                if (data.url === '/') {
-                    // startpage
-                    return this.sandbox.urlManager.getUrl('startpage', {
-                        id: data.id,
-                        webspace: data.properties.webspace_key
-                    });
-                } else {
-                    return this.sandbox.urlManager.getUrl('contentDetail', {
-                        id: data.id,
-                        webspace: data.properties.webspace_key
-                    });
-                }
-            },
-
-            contact: function(data) {
-                return this.sandbox.urlManager.getUrl('contactDetail', data);
-            },
-
-            account: function(data) {
-                return this.sandbox.urlManager.getUrl('accountDetail', data);
-            },
-
-            media: function(data) {
-                return this.sandbox.urlManager.getUrl('mediaDetail', {
-                    id: data.id,
-                    collectionId: data.properties.collection_id
-                });
-            },
-
-            snippet: function(data) {
-                return this.sandbox.urlManager.getUrl('snippetDetail', data);
-            }
         },
 
         /**
