@@ -112,9 +112,12 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             $config['types']['checkbox']['template']
         );
 
+        $container->setParameter('sulu_content.search.mapping', $config['search']['mapping']);
+
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('content_types.xml');
         $loader->load('preview.xml');
+        $loader->load('search.xml');
     }
 }

@@ -58,37 +58,15 @@ class SearchControllerTest extends SuluTestCase
                     'page_size' => 50,
                     'page_count' => 1,
                     'result' => array(
-                        array(
-                            'id' => null,
-                            'document' => array(
-                                'id' => 1234,
-                                'title' => 'Hello',
-                                'description' => null,
-                                'url' => '/',
-                                'locale' => 'de',
-                                'imageUrl' => null,
-                                'category' => 'page',
-                                'created' => '2015-04-10T00:00:00+00:00',
-                                'changed' => '2015-04-12T00:00:00+00:00',
-                                'creatorName' => 'dantleech',
-                                'changerName' => 'dantleech',
-                                'properties' => array(
-                                    'webspace_key' => 'sulu_io',
-                                    'title' => 'Hello',
-                                    'article' => null,
-                                ),
-                            ),
-                            'score' => -1,
-                        ),
                     ),
                     'totals' => array(
-                        'page' => 1,
+                        'page' => 0,
                         'account' => 0,
                         'contact' => 0,
                         'media' => 0,
                         'test_products' => 0,
                     ),
-                    'total' => 1,
+                    'total' => 0,
                 ),
             ),
             array(
@@ -219,7 +197,6 @@ class SearchControllerTest extends SuluTestCase
         $this->entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         $this->createUser();
         $this->indexProducts();
-        $this->indexStructures();
     }
 
     private function createUser()
@@ -262,23 +239,5 @@ class SearchControllerTest extends SuluTestCase
         $product->creator = $this->user;
 
         $this->searchManager->index($product);
-    }
-
-    private function indexStructures()
-    {
-        $structure = new DefaultStructureCache();
-        $structure->setUuid(1234);
-        $structure->setWebspaceKey('sulu_io');
-        $structure->setChanged(new \DateTime('2015-04-12T00:00:00+00:00'));
-        $structure->setCreated(new \DateTime('2015-04-10T00:00:00+00:00'));
-        $structure->setChanger($this->user->getId());
-        $structure->setCreator($this->user->getId());
-
-        $structure->getProperty('url')->setValue('/');
-        $structure->getProperty('title')->setValue('Hello');
-        $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
-        $structure->setLanguageCode('de');
-
-        $this->searchManager->index($structure);
     }
 }

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\EventListener;
+namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -60,12 +60,7 @@ class ReindexListener
     /**
      * @var string
      */
-    private $pageIndexName;
-
-    /**
-     * @var string
-     */
-    private $snippetIndexName;
+    private $mapping;
 
     public function __construct(
         SessionManagerInterface $sessionManager,
@@ -74,8 +69,7 @@ class ReindexListener
         WebspaceManagerInterface $webspaceManager,
         StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper,
-        $pageIndexName,
-        $snippetIndexName
+        array $mapping = array()
     )
     {
         $this->sessionManager = $sessionManager;
@@ -84,8 +78,7 @@ class ReindexListener
         $this->webspaceManager = $webspaceManager;
         $this->structureManager = $structureManager;
         $this->nodeHelper = $nodeHelper;
-        $this->pageIndexName = $pageIndexName;
-        $this->snippetIndexName = $snippetIndexName;
+        $this->mapping = $mapping;
     }
 
     /**
@@ -99,13 +92,16 @@ class ReindexListener
         $filter = $event->getFilter();
         $session = $this->sessionManager->getSession();
 
-        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" OR [jcr:mixinTypes] = "sulu:snippet"';
+        $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:content"';
         $queryManager = $session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
         $res = $query->execute();
 
         $count = array();
-        $purged = false;
+
+        if ($purge) {
+            $this->purgeContentIndexes($output);
+        }
 
         /** @var Row $row */
         foreach ($res->getRows() as $row) {
@@ -128,15 +124,6 @@ class ReindexListener
                     continue;
                 }
 
-                if ($purge && false === $purged) {
-                    foreach (array($this->pageIndexName, $this->snippetIndexName) as $structureIndexName) {
-                        $output->writeln('<comment>Purging index</comment>: ' . $structureIndexName);
-                        $this->searchManager->purge($structureIndexName);
-                    }
-
-                    $purged = true;
-                }
-
                 try {
                     if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
                         $this->searchManager->index($structure, $locale);
@@ -146,10 +133,9 @@ class ReindexListener
                         $count[$structureClass]['deindexed']++;
                     }
                 } catch (\Exception $e) {
-                    throw $e;
                     $output->writeln(
                         '  [!] <error>Error indexing or de-indexing page (path: ' . $node->getPath() .
-                        ', locale: ' . $locale . '): ' . $exc->getMessage() . '</error>'
+                        ', locale: ' . $locale . '): ' . $e->getMessage() . '</error>'
                     );
                 }
             }
@@ -166,6 +152,15 @@ class ReindexListener
                 $stats['indexed'],
                 $stats['deindexed']
             ));
+        }
+    }
+
+    private function purgeContentIndexes($output)
+    {
+        foreach ($this->mapping as $structureMapping) {
+            $structureIndexName = $structureMapping['index'];
+            $output->writeln('<comment>Purging index</comment>: ' . $structureIndexName);
+            $this->searchManager->purge($structureIndexName);
         }
     }
 }

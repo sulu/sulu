@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\EventSubscriber;
+namespace Sulu\Bundle\ContentBundle\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Sulu\Component\Persistence\Model\UserBlameInterface;

@@ -100,13 +100,20 @@ class SearchController
      *
      * @return JsonResponse
      */
-    public function categoriesAction(Request $request)
+    public function categoriesAction()
     {
         return $this->viewHandler->handle(
             View::create($this->searchManager->getCategoryNames())
         );
     }
 
+    /**
+     * Return the category totals for the search results
+     *
+     * @param Hit[]
+     *
+     * @return array
+     */
     private function getCategoryTotals($hits)
     {
         $categoryNames = $this->searchManager->getCategoryNames();

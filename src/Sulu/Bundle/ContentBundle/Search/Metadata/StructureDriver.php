@@ -8,15 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\Search\Metadata;
+namespace Sulu\Bundle\ContentBundle\Search\Metadata;
 
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadataInterface;
-use Metadata\Driver\DriverInterface;
 use Sulu\Component\Content\StructureInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sulu\Bundle\SearchBundle\Search\SuluSearchEvents;
-use Sulu\Bundle\SearchBundle\Search\Event\StructureMetadataLoadEvent;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Metadata\ClassMetadata;
@@ -24,8 +21,6 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Metadata\Driver\AdvancedDriverInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\Structure\Snippet;
-use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Structure;
 
 /**
@@ -51,50 +46,41 @@ class StructureDriver implements AdvancedDriverInterface
     /**
      * @var string
      */
-    private $pageIndexName;
+    private $mapping;
 
     /**
-     * @var string
-     */
-    private $snippetIndexName;
-
-    /**
-     * @param Factory $factory
-     * @param EventDispatcherInterface $eventDispatcher
+     * @param Factory                   $factory
+     * @param EventDispatcherInterface  $eventDispatcher
      * @param StructureManagerInterface $structureManager
-     * @param string $pageIndexName
-     * @param string $snippetIndexName
+     * @param string                    $pageIndexName
+     * @param string                    $snippetIndexName
      */
     public function __construct(
         Factory $factory,
         EventDispatcherInterface $eventDispatcher,
         StructureManagerInterface $structureManager,
-        $pageIndexName = 'page',
-        $snippetIndexName = 'snippet'
-    )
-    {
+        array $mapping = array()
+    ) {
         $this->factory = $factory;
         $this->eventDispatcher = $eventDispatcher;
         $this->structureManager = $structureManager;
-        $this->pageIndexName = $pageIndexName;
-        $this->snippetIndexName = $snippetIndexName;
-        $this->pageIndexName = $pageIndexName;
+        $this->mapping = $mapping;
     }
 
     /**
      * loads metadata for a given class if its derived from StructureInterface
-     * @param \ReflectionClass $class
+     * @param  \ReflectionClass            $class
      * @throws \InvalidArgumentException
      * @return IndexMetadataInterface|null
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
         if (!$class->implementsInterface('Sulu\Component\Content\StructureInterface')) {
-            return null;
+            return;
         }
 
         if ($class->isAbstract()) {
-            return null;
+            return;
         }
 
         /** @var StructureInterface $structure */
@@ -106,18 +92,22 @@ class StructureDriver implements AdvancedDriverInterface
         $indexMeta->setIdField($this->factory->createMetadataField('uuid'));
         $indexMeta->setLocaleField($this->factory->createMetadataField('languageCode'));
 
-        if ($structure instanceof Page) {
-            $indexMeta->setCategoryName('page');
-            $indexMeta->setIndexName($this->pageIndexName);
+        $indexName = 'content';
+        $categoryName = 'content';
+
+        foreach ($this->mapping as $classFqn => $mapping) {
+            if (!$classMetadata->reflection->isSubclassOf($classFqn)) {
+                continue;
+            }
+
+            $indexName = $mapping['index'];
+            $categoryName = $mapping['category'];
         }
 
-        if ($structure instanceof Snippet) {
-            $indexMeta->setCategoryName('snippet');
-            $indexMeta->setIndexName($this->snippetIndexName);
-        }
+        $indexMeta->setCategoryName($categoryName);
+        $indexMeta->setIndexName($indexName);
 
         foreach ($structure->getProperties(true) as $property) {
-
             if ($property instanceof BlockProperty) {
                 $propertyMapping = new ComplexMetadata();
                 foreach ($property->getTypes() as $type) {
@@ -160,7 +150,7 @@ class StructureDriver implements AdvancedDriverInterface
                 $prop->getName(),
                 array(
                     'type' => 'string',
-                    'field' => $this->factory->createMetadataField($prop->getName())
+                    'field' => $this->factory->createMetadataField($prop->getName()),
                 )
             );
         }
@@ -168,11 +158,10 @@ class StructureDriver implements AdvancedDriverInterface
         // index the webspace
         $indexMeta->addFieldMapping('webspace_key', array(
             'type' => 'string',
-            'field' => $this->factory->createMetadataProperty('webspaceKey')
+            'field' => $this->factory->createMetadataProperty('webspaceKey'),
         ));
 
         $classMetadata->addIndexMetadata('_default', $indexMeta);
-
 
         return $classMetadata;
     }
@@ -188,7 +177,7 @@ class StructureDriver implements AdvancedDriverInterface
                     case 'title':
                         $metadata->setTitleField($this->factory->createMetadataField($property->getName()));
                         $metadata->addFieldMapping($property->getName(), array(
-                            'field' => $this->factory->createMetadataField($property->getName()), 
+                            'field' => $this->factory->createMetadataField($property->getName()),
                             'type' => 'string',
                         ));
                         break;
@@ -216,7 +205,7 @@ class StructureDriver implements AdvancedDriverInterface
                     $property->getName(),
                     array(
                         'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                        'field' => $this->factory->createMetadataField($property->getName()), 
+                        'field' => $this->factory->createMetadataField($property->getName()),
                     )
                 );
             }

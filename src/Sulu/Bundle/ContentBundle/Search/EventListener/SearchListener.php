@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SearchBundle\EventListener;
+namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
 use Sulu\Component\Content\StructureManagerInterface;
