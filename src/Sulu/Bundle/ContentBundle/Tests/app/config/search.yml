@@ -1,0 +1,9 @@
+massive_search:
+    adapter: test
+
+sulu_content:
+    search:
+        mapping:
+            Sulu\Component\Content\Structure\Page:
+                index: page
+                category: page
