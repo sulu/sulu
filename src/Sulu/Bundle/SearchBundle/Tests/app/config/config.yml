@@ -2,5 +2,7 @@ massive_search:
     adapter: test
 
 sulu_search:
-    page_index_name: content_admin
-    snippet_index_name: content_admin
+    mapping:
+        Sulu\Component\Content\Structure\Page:
+            index: page
+            category: page

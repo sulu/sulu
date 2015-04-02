@@ -22,7 +22,7 @@ class SearchManagerTest extends BaseTestCase
         for ($i = 1; $i <= 2; $i++) {
 
             $this->generateStructureIndex($nbResults);
-            $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
+            $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('page')->execute();
 
             $this->assertCount($nbResults, $res);
         }
@@ -32,7 +32,7 @@ class SearchManagerTest extends BaseTestCase
     {
         $this->generateStructureIndex(4, 'webspace_four');
         $this->generateStructureIndex(2, 'webspace_two');
-        $result = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('content_admin')->execute();
+        $result = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('page')->execute();
         $this->assertCount(6, $result);
 
         $firstHit = reset($result);
@@ -45,7 +45,7 @@ class SearchManagerTest extends BaseTestCase
         }
 
         // TODO: This should should not be here
-        $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('content_admin')->execute();
+        $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('page')->execute();
         $this->assertCount(4, $res);
     }
 
