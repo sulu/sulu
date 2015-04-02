@@ -9,6 +9,9 @@
 
         <fields>
             <field name="name" type="string" />
+            <field name="mainEmail" expr="join(' ', map(object.getEmails(), 'el.getEmail()'))" type="string" />
+            <field name="mainPhone" expr="join(' ', map(object.getPhones(), 'el.getPhone()'))" type="string" />
+            <field name="address" expr="object.getMainAddress() ? join(' ', [object.getMainAddress().getNumber(), object.getMainAddress().getStreet(), object.getMainAddress().getZip(), object.getMainAddress().getState()]) : ''" type="string" />
         </fields>
 
         <index name="admin_account" />
