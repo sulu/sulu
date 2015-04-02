@@ -24,7 +24,7 @@ class Factory extends BaseFactory
      *
      * @return Document
      */
-    public function makeDocument()
+    public function createDocument()
     {
         return new Document();
     }

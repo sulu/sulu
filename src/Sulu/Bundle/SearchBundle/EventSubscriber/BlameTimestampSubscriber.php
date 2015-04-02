@@ -167,11 +167,11 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     private function mapTimestamp(Document $document, \DateTime $created = null, \DateTime $changed = null)
     {
         $document->addField(
-            $this->factory->makeField('created', $created ? $created->format('c') : null, 'string')
+            $this->factory->createField('created', $created ? $created->format('c') : null, 'string')
         );
 
         $document->addField(
-            $this->factory->makeField('changed', $changed ? $changed->format('c') : null, 'string')
+            $this->factory->createField('changed', $changed ? $changed->format('c') : null, 'string')
         );
     }
 
@@ -185,17 +185,17 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     private function mapCreatorAndChanger(Document $document, UserInterface $creator = null, UserInterface $changer = null)
     {
         $document->addField(
-            $this->factory->makeField('changer', $changer ? $changer->getUsername() : null, 'string')
+            $this->factory->createField('changer', $changer ? $changer->getUsername() : null, 'string')
         );
         $document->addField(
-            $this->factory->makeField('changer_id', $changer ? $changer->getId() : null, 'string')
+            $this->factory->createField('changer_id', $changer ? $changer->getId() : null, 'string')
         );
 
         $document->addField(
-            $this->factory->makeField('creator', $creator ? $creator->getUsername() : null, 'string')
+            $this->factory->createField('creator', $creator ? $creator->getUsername() : null, 'string')
         );
         $document->addField(
-            $this->factory->makeField('creator_id', $creator ? $creator->getId() : null, 'string')
+            $this->factory->createField('creator_id', $creator ? $creator->getId() : null, 'string')
         );
     }
 }
