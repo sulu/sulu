@@ -71,6 +71,14 @@ class WidgetsHandler implements WidgetsHandlerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function hasWidgetGroup($groupAlias)
+    {
+        return (array_key_exists($groupAlias, $this->widgetGroups) && count($this->widgetGroups[$groupAlias]) > 0);
+    }
+
+    /**
      * renders widgets for given aliases
      * @param array $aliases
      * @param array $parameters
@@ -88,10 +96,17 @@ class WidgetsHandler implements WidgetsHandlerInterface
             );
         }
 
-        // render template
-        return $this->templateEngine->render($this->template, array(
-            'widgets' => $widgets,
-            'parameters' => $parameters
-        ));
+        if (count($widgets) > 0) {
+            // render template
+            return $this->templateEngine->render(
+                $this->template,
+                array(
+                    'widgets' => $widgets,
+                    'parameters' => $parameters
+                )
+            );
+        }
+
+        return null;
     }
 }

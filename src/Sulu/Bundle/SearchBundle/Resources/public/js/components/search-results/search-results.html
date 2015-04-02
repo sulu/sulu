@@ -3,13 +3,17 @@
 <% _.each(sections, function(section) { %>
     <div class="search-results-section is-<%= section.category %>">
         <div class="search-results-section-header">
-            <%= translate(categoryTranslationMapping[section.category]) %> (<%= section.results.length %>)
+            <%= translate(categories[section.category].name) %> (<%= totals[section.category] %>)
         </div>
         <ul class="search-results-section-content">
             <% _.each(section.results, function(result) { %>
             <li <% if (result.deepUrl) { %>data-url="<%= result.deepUrl %>"<% } %>>
                 <div class="search-results-thumb">
+                    <% if (result.imageUrl) { %>
+                    <img class="search-results-thumb-image" src="<%= result.imageUrl %>" />
+                    <% } else { %>
                     <div class="<%= categoryIconMapping[section.category] %>"></div>
+                    <% } %>
                 </div>
                 <div class="search-results-description">
                     <div class="search-results-title"><%= result.title %></div>

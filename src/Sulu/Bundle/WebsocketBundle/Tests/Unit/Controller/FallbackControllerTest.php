@@ -11,11 +11,10 @@
 namespace Sulu\Bundle\WebsocketBundle\Tests\Unit\Controller;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsocketBundle\Controller\FallbackController;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class FallbackControllerTest extends ProphecyTestCase
+class FallbackControllerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {

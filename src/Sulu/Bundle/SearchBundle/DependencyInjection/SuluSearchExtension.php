@@ -58,6 +58,7 @@ class SuluSearchExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_search.snippet_index_name', $config['snippet_index_name']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
         $loader->load('metadata.xml');
         $loader->load('search.xml');
         $loader->load('build.xml');

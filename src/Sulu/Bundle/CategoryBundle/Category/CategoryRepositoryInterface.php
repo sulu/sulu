@@ -26,6 +26,13 @@ interface CategoryRepositoryInterface
     public function findCategoryById($id);
 
     /**
+     * Finds the category with a given key
+     * @param string $key
+     * @return Category
+     */
+    public function findCategoryByKey($key);
+
+    /**
      * Finds the categories with the given ids
      * @param array $ids The ids to load
      * @return Category[]

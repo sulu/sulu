@@ -16,6 +16,6 @@ Feature: Password content type
 
     Scenario: Enter a valid password number
         Given I am editing a page of type "password_page"
-        And I fill in "husky-input-password" with "thisisapassword"
+        When I fill in "husky-input-password" with "thisisapassword"
         And I click the save icon
         Then I expect a success notification to appear

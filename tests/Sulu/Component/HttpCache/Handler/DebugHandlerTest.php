@@ -10,12 +10,11 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\HttpCache\Handler\TagsHandler;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class DebugHandlerTest extends ProphecyTestCase
+class DebugHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var HandlerInterface

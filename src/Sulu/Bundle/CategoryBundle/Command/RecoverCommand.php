@@ -10,9 +10,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Command;
 
-use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command for recovering categories.
- * This command is fixing wron left/right and depths (see -d) assignments of the categories tree
+ * This command is fixing wrong left/right and depths (see -d) assignments of the categories tree
  */
 class RecoverCommand extends ContainerAwareCommand
 {
@@ -72,7 +70,7 @@ class RecoverCommand extends ContainerAwareCommand
                 $success = true;
             }
         } else {
-            $output->writeln('<info>Your categories are fine. No errors found<info>');
+            $output->writeln('<info>Your categories are fine. No errors found.<info>');
         }
 
         // fix depths if -depth is defined

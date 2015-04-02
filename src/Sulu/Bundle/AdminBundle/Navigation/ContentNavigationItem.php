@@ -55,7 +55,7 @@ class ContentNavigationItem
      * An array of options, which will be passed to the corresponding component
      * @var array
      */
-    private $componentOptions;
+    private $componentOptions = array();
 
     /**
      * Defines in which state the navigation item will be displayed (basically new, edit)
@@ -76,8 +76,11 @@ class ContentNavigationItem
     private $resetStore;
 
     /**
-     * @param $name
+     * Defines position
+     * @var integer
      */
+    private $position;
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -230,10 +233,26 @@ class ContentNavigationItem
     }
 
     /**
+     * @return mixed
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    /**
      * Returns an array representation of the content navigation item
      * @return array
      */
-    public function toArray()
+    public function toArray(array $options = array())
     {
         $array = array(
             'id' => ($this->getId() != null) ? $this->getId() : uniqid(),
@@ -241,9 +260,10 @@ class ContentNavigationItem
             'action' => $this->getAction(),
             'display' => $this->getDisplay(),
             'component' => $this->getComponent(),
-            'componentOptions' => $this->getComponentOptions(),
+            'componentOptions' => array_merge($this->getComponentOptions(), $options),
             'disabled' => $this->getDisabled(),
             'resetStore' => $this->getResetStore(),
+            'position' => $this->getPosition()
         );
 
         return $array;

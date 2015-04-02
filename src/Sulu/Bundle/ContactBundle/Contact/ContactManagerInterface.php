@@ -13,8 +13,6 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 
 /**
  * Defines functionality of ContactManger
- * Interface ContactManagerInterface
- * @package Sulu\Bundle\ContactBundle\Contact
  */
 interface ContactManagerInterface
 {
@@ -54,8 +52,6 @@ interface ContactManagerInterface
      * @return boolean returns true if a element was unset
      */
     public function unsetMain($arrayCollection);
-
-//    public function addAccountContact($account, $contact);
 
     /**
      * sets main email, based on emails that are set on entity

@@ -21,12 +21,12 @@
         </many-to-one>
         <many-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" inversed-by="accountContacts">
             <join-columns>
-                <join-column name="idContacts" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
+                <join-column name="idContacts" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
-        <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" inversed-by="accountContacts">
+        <many-to-one field="account" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" inversed-by="accountContacts">
             <join-columns>
-                <join-column name="idAccounts" referenced-column-name="id" nullable="false" on-delete="CASCADE"></join-column>
+                <join-column name="idAccounts" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
             </join-columns>
         </many-to-one>
     </entity>

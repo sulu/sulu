@@ -25,6 +25,8 @@ define({
 
         app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
 
+        sandbox.urlManager.setUrl('mediaDetail', 'media/collections/edit:<%= collectionId %>/files/edit:<%= id %>');
+
         // list all collections
         sandbox.mvc.routes.push({
             route: 'media/collections',

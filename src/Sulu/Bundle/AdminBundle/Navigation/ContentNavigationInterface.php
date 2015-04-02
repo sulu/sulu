@@ -12,5 +12,8 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 
 interface ContentNavigationInterface
 {
+    /**
+     * @return NavigationItem[]
+     */
     public function getNavigationItems();
 }

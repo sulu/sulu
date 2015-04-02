@@ -11,12 +11,10 @@
 namespace Sulu\Component\Security\Authorization;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class SecurityCheckerTest extends ProphecyTestCase
+class SecurityCheckerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SecurityCheckerInterface
@@ -51,11 +49,11 @@ class SecurityCheckerTest extends ProphecyTestCase
     public function testIsGrantedContext()
     {
         $this->authorizationChecker->isGranted(
-            array('permission' => 'view', 'locale' => 'de'),
+            array('view'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(true);
 
-        $granted = $this->securityChecker->checkPermission('sulu.media.collection', 'view', 'de');
+        $granted = $this->securityChecker->checkPermission('sulu.media.collection', 'view');
 
         $this->assertTrue($granted);
     }
@@ -65,11 +63,11 @@ class SecurityCheckerTest extends ProphecyTestCase
         $object = new \stdClass();
 
         $this->authorizationChecker->isGranted(
-            array('permission' => 'view', 'locale' => 'de'),
+            array('view'),
             $object
         )->willReturn(true);
 
-        $granted = $this->securityChecker->checkPermission($object, 'view', 'de');
+        $granted = $this->securityChecker->checkPermission($object, 'view');
 
         $this->assertTrue($granted);
     }
@@ -79,33 +77,18 @@ class SecurityCheckerTest extends ProphecyTestCase
         $object = null;
 
         // should always return true for falsy values
-        $this->assertTrue($this->securityChecker->checkPermission($object, 'view', 'de'));
+        $this->assertTrue($this->securityChecker->checkPermission($object, 'view'));
     }
 
     public function testIsGrantedFail()
     {
         $this->setExpectedException(
             'Symfony\Component\Security\Core\Exception\AccessDeniedException',
-            'Permission "view" in localization "de" not granted'
+            'Permission "view" in security context "sulu.media.collection" not granted'
         );
 
         $this->authorizationChecker->isGranted(
-            array('permission' => 'view', 'locale' => 'de'),
-            Argument::which('getSecurityContext', 'sulu.media.collection')
-        )->willReturn(false);
-
-        $this->securityChecker->checkPermission('sulu.media.collection', 'view', 'de');
-    }
-
-    public function testIsGrantedFailWithoutLanguage()
-    {
-        $this->setExpectedException(
-            'Symfony\Component\Security\Core\Exception\AccessDeniedException',
-            'Permission "view" in localization "" not granted'
-        );
-
-        $this->authorizationChecker->isGranted(
-            array('permission' => 'view'),
+            array('view'),
             Argument::which('getSecurityContext', 'sulu.media.collection')
         )->willReturn(false);
 

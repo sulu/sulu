@@ -39,11 +39,14 @@ module.exports = function (grunt) {
                     relativeAssets: false
                 }
             }
-        }
+        },
+
+        uglify: min
     });
 
     grunt.registerTask('build', [
         'compass:dev',
-        'cssmin'
+        'cssmin',
+        'uglify'
     ]);
 };

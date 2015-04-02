@@ -167,7 +167,7 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
                 selected = this.options.preSelectedElement;
             }
 
-            selected = _.where(this.options.data, { id: parseInt(selected, 10) })[0];
+            selected = _.where(this.options.data, { id: selected })[0];
             
             this.$input.attr({
                 'placeholder': selected.placeholder || ''

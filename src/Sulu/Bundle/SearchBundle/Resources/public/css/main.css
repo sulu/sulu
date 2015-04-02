@@ -1,11 +1,18 @@
 /*----------------------------------------*/
 /* line 1, ../scss/modules/search-results.scss */
+.search-results-wrapper {
+  height: 100%;
+  padding: 50px 0 0;
+  overflow: auto;
+}
+
+/* line 7, ../scss/modules/search-results.scss */
 .search-results-container {
   width: 550px;
   margin: 0 auto;
 }
 
-/* line 6, ../scss/modules/search-results.scss */
+/* line 12, ../scss/modules/search-results.scss */
 .search-results-section-content {
   margin: 0;
   padding: 0;
@@ -13,72 +20,78 @@
   border: 1px solid #ccc;
   border-width: 2px 0;
 }
-/* line 13, ../scss/modules/search-results.scss */
+/* line 19, ../scss/modules/search-results.scss */
 .search-results-section-content > li {
   padding: 10px 0;
   overflow: hidden;
   border-top: 1px solid #ccc;
 }
-/* line 18, ../scss/modules/search-results.scss */
+/* line 24, ../scss/modules/search-results.scss */
 .search-results-section-content > li:first-child {
   border-top: 0;
 }
-/* line 22, ../scss/modules/search-results.scss */
+/* line 28, ../scss/modules/search-results.scss */
 .search-results-section-content > li[data-url]:hover {
   cursor: pointer;
 }
 
-/* line 28, ../scss/modules/search-results.scss */
+/* line 34, ../scss/modules/search-results.scss */
 .search-results-section {
   margin-top: 40px;
 }
-/* line 32, ../scss/modules/search-results.scss */
+/* line 38, ../scss/modules/search-results.scss */
 .search-results-section.is-contacts .search-results-thumb img {
   border-radius: 100%;
 }
 
-/* line 38, ../scss/modules/search-results.scss */
+/* line 44, ../scss/modules/search-results.scss */
 .search-results-thumb {
   float: left;
   min-width: 50px;
+  min-height: 30px;
   margin-right: 10px;
   text-align: center;
 }
-/* line 44, ../scss/modules/search-results.scss */
+/* line 51, ../scss/modules/search-results.scss */
 .search-results-thumb img {
   display: block;
 }
-/* line 48, ../scss/modules/search-results.scss */
+/* line 55, ../scss/modules/search-results.scss */
 .search-results-thumb [class*="fa-"] {
-  font-size: 24px;
+  font-size: 20px;
   color: #999999;
   position: relative;
   top: 5px;
 }
 
-/* line 56, ../scss/modules/search-results.scss */
+/* line 63, ../scss/modules/search-results.scss */
+.search-results-thumb-image {
+  width: 50px;
+}
+
+/* line 67, ../scss/modules/search-results.scss */
 .search-results-description {
   overflow: hidden;
 }
 
-/* line 60, ../scss/modules/search-results.scss */
+/* line 71, ../scss/modules/search-results.scss */
 .search-results-section-header {
   margin-bottom: 5px;
   font-size: 16px;
   color: #999;
 }
 
-/* line 66, ../scss/modules/search-results.scss */
+/* line 77, ../scss/modules/search-results.scss */
 .search-results-details {
   font-size: 12px;
   color: #999999;
 }
-/* line 70, ../scss/modules/search-results.scss */
+/* line 81, ../scss/modules/search-results.scss */
 .search-results-details p {
   margin: 0;
 }
 
-/* line 75, ../scss/modules/search-results.scss */
+/* line 86, ../scss/modules/search-results.scss */
 .search-results-loader-container {
   margin: 50px 0 0;
 }
