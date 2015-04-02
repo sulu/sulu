@@ -17,6 +17,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
+use Sulu\Component\Content\StructureInterface;
 
 /**
  * This subscriber populates the image URL field
@@ -77,7 +78,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         $subject = $e->getSubject();
         $evaluator = $e->getFieldEvaluator();
 
-        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf('Sulu\Component\Content\Structure')) {
+        if (false === $metadata->getClassMetadata()->reflection->isSubclassOf(StructureInterface::class)) {
             return;
         }
 

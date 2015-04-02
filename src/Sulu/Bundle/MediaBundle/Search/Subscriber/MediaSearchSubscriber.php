@@ -59,8 +59,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Returns the events this subscriber has subscribed
-     * @return array
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {
@@ -71,7 +70,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
     /**
      * Adds the image to the search document
-     * @param PreIndexEvent $e
+     * @param PreIndexEvent $event
      */
     public function handlePreIndex(PreIndexEvent $event)
     {
