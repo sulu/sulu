@@ -55,9 +55,11 @@ class SearchControllerTest extends SuluTestCase
                 ),
                 array(
                     'page' => 1,
-                    'page_size' => 50,
-                    'page_count' => 1,
-                    'result' => array(
+                    'limit' => 10,
+                    'pages' => 1,
+                    '_embedded' => array(
+                        'result' => array(
+                        ),
                     ),
                     'totals' => array(
                         'page' => 0,
@@ -77,29 +79,31 @@ class SearchControllerTest extends SuluTestCase
                 ),
                 array(
                     'page' => 1,
-                    'page_size' => 50,
-                    'page_count' => 1,
-                    'result' => array(
-                        array(
-                            'id' => null,
-                            'document' => array(
-                                'id' => 6,
-                                'title' => 'Product Xeon',
-                                'description' => 'To be or not to be, that is the question',
-                                'url' => '/foobar',
-                                'locale' => 'fr',
-                                'imageUrl' => null,
-                                'category' => 'test_products',
-                                'created' => '2015-04-10T00:00:00+00:00',
-                                'changed' => '2015-04-12T00:00:00+00:00',
-                                'creatorName' => 'dantleech',
-                                'changerName' => 'dantleech',
-                                'properties' => array(
+                    'limit' => 10,
+                    'pages' => 1,
+                    '_embedded' => array(
+                        'result' => array(
+                            array(
+                                'id' => null,
+                                'document' => array(
+                                    'id' => 6,
                                     'title' => 'Product Xeon',
-                                    'body' => 'To be or not to be, that is the question',
+                                    'description' => 'To be or not to be, that is the question',
+                                    'url' => '/foobar',
+                                    'locale' => 'fr',
+                                    'imageUrl' => null,
+                                    'category' => 'test_products',
+                                    'created' => '2015-04-10T00:00:00+00:00',
+                                    'changed' => '2015-04-12T00:00:00+00:00',
+                                    'creatorName' => 'dantleech',
+                                    'changerName' => 'dantleech',
+                                    'properties' => array(
+                                        'title' => 'Product Xeon',
+                                        'body' => 'To be or not to be, that is the question',
+                                    ),
                                 ),
+                                'score' => -1,
                             ),
-                            'score' => -1,
                         ),
                     ),
                     'totals' => array(
@@ -115,34 +119,36 @@ class SearchControllerTest extends SuluTestCase
             array(
                 array(
                     'q' => 'Xeon', 
-                    'page_size' => 1,
+                    'limit' => 1,
                     'page' => 2,
                 ),
                 array(
                     'page' => 2,
-                    'page_size' => 1,
-                    'page_count' => 2,
-                    'result' => array(
-                        array(
-                            'id' => null,
-                            'document' => array(
-                                'id' => 7,
-                                'title' => 'Car Xeon',
-                                'description' => 'To be or not to be, that is the question',
-                                'url' => '/foobar',
-                                'locale' => 'fr',
-                                'imageUrl' => null,
-                                'category' => 'test_products',
-                                'created' => '2015-04-10T00:00:00+00:00',
-                                'changed' => '2015-04-12T00:00:00+00:00',
-                                'creatorName' => 'dantleech',
-                                'changerName' => 'dantleech',
-                                'properties' => array(
+                    'limit' => 1,
+                    'pages' => 2,
+                    '_embedded' => array(
+                        'result' => array(
+                            array(
+                                'id' => null,
+                                'document' => array(
+                                    'id' => 7,
                                     'title' => 'Car Xeon',
-                                    'body' => 'To be or not to be, that is the question',
+                                    'description' => 'To be or not to be, that is the question',
+                                    'url' => '/foobar',
+                                    'locale' => 'fr',
+                                    'imageUrl' => null,
+                                    'category' => 'test_products',
+                                    'created' => '2015-04-10T00:00:00+00:00',
+                                    'changed' => '2015-04-12T00:00:00+00:00',
+                                    'creatorName' => 'dantleech',
+                                    'changerName' => 'dantleech',
+                                    'properties' => array(
+                                        'title' => 'Car Xeon',
+                                        'body' => 'To be or not to be, that is the question',
+                                    ),
                                 ),
+                                'score' => -1,
                             ),
-                            'score' => -1,
                         ),
                     ),
                     'totals' => array(
@@ -163,16 +169,18 @@ class SearchControllerTest extends SuluTestCase
      */
     public function testSearch($params, $expectedResult)
     {
-        foreach ($expectedResult['result'] as &$hitResult) {
+        foreach ($expectedResult['_embedded']['result'] as &$hitResult) {
             $hitResult['document']['creatorId'] = $this->user->getId();
             $hitResult['document']['changerId'] = $this->user->getId();
         }
+
 
         $this->client->request('GET', '/search/query', $params);
 
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $result = json_decode($response->getContent(), true);
+        unset($result['_links']);
 
         $this->assertEquals($expectedResult, $result);
     }
