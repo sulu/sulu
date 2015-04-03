@@ -1,0 +1,23 @@
+{
+    "name": "sulu-io/document-manager",
+    "description": "Sulu Document Manager",
+    "require": {
+        "doctrine/phpcr-odm": "~1.2",
+        "symfony/event-dispatcher": "~2.0",
+        "symfony-cmf/core-bundle": "~1.2"
+    },
+    "require-dev": {
+        "jackalope/jackalope-doctrine-dbal": "~1.2@dev"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": { "Sulu\\Component\\DocumentManager\\": "" }
+    }
+}
