@@ -54,6 +54,22 @@
                 <source>contacts.sidebar.company</source>
                 <target>Other companies</target>
             </trans-unit>
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2d34h" resname="search-overlay.category.contact.title">
+                <source>search-overlay.category.contact.title</source>
+                <target>Contacts</target>
+            </trans-unit>
+            <trans-unit id="e4blol69a8a085ede200b7f5acb2d39e" resname="search-overlay.placeholder.contact">
+                <source>search-overlay.placeholder.contact</source>
+                <target>Search contacts...</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45b7f5acb2d39e" resname="search-overlay.category.account.title">
+                <source>search-overlay.category.account.title</source>
+                <target>Accounts</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085edec45sds5acb2d39e" resname="search-overlay.placeholder.account">
+                <source>search-overlay.placeholder.account</source>
+                <target>Search accounts...</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
