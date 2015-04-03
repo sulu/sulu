@@ -16,14 +16,14 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\SearchBundle\Search\Document;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
+use Massive\Bundle\SearchBundle\Search\Factory;
 
-class MediaSearchSubscriberTest extends ProphecyTestCase
+class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     private $mediaManager;
     private $subscriber;
@@ -36,13 +36,16 @@ class MediaSearchSubscriberTest extends ProphecyTestCase
     private $event;
     private $document;
     private $reflection;
+    private $factory;
 
     public function setUp()
     {
         parent::setUp();
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);
+        $this->factory = $this->prophesize(Factory::class);
         $this->subscriber = new MediaSearchSubscriber(
             $this->mediaManager->reveal(),
+            $this->factory->reveal(),
             'test_format'
         );
 
