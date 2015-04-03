@@ -4,11 +4,12 @@
 
 ## Search
 
-- Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
+Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
 configuration.
-- Pages and snippets are now indexed in separate indexes for pages and
-  snippets. Replace all instances of `->index('content')` with
-  `->indexes(array('page', 'snippet')`.
+
+Pages and snippets are now indexed in separate indexes for pages and snippets.
+Replace all instances of `->index('content')` with `->indexes(array('page',
+'snippet')`.
 
 ### Media API Object
 

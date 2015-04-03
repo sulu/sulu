@@ -143,7 +143,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         //
         // TODO: ->find does not seem to work when using the UserInterface, so we
         //       are now coupled to the Sulu User entity.
-        if (class_exists(User::class)) {
+        if (class_exists('Sulu\Bundle\SecurityBundle\Entity\User')) {
             if ($creatorId) {
                 $creator = $this->entityManager->find(User::class, $creatorId);
             }
