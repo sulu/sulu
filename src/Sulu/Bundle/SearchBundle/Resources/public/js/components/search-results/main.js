@@ -53,7 +53,7 @@ define([
             this.totals = {};
             this.state = {
                 page: 1,
-                pageCount: 1,
+                pages: 1,
                 loading: false,
                 hasNextPage: true,
                 category: 'all',
@@ -188,15 +188,15 @@ define([
          * @param {Object} response
          */
         parse: function(response) {
-            var data = response.result || [],
+            var data = response._embedded.result || [],
                 preparedData = {},
                 category,
                 deepUrl;
 
             this.state.page = response.page;
-            this.state.pageCount = response.pageCount;
+            this.state.pages = response.pages;
             this.state.loading = false;
-            this.state.hasNextPage = response.page < response.page_count;
+            this.state.hasNextPage = response.page < response.pages;
             this.totals = response.totals;
 
             data.forEach(function(entry) {
