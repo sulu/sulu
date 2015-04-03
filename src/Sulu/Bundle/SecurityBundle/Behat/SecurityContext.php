@@ -94,21 +94,6 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
     public function iAmLoggedInAsAnAdministrator()
     {
         $this->theUserExistsWithPassword('admin', 'admin');
-        $this->visitPath('/admin');
-        $page = $this->getSession()->getPage();
-        $this->waitForSelector('#username');
-        $this->fillSelector('#username', 'admin');
-        $this->fillSelector('#password', 'admin');
-        $loginButton = $page->findById('login-button');
-
-        if (!$loginButton) {
-            throw new \InvalidArgumentException(
-                'Could not find submit button on login page'
-            );
-        }
-        
-        $loginButton->click();
-        $this->getSession()->wait(5000, "document.querySelector('.navigation')");
     }
 
     private function getOrCreateRole($name, $system)
