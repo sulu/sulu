@@ -18,6 +18,9 @@ use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Sulu\Bundle\SearchBundle\Rest\SearchResultRepresentation;
+use Hateoas\Representation\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 
 /**
  * Sulu search controller
@@ -35,15 +38,22 @@ class SearchController
     private $viewHandler;
 
     /**
+     * @var ListRestHelper
+     */
+    private $listRestHelper;
+
+    /**
      * @param SearchManagerInterface $searchManager
      */
     public function __construct(
         SearchManagerInterface $searchManager,
-        ViewHandler $viewHandler
+        ViewHandler $viewHandler,
+        ListRestHelper $listRestHelper
     )
     {
         $this->searchManager = $searchManager;
         $this->viewHandler = $viewHandler;
+        $this->listRestHelper = $listRestHelper;
     }
 
     /**
@@ -58,8 +68,11 @@ class SearchController
         $query = $request->query->get('q');
         $category = $request->query->get('category', null);
         $locale = $request->query->get('locale', null);
-        $page = $request->query->get('page', 1);
-        $pageSize = $request->query->get('page_size', 50);
+
+
+        $page = $this->listRestHelper->getPage();
+        $limit = $this->listRestHelper->getLimit();
+
         $query = $this->searchManager->createSearch($query);
 
         if ($locale) {
@@ -74,19 +87,28 @@ class SearchController
 
         $adapter = new ArrayAdapter($hits);
         $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage($pageSize);
+        $pager->setMaxPerPage($limit);
         $pager->setCurrentPage($page);
 
-        $result = array(
-            'page' => $pager->getCurrentPage(),
-            'page_count' => $pager->getNbPages(),
-            'page_size' => $pager->getMaxPerPage(),
-            'totals' => $this->getCategoryTotals($hits),
-            'total' => count($hits),
-            'result' => $pager->getCurrentPageResults(),
+        $representation = new SearchResultRepresentation(
+            new CollectionRepresentation($pager->getCurrentPageResults(), 'result'),
+            'sulu_search_search',
+            array(
+                'locale' => $locale,
+                'query' => $query,
+                'category' => $category,
+            ),
+            $page,
+            $limit,
+            $pager->getNbPages(),
+            'page',
+            'limit',
+            false,
+            count($hits),
+            $this->getCategoryTotals($hits)
         );
 
-        $view = View::create($result);
+        $view = View::create($representation);
         $context = SerializationContext::create();
         $context->enableMaxDepthChecks();
         $context->setSerializeNull(true);

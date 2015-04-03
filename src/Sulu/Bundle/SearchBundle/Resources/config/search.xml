@@ -11,9 +11,10 @@
 
     <services>
         <!-- Controller -->
-        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%">
+        <service id="sulu_search.controller.search" class="%sulu_search.controller.search.class%" scope="request">
             <argument type="service" id="massive_search.search_manager" />
             <argument type="service" id="fos_rest.view_handler" />
+            <argument type="service" id="sulu_core.list_rest_helper" />
         </service>
 
         <!-- Custom factory -->
