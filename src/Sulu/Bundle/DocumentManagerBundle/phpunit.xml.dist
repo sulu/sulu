@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    colors="true"
+    bootstrap="vendor/symfony-cmf/testing/bootstrap/bootstrap.php"
+    processIsolation="false"
+>
+
+    <testsuites>
+        <testsuite name="Sulu DocumentManager Bundle">
+            <directory>./Tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory>.</directory>
+            <exclude>
+                <directory>Resources/</directory>
+                <directory>Tests/</directory>
+                <directory>vendor/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <php>
+        <server name="KERNEL_DIR" value="Tests/app" />
+    </php>
+
+</phpunit>
+
