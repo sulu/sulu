@@ -10,11 +10,6 @@
         <field name="description" type="text" column="description" nullable="true"/>
         <field name="locale" type="string" column="locale" length="5"/>
 
-        <one-to-one field="defaultMetaOf" target-entity="Sulu\Bundle\MediaBundle\Entity\Collection" mapped-by="defaultMeta">
-            <cascade>
-                <cascade-all />
-            </cascade>
-        </one-to-one>
         <many-to-one field="fileVersion" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersion" inversed-by="meta">
             <join-columns>
                 <join-column name="idFileVersions" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
