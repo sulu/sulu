@@ -11266,7 +11266,8 @@ a.btn-black, a.btn-highlight {
 .data-navigation-item-thumb {
   position: relative;
   top: 6px;
-  display: inline-block;
+  display: block;
+  float: left;
   width: 35px;
   height: 35px;
   margin-right: 10px;
@@ -11276,15 +11277,15 @@ a.btn-black, a.btn-highlight {
   background-repeat: no-repeat;
 }
 
-/* line 118, ../scss/modules/data-navigation.scss */
+/* line 119, ../scss/modules/data-navigation.scss */
 .data-navigation-back {
   height: 50px;
 }
-/* line 121, ../scss/modules/data-navigation.scss */
+/* line 122, ../scss/modules/data-navigation.scss */
 .data-navigation-back:focus {
   outline: 0;
 }
-/* line 125, ../scss/modules/data-navigation.scss */
+/* line 126, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back {
   position: absolute;
   font-size: 14px;
@@ -11295,12 +11296,12 @@ a.btn-black, a.btn-highlight {
   padding-top: 17px;
   padding-left: 22px;
 }
-/* line 136, ../scss/modules/data-navigation.scss */
+/* line 137, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back:hover {
   background-color: #21272E;
   padding-bottom: 5px;
 }
-/* line 142, ../scss/modules/data-navigation.scss */
+/* line 143, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-text {
   margin-left: 60px;
   padding-right: 20px;
@@ -11309,14 +11310,14 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
 }
 
-/* line 153, ../scss/modules/data-navigation.scss */
+/* line 154, ../scss/modules/data-navigation.scss */
 .data-navigation-add .fa-plus-circle {
   margin-right: 5px;
   float: left;
   font-size: 16px;
 }
 
-/* line 160, ../scss/modules/data-navigation.scss */
+/* line 161, ../scss/modules/data-navigation.scss */
 .data-navigation-loader-container {
   position: absolute;
   width: 100%;
@@ -11326,14 +11327,14 @@ a.btn-black, a.btn-highlight {
   padding: 4px 0;
 }
 
-/* line 169, ../scss/modules/data-navigation.scss */
+/* line 170, ../scss/modules/data-navigation.scss */
 .data-navigation-info {
   text-align: center;
   line-height: 50px;
   height: calc(100% - 150px);
 }
 
-/* line 175, ../scss/modules/data-navigation.scss */
+/* line 176, ../scss/modules/data-navigation.scss */
 .data-navigation-info-empty {
   color: #999;
   font-size: 14px;
