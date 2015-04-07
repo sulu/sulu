@@ -10,9 +10,9 @@
 
 namespace Sulu\Component\Content\Rlp\Strategy;
 
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
+use Sulu\Component\Content\Type\Core\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\Content\Type\Core\Rlp\Strategy\RLPStrategyInterface;
+use Sulu\Component\Content\Type\Core\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
 
 class TreeStrategyTest extends \PHPUnit_Framework_TestCase
@@ -30,7 +30,7 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->mapper = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
+            'Sulu\Component\Content\Type\Core\Rlp\Mapper\RlpMapper',
             array('test-mapper'),
             'TestMapper'
         );
@@ -42,7 +42,7 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
 
         $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\StructureManagerInterface');
-        $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\ContentTypeManagerInterface');
+        $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\Type\ContentTypeManagerInterface');
         $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', array(), array(), '', false);
 
         $this->strategy = new TreeStrategy(

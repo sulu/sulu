@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type;
 
-use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
+use Sulu\Bundle\ContentBundle\Content\Type\InternalLinks;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Content\PropertyInterface;

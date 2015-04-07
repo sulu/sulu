@@ -2,11 +2,11 @@
 
 namespace Sulu\Component\Content\Mapper\Subscriber;
 
-use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Mapper\ContentEvents;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentNodeOrderEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent;
 use Prophecy\Argument;
 
 class NodeOrderSubscriberTest extends \PHPUnit_Framework_TestCase

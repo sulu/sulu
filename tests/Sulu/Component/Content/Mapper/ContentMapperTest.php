@@ -18,7 +18,7 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Mapper\ContentEvents;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
@@ -366,13 +366,13 @@ class ContentMapperTest extends PhpcrTestCase
             ->method('dispatch')
             ->with(
                 $this->equalTo(ContentEvents::NODE_PRE_SAVE),
-                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+                $this->isInstanceOf('Sulu\Component\Content\Mapper\Event\ContentNodeEvent')
             );
         $this->eventDispatcher->expects($this->at(1))
             ->method('dispatch')
             ->with(
                 $this->equalTo(ContentEvents::NODE_POST_SAVE),
-                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeEvent')
+                $this->isInstanceOf('Sulu\Component\Content\Mapper\Event\ContentNodeEvent')
             );
 
         $result = $this->mapper->saveRequest(
@@ -1481,13 +1481,13 @@ class ContentMapperTest extends PhpcrTestCase
             ->method('dispatch')
             ->with(
                 $this->equalTo(ContentEvents::NODE_PRE_DELETE),
-                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
+                $this->isInstanceOf('Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent')
             );
         $this->eventDispatcher->expects($this->at(1))
             ->method('dispatch')
             ->with(
                 $this->equalTo(ContentEvents::NODE_POST_DELETE),
-                $this->isInstanceOf('Sulu\Component\Content\Event\ContentNodeDeleteEvent')
+                $this->isInstanceOf('Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent')
             );
         // delete /news/test-2/test-1
         $this->mapper->delete($child->getUuid(), 'default');

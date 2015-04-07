@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\InternalLink;
 
 use Psr\Log\NullLogger;
-use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
+use Sulu\Bundle\ContentBundle\Content\Type\InternalLinks;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 
@@ -60,7 +60,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
     public function testWriteWithNoneExistingUUID()
     {
         $subNode1 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\InternalLink\NodeInterface',
             array(),
             '',
             true,
@@ -69,7 +69,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         );
         $subNode1->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-123-123'));
         $subNode2 = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\InternalLink\NodeInterface',
             array(),
             '',
             true,
@@ -79,7 +79,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $subNode2->expects($this->any())->method('getIdentifier')->will($this->returnValue('123-456-789'));
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\InternalLink\NodeInterface',
             array(),
             '',
             true,

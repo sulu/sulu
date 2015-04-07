@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type;
 
-use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
+use Sulu\Bundle\ContentBundle\Content\Type\SingleInternalLink;
 use Sulu\Component\Content\PropertyInterface;
 
 class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase

@@ -2,7 +2,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
