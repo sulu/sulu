@@ -61,6 +61,7 @@ class CollectionControllerTest extends SuluTestCase
         $collectionMeta->setLocale('en-gb');
         $collectionMeta->setCollection($collection);
 
+        $collection->setDefaultMeta($collectionMeta);
         $collection->addMeta($collectionMeta);
 
         // Collection Meta 2
@@ -1216,7 +1217,10 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $items = $response->_embedded->collections;
 
-        $this->assertEquals(1, $response->total);
+        // all items in this response
+        $this->assertEquals(7, $response->total);
+
+        // root collection items
         $this->assertCount(1, $items);
 
         $this->assertEquals($titles[0], $items[0]->title);
