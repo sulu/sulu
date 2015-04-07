@@ -21,6 +21,10 @@ class SuluContentContentNavigation extends ContentNavigation
 
         $this->setName('Content');
 
+        $this->addNavigationItem($this->getContent());
+        $this->addNavigationItem($this->getSeo());
+        $this->addNavigationItem($this->getExcerpt());
+        $this->addNavigationItem($this->getSettings());
     }
 
     private function getSeo()
@@ -68,43 +72,5 @@ class SuluContentContentNavigation extends ContentNavigation
         $content->setComponent('content/form@sulucontent');
 
         return $content;
-    }
-
-    private function getExternalLink()
-    {
-        $tab = new ContentNavigationItem('content-navigation.contents.external-link');
-        $tab->setId('tab-external-link');
-        $tab->setAction('content');
-        $tab->setGroups(array('content'));
-        $tab->setComponent('content/external@sulucontent');
-
-        return $tab;
-    }
-
-    private function getInternalLink()
-    {
-        $tab = new ContentNavigationItem('content-navigation.contents.internal-link');
-        $tab->setId('tab-internal-link');
-        $tab->setAction('content');
-        $tab->setGroups(array('content'));
-        $tab->setComponent('content/internal@sulucontent');
-
-        return $tab;
-    }
-
-    /**
-     * generate content navigation
-     * @param $showSettings
-     */
-    public function generate($showSettings)
-    {
-        $this->addNavigationItem($this->getContent());
-
-        $this->addNavigationItem($this->getSeo());
-        $this->addNavigationItem($this->getExcerpt());
-
-        if ($showSettings) {
-            $this->addNavigationItem($this->getSettings());
-        }
     }
 }

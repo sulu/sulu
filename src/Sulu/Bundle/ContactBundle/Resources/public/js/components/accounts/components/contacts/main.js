@@ -11,8 +11,9 @@ define([
     'mvc/relationalstore',
     'text!sulucontact/components/accounts/components/contacts/contact-relation.form.html',
     'text!sulucontact/components/accounts/components/contacts/contact.form.html',
-    'config'
-], function(RelationalStore, ContactRelationForm, ContactForm, Config) {
+    'config',
+    'widget-groups'
+], function(RelationalStore, ContactRelationForm, ContactForm, Config, WidgetGroups) {
 
     'use strict';
 
@@ -267,11 +268,16 @@ define([
     return {
         view: true,
 
-        layout: {
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
-            }
+        layout: function() {
+            return {
+                content: {
+                    width: 'fixed'
+                },
+                sidebar: {
+                    width: 'max',
+                    cssClasses: 'sidebar-padding-50'
+                }
+            };
         },
 
         templates: ['/admin/contact/template/contact/list'],
@@ -282,7 +288,7 @@ define([
             this.render();
             bindCustomEvents.call(this);
 
-            if (!!this.options.data && !!this.options.data.id) {
+            if (!!this.options.data && !!this.options.data.id && WidgetGroups.exists('account-detail')) {
                 this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
             }
 

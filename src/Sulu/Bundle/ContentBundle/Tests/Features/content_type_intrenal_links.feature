@@ -32,11 +32,11 @@ Feature: Internal links content type
         And I click the add icon
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.links.loaded" event
-        And I click the column navigation item "sulu.io"
+        When I click the column navigation item "sulu.io"
         And I expect the "husky.column-navigation.links.loaded" event
         And I double click the column navigation item "Articles"
         And I click the tick button
-        Then I should see "Articles"
+        And I should see "Articles"
         And I should see "1 of 1 visible"
         And I click the save icon
-        And I expect a success notification to appear
+        Then I expect a success notification to appear

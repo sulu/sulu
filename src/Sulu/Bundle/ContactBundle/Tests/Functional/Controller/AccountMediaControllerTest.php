@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 use DateTime;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -65,7 +64,6 @@ class AccountMediaControllerTest extends SuluTestCase
     {
         $this->account = new Account();
         $this->account->setName('Company');
-        $this->account->setType(Account::TYPE_BASIC);
         $this->account->setDisabled(0);
         $this->account->setPlaceOfJurisdiction('Feldkirch');
 
@@ -165,10 +163,6 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->persist($faxType);
         $this->em->persist($fax);
         $this->em->persist($contact);
-
-        $accountCategory = new AccountCategory();
-        $accountCategory->setCategory("Test");
-        $this->em->persist($accountCategory);
 
         $this->em->flush();
     }

@@ -375,7 +375,7 @@ define([
         },
 
         isInitialized = function(callback) {
-            if (!this.initialized) {
+            if (!this.initializedFlag) {
                 this.sandbox.on('sulu.contact-form.initialized', function() {
                     callback.call(this);
                 }.bind(this));
@@ -917,7 +917,7 @@ define([
     return {
 
         initialize: function() {
-            this.initialized = false;
+            this.initializedFlag = false;
             this.$editOverlayContent = null;
             this.form = null;
             this.$addOverlay = null;
@@ -935,7 +935,7 @@ define([
             bindDomEvents.call(this);
 
             this.sandbox.emit(EVENT_INITIALIZED.call(this));
-            this.initialized = true;
+            this.initializedFlag = true;
         },
 
         render: function() {
