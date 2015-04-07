@@ -2,6 +2,9 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #973 [All]             Added handling of anonymous user token
+    * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
+    * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #732 [All]             Automatic mapping and assignation of changer, creator, changed and changer.
     * FEATURE     #891 [All]             Added (css) class property to field descriptors, updated husky and fixed an issue when merging settings with matchings
