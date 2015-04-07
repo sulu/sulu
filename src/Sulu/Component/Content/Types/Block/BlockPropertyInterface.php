@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Block;
+namespace Sulu\Component\Content\Types\Block;
 
 use Sulu\Component\Content\PropertyInterface;
 
