@@ -136,9 +136,10 @@ class CollectionManager implements CollectionManagerInterface
      */
     public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array())
     {
+        /** @var Paginator $collectionSet */
         $collectionSet = $this->collectionRepository->findCollectionSet(
             $depth,
-            array('offset' => $offset, 'limit' => $limit, 'search' => $search),
+            array('offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale),
             null,
             $sortBy
         );
@@ -152,7 +153,7 @@ class CollectionManager implements CollectionManagerInterface
             }
         }
 
-        $this->count = sizeof($collections);
+        $this->count = $collectionSet->count();
 
         return $collections;
     }
