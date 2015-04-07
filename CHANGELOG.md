@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
     * BUGFIX      #973 [All]             Added handling of anonymous user token
     * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
