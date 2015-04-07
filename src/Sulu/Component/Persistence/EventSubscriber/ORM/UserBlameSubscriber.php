@@ -16,6 +16,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -117,7 +118,7 @@ class UserBlameSubscriber implements EventSubscriber
         $token = $this->tokenStorage->getToken();
 
         // if no token, do nothing
-        if (null === $token) {
+        if (null === $token || $token instanceof AnonymousToken) {
             return;
         }
 
