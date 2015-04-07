@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
     * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
