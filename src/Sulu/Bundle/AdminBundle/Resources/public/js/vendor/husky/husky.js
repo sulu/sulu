@@ -44677,6 +44677,14 @@ define('__component__$data-navigation@husky',[
         },
 
         /**
+         * Return item from local cache
+         * @param id
+         */
+        getItem: function(id) {
+            return _.where(this.data.children, {id: id})[0];
+        },
+
+        /**
          * @method openChildrenHandler
          * @param {Object} event
          */
@@ -44734,12 +44742,12 @@ define('__component__$data-navigation@husky',[
         selectParentDataHandler: function(event) {
             event.stopPropagation();
 
-            this.openParentHandler(event).then(function() {
-                this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                if (this.options.globalEvents) {
-                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
-                }
-            }.bind(this));
+            this.sandbox.emit(SELECT.call(this), this.data.parent);
+            if (this.options.globalEvents) {
+                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.parent);
+            }
+
+            this.openParentHandler(event);
         },
 
         /**
@@ -44759,12 +44767,16 @@ define('__component__$data-navigation@husky',[
         selectChildrenDataHandler: function(event) {
             event.stopPropagation();
 
-            this.openChildrenHandler(event).then(function() {
-                this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                if (this.options.globalEvents) {
-                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
-                }
-            }.bind(this));
+            var $item = $(event.currentTarget).closest('li'),
+                id = $item.data('id'),
+                item = this.getItem(id);
+
+            this.sandbox.emit(SELECT.call(this), item);
+            if (this.options.globalEvents) {
+                this.sandbox.emit(SELECT_GLOBAL.call(this), item);
+            }
+
+            this.openChildrenHandler(event);
         },
 
         /**
@@ -44774,9 +44786,13 @@ define('__component__$data-navigation@husky',[
         navigateChildrenHandler: function(event) {
             event.stopPropagation();
 
-            this.openChildrenHandler(event).then(function() {
-                this.sandbox.emit(NAVIGATE.call(this), this.data.current.item);
-            }.bind(this));
+            var $item = $(event.currentTarget).closest('li'),
+                id = $item.data('id'),
+                item = this.getItem(id);
+
+            this.sandbox.emit(NAVIGATE.call(this), item);
+
+            this.openChildrenHandler(event);
         },
 
         /**
