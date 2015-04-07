@@ -18,7 +18,7 @@ use PHPCR\SimpleCredentials;
 use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
-use Sulu\Component\Content\Block\BlockContentType;
+use Sulu\Component\Content\Types\BlockContentType;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
