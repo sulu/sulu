@@ -59,13 +59,30 @@ class UpgradeMediaCommand extends ContainerAwareCommand
 
     private function upgradeFile(File $file)
     {
+        /** @var FileVersion $fileVersion */
         foreach ($file->getFileVersions() as $fileVersion) {
-            $this->upgradeFileVersion($fileVersion);
-        }
-    }
+            $meta = $fileVersion->getMeta();
 
-    private function upgradeFileVersion(FileVersion $fileVersion)
-    {
-        $fileVersion->setDefaultMeta($fileVersion->getMeta()->first());
+            if ($meta->isEmpty()) {
+                // some media seems to have no meta this will be fixed here
+                /** @var FileVersion $versionBefore */
+                $versionBefore = $file->getFileVersions()->filter(
+                    function (FileVersion $version) use ($fileVersion) {
+                        return $version->getVersion() == $fileVersion->getVersion() - 1;
+                    }
+                )->first();
+
+                foreach ($versionBefore->getMeta() as $versionBeforeMeta) {
+                    $newMeta = clone $versionBeforeMeta;
+                    
+                    $newMeta->setFileVersion($fileVersion);
+                    $fileVersion->addMeta($newMeta);
+
+                    $this->doctrine->getManager()->persist($fileVersion);
+                }
+            }
+
+            $fileVersion->setDefaultMeta($meta->first());
+        }
     }
 }
