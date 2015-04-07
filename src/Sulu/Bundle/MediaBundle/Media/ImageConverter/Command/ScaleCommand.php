@@ -25,7 +25,7 @@ class ScaleCommand implements CommandInterface
 
         $newWidth = isset($parameters['x']) ? intval($parameters['x']) * $retina : null;
         $newHeight = isset($parameters['y']) ? intval($parameters['y']) * $retina : null;
-        $mode = isset($parameters['mode']) ? intval($parameters['mode']) : $image::THUMBNAIL_OUTBOUND;
+        $mode = isset($parameters['mode']) ? $parameters['mode'] : $image::THUMBNAIL_OUTBOUND;
 
         if ($newHeight == null) {
             $newHeight = $size->getHeight() / $size->getWidth() * $newWidth;
