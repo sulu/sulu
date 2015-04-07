@@ -23,12 +23,22 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public function checkPermission($subject, $permission, $locale = null)
+    public function checkPermission($subject, $permission)
     {
-        if (!$this->hasPermission($subject, $permission, $locale)) {
-            throw new AccessDeniedException(
-                sprintf('Permission "%s" in localization "%s" not granted', $permission, $locale)
-            );
+        if (!$this->hasPermission($subject, $permission)) {
+            if ($subject instanceof SecurityCondition) {
+                $message = sprintf(
+                    'Permission "%s" in localization "%s" for object with id "%s" and of type "%s" not granted',
+                    $permission,
+                    $subject->getLocale(),
+                    $subject->getObjectId(),
+                    $subject->getObjectType()
+                );
+            } else {
+                $message = sprintf('Permission "%s" in security context "%s" not granted', $permission, $subject);
+            }
+
+            throw new AccessDeniedException($message);
         }
 
         return true;
@@ -37,5 +47,5 @@ abstract class AbstractSecurityChecker implements SecurityCheckerInterface
     /**
      * {@inheritDoc}
      */
-    public abstract function hasPermission($subject, $permission, $locale = null);
+    public abstract function hasPermission($subject, $permission);
 }

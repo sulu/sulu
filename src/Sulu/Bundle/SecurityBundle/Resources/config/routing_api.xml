@@ -5,4 +5,5 @@
     <import id="sulu_security.roles" type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\RoleController"/>
     <import id="sulu_security.groups" type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\GroupController"/>
     <import id="sulu_security.users" type="rest" resource="Sulu\Bundle\SecurityBundle\Controller\UserController"/>
+    <import id="sulu_security.permissions" type="rest" resource="sulu_security.permission_controller"/>
 </routes>

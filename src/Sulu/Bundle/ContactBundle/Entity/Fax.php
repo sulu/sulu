@@ -142,12 +142,12 @@ class Fax
     /**
      * Add accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $account
      * @return Fax
      */
-    public function addAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function addAccount(AccountInterface $account)
     {
-        $this->accounts[] = $accounts;
+        $this->accounts[] = $account;
 
         return $this;
     }
@@ -155,11 +155,11 @@ class Fax
     /**
      * Remove accounts
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Account $accounts
+     * @param AccountInterface $account
      */
-    public function removeAccount(\Sulu\Bundle\ContactBundle\Entity\Account $accounts)
+    public function removeAccount(AccountInterface $account)
     {
-        $this->accounts->removeElement($accounts);
+        $this->accounts->removeElement($account);
     }
 
     /**

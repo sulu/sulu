@@ -10,12 +10,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
-use Doctrine\Entity;
+use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress as AccountAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
-use Sulu\Bundle\ContactBundle\Entity\AccountCategory as AccountCategoryEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
@@ -23,11 +22,10 @@ use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
 use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfDelivery as TermsOfDeliveryEntity;
-use Sulu\Bundle\ContactBundle\Entity\TermsOfPayment as TermsOfPaymentEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -45,10 +43,10 @@ use JMS\Serializer\Annotation\Groups;
 class Account extends ApiWrapper
 {
     /**
-     * @param AccountEntity $account
+     * @param AccountInterface $account
      * @param string $locale The locale of this product
      */
-    public function __construct(AccountEntity $account, $locale)
+    public function __construct(AccountInterface $account, $locale)
     {
         $this->entity = $account;
         $this->locale = $locale;
@@ -174,10 +172,10 @@ class Account extends ApiWrapper
     /**
      * Set parent
      *
-     * @param AccountEntity $parent
+     * @param AccountInterface $parent
      * @return Account
      */
-    public function setParent(AccountEntity $parent = null)
+    public function setParent(AccountInterface $parent = null)
     {
         $this->entity->setParent($parent);
 
@@ -187,7 +185,7 @@ class Account extends ApiWrapper
     /**
      * Get parent
      *
-     * @return AccountEntity
+     * @return AccountInterface
      * @VirtualProperty
      * @SerializedName("parent")
      * @Groups({"fullAccount"})
@@ -375,32 +373,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set type
-     *
-     * @param integer $type
-     * @return Account
-     */
-    public function setType($type)
-    {
-        $this->entity->setType($type);
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer
-     * @VirtualProperty
-     * @SerializedName("type")
-     * @Groups({"fullAccount", "partialAccount"})
-     */
-    public function getType()
-    {
-        return $this->entity->getType();
-    }
-
-    /**
      * Add faxes
      *
      * @param FaxEntity $fax
@@ -546,19 +518,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set accountCategory
-     *
-     * @param AccountCategoryEntity $accountCategory
-     * @return Account
-     */
-    public function setAccountCategory(AccountCategoryEntity $accountCategory = null)
-    {
-        $this->entity->setAccountCategory($accountCategory);
-
-        return $this;
-    }
-
-    /**
      * Set registerNumber
      *
      * @param string $registerNumber
@@ -595,19 +554,6 @@ class Account extends ApiWrapper
         $this->entity->addBankAccount($bankAccount);
 
         return $this;
-    }
-
-    /**
-     * Get accountCategory
-     *
-     * @return AccountCategoryEntity
-     * @VirtualProperty
-     * @SerializedName("accountCategory")
-     * @Groups({"fullAccount"})
-     */
-    public function getAccountCategory()
-    {
-        return $this->entity->getAccountCategory();
     }
 
     /**
@@ -747,58 +693,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set termsOfPayment
-     *
-     * @param TermsOfPaymentEntity $termsOfPayment
-     * @return Account
-     */
-    public function setTermsOfPayment(TermsOfPaymentEntity $termsOfPayment = null)
-    {
-        $this->entity->setTermsOfPayment($termsOfPayment);
-
-        return $this;
-    }
-
-    /**
-     * Get termsOfPayment
-     *
-     * @return TermsOfPaymentEntity
-     * @VirtualProperty
-     * @SerializedName("termsOfPayment")
-     * @Groups({"fullAccount"})
-     */
-    public function getTermsOfPayment()
-    {
-        return $this->entity->getTermsOfPayment();
-    }
-
-    /**
-     * Set termsOfDelivery
-     *
-     * @param TermsOfDeliveryEntity $termsOfDelivery
-     * @return Account
-     */
-    public function setTermsOfDelivery(TermsOfDeliveryEntity $termsOfDelivery = null)
-    {
-        $this->entity->setTermsOfDelivery($termsOfDelivery);
-
-        return $this;
-    }
-
-    /**
-     * Get termsOfDelivery
-     *
-     * @return TermsOfDeliveryEntity
-     * @VirtualProperty
-     * @SerializedName("termsOfDelivery")
-     * @Groups({"fullAccount"})
-     */
-    public function getTermsOfDelivery()
-    {
-        return $this->entity->getTermsOfDelivery();
-    }
-
-    /**
      * Set number
      *
      * @param string $number
@@ -851,19 +745,6 @@ class Account extends ApiWrapper
     }
 
     /**
-     * Set responsiblePerson
-     *
-     * @param ContactEntity $responsiblePerson
-     * @return Account
-     */
-    public function setResponsiblePerson(ContactEntity $responsiblePerson = null)
-    {
-        $this->entity->setResponsiblePerson($responsiblePerson);
-
-        return $this;
-    }
-
-    /**
      * Set mainContact
      *
      * @param ContactEntity $mainContact
@@ -874,21 +755,6 @@ class Account extends ApiWrapper
         $this->entity->setMainContact($mainContact);
 
         return $this;
-    }
-
-    /**
-     * Get responsiblePerson
-     *
-     * @return Account
-     * @VirtualProperty
-     * @SerializedName("responsiblePerson")
-     * @Groups({"fullAccount"})
-     */
-    public function getResponsiblePerson()
-    {
-        if ($this->entity->getResponsiblePerson()) {
-            return new Contact($this->entity->getResponsiblePerson(), $this->locale);
-        }
     }
 
     /**
@@ -1165,5 +1031,25 @@ class Account extends ApiWrapper
         }
 
         return $medias;
+    }
+
+    /**
+     * Get categories
+     *
+     * @return Category[]
+     * @VirtualProperty
+     * @SerializedName("categories")
+     * @Groups({"fullAccount"})
+     */
+    public function getCategories()
+    {
+        $entities = array();
+        if ($this->entity->getCategories()) {
+            foreach ($this->entity->getCategories() as $category) {
+                $entities[] = new Category($category, $this->locale);
+            }
+        }
+
+        return $entities;
     }
 }

@@ -71,17 +71,17 @@ class RoleController extends RestController implements ClassResourceInterface, S
             array(),
             false, false, '', '50px'
         );
-        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
-            'system',
-            'system',
-            static::$entityName,
-            'security.roles.system'
-        );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
             static::$entityName,
             'public.name'
+        );
+        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
+            'system',
+            'system',
+            static::$entityName,
+            'security.roles.system'
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
@@ -409,6 +409,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     {
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
+        $roleData['identifier'] = $role->getIdentifier();
         $roleData['system'] = $role->getSystem();
         $roleData['permissions'] = array();
 

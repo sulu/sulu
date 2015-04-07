@@ -28,7 +28,7 @@ Feature: Internal links content type
     Scenario: Single internal link select
         Given I am editing a page of type "single_internal_link_page"
         And I expect the aura component "link" to appear
-        And I click the search icon
+        When I click the search icon
         And I expect an overlay to appear
         And I expect the "husky.column-navigation.link.loaded" event
         And I click the column navigation item "sulu.io"
@@ -36,4 +36,4 @@ Feature: Internal links content type
         And I double click the column navigation item "Articles"
         And I expect the "sulu.content.changed" event
         And I click the save icon
-        And I expect a success notification to appear
+        Then I expect a success notification to appear

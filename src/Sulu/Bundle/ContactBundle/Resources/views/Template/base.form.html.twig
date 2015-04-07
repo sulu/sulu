@@ -14,7 +14,7 @@
                     </span>
                 </div>
 
-                <div class="grid-row small" id="addresses" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl","empty-tpl":"address-empty-tpl"}]'>
+                <div class="grid-row" id="addresses" data-type="collection" data-mapper-property='[{"data":"addresses","tpl":"address-tpl","empty-tpl":"address-empty-tpl"}]'>
 
                     <script type="text/template" id="address-empty-tpl">
                         <div class="grid-col-12 floating">
@@ -90,7 +90,7 @@
                     </script>
                 </div>
 
-                <div class="grid-row small" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
+                <div class="grid-row" id="contact-fields" data-type="collection" data-mapper-property='[{"data":"emails","tpl":"email-tpl"},{"data":"phones","tpl":"phone-tpl"},{"data":"urls","tpl":"url-tpl"},{"data":"faxes","tpl":"fax-tpl"}]'>
                     <script type="text/template" id="email-tpl">
                         <div class="grid-col-6 floating">
                             <~ var uid = _.uniqueId('email_') ~>
@@ -208,7 +208,7 @@
                     </script>
                 </div>
 
-                <div class="grid-row small" data-type="collection" data-mapper-property='{"data":"notes","tpl":"note-tpl"}'>
+                <div class="grid-row" data-type="collection" data-mapper-property='{"data":"notes","tpl":"note-tpl"}'>
                     <script type="text/template" id="note-tpl">
                         <div class="grid-col-12 floating">
                             <~ var uid = _.uniqueId('note_') ~>
@@ -223,6 +223,45 @@
                         </div>
                     </script>
                 </div>
+
+                <h2 class="divider"><%=translate('contact.accounts.bank-accounts')%></h2>
+
+                <div class="grid-row" id="bankAccounts" data-type="collection" data-mapper-property='[{"data":"bankAccounts","tpl":"bank-account-tpl","empty-tpl":"bank-account-empty-tpl"}]'>
+                    <script type="text/template" id="bank-account-empty-tpl">
+                        <div class="grid-col-12 floating">
+                            <div class="form-group">
+                                <label>
+                                    <%=translate('contact.accounts.bankAccounts.add.label')%>
+                                </label>
+                                <div class="m-top-5">
+                                    <span class="fa-plus-circle icon clickable pointer bank-account-add"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+
+                    <script type="text/template" id="bank-account-tpl">
+                        <div class="grid-row m-bottom-0 bank-account-component">
+                            <div class="grid-col-12 floating">
+                                <div class="form-group">
+                                    <label><%=translate('contact.accounts.bankAccount.label')%></label>
+
+                                    <div class="bank-account-row clickable pointer">
+                                        <span data-mapper-property="id" data-form="true" class="hidden"></span>
+
+                                        <span data-mapper-property="bankName" data-form="true"></span>
+                                        <span><%=translate('public.bic')%></span>
+                                        <span data-mapper-property="bic" data-form="true"></span>
+                                        <span><%=translate('public.iban')%></span>
+                                        <span data-mapper-property="iban" data-form="true"></span>
+                                        <span class="fa-times icon bank-account-remove"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+
+                </div>
             </div>
         {% endblock %}
 
@@ -230,7 +269,7 @@
 
     {% block tags %}
         <div class="grid">
-            <div class="grid-row small">
+            <div class="grid-row">
                 <h2 class="divider"><%= translate('contact.contacts.assignment') %></h2>
             </div>
             <div class="grid-row form-horizontal changeListener">

@@ -6,6 +6,20 @@
 
 The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).
 
+### Contact
+
+CRM-Components moved to a new bundle. If you enable the new Bundle everything should work as before.
+
+BC-Breaks are:
+
+ * AccountCategory replaced with standard Categories here is a migration needed
+ 
+For a database upgrade you have to do following steps:
+
+* The Account has no `type` anymore. This column has to be removed from `co_accounts` table.
+* The table `co_account_categories` has to be removed manually.
+* `app/console doctrine:schema:update --force`
+
 ### Security
 
 The names of some classes have changed like shown in the following table:

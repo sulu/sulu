@@ -438,4 +438,26 @@ class DoctrineListBuilderTest extends \PHPUnit_Framework_TestCase
 
         $this->doctrineListBuilder->execute();
     }
+
+    public function testBetween()
+    {
+        $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
+
+        $this->doctrineListBuilder->setFields(
+            array(
+                $nameFieldDescriptor,
+            )
+        );
+
+        $this->doctrineListBuilder->between($nameFieldDescriptor, array(0, 1));
+
+        $this->queryBuilder->expects($this->once())->method('andWhere')->with(
+            '(SuluCoreBundle:Example.name BETWEEN :name_alias1 AND :name_alias2)'
+        );
+
+        $this->queryBuilder->expects($this->at(1))->method('setParameter')->with('name_alias1', 0);
+        $this->queryBuilder->expects($this->at(2))->method('setParameter')->with('name_alias2', 1);
+
+        $this->doctrineListBuilder->execute();
+    }
 }

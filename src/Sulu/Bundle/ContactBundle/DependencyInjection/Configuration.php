@@ -42,21 +42,19 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('country')->defaultValue('15')->end()
                     ->end()
                 ->end()
-                ->arrayNode('account_types')
-                    ->useAttributeAsKey('title')
-                    ->prototype('array')
-                        ->addDefaultsIfNotSet()
-                        ->children()
-                            ->scalarNode('id')->end()
-                            ->scalarNode('name')->end()
-                            ->scalarNode('translation')->end()
-                            ->arrayNode('tabs')
-                                ->useAttributeAsKey('name')
-                                ->prototype('scalar')->defaultValue('false')->end()
+                ->arrayNode('form')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('contact')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('category_root')->defaultValue(null)->end()
                             ->end()
-                            ->arrayNode('convertableTo')
-                                ->useAttributeAsKey('name')
-                                ->prototype('scalar')->defaultValue('false')->end()
+                        ->end()
+                        ->arrayNode('account')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('category_root')->defaultValue(null)->end()
                             ->end()
                         ->end()
                     ->end()
@@ -72,12 +70,8 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ;
+            ->end();
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
         return $treeBuilder;
     }
 }

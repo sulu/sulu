@@ -2,10 +2,9 @@
 
 namespace Sulu\Component\Theme;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Webspace\Theme;
 
-class ThemeTest extends ProphecyTestCase
+class ThemeTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {

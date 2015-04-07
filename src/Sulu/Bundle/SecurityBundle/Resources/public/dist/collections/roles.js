@@ -1,0 +1,1 @@
+define(["mvc/collection","sulusecurity/models/role"],function(a,b){"use strict";return a({model:b,url:"/admin/api/roles",parse:function(a){return a._embedded.roles}})});
