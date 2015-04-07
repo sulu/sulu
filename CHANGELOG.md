@@ -3,6 +3,9 @@ CHANGELOG for Sulu
 
 * dev-develop
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
+    * BUGFIX      #976 [MediaBundle]     Fix media scale mode parameter
+    * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
+    * BUGFIX      #973 [All]             Added handling of anonymous user token
     * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
