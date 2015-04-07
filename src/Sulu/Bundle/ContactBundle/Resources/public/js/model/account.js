@@ -17,14 +17,12 @@ define([
     'sulucontact/model/url',
     'sulucontact/model/note',
     'mvc/hasone',
-    'sulucontact/model/accountCategory',
     'sulucontact/model/accountContact',
     'sulucontact/model/bankAccount',
     'sulucontact/model/contact',
-    'sulucontact/model/termsOfDelivery',
-    'sulucontact/model/termsOfPayment',
-    'sulucontact/model/accountMedia'
-], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountCategory, AccountContact, BankAccount, Contact, TermsOfDelivery, TermsOfPayment, Media) {
+    'sulucontact/model/accountMedia',
+    'sulucategory/model/category'
+], function(RelationalModel, HasMany, Account, Email, Phone, Address, Url, Note, HasOne, AccountContact, BankAccount, Contact, Media, Category) {
 
     'use strict';
 
@@ -42,11 +40,9 @@ define([
                 bankAccount: [],
                 urls: [],
                 accountContacts: [],
-                termsOfPayment: null,
-                termsOfDelivery: null,
-                responsiblePerson: null,
                 mainContact: null,
-                medias: []
+                medias: [],
+                categories: []
             };
         }, relations: [
             {
@@ -85,26 +81,6 @@ define([
                 relatedModel: AccountContact
             },
             {
-                type: HasOne,
-                key: 'accountCategory',
-                relatedModel: AccountCategory
-            },
-            {
-                type: HasOne,
-                key: 'termsOfDelivery',
-                relatedModel: TermsOfDelivery
-            },
-            {
-                type: HasOne,
-                key: 'termsOfPayment',
-                relatedModel: TermsOfPayment
-            },
-            {
-                type: HasOne,
-                key: 'responsiblePerson',
-                relatedModel: Contact
-            },
-            {
                 key: 'mainContact',
                 relatedModel: Contact
             },
@@ -112,6 +88,11 @@ define([
                 type: HasMany,
                 key: 'medias',
                 relatedModel: Media
+            },
+            {
+                type: HasMany,
+                key: 'categories',
+                relatedModel: Category
             }
         ]
     });

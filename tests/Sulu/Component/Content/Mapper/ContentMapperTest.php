@@ -2313,6 +2313,59 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('/page-1', $result->url);
     }
 
+    private function prepareCopyLanguageTree()
+    {
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'de', 1);
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'default', 'en', 1);
+
+        $data = array(
+            array(
+                'title' => 'test',
+                'url' => '/test'
+            ),
+            array(
+                'title' => 'childtest',
+                'url' => '/test/childtest'
+            )
+        );
+
+        $data[0] = $this->mapper->save($data[0], 'overview', 'default', 'de', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'default', 'de', 1, true, null, $data[0]->getUuid());
+
+        return $data;
+    }
+
+    public function testCopyLanguageTree()
+    {
+        $data = $this->prepareCopyLanguageTree();
+
+        $this->mapper->copyLanguage($data[0]->getUuid(), 1, 'default', 'de', 'en');
+        $this->mapper->save(
+            array('title' => 'test-en', 'url' => '/test-en'),
+            'overview',
+            'default',
+            'en',
+            1,
+            true,
+            $data[0]->getUuid(),
+            null,
+            null,
+            false
+        );
+
+        $this->session->refresh(false);
+
+        $this->mapper->copyLanguage($data[1]->getUuid(), 1, 'default', 'de', 'en');
+
+        $result = $this->mapper->load($data[0]->getUuid(), 'default', 'en');
+        $this->assertEquals('test-en', $result->getPropertyValue('title'));
+        $this->assertEquals('/test-en', $result->getPropertyValue('url'));
+
+        $result = $this->mapper->load($data[1]->getUuid(), 'default', 'en');
+        $this->assertEquals('childtest', $result->getPropertyValue('title'));
+        $this->assertEquals('/test-en/childtest', $result->getPropertyValue('url'));
+    }
+
     private function checkTreeResult($result)
     {
         // layer 0

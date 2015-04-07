@@ -16,7 +16,7 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
  * Defines the interface for a role
  * @package Sulu\Bundle\SecurityBundle\Entity
  */
-interface RoleInterface extends AuditableInterface
+interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
 {
     /**
      * Set name

@@ -29257,172 +29257,172 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
     
 
     var defaults = {
-        editable: false,
-        fullWidth: false,
-        removeRow: false,
-        selectItem: {
-            type: 'checkbox',
-            inFirstCell: false
+            editable: false,
+            fullWidth: false,
+            removeRow: false,
+            selectItem: {
+                type: 'checkbox',
+                inFirstCell: false
+            },
+            noItemsText: 'This list is empty',
+            addRowTop: true,
+            excludeFields: [''],
+            cssClass: '',
+            thumbnailFormat: '50x50',
+            showHead: true,
+            hideChildrenAtBeginning: true,
+            openChildId: null,
+            highlightSelected: false,
+            stickyHeader: false,
+            icons: [],
+            removeIcon: 'trash-o',
+            croppedMaxLength: 35,
+            openPathToSelectedChildren: false,
+            rowClickSelect: false
         },
-        noItemsText: 'This list is empty',
-        addRowTop: true,
-        excludeFields: [''],
-        cssClass: '',
-        thumbnailFormat: '50x50',
-        showHead: true,
-        hideChildrenAtBeginning: true,
-        openChildId: null,
-        highlightSelected: false,
-        stickyHeader: false,
-        icons: [],
-        removeIcon: 'trash-o',
-        croppedMaxLength: 35,
-        openPathToSelectedChildren: false,
-        rowClickSelect: false
-    },
 
-    constants = {
-        fullWidthClass: 'fullwidth',
-        stickyHeaderClass: 'sticky-header',
-        selectedRowClass: 'selected',
-        isSelectableClass: 'is-selectable',
-        sortableClass: 'is-sortable',
-        skeletonClass: 'husky-table',
-        containerClass: 'table-container',
-        overflowClass: 'overflow',
-        emptyListElementClass: 'empty-list',
-        rowRemoverClass: 'row-remover',
-        checkboxClass: 'checkbox',
-        radioClass: 'radio',
-        cellFitClass: 'fit',
-        tableClass: 'table',
-        rowClass: 'row',
-        thumbSrcKey: 'url',
-        thumbAltKey: 'alt',
-        headerCellClass: 'header-cell',
-        ascSortedClass: 'sorted-asc',
-        descSortedClass: 'sorted-desc',
-        headerCellLoaderClass: 'header-loader',
-        headerLoadingClass: 'is-loading',
-        editableItemClass: 'editable',
-        editableInputClass: 'editable-input',
-        inputWrapperClass: 'input-wrapper',
-        editedErrorClass: 'server-validation-error',
-        newRecordId: 'newrecord',
-        gridIconClass: 'grid-icon',
-        childWrapperClass: 'child-wrapper',
-        parentClass: 'children-toggler',
-        noChildrenClass: 'no-children',
-        toggleIconClass: 'toggle-icon',
-        collapsedIcon: 'fa-caret-right',
-        expandedIcon: 'fa-caret-down',
-        checkboxCellClass: 'checkbox-cell',
-        textContainerClass: 'cell-content',
-        renderingClass: 'rendering',
-        headerCloneClass: 'header-clone',
-        counterIndentClass: 'indent',
-        childIndent: 25 //px
-    },
+        constants = {
+            fullWidthClass: 'fullwidth',
+            stickyHeaderClass: 'sticky-header',
+            selectedRowClass: 'selected',
+            isSelectableClass: 'is-selectable',
+            sortableClass: 'is-sortable',
+            skeletonClass: 'husky-table',
+            containerClass: 'table-container',
+            overflowClass: 'overflow',
+            emptyListElementClass: 'empty-list',
+            rowRemoverClass: 'row-remover',
+            checkboxClass: 'checkbox',
+            radioClass: 'radio',
+            cellFitClass: 'fit',
+            tableClass: 'table',
+            rowClass: 'row',
+            thumbSrcKey: 'url',
+            thumbAltKey: 'alt',
+            headerCellClass: 'header-cell',
+            ascSortedClass: 'sorted-asc',
+            descSortedClass: 'sorted-desc',
+            headerCellLoaderClass: 'header-loader',
+            headerLoadingClass: 'is-loading',
+            editableItemClass: 'editable',
+            editableInputClass: 'editable-input',
+            inputWrapperClass: 'input-wrapper',
+            editedErrorClass: 'server-validation-error',
+            newRecordId: 'newrecord',
+            gridIconClass: 'grid-icon',
+            childWrapperClass: 'child-wrapper',
+            parentClass: 'children-toggler',
+            noChildrenClass: 'no-children',
+            toggleIconClass: 'toggle-icon',
+            collapsedIcon: 'fa-caret-right',
+            expandedIcon: 'fa-caret-down',
+            checkboxCellClass: 'checkbox-cell',
+            textContainerClass: 'cell-content',
+            renderingClass: 'rendering',
+            headerCloneClass: 'header-clone',
+            counterIndentClass: 'indent',
+            childIndent: 25 //px
+        },
 
-    selectItems = {
-        CHECKBOX: 'checkbox',
-        RADIO: 'radio'
-    },
+        selectItems = {
+            CHECKBOX: 'checkbox',
+            RADIO: 'radio'
+        },
 
-    /**
-     * Templates used by this class
-     */
-    templates = {
-        skeleton: [
-            '<div class="'+ constants.skeletonClass +'">',
-            '   <div class="'+ constants.containerClass +'"></div>',
-            '</div>'
-        ].join(''),
-        table: '<table class="'+ constants.tableClass +'"></table>',
-        header: '<thead></thead>',
-        body: '<tbody></tbody>',
-        row: '<tr class="' + constants.rowClass + '"></tr>',
-        headerCell: '<th class="'+ constants.headerCellClass +'"></th>',
-        cell: '<td></td>',
-        textContainer: '<span class="'+ constants.textContainerClass +'"><%= content %></span>',
-        headerCellLoader: '<div class="'+ constants.headerCellLoaderClass +'"></div>',
-        removeCellContent: '<span class="fa-<%= icon %> '+ constants.rowRemoverClass +'"></span>',
-        editableCellContent: [
-            '<span class="'+ constants.editableItemClass +'"><%= value %></span>',
-            '<div class="'+ constants.inputWrapperClass +'">',
-            '   <input type="text" class="form-element husky-validate '+ constants.editableInputClass +'" value="<%= value %>">',
-            '</div>'
-        ].join(''),
-        img: '<img alt="<%= alt %>" src="<%= src %>"/>',
-        childWrapper: '<div class="'+ constants.childWrapperClass +'"></div>',
-        toggleIcon: '<span class="'+ constants.toggleIconClass +'"></span>',
-        icon: [
-            '<span class="'+ constants.gridIconClass +' <%= align %>" data-icon-index="<%= index %>">',
-            '   <span class="fa-<%= icon %>"></span>',
-            '</span>'
-        ].join(''),
-        checkbox: [
-            '<div class="custom-checkbox">',
-            '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
-            '   <span class="icon"></span>',
-            '</div>'
-        ].join(''),
-        radio: [
-            '<div class="custom-radio">',
-            '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
-            '    <span class="icon"></span>',
-            '</div>'
-        ].join(''),
-        empty: [
-            '<div class="'+ constants.emptyListElementClass +'">',
-            '   <div class="fa-coffee icon"></div>',
-            '   <span><%= text %></span>',
-            '</div>'
-        ].join('')
-    },
+        /**
+         * Templates used by this class
+         */
+        templates = {
+            skeleton: [
+                '<div class="' + constants.skeletonClass + '">',
+                '   <div class="' + constants.containerClass + '"></div>',
+                '</div>'
+            ].join(''),
+            table: '<table class="' + constants.tableClass + '"></table>',
+            header: '<thead></thead>',
+            body: '<tbody></tbody>',
+            row: '<tr class="' + constants.rowClass + '"></tr>',
+            headerCell: '<th class="' + constants.headerCellClass + '"></th>',
+            cell: '<td></td>',
+            textContainer: '<span class="' + constants.textContainerClass + '"><%= content %></span>',
+            headerCellLoader: '<div class="' + constants.headerCellLoaderClass + '"></div>',
+            removeCellContent: '<span class="fa-<%= icon %> ' + constants.rowRemoverClass + '"></span>',
+            editableCellContent: [
+                '<span class="' + constants.editableItemClass + '"><%= value %></span>',
+                '<div class="' + constants.inputWrapperClass + '">',
+                '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
+                '</div>'
+            ].join(''),
+            img: '<img alt="<%= alt %>" src="<%= src %>"/>',
+            childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
+            toggleIcon: '<span class="' + constants.toggleIconClass + '"></span>',
+            icon: [
+                '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
+                '   <span class="fa-<%= icon %>"></span>',
+                '</span>'
+            ].join(''),
+            checkbox: [
+                '<div class="custom-checkbox">',
+                '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
+                '   <span class="icon"></span>',
+                '</div>'
+            ].join(''),
+            radio: [
+                '<div class="custom-radio">',
+                '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
+                '    <span class="icon"></span>',
+                '</div>'
+            ].join(''),
+            empty: [
+                '<div class="' + constants.emptyListElementClass + '">',
+                '   <div class="fa-coffee icon"></div>',
+                '   <span><%= text %></span>',
+                '</div>'
+            ].join('')
+        },
 
-    /**
-     * used to update the table width and its containers due to responsiveness
-     * @event husky.datagrid.update.table
-     */
-    UPDATE_TABLE = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'update.table');
-    },
+        /**
+         * used to update the table width and its containers due to responsiveness
+         * @event husky.datagrid.update.table
+         */
+        UPDATE_TABLE = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'update.table');
+        },
 
-    /**
-     * used to update the table width and its containers due to responsiveness
-     * @event husky.datagrid.table.open-child
-     * @param {Number|String} id The id of the data-record to open the parents for
-     */
-    OPEN_PARENTS = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
-    },
+        /**
+         * used to update the table width and its containers due to responsiveness
+         * @event husky.datagrid.table.open-child
+         * @param {Number|String} id The id of the data-record to open the parents for
+         */
+        OPEN_PARENTS = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
+        },
 
-    /**
-     * triggered when a radio button inside the datagrid is clicked
-     * @event husky.datagrid.table.open-child
-     * @param {Number|String} id The id of the data-record to open the parents for
-     * @param {String} columnName column name
-     */
-    RADIO_SELECTED = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
-    },
+        /**
+         * triggered when a radio button inside the datagrid is clicked
+         * @event husky.datagrid.table.open-child
+         * @param {Number|String} id The id of the data-record to open the parents for
+         * @param {String} columnName column name
+         */
+        RADIO_SELECTED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
+        },
 
-    /**
-     * triggered when children were collapsed
-     * @event husky.datagrid.table.children.collapsed
-     */
-    CHILDREN_COLLAPSED = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
-    },
+        /**
+         * triggered when children were collapsed
+         * @event husky.datagrid.table.children.collapsed
+         */
+        CHILDREN_COLLAPSED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
+        },
 
-    /**
-     * triggered when children were expanded
-     * @event husky.datagrid.table.children.expanded
-     */
-    CHILDREN_EXPANDED = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
-    };
+        /**
+         * triggered when children were expanded
+         * @event husky.datagrid.table.children.expanded
+         */
+        CHILDREN_EXPANDED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
+        };
 
     return {
 
@@ -29456,10 +29456,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
 
-            if(!!this.options.openPathToSelectedChildren){
+            if (!!this.options.openPathToSelectedChildren) {
                 var eventName = '';
-                if(!!this.datagrid.options.instanceName) {
-                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
+                if (!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.' + this.datagrid.options.instanceName + '.view.rendered';
                 } else {
                     eventName = 'husky.datagrid.view.rendered';
                 }
@@ -29470,8 +29470,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Opens path to all selected children
          */
-        openPathToSelectedChildren: function(){
-            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
+        openPathToSelectedChildren: function() {
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id) {
                 this.openParents(id);
             }.bind(this));
         },
@@ -29541,7 +29541,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a row to the datagrid
          * @param record {Object} the new record to add
          */
-        addRecord: function (record) {
+        addRecord: function(record) {
             this.removeEmptyIndicator();
             this.renderBodyRow(record, this.options.addRowTop);
         },
@@ -29597,7 +29597,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Adds css classes to the view element
          */
-        addViewClasses: function () {
+        addViewClasses: function() {
             this.sandbox.dom.addClass(this.$el, this.options.cssClass);
             this.sandbox.dom.addClass(this.$el, constants.renderingClass);
             if (this.options.stickyHeader === true) {
@@ -29716,7 +29716,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Renderes an empty remove-row cell into the header
          */
-        renderHeaderRemoveItem: function () {
+        renderHeaderRemoveItem: function() {
             if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
@@ -29778,13 +29778,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             if (!this.table.rows[record.id]) {
                 var $row = this.sandbox.dom.createElement(templates.row),
-                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
+                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null,
+                    hasParent = this.hasParent(record);
 
                 record.id = (!!record.id) ? record.id : constants.newRecordId;
                 this.sandbox.dom.data($row, 'id', record.id);
 
                 // render the parents before rendering the children
-                if (!!record.parent) {
+                if (hasParent) {
                     if (!this.table.rows[record.parent]) {
                         this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
                     }
@@ -29796,7 +29797,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     cells: {},
                     childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
                     childrenExpanded: false,
-                    parent: !!(record.parent) ? record.parent : null,
+                    parent: hasParent ? record.parent : null,
                     hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
                     level: 1
                 };
@@ -29872,7 +29873,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Renders the remove item for a row in the tbody
          * @param id {Number|String} the id of the row to add the select-item for
          */
-        renderRowRemoveItem: function (id) {
+        renderRowRemoveItem: function(id) {
             if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.html($cell, this.sandbox.util.template(templates.removeCellContent)({
@@ -29943,8 +29944,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!column.type && column.type === this.datagrid.types.THUMBNAILS) {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
-                   alt: content[constants.thumbAltKey],
-                   src: content[constants.thumbSrcKey]
+                    alt: content[constants.thumbAltKey],
+                    src: content[constants.thumbSrcKey]
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -29986,7 +29987,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.sandbox.dom.addClass($wrappedContent, constants.noChildrenClass);
             }
             // if has parent
-            if (!!record.parent) {
+            if (this.hasParent(record)) {
                 this.table.rows[record.id].level = this.table.rows[record.parent].level + 1;
                 // give that child an indent, children love indents
                 this.sandbox.dom.css($wrappedContent, {
@@ -29995,6 +29996,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
             this.sandbox.dom.append($wrappedContent, content);
             return $wrappedContent;
+        },
+
+        hasParent: function(record) {
+            return (!!record.parent && !!this.data.embedded[this.datagrid.getRecordIndexById(record.parent)]);
         },
 
         /**
@@ -30020,9 +30025,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.util.foreach(this.options.icons, function(icon, index) {
                 if (icon.column === column.attribute) {
                     iconStr = this.sandbox.util.template(templates.icon)({
-                       icon: icon.icon,
-                       align: icon.align,
-                       index: index
+                        icon: icon.icon,
+                        align: icon.align,
+                        index: index
                     });
                     if (typeof content === 'object') {
                         this.sandbox.dom.append(content, iconStr);
@@ -30127,7 +30132,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Bindes dom related events
          */
-        bindDomEvents: function () {
+        bindDomEvents: function() {
             // select or deselect items if the body recognizes a change event
             this.sandbox.dom.on(
                 this.table.$body, 'click', this.selectItemChangeHandler.bind(this),
@@ -30177,7 +30182,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 var cloneThs = this.sandbox.dom.find('th', this.table.header.$clone),
                     originalThs = this.sandbox.dom.find('th', this.table.header.$el);
                 this.sandbox.dom.width(this.table.header.$row, this.sandbox.dom.width(
-                   this.sandbox.dom.find('tr', this.table.header.$clone)
+                    this.sandbox.dom.find('tr', this.table.header.$clone)
                 ));
                 this.sandbox.util.foreach(cloneThs, function(cloneTh, index) {
                     // min- and max-width because for table-cells normal width has no effect
@@ -30291,7 +30296,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the focusout of an editable input
          * @param event {Object} the event object
          */
-        editableInputFocusoutHandler: function (event) {
+        editableInputFocusoutHandler: function(event) {
             if (!!this.isFocusoutHandlerEnabled) {
                 this.sandbox.dom.stopPropagation(event);
                 var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
@@ -30306,7 +30311,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         editRow: function(recordId) {
             var modifiedRecord = {};
             // build new record object out of the inputs in the row
-            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
                 if (!!this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el).length) {
                     modifiedRecord[attribute] = this.sandbox.dom.val(
                         this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el)
@@ -30320,7 +30325,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Clears everything up after a row was edited. (hides the input and updates the values)
          * @param record {Object} the changed data record
          */
-        editedSuccessCallback: function (record) {
+        editedSuccessCallback: function(record) {
             var $row;
             if (!!record.id && !!this.table.rows[record.id]) {
                 $row = this.table.rows[record.id].$el;
@@ -30337,7 +30342,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a css class to all inputs in a row, if the editing request returned with an error
          * @param recordId
          */
-        editedErrorCallback: function (recordId) {
+        editedErrorCallback: function(recordId) {
             var $row = this.table.rows[recordId].$el;
             this.sandbox.dom.addClass(
                 this.sandbox.dom.find('.' + constants.inputWrapperClass, $row),
@@ -30352,10 +30357,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param successCallback {Function} gets executed after success
          * @param errorCallback {Function} gets executed after error
          */
-        saveRow: function (recordId, newRecordData, successCallback, errorCallback) {
+        saveRow: function(recordId, newRecordData, successCallback, errorCallback) {
             var hasChanged = false,
                 record;
-            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
                 if (cell.editable === true && cell.originalData !== newRecordData[attribute]) {
                     hasChanged = true;
                 }
@@ -30401,7 +30406,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the click on a body row
          * @param event {Object} the event object
          */
-        bodyRowClickHandler: function (event) {
+        bodyRowClickHandler: function(event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
@@ -30419,14 +30424,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Emits the row clicked event
          * @param event {Object} the original click event
          */
-        emitRowClickedEvent: function (event) {
+        emitRowClickedEvent: function(event) {
             if (this.rowClicked === false) {
                 this.rowClicked = true;
                 var recordId = this.sandbox.dom.data(event.currentTarget, 'id'),
                     parameter = recordId || event;
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, parameter);
                 // delay to prevent multiple emits on double click
-                this.sandbox.util.delay(function () {
+                this.sandbox.util.delay(function() {
                     this.rowClicked = false;
                 }.bind(this), 500);
             }
@@ -30446,7 +30451,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of the select items
          * @param event {Object} the event object
          */
-        selectItemChangeHandler: function (event) {
+        selectItemChangeHandler: function(event) {
             if (!!event.type) {
                 this.sandbox.dom.stopPropagation(event);
             }
@@ -30463,7 +30468,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the click on a body row if the options rowClickSelect is set to true
          * @param event
          */
-        bodyRowSelectHandler: function (event) {
+        bodyRowSelectHandler: function(event) {
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             if (this.options.selectItem.type === selectItems.CHECKBOX) {
                 this.toggleSelectRecord(recordId, !this.datagrid.itemIsSelected(recordId));
@@ -30476,7 +30481,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of a select item in the header
          * @param event {Object} the event object
          */
-        allSelectItemChangeHandler: function (event) {
+        allSelectItemChangeHandler: function(event) {
             this.sandbox.dom.stopPropagation(event);
             var isChecked = this.sandbox.dom.is(event.target, ':checked');
             if (isChecked === true) {
@@ -30490,7 +30495,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Highlights a record an unhighlights all other rows
          * @param id {Number|String} the id of the record to highlight
          */
-        uniqueHighlightRecord: function (id) {
+        uniqueHighlightRecord: function(id) {
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
                 constants.selectedRowClass
@@ -30501,7 +30506,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Selejcts all records
          */
-        selectAllRecords: function () {
+        selectAllRecords: function() {
             this.datagrid.selectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', true);
         },
@@ -30509,7 +30514,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Deselects all records
          */
-        deselectAllRecords: function () {
+        deselectAllRecords: function() {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', false);
         },
@@ -30519,7 +30524,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record to select or deselect
          * @param select {Boolean} true to select false to deselect
          */
-        toggleSelectRecord: function (id, select) {
+        toggleSelectRecord: function(id, select) {
             var areAllSelected;
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
@@ -30545,7 +30550,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects or deselects the select all item
          * @param select {Boolean} true to select false to deselect the select all item
          */
-        toggleSelectAllItem: function (select) {
+        toggleSelectAllItem: function(select) {
             if (!!this.table.header) {
                 this.sandbox.dom.prop(
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.header.$el), 'checked', select
@@ -30557,7 +30562,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects a record and deselects all other records
          * @param id {Number|String} the id of the record to select
          */
-        uniqueSelectRecord: function (id) {
+        uniqueSelectRecord: function(id) {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.datagrid.setItemSelected.call(this.datagrid, id);
         },
@@ -30660,7 +30665,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }
             }
         }
-     };
+    };
 });
 
 /**

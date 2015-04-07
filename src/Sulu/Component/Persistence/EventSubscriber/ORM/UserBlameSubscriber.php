@@ -75,7 +75,7 @@ class UserBlameSubscriber implements EventSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
-        if ($reflection->implementsInterface('Sulu\Component\Persistence\Model\UserBlameInterface')) {
+        if ($reflection !== null && $reflection->implementsInterface('Sulu\Component\Persistence\Model\UserBlameInterface')) {
             if (!$metadata->hasAssociation(self::CREATOR_FIELD)) {
                 $metadata->mapManyToOne(array(
                     'fieldName' => self::CREATOR_FIELD,

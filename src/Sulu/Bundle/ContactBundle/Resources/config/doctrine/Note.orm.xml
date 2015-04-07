@@ -8,6 +8,6 @@
         </id>
         <field name="value" type="text" column="value"/>
         <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="notes"/>
-        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="notes"/>
+        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="notes"/>
     </entity>
 </doctrine-mapping>
