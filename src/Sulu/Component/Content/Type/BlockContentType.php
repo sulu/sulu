@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types;
+namespace Sulu\Component\Content\Type;
 
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
@@ -18,8 +18,8 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Types\Block\BlockPropertyInterface;
-use Sulu\Component\Content\Types\Block\BlockPropertyWrapper;
+use Sulu\Component\Content\Type\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Type\Block\BlockPropertyWrapper;
 
 /**
  * content type for block

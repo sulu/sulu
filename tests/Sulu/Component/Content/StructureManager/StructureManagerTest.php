@@ -12,8 +12,8 @@ namespace Sulu\Component\Content\StructureManager;
 
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Content\Types\Block\BlockProperty;
-use Sulu\Component\Content\Types\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Type\Block\BlockProperty;
+use Sulu\Component\Content\Type\Block\BlockPropertyInterface;
 use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\LocationBundle\Content\Types;
+namespace Sulu\Bundle\LocationBundle\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;

@@ -15,8 +15,8 @@ use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
-use Sulu\Component\Content\Types\Block\BlockProperty;
-use Sulu\Component\Content\Types\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Type\Block\BlockProperty;
+use Sulu\Component\Content\Type\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Type;
@@ -31,7 +31,7 @@ use JMS\Serializer\Annotation\HandlerCallback;
  *     field = "propertyType",
  *     map = {
  *         "property": "Sulu\Component\Content\Property",
- *         "block": "Sulu\Component\Content\Types\Block\BlockProperty",
+ *         "block": "Sulu\Component\Content\Type\Block\BlockProperty",
  *         "section": "Sulu\Component\Content\Section\SectionProperty"
  *     }
  * )

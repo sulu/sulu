@@ -8,17 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types;
+namespace Sulu\Component\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Types\TextArea;
-use Sulu\Component\Content\Types\TextLine;
-use Sulu\Component\Content\Types\Block\BlockProperty;
-use Sulu\Component\Content\Types\Block\BlockPropertyType;
+use Sulu\Component\Content\Type\TextArea;
+use Sulu\Component\Content\Type\TextLine;
+use Sulu\Component\Content\Type\Block\BlockProperty;
+use Sulu\Component\Content\Type\Block\BlockPropertyType;
 
 class BlockContentTypeTest extends \PHPUnit_Framework_TestCase
 {

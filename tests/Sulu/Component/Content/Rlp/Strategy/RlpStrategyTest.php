@@ -12,8 +12,8 @@ namespace Sulu\Component\Content\Rlp\Strategy;
 
 use Jackalope\Node;
 use ReflectionClass;
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy;
+use Sulu\Component\Content\Type\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\Content\Type\Rlp\Strategy\RlpStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\Util\SuluNodeHelper;
 
@@ -37,7 +37,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     /**
      * @var string
      */
-    private $className = 'Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategy';
+    private $className = 'Sulu\Component\Content\Type\Rlp\Strategy\RlpStrategy';
 
     /**
      * @var bool
@@ -52,7 +52,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->mapper = $this->getMock(
-            'Sulu\Component\Content\Types\Rlp\Mapper\RlpMapper',
+            'Sulu\Component\Content\Type\Rlp\Mapper\RlpMapper',
             array(),
             array('test-mapper'),
             'TestMapper'

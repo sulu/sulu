@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Content\Type;
 
 use Sulu\Component\Content\SimpleContentType;
 

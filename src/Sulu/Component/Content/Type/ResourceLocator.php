@@ -8,18 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types;
+namespace Sulu\Component\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RLPStrategyInterface;
+use Sulu\Component\Content\Type\Rlp\Strategy\RLPStrategyInterface;
 
 /**
  * Class ResourceLocator
- * @package Sulu\Component\Content\Types
+ * @package Sulu\Component\Content\Type
  */
 class ResourceLocator extends ComplexContentType implements ResourceLocatorInterface
 {

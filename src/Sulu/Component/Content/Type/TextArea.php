@@ -8,20 +8,20 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types;
+namespace Sulu\Component\Content\Type;
 
 use Sulu\Component\Content\SimpleContentType;
 
 /**
- * ContentType for TextLine
+ * ContentType for TextArea
  */
-class TextLine extends SimpleContentType
+class TextArea extends SimpleContentType
 {
     private $template;
 
     public function __construct($template)
     {
-        parent::__construct('TextLine', '');
+        parent::__construct('TextArea', '');
 
         $this->template = $template;
     }

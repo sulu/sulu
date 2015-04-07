@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Strategy;
+namespace Sulu\Component\Content\Type\Rlp\Strategy;
 
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\Content\Type\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
+namespace Sulu\Bundle\ContentBundle\Content\Type\SmartContent;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;

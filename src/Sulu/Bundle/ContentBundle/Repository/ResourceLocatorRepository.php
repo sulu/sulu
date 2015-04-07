@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Type\ResourceLocatorInterface;
+use Sulu\Component\Content\Type\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Type\Rlp\Strategy\RlpStrategyInterface;
 
 /**
  * resource locator repository

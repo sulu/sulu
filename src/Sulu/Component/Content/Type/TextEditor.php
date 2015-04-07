@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types;
+namespace Sulu\Component\Content\Type;
 
 use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\SimpleContentType;

@@ -8,15 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types;
+namespace Sulu\Component\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Type\Rlp\Strategy\RlpStrategyInterface;
 
 /**
  * interface for resource locator information
- * @package Sulu\Component\Content\Types
+ * @package Sulu\Component\Content\Type
  */
 interface ResourceLocatorInterface extends ContentTypeInterface
 {

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Mapper;
+namespace Sulu\Component\Content\Type\Rlp\Mapper;
 
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
@@ -18,7 +18,7 @@ use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Type\Rlp\ResourceLocatorInformation;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use DateTime;
 

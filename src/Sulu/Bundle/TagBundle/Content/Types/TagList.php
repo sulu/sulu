@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\TagBundle\Content\Types;
+namespace Sulu\Bundle\TagBundle\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
@@ -18,7 +18,7 @@ use Sulu\Component\Content\PropertyInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky
- * @package Sulu\Bundle\TagBundle\Content\Types
+ * @package Sulu\Bundle\TagBundle\Content\Type
  */
 class TagList extends ComplexContentType
 {

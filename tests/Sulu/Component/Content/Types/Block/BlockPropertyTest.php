@@ -1,8 +1,8 @@
 <?php
 
-namespace vendor\sulu\sulu\tests\Sulu\Component\Content\Types\Block;
+namespace vendor\sulu\sulu\tests\Sulu\Component\Content\Type\Block;
 
-use Sulu\Component\Content\Types\Block\BlockProperty;
+use Sulu\Component\Content\Type\Block\BlockProperty;
 
 class BlockPropertyTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,9 +21,9 @@ class BlockPropertyTest extends \PHPUnit_Framework_TestCase
             $col = null
         );
 
-        $this->type1 = $this->getMockBuilder('Sulu\Component\Content\Types\Block\BlockPropertyType')->disableOriginalConstructor()->getMock();
+        $this->type1 = $this->getMockBuilder('Sulu\Component\Content\Type\Block\BlockPropertyType')->disableOriginalConstructor()->getMock();
         $this->type1->expects($this->any())->method('getName')->will($this->returnValue('type1'));
-        $this->type2 = $this->getMockBuilder('Sulu\Component\Content\Types\Block\BlockPropertyType')->disableOriginalConstructor()->getMock();
+        $this->type2 = $this->getMockBuilder('Sulu\Component\Content\Type\Block\BlockPropertyType')->disableOriginalConstructor()->getMock();
         $this->type2->expects($this->any())->method('getName')->will($this->returnValue('type2'));
 
         $this->property->addType($this->type1);

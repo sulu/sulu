@@ -16,14 +16,14 @@
         <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
-        <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Types\TextLine</parameter>
-        <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Types\TextArea</parameter>
-        <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Types\TextEditor</parameter>
-        <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Types\ResourceLocator</parameter>
-        <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Types\BlockContentType</parameter>
+        <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Type\TextLine</parameter>
+        <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Type\TextArea</parameter>
+        <parameter key="sulu.content.type.text_editor.class">Sulu\Component\Content\Type\TextEditor</parameter>
+        <parameter key="sulu.content.type.resource_locator.class">Sulu\Component\Content\Type\ResourceLocator</parameter>
+        <parameter key="sulu.content.type.block.class">Sulu\Component\Content\Type\BlockContentType</parameter>
 
-        <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper</parameter>
-        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy</parameter>
+        <parameter key="sulu.content.rlp.mapper.phpcr.class">Sulu\Component\Content\Type\Rlp\Mapper\PhpcrMapper</parameter>
+        <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Type\Rlp\Strategy\TreeStrategy</parameter>
 
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
 

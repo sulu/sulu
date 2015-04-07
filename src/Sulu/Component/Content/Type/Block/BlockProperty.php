@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Block;
+namespace Sulu\Component\Content\Type\Block;
 
 use JMS\Serializer\Annotation\Discriminator;
 use JMS\Serializer\Annotation\HandlerCallback;

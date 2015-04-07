@@ -12,8 +12,8 @@ namespace Sulu\Bundle\CoreBundle\Command;
 
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
-use Sulu\Component\Content\Types\Block\BlockPropertyInterface;
-use Sulu\Component\Content\Types\Block\BlockPropertyWrapper;
+use Sulu\Component\Content\Type\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Type\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;

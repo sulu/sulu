@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Content\Type;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
@@ -24,7 +24,7 @@ use Sulu\Component\Util\ArrayableInterface;
 
 /**
  * content type for internal links selection
- * @package Sulu\Bundle\ContentBundle\Content\Types
+ * @package Sulu\Bundle\ContentBundle\Content\Type
  */
 class InternalLinks extends ComplexContentType
 {

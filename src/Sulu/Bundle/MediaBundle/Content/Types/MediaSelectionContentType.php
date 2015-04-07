@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Content\Types;
+namespace Sulu\Bundle\MediaBundle\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;

@@ -14,11 +14,11 @@ use Doctrine\ORM\EntityManager;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Property;
-use Sulu\Component\Content\Types\ResourceLocator;
-use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
-use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\TreeStrategy;
+use Sulu\Component\Content\Type\ResourceLocator;
+use Sulu\Component\Content\Type\Rlp\Mapper\PhpcrMapper;
+use Sulu\Component\Content\Type\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Component\Content\Type\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Type\Rlp\Strategy\TreeStrategy;
 use Sulu\Component\PHPCR\PathCleanup;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 

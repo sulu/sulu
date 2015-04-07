@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type;
 
 use PHPUnit_Framework_TestCase;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
@@ -21,7 +21,7 @@ interface NodeInterface extends \PHPCR\NodeInterface, \Iterator
 class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType
+     * @var \Sulu\Bundle\MediaBundle\Content\Type\MediaSelectionContentType
      */
     private $mediaSelection;
 
@@ -34,7 +34,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     {
         $this->mediaManager = $this->getMock('\Sulu\Bundle\MeediaBundle\Media\Manager\MediaManagerInterface');
 
-        $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType(
+        $this->mediaSelection = new \Sulu\Bundle\MediaBundle\Content\Type\MediaSelectionContentType(
             $this->mediaManager,'SuluMediaBundle:Template:image-selection.html.twig'
         );
     }
@@ -47,7 +47,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     public function testWrite()
     {
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -102,7 +102,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     public function testWriteWithPassedContainer()
     {
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -160,7 +160,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -211,7 +211,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
     {
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -273,7 +273,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -324,7 +324,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -385,7 +385,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -436,7 +436,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         $config = '{"config":{"conf1": 1, "conf2": 2}, "displayOption": "right", "ids": [1,2,3,4]}';
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\MediaBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,

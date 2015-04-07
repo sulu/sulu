@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Content\Types;
+namespace Sulu\Bundle\CategoryBundle\Content\Type;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -18,7 +18,7 @@ use Sulu\Component\Content\PropertyInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky
- * @package Sulu\Bundle\CategoryBundle\Content\Types
+ * @package Sulu\Bundle\CategoryBundle\Content\Type
  */
 class CategoryList extends ComplexContentType
 {

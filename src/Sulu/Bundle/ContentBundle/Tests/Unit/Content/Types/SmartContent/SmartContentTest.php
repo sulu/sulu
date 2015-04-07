@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type;
 
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
-use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContent;
+use Sulu\Bundle\ContentBundle\Content\Type\SmartContent\SmartContent;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -119,7 +119,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testWrite()
     {
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -173,7 +173,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
     public function testWriteWithPassedContainer()
     {
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -248,7 +248,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,
@@ -304,7 +304,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
         );
 
         $node = $this->getMockForAbstractClass(
-            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\NodeInterface',
+            'Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\NodeInterface',
             array(),
             '',
             true,

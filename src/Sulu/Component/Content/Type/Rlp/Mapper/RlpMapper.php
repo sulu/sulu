@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Types\Rlp\Mapper;
+namespace Sulu\Component\Content\Type\Rlp\Mapper;
 
 /**
  * base class for Resource Locator Path Mapper
