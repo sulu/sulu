@@ -29,9 +29,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function findCollectionById($id)
     {
         $dql = sprintf(
-            'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionChildren
+            'SELECT n, collectionMeta, defaultMeta, collectionType, collectionParent, parentMeta, collectionChildren
                  FROM %s AS n
                         LEFT JOIN n.meta AS collectionMeta
+                        LEFT JOIN n.defaultMeta AS defaultMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
                         LEFT JOIN n.children AS collectionChildren
@@ -60,9 +61,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $dql = sprintf(
-                'SELECT n, collectionMeta, collectionType, collectionParent, parentMeta, collectionChildren
+                'SELECT n, collectionMeta, defaultMeta, collectionType, collectionParent, parentMeta, collectionChildren
                  FROM %s AS n
-                        LEFT JOIN n.meta AS collectionMeta
+                        LEFT OUTER JOIN n.meta AS collectionMeta
+                        LEFT JOIN n.defaultMeta AS defaultMeta
                         LEFT JOIN n.type AS collectionType
                         LEFT JOIN n.parent AS collectionParent
                         LEFT JOIN n.children AS collectionChildren
@@ -80,7 +82,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             if (array_key_exists('locale', $filter)) {
-                $dql .= ' AND collectionMeta.locale = :locale';
+                $dql .= ' AND (collectionMeta.locale = :locale OR defaultMeta != :locale)';
             }
 
             if ($sortBy !== null && is_array($sortBy) && sizeof($sortBy) > 0) {
@@ -120,6 +122,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
             return new Paginator($query);
         } catch (NoResultException $ex) {
             return array();
@@ -140,6 +143,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         try {
             $qb = $this->createQueryBuilder('collection')
                 ->leftJoin('collection.meta', 'collectionMeta')
+                ->leftJoin('collection.defaultMeta', 'defaultMeta')
                 ->leftJoin('collection.type', 'type')
                 ->leftJoin('collection.parent', 'parent')
                 ->leftJoin('collection.children', 'children')
@@ -150,6 +154,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 ->leftJoin('changer.contact', 'changerContact')
                 */
                 ->addSelect('collectionMeta')
+                ->addSelect('defaultMeta')
                 ->addSelect('type')
                 ->addSelect('parent')
                 ->addSelect('children');
@@ -194,6 +199,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             }
 
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
             return new Paginator($query);
         } catch (NoResultException $ex) {
             return null;
@@ -207,10 +213,11 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     {
         try {
             $sql = sprintf(
-                'SELECT n, collectionMeta
+                'SELECT n, collectionMeta, defaultMeta
                  FROM %s AS p,
                       %s AS n
                         LEFT JOIN n.meta AS collectionMeta
+                        LEFT JOIN n.defaultMeta AS defaultMeta
                  WHERE p.id = :id AND p.lft > n.lft AND p.rgt < n.rgt
                  ORDER BY n.lft',
                 $this->_entityName,
@@ -220,8 +227,8 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $query = new Query($this->_em);
             $query->setDQL($sql);
             $query->setParameter('id', $id);
-
             $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
             return $query->getResult();
         } catch (NoResultException $ex) {
             return array();

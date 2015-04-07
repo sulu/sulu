@@ -11,6 +11,15 @@ know you have only added collections in only one language you can use following 
 UPDATE `me_collection_meta` SET `locale` = 'de';
 ``
 
+Due to this it is possible that one collection has multiple metadata for one language. You have to remove this
+duplicates by hand. For example one collection should have only one meta for the language `de`.
+
+The collection has now a specific field to indicate which meta is default. For this run following command.
+
+```bash
+app/console sulu:upgrade:0.17.0:collections
+```
+
 ### Media API Object
 
 The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).

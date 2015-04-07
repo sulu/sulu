@@ -464,15 +464,13 @@ class Collection extends ApiWrapper
                 $this->entity->addMeta($meta);
 
                 return $meta;
-            } elseif (!$metaCollection->isEmpty()) {
-                // return first when create false
-                return $metaCollection->first();
             }
-        } else {
-            // return exists
-            return $metaCollectionFiltered->first();
+
+            // return first when create false
+            return $this->entity->getDefaultMeta();
         }
 
-        return null;
+        // return exists
+        return $metaCollectionFiltered->first();
     }
 }
