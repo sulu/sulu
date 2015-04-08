@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
+namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Type\InternalLink;
 
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;

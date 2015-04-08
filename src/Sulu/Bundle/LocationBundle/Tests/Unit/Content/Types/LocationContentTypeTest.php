@@ -1,8 +1,8 @@
 <?php
 
-namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Types;
+namespace Sulu\Bundle\LocationBundle\Tests\Unit\Content\Type;
 
-use Sulu\Bundle\LocationBundle\Content\Types\LocationContentType;
+use Sulu\Bundle\LocationBundle\Content\Type\LocationContentType;
 use Sulu\Component\Content\PropertyParameter;
 
 class LocationContentTypeTest extends \PHPUnit_Framework_TestCase

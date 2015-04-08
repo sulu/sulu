@@ -21,11 +21,10 @@ use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\RepositoryException;
 use Sulu\Component\Content\BreadcrumbItem;
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\Content\Event\ContentNodeEvent;
-use Sulu\Component\Content\Event\ContentNodeOrderEvent;
+use Sulu\Component\Content\Type\ContentTypeInterface;
+use Sulu\Component\Content\Type\ContentTypeManager;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent;
 use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
@@ -45,8 +44,8 @@ use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
-use Sulu\Component\Content\Types\ResourceLocatorInterface;
-use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Type\Core\ResourceLocatorInterface;
+use Sulu\Component\Content\Type\Core\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\NodeHelper;
@@ -56,7 +55,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Util\SuluNodeHelper;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes

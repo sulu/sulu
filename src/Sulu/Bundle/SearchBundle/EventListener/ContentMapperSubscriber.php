@@ -11,12 +11,12 @@
 namespace Sulu\Bundle\SearchBundle\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
-use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Mapper\ContentEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 
 /**
  * Listen to sulu node save event and index the structure
