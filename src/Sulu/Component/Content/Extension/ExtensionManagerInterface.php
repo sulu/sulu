@@ -15,7 +15,7 @@ interface ExtensionManagerInterface
     /**
      * Returns extensions for structure
      * @param string $key
-     * @return StructureExtensionInterface[]
+     * @return ExtensionInterface[]
      */
     public function getExtensions($key);
 
@@ -31,7 +31,7 @@ interface ExtensionManagerInterface
      * Returns a extension
      * @param string $key
      * @param string $name
-     * @return StructureExtensionInterface
+     * @return ExtensionInterface
      */
     public function getExtension($key, $name);
 }

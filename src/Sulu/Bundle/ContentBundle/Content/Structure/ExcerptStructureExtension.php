@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -23,7 +23,7 @@ use Sulu\Component\Util\ArrayableInterface;
  * extends structure with seo content
  * @package Sulu\Bundle\ContentBundle\Content\Structure
  */
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension

@@ -20,7 +20,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
@@ -448,7 +448,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
     }
 }
 
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension

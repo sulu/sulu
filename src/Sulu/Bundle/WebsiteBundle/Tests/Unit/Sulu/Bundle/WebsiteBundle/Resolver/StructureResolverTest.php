@@ -50,7 +50,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\StructureExtension\StructureExtension');
+        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\AbstractExtension');
         $excerptExtension->getContentData(array('test1' => 'test1'))->willReturn(array('test1' => 'test1'));
         $this->structureFactory->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 

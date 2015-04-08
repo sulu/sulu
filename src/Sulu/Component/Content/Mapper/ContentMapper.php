@@ -38,7 +38,7 @@ use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\StructureType;

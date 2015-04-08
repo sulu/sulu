@@ -23,8 +23,8 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
@@ -38,7 +38,7 @@ use Sulu\Component\Webspace\Webspace;
 class ContentMapperTest extends PhpcrTestCase
 {
     /**
-     * @var StructureExtensionInterface[]
+     * @var ExtensionInterface[]
      */
     private $extensions = array();
 
@@ -3675,7 +3675,7 @@ class ContentMapperTest extends PhpcrTestCase
     }
 }
 
-class TestExtension extends StructureExtension
+class TestExtension extends AbstractExtension
 {
     protected $properties = array(
         'a',

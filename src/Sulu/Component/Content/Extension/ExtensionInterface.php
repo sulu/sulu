@@ -16,7 +16,7 @@ use PHPCR\NodeInterface;
  * interface for structure extension
  * @package Sulu\Component\Content\Mapper
  */
-interface StructureExtensionInterface
+interface ExtensionInterface
 {
 
     /**
