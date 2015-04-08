@@ -11,6 +11,8 @@
 namespace Sulu\Component\DocumentManager;
 
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
+use ProxyManager\Proxy\LazyLoadingInterface;
+use ProxyManager\Inflector\ClassNameInflector;
 
 class DocumentAccessor
 {
@@ -20,7 +22,13 @@ class DocumentAccessor
     public function __construct($document)
     {
         $this->document = $document;
-        $this->reflection = new \ReflectionClass($document);
+        $documentClass = get_class($document);
+
+        if ($document instanceof LazyLoadingInterface) {
+            $documentClass = $this->getUserClassName($documentClass);
+        }
+        
+        $this->reflection = new \ReflectionClass($documentClass);
     }
 
     public function set($field, $value)
@@ -31,6 +39,7 @@ class DocumentAccessor
                 get_class($this->document), $field
             ));
         }
+
         $property = $this->reflection->getProperty($field);
         $property->setAccessible(true);
         $property->setValue($this->document, $value);
@@ -39,5 +48,28 @@ class DocumentAccessor
     public function has($field)
     {
         return $this->reflection->hasProperty($field);
+    }
+
+    /**
+     * Copy paste from ProxyManager library
+     *
+     * TODO: Make this class a service and inject the ClassNameInflector
+     */
+    private function getUserClassName($className)
+    {
+        $proxyMarker = '\\' . ClassNameInflector::PROXY_MARKER . '\\';
+        $proxyMarkerLength = strlen($proxyMarker);
+
+        $className = ltrim($className, '\\');
+
+        if (false === $position = strrpos($className, $proxyMarker)) {
+            return $className;
+        }
+
+        return substr(
+            $className,
+            $proxyMarkerLength + $position,
+            strrpos($className, '\\') - ($position + $proxyMarkerLength)
+        );
     }
 }

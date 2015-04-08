@@ -45,6 +45,10 @@ class DocumentManagerTest extends SuluTestCase
         $this->assertInstanceOf(PageDocument::class, $document);
         $parent = $document->getParent();
         $this->assertInstanceOf(UnknownDocument::class, $parent);
+        $this->assertEquals('sulu_io', $parent->getNodeName());
+
+        $parent = $parent->getParent();
+        $this->assertEquals('cmf', $parent->getNodeName());
     }
 
 
