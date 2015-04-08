@@ -24491,18 +24491,6 @@ var UriTemplate = (function () {
 })(window.jQuery);
 define("typeahead", function(){});
 
-// Uses AMD or browser globals to create a jQuery plugin.
-(function (factory) {
-  if (typeof define === 'function' && define.amd) {
-      // AMD. Register as an anonymous module.
-      define('dropzone',['jquery'], factory);
-  } else {
-      // Browser globals
-      factory(jQuery);
-  }
-} (function (jQuery) {
-    var module = { exports: { } }; // Fake component
-
 
 /*
  *
@@ -26232,8 +26220,13 @@ define("typeahead", function(){});
 
 }).call(this);
 
-    return module.exports;
-}));
+define("dropzone", ["jquery"], (function (global) {
+    return function () {
+        var ret, fn;
+        return ret || global.Dropzone;
+    };
+}(this)));
+
 /* ===================================================
  * tagmanager.js v3.0.1
  * http://welldonethings.com/tags/manager
@@ -48931,7 +48924,10 @@ define("datepicker-zh-TW", function(){});
     
 
     require.config({
-        paths: { 'dropzone': 'bower_components/dropzone/dropzone-amd-module' }
+        paths: { 'dropzone': 'bower_components/dropzone/dropzone' },
+        shim: {
+            dropzone: {exports: 'Dropzone', deps: ['jquery']}
+        }
     });
 
     define('husky_extensions/dropzone',['dropzone'], function(Dropzone) {
@@ -48942,7 +48938,7 @@ define("datepicker-zh-TW", function(){});
                 // Disable confirmation
                 Dropzone.confirm = function(question, accepted) {
                     accepted();
-                },
+                };
 
                 app.sandbox.dropzone = {
                     initialize: function(selector, configs) {
