@@ -21,7 +21,6 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {
-    const STRUCTURE_MANAGER_ID = 'sulu_content.structure.factory';
     const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
 
     /**
@@ -29,11 +28,11 @@ class StructureExtensionCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition(self::STRUCTURE_MANAGER_ID)) {
+        if (!$container->hasDefinition('sulu_content.extension.manager')) {
             return;
         }
 
-        $definition = $container->getDefinition(self::STRUCTURE_MANAGER_ID);
+        $definition = $container->getDefinition('sulu_content.extension.manager');
         $taggedServices = $container->findTaggedServiceIds(self::STRUCTURE_EXTENSION_TAG);
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
