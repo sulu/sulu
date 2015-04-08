@@ -10,11 +10,6 @@
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
         <parameter key="sulu.content.mapper.subscriber.node_order.class">Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber</parameter>
 
-        <parameter key="sulu_content.structure.factory.class">Sulu\Component\Structure\Factory\StructureFactory</parameter>
-        <parameter key="sulu_content.structure.factory.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
-        <parameter key="sulu_content.structure.factory.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
-        <parameter key="sulu_content.structure.factory.dumper.path">../Resources/Skeleton</parameter>
-
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\Type\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Type\Core\TextLine</parameter>
         <parameter key="sulu.content.type.text_area.class">Sulu\Component\Content\Type\Core\TextArea</parameter>
@@ -26,8 +21,6 @@
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Type\Core\Rlp\Strategy\TreeStrategy</parameter>
 
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
-
-        <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
 
         <parameter key="sulu.content.localization_finder.parent_child_any.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
         <parameter key="sulu.content.localization_finder.null_webspace.class">Sulu\Component\Content\Mapper\LocalizationFinder\NullWebspaceFinder</parameter>

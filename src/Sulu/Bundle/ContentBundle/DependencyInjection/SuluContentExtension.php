@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Sulu\Component\Webspace\Loader\XmlFileLoader;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -54,6 +55,19 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+
+        $this->processTemplates($container, $config);
+        $this->processPreview($container, $config);
+
+        $loader->load('services.xml');
+        $loader->load('content_types.xml');
+        $loader->load('preview.xml');
+        $loader->load('structure.xml');
+    }
+
+    private function processPreview(ContainerBuilder $container, $config)
+    {
         $container->setParameter('sulu.content.preview.mode', $config['preview']['mode']);
         $container->setParameter('sulu.content.preview.websocket', $config['preview']['websocket']);
         $container->setParameter('sulu.content.preview.delay', $config['preview']['delay']);
@@ -67,6 +81,10 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             $errorTemplate
         );
 
+    }
+
+    private function processTemplates(ContainerBuilder $container, $config)
+    {
         $container->setParameter(
             'sulu.content.type.smart_content.template',
             $config['types']['smart_content']['template']
@@ -112,9 +130,5 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
             $config['types']['checkbox']['template']
         );
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.xml');
-        $loader->load('content_types.xml');
-        $loader->load('preview.xml');
     }
 }

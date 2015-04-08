@@ -9,9 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace DTL\Component\Content\Structure;
+namespace Sulu\Component\Content\Structure;
 
-use DTL\Component\Content\Structure\Property;
+use Sulu\Component\Content\Structure\Property;
 
 class Structure extends Item
 {

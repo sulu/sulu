@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace DTL\Component\Content\Structure\Factory\Exception;
+namespace Sulu\Component\Content\Structure\Factory\Exception;
 
 class DocumentTypeNotFoundException extends \RuntimeException
 {
