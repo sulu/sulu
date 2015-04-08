@@ -66,7 +66,8 @@ class RegistratorSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
-        $this->registry->registerDocument($this->document, $this->node->reveal())->shouldBeCalled();
+        $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr')->shouldBeCalled();
 
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
@@ -78,7 +79,8 @@ class RegistratorSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $this->persistEvent->getDocument()->willReturn($this->document);
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
-        $this->registry->registerDocument($this->document, $this->node->reveal())->shouldBeCalled();
+        $this->persistEvent->getLocale()->willReturn('fr');
+        $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr')->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }

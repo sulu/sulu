@@ -12,6 +12,8 @@ namespace Sulu\Component\DocumentManager;
 
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
+use PHPCR\NodeInterface;
+use Sulu\Component\DocumentManager\Document\UnknownDocument;
 
 /**
  * Simple metadata factory which uses an array
@@ -22,6 +24,9 @@ class MetadataFactory
     private $classMap = array();
     private $phpcrTypeMap = array();
 
+    /**
+     * @param array $mapping
+     */
     public function __construct(array $mapping)
     {
         foreach ($mapping as $map) {
@@ -31,6 +36,13 @@ class MetadataFactory
         }
     }
 
+    /**
+     * Return metadata for the given alias
+     *
+     * @param string $alias
+     *
+     * @return Metadata
+     */
     public function getMetadataForAlias($alias)
     {
         if (!isset($this->aliasMap[$alias])) {
@@ -44,6 +56,13 @@ class MetadataFactory
         return $this->getMetadata($map);
     }
 
+    /**
+     * Return metadata for the given PHPCR type (e.g. sulu:page)
+     *
+     * @param string $phpcrType
+     *
+     * @return Metadata
+     */
     public function getMetadataForPhpcrType($phpcrType)
     {
         if (!isset($this->phpcrTypeMap[$phpcrType])) {
@@ -57,11 +76,53 @@ class MetadataFactory
         return $this->getMetadata($map);
     }
 
+    /**
+     * Return true if there is metadata for the given PHPCR type
+     *
+     * @param string $phpcrType
+     *
+     * @return boolean
+     */
     public function hasMetadataForPhpcrType($phpcrType)
     {
         return isset($this->phpcrTypeMap[$phpcrType]);
     }
 
+    /**
+     * Return metadata for the given NodeInterface or return
+     * metadata for the UnknownDocument if the node is not managed
+     *
+     * TODO: Migrate to using the primary type or make this a strategy
+     *       to allow class determination by some other method
+     *
+     * @param NodeInterface $node
+     *
+     * @return object
+     */
+    public function getMetadataForPhpcrNode(NodeInterface $node)
+    {
+        if (!$node->hasProperty('jcr:mixinTypes')) {
+            return $this->getUnknownMetadata();
+        }
+
+        $mixinTypes = $node->getPropertyValue('jcr:mixinTypes');
+
+        foreach ($mixinTypes as $mixinType) {
+            if (true == $this->hasMetadataForPhpcrType($mixinType)) {
+                return $this->getMetadataForPhpcrType($mixinType);
+            }
+        }
+
+        return $this->getUnknownMetadata();
+    }
+
+    /**
+     * Return metadata for the given class
+     *
+     * @param mixed $class
+     *
+     * @return Metadata
+     */
     public function getMetadataForClass($class)
     {
         if (!isset($this->classMap[$class])) {
@@ -75,11 +136,21 @@ class MetadataFactory
         return $this->getMetadata($map);
     }
 
+    /**
+     * Return true if the given alias exists
+     *
+     * @return boolean
+     */
     public function hasAlias($alias)
     {
         return isset($this->aliasMap[$alias]);
     }
 
+    /**
+     * @param array $mapping
+     *
+     * @return Metadata
+     */
     private function getMetadata($mapping)
     {
         $metadata = new Metadata();
@@ -88,5 +159,17 @@ class MetadataFactory
         $metadata->setClass($mapping['class']);
 
         return $metadata;
+    }
+
+    /**
+     * @return Metadata
+     */
+    private function getUnknownMetadata()
+    {
+        return $this->getMetadata(array(
+            'alias' => null,
+            'class' => UnknownDocument::class,
+            'phpcr_type' => null
+        ));
     }
 }

@@ -9,12 +9,9 @@ use Sulu\Component\DocumentManager\Event\CreateEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber;
 use Prophecy\Argument;
-use Sulu\Component\DocumentManager\Document\UnknownDocument;
 
 class InstantiatorSubscriberTest extends \PHPUnit_Framework_TestCase
 {
-    const MIXIN_TYPES = 'jcr:mixinTypes';
-    const PHPCR_TYPE = 'sulu:foobar';
     const ALIAS = 'alias';
 
     private $subscriber;
@@ -32,7 +29,6 @@ class InstantiatorSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->node = $this->prophesize(NodeInterface::class);
     }
 
-
     /**
      * It should create a document for a managed PHPCR node
      */
@@ -40,45 +36,12 @@ class InstantiatorSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         $this->hydrateEvent->hasDocument()->willReturn(false);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
-        $this->node->hasProperty(self::MIXIN_TYPES)->willReturn(true);
-        $this->node->getPropertyValue(self::MIXIN_TYPES)->willReturn(array(
-            self::PHPCR_TYPE
-        ));
-        $this->metadataFactory->hasMetadataForPhpcrType(self::PHPCR_TYPE)->willReturn(true);
-        $this->metadataFactory->getMetadataForPhpcrType(self::PHPCR_TYPE)->willReturn(
+        $this->metadataFactory->getMetadataForPhpcrNode($this->node->reveal())->willReturn(
             $this->metadata->reveal()
         );
         $this->metadata->getClass()->willReturn('\stdClass');
         $this->hydrateEvent->setDocument(Argument::type('stdClass'))->shouldBeCalled();
 
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-    }
-
-    /**
-     * It should create an UnknownDocument for a not-managed PHPCR node
-     */
-    public function testHandleHydrateNotManaged()
-    {
-        $this->hydrateEvent->hasDocument()->willReturn(false);
-        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
-        $this->node->hasProperty(self::MIXIN_TYPES)->willReturn(false);
-        $this->hydrateEvent->setDocument(Argument::type(UnknownDocument::class))->shouldBeCalled();
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-    }
-
-    /**
-     * It should create an UnknownDocument for an not-mapped PHPCR node
-     */
-    public function testHandleHydrateNotMapped()
-    {
-        $this->hydrateEvent->hasDocument()->willReturn(false);
-        $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
-        $this->node->hasProperty(self::MIXIN_TYPES)->willReturn(true);
-        $this->node->getPropertyValue(self::MIXIN_TYPES)->willReturn(array(
-            self::PHPCR_TYPE
-        ));
-        $this->metadataFactory->hasMetadataForPhpcrType(self::PHPCR_TYPE)->willReturn(false);
-        $this->hydrateEvent->setDocument(Argument::type(UnknownDocument::class))->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 

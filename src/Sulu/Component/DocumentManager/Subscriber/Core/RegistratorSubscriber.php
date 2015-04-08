@@ -111,6 +111,6 @@ class RegistratorSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         $node = $event->getNode();
-        $this->documentRegistry->registerDocument($document, $node);
+        $this->documentRegistry->registerDocument($document, $node, $event->getLocale());
     }
 }

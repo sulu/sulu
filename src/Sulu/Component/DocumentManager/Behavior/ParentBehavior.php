@@ -13,7 +13,7 @@ namespace Sulu\Component\DocumentManager\Behavior;
 /**
  * The document has a parent document
  */
-interface HasParentBehavior
+interface ParentBehavior
 {
     /**
      * Return the parent document for this document

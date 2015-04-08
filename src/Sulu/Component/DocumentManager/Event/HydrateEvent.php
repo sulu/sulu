@@ -77,7 +77,6 @@ class HydrateEvent extends Event
     {
         return $this->locale;
     }
-    
 
     /**
      * @return DocumentAccessor

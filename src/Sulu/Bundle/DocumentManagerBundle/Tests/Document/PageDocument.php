@@ -2,7 +2,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Document;
 
-use Sulu\Component\DocumentManager\Behavior\HasParentBehavior;
+use Sulu\Component\DocumentManager\Behavior\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\AutoNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\BlameBehavior;

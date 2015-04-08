@@ -5,6 +5,8 @@ namespace Sulu\Component\DocumentManager\Tests\Unit;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\MetadataFactory;
 use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
+use PHPCR\NodeInterface;
+use Sulu\Component\DocumentManager\Document\UnknownDocument;
 
 class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -108,5 +110,39 @@ class MetadataFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue($this->factory->hasAlias('page'));
         $this->assertFalse($this->factory->hasAlias('fooabarbardg'));
+    }
+
+    /**
+     * It should retrieve metadata for a given PHPCR node
+     */
+    public function testGetForPhpcrNode()
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $node->hasProperty('jcr:mixinTypes')->willReturn(true);
+        $node->getPropertyValue('jcr:mixinTypes')->willReturn(array(
+            'sulu:page',
+            'sulu:barbar',
+        ));
+
+        $metadata = $this->factory->getMetadataForPhpcrNode($node->reveal());
+        $this->assertEquals('page', $metadata->getAlias());
+        $this->assertEquals('Class\Page', $metadata->getClass());
+        $this->assertEquals('sulu:page', $metadata->getPhpcrType());
+    }
+
+    /**
+     * It should retrieve return unknown document metadata when node is unmanaged
+     */
+    public function testGetForPhpcrNodeNoManaged()
+    {
+        $node = $this->prophesize(NodeInterface::class);
+        $node->hasProperty('jcr:mixinTypes')->willReturn(true);
+        $node->getPropertyValue('jcr:mixinTypes')->willReturn(array(
+        ));
+
+        $metadata = $this->factory->getMetadataForPhpcrNode($node->reveal());
+        $this->assertNull($metadata->getAlias());
+        $this->assertEquals(UnknownDocument::class, $metadata->getClass());
+        $this->assertNull($metadata->getPhpcrType());
     }
 }

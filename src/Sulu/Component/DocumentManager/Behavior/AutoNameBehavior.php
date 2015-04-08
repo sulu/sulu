@@ -14,7 +14,7 @@ namespace Sulu\Component\DocumentManager\Behavior;
  * The PHPCR nodes of objects implementing this behavior will have
  * names automatically assigned based on their title.
  */
-interface AutoNameBehavior extends HasParentBehavior
+interface AutoNameBehavior extends ParentBehavior
 {
     /**
      * Return a title to be used as the seed for the node name

@@ -36,7 +36,9 @@ class InstantiatorSubscriber implements EventSubscriberInterface
     /**
      * @param MetadataFactory $metadataFactory
      */
-    public function __construct(MetadataFactory $metadataFactory)
+    public function __construct(
+        MetadataFactory $metadataFactory
+    )
     {
         $this->metadataFactory = $metadataFactory;
     }
@@ -82,33 +84,20 @@ class InstantiatorSubscriber implements EventSubscriberInterface
      * Instantiate a new document. The class is determined from
      * the mixins present in the PHPCR node for legacy reasons.
      *
-     * TODO: We need to migrate to using the primary node type.
-     *
      * @param NodeInterface $node
      */
     private function getDocumentFromNode(NodeInterface $node)
     {
-        if (!$node->hasProperty('jcr:mixinTypes')) {
-            return $this->createUndefined();
-        }
-
-        $mixinTypes = $node->getPropertyValue('jcr:mixinTypes');
-        $metadata = null;
-
-        foreach ($mixinTypes as $mixinType) {
-            if (true == $this->metadataFactory->hasMetadataForPhpcrType($mixinType)) {
-                $metadata = $this->metadataFactory->getMetadataForPhpcrType($mixinType);
-                break;
-            }
-        }
-
-        if (null === $metadata) {
-            return $this->createUndefined();
-        }
+        $metadata = $this->metadataFactory->getMetadataForPhpcrNode($node);
 
         return $this->instantiateFromMetadata($metadata);
     }
 
+    /**
+     * @param Metadata $metadata
+     *
+     * @return object
+     */
     private function instantiateFromMetadata(Metadata $metadata)
     {
         $class = $metadata->getClass();
@@ -122,15 +111,5 @@ class InstantiatorSubscriber implements EventSubscriberInterface
         $document = new $class;
 
         return $document;
-    }
-
-    /**
-     * Creates an undefined document which represents a non-managed phpcr node
-     *
-     * @return UnknownDocument
-     */
-    private function createUndefined()
-    {
-        return new UnknownDocument();
     }
 }

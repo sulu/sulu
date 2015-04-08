@@ -37,6 +37,18 @@ class DocumentManagerTest extends SuluTestCase
     }
 
     /**
+     * It should have a parent document
+     */
+    public function testTraverseParent()
+    {
+        $document = $this->documentManager->find('/cmf/sulu_io/contents', 'fr');
+        $this->assertInstanceOf(PageDocument::class, $document);
+        $parent = $document->getParent();
+        $this->assertInstanceOf(UnknownDocument::class, $parent);
+    }
+
+
+    /**
      * It should pesist a new document
      */
     public function testPersistPage()

@@ -29,17 +29,23 @@ class DocumentRegistry
     private $nodeDocumentMap;
 
     /**
+     * @var array
+     */
+    private $documentLocaleMap;
+
+    /**
      * Register a document
      *
      * @param mixed $document
      * @param NodeInterface $node
      */
-    public function registerDocument($document, NodeInterface $node)
+    public function registerDocument($document, NodeInterface $node, $locale)
     {
         $oid = spl_object_hash($document);
         $this->documentMap[$oid] = $document;
         $this->documentNodeMap[$oid] = $node;
         $this->nodeDocumentMap[$node->getIdentifier()] = $document;
+        $this->documentLocaleMap[$oid] = $locale;
     }
 
     /**
@@ -94,6 +100,7 @@ class DocumentRegistry
         unset($this->nodeDocumentMap[$nodeIdentifier]);
         unset($this->documentMap[$oid]);
         unset($this->documentNodeMap[$oid]);
+        unset($this->documentLocaleMap[$oid]);
     }
 
     /**
@@ -109,6 +116,21 @@ class DocumentRegistry
         $this->assertDocumentExists($oid);
 
         return $this->documentNodeMap[$oid];
+    }
+
+    /**
+     * Return the current locale for the given document
+     *
+     * @param object $document
+     *
+     * @return string
+     */
+    public function getLocaleForDocument($document)
+    {
+        $oid = spl_object_hash($document);
+        $this->assertDocumentExists($oid);
+
+        return $this->documentLocaleMap[$oid];
     }
 
     /**
