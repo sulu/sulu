@@ -5,6 +5,11 @@
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\FileVersion" table="me_file_versions">
 
+        <indexes>
+            <index name='name_idx' columns="name"/>
+            <index name='version_idx' columns="version"/>
+        </indexes>
+
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
