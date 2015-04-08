@@ -12,8 +12,9 @@
 namespace Sulu\Component\Content\Structure;
 
 use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Structure\Section;
 
-class Structure extends Item
+class Structure extends Item implements StructureInterface
 {
     /**
      * The resource from which this structure was loaded
@@ -24,13 +25,35 @@ class Structure extends Item
     public $resource;
 
     /**
+     * TODO: This should be an option as it is implementation specific
+     * @var string
+     */
+    public $cacheLifetime;
+
+    /**
+     * TODO: This should be an option as it is implementation specific
+     * @var string
+     */
+    public $controller;
+
+    /**
+     * TODO: This should be an option as it is implementation specific
+     * @var string
+     */
+    public $view;
+
+    /**
      * Return all direct child properties of this structure, ignoring
      * Sections
      *
      * @return Property[]
      */
-    public function getProperties()
+    public function getProperties($flatten = false)
     {
+        if (false === $flatten) {
+            return $this->children;
+        }
+
         $properties = array();
         foreach ($this->children as $child) {
             if ($child instanceof Section) {
@@ -45,44 +68,50 @@ class Structure extends Item
     }
 
     /**
-     * Returns a model representation of this structure - the structure
-     * without presentation elements: without Sections.
-     *
-     * @return Structure
+     * {@inheritDoc}
      */
-    public function transformToModel()
+    public function getProperty($name)
     {
-        $structure = clone $this;
-        $structure->children = $this->getProperties();
-
-        return $structure;
+        if (!isset($this->children[$name])) {
+            throw new NoSuchPropertyException(sprintf(
+                'Property "%s" does not exist in structure "%s" loaded from resource "%s"',
+                $name,
+                $this->name,
+                $this->resource
+            ));
+        }
     }
 
     /**
-     * Return all the localized properties
-     *
-     * @return Property[]
+     * {@inheritDoc}
      */
-    public function getLocalizedProperties()
+    public function hasProperty($name)
     {
-        return array_filter($this->getProperties(), function (Property $property) {
-            return $property->localized === true;
-        });
+        return isset($this->children[$name]);
     }
 
     /**
-     * Return all the non-localized properties
-     *
-     * @return Property[]
+     * {@inheritDoc}
      */
-    public function getNonLocalizedProperties()
+    public function getPropertyNames()
     {
-        return array_filter($this->getProperties(), function (Property $property) {
-            return $property->localized === false;
-        });
+        return array_keys($this->children);
     }
 
-    public function getPropertiesByTag($tagName)
+    /**
+     * TODO: Implement this
+     *
+     * {@inheritDoc}
+     */
+    public function getPropertyByTagName($tagName, $highest = true)
+    {
+        return reset($this->getPropertiesByTagName($tagName));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPropertiesByTagName($tagName)
     {
         $properties = array();
 
@@ -95,5 +124,13 @@ class Structure extends Item
         }
 
         return $properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function hasTag($tagName)
+    {
+        return (boolean) $this->getPropertiesByTagName($tagName);
     }
 }

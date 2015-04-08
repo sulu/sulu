@@ -72,6 +72,17 @@ class Item
     }
 
     /**
+     * Magic setter to catch bad property calls
+     */
+    public function __set($field, $value)
+    {
+        throw new \InvalidArgumentException(sprintf(
+            'Property "%s" does not exist on "%s"',
+            $field, get_class($this)
+        ));
+    }
+
+    /**
      * Return the named property
      *
      * @return string $name
@@ -127,17 +138,6 @@ class Item
     }
 
     /**
-     * Magic _set to catch undefined property accesses
-     */
-    public function __set($name, $value)
-    {
-        throw new \InvalidArgumentException(sprintf(
-            'Property "%s" does not exist on "%s"',
-            $name, get_class($this)
-        ));
-    }
-
-    /**
      * Return the localized name of this Item or
      * default to the name.
      *
@@ -164,5 +164,73 @@ class Item
         }
 
         return $this->parameters[$name];
+    }
+
+    /**
+     * TODO: Rename to getParameters
+     *
+     * {@inheritDoc}
+     */
+    public function getParams() 
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTags() 
+    {
+        return $this->tags;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTag($tagName)
+    {
+        foreach ($this->tags as $tag) {
+            if ($tag['name'] === $tagName) {
+                return $tag;
+            }
+        }
+    }
+
+    /**
+     * TODO: This is duplicated
+     * @deprecated
+     *
+     * {@inheritDoc}
+     */
+    public function getTitle($locale) 
+    {
+        return $this->getLocalizedTitle($locale);
+    }
+
+    /**
+     * Return a description for this item
+     *
+     * @return string
+     */
+    public function getInfoText($locale) 
+    {
+        return $this->description[$locale];
+    }
+
+    /**
+     * TODO: Remove this, it identical to Item::getChildren()
+     * @deprecated
+     */
+    public function getChildProperties()
+    {
+        return $this->getChildren();
     }
 }

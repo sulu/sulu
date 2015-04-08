@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Structure;
 
-class Property extends Item
+class Property extends Item implements PropertyInterface
 {
     /**
      * Type of this property (e.g. "text_line", "smart_content")
@@ -65,16 +65,73 @@ class Property extends Item
      */
     public $maxOccurs = 1;
 
-    public function __set($field, $value)
-    {
-        throw new \InvalidArgumentException(sprintf(
-            'Property "%s" does not exist on "%s"',
-            $field, get_class($this)
-        ));
-    }
+    /**
+     * @var Structure
+     */
+    public $structure;
 
-    public function isMultiple()
+    public function getIsMultiple()
     {
         return $this->minOccurs !== $this->maxOccurs;
+    }
+
+    public function getMandatory()
+    {
+        return $this->required;
+    }
+
+    public function isMultilingual()
+    {
+        return $this->localized;
+    }
+
+    /**
+     * TODO: Remove this, it is a duplicate
+     */
+    public function getMultilingual()
+    {
+        return $this->localized;
+    }
+
+    public function getMinOccurs()
+    {
+        return $this->minOccurs;
+    }
+
+    public function getStructure() 
+    {
+        throw new \InvalidArgumentException(
+            'Not implemented'
+        );
+    }
+
+    public function getMaxOccurs()
+    {
+        return $this->maxOccurs;
+    }
+
+    public function getContentTypeName() 
+    {
+        return $this->contentTypeName;
+    }
+
+    public function getIsBlock() 
+    {
+        return false;
+    }
+
+    public function getColSpan() 
+    {
+        return $this->colSpan;
+    }
+
+    public function getPlaceholder($locale) 
+    {
+        return $this->placeholder[$locale];
+    }
+
+    public function isMandatory()
+    {
+        return $this->required;
     }
 }
