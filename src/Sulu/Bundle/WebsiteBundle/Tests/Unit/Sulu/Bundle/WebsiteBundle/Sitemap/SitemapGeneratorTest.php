@@ -22,7 +22,7 @@ use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -56,7 +56,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->dataEn = $this->prepareTestData();
         $this->dataEnUs = $this->prepareTestData('en_us');
 
-        $this->structureManager->expects($this->any())
+        $this->structureFactory->expects($this->any())
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
@@ -72,7 +72,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->sitemapGenerator = new SitemapGenerator(
             $contentQuery,
             $this->webspaceManager,
-            new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace)
+            new SitemapContentQueryBuilder($this->structureFactory, $this->languageNamespace)
         );
     }
 
@@ -148,7 +148,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function getExtensionCallback()
     {
-        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
+        return new ExcerptStructureExtension($this->structureFactory, $this->contentTypeManager);
     }
 
     public function getExtensionsCallback()
@@ -482,9 +482,9 @@ class ExcerptStructureExtension extends StructureExtension
     protected $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var string
@@ -492,11 +492,11 @@ class ExcerptStructureExtension extends StructureExtension
     private $languageNamespace;
 
     public function __construct(
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         ContentTypeManagerInterface $contentTypeManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -571,7 +571,7 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private function initExcerptStructure()
     {
-        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+        $excerptStructure = $this->structureFactory->getStructure(self::EXCERPT_EXTENSION_NAME);
         /** @var PropertyInterface $property */
         foreach ($excerptStructure->getProperties() as $property) {
             $this->properties[] = $property->getName();

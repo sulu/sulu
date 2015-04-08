@@ -1084,7 +1084,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->userManager,
             $this->webspaceManager,
             new SmartContentQueryBuilder(
-                $this->structureManager,
+                $this->structureFactory,
                 $this->webspaceManager,
                 $this->sessionManager,
                 $this->languageNamespace

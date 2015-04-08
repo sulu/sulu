@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;
@@ -40,9 +40,9 @@ abstract class RlpStrategy implements RlpStrategyInterface
     protected $cleaner;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var ContentTypeManagerInterface
@@ -61,14 +61,14 @@ abstract class RlpStrategy implements RlpStrategyInterface
         $name,
         RlpMapperInterface $mapper,
         PathCleanupInterface $cleaner,
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         ContentTypeManagerInterface $contentTypeManager,
         SuluNodeHelper $nodeHelper
     ) {
         $this->name = $name;
         $this->mapper = $mapper;
         $this->cleaner = $cleaner;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
         $this->contentTypeManager = $contentTypeManager;
         $this->nodeHelper = $nodeHelper;
     }
@@ -194,7 +194,7 @@ abstract class RlpStrategy implements RlpStrategyInterface
             }
 
             $template = $node->getPropertyValue($templatePropertyName);
-            $structure = $this->structureManager->getStructure($template);
+            $structure = $this->structureFactory->getStructure($template);
 
             // only if rlp exists
             if ($structure->hasTag('sulu.rlp')) {

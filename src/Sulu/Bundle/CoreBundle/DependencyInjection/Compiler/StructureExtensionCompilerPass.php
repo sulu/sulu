@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class StructureExtensionCompilerPass implements CompilerPassInterface
 {
-    const STRUCTURE_MANAGER_ID = 'sulu.content.structure_manager';
+    const STRUCTURE_MANAGER_ID = 'sulu_content.structure.factory';
     const STRUCTURE_EXTENSION_TAG = 'sulu.structure.extension';
 
     /**

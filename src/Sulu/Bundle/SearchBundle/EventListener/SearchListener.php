@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\SearchBundle\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 
 /**
  * Listen to for search to be sure that all structure cache classes are generated and loaded
@@ -19,13 +19,13 @@ use Sulu\Component\Content\StructureManagerInterface;
 class SearchListener
 {
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
-    public function __construct(StructureManagerInterface $structureManager)
+    public function __construct(StructureFactoryInterface $structureFactory)
     {
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -34,6 +34,6 @@ class SearchListener
      */
     public function onSearch(SearchEvent $event)
     {
-        $this->structureManager->getStructures();
+        $this->structureFactory->getStructures();
     }
 }

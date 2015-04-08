@@ -16,7 +16,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**
@@ -57,9 +57,9 @@ class ExcerptStructureExtension extends StructureExtension
     protected $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var string
@@ -67,11 +67,11 @@ class ExcerptStructureExtension extends StructureExtension
     private $languageNamespace;
 
     public function __construct(
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         ContentTypeManagerInterface $contentTypeManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -169,7 +169,7 @@ class ExcerptStructureExtension extends StructureExtension
     private function getExcerptStructure()
     {
         if($this->excerptStructure === null) {
-            $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+            $this->excerptStructure = $this->structureFactory->getStructure(self::EXCERPT_EXTENSION_NAME);
         }
 
         return $this->excerptStructure;

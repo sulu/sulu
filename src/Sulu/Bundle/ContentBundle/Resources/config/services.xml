@@ -44,7 +44,7 @@
         <!-- resource locator -->
         <service id="sulu_content.rl_repository" class="%sulu_content.rl_repository.class%">
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_content.structure.factory"/>
             <argument type="service" id="sulu.content.type.resource_locator"/>
             <argument type="service" id="sulu.content.mapper"/>
         </service>
@@ -56,7 +56,7 @@
 
         <!-- structure extension -->
         <service id="sulu_content.extension.excerpt" class="%sulu_content.extension.excerpt.class%">
-            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_content.structure.factory"/>
             <argument type="service" id="sulu.content.type_manager"/>
             <tag name="sulu.structure.extension"/>
         </service>

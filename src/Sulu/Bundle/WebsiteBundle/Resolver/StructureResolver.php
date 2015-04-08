@@ -5,7 +5,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.
@@ -18,20 +18,20 @@ class StructureResolver implements StructureResolverInterface
     protected $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
-     * @param StructureManagerInterface $structureManager
+     * @param StructureFactoryInterface $structureFactory
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
-        StructureManagerInterface $structureManager
+        StructureFactoryInterface $structureFactory
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -57,7 +57,7 @@ class StructureResolver implements StructureResolverInterface
             $data['published'] = $structure->getPublished();
 
             foreach ($data['extension'] as $name => $value) {
-                $extension = $this->structureManager->getExtension($structure->getKey(), $name);
+                $extension = $this->structureFactory->getExtension($structure->getKey(), $name);
                 $data['extension'][$name] = $extension->getContentData($value);
             }
         }

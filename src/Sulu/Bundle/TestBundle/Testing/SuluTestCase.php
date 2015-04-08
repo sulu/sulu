@@ -127,7 +127,7 @@ abstract class SuluTestCase extends BaseTestCase
     {
         /** @var SessionInterface $session */
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
-        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $structureFactory = $this->getContainer()->get('sulu_content.structure.factory');
 
         if ($session->nodeExists('/cmf')) {
             $session->getNode('/cmf')->remove();
@@ -138,7 +138,7 @@ abstract class SuluTestCase extends BaseTestCase
         $cmf = $session->getRootNode()->addNode('cmf');
 
         $snippetsNode = $cmf->addNode('snippets');
-        $snippetStructures = $structureManager->getStructures(Structure::TYPE_SNIPPET);
+        $snippetStructures = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
 
         foreach ($snippetStructures as $snippetStructure) {
             $snippetsNode->addNode($snippetStructure->getKey());

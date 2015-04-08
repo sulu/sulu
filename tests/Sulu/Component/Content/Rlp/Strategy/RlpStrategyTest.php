@@ -82,7 +82,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('getParentPath')
             ->will($this->returnValue('/parent'));
 
-        $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\StructureManagerInterface');
+        $structureFactory = $this->getMockForAbstractClass('Sulu\Component\Structure\Factory\StructureFactoryInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\Type\ContentTypeManagerInterface');
         $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', array(), array(), '', false);
 
@@ -92,7 +92,7 @@ class RlpStrategyTest extends \PHPUnit_Framework_TestCase
                 'test-strategy',
                 $this->mapper,
                 new PathCleanup(),
-                $structureManager,
+                $structureFactory,
                 $contentTypeManager,
                 $nodeHelper
             ),

@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -39,9 +39,9 @@ class WebspacesInitCommand extends ContainerAwareCommand
     private $properties;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
     protected function configure()
     {
@@ -58,7 +58,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $routes = $this->getContainer()->getParameter('sulu.content.node_names.route');
         $snippets = $this->getContainer()->getParameter('sulu.content.node_names.snippet');
         $template = $this->getContainer()->getParameter('sulu.content.structure.default_type.homepage');
-        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->structureFactory = $this->getContainer()->get('sulu_content.structure.factory');
 
         // properties
         $this->properties = new MultipleTranslatedProperties(
@@ -118,7 +118,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $this->createRecursive($snippetsPath, $root);
         $output->writeln("    snippets: /{$snippetsPath}");
 
-        $snippetStructures = $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
+        $snippetStructures = $this->structureFactory->getStructures(Structure::TYPE_SNIPPET);
         foreach ($snippetStructures as $snippetStructure) {
             $snippetPath = $snippetsPath . '/' . $snippetStructure->getKey();
             $output->writeln("    snippets: /{$snippetPath}");
@@ -171,8 +171,8 @@ class WebspacesInitCommand extends ContainerAwareCommand
 
         // set resource locator to node
 
-        /** @var StructureManagerInterface $structureManager */
-        $structure = $this->structureManager->getStructure($template);
+        /** @var StructureFactoryInterface $structureFactory */
+        $structure = $this->structureFactory->getStructure($template);
 
         $property = $structure->getPropertyByTagName('sulu.rlp');
         $translatedProperty = new TranslatedProperty(

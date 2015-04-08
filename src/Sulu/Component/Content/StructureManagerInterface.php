@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 /**
  * Interface of StructureManager
  */
-interface StructureManagerInterface extends ContainerAwareInterface
+interface StructureFactoryInterface extends ContainerAwareInterface
 {
     /**
      * Returns structure for given key and type

@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\CoreBundle\Cache;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Structure;
 
 /**
@@ -22,20 +22,20 @@ class StructureWarmer implements CacheWarmerInterface
     /**
      * @var StructureManager
      */
-    private $structureManager;
+    private $structureFactory;
 
-    public function __construct(StructureManagerInterface $structureManager)
+    public function __construct(StructureFactoryInterface $structureFactory)
     {
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     public function warmUp($cacheDir)
     {
         // warmup the pages
-        $this->structureManager->getStructures(Structure::TYPE_PAGE);
+        $this->structureFactory->getStructures(Structure::TYPE_PAGE);
 
         // warm up the snippets
-        $this->structureManager->getStructures(Structure::TYPE_SNIPPET);
+        $this->structureFactory->getStructures(Structure::TYPE_SNIPPET);
     }
 
     public function isOptional()

@@ -40,7 +40,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\StructureType;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
@@ -74,9 +74,9 @@ class ContentMapper implements ContentMapperInterface
     private $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
     /**
      * @var SessionManagerInterface
@@ -178,7 +178,7 @@ class ContentMapper implements ContentMapperInterface
 
     public function __construct(
         ContentTypeManager $contentTypeManager,
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
@@ -194,7 +194,7 @@ class ContentMapper implements ContentMapperInterface
         $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
         $this->sessionManager = $sessionManager;
         $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
@@ -583,7 +583,7 @@ class ContentMapper implements ContentMapperInterface
         if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
             // save data of extensions
             $ext = array();
-            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
+            foreach ($this->structureFactory->getExtensions($structure->getKey()) as $extension) {
                 $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
                 if (isset($data['ext']) && isset($data['ext'][$extension->getName()])) {
                     $extension->save(
@@ -786,7 +786,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // check if extension exists
-        if (false === $this->structureManager->hasExtension($structure->getKey(), $extensionName)) {
+        if (false === $this->structureFactory->hasExtension($structure->getKey(), $extensionName)) {
             throw new ExtensionNotFoundException($structure, $extensionName);
         }
 
@@ -796,7 +796,7 @@ class ContentMapper implements ContentMapperInterface
         $node->setProperty($propertyTranslator->getName('changed'), $dateTime);
 
         // save data of extensions
-        $extension = $this->structureManager->getExtension($structure->getKey(), $extensionName);
+        $extension = $this->structureFactory->getExtension($structure->getKey(), $extensionName);
         $extension->save($node, $data, $webspaceKey, $languageCode);
         $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
 
@@ -1435,7 +1435,7 @@ class ContentMapper implements ContentMapperInterface
 
             // load data of extensions
             $data = array();
-            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
+            foreach ($this->structureFactory->getExtensions($structure->getKey()) as $extension) {
                 $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
                 $data[$extension->getName()] = $extension->load($contentNode, $webspaceKey, $availableLocalization);
             }
@@ -2048,7 +2048,7 @@ class ContentMapper implements ContentMapperInterface
      */
     protected function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        $structure = $this->structureManager->getStructure($key, $type);
+        $structure = $this->structureFactory->getStructure($key, $type);
 
         if (!$structure) {
             throw new \InvalidArgumentException(
@@ -2195,7 +2195,7 @@ class ContentMapper implements ContentMapperInterface
                 // get structure (without data)
                 $templateKey = $node->getPropertyValue($propertyTranslator->getName('template'));
                 $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
-                $structure = $this->structureManager->getStructure($templateKey);
+                $structure = $this->structureFactory->getStructure($templateKey);
 
                 $property = new TranslatedProperty(
                     $structure->getPropertyByTagName('sulu.rlp'),
@@ -2248,7 +2248,7 @@ class ContentMapper implements ContentMapperInterface
                 $node->getPropertyValue($propertyTranslator->getName('nodeType')),
                 $templateKey
             );
-            $structure = $this->structureManager->getStructure($templateKey);
+            $structure = $this->structureFactory->getStructure($templateKey);
 
             if (!isset($url)) {
                 $url = $this->getUrl($path, $row, $structure, $webspaceKey, $originLocale);

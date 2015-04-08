@@ -19,7 +19,7 @@ use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\TextLine;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -59,9 +59,9 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
     private $requestAnalyzer;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
     /**
      * @var ContentTypeManagerInterface
@@ -100,7 +100,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->contentMapper = $this->prophesize('Sulu\Component\Content\Mapper\ContentMapperInterface');
         $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Type\ContentTypeManagerInterface');
-        $this->structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
+        $this->structureFactory = $this->prophesize('Sulu\Component\Structure\Factory\StructureFactoryInterface');
         $this->sessionManager = $this->prophesize('Sulu\Component\PHPCR\SessionManager\SessionManagerInterface');
         $this->session = $this->prophesize('PHPCR\SessionInterface');
         $this->node = $this->prophesize('PHPCR\NodeInterface');
@@ -136,7 +136,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
-            $this->structureManager->reveal()
+            $this->structureFactory->reveal()
         );
     }
 

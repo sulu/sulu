@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Type\SmartContent;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
@@ -63,12 +63,12 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
     private $sessionManager;
 
     public function __construct(
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         WebspaceManagerInterface $webspaceManager,
         SessionManagerInterface $sessionManager,
         $languageNamespace
     ) {
-        parent::__construct($structureManager, $languageNamespace);
+        parent::__construct($structureFactory, $languageNamespace);
 
         $this->webspaceManager = $webspaceManager;
         $this->sessionManager = $sessionManager;
@@ -183,7 +183,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
-        foreach ($this->structureManager->getStructures(Page::TYPE_PAGE) as $structure) {
+        foreach ($this->structureFactory->getStructures(Page::TYPE_PAGE) as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
                 $additionalFields[$locale][] = array(
@@ -200,7 +200,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
-        $extension = $this->structureManager->getExtension('', $extension);
+        $extension = $this->structureFactory->getExtension('', $extension);
         $additionalFields[$locale][] = array(
             'name' => $alias,
             'extension' => $extension,
@@ -231,7 +231,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildTagsWhere($languageCode)
     {
-        $structure = $this->structureManager->getStructure('excerpt');
+        $structure = $this->structureFactory->getStructure('excerpt');
         $sql2Where = array();
         if ($structure->hasProperty('tags')) {
             $property = new TranslatedProperty(

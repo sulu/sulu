@@ -15,7 +15,7 @@ use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\PropertyInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Structure\Factory\StructureFactoryInterface;
 
 /**
  * Basic class for content query builder
@@ -23,9 +23,9 @@ use Sulu\Component\Content\StructureManagerInterface;
 abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
 {
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var string
@@ -69,9 +69,9 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     protected $excerpt = true;
 
-    public function __construct(StructureManagerInterface $structureManager, $languageNamespace)
+    public function __construct(StructureFactoryInterface $structureFactory, $languageNamespace)
     {
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
         $this->languageNamespace = $languageNamespace;
 
         $properties = array_merge($this->defaultProperties, $this->properties);
@@ -226,8 +226,8 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     private function buildSelectorForExcerpt($locale, &$additionalFields)
     {
-        $excerptStructure = $this->structureManager->getStructure('excerpt');
-        $extension = $this->structureManager->getExtension('', 'excerpt');
+        $excerptStructure = $this->structureFactory->getStructure('excerpt');
+        $extension = $this->structureFactory->getExtension('', 'excerpt');
 
         foreach ($excerptStructure->getProperties(true) as $property) {
             $additionalFields[$locale][] = array(
