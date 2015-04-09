@@ -180,37 +180,10 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
     {
         try {
-//            $sql = 'SELECT id FROM (
-//                        SELECT me_media.id,
-//                        me_file_versions.name,
-//                        me_file_versions.created,
-//                        me_file_versions.version,
-//                        me_file_versions.idFiles
-//                        FROM me_media
-//                        INNER JOIN me_files ON me_files.idMedia = me_media.id
-//                        INNER JOIN me_file_versions ON me_files.id = me_file_versions.idFiles
-//                        AND me_file_versions.version = me_files.version
-//                        WHERE me_media.idCollections = :collectionId
-//                        ORDER BY created DESC
-//                    ) AS media WHERE name = \'' . $filename . '\' GROUP BY name';
-//
-//            $rsm = new ResultSetMapping;
-//            $rsm->addEntityResult('Sulu\Bundle\MediaBundle\Entity\Media', 'm');
-//            $rsm->addFieldResult('m', 'id', 'id');
-//            $query = $this->getEntityManager()->createNativeQuery(
-//                $sql,
-//                $rsm
-//            );
-//            $query->setParameter('collectionId', $collectionId);
-//
-//            // TODO: Extend ResultSetMapping and remove findMediaById
-//            $partialMedia = $query->getSingleResult();
-//            return $this->findMediaById($partialMedia->getId());
-
             $qb = $this->createQueryBuilder('media')
                 ->select('media.id')
                 ->innerJoin('media.files', 'files')
-                ->innerJoin('files.versions', 'versions', 'WITH', 'versions.version = files.version')
+                ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
                 ->join('media.collection', 'collection')
                 ->where('collection.id = :collectionId')
                 ->andWhere('versions.name = :fileName')
@@ -234,66 +207,27 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     public function findSupplierMedia($collectionId, $limit, $offset)
     {
-//        //TODO: update this thing NOW
-//        $sql = 'SELECT id, name FROM (
-//                    select me_media.id,
-//                    me_file_versions.name,
-//                    me_file_versions.created,
-//                    me_file_versions.version,
-//                    me_file_versions.idFiles
-//                    FROM me_media
-//                    INNER JOIN me_files ON me_files.idMedia = me_media.id
-//                    INNER JOIN me_file_versions ON me_files.id = me_file_versions.idFiles
-//                    AND me_file_versions.version = me_files.version
-//                    WHERE me_media.idCollections = :collectionId
-//                    ORDER BY created DESC
-//                ) AS media GROUP BY name';
-//
-//        $countQuery = 'SELECT count(id) FROM (' . $sql . ') as count';
-//        $rsm = new ResultSetMapping;
-//        $rsm->addScalarResult('count(id)', 'count');
-//        $query = $this->getEntityManager()->createNativeQuery(
-//            $countQuery,
-//            $rsm
-//        );
-//        $query->setParameter('collectionId', $collectionId);
-//        $count = $query->getSingleResult();
-
-
+        // count media in collection
         $qb = $this->createQueryBuilder('media')
-            ->select('count(media.id)')
+            ->select('count(media.id) as counter')
             ->join('media.collection', 'collection')
             ->where('collection.id = :collectionId')
             ->setParameter('collectionId', $collectionId);
         $count = $qb->getQuery()->getSingleScalarResult();
 
-
-        $mediaQuery = $sql . ' LIMIT :limit OFFSET :offset';
-        $rsm = new ResultSetMapping;
-        $rsm->addEntityResult('Sulu\Bundle\MediaBundle\Entity\Media', 'm');
-        $rsm->addFieldResult('m', 'id', 'id');
-        $query = $this->getEntityManager()->createNativeQuery(
-            $mediaQuery,
-            $rsm
-        );
-        $query->setParameter('collectionId', (int)$collectionId);
-        $query->setParameter('limit', (int)$limit);
-        $query->setParameter('offset', (int)$offset);
-        return ['media'=>$query->getResult(), 'count'=>$count['count']];
-    }
-
-    protected function getSupplierMediaQueryBuilder($collectionId)
-    {
         $qb = $this->createQueryBuilder('media')
-            ->select('media.id')
             ->innerJoin('media.files', 'files')
-            ->innerJoin('files.versions', 'versions', 'WITH', 'versions.version = files.version')
+            ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
             ->join('media.collection', 'collection')
             ->where('collection.id = :collectionId')
-            ->andWhere('versions.name = :fileName')
-            ->orderBy('versions.created')
-//            ->setMaxResults(1)
-//            ->setParameter('filename', $filename)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->setParameter('collectionId', $collectionId);
+
+        $query = $qb->getQuery();
+
+        $paginator = new Paginator($query);
+
+        return ['media'=>$paginator, 'count'=>$count];
     }
 }
