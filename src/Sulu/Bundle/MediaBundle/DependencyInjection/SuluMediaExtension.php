@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class SuluMediaExtension extends Extension
 {
-    const DEFAULT_FORMAT_NAME = '170x170';
     const DEFAULT_GHOST_SCRIPT_PATH = 'ghostscript';
     const DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER = 'web';
 
@@ -66,47 +65,6 @@ class SuluMediaExtension extends Extension
             'application/pdf',
         ));
 
-        $container->setParameter('sulu_media.image.formats', array(
-            self::DEFAULT_FORMAT_NAME => array(
-                'name' => self::DEFAULT_FORMAT_NAME,
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '170',
-                            'y' => '170',
-                        )
-                    )
-                ),
-                'options' => $config['format_manager']['default_imagine_options']
-            ),
-            '50x50' => array(
-                'name' => '50x50',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' =>array(
-                            'x' => '50',
-                            'y' => '50',
-                        )
-                    )
-                ),
-                'options' => $config['format_manager']['default_imagine_options']
-            ),
-            '150x100' => array(
-                'name' => '150x100',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' =>array(
-                            'x' => '150',
-                            'y' => '100',
-                        )
-                    )
-                ),
-                'options' => $config['format_manager']['default_imagine_options']
-            ),
-        ));
         $container->setParameter('sulu_media.media.types', array(
             array(
                 'type' => 'document',

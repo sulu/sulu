@@ -47,10 +47,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
     protected function loadThemeFormats($defaultOptions)
     {
         $activeFormats = array();
-        $suluFormats = $this->container->getParameter('sulu_media.image.formats');
-        if (is_array($suluFormats)) {
-            $activeFormats = $suluFormats;
-        }
+        $this->setFormatsFromFile(__DIR__ . '/../Resources/config/image-formats.xml', $activeFormats, $defaultOptions);
 
         $activeTheme = $this->container->get('liip_theme.active_theme');
         $bundles = $this->container->getParameter('kernel.bundles');
@@ -72,22 +69,34 @@ class ImageFormatCompilerPass implements CompilerPassInterface
                 );
 
                 if (file_exists($fullPath)) {
-                    $folder = dirname($fullPath);
-                    $fileName = basename($fullPath);
-
-                    $locator = new FileLocator($folder);
-                    $loader = new XmlFormatLoader($locator);
-                    $loader->setDefaultOptions($defaultOptions);
-                    $themeFormats = $loader->load($fileName);
-                    foreach ($themeFormats as $format) {
-                        if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
-                            $activeFormats[$format['name']] = $format;
-                        }
-                    }
+                    $this->setFormatsFromFile($fullPath, $activeFormats, $defaultOptions);
                 }
             }
         }
 
+        print_r($activeFormats);exit;
+
         return $activeFormats;
+    }
+
+    /**
+     * @param $fullPath
+     * @param $activeFormats
+     * @param $defaultOptions
+     */
+    protected function setFormatsFromFile($fullPath, &$activeFormats, $defaultOptions)
+    {
+        $folder = dirname($fullPath);
+        $fileName = basename($fullPath);
+
+        $locator = new FileLocator($folder);
+        $loader = new XmlFormatLoader($locator);
+        $loader->setDefaultOptions($defaultOptions);
+        $themeFormats = $loader->load($fileName);
+        foreach ($themeFormats as $format) {
+            if (isset($format['name']) && !array_key_exists($format['name'], $activeFormats)) {
+                $activeFormats[$format['name']] = $format;
+            }
+        }
     }
 }
