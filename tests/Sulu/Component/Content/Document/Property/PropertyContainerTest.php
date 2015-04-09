@@ -54,6 +54,7 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
             $this->node->reveal(),
             Argument::type('Sulu\Component\Content\Document\Property\PropertyInterface'),
             null,
+            null,
             null
         )->shouldBeCalledTimes(1);
 

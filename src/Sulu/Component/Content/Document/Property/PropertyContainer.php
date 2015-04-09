@@ -78,6 +78,7 @@ class PropertyContainer implements \ArrayAccess
             $this->node,
             $property,
             null,
+            null,
             null
         );
 
