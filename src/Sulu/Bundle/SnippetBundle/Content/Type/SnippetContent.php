@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Type\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Type\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;

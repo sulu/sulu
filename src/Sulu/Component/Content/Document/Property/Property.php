@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Content\Document\Property;
 
-class Property
+class Property implements PropertyInterface
 {
     private $value;
     private $name;

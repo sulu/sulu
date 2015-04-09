@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Type;
 
 use PHPCR\NodeInterface;
 use SebastianBergmann\Exporter\Exception;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Type\SimpleContentType;
 
 /**

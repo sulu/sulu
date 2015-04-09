@@ -14,7 +14,7 @@ use Sulu\Component\Content\StructureInterface;
 use FOS\HttpCache\CacheInvalidator;
 use Symfony\Component\HttpFoundation\Response;
 use Sulu\Component\Content\Type\ContentTypeManager;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;

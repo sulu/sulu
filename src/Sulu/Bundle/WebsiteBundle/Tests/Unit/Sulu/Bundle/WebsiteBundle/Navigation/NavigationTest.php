@@ -15,7 +15,7 @@ use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;

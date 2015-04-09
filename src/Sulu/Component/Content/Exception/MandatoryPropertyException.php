@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 
 /**
  * data for mandatory exception not found
@@ -37,7 +37,7 @@ class MandatoryPropertyException extends \Exception
     }
 
     /**
-     * @return \Sulu\Component\Content\PropertyInterface
+     * @return \Sulu\Component\Content\Document\Property\PropertyInterface
      */
     public function getProperty()
     {

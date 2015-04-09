@@ -15,7 +15,7 @@ class LocationContentTypeTest extends \PHPUnit_Framework_TestCase
     {
         $this->nodeRepository = $this->getMock('Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface');
         $this->phpcrNode = $this->getMock('PHPCR\NodeInterface');
-        $this->suluProperty = $this->getMock('Sulu\Component\Content\PropertyInterface');
+        $this->suluProperty = $this->getMock('Sulu\Component\Content\Document\Property\PropertyInterface');
         $this->mapManager = $this->getMock('Sulu\Bundle\LocationBundle\Map\MapManager');
         $this->locationContent = new LocationContentType(
             $this->nodeRepository,

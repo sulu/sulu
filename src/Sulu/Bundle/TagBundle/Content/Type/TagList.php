@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Type\ComplexContentType;
 use Sulu\Component\Content\Type\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 
 /**
  * Content Type for the TagList, uses the TagManager-Service and the AutoCompleteList from Husky

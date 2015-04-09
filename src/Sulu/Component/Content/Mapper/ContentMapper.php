@@ -34,7 +34,7 @@ use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;

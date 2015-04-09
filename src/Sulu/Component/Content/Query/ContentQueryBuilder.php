@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Query;
 
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;

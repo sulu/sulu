@@ -54,7 +54,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $excerptExtension->getContentData(array('test1' => 'test1'))->willReturn(array('test1' => 'test1'));
         $this->structureFactory->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+        $property = $this->prophesize('Sulu\Component\Content\Document\Property\PropertyInterface');
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 

@@ -34,8 +34,8 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->parameterBag = $this->prophesize('Symfony\Component\HttpFoundation\ParameterBag');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
         $this->response->headers = $this->parameterBag;
-        $this->property1 = $this->prophesize('Sulu\Component\Content\PropertyInterface');
-        $this->property2 = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+        $this->property1 = $this->prophesize('Sulu\Component\Content\Document\Property\PropertyInterface');
+        $this->property2 = $this->prophesize('Sulu\Component\Content\Document\Property\PropertyInterface');
         $this->contentType1 = $this->prophesize('Sulu\Component\Content\Type\ContentTypeInterface');
         $this->contentType2 = $this->prophesize('Sulu\Component\Content\Type\ContentTypeInterface');
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Type\ContentTypeManager');
