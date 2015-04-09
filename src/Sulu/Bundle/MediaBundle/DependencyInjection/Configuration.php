@@ -50,6 +50,9 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
                     ->end()
+                    ->arrayNode('blocked_file_types')
+                        ->prototype('scalar')->end()->defaultValue(array('file/exe'))
+                    ->end()
                     ->arrayNode('mime_types')
                         ->prototype('scalar')->end()->defaultValue(array(
                             'image/jpeg',
