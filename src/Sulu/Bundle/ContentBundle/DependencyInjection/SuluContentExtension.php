@@ -65,6 +65,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('preview.xml');
         $loader->load('structure.xml');
         $loader->load('extension.xml');
+        $loader->load('form.xml');
     }
 
     private function processPreview(ContainerBuilder $container, $config)
