@@ -179,23 +179,23 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      */
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
     {
-        try {
-            $qb = $this->createQueryBuilder('media')
-                ->innerJoin('media.files', 'files')
-                ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
-                ->join('media.collection', 'collection')
-                ->where('collection.id = :collectionId')
-                ->andWhere('versions.name = :fileName')
-                ->orderBy('versions.created')
-                ->setMaxResults(1)
-                ->setParameter('filename', $filename)
-                ->setParameter('collectionId', $collectionId);
-            $result = $qb->getQuery()->getSingleScalarResult();
+        $qb = $this->createQueryBuilder('media')
+            ->innerJoin('media.files', 'files')
+            ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
+            ->join('media.collection', 'collection')
+            ->where('collection.id = :collectionId')
+            ->andWhere('versions.name = :filename')
+            ->orderBy('versions.created')
+            ->setMaxResults(1)
+            ->setParameter('filename', $filename)
+            ->setParameter('collectionId', $collectionId);
+        $result = $qb->getQuery()->getResult();
 
-            return $result;
-        } catch (NoResultException $ex) {
-            return null;
+        if (count($result) > 0) {
+            return $result[0];
         }
+
+        return null;
     }
 
     /**
@@ -204,7 +204,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
      * @param $offset
      * @return array
      */
-    public function findSupplierMedia($collectionId, $limit, $offset)
+    public function findMediaByCollectionId($collectionId, $limit, $offset)
     {
         // count media in collection
         $qb = $this->createQueryBuilder('media')
@@ -227,6 +227,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
         $paginator = new Paginator($query);
 
-        return ['media'=>$paginator, 'count'=>$count];
+        return ['media' => $paginator, 'count' => $count];
     }
 }
