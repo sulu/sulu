@@ -181,7 +181,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     {
         try {
             $qb = $this->createQueryBuilder('media')
-                ->select('media.id')
                 ->innerJoin('media.files', 'files')
                 ->innerJoin('files.fileVersions', 'versions', 'WITH', 'versions.version = files.version')
                 ->join('media.collection', 'collection')
