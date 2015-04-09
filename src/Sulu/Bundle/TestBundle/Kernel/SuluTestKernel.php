@@ -17,7 +17,6 @@ class SuluTestKernel extends SuluKernel
             new \Doctrine\Bundle\PHPCRBundle\DoctrinePHPCRBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
-            new \Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new \Liip\ThemeBundle\LiipThemeBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
