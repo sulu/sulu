@@ -163,7 +163,7 @@ EOT
             ->setTemplateKey($page['template'])
             ->setWebspaceKey($webspaceKey)
             ->setUserId($this->userId)
-            ->setState($page['published'] ? StructureInterface::STATE_PUBLISHED : StructureInterface::STATE_TEST)
+            ->setState($page['published'] ? WorkflowStage::PUBLISHED : WorkflowStage::TEST)
             ->setIsShadow($page['shadow'] ? true : false)
             ->setShadowBaseLanguage($page['shadow'])
             ->setLocale($page['locale'])
@@ -198,7 +198,7 @@ EOT
             ->setType('snippet')
             ->setTemplateKey($snippet['template'])
             ->setUserId($this->userId)
-            ->setState($snippet['published'] ? StructureInterface::STATE_PUBLISHED : StructureInterface::STATE_TEST)
+            ->setState($snippet['published'] ? WorkflowStage::PUBLISHED : WorkflowStage::TEST)
             ->setLocale($snippet['locale'])
             ->setData($snippet['data']);
 

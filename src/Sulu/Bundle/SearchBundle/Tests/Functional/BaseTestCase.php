@@ -46,7 +46,7 @@ class BaseTestCase extends SuluTestCase
             $structure->getProperty('title')->setValue('Structure Title ' . $i);
 
             $structure->getProperty('url')->setValue('/');
-            $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
+            $structure->setNodeState(WorkflowStage::PUBLISHED);
             $structure->setLanguageCode('de');
 
             $this->getSearchManager()->index($structure);

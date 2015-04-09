@@ -31,7 +31,7 @@ class ContentMapper_saveTest extends SuluTestCase
                     ->setTemplateKey('contact')
                     ->setWebspaceKey('sulu_io')
                     ->setUserId(1)
-                    ->setState(StructureInterface::STATE_PUBLISHED)
+                    ->setState(WorkflowStage::PUBLISHED)
                     ->setLocale('en')
                     ->setData(array(
                         'title' => 'This is a test',
@@ -71,7 +71,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setTemplateKey('contact')
             ->setWebspaceKey('sulu_io')
             ->setUserId(1)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('en')
             ->setData($englishContent);
 
@@ -90,7 +90,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setWebspaceKey('sulu_io')
             ->setUuid($structure->getUuid())
             ->setUserId(1)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('de')
             ->setData($frenchContent);
         $structure = $this->contentMapper->saveRequest($request);
@@ -114,7 +114,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setTemplateKey('contact')
             ->setWebspaceKey('sulu_io')
             ->setUserId(1)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('en')
             ->setData(array(
                 'title' => 'This is a test',
@@ -131,7 +131,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setWebspaceKey('sulu_io')
             ->setParentUuid($structure->getUuid())
             ->setUserId(1)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('de')
             ->setData(array(
                 'title' => 'Ceci est une test',
@@ -151,7 +151,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setWebspaceKey('sulu_io')
             ->setUuid($leafDocument->getUuid())
             ->setUserId(1)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('de')
             ->setData(array(
                 'title' => 'Bonjour le monde',
@@ -309,7 +309,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setTemplateKey('contact')
             ->setWebspaceKey('sulu_io')
             ->setUserId(1)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('de')
             ->setData($data);
         return $this->contentMapper->saveRequest($request);

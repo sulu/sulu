@@ -105,7 +105,7 @@ class SaveStructureTest extends BaseTestCase
         $structure->getProperty('url')->setValue('/this/is/a/url');
         $structure->getProperty('images')->setValue(array('asd'));
         $structure->setLanguageCode('de');
-        $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
+        $structure->setNodeState(WorkflowStage::PUBLISHED);
 
         $searchManager->index($structure);
 

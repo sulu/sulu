@@ -188,7 +188,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
@@ -199,7 +199,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
@@ -210,7 +210,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $data['products'] = $this->mapper->save(
@@ -222,7 +222,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
@@ -233,7 +233,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
@@ -244,7 +244,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         return $data;
@@ -362,7 +362,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $this->data['news/news-1']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
@@ -387,7 +387,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $this->data['news/news-1']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $result = $this->navigation->getNavigation(
@@ -436,7 +436,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
@@ -543,7 +543,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $this->data['products']->getUuid(),
-            StructureInterface::STATE_TEST
+            WorkflowStage::TEST
         );
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
@@ -560,7 +560,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             $this->data['products/products-3']->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);

@@ -62,7 +62,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setData(array(
                 'title' => 'ElePHPant',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
 
@@ -74,7 +74,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setData(array(
                 'title' => 'Penguin',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
 
         $this->snippet2 = $this->contentMapper->saveRequest($req);
 
@@ -90,7 +90,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setData(array(
                 'title' => 'English ElePHPant',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
         $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
@@ -101,7 +101,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setData(array(
                 'title' => 'Some other animal',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
         $this->contentMapper->saveRequest($req);
     }
 
@@ -112,7 +112,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('hotel')
             ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant',
@@ -139,7 +139,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant FOOBAR',
@@ -292,7 +292,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setWebspaceKey('sulu_io')
             ->setTemplateKey('test_page')
             ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData(array('title' => 'Foo'));
 

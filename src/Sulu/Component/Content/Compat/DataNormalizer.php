@@ -81,7 +81,7 @@ class DataNormalizer
 
     private function getWorkflowState($state)
     {
-        if ($state === StructureInterface::STATE_PUBLISHED) {
+        if ($state === WorkflowStage::PUBLISHED) {
             return WorkflowState::PUBLISHED;
         }
 

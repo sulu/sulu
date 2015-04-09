@@ -406,7 +406,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
 
@@ -586,7 +586,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEmpty($content->getNavContexts());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
@@ -633,7 +633,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
@@ -658,7 +658,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
     }
@@ -693,7 +693,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('thats a new test', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('thats cool', 'tag2', 'tag3'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
 
@@ -714,7 +714,7 @@ class ContentMapperTest extends PhpcrTestCase
         );
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
@@ -751,7 +751,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag2', 'tag3'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
 
@@ -766,7 +766,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
@@ -803,7 +803,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(array('tag2', 'tag3'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
 
@@ -818,7 +818,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(array('tag2', 'tag3'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
@@ -854,7 +854,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(null, $content->article);
         $this->assertEquals('/news/test', $content->url);
         $this->assertEquals(null, $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
 
@@ -869,7 +869,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(false, $content->hasProperty($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
@@ -961,7 +961,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/test/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
 
@@ -1030,7 +1030,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
@@ -1074,7 +1074,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals('default', $content->article);
         $this->assertEquals('/news/asdf/test/test', $content->url);
         $this->assertEquals(array('tag1', 'tag2'), $content->tags);
-        $this->assertEquals(StructureInterface::STATE_TEST, $content->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $content->getNodeState());
         $this->assertEquals(1, $content->creator);
         $this->assertEquals(1, $content->changer);
 
@@ -1089,7 +1089,7 @@ class ContentMapperTest extends PhpcrTestCase
         $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
         $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(
-            StructureInterface::STATE_TEST,
+            WorkflowStage::TEST,
             $content->getPropertyValue($this->languageNamespace . ':de-state')
         );
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
@@ -1536,7 +1536,7 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 't1'
         );
         $data1 = $this->mapper->save($data1, 'overview', 'default', 'de', 1);
-        $this->assertEquals(StructureInterface::STATE_TEST, $data1->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $data1->getNodeState());
         $this->assertNull($data1->getPublished());
         $this->assertFalse($data1->getPublishedState());
 
@@ -1545,7 +1545,7 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 't2'
         );
         $data2 = $this->mapper->save($data2, 'overview', 'default', 'de', 1, true, null, null, 2);
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data2->getNodeState());
+        $this->assertEquals(WorkflowStage::PUBLISHED, $data2->getNodeState());
         $this->assertNotNull($data2->getPublished());
         $this->assertTrue($data2->getPublishedState());
 
@@ -1555,7 +1555,7 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 't1'
         );
         $data3 = $this->mapper->save($data3, 'overview', 'default', 'de', 1, true, $data1->getUuid(), null, 2);
-        $this->assertEquals(StructureInterface::STATE_PUBLISHED, $data3->getNodeState());
+        $this->assertEquals(WorkflowStage::PUBLISHED, $data3->getNodeState());
         $this->assertNotNull($data3->getPublished());
         $this->assertTrue($data3->getPublishedState());
         $this->assertTrue($data3->getPublished() > $data2->getPublished());
@@ -1565,7 +1565,7 @@ class ContentMapperTest extends PhpcrTestCase
             'title' => 't2'
         );
         $data4 = $this->mapper->save($data4, 'overview', 'default', 'de', 1, true, $data2->getUuid(), null, 1);
-        $this->assertEquals(StructureInterface::STATE_TEST, $data4->getNodeState());
+        $this->assertEquals(WorkflowStage::TEST, $data4->getNodeState());
         $this->assertNull($data4->getPublished());
         $this->assertFalse($data4->getPublishedState());
     }

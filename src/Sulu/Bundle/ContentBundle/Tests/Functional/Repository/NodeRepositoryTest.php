@@ -348,7 +348,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
             sleep(1);
         }
@@ -414,7 +414,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
             sleep(1);
         }
@@ -476,7 +476,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
         }
 
@@ -551,7 +551,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -602,7 +602,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -701,7 +701,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -753,7 +753,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -820,7 +820,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
         }
 
@@ -914,7 +914,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[3]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $newData = array(
@@ -932,7 +932,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[2]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'default', 'en', 2);
@@ -979,7 +979,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', 'de');
@@ -1010,7 +1010,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', array('de', 'de_at'));

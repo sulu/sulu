@@ -151,7 +151,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('creator'), $userId);
             $node->setProperty($this->properties->getName('created'), new DateTime());
             $node->setProperty($this->properties->getName('navigation'), true);
-            $node->setProperty($this->properties->getName('state'), StructureInterface::STATE_PUBLISHED);
+            $node->setProperty($this->properties->getName('state'), WorkflowStage::PUBLISHED);
             $node->setProperty($this->properties->getName('published'), new DateTime());
         }
         if (!$node->hasProperty($this->properties->getName('nodeType'))) {

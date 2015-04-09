@@ -181,7 +181,7 @@ class SnippetController implements SecuredControllerInterface
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
             ->setData($data)
-            ->setState(intval($request->get('state', StructureInterface::STATE_TEST)));
+            ->setState(intval($request->get('state', WorkflowStage::TEST)));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
@@ -207,7 +207,7 @@ class SnippetController implements SecuredControllerInterface
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
             ->setData($data)
-            ->setState(intval($request->get('state', StructureInterface::STATE_TEST)));
+            ->setState(intval($request->get('state', WorkflowStage::TEST)));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));

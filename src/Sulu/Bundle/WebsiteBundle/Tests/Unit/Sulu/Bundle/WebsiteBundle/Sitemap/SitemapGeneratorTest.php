@@ -216,7 +216,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
@@ -227,7 +227,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
@@ -238,7 +238,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $data['products'] = $this->mapper->save(
@@ -250,7 +250,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_TEST
+            WorkflowStage::TEST
         );
 
         $data['products/products-1']['external_url'] = $data['products']->getUuid();
@@ -263,7 +263,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
@@ -274,7 +274,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-3']['external_url'] = $data['news']->getUuid();
         $data['products/products-3'] = $this->mapper->save(
@@ -286,7 +286,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         return $data;

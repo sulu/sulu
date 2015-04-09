@@ -98,7 +98,7 @@ EOT;
             ->setType('page')
             ->setWebspaceKey('sulu_io')
             ->setUserId($this->getUserId())
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('de')
             ->setData(array(
                 'title' => 'Behat Test Content',

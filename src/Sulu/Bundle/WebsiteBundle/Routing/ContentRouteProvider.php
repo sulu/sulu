@@ -109,7 +109,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
                 if (
                     $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
-                    $content->getNodeState() === StructureInterface::STATE_PUBLISHED
+                    $content->getNodeState() === WorkflowStage::PUBLISHED
                 ) {
                     // redirect to linked page
                     $route = new Route(
@@ -121,7 +121,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 } elseif (
-                    $content->getNodeState() === StructureInterface::STATE_TEST ||
+                    $content->getNodeState() === WorkflowStage::TEST ||
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()
                 ) {

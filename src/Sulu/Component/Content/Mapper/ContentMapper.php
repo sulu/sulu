@@ -148,8 +148,8 @@ class ContentMapper implements ContentMapperInterface
      * @var array
      */
     private $states = array(
-        StructureInterface::STATE_PUBLISHED,
-        StructureInterface::STATE_TEST
+        WorkflowStage::PUBLISHED,
+        WorkflowStage::TEST
     );
 
     /**
@@ -505,7 +505,7 @@ class ContentMapper implements ContentMapperInterface
             $structure->setNodeState($state);
 
             // published => set only once
-            if ($state === StructureInterface::STATE_PUBLISHED && !$node->hasProperty($publishedPropertyName)) {
+            if ($state === WorkflowStage::PUBLISHED && !$node->hasProperty($publishedPropertyName)) {
                 $node->setProperty($publishedPropertyName, new DateTime());
             }
         } else {
@@ -519,8 +519,8 @@ class ContentMapper implements ContentMapperInterface
                 return;
             } elseif (
                 // from test to published
-                $oldState === StructureInterface::STATE_TEST &&
-                $state === StructureInterface::STATE_PUBLISHED
+                $oldState === WorkflowStage::TEST &&
+                $state === WorkflowStage::PUBLISHED
             ) {
                 $node->setProperty($statePropertyName, $state);
                 $structure->setNodeState($state);
@@ -531,8 +531,8 @@ class ContentMapper implements ContentMapperInterface
                 }
             } elseif (
                 // from published to test
-                $oldState === StructureInterface::STATE_PUBLISHED &&
-                $state === StructureInterface::STATE_TEST
+                $oldState === WorkflowStage::PUBLISHED &&
+                $state === WorkflowStage::TEST
             ) {
                 $node->setProperty($statePropertyName, $state);
                 $structure->setNodeState($state);
@@ -567,7 +567,7 @@ class ContentMapper implements ContentMapperInterface
             $partialUpdate,
             $uuid,
             null,
-            StructureInterface::STATE_PUBLISHED,
+            WorkflowStage::PUBLISHED,
             $isShadow,
             $shadowBaseLanguage
         );
@@ -700,7 +700,7 @@ class ContentMapper implements ContentMapperInterface
         $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
 
         $startPage = $this->load($uuid, $webspaceKey, $locale);
-        $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
+        $startPage->setNodeState(WorkflowStage::PUBLISHED);
         $startPage->setNavContexts(array());
 
         if ($this->stopwatch) {
@@ -1085,7 +1085,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setNodeState(
             $contentNode->getPropertyValueWithDefault(
                 $propertyTranslator->getName('state'),
-                StructureInterface::STATE_TEST
+                WorkflowStage::TEST
             )
         );
 

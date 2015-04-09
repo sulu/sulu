@@ -41,7 +41,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
                 'title' => 'ElePHPant',
                 'description' => 'Elephants are large mammals of the family Elephantidae and the order Proboscidea.',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
 
@@ -54,7 +54,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
                 'title' => 'Penguin',
                 'Penguins (order Sphenisciformes, family Spheniscidae) are a group of aquatic, flightless birds living almost exclusively in the Southern Hemisphere, especially in Antarctica.',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
 
         $this->snippet2 = $this->contentMapper->saveRequest($req);
     }
@@ -99,7 +99,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
             ->setWebspaceKey($webspaceKey)
             ->setTemplateKey($templateKey)
             ->setLocale($locale)
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData($data);
 

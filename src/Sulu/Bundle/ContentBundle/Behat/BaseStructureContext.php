@@ -106,7 +106,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
 
             if ($type === 'page') {
                 $request->setWebspaceKey('sulu_io');
-                $request->setState(StructureInterface::STATE_PUBLISHED);
+                $request->setState(WorkflowStage::PUBLISHED);
 
                 if ($parentUuid) {
                     $request->setParentUuid($parentUuid);
