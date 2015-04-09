@@ -24,6 +24,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * Upgrades Resourcelocators to 0.9.0
@@ -116,7 +117,7 @@ class UpgradeResourceLocatorCommand extends ContainerAwareCommand
         $property = $page->getPropertyByTagName('sulu.rlp');
         if (
             $property->getContentTypeName() !== 'resource_locator' &&
-            $page->getNodeType() !== Structure::NODE_TYPE_CONTENT
+            $page->getNodeType() !== RedirectType::NONE
         ) {
             return;
         }

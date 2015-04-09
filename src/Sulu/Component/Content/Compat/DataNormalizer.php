@@ -98,13 +98,6 @@ class DataNormalizer
         $nodeType = $data['nodeType'];
         unset($data['nodeType']);
 
-        switch ($nodeType) {
-            case LegacyStructure::NODE_TYPE_INTERNAL_LINK:
-                return PageInterface::REDIRECT_TYPE_INTERNAL;
-            case LegacyStructure::NODE_TYPE_EXTERNAL_LINK:
-                return PageInterface::REDIRECT_TYPE_EXTERNAL;
-            default:
-                return null;
-        }
+        return $nodeType;
     }
 }

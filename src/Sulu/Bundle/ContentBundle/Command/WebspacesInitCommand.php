@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * Creates default routes in PHPCR for webspaces
@@ -156,7 +157,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
             $node->setProperty($this->properties->getName('published'), new DateTime());
         }
         if (!$node->hasProperty($this->properties->getName('nodeType'))) {
-            $node->setProperty($this->properties->getName('nodeType'), Structure::NODE_TYPE_CONTENT);
+            $node->setProperty($this->properties->getName('nodeType'), RedirectType::NONE);
         }
 
         if (!$node->hasProperty($this->properties->getName('title'))) {

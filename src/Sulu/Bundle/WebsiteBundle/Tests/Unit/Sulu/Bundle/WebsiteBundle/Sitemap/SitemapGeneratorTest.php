@@ -28,6 +28,7 @@ use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 class SitemapGeneratorTest extends PhpcrTestCase
 {
@@ -62,7 +63,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
         $this->contents->setProperty('i18n:en-state', Structure::STATE_PUBLISHED);
-        $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
+        $this->contents->setProperty('i18n:en-nodeType', RedirectType::NONE);
         $this->session->save();
 
         $contentQuery = new ContentQueryExecutor(
@@ -167,43 +168,43 @@ class SitemapGeneratorTest extends PhpcrTestCase
             'news' => array(
                 'title' => 'News ' . $locale,
                 'rl' => '/news',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('footer')
             ),
             'products' => array(
                 'title' => 'Products ' . $locale,
                 'rl' => '/products',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('main')
             ),
             'news/news-1' => array(
                 'title' => 'News-1 ' . $locale,
                 'rl' => '/news/news-1',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
                 'title' => 'News-2 ' . $locale,
                 'rl' => '/news/news-2',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
                 'title' => 'Products-1 ' . $locale,
                 'external_url' => '123-123-123',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'nodeType' => RedirectType::INTERNAL,
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
                 'title' => 'Products-2 ' . $locale,
                 'external_url' => 'www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
+                'nodeType' => RedirectType::EXTERNAL,
                 'navContexts' => array('main')
             ),
             'products/products-3' => array(
                 'title' => 'Products-3 ' . $locale,
                 'external_url' => 'www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'nodeType' => RedirectType::INTERNAL,
                 'navContexts' => array('main')
             )
         );

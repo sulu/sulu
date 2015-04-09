@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Compat\Template;
 
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * TODO: Internal / external links should not be structure types
@@ -22,9 +23,9 @@ class TemplateResolver
      */
     public function resolve($nodeType, $templateKey)
     {
-        if ($nodeType === Structure::NODE_TYPE_EXTERNAL_LINK) {
+        if ($nodeType === RedirectType::EXTERNAL) {
             $templateKey = 'external-link';
-        } elseif ($nodeType === Structure::NODE_TYPE_INTERNAL_LINK) {
+        } elseif ($nodeType === RedirectType::INTERNAL) {
             $templateKey = 'internal-link';
         }
 

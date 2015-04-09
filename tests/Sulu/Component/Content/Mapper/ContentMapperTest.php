@@ -31,6 +31,7 @@ use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
@@ -2841,12 +2842,12 @@ class ContentMapperTest extends PhpcrTestCase
 
         $data2 = array(
             'title' => 'Test',
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'nodeType' => RedirectType::INTERNAL,
             'internal' => $structure1->getUuid()
         );
         $structure2 = $this->mapper->save($data2, 'internal-link', 'default', 'en', 1);
 
-        $this->assertEquals(Structure::NODE_TYPE_INTERNAL_LINK, $structure2->getNodeType());
+        $this->assertEquals(RedirectType::INTERNAL, $structure2->getNodeType());
         $this->assertEquals($structure1->getUuid(), $structure2->getInternalLinkContent()->getUuid());
 
         $this->assertEquals($structure1->getResourceLocator(), $structure2->getResourceLocator());
@@ -2854,12 +2855,12 @@ class ContentMapperTest extends PhpcrTestCase
 
         $data3 = array(
             'title' => 'Test',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
+            'nodeType' => RedirectType::EXTERNAL,
             'external' => 'www.google.at'
         );
         $structure3 = $this->mapper->save($data3, 'external-link', 'default', 'en', 1);
 
-        $this->assertEquals(Structure::NODE_TYPE_EXTERNAL_LINK, $structure3->getNodeType());
+        $this->assertEquals(RedirectType::EXTERNAL, $structure3->getNodeType());
 
         $this->assertEquals('http://www.google.at', $structure3->getResourceLocator());
         $this->assertEquals('Test', $structure3->getNodeName());
@@ -3291,7 +3292,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'Page-1',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1);
@@ -3323,7 +3324,7 @@ class ContentMapperTest extends PhpcrTestCase
         $data = array(
             'title' => 'External',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
         $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
@@ -3345,7 +3346,7 @@ class ContentMapperTest extends PhpcrTestCase
         // back to content type
         $data = array(
             'title' => 'Page-1',
-            'nodeType' => Structure::NODE_TYPE_CONTENT
+            'nodeType' => RedirectType::NONE
         );
         $saveResult = $this->mapper->save($data, 'overview', 'default', 'de', 1, true, $result->getUuid());
         $loadResult = $this->mapper->load($saveResult->getUuid(), 'default', 'de');
@@ -3562,7 +3563,7 @@ class ContentMapperTest extends PhpcrTestCase
             // Internal Link with String Type
             $testSiteData = array(
                 'title' => 'Test',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'nodeType' => RedirectType::INTERNAL,
                 'internal' => $internalLink->getUuid()
             );
             $testSiteStructure = $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1);
@@ -3574,13 +3575,13 @@ class ContentMapperTest extends PhpcrTestCase
                 $snippet->getUuid(),
                 $snippet->getUuid()
             );
-            $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
+            $testSiteData['nodeType'] = RedirectType::NONE;
 
             $this->mapper->save($testSiteData, 'with_snipplet', 'default', 'en', 1, true, $uuid);
 
             // Change to Internal Link String
             $testSiteData['internal'] = $internalLink->getUuid();
-            $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
+            $testSiteData['nodeType'] = RedirectType::INTERNAL;
             $this->mapper->save($testSiteData, 'internal-link', 'default', 'en', 1, true, $uuid);
         } catch (\Exception $e) {
             $this->fail(

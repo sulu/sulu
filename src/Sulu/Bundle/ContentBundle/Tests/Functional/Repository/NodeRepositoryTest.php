@@ -32,6 +32,7 @@ use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * @group functional
@@ -540,7 +541,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => RedirectType::INTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -591,7 +592,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -690,7 +691,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => RedirectType::INTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -742,7 +743,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -903,7 +904,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Test4',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $data[3] = $this->mapper->save(
@@ -921,7 +922,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Test3',
             'internal_link' => $data[0]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => RedirectType::INTERNAL
         );
 
         $data[2] = $this->mapper->save(

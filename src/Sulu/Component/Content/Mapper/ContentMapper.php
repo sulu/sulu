@@ -58,6 +58,7 @@ use PHPCR\PropertyType;
 use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -914,7 +915,7 @@ class ContentMapper implements ContentMapperInterface
 
         $nodeType = $contentNode->getPropertyValueWithDefault(
             $propertyTranslator->getName('nodeType'),
-            Structure::NODE_TYPE_CONTENT
+            RedirectType::NONE
         );
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
@@ -930,7 +931,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setNodeType(
             $contentNode->getPropertyValueWithDefault(
                 $propertyTranslator->getName('nodeType'),
-                Structure::NODE_TYPE_CONTENT
+                RedirectType::NONE
             )
         );
         $structure->setWebspaceKey($webspaceKey);
@@ -1014,7 +1015,7 @@ class ContentMapper implements ContentMapperInterface
 
         $nodeType = $contentNode->getPropertyValueWithDefault(
             $propertyTranslator->getName('nodeType'),
-            Structure::NODE_TYPE_CONTENT
+            RedirectType::NONE
         );
 
         $originTemplateKey = $this->defaultTemplates[$structureType];
@@ -1043,7 +1044,7 @@ class ContentMapper implements ContentMapperInterface
         $structure->setNodeType(
             $contentNode->getPropertyValueWithDefault(
                 $propertyTranslator->getName('nodeType'),
-                Structure::NODE_TYPE_CONTENT
+                RedirectType::NONE
             )
         );
         $structure->setWebspaceKey($webspaceKey);
@@ -1168,7 +1169,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $loadGhostContent = false
     ) {
-        if ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK && $content->hasTag('sulu.rlp')) {
+        if ($content->getNodeType() === RedirectType::INTERNAL && $content->hasTag('sulu.rlp')) {
             $internal = $content->getPropertyValueByTagName('sulu.rlp');
 
             if (!empty($internal)) {
@@ -1315,8 +1316,8 @@ class ContentMapper implements ContentMapperInterface
 
             if ($node->getPropertyValueWithDefault(
                     $statePropertyName,
-                    Structure::STATE_TEST
-                ) === Structure::STATE_PUBLISHED
+                    WorkflowStage::TEST
+                ) === WorkflowStage::PUBLISHED
             ) {
                 // set default value
                 $property->setValue(null);
@@ -1584,7 +1585,7 @@ class ContentMapper implements ContentMapperInterface
             // correct resource locator
             if (
                 $content->getType() === null && $content->hasTag('sulu.rlp') &&
-                $content->getNodeType() === Structure::NODE_TYPE_CONTENT
+                $content->getNodeType() === RedirectType::NONE
             ) {
                 $this->adaptResourceLocator(
                     $content,
@@ -1861,7 +1862,7 @@ class ContentMapper implements ContentMapperInterface
             $node->hasProperty($propertyTranslator->getName('nodeType'))
         ) {
             if (
-                $node->getPropertyValue($propertyTranslator->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
+                $node->getPropertyValue($propertyTranslator->getName('nodeType')) === RedirectType::INTERNAL
             ) {
                 $nodeType = $node->getPropertyValue($propertyTranslator->getName('nodeType'));
                 $parent = $node->getParent()->getIdentifier();

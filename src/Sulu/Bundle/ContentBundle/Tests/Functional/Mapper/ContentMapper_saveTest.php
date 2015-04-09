@@ -10,6 +10,7 @@ use Sulu\Component\Content\Structure;
 use DTL\Component\Content\Document\PageInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 class ContentMapper_saveTest extends SuluTestCase
 {
@@ -230,7 +231,7 @@ class ContentMapper_saveTest extends SuluTestCase
 
         $structure = $this->saveTestPageWithData(array(
             'title' => 'My redirect',
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'nodeType' => RedirectType::INTERNAL,
             'internal_link' => $target->getUuid(),
             'url' => '/redirect',
         ));
@@ -251,7 +252,7 @@ class ContentMapper_saveTest extends SuluTestCase
     {
         $structure = $this->saveTestPageWithData(array(
             'title' => 'My redirect',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
+            'nodeType' => RedirectType::EXTERNAL,
             'external' => 'http://www.dantleech.com',
             'url' => '/redirect',
         ));
@@ -270,7 +271,7 @@ class ContentMapper_saveTest extends SuluTestCase
     {
         $structure = $this->saveTestPageWithData(array(
             'title' => 'Shadow',
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'nodeType' => RedirectType::INTERNAL,
             'url' => '/shadow',
             'shadowOn' => true,
             'shadowBaseLanguage' => 'fr',
@@ -290,7 +291,7 @@ class ContentMapper_saveTest extends SuluTestCase
     {
         $structure = $this->saveTestPageWithData(array(
             'title' => 'Navigation',
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'nodeType' => RedirectType::INTERNAL,
             'url' => '/navigation',
             'navContexts' => array('footer', 'navigation'),
         ));
