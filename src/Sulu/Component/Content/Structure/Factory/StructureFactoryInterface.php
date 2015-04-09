@@ -24,15 +24,13 @@ interface StructureFactoryInterface
      *
      * @param mixed $type The primary system type, e.g. page, snippet
      * @param mixed $structureType The secondary user type
-     * @param boolean $asModel If the structure should be returned as a model
-     *     representation, without presentation elements such as Sections
      *
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
      * @throws Exception\DocumentTypeNotFoundException If the document type was not mapped
      *
      * @return StructureInterface
      */
-    public function getStructure($type, $structureType, $asModel = false);
+    public function getStructure($type, $structureType);
 
     /**
      * Return all structures of the given type

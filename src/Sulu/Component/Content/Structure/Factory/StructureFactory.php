@@ -59,15 +59,9 @@ class StructureFactory implements StructureFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function getStructure($type, $structureType, $asModel = false)
+    public function getStructure($type, $structureType)
     {
-        if (!isset($this->typePaths[$type])) {
-            throw new Exception\DocumentTypeNotFoundException(sprintf(
-                'Structure path for document type "%s" is not mapped. Mapped structure types: "%s"',
-                $type,
-                implode('", "', array_keys($this->typePaths))
-            ));
-        }
+        $this->assertExists($type);
 
         if (!is_string($structureType)) {
             throw new \InvalidArgumentException(sprintf(
@@ -86,7 +80,8 @@ class StructureFactory implements StructureFactoryInterface
         $cache = new ConfigCache($cachePath, $this->debug);
 
         if ($this->debug || !$cache->isFresh()) {
-            $fileLocator = new FileLocator($this->typePaths[$type]);
+            $paths = $this->getPaths($type);
+            $fileLocator = new FileLocator($paths);
 
             try {
                 $filePath = $fileLocator->locate(sprintf('%s.xml', $structureType));
@@ -95,8 +90,8 @@ class StructureFactory implements StructureFactoryInterface
                     'Could not load structure type "%s" for document type "%s", looked in "%s"',
                     $structureType,
                     $type,
-                    implode('", "', $this->typePaths[$type])
-                ));
+                    implode('", "', $paths)
+                ), null, $e);
             }
 
             $metadata =  $this->loader->load($filePath);
@@ -111,10 +106,6 @@ class StructureFactory implements StructureFactoryInterface
         require($cachePath);
 
         $structure = unserialize($metadata);
-
-        if ($asModel) {
-            return $structure->transformToModel();
-        }
 
         return $structure;
     }
@@ -144,8 +135,11 @@ class StructureFactory implements StructureFactoryInterface
      */
     private function getStructureNames($type)
     {
+        $this->assertExists($type);
         $structureNames = array();
-        foreach ($this->typePaths[$type] as $structurePath) {
+
+        foreach ($this->typePaths[$type] as $pathConfig) {
+            $structurePath = $pathConfig['path'];
             $iterator = new \DirectoryIterator($structurePath);
             foreach ($iterator as $file) {
                 $ext = $file->getExtension();
@@ -159,5 +153,44 @@ class StructureFactory implements StructureFactoryInterface
         }
 
         return $structureNames;
+    }
+
+    /**
+     * Assert type exists
+     *
+     * @param string $type
+     */
+    private function assertExists($type)
+    {
+        if (!isset($this->typePaths[$type])) {
+            throw new Exception\DocumentTypeNotFoundException(sprintf(
+                'Structure path for document type "%s" is not mapped. Mapped structure types: "%s"',
+                $type,
+                implode('", "', array_keys($this->typePaths))
+            ));
+        }
+
+    }
+
+    /**
+     * Get the paths from the type path configuration
+     *
+     * @param string $type
+     * @param boolean $includeInternal
+     */
+    private function getPaths($type, $includeInternal = true)
+    {
+        $typeConfigs = $this->typePaths[$type];
+        $paths = array();
+
+        foreach ($typeConfigs as $typeConfig) {
+            if (false === $includeInternal && $typeConfig['internal'] === true) {
+                continue;
+            }
+
+            $paths[] = $typeConfig['path'];
+        }
+
+        return $paths;
     }
 }

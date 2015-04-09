@@ -29,7 +29,13 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory = new StructureFactory(
             $this->loader->reveal(),
             array(
-                'page' => array(__DIR__ . '/data/page'),
+                'page' => array(
+                    array(
+                        'type' => 'page',
+                        'internal' => false,
+                        'path' => __DIR__ . '/data/page',
+                    ),
+                ),
             ),
             $this->cacheDir
         );
@@ -74,19 +80,6 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->factory->getStructure('page', 'something');
         $this->factory->getStructure('page', 'something');
-    }
-
-    /**
-     * It can return a model representation
-     */
-    public function testGetStructureAsModel()
-    {
-        $modelRepresentation = new \stdClass;
-        $this->loader->load($this->mappingFile)->willReturn($this->structure->reveal());
-        $this->structure->transformToModel()->willReturn($modelRepresentation);
-
-        $structure = $this->factory->getStructure('page', 'something', true);
-        $this->assertEquals($modelRepresentation, $structure);
     }
 
     /**

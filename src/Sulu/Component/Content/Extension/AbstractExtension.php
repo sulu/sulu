@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
  * basic implementation of content mapper extension
  * @package Sulu\Component\Content\Mapper
  */
-abstract class StructureExtension implements ExtensionInterface
+abstract class AbstractExtension implements ExtensionInterface
 {
 
     /**
