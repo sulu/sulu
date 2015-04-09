@@ -54,16 +54,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../' . $config['format_cache']['public_folder'] . '/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
-        $container->setParameter('sulu_media.format_manager.mime_types', array(
-            'image/jpeg',
-            'image/jpg',
-            'image/gif',
-            'image/png',
-            'image/bmp',
-            'image/svg+xml',
-            'image/vnd.adobe.photoshop',
-            'application/pdf',
-        ));
+        $container->setParameter('sulu_media.format_manager.mime_types', $config['format_manager']['mime_types']);
 
         $container->setParameter('sulu_media.image.formats', array(
             self::DEFAULT_FORMAT_NAME => array(
@@ -106,7 +97,7 @@ class SuluMediaExtension extends Extension
                 'options' => $config['format_manager']['default_imagine_options']
             ),
         ));
-        
+
         $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

@@ -50,6 +50,18 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
                     ->end()
+                    ->arrayNode('mime_types')
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
+                            'image/png',
+                            'image/bmp',
+                            'image/svg+xml',
+                            'image/vnd.adobe.photoshop',
+                            'application/pdf',
+                        ))
+                    ->end()
                     ->arrayNode('types')
                         ->prototype('scalar')->end()->defaultValue(array(
                             array(
