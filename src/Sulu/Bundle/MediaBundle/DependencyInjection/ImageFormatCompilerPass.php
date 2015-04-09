@@ -74,8 +74,6 @@ class ImageFormatCompilerPass implements CompilerPassInterface
             }
         }
 
-        print_r($activeFormats);exit;
-
         return $activeFormats;
     }
 
