@@ -6,7 +6,7 @@
     <services>
         <!-- document field type -->
         <service id="dtl_content.form.factory.document_type" class="Sulu\Component\Content\Form\Type\DocumentObjectType">
-            <argument type="service" id="doctrine_phpcr.odm.document_manager" />
+            <argument type="service" id="sulu_document_manager" />
             <tag name="form.type" alias="document_object" />
         </service>
 

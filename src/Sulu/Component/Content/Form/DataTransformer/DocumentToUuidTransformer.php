@@ -11,10 +11,11 @@
 namespace Sulu\Component\Content\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
-use Doctrine\ODM\PHPCR\DocumentManager;
 use DTL\Component\Content\Document\DocumentInterface;
 use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
 
 class DocumentToUuidTransformer implements DataTransformerInterface
 {
@@ -31,9 +32,16 @@ class DocumentToUuidTransformer implements DataTransformerInterface
             return;
         }
 
-        $node = $this->documentManager->getNodeForDocument($document);
+        // TODO: Find a sensible way of getting the UUID from the document without
+        //       requiring this behavior (maybe the DocumentHelper ..)
+        if (!$document instanceof UuidBehavior) {
+            throw new \RuntimeException(sprintf(
+                'Document must implement UuuidBehavior to be used in a form. Got "%s"',
+                get_class($document)
+            ));
+        }
 
-        return $node->getIdentifier();
+        return $document->getUuid();
     }
 
     public function reverseTransform($uuid)
@@ -49,7 +57,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
             ));
         }
 
-        $document = $this->documentManager->find(null, $uuid);
+        $document = $this->documentManager->find($uuid);
 
         if (null === $document) {
             throw new TransformationFailedException(sprintf(
