@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Bundle\ContentBundle\Form\DataTransformer;
+namespace Sulu\Component\Content\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;

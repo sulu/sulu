@@ -1,9 +1,8 @@
 <?php
 
-namespace DTL\Component\Content\Compat;
+namespace Sulu\Component\Content\Compat;
 
 use Sulu\Component\Content\StructureInterface;
-use DTL\Component\Content\Document\WorkflowState;
 use Sulu\Component\Content\Structure as LegacyStructure;
 use DTL\Component\Content\Document\PageInterface;
 use PHPCR\Util\PathHelper;
@@ -55,7 +54,7 @@ class DataNormalizer
             'redirectTarget' => $this->getAndUnsetValue($data, 'internal_link'),
             'redirectExternal' => $this->getAndUnsetValue($data, 'external'),
             'navigationContexts' => $this->getAndUnsetValue($data, 'navContexts'),
-            'workflowState' => $this->getWorkflowState($state),
+            'workflowState' => $this->getWorkflowStage($state),
             'shadowLocaleEnabled' => (boolean) $this->getAndUnsetValue($data, 'shadowOn'),
             'shadowLocale' => $this->getAndUnsetValue($data, 'shadowBaseLanguage'),
             'content' => $data,
@@ -80,13 +79,13 @@ class DataNormalizer
         return $value;
     }
 
-    private function getWorkflowState($state)
+    private function getWorkflowStage($state)
     {
         if ($state === WorkflowStage::PUBLISHED) {
-            return WorkflowState::PUBLISHED;
+            return WorkflowStage::PUBLISHED;
         }
 
-        return WorkflowState::TEST;
+        return WorkflowStage::TEST;
     }
 
     private function getAndUnsetRedirectType(&$data)

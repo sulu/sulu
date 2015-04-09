@@ -59,6 +59,9 @@ use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Compat\DataNormalizer;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -184,15 +187,34 @@ class ContentMapper implements ContentMapperInterface
      */
     private $strategy;
 
+    /**
+     * @var DataNormalizer
+     */
+    private $dataNormalizer;
+
+    /**
+     * @Var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
     public function __construct(
-        ContentTypeManager $contentTypeManager,
-        ExtensionManager $extensionManager,
+        DocumentManager $documentManager,
         StructureFactoryInterface $structureFactory,
+        ExtensionManager $extensionManager,
+        DataNormalizer $dataNormalizer,
+        WebspaceManagerInterface $webspaceManager,
+        FormFactoryInterface $formFactory,
+
         SessionManagerInterface $sessionManager,
+        ContentTypeManager $contentTypeManager,
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
-        WebspaceManagerInterface $webspaceManager,
         TemplateResolver $templateResolver,
         SuluNodeHelper $nodeHelper,
         RlpStrategyInterface $strategy,
@@ -204,8 +226,14 @@ class ContentMapper implements ContentMapperInterface
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->extensionManager = $extensionManager;
+        $this->dataNormalizer = $dataNormalizer;
         $this->structureFactory = $structureFactory;
         $this->sessionManager = $sessionManager;
+        $this->webspaceManager = $webspaceManager;
+        $this->documentManager = $documentManager;
+        $this->formFactory = $formFactory;
+
+        // deprecated
         $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
         $this->defaultLanguage = $defaultLanguage;
@@ -213,7 +241,6 @@ class ContentMapper implements ContentMapperInterface
         $this->languageNamespace = $languageNamespace;
         $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
-        $this->webspaceManager = $webspaceManager;
         $this->templateResolver = $templateResolver;
         $this->nodeHelper = $nodeHelper;
         $this->strategy = $strategy;
@@ -264,8 +291,6 @@ class ContentMapper implements ContentMapperInterface
      */
     public function saveRequest(ContentMapperRequest $request)
     {
-        $this->validateRequest($request);
-
         return $this->save(
             $request->getData(),
             $request->getTemplateKey(),
@@ -301,12 +326,11 @@ class ContentMapper implements ContentMapperInterface
         $shadowBaseLanguage = null,
         $structureType = Structure::TYPE_PAGE
     ) {
-        $event = new ContentNodeEvent($node, $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
+        // $event = new ContentNodeEvent($node, $structure);
+        // $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
 
-        $data = $this->dataNormalizer->normalize($data, $state, $parent);
+        $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
 
-        $document->getContent()->stage($data['content']);
         unset($data['content']);
 
         if ($uuid) {
@@ -317,6 +341,7 @@ class ContentMapper implements ContentMapperInterface
 
         $form = $this->formFactory->create($structureType, $document, array(
             'webspace_key' => $webspaceKey,
+            'structure_name' => $templateKey,
         ));
 
         $form->submit($data, false);
@@ -2160,34 +2185,6 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $this->sessionManager->getSession()->save();
-    }
-
-    /**
-     * Validate the content mapper request
-     *
-     * TODO: We should be validating the domain object, i.e. the Page or Snippet structure
-     *       types. But this requires refactoring the ContentMapper
-     */
-    private function validateRequest(ContentMapperRequest $request)
-    {
-        $this->validateRequired(
-            $request,
-            array(
-                'templateKey',
-                'userId',
-                'locale',
-                'type',
-            )
-        );
-
-        if ($request->getType() === Structure::TYPE_PAGE) {
-            $this->validateRequired(
-                $request,
-                array(
-                    'webspaceKey',
-                )
-            );
-        }
     }
 
     private function validateRequired(ContentMapperRequest $request, $keys)

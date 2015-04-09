@@ -64,10 +64,6 @@ abstract class AbstractDocumentType extends AbstractType
         $builder->setAttribute('webspace_key', $options['webspace_key']);
         $builder->setAttribute('structure_name', $options['structure_name']);
 
-        $structureTypeFactory = $this->structureTypeFactory;
-        $structureForm = $structureTypeFactory->createBuilder($this->getName(), $options['structure_name'], array());
-
-        $builder->add($structureForm);
         $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitDocumentParent'));
         $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitStructureName'));
     }

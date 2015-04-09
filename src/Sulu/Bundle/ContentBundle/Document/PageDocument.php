@@ -10,6 +10,11 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
+use Sulu\Component\DocumentManager\Behavior\NodeNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\TimestampBehavior;
+use Sulu\Component\DocumentManager\Behavior\BlameBehavior;
+use Sulu\Component\DocumentManager\Behavior\ParentBehavior;
+
 class PageDocument implements
     NodeNameBehavior,
     TimestampBehavior,
@@ -70,4 +75,13 @@ class PageDocument implements
     {
         return $this->parent;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+    
 }

@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use Sulu\Bundle\ContentBundle\Form\DataTransformer\DocumentToUuidTransformer;
+use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 
 /**
  * Form type which represents a Sulu Document
