@@ -59,7 +59,7 @@ class ContentMapper_saveTest extends SuluTestCase
     /**
      * Can update a node in a different locale
      */
-    public function testSaveUpdate()
+    public function testContentSaveUpdate()
     {
         $englishContent = array(
             'title' => 'This is a test',
@@ -110,7 +110,7 @@ class ContentMapper_saveTest extends SuluTestCase
     /**
      * Can save a document with an assigned parent
      */
-    public function testSaveParent()
+    public function testContentSaveParent()
     {
         $request = ContentMapperRequest::create('page')
             ->setTemplateKey('contact')
@@ -173,7 +173,7 @@ class ContentMapper_saveTest extends SuluTestCase
      * Can save the start page using the dedicated ContentMapper
      * saveStartPage method.
      */
-    public function testSaveStartPage()
+    public function testContentSaveStartPage()
     {
         // this is actually the data sent for mapping ...
         $data = json_decode('
@@ -237,9 +237,9 @@ class ContentMapper_saveTest extends SuluTestCase
         ));
 
         $this->documentManager->clear();
-        $document = $this->documentManager->find(null, $structure->getUuid());
+        $document = $this->documentManager->find($structure->getUuid());
 
-        $this->assertEquals(PageInterface::REDIRECT_TYPE_INTERNAL, $document->getRedirectType());
+        $this->assertEquals(RedirectType::INTERNAL, $document->getRedirectType());
         $this->assertInstanceOf('DTL\Component\Content\Document\DocumentInterface', $document->getRedirectTarget());
         $this->assertEquals($target->getUuid(), $document->getRedirectTarget()->getUuid());
     }
@@ -260,7 +260,7 @@ class ContentMapper_saveTest extends SuluTestCase
         $this->documentManager->clear();
         $document = $this->documentManager->find($structure->getUuid(), 'de');
 
-        $this->assertEquals(PageInterface::REDIRECT_TYPE_EXTERNAL, $document->getRedirectType());
+        $this->assertEquals(RedirectType::EXTERNAL, $document->getRedirectType());
         $this->assertEquals('http://www.dantleech.com', $document->getRedirectExternal());
     }
 
@@ -278,9 +278,9 @@ class ContentMapper_saveTest extends SuluTestCase
         ));
 
         $this->documentManager->clear();
-        $document = $this->documentManager->find(null, $structure->getUuid());
+        $document = $this->documentManager->find($structure->getUuid());
 
-        $this->assertTrue($document->getShadowLocaleEnabled());
+        $this->assertTrue($document->isShadowLocaleEnabled());
         $this->assertEquals('fr', $document->getShadowLocale());
     }
 
@@ -297,7 +297,7 @@ class ContentMapper_saveTest extends SuluTestCase
         ));
 
         $this->documentManager->clear();
-        $document = $this->documentManager->find(null, $structure->getUuid());
+        $document = $this->documentManager->find($structure->getUuid());
 
         $this->assertEquals(array('footer', 'navigation'), $document->getNavigationContexts());
     }

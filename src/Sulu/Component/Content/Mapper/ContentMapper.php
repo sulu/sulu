@@ -62,6 +62,7 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Compat\DataNormalizer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Form\FormFactoryInterface;
+use Sulu\Component\Content\Form\Exception\InvalidFormException;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -351,7 +352,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
 
-        $this->documentManager->persist($document);
+        $this->documentManager->persist($document, $locale);
         $this->documentManager->flush();
 
         return $document;

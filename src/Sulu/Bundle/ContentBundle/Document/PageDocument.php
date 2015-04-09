@@ -14,12 +14,28 @@ use Sulu\Component\DocumentManager\Behavior\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\BlameBehavior;
 use Sulu\Component\DocumentManager\Behavior\ParentBehavior;
+use Sulu\Component\DocumentManager\Behavior\AutoNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
+use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 class PageDocument implements
     NodeNameBehavior,
     TimestampBehavior,
     BlameBehavior,
-    ParentBehavior
+    ParentBehavior,
+    AutoNameBehavior,
+    ResourceSegmentBehavior,
+    NavigationContextBehavior,
+    RedirectTypeBehavior,
+    WorkflowStageBehavior,
+    ShadowLocaleBehavior,
+    UuidBehavior
 {
     private $nodeName;
     private $created;
@@ -27,6 +43,23 @@ class PageDocument implements
     private $creator;
     private $changer;
     private $parent;
+    private $title;
+    private $resourceSegment;
+    private $navigationContexts = array();
+    private $redirectType;
+    private $redirectTarget;
+    private $redirectExternal;
+    private $workflowStage;
+    private $shadowLocaleEnabled;
+    private $shadowLocale;
+    private $uuid;
+    private $structureType;
+
+    public function __construct()
+    {
+        $this->workflowStage = WorkflowStage::TEST;
+        $this->redirectType = RedirectType::NONE;
+    }
 
     /**
      * {@inheritDoc}
@@ -34,6 +67,22 @@ class PageDocument implements
     public function getNodeName() 
     {
         return $this->nodeName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTitle() 
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set the title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 
     /**
@@ -82,6 +131,158 @@ class PageDocument implements
     public function setParent($parent)
     {
         $this->parent = $parent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getResourceSegment() 
+    {
+        return $this->resourceSegment;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setResourceSegment($resourceSegment)
+    {
+        $this->resourceSegment = $resourceSegment;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNavigationContexts() 
+    {
+        return $this->navigationContexts;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setNavigationContexts(array $navigationContexts = array())
+    {
+        $this->navigationContexts = $navigationContexts;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRedirectType() 
+    {
+        return $this->redirectType;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setRedirectType($redirectType)
+    {
+        $this->redirectType = $redirectType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRedirectTarget() 
+    {
+        return $this->redirectTarget;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setRedirectTarget($redirectTarget)
+    {
+        $this->redirectTarget = $redirectTarget;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRedirectExternal() 
+    {
+        return $this->redirectExternal;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setRedirectExternal($redirectExternal)
+    {
+        $this->redirectExternal = $redirectExternal;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getWorkflowStage() 
+    {
+        return $this->workflowStage;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setWorkflowStage($workflowStage)
+    {
+        $this->workflowStage = $workflowStage;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getShadowLocale() 
+    {
+        return $this->shadowLocale;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setShadowLocale($shadowLocale)
+    {
+        $this->shadowLocale = $shadowLocale;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isShadowLocaleEnabled() 
+    {
+        return $this->shadowLocaleEnabled;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setShadowLocaleEnabled($shadowLocaleEnabled)
+    {
+        $this->shadowLocaleEnabled = $shadowLocaleEnabled;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUuid() 
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStructureType() 
+    {
+        return $this->structureType;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function setStructureType($structureType)
+    {
+        $this->structureType = $structureType;
     }
     
 }

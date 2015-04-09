@@ -105,7 +105,6 @@ abstract class AbstractDocumentType extends AbstractType
     public function postSubmitStructureName(FormEvent $event)
     {
         $document = $event->getData();
-        $documentStructureName = $document->getStructureType();
         $structureName = $event->getForm()->getConfig()->getAttribute('structure_name');
         $document->setStructureType($structureName);
     }

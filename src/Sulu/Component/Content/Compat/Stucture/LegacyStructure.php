@@ -13,21 +13,6 @@ namespace Sulu\Component\Content\Compat\Stucture;
 class LegacyStructureConstants
 {
     /**
-     * indicates that the node is a content node
-     */
-    const NODE_TYPE_CONTENT = 1;
-
-    /**
-     * indicates that the node links to an internal resource
-     */
-    const NODE_TYPE_INTERNAL_LINK = 2;
-
-    /**
-     * indicates that the node links to an external resource
-     */
-    const NODE_TYPE_EXTERNAL_LINK = 4;
-
-    /**
      * Structure type page
      */
     const TYPE_PAGE = 'page';

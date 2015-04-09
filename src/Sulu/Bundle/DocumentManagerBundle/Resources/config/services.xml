@@ -58,6 +58,10 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.suscriber.behavior.uuid" class="Sulu\Component\DocumentManager\Subscriber\Behavior\UuidSubscriber">
+            <tag name="kernel.event_subscriber" />
+        </service>
+
         <service id="sulu_document_manager.suscriber.behavior.parent" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ParentSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_manager.factory.ghost" />
             <argument type="service" id="event_dispatcher" />
