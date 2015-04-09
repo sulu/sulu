@@ -28,6 +28,13 @@ interface ContentBehavior
      * @param string
      */
     public function setStructureType($structureType);
+
+    /**
+     * Return the content container
+     *
+     * @return ContentContainer
+     */
+    public function getContent();
 }
 
 

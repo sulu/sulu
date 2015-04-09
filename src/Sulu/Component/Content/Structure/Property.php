@@ -75,11 +75,17 @@ class Property extends Item implements PropertyInterface
         return $this->minOccurs !== $this->maxOccurs;
     }
 
+    /**
+     * @deprecated - use isRequired
+     */
     public function getMandatory()
     {
         return $this->required;
     }
 
+    /**
+     * @deprecated - use isLocalized
+     */
     public function isMultilingual()
     {
         return $this->localized;
@@ -110,11 +116,17 @@ class Property extends Item implements PropertyInterface
         return $this->maxOccurs;
     }
 
+    /**
+     * @deprecated - use getType
+     */
     public function getContentTypeName() 
     {
         return $this->contentTypeName;
     }
 
+    /**
+     * @deprecated
+     */
     public function getIsBlock() 
     {
         return false;
@@ -130,8 +142,28 @@ class Property extends Item implements PropertyInterface
         return $this->placeholder[$locale];
     }
 
+    /**
+     * Duplicate
+     *
+     * @deprecated - use isRequired
+     */
     public function isMandatory()
     {
         return $this->required;
+    }
+
+    public function isRequired()
+    {
+        return $this->required;
+    }
+
+    public function isLocalized()
+    {
+        return $this->localized;
+    }
+
+    public function getType() 
+    {
+        return $this->type;
     }
 }

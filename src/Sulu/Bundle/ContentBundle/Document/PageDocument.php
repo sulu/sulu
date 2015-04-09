@@ -279,6 +279,14 @@ class PageDocument implements
     {
         return $this->structureType;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
     
     /**
      * {@inheritDoc}
