@@ -18,7 +18,7 @@ use Sulu\Bundle\ContentBundle\Preview\DoctrineCacheProvider;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 /**

@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\CoreBundle\Cache;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Structure;
 
 /**

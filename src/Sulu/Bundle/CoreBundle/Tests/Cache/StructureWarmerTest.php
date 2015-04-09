@@ -9,7 +9,7 @@ class StructureWarmerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->structureFactory = $this->prophesize('Sulu\Component\Structure\Factory\StructureFactoryInterface');
+        $this->structureFactory = $this->prophesize('Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
         $this->warmer = new StructureWarmer($this->structureFactory->reveal());
     }
 

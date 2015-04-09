@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;

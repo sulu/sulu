@@ -19,9 +19,9 @@ class ContentMapper_saveTest extends SuluTestCase
     public function setUp()
     {
         $this->initPhpcr();
-        $this->contentMapper = $this->getContainer()->get('dtl_content.compat.content_mapper');
+        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager');
-        $this->parent = $this->documentManager->find('/cmf/sulu_io/contents');
+        $this->parent = $this->documentManager->find('/cmf/sulu_io/contents', 'de');
     }
 
     public function provideSave()
@@ -257,7 +257,7 @@ class ContentMapper_saveTest extends SuluTestCase
         ));
 
         $this->documentManager->clear();
-        $document = $this->documentManager->find(null, $structure->getUuid());
+        $document = $this->documentManager->find($structure->getUuid(), 'de');
 
         $this->assertEquals(PageInterface::REDIRECT_TYPE_EXTERNAL, $document->getRedirectType());
         $this->assertEquals('http://www.dantleech.com', $document->getRedirectExternal());

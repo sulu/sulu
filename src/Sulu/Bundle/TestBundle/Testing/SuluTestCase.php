@@ -12,7 +12,6 @@ use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
-use Sulu\Component\Content\Structure;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 
 /**
@@ -138,7 +137,9 @@ abstract class SuluTestCase extends BaseTestCase
         $cmf = $session->getRootNode()->addNode('cmf');
 
         $snippetsNode = $cmf->addNode('snippets');
-        $snippetStructures = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
+
+        // TODO: Snippets should have their own initializer
+        $snippetStructures = $structureFactory->getStructures('snippet');
 
         foreach ($snippetStructures as $snippetStructure) {
             $snippetsNode->addNode($snippetStructure->getKey());

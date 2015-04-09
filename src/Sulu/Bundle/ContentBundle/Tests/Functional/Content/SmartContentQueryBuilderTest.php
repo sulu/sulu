@@ -19,7 +19,7 @@ use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 

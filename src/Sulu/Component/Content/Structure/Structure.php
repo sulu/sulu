@@ -133,4 +133,13 @@ class Structure extends Item implements StructureInterface
     {
         return (boolean) $this->getPropertiesByTagName($tagName);
     }
+
+    /**
+     * @deprecated Use getName instead
+     * TODO: Remove this
+     */
+    public function getKey()
+    {
+        return $this->getName();
+    }
 }

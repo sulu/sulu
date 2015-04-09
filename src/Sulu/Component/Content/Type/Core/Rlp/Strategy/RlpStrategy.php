@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;

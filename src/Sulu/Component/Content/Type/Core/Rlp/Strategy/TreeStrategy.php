@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Type\Core\Rlp\Strategy;
 
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\Rlp\Mapper\RlpMapperInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Util\SuluNodeHelper;

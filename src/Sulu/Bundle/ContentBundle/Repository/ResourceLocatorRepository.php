@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\ResourceLocatorInterface;
 use Sulu\Component\Content\Type\Core\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Type\Core\Rlp\Strategy\RlpStrategyInterface;

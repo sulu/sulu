@@ -19,7 +19,7 @@ use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\TextLine;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -100,7 +100,7 @@ class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
         $this->contentMapper = $this->prophesize('Sulu\Component\Content\Mapper\ContentMapperInterface');
         $this->requestAnalyzer = $this->prophesize('Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface');
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Type\ContentTypeManagerInterface');
-        $this->structureFactory = $this->prophesize('Sulu\Component\Structure\Factory\StructureFactoryInterface');
+        $this->structureFactory = $this->prophesize('Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
         $this->sessionManager = $this->prophesize('Sulu\Component\PHPCR\SessionManager\SessionManagerInterface');
         $this->session = $this->prophesize('PHPCR\SessionInterface');
         $this->node = $this->prophesize('PHPCR\NodeInterface');

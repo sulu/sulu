@@ -96,7 +96,7 @@ class XmlLoader extends XmlLegacyLoader
 
     private function normalizePropertyData($data)
     {
-        $data = array_merge_recursive(array(
+        $data = array_replace_recursive(array(
             'type' => null,
             'multilingual' => true,
             'mandatory' => true,
@@ -111,12 +111,13 @@ class XmlLoader extends XmlLegacyLoader
 
     private function normalizeStructureData($data)
     {
-        $data = array_merge_recursive(array(
+        $data = array_replace_recursive(array(
             'key' => null,
             'view' => null,
             'controller' => null,
             'cacheLifetime' => null,
         ), $this->normalizeItem($data));
+
 
         return $data;
     }

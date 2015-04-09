@@ -5,7 +5,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.

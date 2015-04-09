@@ -21,7 +21,7 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;

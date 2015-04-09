@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Command;
 
 use Jackalope\Query\Row;
 use PHPCR\SessionInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

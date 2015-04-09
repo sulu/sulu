@@ -12,7 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

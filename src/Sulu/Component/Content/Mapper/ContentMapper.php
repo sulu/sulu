@@ -40,9 +40,9 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\StructureType;
-use Sulu\Component\Content\Template\TemplateResolverInterface;
+use Sulu\Component\Content\Compat\Template\TemplateResolver;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Type\Core\ResourceLocatorInterface;
 use Sulu\Component\Content\Type\Core\Rlp\Strategy\RlpStrategyInterface;
@@ -140,7 +140,7 @@ class ContentMapper implements ContentMapperInterface
     private $webspaceManager;
 
     /**
-     * @var TemplateResolverInterface
+     * @var TemplateResolver
      */
     private $templateResolver;
 
@@ -192,7 +192,7 @@ class ContentMapper implements ContentMapperInterface
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
         WebspaceManagerInterface $webspaceManager,
-        TemplateResolverInterface $templateResolver,
+        TemplateResolver $templateResolver,
         SuluNodeHelper $nodeHelper,
         RlpStrategyInterface $strategy,
         $defaultLanguage,

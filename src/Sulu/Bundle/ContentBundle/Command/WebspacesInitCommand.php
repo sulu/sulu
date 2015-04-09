@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

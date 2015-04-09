@@ -5,7 +5,7 @@
 
     <parameters>
         <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
-        <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
+        <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Compat\Template\TemplateResolver</parameter>
 
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
         <parameter key="sulu.content.mapper.subscriber.node_order.class">Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber</parameter>
@@ -37,8 +37,8 @@
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
             <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu_content.structure.factory"/>
             <argument type="service" id="sulu_content.extension.manager" />
+            <argument type="service" id="sulu_content.structure.factory"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
@@ -84,27 +84,6 @@
         <!-- content type manager -->
         <service id="sulu.content.type_manager" class="%sulu.content.type_manager.class%">
             <argument type="service" id="service_container"/>
-        </service>
-
-        <!-- structure manager -->
-        <service id="sulu_content.structure.factory.loader" class="%sulu_content.structure.factory.loader.class%" public="false"/>
-        <service id="sulu_content.structure.factory.dumper" class="%sulu_content.structure.factory.dumper.class%" public="false">
-            <argument>%sulu_content.structure.factory.dumper.path%</argument>
-            <argument>%kernel.debug%</argument>
-        </service>
-        <service id="sulu_content.structure.factory" class="%sulu_content.structure.factory.class%">
-            <argument type="service" id="sulu_content.structure.factory.loader"/>
-            <argument type="service" id="sulu_content.structure.factory.dumper"/>
-            <argument type="service" id="logger"/>
-            <argument type="collection">
-                <argument key="structure_paths">%sulu.content.structure.paths%</argument>
-                <argument key="cache_dir">%sulu.cache_dir%</argument>
-                <argument key="debug">%kernel.debug%</argument>
-            </argument>
-
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
         </service>
 
         <!-- rlp mapper -->
@@ -153,12 +132,6 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-        </service>
-
-        <!-- cache warmer for structures -->
-        <service id="sulu.cache.warmer.structure" class="%sulu.cache.warmer.structure.class%">
-            <argument type="service" id="sulu_content.structure.factory" />
-            <tag name="kernel.cache_warmer" />
         </service>
 
         <!-- sulu node helper -->

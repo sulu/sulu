@@ -25,7 +25,7 @@ use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
-use Sulu\Component\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Template\TemplateResolver;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Type\Core\ResourceLocator;
@@ -308,7 +308,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareStructureManager()
     {
         if ($this->structureFactory === null) {
-            $this->structureFactory = $this->getMock('\Sulu\Component\Structure\Factory\StructureFactoryInterface');
+            $this->structureFactory = $this->getMock('\Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
 
             $this->structureFactory->expects($this->any())
                 ->method('getStructure')
