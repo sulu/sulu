@@ -22,6 +22,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * The PortalRouteProvider should load the dynamic routes created by Sulu

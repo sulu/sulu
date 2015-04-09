@@ -17,6 +17,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Bundle\ContentBundle\Behat\BaseStructureContext;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Behat context class for the ContentBundle

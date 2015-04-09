@@ -7,6 +7,7 @@ use DTL\Component\Content\Document\WorkflowState;
 use Sulu\Component\Content\Structure as LegacyStructure;
 use DTL\Component\Content\Document\PageInterface;
 use PHPCR\Util\PathHelper;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Normalizes the legacy Sulu request data

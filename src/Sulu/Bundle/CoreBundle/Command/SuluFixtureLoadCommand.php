@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Yaml\Yaml;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Load fixture command

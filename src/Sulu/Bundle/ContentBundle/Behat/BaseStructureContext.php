@@ -18,6 +18,7 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Behat\Gherkin\Node\TableNode;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Base context class for Structure based feature contexts

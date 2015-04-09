@@ -57,6 +57,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes

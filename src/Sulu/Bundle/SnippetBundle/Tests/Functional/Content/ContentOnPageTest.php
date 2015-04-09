@@ -15,6 +15,7 @@ use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class ContentOnPageTest extends BaseFunctionalTestCase
 {

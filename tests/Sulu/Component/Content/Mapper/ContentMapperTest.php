@@ -30,6 +30,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper

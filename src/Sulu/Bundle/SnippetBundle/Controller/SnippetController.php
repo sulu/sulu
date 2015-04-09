@@ -27,6 +27,7 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * handles snippets

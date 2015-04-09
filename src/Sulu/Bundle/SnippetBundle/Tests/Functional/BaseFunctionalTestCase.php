@@ -14,6 +14,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
 {

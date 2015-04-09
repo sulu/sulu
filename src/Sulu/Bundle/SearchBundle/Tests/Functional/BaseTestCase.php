@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class BaseTestCase extends SuluTestCase
 {

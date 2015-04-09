@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content\Document;
 
+use Sulu\Component\Content\Document\WorkflowStage;
+
 /**
  * Simple constants class for representing workflow stages.
  *

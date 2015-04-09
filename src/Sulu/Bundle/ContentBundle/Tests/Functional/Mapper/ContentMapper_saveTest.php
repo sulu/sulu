@@ -9,6 +9,7 @@ use DTL\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Structure;
 use DTL\Component\Content\Document\PageInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class ContentMapper_saveTest extends SuluTestCase
 {

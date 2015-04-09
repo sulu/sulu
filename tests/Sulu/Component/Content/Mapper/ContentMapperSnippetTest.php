@@ -16,6 +16,7 @@ use Sulu\Component\Content\StructureInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {

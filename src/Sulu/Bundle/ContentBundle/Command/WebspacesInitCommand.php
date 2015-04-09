@@ -27,6 +27,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Creates default routes in PHPCR for webspaces
