@@ -106,24 +106,8 @@ class SuluMediaExtension extends Extension
                 'options' => $config['format_manager']['default_imagine_options']
             ),
         ));
-        $container->setParameter('sulu_media.media.types', array(
-            array(
-                'type' => 'document',
-                'mimeTypes' => array('*')
-            ),
-            array(
-                'type' => 'image',
-                'mimeTypes' => array('image/*')
-            ),
-            array(
-                'type' => 'video',
-                'mimeTypes' => array('video/*')
-            ),
-            array(
-                'type' => 'audio',
-                'mimeTypes' => array('audio/*')
-            )
-        ));
+        
+        $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
