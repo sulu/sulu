@@ -38,7 +38,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('ghost_script')
                 ->addDefaultsIfNotSet()
                 ->children()
-                     ->scalarNode('path')->defaultValue(SuluMediaExtension::DEFAULT_GHOST_SCRIPT_PATH)->end()
+                     ->scalarNode('path')->defaultValue('gs')->end()
                 ->end()
             ->end()
             ->arrayNode('storage')
@@ -57,7 +57,11 @@ class Configuration implements ConfigurationInterface
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->arrayNode('response_headers')
-                        ->prototype('scalar')->end()
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            'Expires' => '+1 month',
+                            'Pragma' => 'public',
+                            'Cache-Control' => 'public'
+                        ))
                     ->end()
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
