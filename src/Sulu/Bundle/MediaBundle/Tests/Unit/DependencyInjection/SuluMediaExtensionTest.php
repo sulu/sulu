@@ -27,9 +27,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->load();
 
         $this->assertContainerBuilderHasService('sulu_media.media_manager');
-        $this->assertContainerBuilderHasService('sulu_media.format_manager.response_headers', array(
-            'Expires' => '+1 month'
-        ));
+        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', array());
         $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', '170x170');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.segments', 10);
