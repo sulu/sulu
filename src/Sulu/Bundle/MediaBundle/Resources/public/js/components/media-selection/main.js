@@ -299,6 +299,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         el: getId.call(this, 'collectionSelect'),
                         instanceName: 'media-selection-' + this.options.instanceName,
                         valueName: 'title',
+                        direction: 'bottom',
                         data: data,
                         preSelectedElements: [preselected]
                     }
