@@ -126,6 +126,9 @@ class PhpcrMapper extends RlpMapper
         $languageCode,
         $segmentKey = null
     ) {
+        if ($node->isNew()) {
+            return null;
+        }
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {

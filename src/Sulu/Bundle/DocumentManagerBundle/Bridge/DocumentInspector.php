@@ -1,40 +1,17 @@
 <?php
 
-namespace Sulu\Component\Content\Document;
+namespace Sulu\Bundle\DocumentManagerBundle\Bridge;
 
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
+use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 
 /**
  * This class infers information about documents, for example
  * the documents locale, webspace, path, etc.
  */
-class DocumentInspector
+class DocumentInspector extends BaseDocumentInspector
 {
-    private $documentRegistry;
-    private $pathSegmentRegistry;
-
-    public function __construct(
-        DocumentRegistry $documentRegistry,
-        PathSegmentRegistry $pathSegmentregistry
-    )
-    {
-        $this->documentRegistry = $documentRegistry;
-        $this->pathSegmentRegistry = $pathSegmentregistry;
-    }
-
-    /**
-     * Return the locale for the given document
-     *
-     * @param object $document
-     *
-     * @return string
-     */
-    public function getLocale($document)
-    {
-        return $this->documentRegistry->getLocaleForDocument($document);
-    }
-
     /**
      * Return the webspace name for the given document
      *
@@ -45,20 +22,6 @@ class DocumentInspector
     public function getWebspace($document)
     {
         return $this->extractWebspaceFromPath($this->getPath($document));
-    }
-
-    /**
-     * Return the path for the given document
-     *
-     * @param object $document
-     *
-     * @return string
-     */
-    public function getPath($document)
-    {
-        return $this->documentRegistry
-            ->getNodeForDocument($document)
-            ->getPath();
     }
 
     /**

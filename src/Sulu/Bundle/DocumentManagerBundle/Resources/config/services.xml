@@ -43,6 +43,11 @@
             </argument>
         </service>
 
+        <service id="sulu_document_manager.document_inspector" class="Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector">
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="sulu_document_manager.path_segment_registry" />
+        </service>
+
         <!-- Proxy manager -->
         <service id="sulu_document_manager.proxy_factory" class="Sulu\Component\DocumentManager\ProxyFactory">
             <argument type="service" id="sulu_document_manager.proxy_manager.factory.ghost" />

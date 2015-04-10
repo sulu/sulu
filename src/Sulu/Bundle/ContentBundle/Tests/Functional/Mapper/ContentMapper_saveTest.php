@@ -67,6 +67,7 @@ class ContentMapper_saveTest extends SuluTestCase
             'telephone' => '123123',
             'information' => 'Hello',
             'smart-content' => 'This is smart',
+            'url' => '/path/to',
         );
 
         $request = ContentMapperRequest::create('page')
@@ -86,6 +87,7 @@ class ContentMapper_saveTest extends SuluTestCase
             'telephone' => '123123',
             'information' => 'Hello',
             'smart-content' => 'This is smart',
+            'url' => '/path/to',
         );
 
         $request = ContentMapperRequest::create('page')

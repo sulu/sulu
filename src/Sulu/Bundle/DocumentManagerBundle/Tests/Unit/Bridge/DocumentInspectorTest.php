@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
  
-namespace Sulu\Component\Content\Document;
+namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Bridge;
 
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use PHPCR\NodeInterface;
-
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 
 class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,17 +27,6 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             $this->documentRegistry->reveal(),
             $this->pathRegistry->reveal()
         );
-    }
-
-    /**
-     * It should return the current locale for the given document
-     */
-    public function testGetLocale()
-    {
-        $this->documentRegistry->getLocaleForDocument($this->document)->willReturn('de');
-
-        $result = $this->documentInspector->getLocale($this->document);
-        $this->assertEquals('de', $result);
     }
 
     /**

@@ -25,12 +25,14 @@ use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
 use Sulu\Component\Content\Document\Property\Property;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
     private $contentTypeManager;
     private $structureFactory;
-    private $documentMetadataFactory;
+    private $metadataFactory;
+    private $documentInspector;
 
     /**
      * @param PropertyEncoder $encoder<
@@ -40,14 +42,16 @@ class ContentSubscriber extends AbstractMappingSubscriber
     public function __construct(
         PropertyEncoder $encoder,
         ContentTypeManagerInterface $contentTypeManager,
-        DocumentMetadataFactory $documentMetadataFactory,
-        StructureFactory $structureFactory
+        DocumentMetadataFactory $metadataFactory,
+        StructureFactory $structureFactory,
+        DocumentInspector $documentInspector
     )
     {
         parent::__construct($encoder);
         $this->contentTypeManager = $contentTypeManager;
         $this->structureFactory = $structureFactory;
-        $this->documentMetadataFactory = $documentMetadataFactory;
+        $this->metadataFactory = $metadataFactory;
+        $this->documentInspector = $documentInspector;
     }
 
     /**
@@ -125,7 +129,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
      */
     private function getStructure($document)
     {
-        $documentAlias = $this->documentMetadataFactory->getMetadataForClass(get_class($document))->getAlias();
+        $documentAlias = $this->metadataFactory->getMetadataForClass(get_class($document))->getAlias();
         return $this->structureFactory->getStructure($documentAlias, $document->getStructureType());
     }
 
@@ -139,6 +143,8 @@ class ContentSubscriber extends AbstractMappingSubscriber
     {
         $propertyContainer = $document->getContent();
         $structure = $this->getStructure($document);
+        $webspaceName = $this->documentInspector->getWebspace($document);
+        $locale = $this->documentInspector->getLocale($document);
 
         // If the content container is managed, then update the structure
         // as it may have changed.
@@ -170,8 +176,8 @@ class ContentSubscriber extends AbstractMappingSubscriber
                 $node,
                 $property,
                 null,
-                null,
-                null,
+                $webspaceName,
+                $locale,
                 null
             );
         }
