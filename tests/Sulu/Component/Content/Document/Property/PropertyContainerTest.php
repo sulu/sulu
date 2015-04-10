@@ -37,7 +37,7 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
     /**
      * It shuld lazily initialize a localized property
      */
-    public function testGetProperty()
+    public function testGetLocalizedProperty()
     {
         $name = 'test';
         $contentTypeName = 'hello';
@@ -45,11 +45,57 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
         $locale = 'fr';
 
         $this->document->getLocale()->willReturn($locale);
-        $this->structureProperty->isLocalized()->willReturn(true);
+        $this->encoder->localizedContentName($name, $locale)->willReturn($phpcrName);
+            $this->structureProperty->isLocalized()->willReturn(true);
+
+        $this->doGetProperty($name, $contentTypeName, $phpcrName, $locale);
+
+        $this->propertyContainer->getProperty($name);
+    }
+
+    /**
+     * It should lazily initialize a non-localized property
+     */
+    public function testGetNonLocalizedProperty()
+    {
+        $name = 'test';
+        $contentTypeName = 'hello';
+        $phpcrName = 'phpcrName';
+
+        $this->document->getLocale()->shouldNotBeCalled();
+        $this->encoder->contentName($name)->willReturn($phpcrName);
+        $this->structureProperty->isLocalized()->willReturn(false);
+
+        $this->doGetProperty($name, $contentTypeName, $phpcrName);
+
+        $this->propertyContainer->getProperty($name);
+    }
+
+    /**
+     * It should act as an array
+     */
+    public function testArrayAccess()
+    {
+        $name = 'test';
+        $contentTypeName = 'hello';
+        $phpcrName = 'hai';
+
+        $this->document->getLocale()->shouldNotBeCalled();
+        $this->encoder->contentName($name)->willReturn($phpcrName);
+        $this->structureProperty->isLocalized()->willReturn(false);
+
+        $this->doGetProperty($name, $contentTypeName, $phpcrName);
+
+        $property = $this->propertyContainer[$name];
+        $this->assertInstanceOf(PropertyInterface::class, $property);
+    }
+
+    private function doGetProperty($name, $contentTypeName, $phpcrName)
+    {
         $this->structureProperty->getType()->willReturn($contentTypeName);
         $this->structure->getProperty($name)->willReturn($this->structureProperty);
-        $this->encoder->localizedContentName($name, $locale)->willReturn($phpcrName);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
+
         $this->contentType->read(
             $this->node->reveal(),
             Argument::type('Sulu\Component\Content\Document\Property\PropertyInterface'),

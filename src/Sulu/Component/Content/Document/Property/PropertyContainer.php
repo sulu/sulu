@@ -65,12 +65,12 @@ class PropertyContainer implements \ArrayAccess
 
         if (true === $structureProperty->isLocalized()) {
             $locale = $this->document->getLocale();
-            $name = $this->propertyEncoder->localizedContentName($name, $locale);
+            $phpcrName = $this->propertyEncoder->localizedContentName($name, $locale);
         } else {
-            $name = $this->propertyEncoder->contentname($name);
+            $phpcrName = $this->propertyEncoder->contentname($name);
         }
 
-        $property = new Property($name, $this->document);
+        $property = new Property($phpcrName, $this->document);
         $this->properties[$name] = $property;
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
@@ -92,7 +92,7 @@ class PropertyContainer implements \ArrayAccess
 
     public function offsetGet($offset)
     {
-        return $this->getProperty($offset)->getValue();
+        return $this->getProperty($offset);
     }
 
     public function offsetSet($offset, $value)

@@ -16,7 +16,7 @@ namespace Sulu\Component\Content\Document\Property;
 interface PropertyInterface
 {
     /**
-     * Returns name of template
+     * Returns PHPCR name of template
      *
      * @return string
      */
