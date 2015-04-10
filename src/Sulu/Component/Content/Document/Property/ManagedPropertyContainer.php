@@ -84,6 +84,11 @@ class ManagedPropertyContainer extends PropertyContainer
         return $property;
     }
 
+    public function setStructure(Structure $structure) 
+    {
+        $this->structure = $structure;
+    }
+
     public function getArrayCopy()
     {
         $values = array();

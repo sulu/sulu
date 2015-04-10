@@ -105,13 +105,18 @@ class ContentSubscriber extends AbstractMappingSubscriber
         // Map the content to the node
         $structure = $this->getStructure($document);
 
+        $propertyContainer = $document->getContent();
+
+        if ($propertyContainer instanceof ManagedPropertyContainer) {
+            $propertyContainer->setStructure($structure);
+        }
+
         // Document title is mandatory
         $document->getContent()->getProperty('title')->setValue($document->getTitle());
 
         foreach ($structure->getChildren() as $propertyName => $structureProperty) {
             $contentTypeName = $structureProperty->getContentTypeName();
             $contentType = $this->contentTypeManager->get($contentTypeName);
-            $document->getContent()->getProperty($propertyName);
 
             // TODO: The following logic is duplicated in the ManagedPropertyContainer
             if (true === $structureProperty->isLocalized()) {
@@ -121,7 +126,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
                 $phpcrName = $this->encoder->contentname($propertyName);
             }
 
-            $realProperty = $document->getContent()->getProperty($propertyName);
+            $realProperty = $propertyContainer->getProperty($propertyName);
             $property = new Property($phpcrName, $document);
 
             $property->setValue($realProperty->getValue());
