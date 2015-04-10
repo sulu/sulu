@@ -3,7 +3,14 @@ CHANGELOG for Sulu
 
 * dev-develop
     * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
+    * BUGFIX      #976 [MediaBundle]     Fix media scale mode parameter
+    * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
+    * BUGFIX      #973 [All]             Added handling of anonymous user token
+    * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
+    * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
+    * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
+    * BUGFIX      #922 [ContentBundle]   Fixed URL Generation after copying language of a child node
     * FEATURE     #732 [All]             Automatic mapping and assignation of changer, creator, changed and changer.
     * FEATURE     #891 [All]             Added (css) class property to field descriptors, updated husky and fixed an issue when merging settings with matchings
     * FEATURE     #884 [MediaBundle]     Loaders on media delete and media edit
@@ -24,6 +31,7 @@ CHANGELOG for Sulu
     * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
     * FEATURE     #838 [AdminBundle]     Login UI
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
+    * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
 
 * dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id

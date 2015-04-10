@@ -22,17 +22,15 @@ interface SecurityCheckerInterface
      * Checks a Sulu specific permission based on the subject, a permission type and a locale
      * @param mixed $subject
      * @param string $permission
-     * @param string|null $locale
      * @return boolean
      * @throws AccessDeniedException
      */
-    public function checkPermission($subject, $permission, $locale = null);
+    public function checkPermission($subject, $permission);
 
     /**
      * @param $subject
      * @param $permission
-     * @param string|null $locale
      * @return boolean
      */
-    public function hasPermission($subject, $permission, $locale = null);
+    public function hasPermission($subject, $permission);
 } 
