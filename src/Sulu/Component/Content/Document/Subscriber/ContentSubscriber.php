@@ -102,11 +102,46 @@ class ContentSubscriber extends AbstractMappingSubscriber
             $document->getStructureType()
         );
 
-        // Map the content to the node
+        $this->mapContentToNode($document, $node);
+    }
+
+    /**
+     * @param mixed $document
+     * @param NodeInterface $node
+     */
+    private function createPropertyContainer($document, NodeInterface $node)
+    {
+        return new ManagedPropertyContainer(
+            $this->contentTypeManager,
+            $node,
+            $this->encoder,
+            $this->getStructure($document),
+            $document
+        );
+    }
+
+    /**
+     * @param mixed $document
+     */
+    private function getStructure($document)
+    {
+        $documentAlias = $this->documentMetadataFactory->getMetadataForClass(get_class($document))->getAlias();
+        return $this->structureFactory->getStructure($documentAlias, $document->getStructureType());
+    }
+
+    /**
+     * Map to the content properties to the node using the content types
+     *
+     * @param mixed $document
+     * @param NodeInterface $node
+     */
+    private function mapContentToNode($document, NodeInterface $node)
+    {
+        $propertyContainer = $document->getContent();
         $structure = $this->getStructure($document);
 
-        $propertyContainer = $document->getContent();
-
+        // If the content container is managed, then update the structure
+        // as it may have changed.
         if ($propertyContainer instanceof ManagedPropertyContainer) {
             $propertyContainer->setStructure($structure);
         }
@@ -140,22 +175,5 @@ class ContentSubscriber extends AbstractMappingSubscriber
                 null
             );
         }
-    }
-
-    private function createPropertyContainer($document, NodeInterface $node)
-    {
-        return new ManagedPropertyContainer(
-            $this->contentTypeManager,
-            $node,
-            $this->encoder,
-            $this->getStructure($document),
-            $document
-        );
-    }
-
-    private function getStructure($document)
-    {
-        $documentAlias = $this->documentMetadataFactory->getMetadataForClass(get_class($document))->getAlias();
-        return $this->structureFactory->getStructure($documentAlias, $document->getStructureType());
     }
 }

@@ -5,6 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Core -->
         <service id="sulu_document_manager" class="Sulu\Component\DocumentManager\DocumentManager">
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="sulu_document_manager.node_manager" />
@@ -30,6 +31,16 @@
 
         <service id="sulu_document_manager.property_encoder" class="Sulu\Component\DocumentManager\PropertyEncoder">
             <argument type="service" id="sulu_document_manager.namespace_registry" />
+        </service>
+
+        <!-- Utilities -->
+        <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
+            <argument type="collection">
+                <argument key="base">%sulu.content.node_names.base%</argument>
+                <argument key="content">%sulu.content.node_names.content%</argument>
+                <argument key="route">%sulu.content.node_names.route%</argument>
+                <argument key="snippet">%sulu.content.node_names.snippet%</argument>
+            </argument>
         </service>
 
         <!-- Proxy manager -->

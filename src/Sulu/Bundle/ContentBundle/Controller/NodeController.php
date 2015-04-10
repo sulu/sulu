@@ -26,6 +26,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * handles content nodes
