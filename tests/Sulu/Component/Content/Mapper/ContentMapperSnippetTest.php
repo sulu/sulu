@@ -17,6 +17,7 @@ use PHPCR\PropertyType;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -56,7 +57,7 @@ class ContentMapperSnippetTest extends SuluTestCase
     public function loadFixtures()
     {
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('de')
             ->setUserId(1)
@@ -68,7 +69,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->snippet1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('de')
             ->setUserId(1)
@@ -84,7 +85,7 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setUserId(1)
@@ -95,7 +96,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setUserId(1)
@@ -110,7 +111,7 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setState(WorkflowStage::PUBLISHED)
@@ -137,7 +138,7 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setState(WorkflowStage::PUBLISHED)
@@ -289,7 +290,7 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_PAGE)
+            ->setType(LegacyStructureConstants::TYPE_PAGE)
             ->setWebspaceKey('sulu_io')
             ->setTemplateKey('test_page')
             ->setLocale('de')

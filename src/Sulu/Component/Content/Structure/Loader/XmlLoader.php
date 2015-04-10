@@ -43,6 +43,7 @@ class XmlLoader extends XmlLegacyLoader
         $structure->controller = $data['controller'];
         $structure->tags = $data['tags'];
         $structure->parameters = $data['params'];
+        $structure->resource = $resource;
 
         foreach ($data['properties'] as $propertyName => $dataProperty) {
             $structure->children[$propertyName] = $this->createProperty($dataProperty);

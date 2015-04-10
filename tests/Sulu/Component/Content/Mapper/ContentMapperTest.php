@@ -3556,7 +3556,7 @@ class ContentMapperTest extends PhpcrTestCase
                 null,
                 null,
                 null,
-                Structure::TYPE_SNIPPET
+                LegacyStructureConstants::TYPE_SNIPPET
             );
 
 

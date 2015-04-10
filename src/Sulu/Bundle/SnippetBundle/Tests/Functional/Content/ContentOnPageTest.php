@@ -16,6 +16,7 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 class ContentOnPageTest extends BaseFunctionalTestCase
 {
@@ -34,7 +35,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
     public function loadFixtures()
     {
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setUserId(1)
@@ -47,7 +48,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         $this->snippet1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('hotel')
             ->setLocale('de')
             ->setUserId(1)
@@ -96,7 +97,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         }
 
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_PAGE)
+            ->setType(LegacyStructureConstants::TYPE_PAGE)
             ->setWebspaceKey($webspaceKey)
             ->setTemplateKey($templateKey)
             ->setLocale($locale)

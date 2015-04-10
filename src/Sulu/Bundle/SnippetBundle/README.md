@@ -15,7 +15,7 @@ Why not use a SnippetManager to act as a proxy?
 Get snippet types:
 
     $structureFactory = $this->getContainer('sulu.structure_manager');
-    $snippetTypes = $structureFactory->getTemplates(Structure::TYPE_SNIPPET);
+    $snippetTypes = $structureFactory->getTemplates(LegacyStructureConstants::TYPE_SNIPPET);
 
 Get a snippet:
 

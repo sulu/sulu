@@ -11,6 +11,7 @@
 namespace Sulu\Component\Content\Mapper\Translation;
 
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 class MultipleTranslatedPropertiesTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,9 +33,9 @@ class MultipleTranslatedPropertiesTest extends \PHPUnit_Framework_TestCase
     public function provideGetName()
     {
         return array(
-            array(Structure::TYPE_PAGE, 'foobar', 'i18n:de-foobar'),
-            array(Structure::TYPE_SNIPPET, 'template', 'template'),
-            array(Structure::TYPE_PAGE, 'template', 'i18n:de-template'),
+            array(LegacyStructureConstants::TYPE_PAGE, 'foobar', 'i18n:de-foobar'),
+            array(LegacyStructureConstants::TYPE_SNIPPET, 'template', 'template'),
+            array(LegacyStructureConstants::TYPE_PAGE, 'template', 'i18n:de-template'),
         );
     }
 

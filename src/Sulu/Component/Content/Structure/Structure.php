@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Structure;
 
 use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\Content\Structure\Section;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
 class Structure extends Item implements StructureInterface
 {
@@ -73,7 +74,7 @@ class Structure extends Item implements StructureInterface
     public function getProperty($name)
     {
         if (!isset($this->children[$name])) {
-            throw new NoSuchPropertyException(sprintf(
+            throw new NoSuchPropertyException($this->name, sprintf(
                 'Property "%s" does not exist in structure "%s" loaded from resource "%s"',
                 $name,
                 $this->name,

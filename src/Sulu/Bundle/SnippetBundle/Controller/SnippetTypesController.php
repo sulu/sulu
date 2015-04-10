@@ -15,6 +15,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * handles snippet template
@@ -29,7 +30,7 @@ class SnippetTypesController extends Controller implements ClassResourceInterfac
     {
         /** @var StructureFactoryInterface $structureFactory */
         $structureFactory = $this->get('sulu_content.structure.factory');
-        $types = $structureFactory->getStructures(Structure::TYPE_SNIPPET);
+        $types = $structureFactory->getStructures(LegacyStructureConstants::TYPE_SNIPPET);
 
         $templates = array();
         foreach ($types as $type) {

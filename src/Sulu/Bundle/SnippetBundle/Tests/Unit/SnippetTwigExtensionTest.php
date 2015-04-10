@@ -18,6 +18,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Snippet;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 class SnippetTwigExtensionTest extends SuluTestCase
 {
@@ -74,7 +75,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
             Structure::STATE_PUBLISHED,
             null,
             null,
-            Structure::TYPE_SNIPPET
+            LegacyStructureConstants::TYPE_SNIPPET
         );
 
         return array(array($data));
@@ -95,7 +96,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
             Structure::STATE_PUBLISHED,
             null,
             null,
-            Structure::TYPE_SNIPPET
+            LegacyStructureConstants::TYPE_SNIPPET
         );
 
         $snippet = $this->extension->loadSnippet($data->getUuid());
@@ -133,7 +134,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
             Structure::STATE_PUBLISHED,
             null,
             null,
-            Structure::TYPE_SNIPPET
+            LegacyStructureConstants::TYPE_SNIPPET
         );
         $dataEn = array('title' => 'en-test-title', 'description' => 'en-test-description');
         $dataEn = $this->contentMapper->save(
@@ -148,7 +149,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
             Structure::STATE_PUBLISHED,
             null,
             null,
-            Structure::TYPE_SNIPPET
+            LegacyStructureConstants::TYPE_SNIPPET
         );
 
         $snippet = $this->extension->loadSnippet($dataDe->getUuid(), 'en');

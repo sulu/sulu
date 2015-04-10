@@ -10,6 +10,8 @@
 
 namespace Sulu\Component\Content\Compat\Stucture;
 
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
+
 class LegacyStructureConstants
 {
     /**

@@ -63,6 +63,7 @@ use Sulu\Component\Content\Compat\DataNormalizer;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -258,7 +259,7 @@ class ContentMapper implements ContentMapperInterface
      *
      * @return MultipleTranslatedProperties
      */
-    protected function createPropertyTranslator($locale, $structureType = Structure::TYPE_PAGE)
+    protected function createPropertyTranslator($locale, $structureType = LegacyStructureConstants::TYPE_PAGE)
     {
         $properties = new MultipleTranslatedProperties(
             array(
@@ -325,7 +326,7 @@ class ContentMapper implements ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = Structure::TYPE_PAGE
+        $structureType = LegacyStructureConstants::TYPE_PAGE
     ) {
         // $event = new ContentNodeEvent($node, $structure);
         // $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
@@ -941,7 +942,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadShallowStructureByNode(NodeInterface $contentNode, $localization, $webspaceKey)
     {
-        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: LegacyStructureConstants::TYPE_PAGE;
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
         $nodeType = $contentNode->getPropertyValueWithDefault(
@@ -997,7 +998,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
+        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: LegacyStructureConstants::TYPE_PAGE;
         $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
 
         // START: getAvailableLocalization
@@ -1122,7 +1123,7 @@ class ContentMapper implements ContentMapperInterface
             )
         );
 
-        if ($structureType === Structure::TYPE_PAGE) {
+        if ($structureType === LegacyStructureConstants::TYPE_PAGE) {
             $structure->setPath(
                 str_replace($this->sessionManager->getContentPath($webspaceKey), '', $contentNode->getPath())
             );
@@ -1259,7 +1260,7 @@ class ContentMapper implements ContentMapperInterface
                 // title
                 $templateKey = $node->getPropertyValueWithDefault(
                     $propertyTranslator->getName('template'),
-                    $this->defaultTemplates[Structure::TYPE_PAGE]
+                    $this->defaultTemplates[LegacyStructureConstants::TYPE_PAGE]
                 );
                 $structure = $this->getStructure($templateKey);
                 $nodeNameProperty = $structure->getProperty('title');
@@ -1405,7 +1406,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $srcLanguageCode,
         $destLanguageCodes,
-        $structureType = Structure::TYPE_PAGE
+        $structureType = LegacyStructureConstants::TYPE_PAGE
     ) {
         if (!is_array($destLanguageCodes)) {
             $destLanguageCodes = array($destLanguageCodes);
@@ -1752,7 +1753,7 @@ class ContentMapper implements ContentMapperInterface
      * @param string $key key of content type
      * @return StructureInterface
      */
-    protected function getStructure($key, $type = Structure::TYPE_PAGE)
+    protected function getStructure($key, $type = LegacyStructureConstants::TYPE_PAGE)
     {
         $structure = $this->structureFactory->getStructure($key, $type);
 

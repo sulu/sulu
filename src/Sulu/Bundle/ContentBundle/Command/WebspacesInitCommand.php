@@ -29,6 +29,7 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Creates default routes in PHPCR for webspaces
@@ -120,7 +121,7 @@ class WebspacesInitCommand extends ContainerAwareCommand
         $this->createRecursive($snippetsPath, $root);
         $output->writeln("    snippets: /{$snippetsPath}");
 
-        $snippetStructures = $this->structureFactory->getStructures(Structure::TYPE_SNIPPET);
+        $snippetStructures = $this->structureFactory->getStructures(LegacyStructureConstants::TYPE_SNIPPET);
         foreach ($snippetStructures as $snippetStructure) {
             $snippetPath = $snippetsPath . '/' . $snippetStructure->getKey();
             $output->writeln("    snippets: /{$snippetPath}");

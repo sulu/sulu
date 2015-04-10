@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Cache;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Generates the Structure cache files
@@ -32,10 +33,10 @@ class StructureWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         // warmup the pages
-        $this->structureFactory->getStructures(Structure::TYPE_PAGE);
+        $this->structureFactory->getStructures(LegacyStructureConstants::TYPE_PAGE);
 
         // warm up the snippets
-        $this->structureFactory->getStructures(Structure::TYPE_SNIPPET);
+        $this->structureFactory->getStructures(LegacyStructureConstants::TYPE_SNIPPET);
     }
 
     public function isOptional()

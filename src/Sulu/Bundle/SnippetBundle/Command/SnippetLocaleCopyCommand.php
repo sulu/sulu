@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Copy internationalized properties from one locale to another
@@ -145,7 +146,7 @@ EOT
             null,
             $srcLocale,
             $destLocale,
-            Structure::TYPE_SNIPPET
+            LegacyStructureConstants::TYPE_SNIPPET
         );
 
         $this->output->writeln('<info>Processing: </info>' . $structure->getNodeName());
