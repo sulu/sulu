@@ -40,6 +40,8 @@ class SuluMediaExtension extends Extension
             'sulu_media.format_manager.default_imagine_options',
             $config['format_manager']['default_imagine_options']
         );
+        $container->setParameter('sulu_media.media.storage.local.path', $config['storage']['local']['path']);
+        $container->setParameter('sulu_media.media.storage.local.segments', $config['storage']['local']['segments']);
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
