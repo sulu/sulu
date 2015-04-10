@@ -64,10 +64,9 @@ class ContentSubscriber extends AbstractMappingSubscriber
         // Set the structure type
         $node = $event->getNode();
         $document = $event->getDocument();
-        $value = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName('template', $event->getLocale()),
-            null
-        );
+        $propertyName = $this->encoder->localizedSystemName('template', $event->getLocale());
+        $value = $node->getPropertyValueWithDefault($propertyName, null);
+
         $document->setStructureType($value);
 
         // Set the property container
@@ -85,6 +84,11 @@ class ContentSubscriber extends AbstractMappingSubscriber
         // Set the structure type
         $document = $event->getDocument();
         $node = $event->getNode();
+
+        if (!$document->getStructureType()) {
+            return;
+        }
+
         $node->setProperty(
             $this->encoder->localizedSystemName('template', $event->getLocale()),
             $document->getStructureType()

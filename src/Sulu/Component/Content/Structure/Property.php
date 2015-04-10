@@ -121,7 +121,7 @@ class Property extends Item implements PropertyInterface
      */
     public function getContentTypeName() 
     {
-        return $this->contentTypeName;
+        return $this->type;
     }
 
     /**

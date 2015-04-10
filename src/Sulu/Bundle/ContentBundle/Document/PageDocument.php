@@ -24,6 +24,7 @@ use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Property\PropertyContainer;
 
 class PageDocument implements
     NodeNameBehavior,
@@ -57,11 +58,13 @@ class PageDocument implements
     private $shadowLocale;
     private $uuid;
     private $structureType;
+    private $content;
 
     public function __construct()
     {
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
+        $this->content = new PropertyContainer();
     }
 
     /**
