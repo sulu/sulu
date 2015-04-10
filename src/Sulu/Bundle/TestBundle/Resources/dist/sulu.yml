@@ -17,8 +17,8 @@ fos_rest:
 monolog:
     handlers:
         main:
-            type:         fingers_crossed
-            action_level: error
+            type:         stream
+            action_level: debug
             handler:      nested
         nested:
             type:  stream

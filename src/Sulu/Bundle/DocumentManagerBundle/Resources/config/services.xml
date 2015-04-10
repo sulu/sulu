@@ -69,6 +69,11 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.suscriber.behavior.locale" class="Sulu\Component\DocumentManager\Subscriber\Behavior\LocaleSubscriber">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="sulu_document_manager.document_registry" />
+        </service>
+
         <service id="sulu_document_manager.suscriber.behavior.parent" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ParentSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <tag name="kernel.event_subscriber" />

@@ -62,6 +62,20 @@ class ContentSubscriberTest extends SubscriberTestCase
     }
 
     /**
+     * It should return early if the structure type is empty
+     */
+
+    public function testPersistNoStructureType()
+    {
+        $document = new TestContentDocument($this->propertyContainer->reveal());
+
+        // map the structure type
+        $this->persistEvent->getLocale()->willReturn('fr');
+        $this->encoder->localizedSystemName('template', 'fr')->willReturn('i18n:fr-template');
+        $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
+    }
+
+    /**
      * It should set the structure type and map the content to thethe node
      */
     public function testPersist()

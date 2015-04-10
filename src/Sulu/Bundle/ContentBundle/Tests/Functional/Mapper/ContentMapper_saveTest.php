@@ -62,10 +62,11 @@ class ContentMapper_saveTest extends SuluTestCase
     {
         $englishContent = array(
             'title' => 'This is a test',
-            'url' => '/url/to/content',
             'name' => 'Daniel Leech',
             'email' => 'daniel@dantleech.com',
             'telephone' => '123123',
+            'information' => 'Hello',
+            'smart-content' => 'This is smart',
         );
 
         $request = ContentMapperRequest::create('page')
@@ -80,10 +81,11 @@ class ContentMapper_saveTest extends SuluTestCase
 
         $frenchContent = array(
             'title' => 'Ceci est une test',
-            'url' => '/url/to/content',
             'name' => 'Danièl le Français',
             'email' => 'daniel@dantleech.com',
             'telephone' => '123123',
+            'information' => 'Hello',
+            'smart-content' => 'This is smart',
         );
 
         $request = ContentMapperRequest::create('page')
@@ -96,14 +98,11 @@ class ContentMapper_saveTest extends SuluTestCase
             ->setData($frenchContent);
         $document = $this->contentMapper->saveRequest($request);
 
-        unset($englishContent['title'], $englishContent['url']);
-        unset($frenchContent['title'], $frenchContent['url']);
-
         $document = $this->documentManager->find($document->getUuid(), 'en');
-        // $this->assertEquals($englishContent, $document->getContent()->getArrayCopy());
+        $this->assertEquals($englishContent, $document->getContent()->getArrayCopy());
 
         $document = $this->documentManager->find($document->getUuid(), 'de');
-        // $this->assertEquals($frenchContent, $document->getContent()->getArrayCopy());
+        $this->assertEquals($frenchContent, $document->getContent()->getArrayCopy());
     }
 
     /**
@@ -163,7 +162,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ));
         $this->contentMapper->saveRequest($request);
 
-        $leafDocument = $this->documentManager->find('/cmf/sulu_io/contents/this-is-a-test/bonjour-le-monde');
+        $leafDocument = $this->documentManager->find('/cmf/sulu_io/contents/this-is-a-test/ceci-est-une-test');
         $this->assertNotNull($leafDocument, 'Updating existing document no parent specified');
         $this->assertEquals('Bonjour le monde', $leafDocument->getTitle());
     }

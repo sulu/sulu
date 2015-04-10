@@ -18,15 +18,13 @@ use Sulu\Component\Content\Structure\Structure;
 /**
  * Lazy loading container for content properties.
  */
-class PropertyContainer implements \ArrayAccess
+class ManagedPropertyContainer extends PropertyContainer
 {
     private $contentTypeManager;
     private $structure;
     private $node;
     private $document;
     private $propertyEncoder;
-
-    private $properties = array();
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
@@ -61,6 +59,7 @@ class PropertyContainer implements \ArrayAccess
         }
 
         $structureProperty = $this->structure->getProperty($name);
+
         $contentTypeName = $structureProperty->getType();
 
         if (true === $structureProperty->isLocalized()) {
@@ -85,25 +84,18 @@ class PropertyContainer implements \ArrayAccess
         return $property;
     }
 
+    public function getArrayCopy()
+    {
+        $values = array();
+        foreach ($this->structure->getChildren() as $childName => $structureChild) {
+            $values[$childName] = $this->getProperty($childName)->getValue();
+        }
+
+        return $values;
+    }
+
     public function offsetExists($offset)
     {
         return $this->structure->hasProperty($offset);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->getProperty($offset);
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        throw new \BadMethodCallException(
-            'Cannot set content properties objects'
-        );
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->properties[$offset]);
     }
 }

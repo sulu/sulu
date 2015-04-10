@@ -332,6 +332,7 @@ class ContentMapper implements ContentMapperInterface
 
         $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
 
+        $content = $data['content'];
         unset($data['content']);
 
         if ($uuid) {
@@ -347,10 +348,14 @@ class ContentMapper implements ContentMapperInterface
 
         $form->submit($data, false);
 
+        // TODO: Refactor the content so that conetnt types are agnostic to the node types
+        //       Currently it is not possible to map content with a form as content types
+        //       can do whatever they want in terms of mapping.
+        $document->getContent()->bind($content);
+
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
         }
-
 
         $this->documentManager->persist($document, $locale);
         $this->documentManager->flush();

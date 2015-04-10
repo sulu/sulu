@@ -78,7 +78,7 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = $node->getPropertyValueWithDefault($property->getName(), array());
+        $data = $node->getPropertyValueWithDefault($property->getPhpcrName(), array());
 
         $this->setData($data, $property, $webspaceKey, $languageCode);
     }

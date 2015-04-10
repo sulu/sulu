@@ -23,6 +23,8 @@ use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
+use Sulu\Component\Content\Document\Property\Property;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
@@ -31,7 +33,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
     private $documentMetadataFactory;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder $encoder<
      * @param ContentTypeManagerInterface $contentTypeManager
      * @param StructureFactory $structureFactory
      */
@@ -69,10 +71,16 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
         $document->setStructureType($value);
 
+        if ($value) {
+            $container = $this->createPropertyContainer($document, $node);
+        } else {
+            $container = new PropertyContainer();
+        }
+
         // Set the property container
         $event->getAccessor()->set(
             'content',
-            $this->createPropertyContainer($document, $node)
+            $container
         );
     }
 
@@ -97,12 +105,30 @@ class ContentSubscriber extends AbstractMappingSubscriber
         // Map the content to the node
         $structure = $this->getStructure($document);
 
-        foreach ($structure->getChildren() as $propertyName => $property) {
-            $contentTypeName = $property->getContentTypeName();
+        // Document title is mandatory
+        $document->getContent()->getProperty('title')->setValue($document->getTitle());
+
+        foreach ($structure->getChildren() as $propertyName => $structureProperty) {
+            $contentTypeName = $structureProperty->getContentTypeName();
             $contentType = $this->contentTypeManager->get($contentTypeName);
+            $document->getContent()->getProperty($propertyName);
+
+            // TODO: The following logic is duplicated in the ManagedPropertyContainer
+            if (true === $structureProperty->isLocalized()) {
+                $locale = $document->getLocale();
+                $phpcrName = $this->encoder->localizedContentName($propertyName, $locale);
+            } else {
+                $phpcrName = $this->encoder->contentname($propertyName);
+            }
+
+            $realProperty = $document->getContent()->getProperty($propertyName);
+            $property = new Property($phpcrName, $document);
+
+            $property->setValue($realProperty->getValue());
+
             $contentType->write(
                 $node,
-                $document->getContent()->getProperty($propertyName),
+                $property,
                 null,
                 null,
                 null,
@@ -113,7 +139,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
     private function createPropertyContainer($document, NodeInterface $node)
     {
-        return new PropertyContainer(
+        return new ManagedPropertyContainer(
             $this->contentTypeManager,
             $node,
             $this->encoder,

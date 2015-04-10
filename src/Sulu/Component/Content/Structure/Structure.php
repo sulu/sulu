@@ -80,6 +80,8 @@ class Structure extends Item implements StructureInterface
                 $this->resource
             ));
         }
+
+        return $this->children[$name];
     }
 
     /**

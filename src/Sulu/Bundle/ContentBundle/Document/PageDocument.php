@@ -25,6 +25,7 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
 
 class PageDocument implements
     NodeNameBehavior,
@@ -39,7 +40,8 @@ class PageDocument implements
     RedirectTypeBehavior,
     WorkflowStageBehavior,
     ShadowLocaleBehavior,
-    UuidBehavior
+    UuidBehavior,
+    LocaleBehavior
 {
     private $nodeName;
     private $created;
@@ -59,6 +61,7 @@ class PageDocument implements
     private $uuid;
     private $structureType;
     private $content;
+    private $locale;
 
     public function __construct()
     {
@@ -298,5 +301,13 @@ class PageDocument implements
     {
         $this->structureType = $structureType;
     }
-    
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLocale()
+    {
+        return $this->locale;
+    }
 }

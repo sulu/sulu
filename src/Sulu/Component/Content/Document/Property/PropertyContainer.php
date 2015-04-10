@@ -20,7 +20,7 @@ use Sulu\Component\Content\Structure\Structure;
  */
 class PropertyContainer implements \ArrayAccess
 {
-    private $properties = array();
+    protected $properties = array();
 
     /**
      * Return the named property and evaluate its content
@@ -59,5 +59,23 @@ class PropertyContainer implements \ArrayAccess
     public function offsetUnset($offset)
     {
         unset($this->properties[$offset]);
+    }
+
+    public function getArrayCopy()
+    {
+        $values = array();
+        foreach ($this->properties as $name => $property) {
+            $values[$name] = $property->getValue();
+        }
+
+        return $values;
+    }
+
+    public function bind($data)
+    {
+        foreach ($data as $key => $value) {
+            $property = $this->getProperty($key);
+            $property->setValue($value);
+        }
     }
 }
