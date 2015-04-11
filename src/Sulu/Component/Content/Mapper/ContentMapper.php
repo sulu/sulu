@@ -607,14 +607,22 @@ class ContentMapper implements ContentMapperInterface
      * {@inheritdoc}
      */
     public function loadByNode(
-        NodeInterface $contentNode,
-        $localization,
+        NodeInterface $node,
+        $locale,
         $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        return $this->documentManager->find($contentNode->getPath());
+        return $this->loadDocument(
+            $node->getIdentifier(),
+            $locale,
+            array(
+                'load_ghost_content' => $loadGhostContent,
+                'exclude_ghost' => $excludeGhost,
+                'exclude_shadow' => $excludeShadow,
+            )
+        );
     }
 
     /**
@@ -1079,7 +1087,7 @@ class ContentMapper implements ContentMapperInterface
             'exclude_shadow' => true,
         ), $options);
 
-        $this->documentManager->find($pathOrUuid, $locale);
+        $document = $this->documentManager->find($pathOrUuid, $locale);
 
         if ($this->optionsShouldExcludeDocument($document, $options)) {
             return null;
@@ -1110,7 +1118,7 @@ class ContentMapper implements ContentMapperInterface
 
     private function optionsShouldExcludeDocument($document, array $options = array())
     {
-        $state = $this->documentInspector->getLocalizationState($document);
+        $state = $this->inspector->getLocalizationState($document);
 
         $isShadowOrGhost = $state === LocalizationState::GHOST || $state === LocalizationState::SHADOW;
 

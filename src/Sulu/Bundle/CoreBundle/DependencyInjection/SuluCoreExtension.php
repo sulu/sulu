@@ -189,6 +189,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         // Default template
+        $container->setParameter('sulu.content.structure.default_types', $contentConfig['structure']['default_type']);
         $container->setParameter('sulu.content.structure.default_type.page', $contentConfig['structure']['default_type']['page']);
         $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
         $container->setParameter('sulu.content.structure.default_type.homepage', $contentConfig['structure']['default_type']['homepage']);

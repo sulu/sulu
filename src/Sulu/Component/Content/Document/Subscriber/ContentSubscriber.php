@@ -29,6 +29,8 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
+    const STRUCTURE_TYPE_FIELD = 'template';
+
     private $contentTypeManager;
     private $structureFactory;
     private $metadataFactory;
@@ -70,7 +72,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
         // Set the structure type
         $node = $event->getNode();
         $document = $event->getDocument();
-        $propertyName = $this->encoder->localizedSystemName('template', $event->getLocale());
+        $propertyName = $this->encoder->localizedSystemName(self::STRUCTURE_TYPE_FIELD, $event->getLocale());
         $value = $node->getPropertyValueWithDefault($propertyName, null);
 
         $document->setStructureType($value);

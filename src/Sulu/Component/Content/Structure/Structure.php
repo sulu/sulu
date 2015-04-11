@@ -108,7 +108,8 @@ class Structure extends Item implements StructureInterface
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
-        return reset($this->getPropertiesByTagName($tagName));
+        $properties = $this->getPropertiesByTagName($tagName);
+        return reset($properties);
     }
 
     /**

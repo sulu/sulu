@@ -43,25 +43,35 @@ class StructureFactory implements StructureFactoryInterface
     private $debug;
 
     /**
+     * @var array
+     */
+    private $defaultTypes;
+
+    /**
      * @param LoaderInterface $loader
      * @param array $typePaths
      * @param mixed $cachePath
      * @param mixed $debug
      */
-    public function __construct(LoaderInterface $loader, array $typePaths, $cachePath, $debug = false)
+    public function __construct(LoaderInterface $loader, array $typePaths, array $defaultTypes, $cachePath, $debug = false)
     {
         $this->typePaths = $typePaths;
         $this->cachePath = $cachePath;
         $this->loader = $loader;
         $this->debug = $debug;
+        $this->defaultTypes = $defaultTypes;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getStructure($type, $structureType)
+    public function getStructure($type, $structureType = null)
     {
         $this->assertExists($type);
+
+        if (!$structureType) {
+            $structureType = $this->getDefaultStructureType($type);
+        }
 
         if (!is_string($structureType)) {
             throw new \InvalidArgumentException(sprintf(
@@ -192,5 +202,20 @@ class StructureFactory implements StructureFactoryInterface
         }
 
         return $paths;
+    }
+
+    /**
+     * Return the default structure type for the the given document type
+     */
+    private function getDefaultStructureType($type)
+    {
+        if (!isset($this->defaultTypes[$type])) {
+            throw new \RuntimeException(sprintf(
+                'No structure type was available and no default exists for document with alias "%s"',
+                $type
+            ));
+        }
+
+        return $this->defaultTypes[$type];
     }
 }

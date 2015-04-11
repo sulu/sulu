@@ -63,7 +63,7 @@ class ContentMapper_loadTest extends SuluTestCase
             return;
         }
 
-        $this->assertInstanceOf('DTL\Component\Content\Compat\Structure\StructureBridge', $result);
+        $this->assertInstanceOf(PageDocument::class, $result);
     }
 
     /**

@@ -46,13 +46,13 @@ class XmlLoader extends XmlLegacyLoader
         $structure->resource = $resource;
 
         foreach ($data['properties'] as $propertyName => $dataProperty) {
-            $structure->children[$propertyName] = $this->createProperty($dataProperty);
+            $structure->children[$propertyName] = $this->createProperty($propertyName, $dataProperty);
         }
 
         return $structure;
     }
 
-    private function createProperty($propertyData)
+    private function createProperty($propertyName, $propertyData)
     {
         if ($propertyData['type'] === 'block') {
             return $this->createBlock($propertyData);
@@ -65,6 +65,7 @@ class XmlLoader extends XmlLegacyLoader
         $propertyData = $this->normalizePropertyData($propertyData);
 
         $property = new Property();
+        $property->name = $propertyName;
         $property->type = $propertyData['type'];
         $property->localized = $propertyData['multilingual'];
         $property->required = $propertyData['mandatory'];

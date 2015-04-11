@@ -15,16 +15,35 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\DocumentInspector;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\DocumentManager\Events;
 
 class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 {
     private $inspector;
 
     public function __construct(
+        PropertyEncoder $encoder,
         DocumentInspector $inspector
     )
     {
+        parent::__construct($encoder);
         $this->inspector = $inspector;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            // persist should happen before content is mapped
+            Events::PERSIST => array('handlePersist', 10),
+
+            // hydrate should happen afterwards
+            Events::HYDRATE => array('handleHydrate', -10),
+        );
     }
 
     public function supports($document)
@@ -38,17 +57,10 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     public function doHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();
+        $property = $this->getResourceSegmentProperty($document);
+        $segment = $document->getContent()->getProperty($property->getName())->getValue();
 
-        $structure = $this->inspector->getStructure($document);
-        $property = $structure->getPropertyByTagName('sulu.rlp');
-        var_dump($property);die();;
-
-        $node = $event->getNode();
-        $value = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::URL_FIELD, $event->getLocale()),
-            null
-        );
-        $event->getDocument()->setResourceSegment($value);
+        $document->setResourceSegment($segment);
     }
 
     /**
@@ -56,10 +68,28 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
      */
     public function doPersist(PersistEvent $event)
     {
-        $node = $event->getNode();
-        $node->setProperty(
-            $this->encoder->localizedSystemName(self::URL_FIELD, $event->getLocale()),
-            $event->getDocument()->getResourceSegment()
-        );
+        $document = $event->getDocument();
+        $property = $this->getResourceSegmentProperty($document);
+
+        $document->getContent()->getProperty(
+            $property->getName()
+        )->setValue($document->getResourceSegment());
+    }
+
+    private function getResourceSegmentProperty($document)
+    {
+        $structure = $this->inspector->getStructure($document);
+        $property = $structure->getPropertyByTagName('sulu.rlp');
+
+        if (!$property) {
+            throw new \RuntimeException(sprintf(
+                'Structure "%s" does not have a "sulu.rlp" tag which is required for documents implementing the ' .
+                'ResourceSegmentBehavior. In "%s"',
+                $structure->name,
+                $structure->resource
+            ));
+        }
+
+        return $property;
     }
 }
