@@ -18,12 +18,12 @@ monolog:
     handlers:
         main:
             type:         stream
-            action_level: error
+            action_level: debug
             handler:      nested
         nested:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: error
+            level: debug
 
 sulu_core:
     cache_dir: %kernel.root_dir%/cache/sulu

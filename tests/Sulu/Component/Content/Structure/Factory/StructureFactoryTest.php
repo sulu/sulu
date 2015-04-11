@@ -36,6 +36,16 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
                         'path' => __DIR__ . '/data/page',
                     ),
                 ),
+                'snoopet' => array(
+                    array(
+                        'type' => 'page',
+                        'internal' => false,
+                        'path' => __DIR__ . '/data/snoops',
+                    ),
+                ),
+            ),
+            array(
+                'page' => 'something',
             ),
             $this->cacheDir
         );
@@ -62,6 +72,27 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetStructureNonExisting()
     {
         $this->factory->getStructure('page', 'overview_not_existing');
+    }
+
+    /**
+     * It should use a default structure type if null is given
+     */
+    public function testGetStructureDefault()
+    {
+        $this->loader->load($this->mappingFile)->willReturn($this->structure->reveal());
+        $this->loader->load($this->mappingFile)->shouldBeCalledTimes(1);
+
+        $this->factory->getStructure('page');
+    }
+
+    /**
+     * It should throw an exception if no structure type is given and no default is available
+     *
+     * @expectedException RuntimeException
+     */
+    public function testGetStructureDefaultNoSet()
+    {
+        $this->factory->getStructure('snoopet');
     }
 
     /**

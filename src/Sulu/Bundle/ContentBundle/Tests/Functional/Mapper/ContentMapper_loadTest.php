@@ -11,12 +11,15 @@ use Sulu\Bundle\ContentBundle\Document\PageDocument;
 class ContentMapper_loadTest extends SuluTestCase
 {
     private $contentMapper;
+    private $inspector;
+    private $documentManager;
 
     public function setUp()
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->manager = $this->getContainer()->get('sulu_document_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager');
+        $this->inspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
     }
 
     public function provideLoad()
@@ -42,12 +45,12 @@ class ContentMapper_loadTest extends SuluTestCase
      */
     public function testLoadByNode($locale, $requestLocale, $excludeGhost = true, $loadGhostContent = false, $excludeShadow = true, $shouldBeNull)
     {
-        $locale = 'fr';
+        $locale = 'en';
         $document = $this->createDocument('/cmf/sulu_io/contents/node', $locale);
-        $this->manager->flush();
+        $this->documentManager->flush();
 
         $result = $this->contentMapper->loadByNode(
-            $document->getPhpcrNode(),
+            $this->inspector->getNode($document),
             $requestLocale,
             'sulu_io',
             $excludeGhost,
@@ -119,7 +122,7 @@ class ContentMapper_loadTest extends SuluTestCase
         foreach ($children as $childPath) {
             $this->createDocument('/cmf/sulu_io/contents/parent/' . $childPath, $locale);
         }
-        $this->manager->flush();
+        $this->documentManager->flush();
 
         $result = $this->contentMapper->loadByParent(
             $parent->getUuid(),
@@ -154,7 +157,7 @@ class ContentMapper_loadTest extends SuluTestCase
     public function testLoadByResourceLocator()
     {
         $this->createDocument('/cmf/sulu_io/contents/foo-bar', 'de');
-        $this->manager->flush();
+        $this->documentManager->flush();
 
         $content = $this->contentMapper->loadByResourceLocator('/foo-bar', 'sulu_io', 'de');
         $this->assertEquals('/cmf/sulu_io/contents/foo-bar', $content->getPath());
@@ -169,7 +172,7 @@ class ContentMapper_loadTest extends SuluTestCase
         $this->createDocument('/cmf/sulu_io/contents/foo-bar/bar', 'fr');
         $this->createDocument('/cmf/sulu_io/contents/foo-bar/bar/baz', 'fr');
 
-        $this->manager->flush();
+        $this->documentManager->flush();
 
         $query = 'SELECT * FROM [nt:unstructured] AS a WHERE ISDESCENDANTNODE("a", "/cmf/sulu_io/contents")';
         $structures = $this->contentMapper->loadBySql2($query, $locale, 'sulu_io', $limit);
@@ -221,9 +224,9 @@ class ContentMapper_loadTest extends SuluTestCase
             $this->createDocument('/cmf/sulu_io/contents/' . $name, $locale);
         }
 
-        $this->manager->flush();
+        $this->documentManager->flush();
 
-        $qb = $this->manager->createQueryBuilder();
+        $qb = $this->documentManager->createQueryBuilder();
         $qb->from()->document(PageDocument::class, 'p');
 
         $structures = $this->contentMapper->loadByQuery(
@@ -269,8 +272,8 @@ class ContentMapper_loadTest extends SuluTestCase
             $document = $this->createDocument('/cmf/sulu_io/contents/' . $name, $locale);
         }
 
-        $this->manager->flush();
-        $this->manager->clear();
+        $this->documentManager->flush();
+        $this->documentManager->clear();
 
         $results = $this->contentMapper->loadTreeByUuid(
             null,
@@ -292,7 +295,7 @@ class ContentMapper_loadTest extends SuluTestCase
 
     public function testLoadBreadcrumb()
     {
-        $root = $this->manager->find(null, '/cmf/sulu_io/contents');
+        $root = $this->documentManager->find(null, '/cmf/sulu_io/contents');
         $descendant1 = $this->createDocument('/cmf/sulu_io/contents/foo-bar', 'fr');
         $descendant2 = $this->createDocument('/cmf/sulu_io/contents/foo-bar/bar', 'fr');
         $descendant3 = $this->createDocument('/cmf/sulu_io/contents/foo-bar/bar/baz', 'fr');
@@ -320,8 +323,8 @@ class ContentMapper_loadTest extends SuluTestCase
             ),
         );
 
-        $this->manager->flush();
-        $this->manager->clear();
+        $this->documentManager->flush();
+        $this->documentManager->clear();
 
         $breadcrumb = $this->contentMapper->loadBreadcrumb($descendant3->getUuid(), 'fr', 'sulu_io');
 
@@ -335,7 +338,7 @@ class ContentMapper_loadTest extends SuluTestCase
 
     private function createDocument($path, $locale)
     {
-        $parent = $this->manager->find(PathHelper::getParentPath($path));
+        $parent = $this->documentManager->find(PathHelper::getParentPath($path), 'en');
         $name = PathHelper::getNodeName($path);
 
         if (null === $parent) {
@@ -346,9 +349,9 @@ class ContentMapper_loadTest extends SuluTestCase
         $document->setTitle($name);
         $document->setParent($parent);
         $document->setStructureType('contact');
-        $document->setResourceSegment($name);
+        $document->setResourceSegment('/' . $name);
 
-        $this->manager->persist($document, $locale);
+        $this->documentManager->persist($document, $locale);
 
         return $document;
     }

@@ -56,6 +56,18 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedWebspace, $webspace);
     }
 
+    public function provideGetWebspace()
+    {
+        return array(
+            array('/cmf/sulu_io/content/articles/article-one', 'sulu_io'),
+            array('/cmfcontent/articles/article-one', null),
+            array('/cmf/webspace_five', null),
+            array('/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'),
+            array('', null),
+            array('asdasd', null),
+        );
+    }
+
     /**
      * It should return the Structure for a document implementing ContentBehavior
      */
@@ -71,18 +83,4 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $result = $this->documentInspector->getStructure($document->reveal());
         $this->assertSame($structure, $result);
     }
-
-    public function provideGetWebspace()
-    {
-        return array(
-            array('/cmf/sulu_io/content/articles/article-one', 'sulu_io'),
-            array('/cmfcontent/articles/article-one', null),
-            array('/cmf/webspace_five', null),
-            array('/cmf/webspace_five/foo/bar/dar/ding', 'webspace_five'),
-            array('', null),
-            array('asdasd', null),
-        );
-    }
-
 }
-

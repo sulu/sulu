@@ -16,7 +16,6 @@ class XmlLoaderTest extends \PHPUnit_Framework_TestCase
     public function testLoadTemplate()
     {
         $result = $this->load('template.xml');
-        var_dump($result);die();;
     }
 
     private function load($name)
