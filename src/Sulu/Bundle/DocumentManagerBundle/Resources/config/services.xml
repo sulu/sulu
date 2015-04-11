@@ -46,6 +46,7 @@
         <service id="sulu_document_manager.document_inspector" class="Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.path_segment_registry" />
+            <argument type="service" id="sulu_document_manager.proxy_factory" />
         </service>
 
         <!-- Proxy manager -->
@@ -93,6 +94,15 @@
         <service id="sulu_document_manager.suscriber.behavior.parent" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ParentSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.suscriber.behavior.children" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ChildrenSubscriber">
+            <argument type="service" id="sulu_document_manager.proxy_factory" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.behavior.path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\PathSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector" />
         </service>
 
         <!-- Core Subscribers -->

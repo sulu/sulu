@@ -24,9 +24,9 @@ class ExtensionNotFoundException extends \Exception
      */
     private $name;
 
-    public function __construct(StructureInterface $structure, $name)
+    public function __construct($structureName, $name)
     {
-        parent::__construct(sprintf('Extension "%s" not found in structure "%s"', $name, get_class($structure)));
+        parent::__construct(sprintf('Extension "%s" not found in structure "%s"', $structureName, get_class($structure)));
         $this->structure = $structure;
         $this->name = $name;
     }

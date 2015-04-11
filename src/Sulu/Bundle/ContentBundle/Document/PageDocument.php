@@ -26,6 +26,8 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
+use Sulu\Component\DocumentManager\Behavior\ChildrenBehavior;
+use Sulu\Component\DocumentManager\Behavior\PathBehavior;
 
 class PageDocument implements
     NodeNameBehavior,
@@ -33,7 +35,6 @@ class PageDocument implements
     BlameBehavior,
     ParentBehavior,
     AutoNameBehavior,
-
     ContentBehavior,
     ResourceSegmentBehavior,
     NavigationContextBehavior,
@@ -41,7 +42,9 @@ class PageDocument implements
     WorkflowStageBehavior,
     ShadowLocaleBehavior,
     UuidBehavior,
-    LocaleBehavior
+    LocaleBehavior,
+    ChildrenBehavior,
+    PathBehavior
 {
     private $nodeName;
     private $created;
@@ -62,6 +65,8 @@ class PageDocument implements
     private $structureType;
     private $content;
     private $locale;
+    private $children = array();
+    private $path;
 
     public function __construct()
     {
@@ -310,4 +315,21 @@ class PageDocument implements
     {
         return $this->locale;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPath() 
+    {
+        return $this->path;
+    }
+    
 }

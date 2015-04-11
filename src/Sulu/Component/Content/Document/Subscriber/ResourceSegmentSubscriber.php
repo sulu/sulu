@@ -18,7 +18,14 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 
 class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 {
-    const URL_FIELD = 'url';
+    private $inspector;
+
+    public function __construct(
+        DocumentInspector $inspector
+    )
+    {
+        $this->inspector = $inspector;
+    }
 
     public function supports($document)
     {
@@ -30,6 +37,12 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
      */
     public function doHydrate(HydrateEvent $event)
     {
+        $document = $event->getDocument();
+
+        $structure = $this->inspector->getStructure($document);
+        $property = $structure->getPropertyByTagName('sulu.rlp');
+        var_dump($property);die();;
+
         $node = $event->getNode();
         $value = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::URL_FIELD, $event->getLocale()),

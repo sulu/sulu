@@ -14,6 +14,11 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\ProxyFactory;
+use Sulu\Component\DocumentManager\MetadataFactory;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
 class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,9 +28,16 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->pathRegistry = $this->prophesize(PathSegmentRegistry::class);
         $this->document = new \stdClass;
         $this->node = $this->prophesize(NodeInterface::class);
+        $this->metadataFactory = $this->prophesize(MetadataFactory::class);
+        $this->structureFactory = $this->prophesize(StructureFactoryInterface::class);
+        $this->metadata = $this->prophesize(Metadata::class);
+        $this->proxyFactory = $this->prophesize(ProxyFactory::class);
         $this->documentInspector = new DocumentInspector(
             $this->documentRegistry->reveal(),
-            $this->pathRegistry->reveal()
+            $this->pathRegistry->reveal(),
+            $this->proxyFactory->reveal(),
+            $this->metadataFactory->reveal(),
+            $this->structureFactory->reveal()
         );
     }
 
@@ -42,6 +54,22 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 
         $webspace = $this->documentInspector->getWebspace($this->document);
         $this->assertEquals($expectedWebspace, $webspace);
+    }
+
+    /**
+     * It should return the Structure for a document implementing ContentBehavior
+     */
+    public function testGetStructure()
+    {
+        $structure = new \stdClass;
+        $document = $this->prophesize(ContentBehavior::class);
+        $document->getStructureType()->willReturn('foo');
+
+        $this->metadataFactory->getMetadataForClass(get_class($document->reveal()))->willReturn($this->metadata->reveal());
+        $this->metadata->getAlias()->willReturn('page');
+        $this->structureFactory->getStructure('page', 'foo')->willReturn($structure);
+        $result = $this->documentInspector->getStructure($document->reveal());
+        $this->assertSame($structure, $result);
     }
 
     public function provideGetWebspace()
