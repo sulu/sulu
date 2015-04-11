@@ -101,6 +101,8 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             'foo:ee-template',
         );
 
+        $expectedLocales = array('aa', 'bb', 'ee');
+
         $properties = array();
         foreach ($propertyNames as $propertyName) {
             $property = $this->prophesize(PropertyInterface::class);
@@ -116,7 +118,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $locales = $this->documentInspector->getLocales($document->reveal());
 
         $this->assertEquals(
-            array('aa', 'bb', 'ee'),
+            $expectedLocales,
             $locales
         );
     }

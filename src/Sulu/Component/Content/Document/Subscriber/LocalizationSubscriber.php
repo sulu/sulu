@@ -100,25 +100,26 @@ class LocalizationSubscriber implements EventSubscriberInterface
     /**
      * {@inheritDoc}
      */
-    public function getAvailableLocalization(NodeInterface $contentNode, $document, $locale)
+    public function getAvailableLocalization(NodeInterface $node, $document, $locale)
     {
         $structureTypeName = $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, $locale);
 
         // check if it already is the correct localization
-        if ($contentNode->hasProperty($structureTypeName)) {
+        if ($node->hasProperty($structureTypeName)) {
             return $locale;
         }
 
-        $webspace = $this->documentInspector->getWebspace($document);
+        $webspace = $this->inspector->getWebspace($document);
 
-        if (!$webspace) {
-            $locale = $this->documentInspector->getLocales($document);
-        } else {
+        if ($webspace) {
             $locale = $this->getWebspaceLocale($node, $webspace, $locale);
+        } else {
+            $locales = $this->inspector->getLocales($document);
+            $locale = reset($locales);
         }
 
         if (!$locale) {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Could not find any localizations for document at "%s". This should not happen.',
                 $node->getPath()
             ));
@@ -136,14 +137,14 @@ class LocalizationSubscriber implements EventSubscriberInterface
 
         // find first available localization in parents
         $resultLocalization = $this->findAvailableParentLocalization(
-            $contentNode,
+            $node,
             $localization
         );
 
         // find first available localization in children, if no result is found yet
         if (!$resultLocalization) {
             $resultLocalization = $this->findAvailableChildLocalization(
-                $contentNode,
+                $node,
                 $localization
             );
         }
@@ -151,7 +152,7 @@ class LocalizationSubscriber implements EventSubscriberInterface
         // find any localization available, if no result is found yet
         if (!$resultLocalization) {
             $resultLocalization = $this->findAvailableLocalization(
-                $contentNode,
+                $node,
                 $webspace->getLocalizations()
             );
         }
@@ -166,20 +167,20 @@ class LocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds the next available parent-localization in which the node has a translation
      *
-     * @param NodeInterface $contentNode The node, which properties will be checked
+     * @param NodeInterface $node The node, which properties will be checked
      * @param Localization $localization The localization to start the search for
      *
      * @return Localization|null
      */
     private function findAvailableParentLocalization(
-        NodeInterface $contentNode,
+        NodeInterface $node,
         Localization $localization
     )
     {
         do {
             $propertyName = $this->getPropertyName($localization->getLocalization());
 
-            if ($contentNode->hasProperty($propertyName)) {
+            if ($node->hasProperty($propertyName)) {
                 return $localization;
             }
 
@@ -193,13 +194,13 @@ class LocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds the next available child-localization in which the node has a translation
      *
-     * @param NodeInterface $contentNode The node, which properties will be checked
+     * @param NodeInterface $node The node, which properties will be checked
      * @param Localization $localization The localization to start the search for
      * @param TranslatedProperty $property The property which will be checked for the translation
      * @return null|Localization
      */
     private function findAvailableChildLocalization(
-        NodeInterface $contentNode,
+        NodeInterface $node,
         Localization $localization
     )
     {
@@ -209,12 +210,12 @@ class LocalizationSubscriber implements EventSubscriberInterface
             foreach ($childrenLocalizations as $childrenLocalization) {
                 $propertyName = $this->getPropertyName($childrenLocalization->getLocalization());
                 // return the localization if a translation exists in the child localization
-                if ($contentNode->hasProperty($propertyName)) {
+                if ($node->hasProperty($propertyName)) {
                     return $childrenLocalization;
                 }
 
                 // recursively call this function for checking children
-                return $this->findAvailableChildLocalization($contentNode, $childrenLocalization, $property);
+                return $this->findAvailableChildLocalization($node, $childrenLocalization, $property);
             }
         }
 
@@ -224,26 +225,27 @@ class LocalizationSubscriber implements EventSubscriberInterface
 
     /**
      * Finds any localization, in which the node is translated
-     * @param NodeInterface $contentNode The node, which properties will be checkec
+     * @param NodeInterface $node The node, which properties will be checkec
      * @param array $localizations The available localizations
      * @param TranslatedProperty $property The property to check
      * @return null|Localization
      */
     private function findAvailableLocalization(
-        NodeInterface $contentNode,
+        NodeInterface $node,
         array $localizations
     )
     {
         foreach ($localizations as $localization) {
             $propertyName = $this->getPropertyName($localization->getLocalization());
 
-            if ($contentNode->hasProperty($propertyName)) {
+            if ($node->hasProperty($propertyName)) {
                 return $localization;
             }
 
             $children = $localization->getChildren();
-            if (!empty($childrenLocalizations)) {
-                return $this->findAvailableLocalization($contentNode, $children);
+
+            if ($children) {
+                return $this->findAvailableLocalization($node, $children);
             }
         }
 
