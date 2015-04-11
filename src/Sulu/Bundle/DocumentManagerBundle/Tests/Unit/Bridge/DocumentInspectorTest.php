@@ -19,6 +19,8 @@ use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\MetadataFactory;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+use PHPCR\PropertyInterface;
 
 class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,6 +28,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->pathRegistry = $this->prophesize(PathSegmentRegistry::class);
+        $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
         $this->document = new \stdClass;
         $this->node = $this->prophesize(NodeInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactory::class);
@@ -35,6 +38,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->documentInspector = new DocumentInspector(
             $this->documentRegistry->reveal(),
             $this->pathRegistry->reveal(),
+            $this->namespaceRegistry->reveal(),
             $this->proxyFactory->reveal(),
             $this->metadataFactory->reveal(),
             $this->structureFactory->reveal()
@@ -82,5 +86,38 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->structureFactory->getStructure('page', 'foo')->willReturn($structure);
         $result = $this->documentInspector->getStructure($document->reveal());
         $this->assertSame($structure, $result);
+    }
+
+    /**
+     * It should return the available localizations for the document
+     */
+    public function testGetLocales()
+    {
+        $propertyNames = array(
+            'foo:aa-template',
+            'foo:bb-template',
+            'doo:dd-template',
+            'foo:cc-barbar',
+            'foo:ee-template',
+        );
+
+        $properties = array();
+        foreach ($propertyNames as $propertyName) {
+            $property = $this->prophesize(PropertyInterface::class);
+            $property->getName()->willReturn($propertyName);
+            $properties[] = $property;
+        }
+
+        $document = $this->prophesize(ContentBehavior::class);
+        $this->documentRegistry->getNodeForDocument($document)->willReturn($this->node->reveal());
+        $this->namespaceRegistry->getPrefix('system_localized')->willReturn('foo');
+        $this->node->getProperties()->willReturn($properties);
+
+        $locales = $this->documentInspector->getLocales($document->reveal());
+
+        $this->assertEquals(
+            array('aa', 'bb', 'ee'),
+            $locales
+        );
     }
 }

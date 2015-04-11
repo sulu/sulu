@@ -10,6 +10,8 @@ use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\DocumentManager\MetadataFactory;
 use Sulu\Component\DocumentManager\ProxyFactory;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 
 /**
  * This class infers information about documents, for example
@@ -19,10 +21,12 @@ class DocumentInspector extends BaseDocumentInspector
 {
     private $metadataFactory;
     private $structureFactory;
+    private $namespaceRegistry;
 
     public function __construct(
         DocumentRegistry $documentRegistry,
         PathSegmentRegistry $pathSegmentRegistry,
+        NamespaceRegistry $namespaceRegistry,
         ProxyFactory $proxyFactory,
         MetadataFactory $metadataFactory,
         StructureFactoryInterface $structureFactory
@@ -31,6 +35,7 @@ class DocumentInspector extends BaseDocumentInspector
         parent::__construct($documentRegistry, $pathSegmentRegistry, $proxyFactory);
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
+        $this->namespaceRegistry = $namespaceRegistry;
     }
 
     /**
@@ -73,6 +78,58 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
+     * Return the localization state of the node
+     *
+     * @param object $document
+     *
+     * @return string
+     */
+    public function getLocalizationState($document)
+    {
+        if ($document instanceof ShadowLocaleBehavior) {
+            if (true === $document->isShadowLocaleEnabled()) {
+                return LocalizationState::SHADOW;
+            }
+        }
+
+        $locales = $this->getLocales($document);
+
+        if (in_array($this->requestedLocale, $locales)) {
+            return LocalizationState::LOCALIZED;
+        }
+
+        return LocalizationState::GHOST;
+    }
+
+    /**
+     * Return the concrete localizations for the given document
+     *
+     * @param ContentBehavior $document
+     *
+     * @return array
+     */
+    public function getLocales(ContentBehavior $document)
+    {
+        $locales = array();
+        $node = $this->getNode($document);
+        $prefix = $this->namespaceRegistry->getPrefix('system_localized');
+
+        foreach ($node->getProperties() as $property) {
+            preg_match(
+                sprintf('/^%s:([a-zA-Z_]*?)-%s/', $prefix, ContentSubscriber::STRUCTURE_TYPE_FIELD),
+                $property->getName(),
+                $matches
+            );
+
+            if ($matches) {
+                $locales[$matches[1]] = $matches[1];
+            }
+        }
+
+        return array_values($locales);
+    }
+
+    /**
      * Extracts webspace key from given path
      *
      * @param string $path path of node
@@ -87,8 +144,8 @@ class DocumentInspector extends BaseDocumentInspector
 
         if ($match) {
             return $matches[1];
-        } else {
-            return null;
         }
+
+        return null;
     }
 }
