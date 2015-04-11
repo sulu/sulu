@@ -147,11 +147,6 @@ abstract class SuluTestCase extends BaseTestCase
 
         // we should use the doctrinephpcrbundle repository initializer to do this.
         $webspace = $cmf->addNode('sulu_io');
-        $nodes = $webspace->addNode('routes');
-        $nodes->addNode('de');
-        $nodes->addNode('de_at');
-        $nodes->addNode('en');
-        $nodes->addNode('en_us');
 
         $content = $webspace->addNode('contents');
         $content->setProperty('i18n:en-template', 'default');
@@ -162,6 +157,15 @@ abstract class SuluTestCase extends BaseTestCase
         $content->addMixin('sulu:page');
 
         $webspace->addNode('temp');
+
+        $session->save();
+        $nodes = $webspace->addNode('routes');
+        foreach (array('de', 'de_at', 'en', 'en_us', 'fr') as $locale) {
+            $localeNode = $nodes->addNode($locale);
+            $localeNode->setProperty('sulu:content', $content);
+            $localeNode->setProperty('sulu:history', false);
+            $localeNode->addMixin('mix:referenceable');
+        }
 
         $session->save();
     }

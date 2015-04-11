@@ -12,6 +12,7 @@ use Sulu\Component\DocumentManager\MetadataFactory;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
+use Sulu\Component\Content\Document\LocalizationState;
 
 /**
  * This class infers information about documents, for example
@@ -92,9 +93,10 @@ class DocumentInspector extends BaseDocumentInspector
             }
         }
 
-        $locales = $this->getLocales($document);
+        $originalLocale = $this->documentRegistry->getOriginalLocaleForDocument($document);
+        $currentLocale = $this->documentRegistry->getLocaleForDocument($document);
 
-        if (in_array($this->requestedLocale, $locales)) {
+        if ($originalLocale === $currentLocale) {
             return LocalizationState::LOCALIZED;
         }
 

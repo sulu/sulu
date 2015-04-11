@@ -163,7 +163,6 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
             // TODO: The following logic is duplicated in the ManagedPropertyContainer
             if (true === $structureProperty->isLocalized()) {
-                $locale = $document->getLocale();
                 $phpcrName = $this->encoder->localizedContentName($propertyName, $locale);
             } else {
                 $phpcrName = $this->encoder->contentname($propertyName);

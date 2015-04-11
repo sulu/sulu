@@ -277,7 +277,10 @@ class PhpcrMapper extends RlpMapper
                 );
             }
         } else {
-            throw new ResourceLocatorNotFoundException();
+            throw new ResourceLocatorNotFoundException(sprintf(
+                'Route has "%s" does not have either the "sulu:content" or "sulu:history" properties',
+                $route->getPath()
+            ));
         }
     }
 

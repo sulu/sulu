@@ -21,6 +21,7 @@ use Sulu\Component\DocumentManager\DocumentInspector;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Events;
 
 /**
  * Set a fallback locale for the document if necessary
@@ -28,7 +29,7 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
  * TODO: Most of this code is legacy. It seems to me that this could be
  *       much simpler and more efficient.
  */
-class LocalizationSubscriber implements EventSubscriberInterface
+class FallbackLocalizationSubscriber implements EventSubscriberInterface
 {
     /**
      * @var WebspaceManagerInterface
@@ -69,9 +70,9 @@ class LocalizationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            // needs to happen after the node after the document has been initially registered
+            // needs to happen after the node and document has been initially registered
             // but before any mapping takes place.
-            Events::HYDRATE => array('handleHydrate', 0),
+            Events::HYDRATE => array('handleHydrate', 400),
         );
     }
 
@@ -87,14 +88,19 @@ class LocalizationSubscriber implements EventSubscriberInterface
 
         $node = $event->getNode();
         $locale = $event->getLocale();
+
+        if (!$locale) {
+            return;
+        }
+
         $newLocale = $this->getAvailableLocalization($node, $document, $locale);
 
         if ($newLocale === $locale) {
             return;
         }
 
-        // re-register document with new localization
-        $this->documentRegistry->registerDocument($document, $node, $newLocale);
+        $this->documentRegistry->updateLocale($document, $newLocale);
+        $event->setLocale($newLocale);
     }
 
     /**
@@ -113,7 +119,9 @@ class LocalizationSubscriber implements EventSubscriberInterface
 
         if ($webspace) {
             $locale = $this->getWebspaceLocale($node, $webspace, $locale);
-        } else {
+        }
+
+        if (!$locale) {
             $locales = $this->inspector->getLocales($document);
             $locale = reset($locales);
         }
@@ -133,6 +141,11 @@ class LocalizationSubscriber implements EventSubscriberInterface
         // get localization object for querying parent localizations
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $localization = $webspace->getLocalization($locale);
+
+        if (null === $localization) {
+            return null;
+        }
+
         $resultLocalization = null;
 
         // find first available localization in parents
@@ -215,7 +228,7 @@ class LocalizationSubscriber implements EventSubscriberInterface
                 }
 
                 // recursively call this function for checking children
-                return $this->findAvailableChildLocalization($node, $childrenLocalization, $property);
+                return $this->findAvailableChildLocalization($node, $childrenLocalization);
             }
         }
 

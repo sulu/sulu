@@ -10,7 +10,7 @@ use Prophecy\Argument;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Localization\Localization;
 
-class LocalizationSubscriberTest extends SubscriberTestCase
+class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
     const FIX_LOCALE = 'en';
     const FIX_PROPERTY_NAME = 'property-name';
@@ -28,7 +28,7 @@ class LocalizationSubscriberTest extends SubscriberTestCase
         $this->localization1 = $this->prophesize(Localization::class);
         $this->localization2 = $this->prophesize(Localization::class);
 
-        $this->subscriber = new LocalizationSubscriber(
+        $this->subscriber = new FallbackLocalizationSubscriber(
             $this->encoder->reveal(),
             $this->webspaceManager->reveal(),
             $this->inspector->reveal(),

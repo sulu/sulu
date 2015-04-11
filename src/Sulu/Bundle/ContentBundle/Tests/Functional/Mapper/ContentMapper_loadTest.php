@@ -26,11 +26,11 @@ class ContentMapper_loadTest extends SuluTestCase
     {
         return array(
             array(
-                'fr', 'de', false, false, false,
+                'en', 'de', false, false, false,
                 false,
             ),
             array(
-                'fr', 'de', true, false, true,
+                'en', 'de', true, false, true,
                 true,
             ),
         );
@@ -45,11 +45,10 @@ class ContentMapper_loadTest extends SuluTestCase
      */
     public function testLoadByNode($locale, $requestLocale, $excludeGhost = true, $loadGhostContent = false, $excludeShadow = true, $shouldBeNull)
     {
-        $locale = 'en';
         $document = $this->createDocument('/cmf/sulu_io/contents/node', $locale);
         $this->documentManager->flush();
 
-        $result = $this->contentMapper->loadByNode(
+        $document = $this->contentMapper->loadByNode(
             $this->inspector->getNode($document),
             $requestLocale,
             'sulu_io',
@@ -59,11 +58,11 @@ class ContentMapper_loadTest extends SuluTestCase
         );
 
         if ($shouldBeNull) {
-            $this->assertNull($result);
+            $this->assertNull($document);
             return;
         }
 
-        $this->assertInstanceOf(PageDocument::class, $result);
+        $this->assertInstanceOf(PageDocument::class, $document);
     }
 
     /**
@@ -117,8 +116,8 @@ class ContentMapper_loadTest extends SuluTestCase
      */
     public function testLoadByParent($children, $depth, $flat, $ignoreExceptions, $excludeGhosts, array $expected)
     {
-        $locale = 'fr';
-        $parent = $this->createDocument('/cmf/sulu_io/contents/parent', 'Parent');
+        $locale = 'de';
+        $parent = $this->createDocument('/cmf/sulu_io/contents/parent', $locale);
         foreach ($children as $childPath) {
             $this->createDocument('/cmf/sulu_io/contents/parent/' . $childPath, $locale);
         }
@@ -225,12 +224,10 @@ class ContentMapper_loadTest extends SuluTestCase
         }
 
         $this->documentManager->flush();
-
-        $qb = $this->documentManager->createQueryBuilder();
-        $qb->from()->document(PageDocument::class, 'p');
+        $query = $this->documentManager->createQuery('SELECT * FROM [nt:unstructured]');
 
         $structures = $this->contentMapper->loadByQuery(
-            $qb->getQuery()->getPhpcrQuery(),
+            $query->getPhpcrQuery(),
             $requestedLocale,
             'sulu_io',
             $excludeGhost,
@@ -338,7 +335,7 @@ class ContentMapper_loadTest extends SuluTestCase
 
     private function createDocument($path, $locale)
     {
-        $parent = $this->documentManager->find(PathHelper::getParentPath($path), 'en');
+        $parent = $this->documentManager->find(PathHelper::getParentPath($path), $locale);
         $name = PathHelper::getNodeName($path);
 
         if (null === $parent) {

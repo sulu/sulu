@@ -65,6 +65,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\LocalizationState;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -217,7 +218,7 @@ class ContentMapper implements ContentMapperInterface
         DataNormalizer $dataNormalizer,
         WebspaceManagerInterface $webspaceManager,
         FormFactoryInterface $formFactory,
-        DocumentInspector $documentInspector,
+        DocumentInspector $inspector,
 
         SessionManagerInterface $sessionManager,
         ContentTypeManager $contentTypeManager,
@@ -241,7 +242,7 @@ class ContentMapper implements ContentMapperInterface
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
         $this->formFactory = $formFactory;
-        $this->inspector = $documentInspector;
+        $this->inspector = $inspector;
 
         // deprecated
         $this->localizationFinder = $localizationFinder;
@@ -458,7 +459,7 @@ class ContentMapper implements ContentMapperInterface
     {
         $parent = null;
         if ($uuid) {
-            $parent = $this->documentManagerfind($uuid, $languageCode);
+            $parent = $this->documentManager->find($uuid, $languageCode);
         }
 
         if (null === $parent) {
@@ -470,7 +471,7 @@ class ContentMapper implements ContentMapperInterface
             $fetchDepth = $depth;
         }
 
-        $children = $this->documentInspector->getChildren($parent, null, $fetchDepth, $languageCode);
+        $children = $this->inspector->getChildren($parent, null, $fetchDepth, $languageCode);
         $children = $children->getArrayCopy();
 
         if ($flat) {
@@ -506,9 +507,9 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadStartPage($webspaceKey, $locale)
     {
-        $startPage = $this->getContentDocument($webspaceKey);
+        $startPage = $this->getContentDocument($webspaceKey, $locale);
         $startPage->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $startPage->setNavgationContexts(array());
+        $startPage->setNavigationContexts(array());
 
         return $startPage;
     }
@@ -566,7 +567,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $webspaceChildren = $this->documentInspector->getChildren($this->getContentDocument($webspaceKey, $locale));
+        $webspaceChildren = $this->inspector->getChildren($this->getContentDocument($webspaceKey, $locale));
 
         return $this->filterDocuments($webspaceChildren, array(
             'load_ghost_content' => $loadGhostContent,
