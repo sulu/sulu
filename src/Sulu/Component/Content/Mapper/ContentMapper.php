@@ -66,6 +66,7 @@ use Sulu\Component\Content\Form\Exception\InvalidFormException;
 use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -553,8 +554,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false
     ) {
 
-        throw new \Exception('Implement locale on query');
-        return $this->documentManager->getDocumentsByPhpcrQuery($query, null, null, $locale); // locale not implemented
+        return $this->documentManager->createQuery($query, $locale, LegacyStructureConstants::TYPE_PAGE)->execute();
     }
 
     /**
@@ -569,7 +569,7 @@ class ContentMapper implements ContentMapperInterface
     ) {
         $webspaceChildren = $this->inspector->getChildren($this->getContentDocument($webspaceKey, $locale));
 
-        return $this->filterDocuments($webspaceChildren, array(
+        return $this->filterDocuments($webspaceChildren, $locale, array(
             'load_ghost_content' => $loadGhostContent,
             'exclude_ghost' => $excludeGhost
         ));
@@ -631,28 +631,24 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadBreadcrumb($uuid, $locale, $webspaceKey)
     {
-        throw new \InvalidArgumentException(
-            'Implement getDepth in DocumentInspector' . 
-            'Refactor this'
-        );
-
         $document = $this->documentManager->find($uuid, $locale);
 
         $documents = array();
-        $webspaceDocument = $this->getContentDocument($webspaceKey, $locale);
+        $contentDocument = $this->getContentDocument($webspaceKey, $locale);
+        $contentDepth = $this->inspector->getDepth($contentDocument);
 
         do {
             $documents[] = $document;
 
-            // TODO: Use document inspector to get parent
-            $document = $document->getParent();
-        } while ($document instanceof DocumentInterface && $document->getDepth() >= $contentDocument->getDepth());
+            $document = $this->inspector->getParent($document);
+            $documentDepth = $this->inspector->getDepth($document);
+        } while ($document instanceof ContentBehavior && $documentDepth >= $contentDepth);
 
         $items = array();
         foreach ($documents as $document) {
             $items[] = new BreadcrumbItem(
-                $this->inspector->getDepth(document) - $this->inspector->getDepth($contentDocument),
-                $this->inspector->getUuid($document->getUuid()),
+                $this->inspector->getDepth($document) - $contentDepth,
+                $this->inspector->getUuid($document),
                 $document->getTitle()
             );
         }
@@ -1111,7 +1107,7 @@ class ContentMapper implements ContentMapperInterface
                 continue;
             }
 
-            $collection[] = $this->loadDocument($document, $locale, $options);
+            $collection[] = $document;
         }
 
         return $collection;

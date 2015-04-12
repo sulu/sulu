@@ -243,21 +243,20 @@ class PhpcrMapper extends RlpMapper
         $resourceLocator = ltrim($resourceLocator, '/');
 
         try {
+            $path = sprintf(
+                '%s/%s',
+                $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
+                $resourceLocator
+            );
             if ($resourceLocator !== '') {
                 // get requested resource locator route node
-                $route = $this->sessionManager->getSession()->getNode(
-                    sprintf(
-                        '%s/%s',
-                        $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
-                        $resourceLocator
-                    )
-                );
+                $route = $this->sessionManager->getSession()->getNode($path);
             } else {
                 // get home page route node
                 $route = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
             }
-        } catch (PathNotFoundException $exc) {
-            throw new ResourceLocatorNotFoundException();
+        } catch (PathNotFoundException $e) {
+            throw new ResourceLocatorNotFoundException(sprintf('Path "%s" not found', $path), null, $e);
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {

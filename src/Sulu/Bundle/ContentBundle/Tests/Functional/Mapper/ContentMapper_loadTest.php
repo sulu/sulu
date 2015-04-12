@@ -224,9 +224,9 @@ class ContentMapper_loadTest extends SuluTestCase
         }
 
         $this->documentManager->flush();
-        $query = $this->documentManager->createQuery('SELECT * FROM [nt:unstructured]');
 
-        $structures = $this->contentMapper->loadByQuery(
+        $query = $this->documentManager->createQuery('SELECT * FROM [sulu:page]');
+        $result = $this->contentMapper->loadByQuery(
             $query->getPhpcrQuery(),
             $requestedLocale,
             'sulu_io',
@@ -234,7 +234,7 @@ class ContentMapper_loadTest extends SuluTestCase
             $loadGhostContent
         );
 
-        $this->assertCount(2, $structures);
+        $this->assertCount(3, $result);
     }
 
     public function provideLoadTreeByUuid()
@@ -292,7 +292,7 @@ class ContentMapper_loadTest extends SuluTestCase
 
     public function testLoadBreadcrumb()
     {
-        $root = $this->documentManager->find(null, '/cmf/sulu_io/contents');
+        $root = $this->documentManager->find('/cmf/sulu_io/contents');
         $descendant1 = $this->createDocument('/cmf/sulu_io/contents/foo-bar', 'fr');
         $descendant2 = $this->createDocument('/cmf/sulu_io/contents/foo-bar/bar', 'fr');
         $descendant3 = $this->createDocument('/cmf/sulu_io/contents/foo-bar/bar/baz', 'fr');
@@ -337,6 +337,7 @@ class ContentMapper_loadTest extends SuluTestCase
     {
         $parent = $this->documentManager->find(PathHelper::getParentPath($path), $locale);
         $name = PathHelper::getNodeName($path);
+        $resourceLocator = substr($path, strlen('/cmf/sulu_io/contents'));
 
         if (null === $parent) {
             throw new \InvalidArgumentException('Cannot find parent: ' . $path);
@@ -346,7 +347,7 @@ class ContentMapper_loadTest extends SuluTestCase
         $document->setTitle($name);
         $document->setParent($parent);
         $document->setStructureType('contact');
-        $document->setResourceSegment('/' . $name);
+        $document->setResourceSegment($resourceLocator);
 
         $this->documentManager->persist($document, $locale);
 

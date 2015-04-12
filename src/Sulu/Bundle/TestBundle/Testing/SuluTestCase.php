@@ -40,7 +40,7 @@ abstract class SuluTestCase extends BaseTestCase
 
         $kernel = new static::$class(
             isset($options['environment']) ? $options['environment'] : 'test',
-            isset($options['debug']) ? $options['debug'] : true,
+            isset($options['debug']) ? $options['debug'] : false,
             isset($options['sulu_context']) ? $options['sulu_context'] : 'admin'
         );
 
@@ -154,6 +154,7 @@ abstract class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-created', new \DateTime());
         $content->setProperty('i18n:en-changer', 1);
         $content->setProperty('i18n:en-changed', new \DateTime());
+        $content->setProperty('i18n:en-title', 'Homepage');
         $content->addMixin('sulu:page');
 
         $webspace->addNode('temp');
