@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\LocationBundle\Map\MapManager;
 use Sulu\Component\Content\Type\ComplexContentType;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\PropertyParameter;
 
 /**

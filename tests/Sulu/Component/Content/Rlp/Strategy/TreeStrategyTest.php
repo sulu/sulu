@@ -41,14 +41,14 @@ class TreeStrategyTest extends \PHPUnit_Framework_TestCase
             ->method('getUniquePath')
             ->will($this->returnCallback(array($this, 'getUniquePathCallback')));
 
-        $structureManager = $this->getMockForAbstractClass('Sulu\Component\Content\StructureManagerInterface');
+        $structureFactory = $this->getMockForAbstractClass('Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
         $contentTypeManager = $this->getMockForAbstractClass('Sulu\Component\Content\Type\ContentTypeManagerInterface');
         $nodeHelper = $this->getMock('Sulu\Component\Util\SuluNodeHelper', array(), array(), '', false);
 
         $this->strategy = new TreeStrategy(
             $this->mapper,
             new PathCleanup(),
-            $structureManager,
+            $structureFactory,
             $contentTypeManager,
             $nodeHelper
         );

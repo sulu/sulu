@@ -17,7 +17,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 
 /**
  * provides a cache for preview with phpcr
@@ -35,9 +35,9 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
     private $serializer;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
     /**
      * @var string
@@ -70,7 +70,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         SerializerInterface $serializer,
         Cache $dataCache,
         Cache $changesCache,
@@ -78,7 +78,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         $cacheLifeTime = 3600
     ) {
         $this->contentMapper = $contentMapper;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
         $this->serializer = $serializer;
         $this->dataCache = $dataCache;
         $this->changesCache = $changesCache;
@@ -147,7 +147,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
                 return $this->serializer->deserialize($data, $class, $this->serializeType);
             } catch (\ReflectionException $e) {
                 // load all cache classes
-                $this->structureManager->getStructures();
+                $this->structureFactory->getStructures();
 
                 // try again
                 return $this->serializer->deserialize($data, $class, $this->serializeType);
@@ -204,7 +204,7 @@ class DoctrineCacheProvider implements PreviewCacheProviderInterface
         /** @var Page $structure */
         $structure = $this->fetchStructure($userId, $contentUuid, $webspaceKey, $locale);
         /** @var Page $newStructure */
-        $newStructure = $this->structureManager->getStructure($template);
+        $newStructure = $this->structureFactory->getStructure($template);
 
         $newStructure->copyFrom($structure);
 

@@ -18,6 +18,7 @@ use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Behat\Gherkin\Node\TableNode;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Base context class for Structure based feature contexts
@@ -106,7 +107,7 @@ class BaseStructureContext extends BaseContext implements SnippetAcceptingContex
 
             if ($type === 'page') {
                 $request->setWebspaceKey('sulu_io');
-                $request->setState(StructureInterface::STATE_PUBLISHED);
+                $request->setState(WorkflowStage::PUBLISHED);
 
                 if ($parentUuid) {
                     $request->setParentUuid($parentUuid);

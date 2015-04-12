@@ -189,16 +189,23 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         // Default template
+        $container->setParameter('sulu.content.structure.default_types', $contentConfig['structure']['default_type']);
         $container->setParameter('sulu.content.structure.default_type.page', $contentConfig['structure']['default_type']['page']);
         $container->setParameter('sulu.content.structure.default_type.snippet', $contentConfig['structure']['default_type']['snippet']);
         $container->setParameter('sulu.content.structure.default_type.homepage', $contentConfig['structure']['default_type']['homepage']);
         $container->setParameter('sulu.content.internal_prefix', $contentConfig['internal_prefix']);
 
         // Template
-        $container->setParameter(
-            'sulu.content.structure.paths',
-            $contentConfig['structure']['paths']
-        );
+        $paths = array();
+        foreach ($contentConfig['structure']['paths'] as $pathConfig) {
+            $pathType = $pathConfig['type'];
+            if (!isset($paths[$pathType])) {
+                $paths[$pathType] = array();
+            }
+            $paths[$pathType][] = $pathConfig;
+        }
+
+        $container->setParameter('sulu.content.structure.paths', $paths);
 
         $loader->load('content.xml');
     }

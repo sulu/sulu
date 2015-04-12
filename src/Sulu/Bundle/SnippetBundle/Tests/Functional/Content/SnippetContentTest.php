@@ -17,7 +17,7 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Type\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Bundle\SnippetBundle\Content\Type\SnippetContent;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 
 class SnippetContentTest extends BaseFunctionalTestCase
@@ -54,7 +54,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->loadFixtures();
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->property = $this->getMock('Sulu\Component\Content\PropertyInterface');
+        $this->property = $this->getMock('Sulu\Component\Content\Document\Property\PropertyInterface');
 
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
         $this->contentType = new SnippetContent(

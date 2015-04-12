@@ -23,14 +23,16 @@ use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * @group functional
@@ -62,7 +64,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     private $webspace;
 
     /**
-     * @var StructureExtensionInterface[]
+     * @var ExtensionInterface[]
      */
     private $extensions;
 
@@ -348,7 +350,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
             sleep(1);
         }
@@ -414,7 +416,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
             sleep(1);
         }
@@ -476,7 +478,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
         }
 
@@ -539,7 +541,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => RedirectType::INTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -551,7 +553,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -590,7 +592,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -602,7 +604,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -689,7 +691,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'internal_link' => $data[1]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => RedirectType::INTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -701,7 +703,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -741,7 +743,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Testtitle1',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $data[0] = $this->mapper->save(
@@ -753,7 +755,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[0]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $rootNode = $this->nodeRepository->getIndexNode('default', 'en');
@@ -820,7 +822,7 @@ class NodeRepositoryTest extends PhpcrTestCase
                 true,
                 null,
                 null,
-                StructureInterface::STATE_PUBLISHED
+                WorkflowStage::PUBLISHED
             );
         }
 
@@ -902,7 +904,7 @@ class NodeRepositoryTest extends PhpcrTestCase
         $newData = array(
             'title' => 'Test4',
             'external_link' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => RedirectType::EXTERNAL
         );
 
         $data[3] = $this->mapper->save(
@@ -914,13 +916,13 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[3]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $newData = array(
             'title' => 'Test3',
             'internal_link' => $data[0]->getUuid(),
-            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK
+            'nodeType' => RedirectType::INTERNAL
         );
 
         $data[2] = $this->mapper->save(
@@ -932,7 +934,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             $data[2]->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $result = $this->nodeRepository->orderBefore($data[3]->getUuid(), $data[0]->getUuid(), 'default', 'en', 2);
@@ -979,7 +981,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', 'de');
@@ -1010,7 +1012,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $this->nodeRepository->copyLocale($data['en']->getUuid(), 1, 'default', 'en', array('de', 'de_at'));
@@ -1084,7 +1086,7 @@ class NodeRepositoryTest extends PhpcrTestCase
             $this->userManager,
             $this->webspaceManager,
             new SmartContentQueryBuilder(
-                $this->structureManager,
+                $this->structureFactory,
                 $this->webspaceManager,
                 $this->sessionManager,
                 $this->languageNamespace
@@ -1272,7 +1274,7 @@ class NodeRepositoryTest extends PhpcrTestCase
     }
 }
 
-class TestExtension extends StructureExtension
+class TestExtension extends AbstractExtension
 {
     protected $properties = array(
         'a',

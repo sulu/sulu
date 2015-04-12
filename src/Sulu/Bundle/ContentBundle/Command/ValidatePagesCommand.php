@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Command;
 
 use Jackalope\Query\Row;
 use PHPCR\SessionInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -45,8 +45,8 @@ class ValidatePagesCommand extends ContainerAwareCommand
         /** @var WebspaceManagerInterface $webspaceManager */
         $webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
 
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        /** @var StructureFactoryInterface $structureFactory */
+        $structureFactory = $this->getContainer()->get('sulu_content.structure.factory');
 
         /** @var Webspace $webspace */
         $webspace = $webspaceManager->findWebspaceByKey($webspaceKey);
@@ -68,7 +68,7 @@ class ValidatePagesCommand extends ContainerAwareCommand
         );
 
         $structures = array();
-        foreach ($structureManager->getStructures() as $structure) {
+        foreach ($structureFactory->getStructures() as $structure) {
             $structures[] = $structure->getKey();
         }
 

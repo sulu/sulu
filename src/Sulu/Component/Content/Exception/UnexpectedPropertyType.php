@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Exception;
 
 use Sulu\Component\Content\Type\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 
 class UnexpectedPropertyType extends \Exception
 {

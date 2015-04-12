@@ -19,6 +19,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Document\RedirectType;
 
 class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
 {
@@ -291,7 +292,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
         $webspace->setTheme($theme);
         $portal->setWebspace($webspace);
 
-        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, Structure::NODE_TYPE_INTERNAL_LINK);
+        $structure = $this->getStructureMock($uuid, Structure::STATE_PUBLISHED, RedirectType::INTERNAL);
         $structure->expects($this->any())
             ->method('getResourceLocator')
             ->will($this->returnValue('/other-test'));
@@ -414,7 +415,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getStructureMock($uuid, $state = Structure::STATE_PUBLISHED, $type = Structure::NODE_TYPE_CONTENT)
+    protected function getStructureMock($uuid, $state = Structure::STATE_PUBLISHED, $type = RedirectType::NONE)
     {
         $structure = $this->getMockForAbstractClass(
             '\Sulu\Component\Content\Structure\Page',

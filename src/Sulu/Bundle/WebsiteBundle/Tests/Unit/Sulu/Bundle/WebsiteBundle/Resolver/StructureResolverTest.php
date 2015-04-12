@@ -5,7 +5,7 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Prophecy\Argument;
 use Sulu\Component\Content\Type\ContentTypeInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 
 class StructureResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,21 +25,21 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
     private $contentType;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Type\ContentTypeManagerInterface');
-        $this->structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
+        $this->structureFactory = $this->prophesize('Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
         $this->contentType = $this->prophesize('Sulu\Component\Content\Type\ContentTypeInterface');
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
-            $this->structureManager->reveal()
+            $this->structureFactory->reveal()
         );
     }
 
@@ -50,11 +50,11 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\StructureExtension\StructureExtension');
+        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\AbstractExtension');
         $excerptExtension->getContentData(array('test1' => 'test1'))->willReturn(array('test1' => 'test1'));
-        $this->structureManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
+        $this->structureFactory->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+        $property = $this->prophesize('Sulu\Component\Content\Document\Property\PropertyInterface');
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 

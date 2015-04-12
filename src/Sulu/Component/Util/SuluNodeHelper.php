@@ -16,6 +16,7 @@ use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Structure;
 use PHPCR\SessionInterface;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Utility class for extracting Sulu-centric properties from nodes.
@@ -91,12 +92,12 @@ class SuluNodeHelper
     {
         $mixinTypes = $node->getPropertyValueWithDefault('jcr:mixinTypes', array());
 
-        if (in_array('sulu:' . Structure::TYPE_PAGE, $mixinTypes)) {
-            return Structure::TYPE_PAGE;
+        if (in_array('sulu:' . LegacyStructureConstants::TYPE_PAGE, $mixinTypes)) {
+            return LegacyStructureConstants::TYPE_PAGE;
         }
 
-        if (in_array('sulu:' . Structure::TYPE_SNIPPET, $mixinTypes)) {
-            return Structure::TYPE_SNIPPET;
+        if (in_array('sulu:' . LegacyStructureConstants::TYPE_SNIPPET, $mixinTypes)) {
+            return LegacyStructureConstants::TYPE_SNIPPET;
         }
 
         return null;
@@ -149,25 +150,6 @@ class SuluNodeHelper
         }
 
         return false;
-    }
-
-    /**
-     * Extracts webspace key from given path
-     *
-     * TODO: We should inject the base path here
-     *
-     * @param string $path path of node
-     * @return string
-     */
-    public function extractWebspaceFromPath($path)
-    {
-        $match = preg_match('/^\/' . $this->getPath('base') . '\/(\w*)\/.*$/', $path, $matches);
-
-        if ($match) {
-            return $matches[1];
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -240,10 +222,10 @@ class SuluNodeHelper
     /**
      * Return translated property
      *
-     * @param \Sulu\Component\Content\PropertyInterface $property
+     * @param \Sulu\Component\Content\Document\Property\PropertyInterface $property
      * @param string $locale
      * @param string $prefix
-     * @return \Sulu\Component\Content\PropertyInterface
+     * @return \Sulu\Component\Content\Document\Property\PropertyInterface
      */
     public function getTranslatedProperty($property, $locale, $prefix = null)
     {

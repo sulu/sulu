@@ -26,6 +26,7 @@ use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * handles content nodes
@@ -448,7 +449,7 @@ class NodeController extends RestController
         if ($state !== null) {
             $state = intval($state);
         }
-        $type = $request->query->get('type', Structure::TYPE_PAGE);
+        $type = $request->query->get('type', LegacyStructureConstants::TYPE_PAGE);
 
         $data = $request->request->all();
 

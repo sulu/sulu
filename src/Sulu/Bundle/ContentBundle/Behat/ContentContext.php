@@ -17,6 +17,7 @@ use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Behat\Gherkin\Node\TableNode;
 use Sulu\Bundle\ContentBundle\Behat\BaseStructureContext;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Behat context class for the ContentBundle
@@ -98,7 +99,7 @@ EOT;
             ->setType('page')
             ->setWebspaceKey('sulu_io')
             ->setUserId($this->getUserId())
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setLocale('de')
             ->setData(array(
                 'title' => 'Behat Test Content',

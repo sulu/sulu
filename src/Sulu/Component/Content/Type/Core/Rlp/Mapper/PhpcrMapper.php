@@ -126,6 +126,9 @@ class PhpcrMapper extends RlpMapper
         $languageCode,
         $segmentKey = null
     ) {
+        if ($node->isNew()) {
+            return null;
+        }
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
@@ -240,21 +243,20 @@ class PhpcrMapper extends RlpMapper
         $resourceLocator = ltrim($resourceLocator, '/');
 
         try {
+            $path = sprintf(
+                '%s/%s',
+                $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
+                $resourceLocator
+            );
             if ($resourceLocator !== '') {
                 // get requested resource locator route node
-                $route = $this->sessionManager->getSession()->getNode(
-                    sprintf(
-                        '%s/%s',
-                        $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
-                        $resourceLocator
-                    )
-                );
+                $route = $this->sessionManager->getSession()->getNode($path);
             } else {
                 // get home page route node
                 $route = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
             }
-        } catch (PathNotFoundException $exc) {
-            throw new ResourceLocatorNotFoundException();
+        } catch (PathNotFoundException $e) {
+            throw new ResourceLocatorNotFoundException(sprintf('Path "%s" not found', $path), null, $e);
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
@@ -274,7 +276,10 @@ class PhpcrMapper extends RlpMapper
                 );
             }
         } else {
-            throw new ResourceLocatorNotFoundException();
+            throw new ResourceLocatorNotFoundException(sprintf(
+                'Route has "%s" does not have either the "sulu:content" or "sulu:history" properties',
+                $route->getPath()
+            ));
         }
     }
 

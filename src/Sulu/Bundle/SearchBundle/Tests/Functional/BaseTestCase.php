@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
 use Sulu\Component\Content\StructureInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class BaseTestCase extends SuluTestCase
 {
@@ -46,7 +47,7 @@ class BaseTestCase extends SuluTestCase
             $structure->getProperty('title')->setValue('Structure Title ' . $i);
 
             $structure->getProperty('url')->setValue('/');
-            $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
+            $structure->setNodeState(WorkflowStage::PUBLISHED);
             $structure->setLanguageCode('de');
 
             $this->getSearchManager()->index($structure);

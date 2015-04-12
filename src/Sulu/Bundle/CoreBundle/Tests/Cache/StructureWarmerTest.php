@@ -9,14 +9,14 @@ class StructureWarmerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
-        $this->warmer = new StructureWarmer($this->structureManager->reveal());
+        $this->structureFactory = $this->prophesize('Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
+        $this->warmer = new StructureWarmer($this->structureFactory->reveal());
     }
 
     public function testWarmup()
     {
-        $this->structureManager->getStructures('page')->shouldBeCalled();
-        $this->structureManager->getStructures('snippet')->shouldBeCalled();
+        $this->structureFactory->getStructures('page')->shouldBeCalled();
+        $this->structureFactory->getStructures('snippet')->shouldBeCalled();
         $this->warmer->warmup('/not/important/argument');
     }
 }

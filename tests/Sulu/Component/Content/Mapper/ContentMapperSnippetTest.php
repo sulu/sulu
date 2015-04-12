@@ -16,6 +16,8 @@ use Sulu\Component\Content\StructureInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
@@ -55,26 +57,26 @@ class ContentMapperSnippetTest extends SuluTestCase
     public function loadFixtures()
     {
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('de')
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
 
         $this->snippet1 = $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('de')
             ->setUserId(1)
             ->setData(array(
                 'title' => 'Penguin',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
 
         $this->snippet2 = $this->contentMapper->saveRequest($req);
 
@@ -83,25 +85,25 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setUserId(1)
             ->setData(array(
                 'title' => 'English ElePHPant',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
         $this->contentMapper->saveRequest($req);
 
         $req = ContentMapperRequest::create()
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
             ->setUserId(1)
             ->setData(array(
                 'title' => 'Some other animal',
             ))
-            ->setState(StructureInterface::STATE_PUBLISHED);
+            ->setState(WorkflowStage::PUBLISHED);
         $this->contentMapper->saveRequest($req);
     }
 
@@ -109,10 +111,10 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('hotel')
             ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant',
@@ -136,10 +138,10 @@ class ContentMapperSnippetTest extends SuluTestCase
 
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_SNIPPET)
+            ->setType(LegacyStructureConstants::TYPE_SNIPPET)
             ->setTemplateKey('animal')
             ->setLocale('en')
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant FOOBAR',
@@ -288,11 +290,11 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $req = ContentMapperRequest::create()
             ->setUuid($this->snippet1->getUuid())
-            ->setType(Structure::TYPE_PAGE)
+            ->setType(LegacyStructureConstants::TYPE_PAGE)
             ->setWebspaceKey('sulu_io')
             ->setTemplateKey('test_page')
             ->setLocale('de')
-            ->setState(StructureInterface::STATE_PUBLISHED)
+            ->setState(WorkflowStage::PUBLISHED)
             ->setUserId(1)
             ->setData(array('title' => 'Foo'));
 

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,6 +27,7 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * handles snippets
@@ -39,9 +40,9 @@ class SnippetController implements SecuredControllerInterface
     protected $contentMapper;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var ViewHandler
@@ -74,14 +75,14 @@ class SnippetController implements SecuredControllerInterface
     public function __construct(
         ViewHandler $viewHandler,
         ContentMapper $contentMapper,
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         SnippetRepository $snippetRepository,
         SecurityContext $securityContext,
         UrlGeneratorInterface $urlGenerator
     ) {
         $this->viewHandler = $viewHandler;
         $this->contentMapper = $contentMapper;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
         $this->snippetRepository = $snippetRepository;
         $this->securityContext = $securityContext;
         $this->urlGenerator = $urlGenerator;
@@ -181,7 +182,7 @@ class SnippetController implements SecuredControllerInterface
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
             ->setData($data)
-            ->setState(intval($request->get('state', StructureInterface::STATE_TEST)));
+            ->setState(intval($request->get('state', WorkflowStage::TEST)));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));
@@ -207,7 +208,7 @@ class SnippetController implements SecuredControllerInterface
             ->setLocale($this->languageCode)
             ->setUserId($this->getUser()->getId())
             ->setData($data)
-            ->setState(intval($request->get('state', StructureInterface::STATE_TEST)));
+            ->setState(intval($request->get('state', WorkflowStage::TEST)));
 
         $snippet = $this->contentMapper->saveRequest($mapperRequest);
         $view = View::create($this->decorateSnippet($snippet->toArray(), $this->languageCode));

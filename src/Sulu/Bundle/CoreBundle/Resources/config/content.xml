@@ -5,15 +5,10 @@
 
     <parameters>
         <parameter key="sulu.content.path_cleaner.class">Sulu\Component\PHPCR\PathCleanup</parameter>
-        <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
+        <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Compat\Template\TemplateResolver</parameter>
 
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
         <parameter key="sulu.content.mapper.subscriber.node_order.class">Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber</parameter>
-
-        <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
-        <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
-        <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
-        <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\Type\ContentTypeManager</parameter>
         <parameter key="sulu.content.type.text_line.class">Sulu\Component\Content\Type\Core\TextLine</parameter>
@@ -26,8 +21,6 @@
         <parameter key="sulu.content.rlp.strategy.tree.class">Sulu\Component\Content\Type\Core\Rlp\Strategy\TreeStrategy</parameter>
 
         <parameter key="sulu.content.query_executor.class">Sulu\Component\Content\Query\ContentQueryExecutor</parameter>
-
-        <parameter key="sulu.cache.warmer.structure.class">Sulu\Bundle\CoreBundle\Cache\StructureWarmer</parameter>
 
         <parameter key="sulu.content.localization_finder.parent_child_any.class">Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder</parameter>
         <parameter key="sulu.content.localization_finder.null_webspace.class">Sulu\Component\Content\Mapper\LocalizationFinder\NullWebspaceFinder</parameter>
@@ -43,13 +36,19 @@
         <!-- content mapper -->
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
-            <argument type="service" id="sulu.content.type_manager"/>
-            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_document_manager" />
+            <argument type="service" id="sulu_content.structure.factory"/>
+            <argument type="service" id="sulu_content.extension.manager" />
+            <argument type="service" id="sulu_content.compat.data_normalizer" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="form.factory" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+
             <argument type="service" id="sulu.phpcr.session"/>
+            <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
-            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu.content.template_resolver"/>
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
@@ -92,27 +91,6 @@
             <argument type="service" id="service_container"/>
         </service>
 
-        <!-- structure manager -->
-        <service id="sulu.content.structure_manager.loader" class="%sulu.content.structure_manager.loader.class%" public="false"/>
-        <service id="sulu.content.structure_manager.dumper" class="%sulu.content.structure_manager.dumper.class%" public="false">
-            <argument>%sulu.content.structure_manager.dumper.path%</argument>
-            <argument>%kernel.debug%</argument>
-        </service>
-        <service id="sulu.content.structure_manager" class="%sulu.content.structure_manager.class%">
-            <argument type="service" id="sulu.content.structure_manager.loader"/>
-            <argument type="service" id="sulu.content.structure_manager.dumper"/>
-            <argument type="service" id="logger"/>
-            <argument type="collection">
-                <argument key="structure_paths">%sulu.content.structure.paths%</argument>
-                <argument key="cache_dir">%sulu.cache_dir%</argument>
-                <argument key="debug">%kernel.debug%</argument>
-            </argument>
-
-            <call method="setContainer">
-                <argument type="service" id="service_container"/>
-            </call>
-        </service>
-
         <!-- rlp mapper -->
         <service id="sulu.content.rlp.mapper.phpcr" class="%sulu.content.rlp.mapper.phpcr.class%" public="false">
             <argument type="service" id="sulu.phpcr.session"/>
@@ -122,7 +100,7 @@
         <service id="sulu.content.rlp.strategy.tree" class="%sulu.content.rlp.strategy.tree.class%">
             <argument type="service" id="sulu.content.rlp.mapper.phpcr"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
-            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu_content.structure.factory" />
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.util.node_helper"/>
         </service>
@@ -159,12 +137,6 @@
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-        </service>
-
-        <!-- cache warmer for structures -->
-        <service id="sulu.cache.warmer.structure" class="%sulu.cache.warmer.structure.class%">
-            <argument type="service" id="sulu.content.structure_manager" />
-            <tag name="kernel.cache_warmer" />
         </service>
 
         <!-- sulu node helper -->

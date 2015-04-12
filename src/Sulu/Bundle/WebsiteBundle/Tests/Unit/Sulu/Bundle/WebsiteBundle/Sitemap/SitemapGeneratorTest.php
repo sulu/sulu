@@ -16,17 +16,19 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 class SitemapGeneratorTest extends PhpcrTestCase
 {
@@ -56,12 +58,12 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->dataEn = $this->prepareTestData();
         $this->dataEnUs = $this->prepareTestData('en_us');
 
-        $this->structureManager->expects($this->any())
+        $this->structureFactory->expects($this->any())
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
         $this->contents->setProperty('i18n:en-state', Structure::STATE_PUBLISHED);
-        $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
+        $this->contents->setProperty('i18n:en-nodeType', RedirectType::NONE);
         $this->session->save();
 
         $contentQuery = new ContentQueryExecutor(
@@ -72,7 +74,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->sitemapGenerator = new SitemapGenerator(
             $contentQuery,
             $this->webspaceManager,
-            new SitemapContentQueryBuilder($this->structureManager, $this->languageNamespace)
+            new SitemapContentQueryBuilder($this->structureFactory, $this->languageNamespace)
         );
     }
 
@@ -148,7 +150,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function getExtensionCallback()
     {
-        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
+        return new ExcerptStructureExtension($this->structureFactory, $this->contentTypeManager);
     }
 
     public function getExtensionsCallback()
@@ -166,43 +168,43 @@ class SitemapGeneratorTest extends PhpcrTestCase
             'news' => array(
                 'title' => 'News ' . $locale,
                 'rl' => '/news',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('footer')
             ),
             'products' => array(
                 'title' => 'Products ' . $locale,
                 'rl' => '/products',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('main')
             ),
             'news/news-1' => array(
                 'title' => 'News-1 ' . $locale,
                 'rl' => '/news/news-1',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
                 'title' => 'News-2 ' . $locale,
                 'rl' => '/news/news-2',
-                'nodeType' => Structure::NODE_TYPE_CONTENT,
+                'nodeType' => RedirectType::NONE,
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
                 'title' => 'Products-1 ' . $locale,
                 'external_url' => '123-123-123',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'nodeType' => RedirectType::INTERNAL,
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
                 'title' => 'Products-2 ' . $locale,
                 'external_url' => 'www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
+                'nodeType' => RedirectType::EXTERNAL,
                 'navContexts' => array('main')
             ),
             'products/products-3' => array(
                 'title' => 'Products-3 ' . $locale,
                 'external_url' => 'www.asdf.at',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+                'nodeType' => RedirectType::INTERNAL,
                 'navContexts' => array('main')
             )
         );
@@ -216,7 +218,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
@@ -227,7 +229,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
@@ -238,7 +240,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $data['products'] = $this->mapper->save(
@@ -250,7 +252,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_TEST
+            WorkflowStage::TEST
         );
 
         $data['products/products-1']['external_url'] = $data['products']->getUuid();
@@ -263,7 +265,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
@@ -274,7 +276,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-3']['external_url'] = $data['news']->getUuid();
         $data['products/products-3'] = $this->mapper->save(
@@ -286,7 +288,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         return $data;
@@ -448,7 +450,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
     }
 }
 
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension
@@ -482,9 +484,9 @@ class ExcerptStructureExtension extends StructureExtension
     protected $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var string
@@ -492,11 +494,11 @@ class ExcerptStructureExtension extends StructureExtension
     private $languageNamespace;
 
     public function __construct(
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         ContentTypeManagerInterface $contentTypeManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -571,7 +573,7 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private function initExcerptStructure()
     {
-        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+        $excerptStructure = $this->structureFactory->getStructure(self::EXCERPT_EXTENSION_NAME);
         /** @var PropertyInterface $property */
         foreach ($excerptStructure->getProperties() as $property) {
             $this->properties[] = $property->getName();

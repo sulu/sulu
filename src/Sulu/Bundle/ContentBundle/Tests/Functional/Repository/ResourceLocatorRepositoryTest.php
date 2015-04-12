@@ -73,13 +73,13 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
         $strategy = new TreeStrategy(
             new PhpcrMapper($this->sessionManager, '/cmf/routes'),
             new PathCleanup(),
-            $this->structureManager,
+            $this->structureFactory,
             $this->contentTypeManager,
             $this->nodeHelper
         );
         $this->repository = new ResourceLocatorRepository(
             $strategy,
-            $this->structureManager,
+            $this->structureFactory,
             $this->containerValueMap['sulu.content.type.resource_locator'],
             $this->mapper
         );

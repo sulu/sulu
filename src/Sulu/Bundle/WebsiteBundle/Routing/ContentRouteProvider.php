@@ -22,6 +22,8 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Document\RedirectType;
 
 /**
  * The PortalRouteProvider should load the dynamic routes created by Sulu
@@ -108,8 +110,8 @@ class ContentRouteProvider implements RouteProviderInterface
                 );
 
                 if (
-                    $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
-                    $content->getNodeState() === StructureInterface::STATE_PUBLISHED
+                    $content->getNodeType() === RedirectType::INTERNAL &&
+                    $content->getNodeState() === WorkflowStage::PUBLISHED
                 ) {
                     // redirect to linked page
                     $route = new Route(
@@ -121,7 +123,7 @@ class ContentRouteProvider implements RouteProviderInterface
 
                     $collection->add($content->getKey() . '_' . uniqid(), $route);
                 } elseif (
-                    $content->getNodeState() === StructureInterface::STATE_TEST ||
+                    $content->getNodeState() === WorkflowStage::TEST ||
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()
                 ) {

@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Twig;
 
 use Sulu\Component\Content\Type\ContentTypeInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\PropertyParameter;
 
 /**

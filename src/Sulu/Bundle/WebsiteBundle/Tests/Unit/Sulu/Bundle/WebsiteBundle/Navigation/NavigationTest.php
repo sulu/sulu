@@ -15,17 +15,18 @@ use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class NavigationTest extends PhpcrTestCase
 {
@@ -49,7 +50,7 @@ class NavigationTest extends PhpcrTestCase
         $this->prepareMapper();
         $this->data = $this->prepareTestData();
 
-        $this->structureManager->expects($this->any())
+        $this->structureFactory->expects($this->any())
             ->method('getStructures')
             ->will($this->returnCallback(array($this, 'structuresCallback')));
 
@@ -58,7 +59,7 @@ class NavigationTest extends PhpcrTestCase
         $this->navigation = new NavigationMapper(
             $this->mapper,
             $contentQuery,
-            new NavigationQueryBuilder($this->structureManager, $this->languageNamespace),
+            new NavigationQueryBuilder($this->structureFactory, $this->languageNamespace),
             $this->sessionManager
         );
     }
@@ -125,7 +126,7 @@ class NavigationTest extends PhpcrTestCase
 
     public function getExtensionCallback()
     {
-        return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
+        return new ExcerptStructureExtension($this->structureFactory, $this->contentTypeManager);
     }
 
     public function getExtensionsCallback()
@@ -188,7 +189,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
@@ -199,7 +200,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
@@ -210,7 +211,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['news']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $data['products'] = $this->mapper->save(
@@ -222,7 +223,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
@@ -233,7 +234,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
@@ -244,7 +245,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $data['products']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         return $data;
@@ -362,7 +363,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $this->data['news/news-1']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $result = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 2, true);
@@ -387,7 +388,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $this->data['news/news-1']->getUuid(),
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $result = $this->navigation->getNavigation(
@@ -436,7 +437,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $main = $this->navigation->getNavigation($this->data['news']->getUuid(), 'default', 'en', 1);
@@ -543,7 +544,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             null,
             $this->data['products']->getUuid(),
-            StructureInterface::STATE_TEST
+            WorkflowStage::TEST
         );
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
@@ -560,7 +561,7 @@ class NavigationTest extends PhpcrTestCase
             true,
             $this->data['products/products-3']->getUuid(),
             null,
-            StructureInterface::STATE_PUBLISHED
+            WorkflowStage::PUBLISHED
         );
 
         $main = $this->navigation->getNavigation($this->data['products']->getUuid(), 'default', 'en', 1);
@@ -637,7 +638,7 @@ class NavigationTest extends PhpcrTestCase
     }
 }
 
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension
@@ -671,9 +672,9 @@ class ExcerptStructureExtension extends StructureExtension
     protected $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    protected $structureManager;
+    protected $structureFactory;
 
     /**
      * @var string
@@ -681,11 +682,11 @@ class ExcerptStructureExtension extends StructureExtension
     private $languageNamespace;
 
     public function __construct(
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         ContentTypeManagerInterface $contentTypeManager
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -760,7 +761,7 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private function initExcerptStructure()
     {
-        $excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+        $excerptStructure = $this->structureFactory->getStructure(self::EXCERPT_EXTENSION_NAME);
         /** @var PropertyInterface $property */
         foreach ($excerptStructure->getProperties() as $property) {
             $this->properties[] = $property->getName();

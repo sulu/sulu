@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Controller;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -49,9 +49,9 @@ class TemplateController extends Controller
     {
         $internal = $request->get('internal', false);
 
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->get('sulu.content.structure_manager');
-        $structures = $structureManager->getStructures();
+        /** @var StructureFactoryInterface $structureFactory */
+        $structureFactory = $this->get('sulu_content.structure.factory');
+        $structures = $structureFactory->getStructures();
 
         $templates = array();
         foreach ($structures as $structure) {
@@ -140,10 +140,10 @@ class TemplateController extends Controller
      */
     private function getTemplateStructure($key, $type)
     {
-        /** @var StructureManagerInterface $structureManager */
-        $structureManager = $this->container->get('sulu.content.structure_manager');
+        /** @var StructureFactoryInterface $structureFactory */
+        $structureFactory = $this->container->get('sulu_content.structure.factory');
 
-        return $structureManager->getStructure($key, $type);
+        return $structureFactory->getStructure($key, $type);
     }
 
     /**

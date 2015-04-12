@@ -18,19 +18,19 @@ use Sulu\Component\Content\Metadata;
 class NavigationContext
 {
     /**
-     * @var Metadata
+     * @var array
      */
-    private $metadata;
+    private $data;
 
     /**
      * @var string
      */
     private $key;
 
-    public function __construct($key, $metadata)
+    public function __construct($key, $data)
     {
         $this->key = $key;
-        $this->metadata = new Metadata($metadata);
+        $this->data = $data;
     }
 
     /**
@@ -47,7 +47,11 @@ class NavigationContext
      */
     public function getTitle($locale)
     {
-        return $this->metadata->get('title', $locale, ucfirst($this->key));
+        if (isset($this->data[$locale]['title'])) {
+            return $this->data[$locale]['title'];
+        }
+
+        return ucfirst($this->key);
     }
 
     /**
@@ -55,6 +59,6 @@ class NavigationContext
      */
     public function getMetadata()
     {
-        return $this->metadata->getData();
+        return $this->data;
     }
 }

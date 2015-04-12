@@ -17,7 +17,7 @@ use Sulu\Component\Content\Type\ContentTypeInterface;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Block\BlockPropertyWrapper;
 

@@ -16,6 +16,7 @@ use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Interface of ContentMapper
@@ -52,7 +53,7 @@ interface ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = Structure::TYPE_PAGE
+        $structureType = LegacyStructureConstants::TYPE_PAGE
     );
 
     /**

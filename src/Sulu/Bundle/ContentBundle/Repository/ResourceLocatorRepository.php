@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Repository;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Type\Core\ResourceLocatorInterface;
 use Sulu\Component\Content\Type\Core\Rlp\ResourceLocatorInformation;
 use Sulu\Component\Content\Type\Core\Rlp\Strategy\RlpStrategyInterface;
@@ -23,9 +23,9 @@ use Sulu\Component\Content\Type\Core\Rlp\Strategy\RlpStrategyInterface;
 class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 {
     /**
-     * @var StructureManagerInterface
+     * @var StructureFactoryInterface
      */
-    private $structureManager;
+    private $structureFactory;
 
     /**
      * @var RlpStrategyInterface
@@ -56,13 +56,13 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
      */
     public function __construct(
         RlpStrategyInterface $strategy,
-        StructureManagerInterface $structureManager,
+        StructureFactoryInterface $structureFactory,
         ResourceLocatorInterface $resourceLocator,
         ContentMapperInterface $contentMapper
     )
     {
         $this->strategy = $strategy;
-        $this->structureManager = $structureManager;
+        $this->structureFactory = $structureFactory;
         $this->resourceLocator = $resourceLocator;
         $this->contentMapper = $contentMapper;
     }
@@ -73,7 +73,7 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     public function generate($parts, $parentUuid, $uuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null)
     {
         /** @var StructureInterface $structure */
-        $structure = $this->structureManager->getStructure($templateKey);
+        $structure = $this->structureFactory->getStructure($templateKey);
         $title = $this->implodeRlpParts($structure, $parts);
 
         if ($parentUuid !== null) {

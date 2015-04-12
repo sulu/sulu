@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Yaml\Yaml;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Load fixture command
@@ -163,7 +164,7 @@ EOT
             ->setTemplateKey($page['template'])
             ->setWebspaceKey($webspaceKey)
             ->setUserId($this->userId)
-            ->setState($page['published'] ? StructureInterface::STATE_PUBLISHED : StructureInterface::STATE_TEST)
+            ->setState($page['published'] ? WorkflowStage::PUBLISHED : WorkflowStage::TEST)
             ->setIsShadow($page['shadow'] ? true : false)
             ->setShadowBaseLanguage($page['shadow'])
             ->setLocale($page['locale'])
@@ -198,7 +199,7 @@ EOT
             ->setType('snippet')
             ->setTemplateKey($snippet['template'])
             ->setUserId($this->userId)
-            ->setState($snippet['published'] ? StructureInterface::STATE_PUBLISHED : StructureInterface::STATE_TEST)
+            ->setState($snippet['published'] ? WorkflowStage::PUBLISHED : WorkflowStage::TEST)
             ->setLocale($snippet['locale'])
             ->setData($snippet['data']);
 
