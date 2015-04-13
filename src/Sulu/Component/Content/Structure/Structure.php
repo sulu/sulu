@@ -75,10 +75,11 @@ class Structure extends Item
     {
         if (!isset($this->children[$name])) {
             throw new NoSuchPropertyException($this->name, sprintf(
-                'Property "%s" does not exist in structure "%s" loaded from resource "%s"',
+                'Property "%s" does not exist in structure "%s" loaded from resource "%s". Known properties: "%s"',
                 $name,
                 $this->name,
-                $this->resource
+                $this->resource,
+                implode('", "', array_keys($this->children))
             ));
         }
 

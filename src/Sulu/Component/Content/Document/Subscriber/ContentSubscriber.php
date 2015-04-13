@@ -136,12 +136,22 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $webspaceName = $this->inspector->getWebspace($document);
         $structure = $this->inspector->getStructure($document);
 
-        foreach ($structure->getChildren() as $propertyName => $structureProperty) {
+        if ($propertyContainer instanceof ManagedPropertyContainer) {
+            $propertyContainer->setStructure($structure);
+        }
+
+        foreach ($structure->getProperties(true) as $propertyName => $structureProperty) {
             $contentTypeName = $structureProperty->getContentTypeName();
             $contentType = $this->contentTypeManager->get($contentTypeName);
 
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
-            $realProperty = $propertyContainer->getProperty($propertyName);
+            try {
+                $realProperty = $propertyContainer->getProperty($propertyName);
+            } catch (\Exception $e) {
+                var_dump($structure->getName());
+                var_dump($propertyName);die();;
+                var_dump($structure);die();;
+            }
             $legacyProperty->setValue($realProperty->getValue());
 
             $contentType->write(

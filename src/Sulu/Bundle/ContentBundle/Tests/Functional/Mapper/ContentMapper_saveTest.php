@@ -162,7 +162,7 @@ class ContentMapper_saveTest extends SuluTestCase
             ));
         $this->contentMapper->saveRequest($request);
 
-        $leafDocument = $this->documentManager->find('/cmf/sulu_io/contents/this-is-a-test/ceci-est-une-test');
+        $leafDocument = $this->documentManager->find('/cmf/sulu_io/contents/this-is-a-test/ceci-est-une-test', 'de');
         $this->assertNotNull($leafDocument, 'Updating existing document no parent specified');
         $this->assertEquals('Bonjour le monde', $leafDocument->getTitle());
     }
