@@ -15,12 +15,12 @@ use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
-use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
-use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
-use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Type\Core\Rlp\ResourceLocatorInformation;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use DateTime;
+use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
+use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
+use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
 
 class PhpcrMapper extends RlpMapper
 {
@@ -82,7 +82,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws ResourceLocatorNotFoundException
      *
      * @return NodeInterface path
      */
@@ -126,6 +126,9 @@ class PhpcrMapper extends RlpMapper
         $languageCode,
         $segmentKey = null
     ) {
+        if ($node->isNew()) {
+            return null;
+        }
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
             if ($ref instanceof \PHPCR\PropertyInterface) {
@@ -155,7 +158,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws ResourceLocatorNotFoundException
      *
      * @return NodeInterface path
      */
@@ -231,8 +234,8 @@ class PhpcrMapper extends RlpMapper
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException resourceLocator has been moved
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException resourceLocator not found or has no content reference
+     * @throws ResourceLocatorMovedException resourceLocator has been moved
+     * @throws ResourceLocatorNotFoundException resourceLocator not found or has no content reference
      * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
@@ -240,21 +243,20 @@ class PhpcrMapper extends RlpMapper
         $resourceLocator = ltrim($resourceLocator, '/');
 
         try {
+            $path = sprintf(
+                '%s/%s',
+                $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
+                $resourceLocator
+            );
             if ($resourceLocator !== '') {
                 // get requested resource locator route node
-                $route = $this->sessionManager->getSession()->getNode(
-                    sprintf(
-                        '%s/%s',
-                        $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
-                        $resourceLocator
-                    )
-                );
+                $route = $this->sessionManager->getSession()->getNode($path);
             } else {
                 // get home page route node
                 $route = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
             }
-        } catch (PathNotFoundException $exc) {
-            throw new ResourceLocatorNotFoundException();
+        } catch (PathNotFoundException $e) {
+            throw new ResourceLocatorNotFoundException(sprintf('Path "%s" not found', $path), null, $e);
         }
 
         if ($route->hasProperty('sulu:content') && $route->hasProperty('sulu:history')) {
@@ -274,7 +276,10 @@ class PhpcrMapper extends RlpMapper
                 );
             }
         } else {
-            throw new ResourceLocatorNotFoundException();
+            throw new ResourceLocatorNotFoundException(sprintf(
+                'Route has "%s" does not have either the "sulu:content" or "sulu:history" properties',
+                $route->getPath()
+            ));
         }
     }
 
@@ -331,8 +336,8 @@ class PhpcrMapper extends RlpMapper
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorMovedException
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorNotFoundException
+     * @throws ResourceLocatorMovedException
+     * @throws ResourceLocatorNotFoundException
      */
     public function move($src, $dest, $webspaceKey, $languageCode, $segmentKey = null)
     {
@@ -556,7 +561,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $resourceLocator
      * @param $contentNode
      * @return bool
-     * @throws \Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException
+     * @throws ResourceLocatorAlreadyExistsException
      */
     private function checkResourceLocator(NodeInterface $routes, $resourceLocator, $contentNode)
     {
