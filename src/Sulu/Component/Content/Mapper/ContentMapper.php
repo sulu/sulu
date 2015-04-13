@@ -17,33 +17,22 @@ use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
-use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use PHPCR\RepositoryException;
 use Sulu\Component\Content\BreadcrumbItem;
-use Sulu\Component\Content\Types\ContentTypeInterface;
-use Sulu\Component\Content\Types\ContentTypeManager;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
-use Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent;
 use Sulu\Component\Content\Exception\ExtensionNotFoundException;
-use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
-use Sulu\Component\Content\Exception\MandatoryPropertyException;
-use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
-use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Document\Property\PropertyInterface;
-use Sulu\Component\Content\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Template\TemplateResolver;
-use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
@@ -71,7 +60,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -162,7 +150,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private $states = array(
         WorkflowStage::PUBLISHED,
-        WorkflowStage::TEST
+        WorkflowStage::TEST,
     );
 
     /**
@@ -419,7 +407,7 @@ class ContentMapper implements ContentMapperInterface
             $shadowBaseLanguage
         );
     }
-    
+
     public function loadByParent(
         $uuid,
         $webspaceKey,
@@ -428,8 +416,7 @@ class ContentMapper implements ContentMapperInterface
         $flat = true,
         $ignoreExceptions = false,
         $excludeGhosts = false
-    )
-    {
+    ) {
         $parent = null;
         if ($uuid) {
             $parent = $this->documentManager->find($uuid, $languageCode);
@@ -500,7 +487,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         return $this->loadDocument($uuid, $locale, array(
-            'exclude_shadow' => false
+            'exclude_shadow' => false,
         ));
     }
 
@@ -525,7 +512,6 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-
         return $this->documentManager->createQuery($query, $locale, LegacyStructureConstants::TYPE_PAGE)->execute();
     }
 
@@ -543,7 +529,7 @@ class ContentMapper implements ContentMapperInterface
 
         return $this->filterDocuments($webspaceChildren, $locale, array(
             'load_ghost_content' => $loadGhostContent,
-            'exclude_ghost' => $excludeGhost
+            'exclude_ghost' => $excludeGhost,
         ));
     }
 
@@ -566,8 +552,8 @@ class ContentMapper implements ContentMapperInterface
      * hydrated.
      *
      * @param NodeInterface $node
-     * @param string $localization
-     * @param string $webspaceKey
+     * @param string        $localization
+     * @param string        $webspaceKey
      *
      * @return StructureInterface
      */
@@ -737,7 +723,7 @@ class ContentMapper implements ContentMapperInterface
      *       should be scoped for each save request.
      *
      * TRUE dont rename pages on save
-     * @param boolean $noRenamingFlag
+     * @param  boolean $noRenamingFlag
      * @return $this
      */
     public function setNoRenamingFlag($noRenamingFlag)
@@ -749,7 +735,7 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * TRUE ignores mandatory in save
-     * @param bool $ignoreMandatoryFlag
+     * @param  bool  $ignoreMandatoryFlag
      * @return $this
      */
     public function setIgnoreMandatoryFlag($ignoreMandatoryFlag)
@@ -760,9 +746,9 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param bool $move
+     * @param  string             $webspaceKey
+     * @param  string             $locale
+     * @param  bool               $move
      * @return StructureInterface
      */
     private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, $move = true)
@@ -791,7 +777,7 @@ class ContentMapper implements ContentMapperInterface
 
         // prepare pathes
         $path = $node->getPath();
-        $destPath = $parentNode->getPath() . '/' . $nodeName;
+        $destPath = $parentNode->getPath().'/'.$nodeName;
 
         if ($move) {
             // move node
@@ -846,11 +832,11 @@ class ContentMapper implements ContentMapperInterface
     /**
      * adopts resource locator for just moved or copied node
      * @param StructureInterface $content
-     * @param NodeInterface $node
-     * @param string $parentResourceLocator
-     * @param string $webspaceKey
-     * @param string $locale
-     * @param int $userId
+     * @param NodeInterface      $node
+     * @param string             $parentResourceLocator
+     * @param string             $webspaceKey
+     * @param string             $locale
+     * @param int                $userId
      */
     private function adaptResourceLocator(
         StructureInterface $content,
@@ -893,8 +879,8 @@ class ContentMapper implements ContentMapperInterface
      *
      * @param NodeInterface $node
      * @param string Webspace - required by event listeners
-     * @param boolean $dereference Remove REFERENCE properties (or property
-     *   values in the case of multi-value) from referencing nodes
+     * @param boolean       $dereference Remove REFERENCE properties (or property
+     *                                   values in the case of multi-value) from referencing nodes
      */
     private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
     {
@@ -973,8 +959,8 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * @param $webspaceKey
-     * @param string $locale
-     * @param string $segment
+     * @param  string        $locale
+     * @param  string        $segment
      * @return NodeInterface
      */
     protected function getRootRouteNode($webspaceKey, $locale, $segment)
@@ -1149,7 +1135,7 @@ class ContentMapper implements ContentMapperInterface
             return $this->getPropertyData($document, $field['property']);
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -1207,9 +1193,9 @@ class ContentMapper implements ContentMapperInterface
             $property = $structure->getPropertyByTagName('sulu.rlp');
 
             if ($property->getContentTypeName() !== 'resource_locator') {
-                return 'http://' . $document->getContent()->getProperty($property->getName())->getValue();
+                return 'http://'.$document->getContent()->getProperty($property->getName())->getValue();
             }
-        
+
             return $document->getResourceSegment();
         }
 
@@ -1218,10 +1204,10 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * Returns urls for given page for all locales in webspace
-     * @param Page $page
-     * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $segmentKey
+     * @param  Page          $page
+     * @param  NodeInterface $node
+     * @param  string        $webspaceKey
+     * @param  string        $segmentKey
      * @return array
      */
     private function getLocalizedUrlsForPage(PageDocument $page)
@@ -1237,8 +1223,6 @@ class ContentMapper implements ContentMapperInterface
 
         return $localizedUrls;
     }
-
-
 
     /**
      * {@inheritdoc}
@@ -1269,7 +1253,7 @@ class ContentMapper implements ContentMapperInterface
     private function validateRequired(ContentMapperRequest $request, $keys)
     {
         foreach ($keys as $required) {
-            $method = 'get' . ucfirst($required);
+            $method = 'get'.ucfirst($required);
             $val = $request->$method();
 
             if (null === $val) {
@@ -1294,7 +1278,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->documentManager->find($pathOrUuid, $locale);
 
         if ($this->optionsShouldExcludeDocument($document, $options)) {
-            return null;
+            return;
         }
 
         return $document;
@@ -1340,5 +1324,4 @@ class ContentMapper implements ContentMapperInterface
     {
         $this->extensionDataCache = new ArrayCache();
     }
-
 }
