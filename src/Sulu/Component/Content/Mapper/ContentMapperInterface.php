@@ -14,8 +14,9 @@ use PHPCR\NodeInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Interface of ContentMapper.
@@ -333,25 +334,7 @@ interface ContentMapperInterface
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 
     /**
-     * TRUE dont rename pages on save.
-     *
-     * @param bool $noRenamingFlag
-     *
-     * @return $this
-     */
-    public function setNoRenamingFlag($noRenamingFlag);
-
-    /**
-     * TRUE ignores mandatory in save.
-     *
-     * @param bool $ignoreMandatoryFlag
-     *
-     * @return $this
-     */
-    public function setIgnoreMandatoryFlag($ignoreMandatoryFlag);
-
-    /**
-     * converts a query result in a list of arrays.
+     * Converts a query result in a list of arrays
      *
      * @param QueryResultInterface $queryResult
      * @param string $webspaceKey

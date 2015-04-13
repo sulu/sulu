@@ -72,7 +72,7 @@ class CategoryListTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $property = $this->getMockBuilder('Sulu\Component\Content\PropertyInterface')
+        $property = $this->getMockBuilder('Sulu\Component\Content\Compat\PropertyInterface')
             ->getMock();
         $property->expects($this->any())->method('getName')->willReturn('property');
         $property->expects($this->any())->method('setValue')->with(array($category1->toArray(), $category2->toArray()));
