@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Component\Content\Compat\Document;
+namespace Sulu\Component\Content\Document;
 
 /**
  * Constats class for localization states
