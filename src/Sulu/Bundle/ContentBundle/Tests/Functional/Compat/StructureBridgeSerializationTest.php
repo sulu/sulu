@@ -6,9 +6,9 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Util\NodeHelper;
-use DTL\Bundle\ContentBundle\Tests\Integration\BaseTestCase;
-use DTL\Component\Content\Compat\Structure\StructureBridge;
-use DTL\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\ContentBundle\Tests\Integration\BaseTestCase;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Property as LegacyProperty;
 
 class StructureBridgeSerializationTest extends SuluTestCase
