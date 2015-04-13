@@ -42,10 +42,10 @@ use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Compat\StructureType;
-use Sulu\Component\Content\Compat\Template\TemplateResolver;
+use Sulu\Component\Content\Template\TemplateResolver;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
-use Sulu\Component\Content\Type\Core\ResourceLocatorInterface;
-use Sulu\Component\Content\Type\Core\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\Content\Types\ResourceLocatorInterface;
+use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\NodeHelper;
@@ -73,6 +73,8 @@ use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -93,12 +95,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * @var ExtensionManager
      */
-    private $extensionManager;
-
-    /**
-     * @var StructureFactoryInterface
-     */
-    private $structureFactory;
+    private $structureManager;
 
     /**
      * @var SessionManagerInterface
@@ -225,16 +222,16 @@ class ContentMapper implements ContentMapperInterface
 
     public function __construct(
         DocumentManager $documentManager,
-        StructureFactoryInterface $structureFactory,
-        ExtensionManager $extensionManager,
         DataNormalizer $dataNormalizer,
         WebspaceManagerInterface $webspaceManager,
         FormFactoryInterface $formFactory,
         DocumentInspector $inspector,
         PropertyEncoder $encoder,
 
+        StructureManagerInterface $structureManager,
+
+        ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
-        ContentTypeManager $contentTypeManager,
         EventDispatcherInterface $eventDispatcher,
         LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
@@ -248,9 +245,8 @@ class ContentMapper implements ContentMapperInterface
         $stopwatch = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
-        $this->extensionManager = $extensionManager;
+        $this->structureManager = $structureManager;
         $this->dataNormalizer = $dataNormalizer;
-        $this->structureFactory = $structureFactory;
         $this->sessionManager = $sessionManager;
         $this->webspaceManager = $webspaceManager;
         $this->documentManager = $documentManager;
@@ -376,12 +372,12 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // check if extension exists
-        if (false === $this->extensionManager->hasExtension($document->getStructureType(), $extensionName)) {
+        if (false === $this->structureManager->hasExtension($document->getStructureType(), $extensionName)) {
             throw new ExtensionNotFoundException($document->getStructureType(), $extensionName);
         }
 
         // save data of extensions
-        $extension = $this->structureFactory->getExtension($document->getStructureType(), $extensionName);
+        $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
         $node = $this->documentRegistry->getNodeForDocument($document);
 
         $extension->save($node, $data, $webspaceKey, $locale);

@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Mapper;
+namespace Sulu\Component\Content\Mapper;
 
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
