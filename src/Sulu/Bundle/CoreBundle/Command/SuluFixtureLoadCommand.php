@@ -2,8 +2,8 @@
 
 namespace Sulu\Bundle\CoreBundle\Command;
 
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\StructureInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

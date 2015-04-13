@@ -2,45 +2,51 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
+use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
+use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Tests\Fixtures\DefaultStructureCache;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class SearchIntegrationTest extends WebTestCase
+class SearchIntegrationTest extends SuluTestCase
 {
-    protected $container;
+    private $documentManager;
+
+    protected function getKernelConfiguration()
+    {
+        return array(
+            'sulu_context' => 'website'
+        );
+    }
 
     public function setUp()
     {
-        static::$kernel = static::createKernel();
-        static::$kernel->suluContext = 'website';
-        static::$kernel->boot();
-        $this->container = self::$kernel->getContainer();
+        $this->initPhpcr();
+        $this->documentManager = $this->container->get('sulu_document_manager.document_manager');
+        $this->nodeManager = $this->container->get('sulu_document_manager.node_manager');
+        $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();
         $tagManager = $this->getMock('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
 
-        $this->mediaSelectionContainer = $this->getMockBuilder('Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer')
-            ->disableOriginalConstructor()->getMock();
-        $this->mediaSelectionContainer->expects($this->any())
-            ->method('getData')
-            ->willReturn(array($this->media));
+        $this->mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
+        $this->mediaSelectionContainer->getData('de')->willReturn(array($this->media));
+        $this->mediaSelectionContainer->toArray()->willReturn(null);
     }
 
     public function provideIndex()
     {
         return array(
-            array('170x170', false, null),
-            array('invalid', false, '\InvalidArgumentException'),
+            array('170x170', null),
+            array('invalid', '\InvalidArgumentException'),
         );
     }
 
     /**
      * @dataProvider provideIndex
      */
-    public function testIndex($format, $noMedia, $expectedException)
+    public function testIndex($format, $expectedException)
     {
         if ($expectedException) {
             $this->setExpectedException($expectedException);
@@ -50,12 +56,18 @@ class SearchIntegrationTest extends WebTestCase
             $format => 'myimage.jpg',
         ));
 
-        $searchManager = $this->container->get('massive_search.search_manager');
         $testAdapter = $this->container->get('massive_search.adapter.test');
 
-        $structure = new DefaultStructureCache();
-        $structure->getProperty('images')->setValue($this->mediaSelectionContainer);
-        $searchManager->index($structure);
+        $document = $this->documentManager->create('page');
+        $document->setTitle('Hallo');
+        $document->setResourceSegment('/hallo/fo');
+        $document->setStructureType('images');
+        $document->setParent($this->webspaceDocument);
+        $document->getContent()->bind(array(
+            'images' => $this->mediaSelectionContainer->reveal()
+        ), false);
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
 
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
@@ -66,8 +78,12 @@ class SearchIntegrationTest extends WebTestCase
 
     public function testIndexNoMedia()
     {
-        $searchManager = $this->container->get('massive_search.search_manager');
-        $structure = new DefaultStructureCache();
-        $searchManager->index($structure);
+        $document = $this->documentManager->create('page');
+        $document->setStructureType('images');
+        $document->setTitle('Hallo');
+        $document->setResourceSegment('/hallo');
+        $document->setParent($this->webspaceDocument);
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
     }
 }

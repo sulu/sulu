@@ -14,8 +14,8 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 use Sulu\Component\Util\ArrayableInterface;
@@ -273,7 +273,7 @@ class SmartContent extends ComplexContentType
      * @param PropertyInterface $property
      * @param PropertyParameter[] $params
      *
-     * @return array|\Sulu\Component\Content\StructureInterface[]
+     * @return array|\Sulu\Component\Content\Compat\StructureInterface[]
      */
     private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
     {
@@ -362,7 +362,7 @@ class SmartContent extends ComplexContentType
      * @param SmartContentContainer $container
      * @param string $excludeUuid
      *
-     * @return \Sulu\Component\Content\StructureInterface[]
+     * @return \Sulu\Component\Content\Compat\StructureInterface[]
      */
     private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)
     {

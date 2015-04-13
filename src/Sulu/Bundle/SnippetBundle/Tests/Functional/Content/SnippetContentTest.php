@@ -16,9 +16,9 @@ use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\PropertyInterface;
 
 class SnippetContentTest extends BaseFunctionalTestCase
 {
@@ -54,7 +54,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->loadFixtures();
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->property = $this->getMock('Sulu\Component\Content\PropertyInterface');
+        $this->property = $this->getMock('Sulu\Component\Content\Compat\PropertyInterface');
 
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
         $this->contentType = new SnippetContent(
@@ -77,13 +77,13 @@ class SnippetContentTest extends BaseFunctionalTestCase
                 }
             }));
 
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->read($pageNode, $this->property, 'sulu_io', 'de', null);
     }
 
     public function testPropertyWriteContentMapper()
     {
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->assertTrue($pageNode->hasProperty('i18n:de-hotels'));
 
         $prop = $pageNode->getProperty('i18n:de-hotels');
@@ -105,14 +105,14 @@ class SnippetContentTest extends BaseFunctionalTestCase
             ->method('getValue')
             ->will($this->returnValue(array('ids' => 'this-aint-nuffin')));
 
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->write($pageNode, $this->property, 0, 'sulu_io', 'de', null);
     }
 
     public function testGetContentData()
     {
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
-        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de', 'sulu_io');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
+        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de');
         $property = $pageStructure->getProperty('hotels');
         $data = $this->contentType->getContentData($property);
         $this->assertCount(2, $data);
@@ -124,10 +124,12 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
     public function testGetContentDataShadow()
     {
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
         $property = $pageStructure->getProperty('hotels');
+
         $data = $this->contentType->getContentData($property);
+
         $this->assertCount(2, $data);
         $hotel1 = reset($data);
         $this->assertEquals('Le grande budapest (en)', $hotel1['title']);
@@ -137,7 +139,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
     public function testGetReferencedUuids()
     {
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
         $property = $pageStructure->getProperty('hotels');
         $uuids = $this->contentType->getReferencedUuids($property);
@@ -151,7 +153,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->property->expects($this->any())
             ->method('getName')->will($this->returnValue('i18n:de-hotels'));
 
-        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->remove($pageNode, $this->property, 'sulu_io', 'de', null);
         $this->session->save();
         $this->assertFalse($pageNode->hasProperty('i18n:de-hotels'));

@@ -12,10 +12,10 @@ namespace Sulu\Component\Content\Query;
 
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 
 /**
  * Basic class for content query builder.
@@ -152,7 +152,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $sql2 = sprintf(
             "SELECT %s
              FROM [nt:unstructured] AS page
-             WHERE page.[jcr:mixinTypes] = 'sulu:page'
+             WHERE (page.[jcr:mixinTypes] = 'sulu:page' OR page.[jcr:mixinTypes] = 'sulu:home')
                 AND (%s)
                 %s %s",
             implode(', ', $select),
@@ -160,6 +160,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
             sizeof($order) > 0 ? 'ORDER BY' : '',
             implode(', ', $order)
         );
+
 
         return array($sql2, $additionalFields);
     }

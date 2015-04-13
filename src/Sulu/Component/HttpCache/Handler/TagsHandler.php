@@ -10,11 +10,12 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
+use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
@@ -39,11 +40,6 @@ class TagsHandler implements
      * @var ContentTypeManager
      */
     private $contentTypeManager;
-
-    /**
-     * @var bool
-     */
-    private $invalidated = false;
 
     /**
      * @var array
