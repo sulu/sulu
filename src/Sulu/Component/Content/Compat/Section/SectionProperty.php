@@ -20,14 +20,14 @@ use JMS\Serializer\Annotation\HandlerCallback;
 
 /**
  * defines a section for properties
- * @package Sulu\Component\Content
+ * @package Sulu\Component\Content\Compat
  */
 class SectionProperty extends Property implements SectionPropertyInterface
 {
     /**
      * properties managed by this block
      * @var PropertyInterface[]
-     * @Type("array<Sulu\Component\Content\Property>")
+     * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
     private $childProperties = array();
 

@@ -126,7 +126,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * @param \Sulu\Component\Content\Block\BlockPropertyInterface $block
+     * @param \Sulu\Component\Content\Compat\Block\BlockPropertyInterface $block
      */
     public function setBlock($block)
     {
@@ -134,7 +134,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * @return \Sulu\Component\Content\Block\BlockPropertyInterface
+     * @return \Sulu\Component\Content\Compat\Block\BlockPropertyInterface
      */
     public function getBlock()
     {
@@ -142,7 +142,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * @param \Sulu\Component\Content\PropertyInterface $property
+     * @param \Sulu\Component\Content\Compat\PropertyInterface $property
      */
     public function setProperty($property)
     {
@@ -150,7 +150,7 @@ class BlockPropertyWrapper implements PropertyInterface
     }
 
     /**
-     * @return \Sulu\Component\Content\PropertyInterface
+     * @return \Sulu\Component\Content\Compat\PropertyInterface
      */
     public function getProperty()
     {

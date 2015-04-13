@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Compat\Event;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\Content\Compat\Mapper\ContentMapperInterface;
 use Sulu\Component\Util\SuluNodeHelper;
 
 /**
@@ -22,7 +22,7 @@ use Sulu\Component\Util\SuluNodeHelper;
 class ContentNodeDeleteEvent extends Event
 {
     /**
-     * @var Sulu\Component\Content\Mapper\ContentMapperInterface
+     * @var Sulu\Component\Content\Compat\Mapper\ContentMapperInterface
      */
     private $contentMapper;
 

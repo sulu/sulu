@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use Sulu\Component\Localization\Localization;
 
 /**
  * type for structures, like ghost or shadow
- * @package Sulu\Component\Content
+ * @package Sulu\Component\Content\Compat
  */
 class StructureType
 {

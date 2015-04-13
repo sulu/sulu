@@ -8,15 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\Structure\Snippet;
-use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
-use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
-use Sulu\Component\Content\Template\Exception\InvalidXmlException;
-use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
+use Sulu\Component\Content\Compat\StructureExtension\StructureExtensionInterface;
+use Sulu\Component\Content\Compat\Template\Dumper\PhpTemplateDumper;
+use Sulu\Component\Content\Compat\Template\Exception\InvalidXmlException;
+use Sulu\Component\Content\Compat\Template\Exception\TemplateNotFoundException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Config\ConfigCache;

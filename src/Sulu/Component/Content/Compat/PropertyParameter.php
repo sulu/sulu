@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\HandlerCallback;
@@ -32,7 +32,7 @@ class PropertyParameter
 
     /**
      * @var string|bool|array
-     * @Type("array<string,Sulu\Component\Content\PropertyParameter>")
+     * @Type("array<string,Sulu\Component\Content\Compat\PropertyParameter>")
      */
     private $value;
 
@@ -44,7 +44,7 @@ class PropertyParameter
 
     /**
      * @var Metadata
-     * @Type("Sulu\Component\Content\Metadata")
+     * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metadata;
 
