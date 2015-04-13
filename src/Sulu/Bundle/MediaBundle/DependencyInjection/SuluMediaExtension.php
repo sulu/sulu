@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class SuluMediaExtension extends Extension
 {
-    const DEFAULT_GHOST_SCRIPT_PATH = 'ghostscript';
+    const DEFAULT_FORMAT_NAME = '170x170';
     const DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER = 'web';
 
     /**
