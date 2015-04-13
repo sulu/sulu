@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Mapper\Event;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
