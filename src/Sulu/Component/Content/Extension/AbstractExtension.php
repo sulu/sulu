@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Extension;
+namespace Sulu\Component\Content\Extension;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
