@@ -43,7 +43,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
-        $container->setParameter('sulu_media.format_manager.config_files', $config['format_manager']['config_files']);
+        $container->setParameter('sulu_media.format_manager.config_paths', $config['format_manager']['config_paths']);
         $container->setParameter('sulu_media.collection.previews.limit', 3);
         $container->setParameter('sulu_media.collection.previews.format', '150x100');
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
@@ -53,7 +53,6 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../' . $config['format_cache']['public_folder'] . '/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
-        $container->setParameter('sulu_media.image.formats', array()); // written by compiler pass
         $container->setParameter('sulu_media.format_manager.mime_types', array(
             'image/jpeg',
             'image/jpg',

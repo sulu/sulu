@@ -51,7 +51,7 @@ class ImageFormatCompilerPass implements CompilerPassInterface
 
         $activeTheme = $this->container->get('liip_theme.active_theme');
         $bundles = $this->container->getParameter('kernel.bundles');
-        $configPaths = $this->container->getParameter('sulu_media.format_manager.config_files');
+        $configPaths = $this->container->getParameter('sulu_media.format_manager.config_paths');
         $defaultConfigPath = 'config/image-formats.xml';
 
         foreach ($activeTheme->getThemes() as $theme) {

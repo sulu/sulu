@@ -66,7 +66,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
                     ->end()
-                    ->arrayNode('config_files')
+                    ->arrayNode('config_paths')
                         ->prototype('scalar')->end()
                     ->end()
                 ->end()
