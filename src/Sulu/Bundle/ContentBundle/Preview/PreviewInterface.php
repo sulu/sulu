@@ -66,7 +66,7 @@ interface PreviewInterface
      * @param string $locale
      * @param string $property propertyName which was changed
      * @param mixed $data new data
-     * @return \Sulu\Component\Content\StructureInterface
+     * @return \Sulu\Component\Content\Compat\StructureInterface
      */
     public function updateProperty($userId, $contentUuid, $webspaceKey, $locale, $property, $data);
 

@@ -184,13 +184,13 @@ interface StructureInterface extends \JsonSerializable
     public function getPropertyNames();
 
     /**
-     * @param \Sulu\Component\Content\StructureType $type
+     * @param \Sulu\Component\Content\Compat\StructureType $type
      */
     public function setType($type);
 
     /**
      * return type of structure
-     * @return \Sulu\Component\Content\StructureType
+     * @return \Sulu\Component\Content\Compat\StructureType
      */
     public function getType();
 

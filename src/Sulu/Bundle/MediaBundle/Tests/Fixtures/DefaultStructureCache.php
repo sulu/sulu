@@ -11,7 +11,7 @@ use Sulu\Component\Content\Section\SectionProperty;
 /**
  * DefaultStructureCache
  */
-class DefaultStructureCache extends \Sulu\Component\Content\Structure
+class DefaultStructureCache extends \Sulu\Component\Content\Compat\Structure
 {
     public function __construct()
     {

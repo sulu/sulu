@@ -18,8 +18,8 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
-use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Structure\Snippet;
+use Sulu\Component\Content\Compat\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Snippet;
 
 /**
  * ContentType for Snippets

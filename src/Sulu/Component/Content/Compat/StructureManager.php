@@ -11,8 +11,8 @@
 namespace Sulu\Component\Content;
 
 use Psr\Log\LoggerInterface;
-use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Structure\Snippet;
+use Sulu\Component\Content\Compat\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
 use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\Exception\InvalidXmlException;
@@ -84,9 +84,9 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
             'cache_dir' => null,
             'debug' => false,
             'page_cache_class_suffix' => 'PageCache',
-            'page_base_class' => 'Sulu\Component\Content\Structure\Page',
+            'page_base_class' => 'Sulu\Component\Content\Compat\Structure\Page',
             'snippet_cache_class_suffix' => 'SnippetCache',
-            'snippet_base_class' => 'Sulu\Component\Content\Structure\Snippet'
+            'snippet_base_class' => 'Sulu\Component\Content\Compat\Structure\Snippet'
         );
 
         // overwrite the default values with the given options

@@ -20,7 +20,7 @@ class SuluCollectorTest extends \PHPUnit_Framework_TestCase
         $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
         $this->webspace = $this->prophesize('Sulu\Component\Webspace\Webspace');
         $this->segment = $this->prophesize('Sulu\Component\Webspace\Segment');
-        $this->structure = $this->prophesize('Sulu\Component\Content\Structure\Page');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\Page');
 
         $this->dataCollector = new SuluCollector($this->requestAnalyzer->reveal());
     }

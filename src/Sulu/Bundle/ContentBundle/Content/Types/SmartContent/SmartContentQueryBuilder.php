@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
-use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

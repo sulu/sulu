@@ -10,7 +10,7 @@
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
         <parameter key="sulu.content.mapper.subscriber.node_order.class">Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber</parameter>
 
-        <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\StructureManager</parameter>
+        <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\Compat\StructureManager</parameter>
         <parameter key="sulu.content.structure_manager.loader.class">Sulu\Component\Content\Template\TemplateReader</parameter>
         <parameter key="sulu.content.structure_manager.dumper.class">Sulu\Component\Content\Template\Dumper\PhpTemplateDumper</parameter>
         <parameter key="sulu.content.structure_manager.dumper.path">../Resources/Skeleton</parameter>

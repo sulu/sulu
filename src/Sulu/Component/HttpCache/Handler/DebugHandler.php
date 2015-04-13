@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;
 use FOS\HttpCache\ProxyClient\Invalidation\PurgeInterface;
 use Sulu\Component\Content\Compat\PageInterface;
-use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 
 /**

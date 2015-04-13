@@ -35,7 +35,7 @@ class HitListener
      */
     public function onHit(HitEvent $event)
     {
-        if (false === $event->getMetadata()->reflection->isSubclassOf('Sulu\Component\Content\Structure')) {
+        if (false === $event->getDocumentReflection()->isSubclassOf('Sulu\Component\Content\Compat\Structure')) {
             return;
         }
 

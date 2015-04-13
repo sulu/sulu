@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Controller;
 
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
