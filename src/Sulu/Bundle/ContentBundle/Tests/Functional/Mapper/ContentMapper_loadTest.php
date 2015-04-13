@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Mapper;
 
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;

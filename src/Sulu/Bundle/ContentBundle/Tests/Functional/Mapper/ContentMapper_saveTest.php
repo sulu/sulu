@@ -3,7 +3,7 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Mapper;
 
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Structure;
 use DTL\Component\Content\Document\PageInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
