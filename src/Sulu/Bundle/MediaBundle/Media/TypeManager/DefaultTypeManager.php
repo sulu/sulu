@@ -10,16 +10,20 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\TypeManager;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 
+/**
+ * Class DefaultTypeManager
+ * Default Type Manager used to get correct media type by a mime type
+ */
 class DefaultTypeManager implements TypeManagerInterface
 {
     /**
-     * @var array
+     * @var ObjectManager
      */
-    private $blockedMimeTypes;
+    private $objectManager;
 
     /**
      * @var array
@@ -27,34 +31,37 @@ class DefaultTypeManager implements TypeManagerInterface
     private $mediaTypes;
 
     /**
+     * @var array
+     */
+    private $blockedMimeTypes;
+
+    /**
      * @var MediaType[]
      */
     private $mediaTypeEntities;
 
     /**
-     * @param EntityManager $em
+     * @param ObjectManager $objectManager
      * @param array $mediaTypes
      * @param array $blockedMimeTypes
      */
     public function __construct(
-        EntityManager $em,
+        ObjectManager $objectManager,
         $mediaTypes,
         $blockedMimeTypes
     ) {
-        $this->em = $em;
+        $this->objectManager = $objectManager;
         $this->mediaTypes = $mediaTypes;
         $this->blockedMimeTypes = $blockedMimeTypes;
     }
 
     /**
-     * @param int $id
-     * @return MediaType
-     * @throws MediaTypeNotFoundException
+     * {@inheritdoc}
      */
     public function get($id)
     {
         /** @var MediaType $type */
-        $type = $this->em->getRepository(self::ENTITY_NAME_MEDIATYPE)->find($id);
+        $type = $this->objectManager->getRepository(self::ENTITY_NAME_MEDIATYPE)->find($id);
         if (!$type) {
             throw new MediaTypeNotFoundException('Collection Type with the ID ' . $id . ' not found');
         }
@@ -63,8 +70,7 @@ class DefaultTypeManager implements TypeManagerInterface
     }
 
     /**
-     * @param string $fileMimeType
-     * @return integer
+     * {@inheritdoc}
      */
     public function getMediaType($fileMimeType)
     {
@@ -78,7 +84,7 @@ class DefaultTypeManager implements TypeManagerInterface
         }
 
         if (!isset($this->mediaTypeEntities[$name])) {
-            $mediaType = $this->em->getRepository(self::ENTITY_CLASS_MEDIATYPE)->findOneByName($name);
+            $mediaType = $this->objectManager->getRepository(self::ENTITY_CLASS_MEDIATYPE)->findOneByName($name);
             $this->mediaTypeEntities[$name] = $mediaType;
         }
 
