@@ -27,7 +27,11 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->load();
 
         $this->assertContainerBuilderHasService('sulu_media.media_manager');
-        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', array());
+        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', array(
+            'Expires' => '+1 month',
+            'Pragma' => 'public',
+            'Cache-Control' => 'public'
+        ));
         $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', '170x170');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.segments', 10);
@@ -38,7 +42,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
         $this->assertContainerBuilderHasParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', array('file/exe'));
-        $this->assertContainerBuilderHasParameter('ghost_script.path', 'ghostscript');
+        $this->assertContainerBuilderHasParameter('ghost_script.path', 'gs');
         $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types',  array(
             'image/jpeg',
             'image/jpg',
