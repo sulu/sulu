@@ -24492,282 +24492,109 @@ var UriTemplate = (function () {
 define("typeahead", function(){});
 
 
-;(function(){
-
-/**
- * Require the module at `name`.
- *
- * @param {String} name
- * @return {Object} exports
- * @api public
- */
-
-function require(name) {
-  var module = require.modules[name];
-  if (!module) throw new Error('failed to require "' + name + '"');
-
-  if (!('exports' in module) && typeof module.definition === 'function') {
-    module.client = module.component = true;
-    module.definition.call(this, module.exports = {}, module);
-    delete module.definition;
-  }
-
-  return module.exports;
-}
-
-/**
- * Registered modules.
- */
-
-require.modules = {};
-
-/**
- * Register module at `name` with callback `definition`.
- *
- * @param {String} name
- * @param {Function} definition
- * @api private
- */
-
-require.register = function (name, definition) {
-  require.modules[name] = {
-    definition: definition
-  };
-};
-
-/**
- * Define a module's exports immediately with `exports`.
- *
- * @param {String} name
- * @param {Generic} exports
- * @api private
- */
-
-require.define = function (name, exports) {
-  require.modules[name] = {
-    exports: exports
-  };
-};
-require.register("component~emitter@1.1.2", function (exports, module) {
-
-/**
- * Expose `Emitter`.
- */
-
-module.exports = Emitter;
-
-/**
- * Initialize a new `Emitter`.
- *
- * @api public
- */
-
-function Emitter(obj) {
-  if (obj) return mixin(obj);
-};
-
-/**
- * Mixin the emitter properties.
- *
- * @param {Object} obj
- * @return {Object}
- * @api private
- */
-
-function mixin(obj) {
-  for (var key in Emitter.prototype) {
-    obj[key] = Emitter.prototype[key];
-  }
-  return obj;
-}
-
-/**
- * Listen on the given `event` with `fn`.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.on =
-Emitter.prototype.addEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-  (this._callbacks[event] = this._callbacks[event] || [])
-    .push(fn);
-  return this;
-};
-
-/**
- * Adds an `event` listener that will be invoked a single
- * time then automatically removed.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.once = function(event, fn){
-  var self = this;
-  this._callbacks = this._callbacks || {};
-
-  function on() {
-    self.off(event, on);
-    fn.apply(this, arguments);
-  }
-
-  on.fn = fn;
-  this.on(event, on);
-  return this;
-};
-
-/**
- * Remove the given callback for `event` or all
- * registered callbacks.
- *
- * @param {String} event
- * @param {Function} fn
- * @return {Emitter}
- * @api public
- */
-
-Emitter.prototype.off =
-Emitter.prototype.removeListener =
-Emitter.prototype.removeAllListeners =
-Emitter.prototype.removeEventListener = function(event, fn){
-  this._callbacks = this._callbacks || {};
-
-  // all
-  if (0 == arguments.length) {
-    this._callbacks = {};
-    return this;
-  }
-
-  // specific event
-  var callbacks = this._callbacks[event];
-  if (!callbacks) return this;
-
-  // remove all handlers
-  if (1 == arguments.length) {
-    delete this._callbacks[event];
-    return this;
-  }
-
-  // remove specific handler
-  var cb;
-  for (var i = 0; i < callbacks.length; i++) {
-    cb = callbacks[i];
-    if (cb === fn || cb.fn === fn) {
-      callbacks.splice(i, 1);
-      break;
-    }
-  }
-  return this;
-};
-
-/**
- * Emit `event` with the given args.
- *
- * @param {String} event
- * @param {Mixed} ...
- * @return {Emitter}
- */
-
-Emitter.prototype.emit = function(event){
-  this._callbacks = this._callbacks || {};
-  var args = [].slice.call(arguments, 1)
-    , callbacks = this._callbacks[event];
-
-  if (callbacks) {
-    callbacks = callbacks.slice(0);
-    for (var i = 0, len = callbacks.length; i < len; ++i) {
-      callbacks[i].apply(this, args);
-    }
-  }
-
-  return this;
-};
-
-/**
- * Return array of callbacks for `event`.
- *
- * @param {String} event
- * @return {Array}
- * @api public
- */
-
-Emitter.prototype.listeners = function(event){
-  this._callbacks = this._callbacks || {};
-  return this._callbacks[event] || [];
-};
-
-/**
- * Check if this emitter has `event` handlers.
- *
- * @param {String} event
- * @return {Boolean}
- * @api public
- */
-
-Emitter.prototype.hasListeners = function(event){
-  return !! this.listeners(event).length;
-};
-
-});
-
-require.register("dropzone", function (exports, module) {
-
-
-/**
- * Exposing dropzone
- */
-module.exports = require("dropzone/lib/dropzone.js");
-
-});
-
-require.register("dropzone/lib/dropzone.js", function (exports, module) {
 /*
-#
-# More info at [www.dropzonejs.com](http://www.dropzonejs.com)
-# 
-# Copyright (c) 2012, Matias Meno  
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-*/
-
+ *
+ * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
+ *
+ * Copyright (c) 2012, Matias Meno
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
 
 (function() {
-  var Dropzone, Em, camelize, contentLoaded, detectVerticalSquash, drawImageIOSFix, noop, without,
+  var Dropzone, Emitter, camelize, contentLoaded, detectVerticalSquash, drawImageIOSFix, noop, without,
+    __slice = [].slice,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
-
-  Em = typeof Emitter !== "undefined" && Emitter !== null ? Emitter : require("component~emitter@1.1.2");
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   noop = function() {};
 
+  Emitter = (function() {
+    function Emitter() {}
+
+    Emitter.prototype.addEventListener = Emitter.prototype.on;
+
+    Emitter.prototype.on = function(event, fn) {
+      this._callbacks = this._callbacks || {};
+      if (!this._callbacks[event]) {
+        this._callbacks[event] = [];
+      }
+      this._callbacks[event].push(fn);
+      return this;
+    };
+
+    Emitter.prototype.emit = function() {
+      var args, callback, callbacks, event, _i, _len;
+      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      this._callbacks = this._callbacks || {};
+      callbacks = this._callbacks[event];
+      if (callbacks) {
+        for (_i = 0, _len = callbacks.length; _i < _len; _i++) {
+          callback = callbacks[_i];
+          callback.apply(this, args);
+        }
+      }
+      return this;
+    };
+
+    Emitter.prototype.removeListener = Emitter.prototype.off;
+
+    Emitter.prototype.removeAllListeners = Emitter.prototype.off;
+
+    Emitter.prototype.removeEventListener = Emitter.prototype.off;
+
+    Emitter.prototype.off = function(event, fn) {
+      var callback, callbacks, i, _i, _len;
+      if (!this._callbacks || arguments.length === 0) {
+        this._callbacks = {};
+        return this;
+      }
+      callbacks = this._callbacks[event];
+      if (!callbacks) {
+        return this;
+      }
+      if (arguments.length === 1) {
+        delete this._callbacks[event];
+        return this;
+      }
+      for (i = _i = 0, _len = callbacks.length; _i < _len; i = ++_i) {
+        callback = callbacks[i];
+        if (callback === fn) {
+          callbacks.splice(i, 1);
+          break;
+        }
+      }
+      return this;
+    };
+
+    return Emitter;
+
+  })();
+
   Dropzone = (function(_super) {
-    var extend;
+    var extend, resolveOption;
 
     __extends(Dropzone, _super);
+
+    Dropzone.prototype.Emitter = Emitter;
+
 
     /*
     This is a list of all available events you can register on a dropzone object.
@@ -24775,10 +24602,9 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     You can register an event handler like this:
     
         dropzone.on("dragEnter", function() { });
-    */
+     */
 
-
-    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached"];
+    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
 
     Dropzone.prototype.defaultOptions = {
       url: null,
@@ -24790,9 +24616,11 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       paramName: "file",
       createImageThumbnails: true,
       maxThumbnailFilesize: 10,
-      thumbnailWidth: 100,
-      thumbnailHeight: 100,
+      thumbnailWidth: 120,
+      thumbnailHeight: 120,
+      filesizeBase: 1000,
       maxFiles: null,
+      filesizeBase: 1000,
       params: {},
       clickable: true,
       ignoreHiddenFiles: true,
@@ -24802,6 +24630,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       autoQueue: true,
       addRemoveLinks: false,
       previewsContainer: null,
+      capture: null,
       dictDefaultMessage: "Drop files here to upload",
       dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
       dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
@@ -24853,15 +24682,13 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         srcRatio = file.width / file.height;
         info.optWidth = this.options.thumbnailWidth;
         info.optHeight = this.options.thumbnailHeight;
-        if (!((info.optWidth != null) && (info.optHeigh != null))) {
-          if ((info.optWidth == null) && (info.optHeight == null)) {
-            info.optWidth = info.srcWidth;
-            info.optHeight = info.srcHeight;
-          } else if (info.optWidth == null) {
-            info.optWidth = srcRatio * info.optHeight;
-          } else if (info.optHeight == null) {
-            info.optHeight = (1 / srcRatio) * info.optWidth;
-          }
+        if ((info.optWidth == null) && (info.optHeight == null)) {
+          info.optWidth = info.srcWidth;
+          info.optHeight = info.srcHeight;
+        } else if (info.optWidth == null) {
+          info.optWidth = srcRatio * info.optHeight;
+        } else if (info.optHeight == null) {
+          info.optHeight = (1 / srcRatio) * info.optWidth;
         }
         trgRatio = info.optWidth / info.optHeight;
         if (file.height < info.optHeight || file.width < info.optWidth) {
@@ -24880,6 +24707,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         info.srcY = (file.height - info.srcHeight) / 2;
         return info;
       },
+
       /*
       Those functions register themselves to the events on init and handle all
       the user interface specific stuff. Overwriting them won't break the upload
@@ -24887,8 +24715,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       You can overwrite them if you don't like the default behavior. If you just
       want to add an additional event handler, register it on the dropzone object
       and don't overwrite those options.
-      */
-
+       */
       drop: function(e) {
         return this.element.classList.remove("dz-drag-hover");
       },
@@ -24910,110 +24737,131 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         return this.element.classList.remove("dz-started");
       },
       addedfile: function(file) {
-        var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results,
-          _this = this;
+        var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
         if (this.element === this.previewsContainer) {
           this.element.classList.add("dz-started");
         }
-        file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
-        file.previewTemplate = file.previewElement;
-        this.previewsContainer.appendChild(file.previewElement);
-        _ref = file.previewElement.querySelectorAll("[data-dz-name]");
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          node = _ref[_i];
-          node.textContent = file.name;
-        }
-        _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          node = _ref1[_j];
-          node.innerHTML = this.filesize(file.size);
-        }
-        if (this.options.addRemoveLinks) {
-          file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
-          file.previewElement.appendChild(file._removeLink);
-        }
-        removeFileEvent = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          if (file.status === Dropzone.UPLOADING) {
-            return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function() {
-              return _this.removeFile(file);
-            });
-          } else {
-            if (_this.options.dictRemoveFileConfirmation) {
-              return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function() {
-                return _this.removeFile(file);
-              });
-            } else {
-              return _this.removeFile(file);
-            }
+        if (this.previewsContainer) {
+          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+          file.previewTemplate = file.previewElement;
+          this.previewsContainer.appendChild(file.previewElement);
+          _ref = file.previewElement.querySelectorAll("[data-dz-name]");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            node.textContent = file.name;
           }
-        };
-        _ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
-        _results = [];
-        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-          removeLink = _ref2[_k];
-          _results.push(removeLink.addEventListener("click", removeFileEvent));
+          _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            node = _ref1[_j];
+            node.innerHTML = this.filesize(file.size);
+          }
+          if (this.options.addRemoveLinks) {
+            file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
+            file.previewElement.appendChild(file._removeLink);
+          }
+          removeFileEvent = (function(_this) {
+            return function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (file.status === Dropzone.UPLOADING) {
+                return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function() {
+                  return _this.removeFile(file);
+                });
+              } else {
+                if (_this.options.dictRemoveFileConfirmation) {
+                  return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function() {
+                    return _this.removeFile(file);
+                  });
+                } else {
+                  return _this.removeFile(file);
+                }
+              }
+            };
+          })(this);
+          _ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
+          _results = [];
+          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+            removeLink = _ref2[_k];
+            _results.push(removeLink.addEventListener("click", removeFileEvent));
+          }
+          return _results;
         }
-        return _results;
       },
       removedfile: function(file) {
         var _ref;
-        if ((_ref = file.previewElement) != null) {
-          _ref.parentNode.removeChild(file.previewElement);
+        if (file.previewElement) {
+          if ((_ref = file.previewElement) != null) {
+            _ref.parentNode.removeChild(file.previewElement);
+          }
         }
         return this._updateMaxFilesReachedClass();
       },
       thumbnail: function(file, dataUrl) {
-        var thumbnailElement, _i, _len, _ref, _results;
-        file.previewElement.classList.remove("dz-file-preview");
-        file.previewElement.classList.add("dz-image-preview");
-        _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          thumbnailElement = _ref[_i];
-          thumbnailElement.alt = file.name;
-          _results.push(thumbnailElement.src = dataUrl);
+        var thumbnailElement, _i, _len, _ref;
+        if (file.previewElement) {
+          file.previewElement.classList.remove("dz-file-preview");
+          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            thumbnailElement = _ref[_i];
+            thumbnailElement.alt = file.name;
+            thumbnailElement.src = dataUrl;
+          }
+          return setTimeout(((function(_this) {
+            return function() {
+              return file.previewElement.classList.add("dz-image-preview");
+            };
+          })(this)), 1);
         }
-        return _results;
       },
       error: function(file, message) {
         var node, _i, _len, _ref, _results;
-        file.previewElement.classList.add("dz-error");
-        if (typeof message !== "String" && message.error) {
-          message = message.error;
+        if (file.previewElement) {
+          file.previewElement.classList.add("dz-error");
+          if (typeof message !== "String" && message.error) {
+            message = message.error;
+          }
+          _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.textContent = message);
+          }
+          return _results;
         }
-        _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          node = _ref[_i];
-          _results.push(node.textContent = message);
-        }
-        return _results;
       },
       errormultiple: noop,
       processing: function(file) {
-        file.previewElement.classList.add("dz-processing");
-        if (file._removeLink) {
-          return file._removeLink.textContent = this.options.dictCancelUpload;
+        if (file.previewElement) {
+          file.previewElement.classList.add("dz-processing");
+          if (file._removeLink) {
+            return file._removeLink.textContent = this.options.dictCancelUpload;
+          }
         }
       },
       processingmultiple: noop,
       uploadprogress: function(file, progress, bytesSent) {
         var node, _i, _len, _ref, _results;
-        _ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          node = _ref[_i];
-          _results.push(node.style.width = "" + progress + "%");
+        if (file.previewElement) {
+          _ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            if (node.nodeName === 'PROGRESS') {
+              _results.push(node.value = progress);
+            } else {
+              _results.push(node.style.width = "" + progress + "%");
+            }
+          }
+          return _results;
         }
-        return _results;
       },
       totaluploadprogress: noop,
       sending: noop,
       sendingmultiple: noop,
       success: function(file) {
-        return file.previewElement.classList.add("dz-success");
+        if (file.previewElement) {
+          return file.previewElement.classList.add("dz-success");
+        }
       },
       successmultiple: noop,
       canceled: function(file) {
@@ -25022,13 +24870,17 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       canceledmultiple: noop,
       complete: function(file) {
         if (file._removeLink) {
-          return file._removeLink.textContent = this.options.dictRemoveFile;
+          file._removeLink.textContent = this.options.dictRemoveFile;
+        }
+        if (file.previewElement) {
+          return file.previewElement.classList.add("dz-complete");
         }
       },
       completemultiple: noop,
       maxfilesexceeded: noop,
       maxfilesreached: noop,
-      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-success-mark\"><span>✔</span></div>\n  <div class=\"dz-error-mark\"><span>✘</span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+      queuecomplete: noop,
+      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>"
     };
 
     extend = function() {
@@ -25085,10 +24937,12 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
         fallback.parentNode.removeChild(fallback);
       }
-      if (this.options.previewsContainer) {
-        this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
-      } else {
-        this.previewsContainer = this.element;
+      if (this.options.previewsContainer !== false) {
+        if (this.options.previewsContainer) {
+          this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
+        } else {
+          this.previewsContainer = this.element;
+        }
       }
       if (this.options.clickable) {
         if (this.options.clickable === true) {
@@ -25161,8 +25015,7 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     };
 
     Dropzone.prototype.init = function() {
-      var eventName, noPropagation, setupHiddenFileInput, _i, _len, _ref, _ref1,
-        _this = this;
+      var eventName, noPropagation, setupHiddenFileInput, _i, _len, _ref, _ref1;
       if (this.element.tagName === "form") {
         this.element.setAttribute("enctype", "multipart/form-data");
       }
@@ -25170,38 +25023,43 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
       }
       if (this.clickableElements.length) {
-        setupHiddenFileInput = function() {
-          if (_this.hiddenFileInput) {
-            document.body.removeChild(_this.hiddenFileInput);
-          }
-          _this.hiddenFileInput = document.createElement("input");
-          _this.hiddenFileInput.setAttribute("type", "file");
-          if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
-            _this.hiddenFileInput.setAttribute("multiple", "multiple");
-          }
-          _this.hiddenFileInput.className = "dz-hidden-input";
-          if (_this.options.acceptedFiles != null) {
-            _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
-          }
-          _this.hiddenFileInput.style.visibility = "hidden";
-          _this.hiddenFileInput.style.position = "absolute";
-          _this.hiddenFileInput.style.top = "0";
-          _this.hiddenFileInput.style.left = "0";
-          _this.hiddenFileInput.style.height = "0";
-          _this.hiddenFileInput.style.width = "0";
-          document.body.appendChild(_this.hiddenFileInput);
-          return _this.hiddenFileInput.addEventListener("change", function() {
-            var file, files, _i, _len;
-            files = _this.hiddenFileInput.files;
-            if (files.length) {
-              for (_i = 0, _len = files.length; _i < _len; _i++) {
-                file = files[_i];
-                _this.addFile(file);
-              }
+        setupHiddenFileInput = (function(_this) {
+          return function() {
+            if (_this.hiddenFileInput) {
+              document.body.removeChild(_this.hiddenFileInput);
             }
-            return setupHiddenFileInput();
-          });
-        };
+            _this.hiddenFileInput = document.createElement("input");
+            _this.hiddenFileInput.setAttribute("type", "file");
+            if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
+              _this.hiddenFileInput.setAttribute("multiple", "multiple");
+            }
+            _this.hiddenFileInput.className = "dz-hidden-input";
+            if (_this.options.acceptedFiles != null) {
+              _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
+            }
+            if (_this.options.capture != null) {
+              _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
+            }
+            _this.hiddenFileInput.style.visibility = "hidden";
+            _this.hiddenFileInput.style.position = "absolute";
+            _this.hiddenFileInput.style.top = "0";
+            _this.hiddenFileInput.style.left = "0";
+            _this.hiddenFileInput.style.height = "0";
+            _this.hiddenFileInput.style.width = "0";
+            document.body.appendChild(_this.hiddenFileInput);
+            return _this.hiddenFileInput.addEventListener("change", function() {
+              var file, files, _i, _len;
+              files = _this.hiddenFileInput.files;
+              if (files.length) {
+                for (_i = 0, _len = files.length; _i < _len; _i++) {
+                  file = files[_i];
+                  _this.addFile(file);
+                }
+              }
+              return setupHiddenFileInput();
+            });
+          };
+        })(this);
         setupHiddenFileInput();
       }
       this.URL = (_ref = window.URL) != null ? _ref : window.webkitURL;
@@ -25210,22 +25068,30 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         eventName = _ref1[_i];
         this.on(eventName, this.options[eventName]);
       }
-      this.on("uploadprogress", function() {
-        return _this.updateTotalUploadProgress();
-      });
-      this.on("removedfile", function() {
-        return _this.updateTotalUploadProgress();
-      });
-      this.on("canceled", function(file) {
-        return _this.emit("complete", file);
-      });
-      this.on("complete", function(file) {
-        if (_this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
-          return setTimeout((function() {
-            return _this.emit("queuecomplete");
-          }), 0);
-        }
-      });
+      this.on("uploadprogress", (function(_this) {
+        return function() {
+          return _this.updateTotalUploadProgress();
+        };
+      })(this));
+      this.on("removedfile", (function(_this) {
+        return function() {
+          return _this.updateTotalUploadProgress();
+        };
+      })(this));
+      this.on("canceled", (function(_this) {
+        return function(file) {
+          return _this.emit("complete", file);
+        };
+      })(this));
+      this.on("complete", (function(_this) {
+        return function(file) {
+          if (_this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
+            return setTimeout((function() {
+              return _this.emit("queuecomplete");
+            }), 0);
+          }
+        };
+      })(this));
       noPropagation = function(e) {
         e.stopPropagation();
         if (e.preventDefault) {
@@ -25238,47 +25104,61 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
         {
           element: this.element,
           events: {
-            "dragstart": function(e) {
-              return _this.emit("dragstart", e);
-            },
-            "dragenter": function(e) {
-              noPropagation(e);
-              return _this.emit("dragenter", e);
-            },
-            "dragover": function(e) {
-              var efct;
-              try {
-                efct = e.dataTransfer.effectAllowed;
-              } catch (_error) {}
-              e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
-              noPropagation(e);
-              return _this.emit("dragover", e);
-            },
-            "dragleave": function(e) {
-              return _this.emit("dragleave", e);
-            },
-            "drop": function(e) {
-              noPropagation(e);
-              return _this.drop(e);
-            },
-            "dragend": function(e) {
-              return _this.emit("dragend", e);
-            }
+            "dragstart": (function(_this) {
+              return function(e) {
+                return _this.emit("dragstart", e);
+              };
+            })(this),
+            "dragenter": (function(_this) {
+              return function(e) {
+                noPropagation(e);
+                return _this.emit("dragenter", e);
+              };
+            })(this),
+            "dragover": (function(_this) {
+              return function(e) {
+                var efct;
+                try {
+                  efct = e.dataTransfer.effectAllowed;
+                } catch (_error) {}
+                e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+                noPropagation(e);
+                return _this.emit("dragover", e);
+              };
+            })(this),
+            "dragleave": (function(_this) {
+              return function(e) {
+                return _this.emit("dragleave", e);
+              };
+            })(this),
+            "drop": (function(_this) {
+              return function(e) {
+                noPropagation(e);
+                return _this.drop(e);
+              };
+            })(this),
+            "dragend": (function(_this) {
+              return function(e) {
+                return _this.emit("dragend", e);
+              };
+            })(this)
           }
         }
       ];
-      this.clickableElements.forEach(function(clickableElement) {
-        return _this.listeners.push({
-          element: clickableElement,
-          events: {
-            "click": function(evt) {
-              if ((clickableElement !== _this.element) || (evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message")))) {
-                return _this.hiddenFileInput.click();
+      this.clickableElements.forEach((function(_this) {
+        return function(clickableElement) {
+          return _this.listeners.push({
+            element: clickableElement,
+            events: {
+              "click": function(evt) {
+                if ((clickableElement !== _this.element) || (evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message")))) {
+                  return _this.hiddenFileInput.click();
+                }
               }
             }
-          }
-        });
-      });
+          });
+        };
+      })(this));
       this.enable();
       return this.options.init.call(this);
     };
@@ -25426,24 +25306,20 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     };
 
     Dropzone.prototype.filesize = function(size) {
-      var string;
-      if (size >= 1024 * 1024 * 1024 * 1024 / 10) {
-        size = size / (1024 * 1024 * 1024 * 1024 / 10);
-        string = "TiB";
-      } else if (size >= 1024 * 1024 * 1024 / 10) {
-        size = size / (1024 * 1024 * 1024 / 10);
-        string = "GiB";
-      } else if (size >= 1024 * 1024 / 10) {
-        size = size / (1024 * 1024 / 10);
-        string = "MiB";
-      } else if (size >= 1024 / 10) {
-        size = size / (1024 / 10);
-        string = "KiB";
-      } else {
-        size = size * 10;
-        string = "b";
+      var cutoff, i, selectedSize, selectedUnit, unit, units, _i, _len;
+      units = ['TB', 'GB', 'MB', 'KB', 'b'];
+      selectedSize = selectedUnit = null;
+      for (i = _i = 0, _len = units.length; _i < _len; i = ++_i) {
+        unit = units[i];
+        cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
+        if (size >= cutoff) {
+          selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
+          selectedUnit = unit;
+          break;
+        }
       }
-      return "<strong>" + (Math.round(size) / 10) + "</strong> " + string;
+      selectedSize = Math.round(10 * selectedSize) / 10;
+      return "<strong>" + selectedSize + "</strong> " + selectedUnit;
     };
 
     Dropzone.prototype._updateMaxFilesReachedClass = function() {
@@ -25523,26 +25399,27 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     };
 
     Dropzone.prototype._addFilesFromDirectory = function(directory, path) {
-      var dirReader, entriesReader,
-        _this = this;
+      var dirReader, entriesReader;
       dirReader = directory.createReader();
-      entriesReader = function(entries) {
-        var entry, _i, _len;
-        for (_i = 0, _len = entries.length; _i < _len; _i++) {
-          entry = entries[_i];
-          if (entry.isFile) {
-            entry.file(function(file) {
-              if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
-                return;
-              }
-              file.fullPath = "" + path + "/" + file.name;
-              return _this.addFile(file);
-            });
-          } else if (entry.isDirectory) {
-            _this._addFilesFromDirectory(entry, "" + path + "/" + entry.name);
+      entriesReader = (function(_this) {
+        return function(entries) {
+          var entry, _i, _len;
+          for (_i = 0, _len = entries.length; _i < _len; _i++) {
+            entry = entries[_i];
+            if (entry.isFile) {
+              entry.file(function(file) {
+                if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+                  return;
+                }
+                file.fullPath = "" + path + "/" + file.name;
+                return _this.addFile(file);
+              });
+            } else if (entry.isDirectory) {
+              _this._addFilesFromDirectory(entry, "" + path + "/" + entry.name);
+            }
           }
-        }
-      };
+        };
+      })(this);
       return dirReader.readEntries(entriesReader, function(error) {
         return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log(error) : void 0 : void 0;
       });
@@ -25562,7 +25439,6 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     };
 
     Dropzone.prototype.addFile = function(file) {
-      var _this = this;
       file.upload = {
         progress: 0,
         total: file.size,
@@ -25572,18 +25448,20 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       file.status = Dropzone.ADDED;
       this.emit("addedfile", file);
       this._enqueueThumbnail(file);
-      return this.accept(file, function(error) {
-        if (error) {
-          file.accepted = false;
-          _this._errorProcessing([file], error);
-        } else {
-          file.accepted = true;
-          if (_this.options.autoQueue) {
-            _this.enqueueFile(file);
+      return this.accept(file, (function(_this) {
+        return function(error) {
+          if (error) {
+            file.accepted = false;
+            _this._errorProcessing([file], error);
+          } else {
+            file.accepted = true;
+            if (_this.options.autoQueue) {
+              _this.enqueueFile(file);
+            }
           }
-        }
-        return _this._updateMaxFilesReachedClass();
-      });
+          return _this._updateMaxFilesReachedClass();
+        };
+      })(this));
     };
 
     Dropzone.prototype.enqueueFiles = function(files) {
@@ -25596,13 +25474,14 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     };
 
     Dropzone.prototype.enqueueFile = function(file) {
-      var _this = this;
       if (file.status === Dropzone.ADDED && file.accepted === true) {
         file.status = Dropzone.QUEUED;
         if (this.options.autoProcessQueue) {
-          return setTimeout((function() {
-            return _this.processQueue();
-          }), 0);
+          return setTimeout(((function(_this) {
+            return function() {
+              return _this.processQueue();
+            };
+          })(this)), 0);
         }
       } else {
         throw new Error("This file can't be queued because it has already been processed or was rejected.");
@@ -25614,25 +25493,27 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     Dropzone.prototype._processingThumbnail = false;
 
     Dropzone.prototype._enqueueThumbnail = function(file) {
-      var _this = this;
       if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
         this._thumbnailQueue.push(file);
-        return setTimeout((function() {
-          return _this._processThumbnailQueue();
-        }), 0);
+        return setTimeout(((function(_this) {
+          return function() {
+            return _this._processThumbnailQueue();
+          };
+        })(this)), 0);
       }
     };
 
     Dropzone.prototype._processThumbnailQueue = function() {
-      var _this = this;
       if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
         return;
       }
       this._processingThumbnail = true;
-      return this.createThumbnail(this._thumbnailQueue.shift(), function() {
-        _this._processingThumbnail = false;
-        return _this._processThumbnailQueue();
-      });
+      return this.createThumbnail(this._thumbnailQueue.shift(), (function(_this) {
+        return function() {
+          _this._processingThumbnail = false;
+          return _this._processThumbnailQueue();
+        };
+      })(this));
     };
 
     Dropzone.prototype.removeFile = function(file) {
@@ -25662,13 +25543,28 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     };
 
     Dropzone.prototype.createThumbnail = function(file, callback) {
-      var fileReader,
-        _this = this;
+      var fileReader;
       fileReader = new FileReader;
-      fileReader.onload = function() {
-        var img;
-        img = document.createElement("img");
-        img.onload = function() {
+      fileReader.onload = (function(_this) {
+        return function() {
+          if (file.type === "image/svg+xml") {
+            _this.emit("thumbnail", file, fileReader.result);
+            if (callback != null) {
+              callback();
+            }
+            return;
+          }
+          return _this.createThumbnailFromUrl(file, fileReader.result, callback);
+        };
+      })(this);
+      return fileReader.readAsDataURL(file);
+    };
+
+    Dropzone.prototype.createThumbnailFromUrl = function(file, imageUrl, callback) {
+      var img;
+      img = document.createElement("img");
+      img.onload = (function(_this) {
+        return function() {
           var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
           file.width = img.width;
           file.height = img.height;
@@ -25690,9 +25586,11 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
             return callback();
           }
         };
-        return img.src = fileReader.result;
-      };
-      return fileReader.readAsDataURL(file);
+      })(this);
+      if (callback != null) {
+        img.onerror = callback;
+      }
+      return img.src = imageUrl;
     };
 
     Dropzone.prototype.processQueue = function() {
@@ -25782,94 +25680,112 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
       }
     };
 
+    resolveOption = function() {
+      var args, option;
+      option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if (typeof option === 'function') {
+        return option.apply(this, args);
+      }
+      return option;
+    };
+
     Dropzone.prototype.uploadFile = function(file) {
       return this.uploadFiles([file]);
     };
 
     Dropzone.prototype.uploadFiles = function(files) {
-      var file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, key, option, progressObj, response, updateProgress, value, xhr, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5,
-        _this = this;
+      var file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, key, method, option, progressObj, response, updateProgress, url, value, xhr, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
       xhr = new XMLHttpRequest();
       for (_i = 0, _len = files.length; _i < _len; _i++) {
         file = files[_i];
         file.xhr = xhr;
       }
-      xhr.open(this.options.method, this.options.url, true);
+      method = resolveOption(this.options.method, files);
+      url = resolveOption(this.options.url, files);
+      xhr.open(method, url, true);
       xhr.withCredentials = !!this.options.withCredentials;
       response = null;
-      handleError = function() {
-        var _j, _len1, _results;
-        _results = [];
-        for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
-          file = files[_j];
-          _results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
-        }
-        return _results;
-      };
-      updateProgress = function(e) {
-        var allFilesFinished, progress, _j, _k, _l, _len1, _len2, _len3, _results;
-        if (e != null) {
-          progress = 100 * e.loaded / e.total;
+      handleError = (function(_this) {
+        return function() {
+          var _j, _len1, _results;
+          _results = [];
           for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
             file = files[_j];
-            file.upload = {
-              progress: progress,
-              total: e.total,
-              bytesSent: e.loaded
-            };
+            _results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
           }
-        } else {
-          allFilesFinished = true;
-          progress = 100;
-          for (_k = 0, _len2 = files.length; _k < _len2; _k++) {
-            file = files[_k];
-            if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
-              allFilesFinished = false;
+          return _results;
+        };
+      })(this);
+      updateProgress = (function(_this) {
+        return function(e) {
+          var allFilesFinished, progress, _j, _k, _l, _len1, _len2, _len3, _results;
+          if (e != null) {
+            progress = 100 * e.loaded / e.total;
+            for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+              file = files[_j];
+              file.upload = {
+                progress: progress,
+                total: e.total,
+                bytesSent: e.loaded
+              };
             }
-            file.upload.progress = progress;
-            file.upload.bytesSent = file.upload.total;
+          } else {
+            allFilesFinished = true;
+            progress = 100;
+            for (_k = 0, _len2 = files.length; _k < _len2; _k++) {
+              file = files[_k];
+              if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
+                allFilesFinished = false;
+              }
+              file.upload.progress = progress;
+              file.upload.bytesSent = file.upload.total;
+            }
+            if (allFilesFinished) {
+              return;
+            }
           }
-          if (allFilesFinished) {
+          _results = [];
+          for (_l = 0, _len3 = files.length; _l < _len3; _l++) {
+            file = files[_l];
+            _results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
+          }
+          return _results;
+        };
+      })(this);
+      xhr.onload = (function(_this) {
+        return function(e) {
+          var _ref;
+          if (files[0].status === Dropzone.CANCELED) {
             return;
           }
-        }
-        _results = [];
-        for (_l = 0, _len3 = files.length; _l < _len3; _l++) {
-          file = files[_l];
-          _results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
-        }
-        return _results;
-      };
-      xhr.onload = function(e) {
-        var _ref;
-        if (files[0].status === Dropzone.CANCELED) {
-          return;
-        }
-        if (xhr.readyState !== 4) {
-          return;
-        }
-        response = xhr.responseText;
-        if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
-          try {
-            response = JSON.parse(response);
-          } catch (_error) {
-            e = _error;
-            response = "Invalid JSON response from server.";
+          if (xhr.readyState !== 4) {
+            return;
           }
-        }
-        updateProgress();
-        if (!((200 <= (_ref = xhr.status) && _ref < 300))) {
+          response = xhr.responseText;
+          if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+            try {
+              response = JSON.parse(response);
+            } catch (_error) {
+              e = _error;
+              response = "Invalid JSON response from server.";
+            }
+          }
+          updateProgress();
+          if (!((200 <= (_ref = xhr.status) && _ref < 300))) {
+            return handleError();
+          } else {
+            return _this._finished(files, response, e);
+          }
+        };
+      })(this);
+      xhr.onerror = (function(_this) {
+        return function() {
+          if (files[0].status === Dropzone.CANCELED) {
+            return;
+          }
           return handleError();
-        } else {
-          return _this._finished(files, response, e);
-        }
-      };
-      xhr.onerror = function() {
-        if (files[0].status === Dropzone.CANCELED) {
-          return;
-        }
-        return handleError();
-      };
+        };
+      })(this);
       progressObj = (_ref = xhr.upload) != null ? _ref : xhr;
       progressObj.onprogress = updateProgress;
       headers = {
@@ -25960,9 +25876,9 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
 
     return Dropzone;
 
-  })(Em);
+  })(Emitter);
 
-  Dropzone.version = "3.9.0";
+  Dropzone.version = "4.0.1";
 
   Dropzone.options = {};
 
@@ -26191,13 +26107,13 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
 
   Dropzone.SUCCESS = "success";
 
+
   /*
   
   Bugfix for iOS 6 and 7
   Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
   based on the work of https://github.com/stomita/ios-imagefile-megapixel
-  */
-
+   */
 
   detectVerticalSquash = function(img) {
     var alpha, canvas, ctx, data, ey, ih, iw, py, ratio, sy;
@@ -26235,20 +26151,20 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
     return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
   };
 
-  /*
-  # contentloaded.js
-  #
-  # Author: Diego Perini (diego.perini at gmail.com)
-  # Summary: cross-browser wrapper for DOMContentLoaded
-  # Updated: 20101020
-  # License: MIT
-  # Version: 1.2
-  #
-  # URL:
-  # http://javascript.nwbox.com/ContentLoaded/
-  # http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
-  */
 
+  /*
+   * contentloaded.js
+   *
+   * Author: Diego Perini (diego.perini at gmail.com)
+   * Summary: cross-browser wrapper for DOMContentLoaded
+   * Updated: 20101020
+   * License: MIT
+   * Version: 1.2
+   *
+   * URL:
+   * http://javascript.nwbox.com/ContentLoaded/
+   * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+   */
 
   contentLoaded = function(win, fn) {
     var add, doc, done, init, poll, pre, rem, root, top;
@@ -26304,17 +26220,13 @@ require.register("dropzone/lib/dropzone.js", function (exports, module) {
 
 }).call(this);
 
-});
+define("dropzone", ["jquery"], (function (global) {
+    return function () {
+        var ret, fn;
+        return ret || global.Dropzone;
+    };
+}(this)));
 
-if (typeof exports == "object") {
-  module.exports = require("dropzone");
-} else if (typeof define == "function" && define.amd) {
-  define('dropzone',[], function(){ return require("dropzone"); });
-} else {
-  this["Dropzone"] = require("dropzone");
-}
-})()
-;
 /* ===================================================
  * tagmanager.js v3.0.1
  * http://welldonethings.com/tags/manager
@@ -29384,172 +29296,172 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
     
 
     var defaults = {
-        editable: false,
-        fullWidth: false,
-        removeRow: false,
-        selectItem: {
-            type: 'checkbox',
-            inFirstCell: false
+            editable: false,
+            fullWidth: false,
+            removeRow: false,
+            selectItem: {
+                type: 'checkbox',
+                inFirstCell: false
+            },
+            noItemsText: 'This list is empty',
+            addRowTop: true,
+            excludeFields: [''],
+            cssClass: '',
+            thumbnailFormat: '50x50',
+            showHead: true,
+            hideChildrenAtBeginning: true,
+            openChildId: null,
+            highlightSelected: false,
+            stickyHeader: false,
+            icons: [],
+            removeIcon: 'trash-o',
+            croppedMaxLength: 35,
+            openPathToSelectedChildren: false,
+            rowClickSelect: false
         },
-        noItemsText: 'This list is empty',
-        addRowTop: true,
-        excludeFields: [''],
-        cssClass: '',
-        thumbnailFormat: '50x50',
-        showHead: true,
-        hideChildrenAtBeginning: true,
-        openChildId: null,
-        highlightSelected: false,
-        stickyHeader: false,
-        icons: [],
-        removeIcon: 'trash-o',
-        croppedMaxLength: 35,
-        openPathToSelectedChildren: false,
-        rowClickSelect: false
-    },
 
-    constants = {
-        fullWidthClass: 'fullwidth',
-        stickyHeaderClass: 'sticky-header',
-        selectedRowClass: 'selected',
-        isSelectableClass: 'is-selectable',
-        sortableClass: 'is-sortable',
-        skeletonClass: 'husky-table',
-        containerClass: 'table-container',
-        overflowClass: 'overflow',
-        emptyListElementClass: 'empty-list',
-        rowRemoverClass: 'row-remover',
-        checkboxClass: 'checkbox',
-        radioClass: 'radio',
-        cellFitClass: 'fit',
-        tableClass: 'table',
-        rowClass: 'row',
-        thumbSrcKey: 'url',
-        thumbAltKey: 'alt',
-        headerCellClass: 'header-cell',
-        ascSortedClass: 'sorted-asc',
-        descSortedClass: 'sorted-desc',
-        headerCellLoaderClass: 'header-loader',
-        headerLoadingClass: 'is-loading',
-        editableItemClass: 'editable',
-        editableInputClass: 'editable-input',
-        inputWrapperClass: 'input-wrapper',
-        editedErrorClass: 'server-validation-error',
-        newRecordId: 'newrecord',
-        gridIconClass: 'grid-icon',
-        childWrapperClass: 'child-wrapper',
-        parentClass: 'children-toggler',
-        noChildrenClass: 'no-children',
-        toggleIconClass: 'toggle-icon',
-        collapsedIcon: 'fa-caret-right',
-        expandedIcon: 'fa-caret-down',
-        checkboxCellClass: 'checkbox-cell',
-        textContainerClass: 'cell-content',
-        renderingClass: 'rendering',
-        headerCloneClass: 'header-clone',
-        counterIndentClass: 'indent',
-        childIndent: 25 //px
-    },
+        constants = {
+            fullWidthClass: 'fullwidth',
+            stickyHeaderClass: 'sticky-header',
+            selectedRowClass: 'selected',
+            isSelectableClass: 'is-selectable',
+            sortableClass: 'is-sortable',
+            skeletonClass: 'husky-table',
+            containerClass: 'table-container',
+            overflowClass: 'overflow',
+            emptyListElementClass: 'empty-list',
+            rowRemoverClass: 'row-remover',
+            checkboxClass: 'checkbox',
+            radioClass: 'radio',
+            cellFitClass: 'fit',
+            tableClass: 'table',
+            rowClass: 'row',
+            thumbSrcKey: 'url',
+            thumbAltKey: 'alt',
+            headerCellClass: 'header-cell',
+            ascSortedClass: 'sorted-asc',
+            descSortedClass: 'sorted-desc',
+            headerCellLoaderClass: 'header-loader',
+            headerLoadingClass: 'is-loading',
+            editableItemClass: 'editable',
+            editableInputClass: 'editable-input',
+            inputWrapperClass: 'input-wrapper',
+            editedErrorClass: 'server-validation-error',
+            newRecordId: 'newrecord',
+            gridIconClass: 'grid-icon',
+            childWrapperClass: 'child-wrapper',
+            parentClass: 'children-toggler',
+            noChildrenClass: 'no-children',
+            toggleIconClass: 'toggle-icon',
+            collapsedIcon: 'fa-caret-right',
+            expandedIcon: 'fa-caret-down',
+            checkboxCellClass: 'checkbox-cell',
+            textContainerClass: 'cell-content',
+            renderingClass: 'rendering',
+            headerCloneClass: 'header-clone',
+            counterIndentClass: 'indent',
+            childIndent: 25 //px
+        },
 
-    selectItems = {
-        CHECKBOX: 'checkbox',
-        RADIO: 'radio'
-    },
+        selectItems = {
+            CHECKBOX: 'checkbox',
+            RADIO: 'radio'
+        },
 
-    /**
-     * Templates used by this class
-     */
-    templates = {
-        skeleton: [
-            '<div class="'+ constants.skeletonClass +'">',
-            '   <div class="'+ constants.containerClass +'"></div>',
-            '</div>'
-        ].join(''),
-        table: '<table class="'+ constants.tableClass +'"></table>',
-        header: '<thead></thead>',
-        body: '<tbody></tbody>',
-        row: '<tr class="' + constants.rowClass + '"></tr>',
-        headerCell: '<th class="'+ constants.headerCellClass +'"></th>',
-        cell: '<td></td>',
-        textContainer: '<span class="'+ constants.textContainerClass +'"><%= content %></span>',
-        headerCellLoader: '<div class="'+ constants.headerCellLoaderClass +'"></div>',
-        removeCellContent: '<span class="fa-<%= icon %> '+ constants.rowRemoverClass +'"></span>',
-        editableCellContent: [
-            '<span class="'+ constants.editableItemClass +'"><%= value %></span>',
-            '<div class="'+ constants.inputWrapperClass +'">',
-            '   <input type="text" class="form-element husky-validate '+ constants.editableInputClass +'" value="<%= value %>">',
-            '</div>'
-        ].join(''),
-        img: '<img alt="<%= alt %>" src="<%= src %>"/>',
-        childWrapper: '<div class="'+ constants.childWrapperClass +'"></div>',
-        toggleIcon: '<span class="'+ constants.toggleIconClass +'"></span>',
-        icon: [
-            '<span class="'+ constants.gridIconClass +' <%= align %>" data-icon-index="<%= index %>">',
-            '   <span class="fa-<%= icon %>"></span>',
-            '</span>'
-        ].join(''),
-        checkbox: [
-            '<div class="custom-checkbox">',
-            '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
-            '   <span class="icon"></span>',
-            '</div>'
-        ].join(''),
-        radio: [
-            '<div class="custom-radio">',
-            '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
-            '    <span class="icon"></span>',
-            '</div>'
-        ].join(''),
-        empty: [
-            '<div class="'+ constants.emptyListElementClass +'">',
-            '   <div class="fa-coffee icon"></div>',
-            '   <span><%= text %></span>',
-            '</div>'
-        ].join('')
-    },
+        /**
+         * Templates used by this class
+         */
+        templates = {
+            skeleton: [
+                '<div class="' + constants.skeletonClass + '">',
+                '   <div class="' + constants.containerClass + '"></div>',
+                '</div>'
+            ].join(''),
+            table: '<table class="' + constants.tableClass + '"></table>',
+            header: '<thead></thead>',
+            body: '<tbody></tbody>',
+            row: '<tr class="' + constants.rowClass + '"></tr>',
+            headerCell: '<th class="' + constants.headerCellClass + '"></th>',
+            cell: '<td></td>',
+            textContainer: '<span class="' + constants.textContainerClass + '"><%= content %></span>',
+            headerCellLoader: '<div class="' + constants.headerCellLoaderClass + '"></div>',
+            removeCellContent: '<span class="fa-<%= icon %> ' + constants.rowRemoverClass + '"></span>',
+            editableCellContent: [
+                '<span class="' + constants.editableItemClass + '"><%= value %></span>',
+                '<div class="' + constants.inputWrapperClass + '">',
+                '   <input type="text" class="form-element husky-validate ' + constants.editableInputClass + '" value="<%= value %>">',
+                '</div>'
+            ].join(''),
+            img: '<img alt="<%= alt %>" src="<%= src %>"/>',
+            childWrapper: '<div class="' + constants.childWrapperClass + '"></div>',
+            toggleIcon: '<span class="' + constants.toggleIconClass + '"></span>',
+            icon: [
+                '<span class="' + constants.gridIconClass + ' <%= align %>" data-icon-index="<%= index %>">',
+                '   <span class="fa-<%= icon %>"></span>',
+                '</span>'
+            ].join(''),
+            checkbox: [
+                '<div class="custom-checkbox">',
+                '   <input class="' + constants.checkboxClass + '" type="checkbox" data-form="false"/>',
+                '   <span class="icon"></span>',
+                '</div>'
+            ].join(''),
+            radio: [
+                '<div class="custom-radio">',
+                '    <input class="' + constants.radioClass + '" name="<%= name %>" type="radio" data-form="false"/>',
+                '    <span class="icon"></span>',
+                '</div>'
+            ].join(''),
+            empty: [
+                '<div class="' + constants.emptyListElementClass + '">',
+                '   <div class="fa-coffee icon"></div>',
+                '   <span><%= text %></span>',
+                '</div>'
+            ].join('')
+        },
 
-    /**
-     * used to update the table width and its containers due to responsiveness
-     * @event husky.datagrid.update.table
-     */
-    UPDATE_TABLE = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'update.table');
-    },
+        /**
+         * used to update the table width and its containers due to responsiveness
+         * @event husky.datagrid.update.table
+         */
+        UPDATE_TABLE = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'update.table');
+        },
 
-    /**
-     * used to update the table width and its containers due to responsiveness
-     * @event husky.datagrid.table.open-child
-     * @param {Number|String} id The id of the data-record to open the parents for
-     */
-    OPEN_PARENTS = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
-    },
+        /**
+         * used to update the table width and its containers due to responsiveness
+         * @event husky.datagrid.table.open-child
+         * @param {Number|String} id The id of the data-record to open the parents for
+         */
+        OPEN_PARENTS = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'table.open-parents');
+        },
 
-    /**
-     * triggered when a radio button inside the datagrid is clicked
-     * @event husky.datagrid.table.open-child
-     * @param {Number|String} id The id of the data-record to open the parents for
-     * @param {String} columnName column name
-     */
-    RADIO_SELECTED = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
-    },
+        /**
+         * triggered when a radio button inside the datagrid is clicked
+         * @event husky.datagrid.table.open-child
+         * @param {Number|String} id The id of the data-record to open the parents for
+         * @param {String} columnName column name
+         */
+        RADIO_SELECTED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'radio.selected');
+        },
 
-    /**
-     * triggered when children were collapsed
-     * @event husky.datagrid.table.children.collapsed
-     */
-    CHILDREN_COLLAPSED = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
-    },
+        /**
+         * triggered when children were collapsed
+         * @event husky.datagrid.table.children.collapsed
+         */
+        CHILDREN_COLLAPSED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'children.collapsed');
+        },
 
-    /**
-     * triggered when children were expanded
-     * @event husky.datagrid.table.children.expanded
-     */
-    CHILDREN_EXPANDED = function() {
-        return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
-    };
+        /**
+         * triggered when children were expanded
+         * @event husky.datagrid.table.children.expanded
+         */
+        CHILDREN_EXPANDED = function() {
+            return this.datagrid.createEventName.call(this.datagrid, 'children.expanded');
+        };
 
     return {
 
@@ -29583,10 +29495,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.on(UPDATE_TABLE.call(this), this.onResize.bind(this));
             this.sandbox.on(OPEN_PARENTS.call(this), this.openParents.bind(this));
 
-            if(!!this.options.openPathToSelectedChildren){
+            if (!!this.options.openPathToSelectedChildren) {
                 var eventName = '';
-                if(!!this.datagrid.options.instanceName) {
-                    eventName = 'husky.datagrid.'+this.datagrid.options.instanceName+'.view.rendered';
+                if (!!this.datagrid.options.instanceName) {
+                    eventName = 'husky.datagrid.' + this.datagrid.options.instanceName + '.view.rendered';
                 } else {
                     eventName = 'husky.datagrid.view.rendered';
                 }
@@ -29597,8 +29509,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Opens path to all selected children
          */
-        openPathToSelectedChildren: function(){
-            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id){
+        openPathToSelectedChildren: function() {
+            this.sandbox.util.each(this.datagrid.selectedItems, function(idx, id) {
                 this.openParents(id);
             }.bind(this));
         },
@@ -29668,7 +29580,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a row to the datagrid
          * @param record {Object} the new record to add
          */
-        addRecord: function (record) {
+        addRecord: function(record) {
             this.removeEmptyIndicator();
             this.renderBodyRow(record, this.options.addRowTop);
         },
@@ -29724,7 +29636,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Adds css classes to the view element
          */
-        addViewClasses: function () {
+        addViewClasses: function() {
             this.sandbox.dom.addClass(this.$el, this.options.cssClass);
             this.sandbox.dom.addClass(this.$el, constants.renderingClass);
             if (this.options.stickyHeader === true) {
@@ -29843,7 +29755,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Renderes an empty remove-row cell into the header
          */
-        renderHeaderRemoveItem: function () {
+        renderHeaderRemoveItem: function() {
             if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.headerCell);
                 this.sandbox.dom.addClass($cell, constants.cellFitClass);
@@ -29905,13 +29817,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
 
             if (!this.table.rows[record.id]) {
                 var $row = this.sandbox.dom.createElement(templates.row),
-                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null;
+                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null,
+                    hasParent = this.hasParent(record);
 
                 record.id = (!!record.id) ? record.id : constants.newRecordId;
                 this.sandbox.dom.data($row, 'id', record.id);
 
                 // render the parents before rendering the children
-                if (!!record.parent) {
+                if (hasParent) {
                     if (!this.table.rows[record.parent]) {
                         this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
                     }
@@ -29923,7 +29836,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                     cells: {},
                     childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
                     childrenExpanded: false,
-                    parent: !!(record.parent) ? record.parent : null,
+                    parent: hasParent ? record.parent : null,
                     hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
                     level: 1
                 };
@@ -29999,7 +29912,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Renders the remove item for a row in the tbody
          * @param id {Number|String} the id of the row to add the select-item for
          */
-        renderRowRemoveItem: function (id) {
+        renderRowRemoveItem: function(id) {
             if (this.options.removeRow === true) {
                 var $cell = this.sandbox.dom.createElement(templates.cell);
                 this.sandbox.dom.html($cell, this.sandbox.util.template(templates.removeCellContent)({
@@ -30070,8 +29983,8 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             if (!!column.type && column.type === this.datagrid.types.THUMBNAILS) {
                 content = this.datagrid.manipulateContent(content, column.type, this.options.thumbnailFormat);
                 content = this.sandbox.util.template(templates.img)({
-                   alt: content[constants.thumbAltKey],
-                   src: content[constants.thumbSrcKey]
+                    alt: content[constants.thumbAltKey],
+                    src: content[constants.thumbSrcKey]
                 });
             } else {
                 content = this.datagrid.processContentFilter(
@@ -30113,7 +30026,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 this.sandbox.dom.addClass($wrappedContent, constants.noChildrenClass);
             }
             // if has parent
-            if (!!record.parent) {
+            if (this.hasParent(record)) {
                 this.table.rows[record.id].level = this.table.rows[record.parent].level + 1;
                 // give that child an indent, children love indents
                 this.sandbox.dom.css($wrappedContent, {
@@ -30122,6 +30035,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             }
             this.sandbox.dom.append($wrappedContent, content);
             return $wrappedContent;
+        },
+
+        hasParent: function(record) {
+            return (!!record.parent && !!this.data.embedded[this.datagrid.getRecordIndexById(record.parent)]);
         },
 
         /**
@@ -30147,9 +30064,9 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.util.foreach(this.options.icons, function(icon, index) {
                 if (icon.column === column.attribute) {
                     iconStr = this.sandbox.util.template(templates.icon)({
-                       icon: icon.icon,
-                       align: icon.align,
-                       index: index
+                        icon: icon.icon,
+                        align: icon.align,
+                        index: index
                     });
                     if (typeof content === 'object') {
                         this.sandbox.dom.append(content, iconStr);
@@ -30254,7 +30171,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Bindes dom related events
          */
-        bindDomEvents: function () {
+        bindDomEvents: function() {
             // select or deselect items if the body recognizes a change event
             this.sandbox.dom.on(
                 this.table.$body, 'click', this.selectItemChangeHandler.bind(this),
@@ -30304,7 +30221,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 var cloneThs = this.sandbox.dom.find('th', this.table.header.$clone),
                     originalThs = this.sandbox.dom.find('th', this.table.header.$el);
                 this.sandbox.dom.width(this.table.header.$row, this.sandbox.dom.width(
-                   this.sandbox.dom.find('tr', this.table.header.$clone)
+                    this.sandbox.dom.find('tr', this.table.header.$clone)
                 ));
                 this.sandbox.util.foreach(cloneThs, function(cloneTh, index) {
                     // min- and max-width because for table-cells normal width has no effect
@@ -30418,7 +30335,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the focusout of an editable input
          * @param event {Object} the event object
          */
-        editableInputFocusoutHandler: function (event) {
+        editableInputFocusoutHandler: function(event) {
             if (!!this.isFocusoutHandlerEnabled) {
                 this.sandbox.dom.stopPropagation(event);
                 var recordId = this.sandbox.dom.data(this.sandbox.dom.parents(event.currentTarget, '.' + constants.rowClass), 'id');
@@ -30433,7 +30350,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         editRow: function(recordId) {
             var modifiedRecord = {};
             // build new record object out of the inputs in the row
-            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
                 if (!!this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el).length) {
                     modifiedRecord[attribute] = this.sandbox.dom.val(
                         this.sandbox.dom.find('.' + constants.editableInputClass, cell.$el)
@@ -30447,7 +30364,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Clears everything up after a row was edited. (hides the input and updates the values)
          * @param record {Object} the changed data record
          */
-        editedSuccessCallback: function (record) {
+        editedSuccessCallback: function(record) {
             var $row;
             if (!!record.id && !!this.table.rows[record.id]) {
                 $row = this.table.rows[record.id].$el;
@@ -30464,7 +30381,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Adds a css class to all inputs in a row, if the editing request returned with an error
          * @param recordId
          */
-        editedErrorCallback: function (recordId) {
+        editedErrorCallback: function(recordId) {
             var $row = this.table.rows[recordId].$el;
             this.sandbox.dom.addClass(
                 this.sandbox.dom.find('.' + constants.inputWrapperClass, $row),
@@ -30479,10 +30396,10 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param successCallback {Function} gets executed after success
          * @param errorCallback {Function} gets executed after error
          */
-        saveRow: function (recordId, newRecordData, successCallback, errorCallback) {
+        saveRow: function(recordId, newRecordData, successCallback, errorCallback) {
             var hasChanged = false,
                 record;
-            this.sandbox.util.each(this.table.rows[recordId].cells, function (attribute, cell) {
+            this.sandbox.util.each(this.table.rows[recordId].cells, function(attribute, cell) {
                 if (cell.editable === true && cell.originalData !== newRecordData[attribute]) {
                     hasChanged = true;
                 }
@@ -30528,7 +30445,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the click on a body row
          * @param event {Object} the event object
          */
-        bodyRowClickHandler: function (event) {
+        bodyRowClickHandler: function(event) {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
@@ -30546,14 +30463,14 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Emits the row clicked event
          * @param event {Object} the original click event
          */
-        emitRowClickedEvent: function (event) {
+        emitRowClickedEvent: function(event) {
             if (this.rowClicked === false) {
                 this.rowClicked = true;
                 var recordId = this.sandbox.dom.data(event.currentTarget, 'id'),
                     parameter = recordId || event;
                 this.datagrid.emitItemClickedEvent.call(this.datagrid, parameter);
                 // delay to prevent multiple emits on double click
-                this.sandbox.util.delay(function () {
+                this.sandbox.util.delay(function() {
                     this.rowClicked = false;
                 }.bind(this), 500);
             }
@@ -30573,7 +30490,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of the select items
          * @param event {Object} the event object
          */
-        selectItemChangeHandler: function (event) {
+        selectItemChangeHandler: function(event) {
             if (!!event.type) {
                 this.sandbox.dom.stopPropagation(event);
             }
@@ -30590,7 +30507,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the click on a body row if the options rowClickSelect is set to true
          * @param event
          */
-        bodyRowSelectHandler: function (event) {
+        bodyRowSelectHandler: function(event) {
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             if (this.options.selectItem.type === selectItems.CHECKBOX) {
                 this.toggleSelectRecord(recordId, !this.datagrid.itemIsSelected(recordId));
@@ -30603,7 +30520,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Handles the change event of a select item in the header
          * @param event {Object} the event object
          */
-        allSelectItemChangeHandler: function (event) {
+        allSelectItemChangeHandler: function(event) {
             this.sandbox.dom.stopPropagation(event);
             var isChecked = this.sandbox.dom.is(event.target, ':checked');
             if (isChecked === true) {
@@ -30617,7 +30534,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Highlights a record an unhighlights all other rows
          * @param id {Number|String} the id of the record to highlight
          */
-        uniqueHighlightRecord: function (id) {
+        uniqueHighlightRecord: function(id) {
             this.sandbox.dom.removeClass(
                 this.sandbox.dom.find('.' + constants.rowClass + '.' + constants.selectedRowClass, this.table.$body),
                 constants.selectedRowClass
@@ -30628,7 +30545,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Selejcts all records
          */
-        selectAllRecords: function () {
+        selectAllRecords: function() {
             this.datagrid.selectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', true);
         },
@@ -30636,7 +30553,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         /**
          * Deselects all records
          */
-        deselectAllRecords: function () {
+        deselectAllRecords: function() {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.sandbox.dom.prop(this.sandbox.dom.find('.' + constants.checkboxClass, this.table.$body), 'checked', false);
         },
@@ -30654,7 +30571,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * @param id {Number|String} the id of the record to select or deselect
          * @param select {Boolean} true to select false to deselect
          */
-        toggleSelectRecord: function (id, select) {
+        toggleSelectRecord: function(id, select) {
             var areAllSelected;
             if (select === true) {
                 this.datagrid.setItemSelected.call(this.datagrid, id);
@@ -30680,7 +30597,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects or deselects the select all item
          * @param select {Boolean} true to select false to deselect the select all item
          */
-        toggleSelectAllItem: function (select) {
+        toggleSelectAllItem: function(select) {
             if (!!this.table.header) {
                 this.sandbox.dom.prop(
                     this.sandbox.dom.find('.' + constants.checkboxClass, this.table.header.$el), 'checked', select
@@ -30692,7 +30609,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
          * Selects a record and deselects all other records
          * @param id {Number|String} the id of the record to select
          */
-        uniqueSelectRecord: function (id) {
+        uniqueSelectRecord: function(id) {
             this.datagrid.deselectAllItems.call(this.datagrid);
             this.datagrid.setItemSelected.call(this.datagrid, id);
         },
@@ -30795,7 +30712,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
                 }
             }
         }
-     };
+    };
 });
 
 /**
@@ -32999,6 +32916,22 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                         return i;
                     }
                 }
+
+                return null;
+            },
+
+            /**
+             * Returns the item for a given id
+             * @param id {Number|String} the id to search for
+             * @returns {Number|String} the index of the found record
+             */
+            getRecordById: function(id) {
+                for (var i = -1, length = this.data.embedded.length; ++i < length;) {
+                    if (this.data.embedded[i].id === id) {
+                        return this.data.embedded[i];
+                    }
+                }
+
                 return null;
             },
 
@@ -33158,8 +33091,10 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
              * @param selection {Array} list of selected items
              */
             updateSelection: function(selection) {
+                var i, length;
+
                 this.gridViews[this.viewId].deselectAllRecords();
-                
+
                 for (i = -1, length = selection.length; ++i < length;) {
                     this.gridViews[this.viewId].selectRecord(selection[i]);
                 }
@@ -33209,7 +33144,7 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 if (this.selectedItems.indexOf(id) === -1) {
                     this.selectedItems.push(id);
                     // emit events with selected data
-                    this.sandbox.emit(ITEM_SELECT.call(this), id);
+                    this.sandbox.emit(ITEM_SELECT.call(this), id, this.getRecordById(id));
                     this.sandbox.emit(NUMBER_SELECTIONS.call(this), this.getSelectedItemIds().length);
                     this.setSelectedItemsToData();
                     return true;
@@ -41221,6 +41156,7 @@ define('__component__$overlay@husky',[], function() {
             this.overlay.opened = false;
             this.dragged = false;
             this.collapsed = false;
+            this.overlay.$content.css('height', '');
 
             this.sandbox.emit(CLOSED.call(this));
 
@@ -43234,6 +43170,10 @@ define('__component__$dropzone@husky',[], function () {
         /** returns normalized event names */
         createEventName = function (postFix) {
             return eventNamespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
+        },
+
+        createJQueryEventName = function(event) {
+            return event + '.dropzone.' + (this.options.instanceName ? this.options.instanceName : '');
         };
 
     return {
@@ -43273,18 +43213,20 @@ define('__component__$dropzone@husky',[], function () {
             }.bind(this));
 
             if (this.options.showOverlay) {
-                this.sandbox.dom.on(this.sandbox.dom.$document, 'dragenter', function () {
+                this.sandbox.dom.on(this.sandbox.dom.$document, createJQueryEventName.call(this, 'dragenter'), function() {
                     this.openOverlay();
                 }.bind(this));
-                this.sandbox.dom.on(this.sandbox.dom.$document, 'drop', function(event) {
-                    if (this.dropzoneEnabled) {                        
+                this.sandbox.dom.on(this.sandbox.dom.$document, createJQueryEventName.call(this, 'drop'), function(event) {
+                    if (this.dropzoneEnabled) {
                         this.addFiles(event.originalEvent.dataTransfer.files);
                     }
                 }.bind(this));
             }
-            this.sandbox.dom.on(this.sandbox.dom.$document, 'dragover drop', function(event) {
-                this.sandbox.dom.preventDefault(event);
-            }.bind(this));
+            this.sandbox.dom.on(this.sandbox.dom.$document,
+                createJQueryEventName.call(this, 'dragover') + ' ' + createJQueryEventName.call(this, 'drop'),
+                function(event) {
+                    this.sandbox.dom.preventDefault(event);
+                }.bind(this));
 
             if (this.options.cancelUploadOnOverlayClick) {
                 this.$el.on('click', '.husky-overlay-container.dropzone', function() {
@@ -43569,6 +43511,15 @@ define('__component__$dropzone@husky',[], function () {
                 arrReturn.push(files[i].response);
             }
             return arrReturn;
+        },
+
+        remove: function() {
+            this.dropzone.disable();
+            this.dropzone.destroy();
+
+            this.sandbox.dom.off(this.sandbox.dom.$document, createJQueryEventName.call(this, 'dragenter'));
+            this.sandbox.dom.off(this.sandbox.dom.$document, createJQueryEventName.call(this, 'drop'));
+            this.sandbox.dom.off(this.sandbox.dom.$document, createJQueryEventName.call(this, 'dragover'));
         }
     };
 
@@ -44208,21 +44159,19 @@ define('__component__$data-navigation@husky',[
 
             main: function() {
                 return [
-                    '<div class="data-navigation">',
+                    '<div class="data-navigation<% if (options.showAddButton) { %> has-add-btn<% } %>">',
                     '   <div class="data-navigation-header"></div>',
                     '   <div class="data-navigation-list-container iscroll">',
-                    '       <div class="search"></div>',
-                    '       <div class="iscroll-inner"></div>',
+                    '       <div class="data-navigation-search"></div>',
+                    '       <div class="data-navigation-list-scroll iscroll-inner"></div>',
                     '       <div class="loader"></div>',
                     '   </div>',
-                    '   <% if (options.showAddButton) { %>',
                     '       <div class="data-navigation-list-footer">',
                     '           <button class="data-navigation-add btn">',
                     '               <span class="fa-plus-circle"></span>',
                     '               <%= options.translates.addButton %>',
                     '           </button>',
                     '       </div>',
-                    '   <% } %>',
                     '</div>'
                 ].join('');
             }
@@ -44380,7 +44329,7 @@ define('__component__$data-navigation@husky',[
                 {
                     name: 'search@husky',
                     options: {
-                        el: this.sandbox.dom.find('.search', this.$el),
+                        el: this.sandbox.dom.find('.data-navigation-search', this.$el),
                         appearance: 'white',
                         instanceName: 'data-navigation'
                     }
@@ -44413,7 +44362,7 @@ define('__component__$data-navigation@husky',[
                     .then(function(data) {
                         var children = data._embedded[this.options.resultKey] || [];
                         this.data.children = this.data.children.concat(children);
-                        this.data.hasNextPage = children.length == this.options.limit;
+                        this.data.hasNextPage = this.page < data.pages;
                         this.currentView.append(children, this.options);
 
                         this.hideLoader();
@@ -44422,6 +44371,7 @@ define('__component__$data-navigation@husky',[
             } else {
                 def.resolve();
             }
+
             return def;
         },
 
@@ -44585,9 +44535,9 @@ define('__component__$data-navigation@husky',[
          */
         hideSearch: function(data) {
             if (data.children.length === 0 && !this.searchTerm) {
-                this.$find('.search').hide();
+                this.$find('.data-navigation-search').hide();
             } else {
-                this.$find('.search').show();
+                this.$find('.data-navigation-search').show();
             }
 
             return data;
@@ -44648,6 +44598,14 @@ define('__component__$data-navigation@husky',[
         },
 
         /**
+         * Return item from local cache
+         * @param id
+         */
+        getItem: function(id) {
+            return _.where(this.data.children, {id: id})[0];
+        },
+
+        /**
          * @method openChildrenHandler
          * @param {Object} event
          */
@@ -44705,12 +44663,12 @@ define('__component__$data-navigation@husky',[
         selectParentDataHandler: function(event) {
             event.stopPropagation();
 
-            this.openParentHandler(event).then(function() {
-                this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                if (this.options.globalEvents) {
-                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
-                }
-            }.bind(this));
+            this.sandbox.emit(SELECT.call(this), this.data.parent);
+            if (this.options.globalEvents) {
+                this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.parent);
+            }
+
+            this.openParentHandler(event);
         },
 
         /**
@@ -44730,12 +44688,16 @@ define('__component__$data-navigation@husky',[
         selectChildrenDataHandler: function(event) {
             event.stopPropagation();
 
-            this.openChildrenHandler(event).then(function() {
-                this.sandbox.emit(SELECT.call(this), this.data.current.item);
-                if (this.options.globalEvents) {
-                    this.sandbox.emit(SELECT_GLOBAL.call(this), this.data.current.item);
-                }
-            }.bind(this));
+            var $item = $(event.currentTarget).closest('li'),
+                id = $item.data('id'),
+                item = this.getItem(id);
+
+            this.sandbox.emit(SELECT.call(this), item);
+            if (this.options.globalEvents) {
+                this.sandbox.emit(SELECT_GLOBAL.call(this), item);
+            }
+
+            this.openChildrenHandler(event);
         },
 
         /**
@@ -44745,9 +44707,13 @@ define('__component__$data-navigation@husky',[
         navigateChildrenHandler: function(event) {
             event.stopPropagation();
 
-            this.openChildrenHandler(event).then(function() {
-                this.sandbox.emit(NAVIGATE.call(this), this.data.current.item);
-            }.bind(this));
+            var $item = $(event.currentTarget).closest('li'),
+                id = $item.data('id'),
+                item = this.getItem(id);
+
+            this.sandbox.emit(NAVIGATE.call(this), item);
+
+            this.openChildrenHandler(event);
         },
 
         /**
@@ -48967,7 +48933,10 @@ define("datepicker-zh-TW", function(){});
     
 
     require.config({
-        paths: { "dropzone": 'bower_components/dropzone/dropzone' }
+        paths: { 'dropzone': 'bower_components/dropzone/dropzone' },
+        shim: {
+            dropzone: {exports: 'Dropzone', deps: ['jquery']}
+        }
     });
 
     define('husky_extensions/dropzone',['dropzone'], function(Dropzone) {
@@ -48978,7 +48947,7 @@ define("datepicker-zh-TW", function(){});
                 // Disable confirmation
                 Dropzone.confirm = function(question, accepted) {
                     accepted();
-                },
+                };
 
                 app.sandbox.dropzone = {
                     initialize: function(selector, configs) {
@@ -49937,6 +49906,20 @@ define('husky_extensions/itembox',[],function() {
                     this.updateOrder();
                     this.updateVisibility();
                 }
+            },
+
+            /**
+             * Remove item by id
+             * @param {int} itemId
+             */
+            removeItemById: function(itemId) {
+                var $removeItem = this.sandbox.dom.find('li[data-id=' + itemId + ']', this.$el);
+
+                this.sandbox.dom.remove($removeItem);
+                this.removeHandler(itemId);
+
+                this.updateOrder();
+                this.updateVisibility();
             },
 
             /**

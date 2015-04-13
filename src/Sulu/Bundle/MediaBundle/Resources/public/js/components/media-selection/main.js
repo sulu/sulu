@@ -85,8 +85,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     '       <div class="fa-times media-selection-overlay-close"></div>',
                     '       <div class="media-selection-overlay-dropzone-container"></div>',
                     '       <div class="media-selection-overlay-toolbar-container"></div>',
-                    '       <div class="media-selection-overlay-content-title">' + options.contentDefaultTitle + '</div>',
-                    '       <div class="media-selection-overlay-datagrid-container"></div>',
+                    '       <div class="media-selection-overlay-content-area">',
+                    '           <div class="media-selection-overlay-content-title">' + options.contentDefaultTitle + '</div>',
+                    '           <div class="media-selection-overlay-datagrid-container"></div>',
+                    '       </div>',
                     '   </div>',
                     '</div>'
                 ].join('');
@@ -498,7 +500,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     name: 'overlay@husky',
                     options: {
                         triggerEl: this.$addButton,
-                        draggable: false,
+                        draggable: true,
+                        dragTrigger: '.media-selection-overlay-navigation-container',
                         removeOnClose: false,
                         el: $element,
                         container: this.$el,
