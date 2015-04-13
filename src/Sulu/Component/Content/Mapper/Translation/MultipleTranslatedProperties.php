@@ -40,7 +40,7 @@ class MultipleTranslatedProperties
     /**
      * @var string
      */
-    private $structureType = LegacyStructureConstants::TYPE_PAGE;
+    private $structureType = Structure::TYPE_PAGE;
 
     public function __construct(
         $names,
@@ -80,7 +80,7 @@ class MultipleTranslatedProperties
     public function getName($key)
     {
         // templates do not translate the template key
-        if ($this->structureType === LegacyStructureConstants::TYPE_SNIPPET) {
+        if ($this->structureType === Structure::TYPE_SNIPPET) {
             if ($key === 'template') {
                 return $key;
             }

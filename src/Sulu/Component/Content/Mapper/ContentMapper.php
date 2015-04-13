@@ -296,7 +296,7 @@ class ContentMapper implements ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = LegacyStructureConstants::TYPE_PAGE
+        $structureType = Structure::TYPE_PAGE
     ) {
         // $event = new ContentNodeEvent($node, $structure);
         // $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
@@ -512,7 +512,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        return $this->documentManager->createQuery($query, $locale, LegacyStructureConstants::TYPE_PAGE)->execute();
+        return $this->documentManager->createQuery($query, $locale, Structure::TYPE_PAGE)->execute();
     }
 
     /**
@@ -653,7 +653,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $srcLanguageCode,
         $destLanguageCodes,
-        $structureType = LegacyStructureConstants::TYPE_PAGE
+        $structureType = Structure::TYPE_PAGE
     ) {
         throw new \RuntimeException('Do this');
         if (!is_array($destLanguageCodes)) {
