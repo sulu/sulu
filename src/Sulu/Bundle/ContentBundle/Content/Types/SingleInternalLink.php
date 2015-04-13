@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 use PHPCR\NodeInterface;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Compat\SimpleContentType;
+use Sulu\Component\Content\SimpleContentType;
 
 /**
  * ContentType for SingleInternalLink

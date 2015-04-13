@@ -8,9 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat;
+namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * base class of complex content types

@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Types;
+namespace Sulu\Component\Content\Types;
 
-use Sulu\Component\Content\Compat\SimpleContentType;
+use Sulu\Component\Content\SimpleContentType;
 
 /**
  * ContentType for TextLine

@@ -14,7 +14,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
-use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Util\ArrayableInterface;

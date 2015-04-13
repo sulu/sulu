@@ -13,7 +13,7 @@ namespace Sulu\Bundle\LocationBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\LocationBundle\Map\MapManager;
-use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 

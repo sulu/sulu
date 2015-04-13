@@ -12,7 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
-use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use PHPCR\PropertyType;

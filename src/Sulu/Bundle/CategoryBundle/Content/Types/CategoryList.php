@@ -12,7 +12,7 @@ namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 

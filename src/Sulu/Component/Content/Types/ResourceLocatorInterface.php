@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Types;
+namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\ContentTypeInterface;
