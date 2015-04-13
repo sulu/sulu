@@ -39,6 +39,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\SnippetBundle\SuluSnippetBundle(),
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
             new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
+            new \Sulu\Bundle\DocumentManagerBundle\SuluDocumentManagerBundle(),
         );
 
         return $bundles;

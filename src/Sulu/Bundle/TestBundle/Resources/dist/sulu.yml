@@ -2,6 +2,8 @@ framework:
     secret: secret
     router: { resource: "%kernel.root_dir%/config/routing.yml" }
     templating: { engines: ['twig'] }
+    form:
+        enabled: true
     test: ~
     session:
         storage_id: session.storage.mock_file
@@ -15,13 +17,13 @@ fos_rest:
 monolog:
     handlers:
         main:
-            type:         fingers_crossed
+            type:         stream
             action_level: error
             handler:      nested
         nested:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: debug
+            level: error
 
 sulu_core:
     cache_dir: %kernel.root_dir%/cache/sulu
@@ -77,3 +79,9 @@ parameters:
 
 sulu_test:
     enable_test_user_provider: true
+
+sulu_document_manager:
+    mapping:
+        page:
+            class: Sulu\Bundle\ContentBundle\Document\PageDocument
+            phpcr_type: sulu:page
