@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Event;
+namespace Sulu\Component\Content\Compat\Event;
 
 use PHPCR\NodeInterface;
 use Symfony\Component\EventDispatcher\Event;

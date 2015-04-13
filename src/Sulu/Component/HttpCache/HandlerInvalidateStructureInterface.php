@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\HttpCache;
 
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * Handlers implementing will invalidate the given structure with the

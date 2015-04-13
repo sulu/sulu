@@ -11,12 +11,12 @@
 namespace Sulu\Bundle\ContentBundle\Content\Structure;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
 
 /**

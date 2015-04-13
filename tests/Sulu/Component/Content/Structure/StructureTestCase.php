@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Compat\Structure;
 
 use DateTime;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Sulu\Component\Content\StructureTag;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Compat\StructureTag;
+use Sulu\Component\Content\Compat\PropertyTag;
 
 abstract class StructureTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -69,7 +69,7 @@ abstract class StructureTestCase extends \PHPUnit_Framework_TestCase
             $this->returnValue('testvalue')
         );
 
-        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'addChild');
+        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Compat\Structure', 'addChild');
         $addMethod->setAccessible(true);
 
         $addMethod->invoke($this->structure, $this->titleProperty);
@@ -175,7 +175,7 @@ abstract class StructureTestCase extends \PHPUnit_Framework_TestCase
             $this->returnCallback(array($this, 'returnCallbackTestTag'))
         );
 
-        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Structure', 'addChild');
+        $addMethod = new \ReflectionMethod('Sulu\Component\Content\Compat\Structure', 'addChild');
         $addMethod->setAccessible(true);
 
         $addMethod->invoke($this->structure, $this->titleProperty);

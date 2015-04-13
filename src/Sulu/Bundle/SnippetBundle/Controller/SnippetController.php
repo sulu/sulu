@@ -12,8 +12,8 @@ namespace Sulu\Bundle\SnippetBundle\Controller;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\JsonResponse;

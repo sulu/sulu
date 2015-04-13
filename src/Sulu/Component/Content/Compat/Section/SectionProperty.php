@@ -8,13 +8,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Section;
+namespace Sulu\Component\Content\Compat\Section;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\HandlerCallback;
 

@@ -15,7 +15,7 @@ use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Structure\Snippet;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 class SnippetApiTest extends SuluTestCase
 {

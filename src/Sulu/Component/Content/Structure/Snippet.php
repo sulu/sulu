@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Compat\Structure;
 
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\Metadata;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Metadata;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * This structure represents some encapsulated content. For example

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 use Sulu\Bundle\ContentBundle\Content\Types\InternalLinks;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Psr\Log\LoggerInterface;
 
 class InternalLinksTest extends \PHPUnit_Framework_TestCase
@@ -49,7 +49,7 @@ class InternalLinksTest extends \PHPUnit_Framework_TestCase
         $this->contentQueryExecutor = $this->prophesize('Sulu\Component\Content\Query\ContentQueryExecutorInterface');
         $this->contentQueryBuilder = $this->prophesize('Sulu\Component\Content\Query\ContentQueryBuilderInterface');
         $this->logger = $this->prophesize('Psr\Log\LoggerInterface');
-        $this->property = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+        $this->property = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
 
         $this->type = new InternalLinks(
             $this->contentQueryExecutor->reveal(),

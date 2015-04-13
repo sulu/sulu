@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\Compat\Mapper;
 
 use PHPCR\Query\QueryResultInterface;
-use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\NodeInterface;
 

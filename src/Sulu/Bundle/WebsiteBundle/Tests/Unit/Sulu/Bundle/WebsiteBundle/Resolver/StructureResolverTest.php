@@ -3,9 +3,9 @@
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Prophecy\Argument;
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 
 class StructureResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,9 +33,9 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManagerInterface');
-        $this->structureManager = $this->prophesize('Sulu\Component\Content\StructureManagerInterface');
-        $this->contentType = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
+        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeManagerInterface');
+        $this->structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');
+        $this->contentType = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeInterface');
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),
@@ -54,7 +54,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $excerptExtension->getContentData(array('test1' => 'test1'))->willReturn(array('test1' => 'test1'));
         $this->structureManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property = $this->prophesize('Sulu\Component\Content\PropertyInterface');
+        $property = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 

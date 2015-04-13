@@ -12,7 +12,7 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use Sulu\Component\HttpCache\Handler\AggregateHandler;
 use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 
 class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
@@ -45,7 +45,7 @@ class AggregateHandlerTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
 
         $this->handler1 = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')

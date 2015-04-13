@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Block;
+namespace Sulu\Component\Content\Compat\Block;
 
 use JMS\Serializer\Annotation\Discriminator;
 use JMS\Serializer\Annotation\HandlerCallback;
@@ -16,8 +16,8 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * representation of a block node in template xml

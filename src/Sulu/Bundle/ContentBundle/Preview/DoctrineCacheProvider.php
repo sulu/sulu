@@ -12,12 +12,12 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\SerializerInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 
 /**
  * provides a cache for preview with phpcr

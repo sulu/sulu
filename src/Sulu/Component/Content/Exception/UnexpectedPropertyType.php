@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Exception;
+namespace Sulu\Component\Content\Compat\Exception;
 
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 class UnexpectedPropertyType extends \Exception
 {

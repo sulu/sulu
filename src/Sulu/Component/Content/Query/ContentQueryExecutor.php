@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Query;
+namespace Sulu\Component\Content\Compat\Query;
 
 use Jackalope\Query\Row;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;

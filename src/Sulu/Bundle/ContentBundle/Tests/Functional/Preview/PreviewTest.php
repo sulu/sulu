@@ -14,7 +14,7 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewCacheProviderInterface;
 use Sulu\Bundle\ContentBundle\Preview\PreviewInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;

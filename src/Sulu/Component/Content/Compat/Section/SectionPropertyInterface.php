@@ -7,9 +7,9 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace Sulu\Component\Content\Section;
+namespace Sulu\Component\Content\Compat\Section;
 
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * defines a section for properties

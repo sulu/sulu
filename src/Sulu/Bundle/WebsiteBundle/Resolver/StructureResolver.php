@@ -2,10 +2,10 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 
 /**
  * Class that "resolves" the view data for a given structure.

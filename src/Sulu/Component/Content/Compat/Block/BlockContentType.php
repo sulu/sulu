@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Block;
+namespace Sulu\Component\Content\Compat\Block;
 
 use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
-use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * content type for block

@@ -11,7 +11,7 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use FOS\HttpCache\ProxyClient;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\HttpCache\ProxyClient\ProxyClientInterface;

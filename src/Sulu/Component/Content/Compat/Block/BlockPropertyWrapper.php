@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Block;
+namespace Sulu\Component\Content\Compat\Block;
 
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyTag;
 
 class BlockPropertyWrapper implements PropertyInterface
 {

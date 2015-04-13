@@ -8,12 +8,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Compat\Structure;
 
 require_once __DIR__ . '/StructureTestCase.php';
 
 use DateTime;
-use Sulu\Component\Content\StructureType;
+use Sulu\Component\Content\Compat\StructureType;
 
 class PageTest extends StructureTestCase
 {

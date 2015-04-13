@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Content type definition

@@ -8,10 +8,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Event;
+namespace Sulu\Component\Content\Compat\Event;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Util\SuluNodeHelper;

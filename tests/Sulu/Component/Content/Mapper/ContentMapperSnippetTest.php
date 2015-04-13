@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\Compat\Mapper;
 
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\UUIDHelper;

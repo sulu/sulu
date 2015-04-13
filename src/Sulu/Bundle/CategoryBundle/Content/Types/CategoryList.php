@@ -12,9 +12,9 @@ namespace Sulu\Bundle\CategoryBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
-use Sulu\Component\Content\ComplexContentType;
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\ComplexContentType;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * Content Type for the CategoryList, uses the CategoryManager-Service and the Datagrid from Husky

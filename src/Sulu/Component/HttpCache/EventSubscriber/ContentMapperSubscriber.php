@@ -12,7 +12,7 @@ namespace Sulu\Component\HttpCache\EventSubscriber;
 
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Compat\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;

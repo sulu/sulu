@@ -11,7 +11,7 @@
 namespace Sulu\Component\HttpCache\Handler;
 
 use Symfony\Component\HttpFoundation\Response;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
