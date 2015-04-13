@@ -8,12 +8,14 @@
 
         <parameter key="sulu_core.webspace.cache_class">WebspaceCollectionCache</parameter>
         <parameter key="sulu_core.webspace.base_class">WebspaceCollection</parameter>
+        <parameter key="sulu_core.webspace.document_manager.webspace_initializer.class">Sulu\Component\Webspace\DocumentManager\WebspaceInitializer</parameter>
     </parameters>
 
     <services>
         <service id="sulu_core.webspace.loader.xml" class="%sulu_core.webspace.loader.xml_class%">
             <argument type="service" id="file_locator"/>
         </service>
+
         <service id="sulu_core.webspace.webspace_manager" class="%sulu_core.webspace.webspace_manager.class%">
             <tag name="sulu.localization_provider"/>
             <!-- TODO use delegating loader -->
@@ -26,6 +28,15 @@
                 <argument key="cache_class">%sulu_core.webspace.cache_class%</argument>
                 <argument key="base_class">%sulu_core.webspace.base_class%</argument>
             </argument>
+        </service>
+
+        <service id="sulu_core.webspace.document_manager.webspace_initializer" class="%sulu_core.webspace.document_manager.webspace_initializer.class%">
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.path_segment_registry" />
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <tag name="sulu_document_manager.initializer" priority="255" />
         </service>
     </services>
 </container>

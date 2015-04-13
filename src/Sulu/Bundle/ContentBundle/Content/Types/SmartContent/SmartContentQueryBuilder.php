@@ -12,10 +12,10 @@ namespace Sulu\Bundle\ContentBundle\Content\Types\SmartContent;
 
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
-use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Content\Compat\Structure;
 
 /**
  * Query builder to load smart content.
@@ -190,7 +190,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildPropertySelect($alias, $propertyName, $locale, &$additionalFields)
     {
-        foreach ($this->structureManager->getStructures(Page::TYPE_PAGE) as $structure) {
+        foreach ($this->structureManager->getStructures(Structure::TYPE_PAGE) as $structure) {
             if ($structure->hasProperty($propertyName)) {
                 $property = $structure->getProperty($propertyName);
                 $additionalFields[$locale][] = array(
@@ -207,7 +207,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
-        $extension = $this->structureManager->getExtension('', $extension);
+        $extension = $this->structureManager->getExtension('all', $extension);
         $additionalFields[$locale][] = array(
             'name' => $alias,
             'extension' => $extension,

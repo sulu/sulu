@@ -13,8 +13,8 @@ namespace Sulu\Bundle\WebsiteBundle\Navigation;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -143,15 +143,11 @@ class NavigationMapper implements NavigationMapperInterface
 
         $result = array();
         foreach ($breadcrumbItems as $item) {
-            if ($item->getDepth() === 0) {
-                $result[] = $this->contentMapper->loadStartPage($webspace, $language);
-            } else {
-                $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
-            }
+            $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
         }
         $result[] = $this->contentMapper->load($uuid, $webspace, $language);
 
-        return $this->generateNavigation($result, $webspace, $language, false, null, true);
+        return $this->generateNavigation($result, $webspace, $language, false, null, true, false);
     }
 
     /**
@@ -163,7 +159,8 @@ class NavigationMapper implements NavigationMapperInterface
         $language,
         $flat = false,
         $context = null,
-        $breakOnNotInNavigation = false
+        $breakOnNotInNavigation = false,
+        $recursive = true
     ) {
         $result = array();
 
@@ -172,7 +169,7 @@ class NavigationMapper implements NavigationMapperInterface
             if ($this->inNavigation($content, $context)) {
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
-                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : array();
 
                 if (false === $flat) {
                     $result[] = new NavigationItem(
@@ -195,7 +192,7 @@ class NavigationMapper implements NavigationMapperInterface
                     $result = array_merge($result, $children);
                 }
             } elseif (true === $flat) {
-                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : array();
                 $result = array_merge($result, $children);
             } elseif ($breakOnNotInNavigation) {
                 break;

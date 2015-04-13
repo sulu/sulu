@@ -56,7 +56,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -111,7 +111,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -169,7 +169,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -220,7 +220,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -282,7 +282,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -333,7 +333,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -394,7 +394,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,
@@ -445,7 +445,7 @@ class MediaSelectionContentTypeTest extends PHPUnit_Framework_TestCase
         );
 
         $property = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\PropertyInterface',
+            'Sulu\Component\Content\Compat\PropertyInterface',
             array(),
             '',
             true,

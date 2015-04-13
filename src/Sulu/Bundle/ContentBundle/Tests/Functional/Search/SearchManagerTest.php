@@ -14,13 +14,20 @@ use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 class SearchManagerTest extends BaseTestCase
 {
+    /**
+     * The search manager should update existing documents with the same IDs rather
+     * than creating new documents
+     */
     public function testSearchManager()
     {
         $nbResults = 10;
+        $documents = $this->generateStructureIndex($nbResults);
 
-        // ensure that we do not create new documents for existing IDs
         for ($i = 1; $i <= 2; $i++) {
-            $this->generateStructureIndex($nbResults);
+            foreach ($documents as $document) {
+                $this->documentManager->persist($document, 'de');
+            }
+
             $res = $this->getSearchManager()->createSearch('Structure')->locale('de')->index('page')->execute();
 
             $this->assertCount($nbResults, $res);
@@ -47,29 +54,5 @@ class SearchManagerTest extends BaseTestCase
         // TODO: This should should not be here
         $res = $this->getSearchManager()->createSearch('+webspaceKey:webspace_four Structure*')->locale('de')->index('page')->execute();
         $this->assertCount(4, $res);
-    }
-
-    public function testHomepage()
-    {
-        $homepage = $this->contentMapper->loadStartPage('sulu_io', 'en');
-        $this->contentMapper->saveRequest(ContentMapperRequest::create()
-            ->setWebspaceKey('sulu_io')
-            ->setTemplateKey('default')
-            ->setUserId(1)
-            ->setUuid($homepage->getUuid())
-            ->setLocale('en')
-            ->setState(2)
-            ->setData(array(
-                'title' => 'Homepage',
-                'url' => '/en',
-            ))
-        );
-
-        $result = $this->getSearchManager()->createSearch('Homepage')->execute();
-        $this->assertCount(1, $result);
-        $firstHit = reset($result);
-        $document = $firstHit->getDocument();
-        $this->markTestSkipped('Cannot determine if the page is the homepage');
-        $this->assertEquals('homepage', $document->getCategory());
     }
 }

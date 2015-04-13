@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Sulu CMS.
  *
@@ -10,7 +11,6 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use DateTime;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
@@ -18,44 +18,50 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
-use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\BreadcrumbItem;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Compat\DataNormalizer;
+use Sulu\Component\Content\Compat\Property as LegacyProperty;
+use Sulu\Component\Content\Compat\Structure as LegacyStructure;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
-use Sulu\Component\Content\Event\ContentNodeEvent;
-use Sulu\Component\Content\Event\ContentNodeOrderEvent;
-use Sulu\Component\Content\Exception\ExtensionNotFoundException;
-use Sulu\Component\Content\Exception\InvalidNavigationContextExtension;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\InvalidOrderPositionException;
-use Sulu\Component\Content\Exception\MandatoryPropertyException;
-use Sulu\Component\Content\Exception\StateNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
-use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
+use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Form\Exception\InvalidFormException;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\Section\SectionPropertyInterface;
-use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\StructureType;
-use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
-use Sulu\Component\Content\Template\TemplateResolverInterface;
+use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\NodeHelper;
 use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
-use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
@@ -72,7 +78,7 @@ class ContentMapper implements ContentMapperInterface
     private $contentTypeManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var ExtensionManager
      */
     private $structureManager;
 
@@ -87,82 +93,9 @@ class ContentMapper implements ContentMapperInterface
     private $eventDispatcher;
 
     /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
-
-    /**
-     * namespace of translation.
-     *
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
-     * prefix for internal properties.
-     *
-     * @var string
-     */
-    private $internalPrefix;
-
-    /**
-     * default language of translation.
-     *
-     * @var string
-     */
-    private $defaultLanguage;
-
-    /**
-     * default template.
-     *
-     * @var string[]
-     */
-    private $defaultTemplates;
-
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
-
-    /**
-     * @var PathCleanupInterface
-     */
-    private $cleaner;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
-
-    /**
-     * @var TemplateResolverInterface
-     */
-    private $templateResolver;
-
-    /**
-     * excepted states.
-     *
-     * @var array
-     */
-    private $states = array(
-        StructureInterface::STATE_PUBLISHED,
-        StructureInterface::STATE_TEST,
-    );
-
-    /**
-     * @var MultipleTranslatedProperties
-     */
-    private $properties;
-
-    /**
-     * @var bool
-     */
-    private $ignoreMandatoryFlag = false;
-
-    /**
-     * @var bool
-     */
-    private $noRenamingFlag = false;
 
     /**
      * @var Cache
@@ -170,86 +103,68 @@ class ContentMapper implements ContentMapperInterface
     private $extensionDataCache;
 
     /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
-
-    /**
      * @var RlpStrategyInterface
      */
     private $strategy;
 
+    /**
+     * @var DataNormalizer
+     */
+    private $dataNormalizer;
+
+    /**
+     * @Var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $inspector;
+
+    /**
+     * @var PropertyEncoder
+     */
+    private $encoder;
+
+    /**
+     * @var NamespaceRegistry
+     */
+    private $namespaceRegistry;
+
     public function __construct(
-        ContentTypeManager $contentTypeManager,
+        DocumentManager $documentManager,
+        DataNormalizer $dataNormalizer,
+        WebspaceManagerInterface $webspaceManager,
+        FormFactoryInterface $formFactory,
+        DocumentInspector $inspector,
+        PropertyEncoder $encoder,
         StructureManagerInterface $structureManager,
+        ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        LocalizationFinderInterface $localizationFinder,
-        PathCleanupInterface $cleaner,
-        WebspaceManagerInterface $webspaceManager,
-        TemplateResolverInterface $templateResolver,
-        SuluNodeHelper $nodeHelper,
         RlpStrategyInterface $strategy,
-        $defaultLanguage,
-        $defaultTemplates,
-        $languageNamespace,
-        $internalPrefix,
-        $stopwatch = null
+        NamespaceRegistry $namespaceRegistry
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->dataNormalizer = $dataNormalizer;
         $this->sessionManager = $sessionManager;
-        $this->localizationFinder = $localizationFinder;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->defaultTemplates = $defaultTemplates;
-        $this->languageNamespace = $languageNamespace;
-        $this->internalPrefix = $internalPrefix;
-        $this->cleaner = $cleaner;
         $this->webspaceManager = $webspaceManager;
-        $this->templateResolver = $templateResolver;
-        $this->nodeHelper = $nodeHelper;
+        $this->documentManager = $documentManager;
+        $this->formFactory = $formFactory;
+        $this->inspector = $inspector;
+        $this->encoder = $encoder;
+        $this->namespaceRegistry = $namespaceRegistry;
+
+        // deprecated
+        $this->eventDispatcher = $eventDispatcher;
         $this->strategy = $strategy;
-
-        // optional
-        $this->stopwatch = $stopwatch;
-    }
-
-    /**
-     * Create a new property translator.
-     *
-     * @param string $languageCode
-     * @param string $structureType
-     *
-     * @return MultipleTranslatedProperties
-     */
-    protected function createPropertyTranslator($languageCode, $structureType = Structure::TYPE_PAGE)
-    {
-        $properties = new MultipleTranslatedProperties(
-            array(
-                'changer',
-                'changed',
-                'created',
-                'creator',
-                'published',
-                'state',
-                'title',
-                'template',
-                'published',
-                'nodeType',
-                'navContexts',
-                'shadow-on',
-                'shadow-base',
-                'internal_link',
-            ),
-            $this->languageNamespace,
-            $this->internalPrefix
-        );
-
-        $properties->setLanguage($languageCode);
-        $properties->setStructureType($structureType);
-
-        return $properties;
     }
 
     /**
@@ -257,8 +172,6 @@ class ContentMapper implements ContentMapperInterface
      */
     public function saveRequest(ContentMapperRequest $request)
     {
-        $this->validateRequest($request);
-
         return $this->save(
             $request->getData(),
             $request->getTemplateKey(),
@@ -282,493 +195,101 @@ class ContentMapper implements ContentMapperInterface
      */
     public function save(
         $data,
-        $templateKey,
+        $structureType,
         $webspaceKey,
-        $languageCode,
+        $locale,
         $userId,
-        $partialUpdate = true,
+        $partialUpdate = true, // ignore missing property: clearMissing = false
         $uuid = null,
         $parentUuid = null,
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = Structure::TYPE_PAGE
+        $documentAlias = LegacyStructure::TYPE_PAGE
     ) {
-        $propertyTranslator = $this->createPropertyTranslator($languageCode, $structureType);
+        $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
 
-        // set default node-type
-        if (!isset($data['nodeType'])) {
-            $data['nodeType'] = Structure::NODE_TYPE_CONTENT;
-        }
+        $content = isset($data['content']) ? $data['content'] : null;
+        $extensions = isset($data['extensions']) ? $data['extensions'] : null;
+        unset($data['content']);
+        unset($data['extensions']);
 
-        $resolvedTemplateKey = $this->templateResolver->resolve($data['nodeType'], $templateKey);
-        $structure = $this->getStructure($resolvedTemplateKey, $structureType);
-
-        $session = $this->getSession();
-
-        if (Structure::TYPE_PAGE === $structureType) {
-            if ($parentUuid !== null) {
-                $root = $session->getNodeByIdentifier($parentUuid);
-            } else {
-                $root = $this->getContentNode($webspaceKey);
-            }
+        if ($uuid) {
+            $document = $this->documentManager->find($uuid, $locale, array('type' => $documentAlias));
         } else {
-            $root = $this->sessionManager->getSnippetNode($resolvedTemplateKey);
+            $document = $this->documentManager->create($documentAlias);
         }
 
-        $nodeNameProperty = $structure->getProperty('title');
-        $translatedNodeNameProperty = new TranslatedProperty(
-            $nodeNameProperty,
-            $languageCode,
-            $this->languageNamespace
-        );
-
-        $dateTime = new \DateTime();
-
-        $newTranslatedNode = function (NodeInterface $node) use ($userId, $dateTime, &$state, $propertyTranslator) {
-            $node->setProperty($propertyTranslator->getName('creator'), $userId);
-            $node->setProperty($propertyTranslator->getName('created'), $dateTime);
-
-            if (!isset($state)) {
-                $state = StructureInterface::STATE_TEST;
-            }
-        };
-
-        $nodeNamePropertyName = $nodeNameProperty->getName();
-        if (!isset($data[$nodeNamePropertyName])) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'You must set the "%s" data key',
-                    $nodeNamePropertyName
-                )
-            );
+        if (!$document instanceof ContentBehavior) {
+            throw new \RuntimeException(sprintf(
+                'The content mapper can only be used to save documents implementing the ContentBehavior interface, got: "%s"',
+                get_class($document)
+            ));
         }
 
-        // title should not have a slash
-        $title = str_replace('/', '-', $data[$nodeNamePropertyName]);
+        if (!$document instanceof ResourceSegmentBehavior) {
+            unset($data['resourceSegment']);
+        }
 
-        /** @var NodeInterface $node */
-        if ($uuid === null) {
-            // create a new node
-            $path = $this->cleaner->cleanUp($title, $languageCode);
-            $path = $this->getUniquePath($path, $root);
-            $node = $root->addNode($path);
-            $newTranslatedNode($node);
+        $data['structureType'] = $structureType;
 
-            $node->addMixin('sulu:' . $structureType);
-        } else {
-            $node = $session->getNodeByIdentifier($uuid);
-            $nodeStructureType = $this->nodeHelper->getStructureTypeForNode($node);
-
-            if (null !== $nodeStructureType && $nodeStructureType !== $structureType) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'Cannot change the structure type of "%s" to "%s"',
-                        $node->getPath(),
-                        $structureType
-                    )
-                );
+        if ($document instanceof ShadowLocaleBehavior) {
+            if ($isShadow) {
+                $data['shadowLocaleEnabled'] = true;
             }
 
-            if (!$node->hasProperty($propertyTranslator->getName('title'))) {
-                $newTranslatedNode($node);
-            } else {
-                $hasSameLanguage = ($languageCode == $this->defaultLanguage);
-
-                $hasSamePath = ($node->getPath() !== $root->getPath());
-
-                $hasDifferentTitle = !$node->hasProperty($translatedNodeNameProperty->getName()) ||
-                    $node->getPropertyValue(
-                        $translatedNodeNameProperty->getName()
-                    ) !== $data[$nodeNameProperty->getName()];
-
-                // decide if the snippet template type has changed. If it has then we need to
-                // move it to the path of the new template type.
-                if ($structureType === Structure::TYPE_SNIPPET) {
-                    $currentSnippetType = $this->nodeHelper->extractSnippetTypeFromPath($node->getPath());
-                    if ($templateKey !== $currentSnippetType) {
-                        $session->move(
-                            $node->getPath(),
-                            $root->getPath() . '/' . PathHelper::getNodeName($node->getPath())
-                        );
-                    }
-                }
-
-                if (!$this->noRenamingFlag && $hasSameLanguage && $hasSamePath && $hasDifferentTitle) {
-                    $path = $this->cleaner->cleanUp($title, $languageCode);
-                    $path = $this->getUniquePath($path, $node->getParent());
-
-                    if ($path) {
-                        // workaround for Jackalope bug referenced in: https://github.com/sulu-cmf/sulu/issues/518
-                        $nextNode = $this->nodeHelper->getNextNode($node);
-
-                        if ($nextNode) {
-                            $nextNodeName = $nextNode->getName();
-                            $nodeName = $node->getName();
-                        }
-
-                        $node->rename($path);
-
-                        if ($nextNode) {
-                            $parentNode = $node->getParent();
-                            $parentNode->orderBefore($node->getName(), $nextNodeName);
-                        }
-                    }
-                    // FIXME refresh session here
-                }
+            if ($shadowBaseLanguage) {
+                $data['shadowLocale'] = $shadowBaseLanguage;
             }
         }
 
-        if ($isShadow) {
-            $this->validateShadow($node, $languageCode, $shadowBaseLanguage);
+        $options = array();
 
-            // If the URL for the shadow resource locator is not set, fallback to the shadow page for the
-            // shadow base resource locator
-            if ($structure->hasTag('sulu.rlp')) {
-                $property = $structure->getPropertyByTagName('sulu.rlp');
-                $baseLanguageRlProperty = new TranslatedProperty(
-                    $property,
-                    $shadowBaseLanguage,
-                    $this->languageNamespace
-                );
-                if (!isset($data[$property->getName()])) {
-                    $rlpContentType = $this->getContentType($baseLanguageRlProperty->getContentTypeName());
-                    $rlpContentType->read($node, $baseLanguageRlProperty, $webspaceKey, $shadowBaseLanguage, null);
-                    $rl = $baseLanguageRlProperty->getValue();
-                    $data[$property->getName()] = $rl;
-                }
-            }
+        if ($document instanceof WebspaceBehavior) {
+            $options['webspace_key'] = $webspaceKey;
         }
 
-        $shadowChanged = false;
-
-        if ($node->hasProperty($propertyTranslator->getName('shadow-on'))) {
-            $oldShadowStatus = $node->getPropertyValue($propertyTranslator->getName('shadow-on'));
-            if ($isShadow !== $oldShadowStatus) {
-                $shadowChanged = true;
-            }
+        if ($document instanceof ContentBehavior) {
+            $data['structureType'] = $structureType;
         }
 
-        $node->setProperty($propertyTranslator->getName('changer'), $userId);
-        $node->setProperty($propertyTranslator->getName('changed'), $dateTime);
-        $node->setProperty($propertyTranslator->getName('template'), $templateKey);
-        $node->setProperty($propertyTranslator->getName('shadow-on'), $isShadow);
-        $node->setProperty($propertyTranslator->getName('shadow-base'), $shadowBaseLanguage);
+        $form = $this->formFactory->create($documentAlias, $document, $options);
 
-        if (isset($data['nodeType'])) {
-            $node->setProperty($propertyTranslator->getName('nodeType'), $data['nodeType']);
+        $clearMissing = false;
+        $form->submit($data, $clearMissing);
+
+        if ($document instanceof ContentBehavior) {
+            // TODO: Refactor the content so that conetnt types are agnostic to the node types
+            //       Currently it is not possible to map content with a form as content types
+            //       can do whatever they want in terms of mapping.
+            $clearMissing = !$partialUpdate;
+            $document->getContent()->bind($content, $clearMissing);
         }
 
-        if (Structure::TYPE_PAGE === $structureType) {
-            // do not state transition for root (contents) node
-            $contentRootNode = $this->getContentNode($webspaceKey);
-            if ($node->getPath() !== $contentRootNode->getPath() && isset($state)) {
-                $this->changeState(
-                    $node,
-                    $state,
-                    $structure,
-                    $propertyTranslator->getName('state'),
-                    $propertyTranslator->getName('published')
-                );
-            }
-        } elseif (isset($state)) {
-            $this->changeState(
-                $node,
-                $state,
-                $structure,
-                $propertyTranslator->getName('state'),
-                $propertyTranslator->getName('published')
-            );
+        if ($document instanceof ExtensionBehavior) {
+            // TODO: As with content data, extensions should be set through the form
+            $document->setExtensionsData($extensions);
         }
 
-        if (Structure::TYPE_PAGE === $structureType) {
-            if (isset($data['navContexts']) && $data['navContexts'] !== false
-                && $this->validateNavContexts(
-                    $data['navContexts'],
-                    $this->webspaceManager->findWebspaceByKey($webspaceKey)
-                )
-            ) {
-                $node->setProperty($propertyTranslator->getName('navContexts'), $data['navContexts']);
-            }
+        if (!$form->isValid()) {
+            throw new InvalidFormException($form);
         }
 
-        // if the shadow status has changed, do not process the rest of the form.
-        $postSave = array();
-        if (false === $shadowChanged) {
+        $this->documentManager->persist($document, $locale, array(
+            'blame.user' => $userId,
+        ));
+        $this->documentManager->flush();
 
-            // go through every property in the template
-            /** @var PropertyInterface $property */
-            foreach ($structure->getProperties(true) as $property) {
-                // allow null values in data
-                if (isset($data[$property->getName()])) {
-                    $type = $this->getContentType($property->getContentTypeName());
-                    $value = $data[$property->getName()];
-                    $property->setValue($value);
+        $structure = $this->documentToStructure($document);
 
-                    // add property to post save action
-                    if ($type->getType() == ContentTypeInterface::POST_SAVE) {
-                        $postSave[] = array(
-                            'type' => $type,
-                            'property' => $property,
-                        );
-                    } else {
-                        $translatedProperty = new TranslatedProperty(
-                            $property, $languageCode, $this->languageNamespace
-                        );
-                        // TODO find a better why for change Types (same hack is used in BlockContentType:write )
-                        $type->remove(
-                            $node,
-                            $translatedProperty,
-                            $webspaceKey,
-                            $languageCode,
-                            null
-                        );
-                        $type->write(
-                            $node,
-                            $translatedProperty,
-                            $userId,
-                            $webspaceKey,
-                            $languageCode,
-                            null
-                        );
-                    }
-                } elseif ($isShadow) {
-                    // nothing
-                } elseif (!$this->ignoreMandatoryFlag && $property->getMandatory()) {
-                    $type = $this->getContentType($property->getContentTypeName());
-                    $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
-
-                    if (false === $type->hasValue($node, $translatedProperty, $webspaceKey, $languageCode, null)) {
-                        throw new MandatoryPropertyException($templateKey, $property);
-                    }
-                } elseif (!$partialUpdate) {
-                    $type = $this->getContentType($property->getContentTypeName());
-                    // if it is not a partial update remove property
-                    $type->remove(
-                        $node,
-                        new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                        $webspaceKey,
-                        $languageCode,
-                        null
-                    );
-                }
-                // if it is a partial update ignore property
-            }
-        }
-
-        // save node now
-        $session->save();
-
-        // set post save content types properties
-        foreach ($postSave as $post) {
-            try {
-                /** @var ContentTypeInterface $type */
-                $type = $post['type'];
-                /** @var PropertyInterface $property */
-                $property = $post['property'];
-
-                $type->write(
-                    $node,
-                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                    $userId,
-                    $webspaceKey,
-                    $languageCode,
-                    null
-                );
-            } catch (\Exception $ex) {
-                // TODO Introduce a PostSaveException, so that we don't have to catch everything
-                // FIXME message for user or log entry
-                throw $ex;
-            }
-        }
-        $session->save();
-
-        if (Structure::TYPE_PAGE === $structureType && false === $shadowChanged) {
-            // save data of extensions
-            $ext = array();
-            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
-                $extension->setLanguageCode($languageCode, $this->languageNamespace, $this->internalPrefix);
-                if (isset($data['ext']) && isset($data['ext'][$extension->getName()])) {
-                    $extension->save(
-                        $node,
-                        $data['ext'][$extension->getName()],
-                        $webspaceKey,
-                        $languageCode
-                    );
-                }
-                $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
-            }
-
-            $structure->setExt($ext);
-        }
-
-        $event = new ContentNodeEvent($node, $structure);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
-
-        $session->save();
-
-        $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-        $structure->setNodeType(
-            $node->getPropertyValueWithDefault($propertyTranslator->getName('nodeType'), Structure::NODE_TYPE_CONTENT)
-        );
-        $structure->setWebspaceKey($webspaceKey);
-        $structure->setLanguageCode($languageCode);
-        $structure->setCreator($node->getPropertyValue($propertyTranslator->getName('creator')));
-        $structure->setChanger($node->getPropertyValue($propertyTranslator->getName('changer')));
-        $structure->setCreated($node->getPropertyValue($propertyTranslator->getName('created')));
-        $structure->setChanged($node->getPropertyValue($propertyTranslator->getName('changed')));
-        $structure->setIsShadow($node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false));
-        $structure->setShadowBaseLanguage(
-            $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-base'), null)
-        );
-        $structure->setEnabledShadowLanguages(
-            $this->getEnabledShadowLanguages($node)
-        );
-        $structure->setConcreteLanguages($this->getConcreteLanguages($node));
-
-        $structure->setPublished(
-            $node->getPropertyValueWithDefault($propertyTranslator->getName('published'), null)
-        );
-
-        if (Structure::TYPE_PAGE === $structureType) {
-            $structure->setPath(
-                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
-            );
-            $structure->setNavContexts(
-                $node->getPropertyValueWithDefault($propertyTranslator->getName('navContexts'), array())
-            );
-            $structure->setOriginTemplate(
-                $node->getPropertyValueWithDefault(
-                    $propertyTranslator->getName('template'),
-                    $this->defaultTemplates[$structureType]
-                )
-            );
-            // load dependencies for internal links
-            $this->loadInternalLinkDependencies(
-                $structure,
-                $languageCode,
-                $webspaceKey
-            );
-
-            $this->loadLocalizedUrlsForPage($structure, $node, $webspaceKey, null);
-        }
-
-        // throw an content.node.save event
-        $event = new ContentNodeEvent($node, $structure);
+        $event = new ContentNodeEvent($this->inspector->getNode($document), $structure);
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
 
         return $structure;
     }
 
     /**
-     * Validate a shadow language mapping.
-     *
-     * If a node of $language is set to shadow language $shadowBaseLanguage then
-     * it must not shadow either itself or a language which is not concrete.
-     *
-     * @param NodeInterface $node
-     * @param string $language
-     * @param string $shadowBaseLanguage
-     *
-     * @throws \RuntimeException
-     */
-    protected function validateShadow(NodeInterface $node, $language, $shadowBaseLanguage)
-    {
-        if ($language == $shadowBaseLanguage) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Attempting to make language "%s" a shadow of itself! ("%s")',
-                    $language,
-                    $shadowBaseLanguage
-                )
-            );
-        }
-
-        $concreteLanguages = $this->getConcreteLanguages($node);
-
-        if (!in_array($shadowBaseLanguage, $concreteLanguages)) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Attempting to make language "%s" a shadow of a non-concrete language "%s". Concrete languages are "%s"',
-                    $language,
-                    $shadowBaseLanguage,
-                    implode(', ', $concreteLanguages)
-                )
-            );
-        }
-    }
-
-    /**
-     * Return the enabled shadow languages on the given node.
-     *
-     * @param NodeInterface $node
-     *
-     * @return array
-     */
-    protected function getEnabledShadowLanguages(NodeInterface $node)
-    {
-        $nodeLanguages = $this->nodeHelper->getLanguagesForNode($node);
-        $shadowBaseLanguages = array();
-
-        foreach ($nodeLanguages as $nodeLanguage) {
-            $propertyTranslator = $this->createPropertyTranslator($nodeLanguage);
-            $shadowOn = $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), null);
-
-            if ($shadowOn) {
-                $nodeShadowBaseLanguage = $node->getPropertyValueWithDefault(
-                    $propertyTranslator->getName('shadow-base'),
-                    null
-                );
-
-                if (null !== $nodeShadowBaseLanguage) {
-                    $shadowBaseLanguages[$nodeShadowBaseLanguage] = $nodeLanguage;
-                }
-            }
-        }
-
-        return $shadowBaseLanguages;
-    }
-
-    /**
-     * Return the "concrete" languages in a node - i.e. all languages
-     * excluding shadow languages.
-     *
-     * @param NodeInterface $node
-     *
-     * @return array
-     */
-    protected function getConcreteLanguages(NodeInterface $node)
-    {
-        $enabledLanguages = $this->nodeHelper->getLanguagesForNode($node);
-        $enabledShadowLanguages = $this->getEnabledShadowLanguages($node);
-        $concreteTranslations = array_diff($enabledLanguages, array_values($enabledShadowLanguages));
-
-        return $concreteTranslations;
-    }
-
-    /**
-     * validates navigation contexts.
-     *
-     * @param string[] $navContexts
-     * @param \Sulu\Component\Webspace\Webspace $webspace
-     *
-     * @throws \Sulu\Component\Content\Exception\InvalidNavigationContextExtension
-     *
-     * @return bool
-     */
-    private function validateNavContexts($navContexts, Webspace $webspace)
-    {
-        $webspaceContextKeys = $webspace->getNavigation()->getContextKeys();
-        foreach ($navContexts as $context) {
-            if (!in_array($context, $webspaceContextKeys)) {
-                throw new InvalidNavigationContextExtension($navContexts, $webspaceContextKeys);
-            }
-        }
-
-        return true;
-    }
-
-    /**
+     * TODO: Refactor this .. this should be handled in a listener or in the form, or something
      * {@inheritdoc}
      */
     public function saveExtension(
@@ -776,105 +297,45 @@ class ContentMapper implements ContentMapperInterface
         $data,
         $extensionName,
         $webspaceKey,
-        $languageCode,
+        $locale,
         $userId
     ) {
-        $propertyTranslator = $this->createPropertyTranslator($languageCode);
+        $document = $this->loadDocument(
+            $uuid,
+            $locale,
+            array(
+                'exclude_ghost' => true,
+            )
+        );
 
-        // get node from session
-        $session = $this->getSession();
-        $node = $session->getNodeByIdentifier($uuid);
-
-        // load rest of node
-        $structure = $this->loadByNode($node, $languageCode, $webspaceKey, true, true);
-
-        if ($structure === null) {
-            throw new TranslatedNodeNotFoundException($uuid, $languageCode);
+        if ($document === null) {
+            throw new TranslatedNodeNotFoundException($uuid, $locale);
         }
 
-        // check if extension exists
-        if (false === $this->structureManager->hasExtension($structure->getKey(), $extensionName)) {
-            throw new ExtensionNotFoundException($structure, $extensionName);
+        if (!$document instanceof ExtensionBehavior) {
+            throw new \RuntimeException(sprintf(
+                'Document of class "%s" must implement the ExtensionableBehavior if it is to be extended',
+                get_class($document)
+            ));
         }
-
-        // set changer / changed
-        $dateTime = new \DateTime();
-        $node->setProperty($propertyTranslator->getName('changer'), $userId);
-        $node->setProperty($propertyTranslator->getName('changed'), $dateTime);
 
         // save data of extensions
-        $extension = $this->structureManager->getExtension($structure->getKey(), $extensionName);
-        $extension->save($node, $data, $webspaceKey, $languageCode);
-        $ext[$extension->getName()] = $extension->load($node, $webspaceKey, $languageCode);
+        $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
+        $node = $this->inspector->getNode($document);
 
-        $ext = array_merge($structure->getExt(), $ext);
-        $structure->setExt($ext);
+        $extension->save($node, $data, $webspaceKey, $locale);
+        $extensionData = $extension->load($node, $webspaceKey, $locale);
 
-        $session->save();
+        $document->setExtension($extension->getName(), $extensionData);
 
-        // throw an content.node.save event
+        $this->documentManager->flush();
+
+        $structure = $this->documentToStructure($document);
+
         $event = new ContentNodeEvent($node, $structure);
         $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
 
         return $structure;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function changeState(
-        NodeInterface $node,
-        $state,
-        StructureInterface $structure,
-        $statePropertyName,
-        $publishedPropertyName
-    ) {
-        if (!in_array($state, $this->states)) {
-            throw new StateNotFoundException($state);
-        }
-
-        // no state (new node) set state
-        if (!$node->hasProperty($statePropertyName)) {
-            $node->setProperty($statePropertyName, $state);
-            $structure->setNodeState($state);
-
-            // published => set only once
-            if ($state === StructureInterface::STATE_PUBLISHED && !$node->hasProperty($publishedPropertyName)) {
-                $node->setProperty($publishedPropertyName, new DateTime());
-            }
-        } else {
-            $oldState = $node->getPropertyValue($statePropertyName);
-            $oldState = intval($oldState);
-            $state = intval($state);
-
-            if ($oldState === $state) {
-                $structure->setNodeState($state);
-
-                return;
-            } elseif (
-                // from test to published
-                $oldState === StructureInterface::STATE_TEST &&
-                $state === StructureInterface::STATE_PUBLISHED
-            ) {
-                $node->setProperty($statePropertyName, $state);
-                $structure->setNodeState($state);
-
-                // set only once
-                if (!$node->hasProperty($publishedPropertyName)) {
-                    $node->setProperty($publishedPropertyName, new DateTime());
-                }
-            } elseif (
-                // from published to test
-                $oldState === StructureInterface::STATE_PUBLISHED &&
-                $state === StructureInterface::STATE_TEST
-            ) {
-                $node->setProperty($statePropertyName, $state);
-                $structure->setNodeState($state);
-
-                // set published date to null
-                $node->getProperty($publishedPropertyName)->remove();
-            }
-        }
     }
 
     /**
@@ -884,32 +345,30 @@ class ContentMapper implements ContentMapperInterface
         $data,
         $templateKey,
         $webspaceKey,
-        $languageCode,
+        $locale,
         $userId,
         $partialUpdate = true,
         $isShadow = null,
         $shadowBaseLanguage = null
     ) {
-        $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
+        $uuid = $this->inspector->getUuid($this->getContentDocument($webspaceKey, $locale));
 
         return $this->save(
             $data,
             $templateKey,
             $webspaceKey,
-            $languageCode,
+            $locale,
             $userId,
             $partialUpdate,
             $uuid,
             null,
-            StructureInterface::STATE_PUBLISHED,
+            WorkflowStage::PUBLISHED,
             $isShadow,
-            $shadowBaseLanguage
+            $shadowBaseLanguage,
+            'home'
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function loadByParent(
         $uuid,
         $webspaceKey,
@@ -919,157 +378,101 @@ class ContentMapper implements ContentMapperInterface
         $ignoreExceptions = false,
         $excludeGhosts = false
     ) {
-        if ($uuid != null) {
-            $root = $this->getSession()->getNodeByIdentifier($uuid);
-            // set depth hint specific
-            $root = $this->getSession()->getNode($root->getPath(), $depth + 1);
-        } else {
-            $root = $this->getContentNode($webspaceKey);
+        $parent = null;
+        $options = array('hydrate.load_ghost_content' => true);
+        if ($uuid) {
+            $parent = $this->documentManager->find($uuid, $languageCode, $options);
         }
 
-        return $this->loadByParentNode(
-            $root,
-            $webspaceKey,
-            $languageCode,
-            $depth,
-            $flat,
-            $ignoreExceptions,
-            $excludeGhosts
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function loadByParentNode(
-        NodeInterface $parent,
-        $webspaceKey,
-        $languageCode,
-        $depth = 1,
-        $flat = true,
-        $ignoreExceptions = false,
-        $excludeGhosts
-    ) {
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.loadByParentNode');
+        if (null === $parent) {
+            $parent = $this->getContentDocument($webspaceKey, $languageCode, $options);
         }
 
-        $results = array();
-        $nodes = $parent->getNodes();
+        $fetchDepth = -1;
 
-        if ($this->stopwatch) {
-            $this->stopwatch->lap('contentManager.loadByParentNode');
+        if (false === $flat) {
+            $fetchDepth = $depth;
         }
 
-        /** @var NodeInterface $node */
-        foreach ($nodes as $node) {
-            try {
-                $result = $this->loadByNode($node, $languageCode, $webspaceKey, $excludeGhosts, true);
+        $children = $this->inspector->getChildren($parent, $options);
+        $children = $this->documentsToStructureCollection($children->toArray(), array(
+            'exclude_ghost' => $excludeGhosts,
+        ));
 
-                if ($result) {
-                    $results[] = $result;
-                }
-
+        if ($flat) {
+            foreach ($children as $child) {
                 if ($depth === null || $depth > 1) {
-                    $children = $this->loadByParentNode(
-                        $node,
+                    $childChildren = $this->loadByParent(
+                        $child->getUuid(),
                         $webspaceKey,
                         $languageCode,
-                        $depth !== null ? $depth - 1 : null,
+                        $depth - 1,
                         $flat,
                         $ignoreExceptions,
                         $excludeGhosts
                     );
-                    if ($flat) {
-                        $results = array_merge($results, $children);
-                    } elseif ($result !== null) {
-                        $result->setChildren($children);
-                    }
-                }
-            } catch (TemplateNotFoundException $ex) {
-                // ignore pages without valid template
-            } catch (\Exception $ex) {
-                if (!$ignoreExceptions) {
-                    throw $ex;
+                    $children = array_merge($children, $childChildren);
                 }
             }
         }
 
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadByParentNode');
-        }
-
-        return $results;
+        return $children;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false)
+    public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.load');
-        }
-        $session = $this->getSession();
-        $contentNode = $session->getNodeByIdentifier($uuid);
+        $document = $this->documentManager->find($uuid, $locale, array(
+            'hydrate.load_ghost_content' => $loadGhostContent,
+        ));
 
-        $result = $this->loadByNode($contentNode, $languageCode, $webspaceKey, false, $loadGhostContent, false);
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.load');
-        }
-
-        return $result;
+        return $this->documentToStructure($document);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadStartPage($webspaceKey, $languageCode)
+    public function loadStartPage($webspaceKey, $locale)
     {
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.loadStartPage');
-        }
+        $startPage = $this->getContentDocument($webspaceKey, $locale);
+        $startPage->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $startPage->setNavigationContexts(array());
 
-        $uuid = $this->getContentNode($webspaceKey)->getIdentifier();
-
-        $startPage = $this->load($uuid, $webspaceKey, $languageCode);
-        $startPage->setNodeState(StructureInterface::STATE_PUBLISHED);
-        $startPage->setNavContexts(array());
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadStartPage');
-        }
-
-        return $startPage;
+        return $this->documentToStructure($startPage);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
+    public function loadByResourceLocator($resourceLocator, $webspaceKey, $locale, $segmentKey = null)
     {
-        $session = $this->getSession();
         $uuid = $this->getResourceLocator()->loadContentNodeUuid(
             $resourceLocator,
             $webspaceKey,
-            $languageCode,
+            $locale,
             $segmentKey
         );
 
-        $contentNode = $session->getNodeByIdentifier($uuid);
+        $document = $this->loadDocument($uuid, $locale, array(
+            'exclude_shadow' => false,
+        ));
 
-        return $this->loadByNode($contentNode, $languageCode, $webspaceKey, true, false, false);
+        return $this->documentToStructure($document);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadBySql2($sql2, $languageCode, $webspaceKey, $limit = null)
+    public function loadBySql2($sql2, $locale, $webspaceKey, $limit = null)
     {
-        $query = $this->createSql2Query($sql2, $limit);
+        $query = $this->documentManager->createQuery($sql2, $locale);
+        $query->setMaxResults($limit);
 
-        return $this->loadByQuery($query, $languageCode, $webspaceKey);
+        $documents = $query->execute();
+
+        return $this->documentsToStructureCollection($documents, null);
     }
 
     /**
@@ -1077,32 +480,17 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadByQuery(
         QueryInterface $query,
-        $languageCode,
+        $locale,
         $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $result = $query->execute();
-        $structures = array();
+        $documents = $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
 
-        foreach ($result as $row) {
-            try {
-                $structure = $this->loadByNode(
-                    $row->getNode(),
-                    $languageCode,
-                    $webspaceKey,
-                    $excludeGhost,
-                    $loadGhostContent
-                );
-                if (null !== $structure) {
-                    $structures[] = $structure;
-                }
-            } catch (TemplateNotFoundException $ex) {
-                // ignore pages without valid template
-            }
-        }
-
-        return $structures;
+        return $this->documentsToStructureCollection($documents, array(
+            'exclude_ghost' => $excludeGhost,
+            'load_ghost_content' => $loadGhostContent,
+        ));
     }
 
     /**
@@ -1110,24 +498,22 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadTreeByUuid(
         $uuid,
-        $languageCode,
+        $locale,
         $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $node = $this->getSession()->getNodeByIdentifier($uuid);
+        $webspaceChildren = $this->getContentDocument($webspaceKey, $locale, array(
+            'hydrate.load_ghost_content' => $loadGhostContent,
+        ))->getChildren();
 
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.loadTreeByUuid');
-        }
+        $documents = $this->filterDocuments($webspaceChildren, array(
+            'exclude_ghost' => $excludeGhost,
+        ));
 
-        list($result) = $this->loadTreeByNode($node, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadTreeByUuid');
-        }
-
-        return $result;
+        return $this->documentsToStructureCollection($documents, array(
+            'exclude_ghost' => $excludeGhost,
+        ));
     }
 
     /**
@@ -1135,98 +521,12 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadTreeByPath(
         $path,
-        $languageCode,
+        $locale,
         $webspaceKey,
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $path = ltrim($path, '/');
-        if ($path === '') {
-            $node = $this->getContentNode($webspaceKey);
-        } else {
-            $node = $this->getContentNode($webspaceKey)->getNode($path);
-        }
-
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.loadTreeByPath');
-        }
-
-        list($result) = $this->loadTreeByNode($node, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadTreeByPath');
-        }
-
-        return $result;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function loadTreeByNode(
-        NodeInterface $node,
-        $languageCode,
-        $webspaceKey,
-        $excludeGhost = true,
-        $loadGhostContent = false,
-        NodeInterface $childNode = null
-    ) {
-        // go up to content node
-        if ($node->getDepth() > $this->getContentNode($webspaceKey)->getDepth()) {
-            list($globalResult, $nodeStructure) = $this->loadTreeByNode(
-                $node->getParent(),
-                $languageCode,
-                $webspaceKey,
-                $excludeGhost,
-                $loadGhostContent,
-                $node
-            );
-        }
-
-        // load children of node
-        $result = array();
-        $childStructure = null;
-        foreach ($node as $child) {
-            try {
-                $structure = $this->loadByNode($child, $languageCode, $webspaceKey, $excludeGhost, $loadGhostContent);
-                if ($structure === null) {
-                    continue;
-                }
-
-                $result[] = $structure;
-                // search structure for child node
-                if ($childNode !== null && $childNode === $child) {
-                    $childStructure = $structure;
-                }
-            } catch (TemplateNotFoundException $ex) {
-                // ignore pages without valid template
-            }
-        }
-
-        // set global result once
-        if (!isset($globalResult)) {
-            $globalResult = $result;
-        }
-        // set children of structure
-        if (isset($nodeStructure)) {
-            $nodeStructure->setChildren($result);
-        }
-
-        return array($globalResult, $childStructure);
-    }
-
-    /**
-     * returns a sql2 query.
-     */
-    private function createSql2Query($sql2, $limit = null)
-    {
-        $queryManager = $this->getSession()->getWorkspace()->getQueryManager();
-        $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
-        if ($limit) {
-            $query->setLimit($limit);
-        }
-
-        return $query;
+        return $this->loadTreeByUuid($path, $locale, $webspaceKey, $excludeGhost, $loadGhostContent);
     }
 
     /**
@@ -1235,434 +535,74 @@ class ContentMapper implements ContentMapperInterface
      * hydrated.
      *
      * @param NodeInterface $node
-     * @param string $localization
-     * @param string $webspaceKey
+     * @param string        $localization
+     * @param string        $webspaceKey
      *
      * @return StructureInterface
      */
     public function loadShallowStructureByNode(NodeInterface $contentNode, $localization, $webspaceKey)
     {
-        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
-        $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
+        $document = $this->documentManager->find($contentNode->getPath(), $localization);
 
-        $nodeType = $contentNode->getPropertyValueWithDefault(
-            $propertyTranslator->getName('nodeType'),
-            Structure::NODE_TYPE_CONTENT
-        );
-
-        $originTemplateKey = $this->defaultTemplates[$structureType];
-        $templateKey = $contentNode->getPropertyValueWithDefault(
-            $propertyTranslator->getName('template'),
-            $originTemplateKey
-        );
-
-        $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
-        $structure = $this->getStructure($templateKey, $structureType);
-
-        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setNodeType(
-            $contentNode->getPropertyValueWithDefault(
-                $propertyTranslator->getName('nodeType'),
-                Structure::NODE_TYPE_CONTENT
-            )
-        );
-        $structure->setWebspaceKey($webspaceKey);
-        $structure->setLanguageCode($localization);
-        $structure->setCreator($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('creator'), 0));
-        $structure->setChanger($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changer'), 0));
-        $structure->setCreated(
-            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('created'), new \DateTime())
-        );
-        $structure->setChanged(
-            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changed'), new \DateTime())
-        );
-        $structure->setHasChildren($contentNode->hasNodes());
-        $structure->setEnabledShadowLanguages(
-            $this->getEnabledShadowLanguages($contentNode)
-        );
-        $structure->setConcreteLanguages(
-            $this->getConcreteLanguages($contentNode)
-        );
-
-        return $structure;
+        return $this->documentToStructure($document);
     }
 
     /**
      * {@inheritdoc}
      */
     public function loadByNode(
-        NodeInterface $contentNode,
-        $localization,
+        NodeInterface $node,
+        $locale,
         $webspaceKey = null,
         $excludeGhost = true,
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        $structureType = $this->nodeHelper->getStructureTypeForNode($contentNode) ?: Structure::TYPE_PAGE;
-        $propertyTranslator = $this->createPropertyTranslator($localization, $structureType);
-
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.loadByNode');
-            $this->stopwatch->start('contentManager.loadByNode.available-localization');
-        }
-
-        if ($loadGhostContent) {
-            $availableLocalization = $this->localizationFinder->getAvailableLocalization(
-                $contentNode,
-                $localization,
-                $webspaceKey
-            );
-        } else {
-            $availableLocalization = $localization;
-        }
-
-        // if there was no webspace then determine the webspace from the content node path
-        if (null === $webspaceKey) {
-            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($contentNode->getPath());
-        }
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadByNode.available-localization');
-            $this->stopwatch->start('contentManager.loadByNode.mapping');
-        }
-
-        $shadowOn = $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false);
-        $shadowBaseLanguage = $contentNode->getPropertyValueWithDefault(
-            $propertyTranslator->getName('shadow-base'),
-            false
-        );
-
-        $availableLocalization = $this->getResolvedLocale($contentNode, $availableLocalization);
-
-        if (($excludeGhost && $excludeShadow) && $availableLocalization != $localization) {
-            return;
-        }
-
-        // now switch the language to the available localization
-        if ($availableLocalization != $localization) {
-            $propertyTranslator->setLanguage($availableLocalization);
-        }
-
-        $nodeType = $contentNode->getPropertyValueWithDefault(
-            $propertyTranslator->getName('nodeType'),
-            Structure::NODE_TYPE_CONTENT
-        );
-
-        $originTemplateKey = $this->defaultTemplates[$structureType];
-        $templateKey = $contentNode->getPropertyValueWithDefault(
-            $propertyTranslator->getName('template'),
-            $originTemplateKey
-        );
-
-        $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
-        $structure = $this->getStructure($templateKey, $structureType);
-
-        // set structure to ghost, if the available localization does not match the requested one
-        if ($availableLocalization != $localization) {
-            if ($shadowBaseLanguage) {
-                $structure->setType(StructureType::getShadow($availableLocalization));
-            } else {
-                $structure->setType(StructureType::getGhost($availableLocalization));
-            }
-        }
-
-        $structure->setHasTranslation($contentNode->hasProperty($propertyTranslator->getName('title')));
-
-        $structure->setIsShadow($shadowOn);
-        $structure->setShadowBaseLanguage($shadowBaseLanguage);
-        $structure->setUuid($contentNode->getPropertyValue('jcr:uuid'));
-        $structure->setNodeType(
-            $contentNode->getPropertyValueWithDefault(
-                $propertyTranslator->getName('nodeType'),
-                Structure::NODE_TYPE_CONTENT
-            )
-        );
-        $structure->setWebspaceKey($webspaceKey);
-        $structure->setLanguageCode($localization);
-        $structure->setCreator($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('creator'), 0));
-        $structure->setChanger($contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changer'), 0));
-        $structure->setCreated(
-            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('created'), new \DateTime())
-        );
-        $structure->setChanged(
-            $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('changed'), new \DateTime())
-        );
-        $structure->setHasChildren($contentNode->hasNodes());
-        $structure->setEnabledShadowLanguages(
-            $this->getEnabledShadowLanguages($contentNode)
-        );
-        $structure->setConcreteLanguages(
-            $this->getConcreteLanguages($contentNode)
-        );
-
-        // go through every property in the template
-        /** @var PropertyInterface $property */
-        foreach ($structure->getProperties(true) as $property) {
-            if (!($property instanceof SectionPropertyInterface)) {
-                $type = $this->getContentType($property->getContentTypeName());
-                $type->read(
-                    $contentNode,
-                    new TranslatedProperty(
-                        $property,
-                        $availableLocalization,
-                        $this->languageNamespace
-                    ),
-                    $webspaceKey,
-                    $availableLocalization,
-                    null
-                );
-            }
-        }
-
-        $structure->setNodeState(
-            $contentNode->getPropertyValueWithDefault(
-                $propertyTranslator->getName('state'),
-                StructureInterface::STATE_TEST
+        $document = $this->loadDocument(
+            $node->getIdentifier(),
+            $locale,
+            array(
+                'load_ghost_content' => $loadGhostContent,
+                'exclude_ghost' => $excludeGhost,
+                'exclude_shadow' => $excludeShadow,
             )
         );
 
-        if ($structureType === Structure::TYPE_PAGE) {
-            $structure->setPath(
-                str_replace($this->sessionManager->getContentPath($webspaceKey), '', $contentNode->getPath())
-            );
-            $structure->setNavContexts(
-                $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('navContexts'), array())
-            );
-            $structure->setPublished(
-                $contentNode->getPropertyValueWithDefault($propertyTranslator->getName('published'), null)
-            );
-            $structure->setOriginTemplate(
-                $contentNode->getPropertyValueWithDefault(
-                    $propertyTranslator->getName('template'),
-                    $this->defaultTemplates[$structureType]
-                )
-            );
-
-            // load data of extensions
-            $data = array();
-            foreach ($this->structureManager->getExtensions($structure->getKey()) as $extension) {
-                $extension->setLanguageCode($localization, $this->languageNamespace, $this->internalPrefix);
-                $data[$extension->getName()] = $extension->load($contentNode, $webspaceKey, $availableLocalization);
-            }
-            $structure->setExt($data);
-
-            $this->loadInternalLinkDependencies(
-                $structure,
-                $localization,
-                $webspaceKey,
-                $loadGhostContent
-            );
-
-            $this->loadLocalizedUrlsForPage($structure, $contentNode, $webspaceKey, null);
-        }
-
-        // throw an content.node.load event (disabled for now)
-        //$event = new ContentNodeEvent($contentNode, $structure);
-        //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadByNode.mapping');
-            $this->stopwatch->stop('contentManager.loadByNode');
-        }
-
-        return $structure;
-    }
-
-    /**
-     * Determites locale for shadow-pages.
-     */
-    private function getResolvedLocale(NodeInterface $node, $defaultLocale)
-    {
-        $propertyTranslator = $this->createPropertyTranslator($defaultLocale);
-        $shadowOn = $node->getPropertyValueWithDefault($propertyTranslator->getName('shadow-on'), false);
-        $shadowBaseLanguage = null;
-        if (true === $shadowOn) {
-            $shadowBaseLanguage = $node->getPropertyValueWithDefault(
-                $propertyTranslator->getName('shadow-base'),
-                false
-            );
-
-            if ($shadowBaseLanguage) {
-                return $shadowBaseLanguage;
-            }
-        }
-
-        return $defaultLocale;
+        return $this->documentToStructure($document);
     }
 
     /**
      * {@inheritdoc}
      */
-    private function loadInternalLinkDependencies(
-        StructureInterface $content,
-        $localization,
-        $webspaceKey,
-        $loadGhostContent = false
-    ) {
-        if ($content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK && $content->hasTag('sulu.rlp')) {
-            $internal = $content->getPropertyValueByTagName('sulu.rlp');
-
-            if (!empty($internal)) {
-                $internalContent =
-                    $this->load(
-                        $internal,
-                        $webspaceKey,
-                        $localization,
-                        $loadGhostContent
-                    );
-                if ($internalContent !== null) {
-                    $content->setInternalLinkContent($internalContent);
-                }
-            }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadBreadcrumb($uuid, $languageCode, $webspaceKey)
+    public function loadBreadcrumb($uuid, $locale, $webspaceKey)
     {
-        $propertyTranslator = $this->createPropertyTranslator($languageCode);
+        $document = $this->documentManager->find($uuid, $locale);
 
-        if ($this->stopwatch) {
-            $this->stopwatch->start('contentManager.loadBreadcrumb');
-            $this->stopwatch->start('contentManager.loadBreadcrumb.query');
+        $documents = array();
+        $contentDocument = $this->getContentDocument($webspaceKey, $locale);
+        $contentDepth = $this->inspector->getDepth($contentDocument);
+        $document = $this->inspector->getParent($document);
+        $documentDepth = $this->inspector->getDepth($document);
+
+        while ($document instanceof ContentBehavior && $documentDepth >= $contentDepth) {
+            $documents[] = $document;
+
+            $document = $this->inspector->getParent($document);
+            $documentDepth = $this->inspector->getDepth($document);
         }
 
-        $sql = sprintf(
-            "SELECT parent.[jcr:uuid], child.[jcr:uuid]
-             FROM [nt:unstructured] AS child INNER JOIN [nt:unstructured] AS parent
-                 ON ISDESCENDANTNODE(child, parent)
-             WHERE child.[jcr:uuid]='%s'",
-            $uuid
-        );
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadBreadcrumb.query');
+        $items = array();
+        foreach ($documents as $document) {
+            $items[] = new BreadcrumbItem(
+                $this->inspector->getDepth($document) - $contentDepth,
+                $this->inspector->getUuid($document),
+                $document->getTitle()
+            );
         }
 
-        $query = $this->createSql2Query($sql);
-        $nodes = $query->execute();
+        $items = array_reverse($items);
 
-        $result = array();
-        $groundDepth = $this->getContentNode($webspaceKey)->getDepth();
-
-        /** @var Row $row */
-        foreach ($nodes->getRows() as $row) {
-            $node = $row->getNode('parent');
-            // uuid
-            $nodeUuid = $node->getIdentifier();
-            // depth
-            $depth = $node->getDepth() - $groundDepth;
-            if ($depth >= 0) {
-                // title
-                $templateKey = $node->getPropertyValueWithDefault(
-                    $propertyTranslator->getName('template'),
-                    $this->defaultTemplates[Structure::TYPE_PAGE]
-                );
-                $structure = $this->getStructure($templateKey);
-                $nodeNameProperty = $structure->getProperty('title');
-                $property = $structure->getProperty($nodeNameProperty->getName());
-                $type = $this->getContentType($property->getContentTypeName());
-                $type->read(
-                    $node,
-                    new TranslatedProperty($property, $languageCode, $this->languageNamespace),
-                    $webspaceKey,
-                    $languageCode,
-                    null
-                );
-                $nodeName = $property->getValue();
-                $structure->setUuid($node->getPropertyValue('jcr:uuid'));
-                $structure->setPath(
-                    str_replace($this->sessionManager->getContentPath($webspaceKey), '', $node->getPath())
-                );
-
-                // throw an content.node.load event (disabled for now)
-                //$event = new ContentNodeEvent($node, $structure);
-                //$this->eventDispatcher->dispatch(ContentEvents::NODE_LOAD, $event);
-
-                $result[$depth] = new BreadcrumbItem($depth, $nodeUuid, $nodeName);
-            }
-        }
-
-        if ($this->stopwatch) {
-            $this->stopwatch->stop('contentManager.loadBreadcrumb');
-        }
-
-        ksort($result);
-
-        return $result;
-    }
-
-    /**
-     * Loads urls for given page for all locales in webspace.
-     *
-     * @param Page $page
-     * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $segmentKey
-     */
-    private function loadLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
-    {
-        $localizedUrls = array();
-
-        if ($page->hasTag('sulu.rlp')) {
-            $localizedUrls = $this->getLocalizedUrlsForPage($page, $node, $webspaceKey, $segmentKey);
-        }
-
-        $page->setUrls($localizedUrls);
-    }
-
-    /**
-     * Returns urls for given page for all locales in webspace.
-     *
-     * @param Page $page
-     * @param NodeInterface $node
-     * @param string $webspaceKey
-     * @param string $segmentKey
-     *
-     * @return array
-     */
-    private function getLocalizedUrlsForPage(Page $page, NodeInterface $node, $webspaceKey, $segmentKey)
-    {
-        $localizedUrls = array();
-
-        if (null === $webspaceKey) {
-            $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($node->getPath());
-        }
-
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-        $property = $page->getPropertyByTagName('sulu.rlp');
-        $property = clone $property;
-
-        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-
-        foreach ($webspace->getAllLocalizations() as $localization) {
-            // prepare translation vars
-            $locale = $localization->getLocalization();
-            $resolvedLocale = $this->getResolvedLocale($node, $localization->getLocalization());
-            $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
-
-            // state property
-            $propertyTranslator = $this->createPropertyTranslator($resolvedLocale);
-            $statePropertyName = $propertyTranslator->getName('state');
-
-            if ($node->getPropertyValueWithDefault(
-                    $statePropertyName,
-                    Structure::STATE_TEST
-                ) === Structure::STATE_PUBLISHED
-            ) {
-                // set default value
-                $property->setValue(null);
-                $contentType->read($node, $translatedProperty, $webspaceKey, $locale, $segmentKey);
-
-                if (null !== $property->getValue()) {
-                    $localizedUrls[$locale] = $property->getValue();
-                }
-            }
-        }
-
-        return $localizedUrls;
+        return $items;
     }
 
     /**
@@ -1670,32 +610,25 @@ class ContentMapper implements ContentMapperInterface
      */
     public function delete($uuid, $webspaceKey, $dereference = false)
     {
-        $session = $this->getSession();
-        $node = $session->getNodeByIdentifier($uuid);
-
-        $this->deleteRecursively($node, $webspaceKey, $dereference);
-        $session->save();
+        $document = $this->documentManager->find($uuid);
+        $this->documentManager->remove($document, $dereference);
+        $this->documentManager->flush();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode)
+    public function move($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode)
+    public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
-        $result = $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, false);
-
-        // session don't recognice a new child in parent, a refresh fixes that
-        $this->getSession()->refresh(false);
-
-        return $result;
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, false);
     }
 
     /**
@@ -1705,467 +638,223 @@ class ContentMapper implements ContentMapperInterface
         $uuid,
         $userId,
         $webspaceKey,
-        $srcLanguageCode,
-        $destLanguageCodes,
-        $structureType = Structure::TYPE_PAGE
+        $srcLocale,
+        $destLocales,
+        $structureType = LegacyStructure::TYPE_PAGE
     ) {
-        if (!is_array($destLanguageCodes)) {
-            $destLanguageCodes = array($destLanguageCodes);
+        if (!is_array($destLocales)) {
+            $destLocales = array($destLocales);
         }
 
-        $structure = $this->load($uuid, $webspaceKey, $srcLanguageCode);
-        $parentNode = $this->getSession()->getNodeByIdentifier($structure->getUuid())->getParent();
-        $resourceLocator = $this->getResourceLocator();
+        $document = $this->documentManager->find($uuid, $srcLocale);
+        $parentDocument = $this->inspector->getParent($document);
 
-        $data = $structure->toArray(true);
-        foreach ($destLanguageCodes as $destLanguageCode) {
-            if ($structure->hasTag('sulu.rlp') &&
-                $structure->getPropertyByTagName('sulu.rlp')->getContentTypeName() === 'resource_locator'
-            ) {
-                $parentUrl = $resourceLocator->getResourceLocatorByUuid(
-                    $parentNode->getIdentifier(),
+        $resourceLocatorType = $this->getResourceLocator();
+
+        foreach ($destLocales as $destLocale) {
+            // TODO: This can be removed if RoutingAuto replaces the ResourceLocator code.
+            if ($document instanceof ResourceSegmentBehavior) {
+                $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
+                    $parentDocument->getUUid(),
                     $webspaceKey,
-                    $destLanguageCode
+                    $destLocale
                 );
-                $rlp = $this->getResourceLocator()->getStrategy()->generate(
-                    $structure->getPropertyValue('title'),
-                    $parentUrl,
+                $resourceLocator = $resourceLocatorType->getStrategy()->generate(
+                    $document->getTitle(),
+                    $parentResourceLocator,
                     $webspaceKey,
-                    $destLanguageCode
+                    $destLocale
                 );
 
-                $data[$structure->getPropertyByTagName('sulu.rlp')->getName()] = $rlp;
+                $document->setResourceSegment($resourceLocator);
             }
 
-            $this->save(
-                $data,
-                $structure->getKey(),
-                $webspaceKey,
-                $destLanguageCode,
-                $userId,
-                false,
-                $uuid,
-                null,
-                Structure::STATE_TEST,
-                $structure->getIsShadow(),
-                $structure->getShadowBaseLanguage(),
-                $structureType
-            );
+            $this->documentManager->persist($document, $destLocale);
         }
+        $this->documentManager->flush();
 
-        return $structure;
+        return $this->documentToStructure($document);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode)
+    public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $locale)
     {
-        // prepare utility
-        $session = $this->getSession();
+        $document = $this->documentManager->find($uuid, $locale);
+        $this->documentManager->reorder($document, $beforeUuid);
+        $this->documentManager->persist($document, $locale, array(
+            'blame.user' => $userId,
+        ));
 
-        // load from phpcr
-        /** @var NodeInterface $beforeTargetNode */
-        /** @var NodeInterface $subjectNode */
-        list($beforeTargetNode, $subjectNode) = iterator_to_array(
-            $session->getNodesByIdentifier(array($uuid, $beforeUuid)),
-            false
-        );
-
-        $parent = $beforeTargetNode->getParent();
-        $parent->orderBefore($beforeTargetNode->getName(), $subjectNode->getName());
-
-        $event = new ContentNodeOrderEvent($beforeTargetNode);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $event);
-
-        // set changer of node in specific language
-        $this->setChanger($beforeTargetNode, $userId, $languageCode);
-        $this->setChanger($subjectNode, $userId, $languageCode);
-
-        // save session
-        $session->save();
-
-        // session don't recognice a new child order, a refresh fixes that
-        $session->refresh(false);
-
-        return $this->load($uuid, $webspaceKey, $languageCode);
+        return $this->documentToStructure($document);
     }
 
     /**
+     * TODO: Move this logic to the DocumentManager
      * {@inheritDoc}
      */
-    public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode)
+    public function orderAt($uuid, $position, $userId, $webspaceKey, $locale)
     {
-        $session = $this->getSession();
+        $document = $this->documentManager->find($uuid, $locale);
 
-        $subject = $session->getNodeByIdentifier($uuid);
-        $parent = $subject->getParent();
-        $siblings = array_values($parent->getNodes()->getArrayCopy()); // get indexed array
+        $parentDocument = $this->inspector->getParent($document);
+        $siblingDocuments = $this->inspector->getChildren($parentDocument);
+
+        $siblings = array_values($siblingDocuments->toArray()); // get indexed array
         $countSiblings = count($siblings);
-        $oldPosition = array_search($subject, $siblings) + 1;
+        $currentPosition = array_search($document, $siblings) + 1;
+
         if ($countSiblings < $position || $position <= 0) {
-            throw new InvalidOrderPositionException();
+            throw new InvalidOrderPositionException(sprintf(
+                'Cannot order node "%s" at out-of-range position "%s", must be >= 0 && < %d"',
+                $this->inspector->getPath($document),
+                $position,
+                $countSiblings
+            ));
         }
+
         if ($position === $countSiblings) {
-            $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
-            $parent->orderBefore($siblings[$position - 1]->getName(), $subject->getName());
+            // move to the end
+            $this->documentManager->reorder($document, null);
         } else {
-            if ($oldPosition < $position) {
-                $parent->orderBefore($subject->getName(), $siblings[$position]->getName());
-            } else {
-                if ($oldPosition > $position) {
-                    $parent->orderBefore($subject->getName(), $siblings[$position - 1]->getName());
-                }
+            if ($currentPosition < $position) {
+                $targetSibling = $siblings[$position];
+            } elseif ($currentPosition > $position) {
+                $targetSibling = $siblings[$position - 1];
             }
+
+            $this->documentManager->reorder($document, $targetSibling->getPath());
         }
 
-        // set changer of node in specific language
-        $this->setChanger($subject, $userId, $languageCode);
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
 
-        $event = new ContentNodeOrderEvent($subject);
-        $this->eventDispatcher->dispatch(ContentEvents::NODE_ORDER, $event);
-
-        $session->save();
-        $session->refresh(false);
-
-        return $this->load($uuid, $webspaceKey, $languageCode);
+        return $this->documentToStructure($document);
     }
 
     /**
-     * TODO: Refactor this. This should not effect the global state of the object, this
-     *       should be scoped for each save request.
+     * Copy or move a node by UUID to a detination parent.
      *
-     * TRUE dont rename pages on save
+     * Note that the bulk of this method is about the resource locator and can
+     * be removed if we integrate the RoutingAuto component.
      *
-     * @param bool $noRenamingFlag
-     *
-     * @return $this
-     */
-    public function setNoRenamingFlag($noRenamingFlag)
-    {
-        $this->noRenamingFlag = $noRenamingFlag;
-
-        return $this;
-    }
-
-    /**
-     * TRUE ignores mandatory in save.
-     *
-     * @param bool $ignoreMandatoryFlag
-     *
-     * @return $this
-     */
-    public function setIgnoreMandatoryFlag($ignoreMandatoryFlag)
-    {
-        $this->ignoreMandatoryFlag = $ignoreMandatoryFlag;
-
-        return $this;
-    }
-
-    /**
-     * copies (move = false) or move (move = true) the src (uuid) node to dest (parentUuid) node.
-     *
-     * @param string $uuid
-     * @param string $destParentUuid
-     * @param int $userId
      * @param string $webspaceKey
-     * @param string $languageCode
+     * @param string $locale
      * @param bool $move
      *
      * @return StructureInterface
      */
-    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode, $move = true)
+    private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, $move = true)
     {
-        $propertyTranslator = $this->createPropertyTranslator($languageCode);
         // find localizations
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $localizations = $webspace->getAllLocalizations();
 
-        // prepare utility
-        $session = $this->getSession();
-
         // load from phpcr
-        $node = $session->getNodeByIdentifier($uuid);
-        $parentNode = $session->getNodeByIdentifier($destParentUuid);
-
-        // prepare content node
-        $content = $this->loadByNode($node, $languageCode, $webspaceKey, false, true);
-        $nodeName = $content->getPropertyValue('title');
-
-        // node name should not have a slash
-        $nodeName = str_replace('/', '-', $nodeName);
-
-        $nodeName = $this->cleaner->cleanup($nodeName, $languageCode);
-        $nodeName = $this->getUniquePath($nodeName, $parentNode);
-
-        // prepare pathes
-        $path = $node->getPath();
-        $destPath = $parentNode->getPath() . '/' . $nodeName;
+        $document = $this->documentManager->find($uuid, $locale);
+        $parentDocument = $this->documentManager->find($destParentUuid, $locale);
 
         if ($move) {
             // move node
-            $session->move($path, $destPath);
+            $this->documentManager->move($document, $destParentUuid);
         } else {
             // copy node
-            $session->getWorkspace()->copy($path, $destPath);
-            $session->save();
-
-            // load new phpcr and content node
-            $node = $session->getNode($destPath);
+            $copiedPath = $this->documentManager->copy($document, $destParentUuid);
+            $document = $this->documentManager->find($copiedPath, $locale);
+            $this->documentManager->refresh($parentDocument);
         }
 
+        // modifiy the resource locators -- note this can be removed once the routing auto
+        // system is implemented.
         foreach ($localizations as $locale) {
-            $content = $this->loadByNode($node, $locale->getLocalization(), $webspaceKey, false, true);
+            $locale = $locale->getLocalization();
+
+            if (!$document instanceof ResourceSegmentBehavior) {
+                break;
+            }
 
             // prepare parent content node
-            $parentContent = $this->loadByNode($parentNode, $locale->getLocalization(), $webspaceKey, false, true);
+            // finding the document will update the locale without reloading from PHPCR
+            $this->documentManager->find($document->getUuid(), $locale);
+            $this->documentManager->find($parentDocument->getUuid(), $locale);
+
             $parentResourceLocator = '/';
-            if ($parentContent->hasTag('sulu.rlp')) {
-                $parentResourceLocator = $parentContent->getPropertyValueByTagName('sulu.rlp');
-            }
-            // correct resource locator
-            if (
-                $content->getType() === null && $content->hasTag('sulu.rlp') &&
-                $content->getNodeType() === Structure::NODE_TYPE_CONTENT
-            ) {
-                $this->adaptResourceLocator(
-                    $content,
-                    $node,
-                    $parentResourceLocator,
-                    $webspaceKey,
-                    $locale->getLocalization(),
-                    $userId
-                );
-
-                // set changer of node
-                $propertyTranslator->setLanguage($languageCode);
-                $node->setProperty($propertyTranslator->getName('changer'), $userId);
-                $node->setProperty($propertyTranslator->getName('changed'), new DateTime());
-            }
-        }
-
-        // set changer of node in specific language
-        $this->setChanger($node, $userId, $languageCode);
-
-        $session->save();
-
-        return $this->loadByNode($node, $languageCode, $webspaceKey);
-    }
-
-    private function setChanger(NodeInterface $node, $userId, $languageCode)
-    {
-        $propertyTranslator = $this->createPropertyTranslator($languageCode);
-        $node->setProperty($propertyTranslator->getName('changer'), $userId);
-        $node->setProperty($propertyTranslator->getName('changed'), new DateTime());
-    }
-
-    /**
-     * adopts resource locator for just moved or copied node.
-     *
-     * @param StructureInterface $content
-     * @param NodeInterface $node
-     * @param string $parentResourceLocator
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param int $userId
-     */
-    private function adaptResourceLocator(
-        StructureInterface $content,
-        NodeInterface $node,
-        $parentResourceLocator,
-        $webspaceKey,
-        $languageCode,
-        $userId
-    ) {
-        // prepare objects
-        $property = $content->getPropertyByTagName('sulu.rlp');
-        $translatedProperty = new TranslatedProperty($property, $languageCode, $this->languageNamespace);
-        $contentType = $this->getResourceLocator();
-        $strategy = $contentType->getStrategy();
-
-        // get resource locator pathes
-        $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
-
-        if ($srcResourceLocator !== null) {
-            $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
-        } else {
-            $resourceLocatorPart = $content->getPropertyValue('title');
-        }
-
-        // generate new resourcelocator
-        $destResourceLocator = $strategy->generate(
-            $resourceLocatorPart,
-            $parentResourceLocator,
-            $webspaceKey,
-            $languageCode
-        );
-
-        // save new resource-locator
-        $property->setValue($destResourceLocator);
-        $contentType->write($node, $translatedProperty, $userId, $webspaceKey, $languageCode, null);
-    }
-
-    /**
-     * Remove node and recursive childnodes with references (path, history path ...).
-     *
-     * @param NodeInterface $node
-     * @param string Webspace - required by event listeners
-     * @param bool $dereference Remove REFERENCE properties (or property
-     *   values in the case of multi-value) from referencing nodes
-     */
-    private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
-    {
-        foreach ($node->getNodes() as $childNode) {
-            $this->deleteRecursively($childNode, $webspace, $dereference);
-        }
-
-        foreach ($node->getReferences() as $ref) {
-            if ($ref instanceof \PHPCR\PropertyInterface) {
-                $child = $ref->getParent();
-
-                if ($dereference) {
-                    if ($ref->isMultiple()) {
-                        $values = $ref->getValue();
-                        foreach ($values as $i => $referringNode) {
-                            if ($node->getIdentifier() === $referringNode->getIdentifier()) {
-                                unset($values[$i]);
-                            }
-                        }
-
-                        $ref->getParent()->setProperty($ref->getName(), $values, PropertyType::REFERENCE);
-                    } else {
-                        $ref->remove();
-                    }
-                }
-            } else {
-                $child = $ref;
+            if ($parentDocument instanceof ResourceSegmentBehavior) {
+                $parentResourceLocator = $parentDocument->getResourceSegment();
             }
 
-            if ($this->nodeHelper->hasSuluNodeType($child, array('sulu:path'))) {
-                $this->deleteRecursively($child, $webspace, $dereference);
+            // TODO: This could be optimized
+            $localizationState = $this->inspector->getLocalizationState($document);
+            if ($localizationState !== LocalizationState::LOCALIZED) {
+                continue;
             }
-        }
 
-        $dispatchPost = false;
+            if ($document->getRedirectType() !== RedirectType::NONE) {
+                continue;
+            }
 
-        // if the node being deleted is a structure, dispatch an event
-        if ($this->nodeHelper->getStructureTypeForNode($node)) {
-            $event = new ContentNodeDeleteEvent($this, $this->nodeHelper, $node, $webspace);
-            $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_DELETE, $event);
-            $dispatchPost = true;
-        }
-
-        $node->remove();
-
-        if (true === $dispatchPost) {
-            $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_DELETE, $event);
-        }
-    }
-
-    /**
-     * returns a structure with given key.
-     *
-     * @param string $key key of content type
-     *
-     * @return StructureInterface
-     */
-    protected function getStructure($key, $type = Structure::TYPE_PAGE)
-    {
-        $structure = $this->structureManager->getStructure($key, $type);
-
-        if (!$structure) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Could not find "%s" structure template for key "%s"',
-                    $type,
-                    $key
-                )
+            $strategy = $this->getResourceLocator()->getStrategy();
+            $nodeName = PathHelper::getNodeName($document->getResourceSegment());
+            $newResourceLocator = $strategy->generate(
+                $nodeName,
+                $parentDocument->getResourceSegment(),
+                $webspaceKey,
+                $locale
             );
+
+            $document->setResourceSegment($newResourceLocator);
+
+            $this->documentManager->persist($document, $locale, array(
+                'blame.user' => $userId,
+            ));
         }
 
-        return $structure;
+        $this->documentManager->flush();
+
+        return $this->documentToStructure($document);
     }
 
     /**
+     * Return the resource locator content type.
+     *
      * @return ResourceLocatorInterface
      */
     public function getResourceLocator()
     {
-        return $this->getContentType('resource_locator');
+        return $this->contentTypeManager->get('resource_locator');
     }
 
     /**
-     * returns a type with given name.
+     * Return the content document (aka the home page)
      *
-     * @param $name
-     *
-     * @return ContentTypeInterface
-     */
-    protected function getContentType($name)
-    {
-        return $this->contentTypeManager->get($name);
-    }
-
-    /**
      * @param $webspaceKey
      *
-     * @return NodeInterface
+     * @return Document
      */
-    protected function getContentNode($webspaceKey)
+    private function getContentDocument($webspaceKey, $locale, array $options = array())
     {
-        return $this->sessionManager->getContentNode($webspaceKey);
+        return $this->documentManager->find(
+            $this->sessionManager->getContentPath($webspaceKey),
+            $locale,
+            $options
+        );
     }
 
     /**
-     * @return SessionInterface
-     */
-    protected function getSession()
-    {
-        return $this->sessionManager->getSession();
-    }
-
-    /**
+     * Return the node in the content repository which contains all of the routes.
+     *
      * @param $webspaceKey
-     * @param string $languageCode
+     * @param string $locale
      * @param string $segment
      *
      * @return NodeInterface
      */
-    protected function getRouteNode($webspaceKey, $languageCode, $segment)
+    protected function getRootRouteNode($webspaceKey, $locale, $segment)
     {
-        return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segment);
-    }
-
-    /**
-     * @param $name
-     * @param NodeInterface $parent
-     *
-     * @return string
-     */
-    private function getUniquePath($name, NodeInterface $parent)
-    {
-        if ($parent->hasNode($name)) {
-            $i = 0;
-            do {
-                $i++;
-            } while ($parent->hasNode($name . '-' . $i));
-
-            return $name . '-' . $i;
-        } else {
-            return $name;
-        }
-    }
-
-    // =================================
-    // START: Row to array mapping logic
-    // =================================
-
-    /**
-     * initializes cache for extension data.
-     */
-    private function initializeExtensionCache()
-    {
-        $this->extensionDataCache = new ArrayCache();
+        return $this->documentManager->find(
+            $this->sessionManager->getRoutePath($webspaceKey, $locale, $segment)
+        );
     }
 
     /**
@@ -2182,21 +871,42 @@ class ContentMapper implements ContentMapperInterface
 
         $result = array();
         foreach ($locales as $locale) {
-            /** @var \Jackalope\Query\Row $row */
             foreach ($queryResult->getRows() as $row) {
                 $pageDepth = substr_count($row->getPath('page'), '/') - $rootDepth;
 
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
                     $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
 
-                    if (false !== $item && !in_array($item, $result)) {
-                        $result[] = $item;
+                    if (false === $item || in_array($item, $result)) {
+                        continue;
                     }
+
+                    $result[] = $item;
                 }
             };
         }
 
         return $result;
+    }
+
+    /**
+     * @param $name
+     * @param NodeInterface $parent
+     *
+     * @return string
+     */
+    private function getUniquePath($name, NodeInterface $parent)
+    {
+        if ($parent->hasNode($name)) {
+            $i = 0;
+            do {
+                $i++;
+            } while ($parent->hasNode($name.'-'.$i));
+
+            return $name.'-'.$i;
+        } else {
+            return $name;
+        }
     }
 
     /**
@@ -2206,129 +916,99 @@ class ContentMapper implements ContentMapperInterface
     {
         // reset cache
         $this->initializeExtensionCache();
-        $propertyTranslator = $this->createPropertyTranslator($locale);
+        $templateName = $this->encoder->localizedSystemName('template', $locale);
+        $nodeTypeName = $this->encoder->localizedSystemName('nodeType', $locale);
 
         // check and determine shadow-nodes
         $node = $row->getNode('page');
-        if (
-            $node->hasProperty($propertyTranslator->getName('template')) &&
-            $node->hasProperty($propertyTranslator->getName('nodeType'))
-        ) {
-            $originalNode = $node;
-            if (
-                $node->getPropertyValue($propertyTranslator->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
-            ) {
-                $nodeType = $node->getPropertyValue($propertyTranslator->getName('nodeType'));
-                $parent = $node->getParent()->getIdentifier();
+        $document = $this->documentManager->find($node->getIdentifier(), $locale);
+        $originalDocument = $document;
 
-                // get structure (without data)
-                $templateKey = $node->getPropertyValue($propertyTranslator->getName('template'));
-                $templateKey = $this->templateResolver->resolve($nodeType, $templateKey);
-                $structure = $this->structureManager->getStructure($templateKey);
+        if (!$node->hasProperty($templateName) && !$node->hasProperty($nodeTypeName)) {
+            return false;
+        }
 
-                $property = new TranslatedProperty(
-                    $structure->getPropertyByTagName('sulu.rlp'),
-                    $locale,
-                    $this->languageNamespace
-                );
-                $uuid = $node->getPropertyValue($property->getName());
+        $redirectType = $document->getRedirectType();
 
-                $node = $this->sessionManager->getSession()->getNodeByIdentifier($uuid);
-                $structure = $this->load($uuid, $webspaceKey, $locale);
-                $url = $structure->getResourceLocator();
-            }
+        if ($redirectType === RedirectType::INTERNAL) {
+            $target = $document->getRedirectTarget();
 
-            $originLocale = $locale;
-            $locale = $this->getResolvedLocale($node, $locale);
-            $propertyTranslator->setLanguage($locale);
+            if ($target) {
+                $url = $target->getResourceSegment();
 
-            // load default data
-            $uuid = $node->getIdentifier();
-
-            $templateKey = $node->getPropertyValue($propertyTranslator->getName('template'));
-
-            // if nodetype is set before (internal link)
-            if (!isset($nodeType)) {
-                $nodeType = $node->getPropertyValue($propertyTranslator->getName('nodeType'));
-            }
-
-            // if parent is set before (internal link)
-            if (!isset($parent)) {
-                $parent = $node->getParent()->getIdentifier();
-            }
-
-            $nodeState = $node->getPropertyValue($propertyTranslator->getName('state'));
-
-            // if page is not published ignore it
-            if ($nodeState !== Structure::STATE_PUBLISHED) {
-                return false;
-            }
-
-            $changed = $node->getPropertyValue($propertyTranslator->getName('changed'));
-            $changer = $node->getPropertyValue($propertyTranslator->getName('changer'));
-            $created = $node->getPropertyValue($propertyTranslator->getName('created'));
-            $creator = $node->getPropertyValue($propertyTranslator->getName('creator'));
-            $published = $node->getPropertyValueWithDefault($propertyTranslator->getName('published'), null);
-
-            $path = $row->getPath('page');
-
-            // get structure
-            $templateKey = $this->templateResolver->resolve(
-                $node->getPropertyValue($propertyTranslator->getName('nodeType')),
-                $templateKey
-            );
-            $structure = $this->structureManager->getStructure($templateKey);
-
-            if (!isset($url)) {
-                $url = $this->getUrl($path, $row, $structure, $webspaceKey, $originLocale);
-            }
-
-            // get url returns false if route is not this language
-            if ($url !== false) {
-                // generate field data
-                $fieldsData = $this->getFieldsData(
-                    $row,
-                    $node,
-                    $fields[$originLocale],
-                    $templateKey,
-                    $webspaceKey,
-                    $locale
-                );
-
-                $key = $this->nodeHelper->extractWebspaceFromPath($path);
-                $shortPath = str_replace($this->sessionManager->getContentPath($key), '', $path);
-
-                return array_merge(
-                    array(
-                        'uuid' => $uuid,
-                        'nodeType' => $nodeType,
-                        'path' => $shortPath,
-                        'changed' => $changed,
-                        'changer' => $changer,
-                        'created' => $created,
-                        'published' => $published,
-                        'creator' => $creator,
-                        'title' => $this->getTitle($originalNode, $structure, $webspaceKey, $locale),
-                        'url' => $url,
-                        'urls' => $this->getLocalizedUrlsForPage($structure, $node, $webspaceKey, null),
-                        'locale' => $locale,
-                        'webspaceKey' => $key,
-                        'template' => $templateKey,
-                        'parent' => $parent,
-                        'order' => $node->hasProperty('sulu:order') ? $node->getPropertyValue('sulu:order') : null,
-                    ),
-                    $fieldsData
-                );
+                $document = $target;
+                $node = $this->inspector->getNode($document);
             }
         }
 
-        return false;
+        if ($redirectType === RedirectType::EXTERNAL) {
+            $url = 'http://'.$document->getRedirectExternal();
+        }
+
+        $originLocale = $locale;
+        if ($document instanceof ShadowLocaleBehavior) {
+            $locale = $document->isShadowLocaleEnabled() ? $document->getShadowLocale() : $originLocale;
+        }
+
+        $nodeState = null;
+        if ($document instanceof WorkflowStageBehavior) {
+            $nodeState = $document->getWorkflowStage();
+        }
+
+        // if page is not piblished ignore it
+        if ($nodeState !== WorkflowStage::PUBLISHED) {
+            return false;
+        }
+
+        if (!isset($url)) {
+            $url = $document->getResourceSegment();
+        }
+
+        if (false === $url) {
+            return;
+        }
+
+        // generate field data
+        $fieldsData = $this->getFieldsData(
+            $row,
+            $node,
+            $document,
+            $fields[$originLocale],
+            $document->getStructureType(),
+            $webspaceKey,
+            $locale
+        );
+
+        $structureType = $document->getStructureType();
+        $shortPath = $this->inspector->getContentPath($originalDocument);
+
+        return array_merge(
+            array(
+                'uuid' => $document->getUuid(),
+                'nodeType' => $redirectType,
+                'path' => $shortPath,
+                'changed' => $document->getChanged(),
+                'changer' => $document->getChanger(),
+                'created' => $document->getCreated(),
+                'published' => $document->getWorkflowStage() === WorkflowStage::PUBLISHED,
+                'creator' => $document->getCreator(),
+                'title' => $originalDocument->getTitle(),
+                'url' => $url,
+                'urls' => $this->inspector->getLocalizedUrlsForPage($document),
+                'locale' => $locale,
+                'webspaceKey' => $this->inspector->getWebspace($document),
+                'template' => $structureType,
+                'parent' => $this->inspector->getParent($document)->getUuid(),
+                'order' => null, // TODO: Implement order
+            ),
+            $fieldsData
+        );
     }
 
     /**
      * Return extracted data (configured by fields array) from node.
      */
-    private function getFieldsData(Row $row, NodeInterface $node, $fields, $templateKey, $webspaceKey, $locale)
+    private function getFieldsData(Row $row, NodeInterface $node, $document, $fields, $templateKey, $webspaceKey, $locale)
     {
         $fieldsData = array();
         foreach ($fields as $field) {
@@ -2346,7 +1026,7 @@ class ContentMapper implements ContentMapperInterface
             if (!isset($target[$field['name']])) {
                 $target[$field['name']] = '';
             }
-            if (($data = $this->getFieldData($field, $row, $node, $templateKey, $webspaceKey, $locale)) !== null) {
+            if (($data = $this->getFieldData($field, $row, $node, $document, $templateKey, $webspaceKey, $locale)) !== null) {
                 $target[$field['name']] = $data;
             }
         }
@@ -2357,7 +1037,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Return data for one field.
      */
-    private function getFieldData($field, Row $row, NodeInterface $node, $templateKey, $webspaceKey, $locale)
+    private function getFieldData($field, Row $row, NodeInterface $node, $document, $templateKey, $webspaceKey, $locale)
     {
         if (isset($field['column'])) {
             // normal data from node property
@@ -2376,7 +1056,7 @@ class ContentMapper implements ContentMapperInterface
             && (!isset($field['templateKey']) || $field['templateKey'] === $templateKey)
         ) {
             // not extension data but property of node
-            return $this->getPropertyData($node, $field['property'], $webspaceKey, $locale);
+            return $this->getPropertyData($document, $field['property']);
         }
 
         return;
@@ -2385,22 +1065,9 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns data for property.
      */
-    private function getPropertyData(NodeInterface $node, PropertyInterface $property, $webspaceKey, $locale)
+    private function getPropertyData($document, LegacyProperty $property)
     {
-        $contentType = $this->contentTypeManager->get($property->getContentTypeName());
-
-        $contentType->read(
-            $node,
-            new TranslatedProperty($property, $locale, $this->languageNamespace),
-            $webspaceKey,
-            $locale,
-            null
-        );
-
-        $property->getStructure()->setLanguageCode($locale);
-        $property->getStructure()->setWebspaceKey($webspaceKey);
-
-        return $contentType->getContentData($property);
+        return $document->getContent()->getProperty($property->getName())->getValue();
     }
 
     /**
@@ -2408,7 +1075,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getExtensionData(
         NodeInterface $node,
-        StructureExtension $extension,
+        ExtensionInterface $extension,
         $propertyName,
         $webspaceKey,
         $locale
@@ -2436,9 +1103,9 @@ class ContentMapper implements ContentMapperInterface
     /**
      * load data from extension.
      */
-    private function loadExtensionData(NodeInterface $node, StructureExtension $extension, $webspaceKey, $locale)
+    private function loadExtensionData(NodeInterface $node, ExtensionInterface $extension, $webspaceKey, $locale)
     {
-        $extension->setLanguageCode($locale, $this->languageNamespace, '');
+        $extension->setLanguageCode($locale, $this->namespaceRegistry->getPrefix('extension_localized'), '');
         $data = $extension->load(
             $node,
             $webspaceKey,
@@ -2449,55 +1116,15 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * Returns title of a row.
-     */
-    private function getTitle(NodeInterface $node, StructureInterface $structure, $webspaceKey, $locale)
-    {
-        return $this->getPropertyData($node, $structure->getProperty('title'), $webspaceKey, $locale);
-    }
-
-    /**
-     * Returns url of a row.
-     */
-    private function getUrl(
-        $path,
-        Row $row,
-        StructureInterface $structure,
-        $webspaceKey,
-        $locale
-    ) {
-        // if homepage
-        if ($webspaceKey !== null && $this->sessionManager->getContentPath($webspaceKey) === $path) {
-            $url = '/';
-        } else {
-            if ($structure->hasTag('sulu.rlp')) {
-                $property = $structure->getPropertyByTagName('sulu.rlp');
-
-                if ($property->getContentTypeName() !== 'resource_locator') {
-                    $url = 'http://' . $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
-                } else {
-                    $url = $this->getPropertyData($row->getNode('page'), $property, $webspaceKey, $locale);
-                }
-            } else {
-                $url = '';
-            }
-        }
-
-        return $url;
-    }
-
-    // ===============================
-    // END: Row to array mapping logic
-    // ===============================
-
-    /**
+     * TODO: Move this to ResourceLocator repository>
+     *
      * {@inheritdoc}
      */
-    public function restoreHistoryPath($path, $userId, $webspaceKey, $languageCode, $segmentKey = null)
+    public function restoreHistoryPath($path, $userId, $webspaceKey, $locale, $segmentKey = null)
     {
-        $this->strategy->restoreByPath($path, $webspaceKey, $languageCode, $segmentKey);
+        $this->strategy->restoreByPath($path, $webspaceKey, $locale, $segmentKey);
 
-        $content = $this->loadByResourceLocator($path, $webspaceKey, $languageCode, $segmentKey);
+        $content = $this->loadByResourceLocator($path, $webspaceKey, $locale, $segmentKey);
         $property = $content->getPropertyByTagName('sulu.rlp');
         $property->setValue($path);
 
@@ -2506,58 +1133,118 @@ class ContentMapper implements ContentMapperInterface
         $contentType = $this->contentTypeManager->get($property->getContentTypeName());
         $contentType->write(
             $node,
-            new TranslatedProperty($property, $languageCode, $this->languageNamespace),
+            new TranslatedProperty($property, $locale, $this->namespaceRegistry->getPrefix('content_localized')),
             $userId,
             $webspaceKey,
-            $languageCode,
+            $locale,
             $segmentKey
         );
 
         $this->sessionManager->getSession()->save();
     }
 
-    /**
-     * Validate the content mapper request.
-     *
-     * TODO: We should be validating the domain object, i.e. the Page or Snippet structure
-     *       types. But this requires refactoring the ContentMapper
-     */
-    private function validateRequest(ContentMapperRequest $request)
+    private function loadDocument($pathOrUuid, $locale, $options)
     {
-        $this->validateRequired(
-            $request,
-            array(
-                'templateKey',
-                'userId',
-                'locale',
-                'type',
-            )
-        );
+        $document = $this->documentManager->find($pathOrUuid, $locale, array(
+            'hydrate.load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
+        ));
 
-        if ($request->getType() === Structure::TYPE_PAGE) {
-            $this->validateRequired(
-                $request,
-                array(
-                    'webspaceKey',
-                )
-            );
+        if ($this->optionsShouldExcludeDocument($document, $options)) {
+            return;
         }
+
+        return $document;
     }
 
-    private function validateRequired(ContentMapperRequest $request, $keys)
+    private function filterDocuments($documents, $options)
     {
-        foreach ($keys as $required) {
-            $method = 'get' . ucfirst($required);
-            $val = $request->$method();
-
-            if (null === $val) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'ContentMapperRequest "%s" cannot be null',
-                        $required
-                    )
-                );
+        $collection = array();
+        foreach ($documents as $document) {
+            if ($this->optionsShouldExcludeDocument($document, $options)) {
+                continue;
             }
+
+            $collection[] = $document;
         }
+
+        return $collection;
+    }
+
+    private function optionsShouldExcludeDocument($document, array $options = null)
+    {
+        if ($options === null) {
+            return false;
+        }
+
+        $options = array_merge(array(
+            'exclude_ghost' => true,
+            'exclude_shadow' => true,
+        ), $options);
+
+        $state = $this->inspector->getLocalizationState($document);
+
+        if ($options['exclude_ghost'] && $state == LocalizationState::GHOST) {
+            return true;
+        }
+
+        if ($options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Initializes cache of extension data.
+     */
+    private function initializeExtensionCache()
+    {
+        $this->extensionDataCache = new ArrayCache();
+    }
+
+    /**
+     * Return a structure bridge corresponding to the given document.
+     *
+     * @param DocumentInterface $document
+     *
+     * @return StructureBridge
+     */
+    private function documentToStructure($document)
+    {
+        if (null === $document) {
+            return;
+        }
+        $structure = $this->inspector->getStructure($document);
+        $documentAlias = $this->inspector->getMetadata($document)->getAlias();
+
+        $structureBridge = $this->structureManager->wrapStructure($documentAlias, $structure);
+        $structureBridge->setDocument($document);
+
+        return $structureBridge;
+    }
+
+    /**
+     * Return a collection of structures for the given documents, optionally filtering according
+     * to the given options (as defined in optionsShouldExcludeDocument)
+     *
+     * @param object[] $documents
+     * @param array|null $filterOptions
+     */
+    private function documentsToStructureCollection($documents, $filterOptions = null)
+    {
+        $collection = array();
+        foreach ($documents as $document) {
+            if (!$document instanceof ContentBehavior) {
+                continue;
+            }
+
+            if ($this->optionsShouldExcludeDocument($document, $filterOptions)) {
+                continue;
+            }
+
+            $collection[] = $this->documentToStructure($document);
+        }
+
+        return $collection;
     }
 }
