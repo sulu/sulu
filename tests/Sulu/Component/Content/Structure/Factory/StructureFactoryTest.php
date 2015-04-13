@@ -24,7 +24,7 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
         $this->cacheDir = __DIR__ . '/data/cache';
         $this->mappingFile = __DIR__ . '/data/page/something.xml';
 
-        $this->structure = $this->prophesize('Sulu\Component\Content\Structure\Structure');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure');
         $this->loader = $this->prophesize('Symfony\Component\Config\Loader\LoaderInterface');
         $this->factory = new StructureFactory(
             $this->loader->reveal(),

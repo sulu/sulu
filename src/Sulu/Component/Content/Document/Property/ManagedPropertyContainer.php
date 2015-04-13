@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Document\Property;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;

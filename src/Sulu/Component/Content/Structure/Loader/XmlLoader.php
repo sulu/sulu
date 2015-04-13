@@ -15,7 +15,7 @@ use Exception;
 use Sulu\Exception\FeatureNotImplementedException;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Config\Util\XmlUtils;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\Content\Structure\Item;
 use Sulu\Component\Content\Structure\Section;
