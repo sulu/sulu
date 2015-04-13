@@ -4,7 +4,7 @@ namespace Sulu\Component\Content\Mapper\Subscriber;
 
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Sulu\Component\Content\Compat\ContentEvents;
+use Sulu\Component\Content\ContentEvents;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Prophecy\Argument;
