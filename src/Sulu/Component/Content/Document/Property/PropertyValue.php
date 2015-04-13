@@ -6,17 +6,16 @@ use Sulu\Component\Content\Compat\Structure\PropertyInterface as StructureProper
 
 /**
  * Value object for content type rendering.
- *
- * TODO: Should probably be removed.
  */
-class ValueProperty implements PropertyInterface
+class PropertyValue
 {
     private $value;
-    private $children;
+    private $name;
 
-    public function __construct($name)
+    public function __construct($name, $value = null)
     {
         $this->name = $name;
+        $this->value = $value;
     }
 
     /**
@@ -46,15 +45,5 @@ class ValueProperty implements PropertyInterface
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    public function getChildProperties()
-    {
-        return $this->children;
-    }
-
-    public function addChild(Property $property)
-    {
-        $this->children[] = $property;
     }
 }

@@ -13,6 +13,9 @@ use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
 use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Property\PropertyValue;
 
 class PropertyContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,14 +28,19 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->structureProperty = $this->prophesize(Property::class);
+        $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+        $this->inspector = $this->prophesize(DocumentInspector::class);
+        $this->legacyProperty = $this->prophesize(PropertyInterface::class);
 
         $this->propertyContainer = new ManagedPropertyContainer(
             $this->contentTypeManager->reveal(),
-            $this->node->reveal(),
-            $this->encoder->reveal(),
+            $this->propertyFactory->reveal(),
+            $this->inspector->reveal(),
             $this->structure->reveal(),
             $this->document->reveal()
         );
+
+        $this->inspector->getNode($this->document->reveal())->willReturn($this->node->reveal());
     }
 
     /**
@@ -42,16 +50,11 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'test';
         $contentTypeName = 'hello';
-        $phpcrName = 'phpcrName';
         $locale = 'fr';
 
-        $this->document->getLocale()->willReturn($locale);
-        $this->encoder->fromProperty($this->structureProperty->reveal(), $locale)->willReturn($phpcrName);
-            $this->structureProperty->isLocalized()->willReturn(true);
-
-        $this->doGetProperty($name, $contentTypeName, $phpcrName, $locale);
-
-        $this->propertyContainer->getProperty($name);
+        $this->inspector->getLocale($this->document->reveal())->willReturn($locale);
+        $this->structureProperty->isLocalized()->willReturn(true);
+        $this->doGetProperty($name, $contentTypeName, $locale);
     }
 
     /**
@@ -61,15 +64,11 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'test';
         $contentTypeName = 'hello';
-        $phpcrName = 'phpcrName';
 
         $this->document->getLocale()->shouldNotBeCalled();
-        $this->encoder->contentName($name)->willReturn($phpcrName);
         $this->structureProperty->isLocalized()->willReturn(false);
 
-        $this->doGetProperty($name, $contentTypeName, $phpcrName);
-
-        $this->propertyContainer->getProperty($name);
+        $this->doGetProperty($name, $contentTypeName, null);
     }
 
     /**
@@ -79,27 +78,29 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
     {
         $name = 'test';
         $contentTypeName = 'hello';
-        $phpcrName = 'hai';
 
         $this->document->getLocale()->shouldNotBeCalled();
-        $this->encoder->contentName($name)->willReturn($phpcrName);
         $this->structureProperty->isLocalized()->willReturn(false);
 
-        $this->doGetProperty($name, $contentTypeName, $phpcrName);
-
-        $property = $this->propertyContainer[$name];
-        $this->assertInstanceOf(PropertyInterface::class, $property);
+        $this->doGetProperty($name, $contentTypeName, null);
     }
 
-    private function doGetProperty($name, $contentTypeName, $phpcrName)
+    private function doGetProperty($name, $contentTypeName, $locale)
     {
-        $this->structureProperty->getContentTypeName()->willReturn($contentTypeName);
+        $this->structureProperty->getType()->willReturn($contentTypeName);
         $this->structure->getProperty($name)->willReturn($this->structureProperty);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
 
+        if ($locale) {
+            $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), $locale)->willReturn($this->legacyProperty->reveal());
+        } else {
+            $this->propertyFactory->createProperty($this->structureProperty->reveal(), $locale)->willReturn($this->legacyProperty->reveal());
+        }
+
+
         $this->contentType->read(
             $this->node->reveal(),
-            Argument::type('Sulu\Component\Content\Compat\PropertyInterface'),
+            $this->legacyProperty->reveal(),
             null,
             null,
             null
@@ -107,7 +108,7 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
 
         $property = $this->propertyContainer->getProperty($name);
 
-        $this->assertInstanceOf(PropertyInterface::class, $property);
-        $this->assertEquals($phpcrName, $property->getName());
+        $this->assertInstanceOf(PropertyValue::class, $property);
+        $this->assertEquals($name, $property->getName());
     }
 }
