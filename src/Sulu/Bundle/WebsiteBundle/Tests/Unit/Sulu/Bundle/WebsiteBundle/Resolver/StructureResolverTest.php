@@ -3,8 +3,8 @@
 namespace Sulu\Bundle\WebsiteBundle\Resolver;
 
 use Prophecy\Argument;
-use Sulu\Component\Content\Compat\ContentTypeInterface;
-use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 
 class StructureResolverTest extends \PHPUnit_Framework_TestCase
@@ -33,9 +33,9 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeManagerInterface');
+        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManagerInterface');
         $this->structureManager = $this->prophesize('Sulu\Component\Content\Compat\StructureManagerInterface');
-        $this->contentType = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeInterface');
+        $this->contentType = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
 
         $this->structureResolver = new StructureResolver(
             $this->contentTypeManager->reveal(),

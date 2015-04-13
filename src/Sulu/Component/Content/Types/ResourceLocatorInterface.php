@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Compat\Types;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
 
 /**

@@ -14,7 +14,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Content\Compat\ContentEvents;
+use Sulu\Component\Content\ContentEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
 

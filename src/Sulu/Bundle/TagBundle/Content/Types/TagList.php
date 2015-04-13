@@ -13,7 +13,7 @@ namespace Sulu\Bundle\TagBundle\Content\Types;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\ComplexContentType;
-use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**

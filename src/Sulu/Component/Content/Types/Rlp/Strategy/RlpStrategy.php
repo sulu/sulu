@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Types\Rlp\Strategy;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotValidException;
 use Sulu\Component\Content\Compat\StructureManagerInterface;

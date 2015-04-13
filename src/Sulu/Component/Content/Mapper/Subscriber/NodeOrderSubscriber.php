@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Mapper\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\Content\Compat\ContentEvents;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Event\ContentNodeOrderEvent;

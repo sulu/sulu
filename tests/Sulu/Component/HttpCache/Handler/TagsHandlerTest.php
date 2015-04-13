@@ -36,9 +36,9 @@ class TagsHandlerTest extends \PHPUnit_Framework_TestCase
         $this->response->headers = $this->parameterBag;
         $this->property1 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
         $this->property2 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
-        $this->contentType1 = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeInterface');
-        $this->contentType2 = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeInterface');
-        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\Compat\ContentTypeManager');
+        $this->contentType1 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
+        $this->contentType2 = $this->prophesize('Sulu\Component\Content\ContentTypeInterface');
+        $this->contentTypeManager = $this->prophesize('Sulu\Component\Content\ContentTypeManager');
 
         $this->handler = new TagsHandler(
             $this->proxyCache->reveal(),

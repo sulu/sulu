@@ -18,7 +18,7 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
-use Sulu\Component\Content\Compat\ContentEvents;
+use Sulu\Component\Content\ContentEvents;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;

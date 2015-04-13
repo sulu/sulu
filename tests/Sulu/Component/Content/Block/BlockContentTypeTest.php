@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Compat\Block;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;

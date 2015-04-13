@@ -12,7 +12,7 @@ namespace Sulu\Bundle\ContentBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use JMS\Serializer\SerializerInterface;
-use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Page;

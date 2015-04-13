@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Content\Structure;
 
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
