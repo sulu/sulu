@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Media Types
+
+The media types are now set by wildcard check and need to be updated,
+by running the following command: `sulu:media:type:update`.
+
 ### Media API Object
 
 The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).

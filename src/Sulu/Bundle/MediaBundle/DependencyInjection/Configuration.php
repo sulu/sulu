@@ -66,6 +66,41 @@ class Configuration implements ConfigurationInterface
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
                     ->end()
+                    ->arrayNode('blocked_file_types')
+                        ->prototype('scalar')->end()->defaultValue(array('file/exe'))
+                    ->end()
+                    ->arrayNode('mime_types')
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
+                            'image/png',
+                            'image/bmp',
+                            'image/svg+xml',
+                            'image/vnd.adobe.photoshop',
+                            'application/pdf',
+                        ))
+                    ->end()
+                    ->arrayNode('types')
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            array(
+                                'type' => 'document',
+                                'mimeTypes' => array('*')
+                            ),
+                            array(
+                                'type' => 'image',
+                                'mimeTypes' => array('image/*')
+                            ),
+                            array(
+                                'type' => 'video',
+                                'mimeTypes' => array('video/*')
+                            ),
+                            array(
+                                'type' => 'audio',
+                                'mimeTypes' => array('audio/*')
+                            )
+                        ))
+                    ->end()
                 ->end()
             ->end()
             ->arrayNode('format_cache')
