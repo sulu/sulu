@@ -15,6 +15,7 @@ use PHPCR\Util\NodeHelper;
 use PHPCR\WorkspaceInterface;
 use Sulu\Component\PHPCR\NodeTypes\Base\SuluNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\ContentNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Path\PathNodeType;
@@ -57,6 +58,7 @@ class PHPCRInitCommand extends ContainerAwareCommand
             new ContentNodeType(),
             new SnippetNodeType(),
             new PageNodeType(),
+            new HomeNodeType()
         ) as $nodeType) {
             $output->writeln('  - ' . $nodeType->getName());
             $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);

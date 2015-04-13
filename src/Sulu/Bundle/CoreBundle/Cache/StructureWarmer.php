@@ -10,9 +10,9 @@
 
 namespace Sulu\Bundle\CoreBundle\Cache;
 
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\StructureManagerInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Compat\Structure;
 
 /**
  * Generates the Structure cache files.

@@ -11,12 +11,13 @@
 namespace Sulu\Component\HttpCache\EventListener;
 
 use Prophecy\Argument;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\EventSubscriber\UpdateResponseSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -56,7 +57,7 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->getResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $this->filterResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
-        $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
 

@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,9 +22,9 @@ class DefaultController extends WebsiteController
 {
     /**
      * Loads the content from the request (filled by the route provider) and creates a response with this content and
-     * the appropriate cache headers.
+     * the appropriate cache headers
      *
-     * @param \Sulu\Component\Content\StructureInterface $structure
+     * @param \Sulu\Component\Content\Compat\StructureInterface $structure
      * @param bool $preview
      * @param bool $partial
      *

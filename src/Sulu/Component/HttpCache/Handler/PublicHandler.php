@@ -10,8 +10,8 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Sulu\Component\Content\PageInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\PageInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerUpdateResponseInterface;
 use Sulu\Component\HttpCache\HttpCache;
 use Symfony\Component\HttpFoundation\Response;

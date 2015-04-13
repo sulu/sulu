@@ -15,8 +15,9 @@ use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\Rlp\Mapper\RlpMapperInterface;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class PhpcrMapperTest extends PhpcrTestCase
+class PhpcrMapperTest extends SuluTestCase
 {
     /**
      * @var NodeInterface
@@ -35,7 +36,12 @@ class PhpcrMapperTest extends PhpcrTestCase
 
     public function setUp()
     {
-        $this->prepareMapper();
+        $this->initPhpcr();
+        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+
         $this->prepareTestData();
 
         $this->rlpMapper = new PhpcrMapper($this->sessionManager, '/cmf/routes');
@@ -43,7 +49,7 @@ class PhpcrMapperTest extends PhpcrTestCase
 
     private function prepareTestData()
     {
-        $products = $this->languageRoutes['de']->addNode('products');
+        $products = $this->session->getNode('/cmf/sulu_io/routes/de')->addNode('products');
         $products->addMixin('mix:referenceable');
 
         $machines = $products->addNode('machines');
@@ -58,10 +64,11 @@ class PhpcrMapperTest extends PhpcrTestCase
         $drill1 = $machines->addNode('drill-1');
         $drill1->addMixin('mix:referenceable');
 
-        $this->content1 = $this->contents->addNode('content1');
+        $contents = $this->session->getNode('/cmf/sulu_io/contents');
+        $this->content1 = $contents->addNode('content1');
         $this->content1->addMixin('mix:referenceable');
 
-        $this->content2 = $this->contents->addNode('content2');
+        $this->content2 = $contents->addNode('content2');
         $this->content2->addMixin('mix:referenceable');
 
         $this->session->save();
@@ -70,61 +77,61 @@ class PhpcrMapperTest extends PhpcrTestCase
     public function testUnique()
     {
         // exists in phpcr
-        $result = $this->rlpMapper->unique('/products/machines', 'default', 'de');
+        $result = $this->rlpMapper->unique('/products/machines', 'sulu_io', 'de');
         $this->assertFalse($result);
 
         // exists in phpcr
-        $result = $this->rlpMapper->unique('/products/machines/drill', 'default', 'de');
+        $result = $this->rlpMapper->unique('/products/machines/drill', 'sulu_io', 'de');
         $this->assertFalse($result);
 
         // not exists in phpcr
-        $result = $this->rlpMapper->unique('/products/machines-2', 'default', 'de');
+        $result = $this->rlpMapper->unique('/products/machines-2', 'sulu_io', 'de');
         $this->assertTrue($result);
 
         // not exists in phpcr
-        $result = $this->rlpMapper->unique('/products/machines/drill-2', 'default', 'de');
+        $result = $this->rlpMapper->unique('/products/machines/drill-2', 'sulu_io', 'de');
         $this->assertTrue($result);
 
         // not exists in phpcr
-        $result = $this->rlpMapper->unique('/news', 'default', 'de');
+        $result = $this->rlpMapper->unique('/news', 'sulu_io', 'de');
         $this->assertTrue($result);
     }
 
     public function testGetUniquePath()
     {
         // machines & machines-1 exists
-        $result = $this->rlpMapper->getUniquePath('/products/machines', 'default', 'de');
+        $result = $this->rlpMapper->getUniquePath('/products/machines', 'sulu_io', 'de');
         $this->assertEquals('/products/machines-2', $result);
-        $this->assertTrue($this->rlpMapper->unique($result, 'default', 'de'));
+        $this->assertTrue($this->rlpMapper->unique($result, 'sulu_io', 'de'));
 
         // drill & drill-1 exists
-        $result = $this->rlpMapper->getUniquePath('/products/machines/drill', 'default', 'de');
+        $result = $this->rlpMapper->getUniquePath('/products/machines/drill', 'sulu_io', 'de');
         $this->assertEquals('/products/machines/drill-2', $result);
-        $this->assertTrue($this->rlpMapper->unique($result, 'default', 'de'));
+        $this->assertTrue($this->rlpMapper->unique($result, 'sulu_io', 'de'));
 
         // products exists
-        $result = $this->rlpMapper->getUniquePath('/products', 'default', 'de');
+        $result = $this->rlpMapper->getUniquePath('/products', 'sulu_io', 'de');
         $this->assertEquals('/products-1', $result);
-        $this->assertTrue($this->rlpMapper->unique($result, 'default', 'de'));
+        $this->assertTrue($this->rlpMapper->unique($result, 'sulu_io', 'de'));
 
         // news not exists
-        $result = $this->rlpMapper->getUniquePath('/news', 'default', 'de');
+        $result = $this->rlpMapper->getUniquePath('/news', 'sulu_io', 'de');
         $this->assertEquals('/news', $result);
-        $this->assertTrue($this->rlpMapper->unique($result, 'default', 'de'));
+        $this->assertTrue($this->rlpMapper->unique($result, 'sulu_io', 'de'));
     }
 
     public function testSaveFailure()
     {
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException');
-        $this->rlpMapper->save($this->content1, '/products/machines/drill', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/machines/drill', 'sulu_io', 'de');
     }
 
     public function testSave()
     {
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $route = '/cmf/default/routes/de/products/news/content1-news';
+        $route = '/cmf/sulu_io/routes/de/products/news/content1-news';
 
         $node = $this->session->getNode($route);
         $this->assertTrue($node->getPropertyValue('sulu:content') == $this->content1);
@@ -134,61 +141,61 @@ class PhpcrMapperTest extends PhpcrTestCase
     public function testReadFailure()
     {
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
-        $this->rlpMapper->loadByContent($this->content1, 'default', 'de');
+        $this->rlpMapper->loadByContent($this->content1, 'sulu_io', 'de');
     }
 
     public function testReadFailureUuid()
     {
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
-        $this->rlpMapper->loadByContentUuid($this->content1->getIdentifier(), 'default', 'de');
+        $this->rlpMapper->loadByContentUuid($this->content1->getIdentifier(), 'sulu_io', 'de');
     }
 
     public function testRead()
     {
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $result = $this->rlpMapper->loadByContent($this->content1, 'default', 'de');
+        $result = $this->rlpMapper->loadByContent($this->content1, 'sulu_io', 'de');
         $this->assertEquals('/products/news/content1-news', $result);
     }
 
     public function testReadUuid()
     {
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $result = $this->rlpMapper->loadByContentUuid($this->content1->getIdentifier(), 'default', 'de');
+        $result = $this->rlpMapper->loadByContentUuid($this->content1->getIdentifier(), 'sulu_io', 'de');
         $this->assertEquals('/products/news/content1-news', $result);
     }
 
     public function testLoadFailure()
     {
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
-        $this->rlpMapper->loadByResourceLocator('/test/test-1', 'default', 'de');
+        $this->rlpMapper->loadByResourceLocator('/test/test-1', 'sulu_io', 'de');
     }
 
     public function testLoad()
     {
         // create route for content
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $result = $this->rlpMapper->loadByResourceLocator('/products/news/content1-news', 'default', 'de');
+        $result = $this->rlpMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
         $this->assertEquals($this->content1->getIdentifier(), $result);
     }
 
     public function testMove()
     {
         // create route for content
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         // move
-        $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default', 'de');
+        $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/default/routes/de/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/default/routes/de/products/asdf/content2-news');
+        $oldNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
@@ -201,30 +208,30 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
 
         // get content from new path
-        $result = $this->rlpMapper->loadByResourceLocator('/products/asdf/content2-news', 'default', 'de');
+        $result = $this->rlpMapper->loadByResourceLocator('/products/asdf/content2-news', 'sulu_io', 'de');
         $this->assertEquals($this->content1->getIdentifier(), $result);
 
         // get content from history should throw an exception
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
-        $result = $this->rlpMapper->loadByResourceLocator('/products/news/content1-news', 'default', 'de');
+        $result = $this->rlpMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
     }
 
     public function testMoveTwice()
     {
         // create route for content
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         // first move
-        $this->rlpMapper->move('/products/news/content1-news', '/products/news/content2-news', 'default', 'de');
+        $this->rlpMapper->move('/products/news/content1-news', '/products/news/content2-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         // second move
-        $this->rlpMapper->move('/products/news/content2-news', '/products/asdf/content2-news', 'default', 'de');
+        $this->rlpMapper->move('/products/news/content2-news', '/products/asdf/content2-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $oldNode = $this->session->getNode('/cmf/default/routes/de/products/news/content1-news');
-        $newNode = $this->session->getNode('/cmf/default/routes/de/products/asdf/content2-news');
+        $oldNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/news/content1-news');
+        $newNode = $this->session->getNode('/cmf/sulu_io/routes/de/products/asdf/content2-news');
 
         $oldNodeMixins = $oldNode->getMixinNodeTypes();
         $newNodeMixins = $newNode->getMixinNodeTypes();
@@ -236,22 +243,22 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertEquals($this->content1, $newNode->getPropertyValue('sulu:content'));
 
         // get content from new path
-        $result = $this->rlpMapper->loadByResourceLocator('/products/asdf/content2-news', 'default', 'de');
+        $result = $this->rlpMapper->loadByResourceLocator('/products/asdf/content2-news', 'sulu_io', 'de');
         $this->assertEquals($this->content1->getIdentifier(), $result);
 
         // get content from history should throw an exception
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorMovedException');
-        $result = $this->rlpMapper->loadByResourceLocator('/products/news/content1-news', 'default', 'de');
+        $result = $this->rlpMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
     }
 
     public function testMoveNotExist()
     {
         // create routes for content
-        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
-        $this->rlpMapper->move('/news', '/neuigkeiten', 'default', 'de');
+        $this->rlpMapper->move('/news', '/neuigkeiten', 'sulu_io', 'de');
     }
 
     public function testMoveTree()
@@ -259,50 +266,50 @@ class PhpcrMapperTest extends PhpcrTestCase
         $session = $this->sessionManager->getSession();
 
         // create routes for content
-        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'sulu_io', 'de');
 
-        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'sulu_io', 'de');
         $session->save();
 
         // move route
-        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $this->rlpMapper->move('/news', '/test', 'sulu_io', 'de');
         $session->save();
         $session->refresh(false);
 
         // check exist new routes
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test/news-1', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test/news-1', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test/news-1/sub-1', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test/news-1/sub-1', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test/news-1/sub-2', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test/news-1/sub-2', 'sulu_io', 'de')
         );
 
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test/news-2', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test/news-2', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test/news-2/sub-1', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test/news-2/sub-1', 'sulu_io', 'de')
         );
         $this->assertEquals(
             $this->content1->getIdentifier(),
-            $this->rlpMapper->loadByResourceLocator('/test/news-2/sub-2', 'default', 'de')
+            $this->rlpMapper->loadByResourceLocator('/test/news-2/sub-2', 'sulu_io', 'de')
         );
 
         // check history
@@ -319,7 +326,7 @@ class PhpcrMapperTest extends PhpcrTestCase
     private function getRlForHistory($rl)
     {
         try {
-            $this->rlpMapper->loadByResourceLocator($rl, 'default', 'de');
+            $this->rlpMapper->loadByResourceLocator($rl, 'sulu_io', 'de');
 
             return false;
         } catch (ResourceLocatorMovedException $ex) {
@@ -343,54 +350,54 @@ class PhpcrMapperTest extends PhpcrTestCase
         $session->save();
 
         // create routes for content
-        $this->rlpMapper->save($c2, '/news', 'default', 'de');
-        $this->rlpMapper->save($c3, '/news/news-1', 'default', 'de');
-        $this->rlpMapper->save($c4, '/news/news-1/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+        $this->rlpMapper->save($c2, '/news', 'sulu_io', 'de');
+        $this->rlpMapper->save($c3, '/news/news-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($c4, '/news/news-1/sub-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'sulu_io', 'de');
 
-        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'sulu_io', 'de');
         $session->save();
 
-        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'de');
+        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'sulu_io', 'de');
         $this->assertEquals('/news/news-1', $result);
 
-        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'default', 'en');
+        $result = $this->rlpMapper->getParentPath($c4->getIdentifier(), 'sulu_io', 'en');
         $this->assertNull($result);
     }
 
     public function testLoadHistoryByContentUuid()
     {
         // create route for content
-        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/products/news/content1-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         sleep(1);
 
         // move
-        $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'default', 'de');
+        $this->rlpMapper->move('/products/news/content1-news', '/products/asdf/content2-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         sleep(1);
 
         // move
-        $this->rlpMapper->move('/products/asdf/content2-news', '/products/content2-news', 'default', 'de');
+        $this->rlpMapper->move('/products/asdf/content2-news', '/products/content2-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         sleep(1);
 
         // move
-        $this->rlpMapper->move('/products/content2-news', '/content2-news', 'default', 'de');
+        $this->rlpMapper->move('/products/content2-news', '/content2-news', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
         sleep(1);
 
         // move
-        $this->rlpMapper->move('/content2-news', '/best-url-ever', 'default', 'de');
+        $this->rlpMapper->move('/content2-news', '/best-url-ever', 'sulu_io', 'de');
         $this->sessionManager->getSession()->save();
 
-        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content1->getIdentifier(), 'default', 'de');
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content1->getIdentifier(), 'sulu_io', 'de');
 
         $this->assertEquals(4, sizeof($result));
         $this->assertEquals('/content2-news', $result[0]->getResourceLocator());
@@ -406,35 +413,35 @@ class PhpcrMapperTest extends PhpcrTestCase
     public function testDeleteByPath()
     {
         $session = $this->sessionManager->getSession();
-        $rootNode = $session->getNode('/cmf/default/routes/de');
+        $rootNode = $session->getNode('/cmf/sulu_io/routes/de');
 
         // create routes for content
-        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'sulu_io', 'de');
 
 // FIXME  issue: https://github.com/jackalope/jackalope/issues/227
 // FIXME  pr: https://github.com/jackalope/jackalope/pull/228
-//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'sulu_io', 'de');
         $session->save();
 
         // move route
-        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $this->rlpMapper->move('/news', '/test', 'sulu_io', 'de');
         $session->save();
         $session->refresh(false);
 
         // delete a history url
-        $this->rlpMapper->deleteByPath('/news/news-1/sub-1', 'default', 'de');
+        $this->rlpMapper->deleteByPath('/news/news-1/sub-1', 'sulu_io', 'de');
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
         $this->assertTrue($rootNode->hasNode('news/news-1/sub-2'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-1'));
         $this->assertTrue($rootNode->hasNode('test/news-1/sub-2'));
 
         // delete a normal url
-        $this->rlpMapper->deleteByPath('/test/news-1/sub-2', 'default', 'de');
+        $this->rlpMapper->deleteByPath('/test/news-1/sub-2', 'sulu_io', 'de');
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-1'));
         $this->assertFalse($rootNode->hasNode('news/news-1/sub-2'));
 
@@ -446,29 +453,29 @@ class PhpcrMapperTest extends PhpcrTestCase
     public function testTreeDeleteByPath()
     {
         $session = $this->sessionManager->getSession();
-        $rootNode = $session->getNode('/cmf/default/routes/de');
+        $rootNode = $session->getNode('/cmf/sulu_io/routes/de');
 
         // create routes for content
-        $this->rlpMapper->save($this->content1, '/news', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($this->content1, '/news', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'sulu_io', 'de');
 
 // FIXME  issue: https://github.com/jackalope/jackalope/issues/227
 // FIXME  pr: https://github.com/jackalope/jackalope/pull/228
-//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'sulu_io', 'de');
 //
-//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'sulu_io', 'de');
         $session->save();
 
         // move route
-        $this->rlpMapper->move('/news', '/test', 'default', 'de');
+        $this->rlpMapper->move('/news', '/test', 'sulu_io', 'de');
         $session->save();
         $session->refresh(false);
 
         // delete all
-        $this->rlpMapper->deleteByPath('/test', 'default', 'de');
+        $this->rlpMapper->deleteByPath('/test', 'sulu_io', 'de');
         $this->assertFalse($rootNode->hasNode('test'));
         $this->assertFalse($rootNode->hasNode('news'));
     }
@@ -476,34 +483,34 @@ class PhpcrMapperTest extends PhpcrTestCase
     public function testRestore()
     {
         $session = $this->sessionManager->getSession();
-        $rootNode = $session->getNode('/cmf/default/routes/de');
+        $rootNode = $session->getNode('/cmf/sulu_io/routes/de');
 
         // create routes for content
-        $this->rlpMapper->save($this->content2, '/news', 'default', 'de');
-        $this->rlpMapper->save($this->content1, '/news/news-1', 'default', 'de');
+        $this->rlpMapper->save($this->content2, '/news', 'sulu_io', 'de');
+        $this->rlpMapper->save($this->content1, '/news/news-1', 'sulu_io', 'de');
 
 // FIXME  issue: https://github.com/jackalope/jackalope/issues/227
 // FIXME  pr: https://github.com/jackalope/jackalope/pull/228
-//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-1', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-1/sub-2', 'sulu_io', 'de');
 //
-//        $this->rlpMapper->save($this->content1, '/news/news-2', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'default', 'de');
-//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'default', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-1', 'sulu_io', 'de');
+//        $this->rlpMapper->save($this->content1, '/news/news-2/sub-2', 'sulu_io', 'de');
         $session->save();
 
         // move route
-        $this->rlpMapper->move('/news', '/asdf', 'default', 'de');
+        $this->rlpMapper->move('/news', '/asdf', 'sulu_io', 'de');
         $session->save();
         $session->refresh(false);
 
         // move route
-        $this->rlpMapper->move('/asdf', '/test', 'default', 'de');
+        $this->rlpMapper->move('/asdf', '/test', 'sulu_io', 'de');
         $session->save();
         $session->refresh(false);
 
         // load history
-        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'sulu_io', 'de');
         $this->assertEquals(2, sizeof($result));
 
         $news = $rootNode->getNode('news');
@@ -525,7 +532,7 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
 
         sleep(1);
-        $this->rlpMapper->restoreByPath('/news', 'default', 'de');
+        $this->rlpMapper->restoreByPath('/news', 'sulu_io', 'de');
 
         // after
         $this->assertFalse($news->getPropertyValue('sulu:history'));
@@ -541,7 +548,7 @@ class PhpcrMapperTest extends PhpcrTestCase
         $this->assertEquals($this->content1, $test1->getPropertyValue('sulu:content'));
 
         // load history
-        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'default', 'de');
+        $result = $this->rlpMapper->loadHistoryByContentUuid($this->content2->getIdentifier(), 'sulu_io', 'de');
 
         $this->assertEquals(2, sizeof($result));
         $this->assertEquals('/test', $result[0]->getResourceLocator());
