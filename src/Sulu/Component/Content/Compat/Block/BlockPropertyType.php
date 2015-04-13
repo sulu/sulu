@@ -28,14 +28,14 @@ class BlockPropertyType
 
     /**
      * @var Metadata
-     * @Type("Sulu\Component\Content\Metadata")
+     * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metadata;
 
     /**
      * properties managed by this block
      * @var PropertyInterface[]
-     * @Type("array<Sulu\Component\Content\Property>")
+     * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
     private $childProperties = array();
 

@@ -8,16 +8,16 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyInterface;
-use Sulu\Component\Content\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Compat\Block\BlockProperty;
+use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
@@ -30,9 +30,9 @@ use JMS\Serializer\Annotation\HandlerCallback;
  * @Discriminator(
  *     field = "propertyType",
  *     map = {
- *         "property": "Sulu\Component\Content\Property",
- *         "block": "Sulu\Component\Content\Block\BlockProperty",
- *         "section": "Sulu\Component\Content\Section\SectionProperty"
+ *         "property": "Sulu\Component\Content\Compat\Property",
+ *         "block": "Sulu\Component\Content\Compat\Block\BlockProperty",
+ *         "section": "Sulu\Component\Content\Compat\Section\SectionProperty"
  *     }
  * )
  */
@@ -47,7 +47,7 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * @var Metadata
-     * @Type("Sulu\Component\Content\Metadata")
+     * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metadata;
 
@@ -89,14 +89,14 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * parameter of property to merge with parameter of content type
      * @var array
-     * @Type("array<string,Sulu\Component\Content\PropertyParameter>")
+     * @Type("array<string,Sulu\Component\Content\Compat\PropertyParameter>")
      */
     private $params;
 
     /**
      * tags defined in xml
      * @var PropertyTag[]
-     * @Type("array<Sulu\Component\Content\PropertyTag>")
+     * @Type("array<Sulu\Component\Content\Compat\PropertyTag>")
      */
     private $tags;
 
@@ -212,7 +212,7 @@ class Property implements PropertyInterface, \JsonSerializable
 
     /**
      * returns tags defined in xml
-     * @return \Sulu\Component\Content\PropertyTag[]
+     * @return \Sulu\Component\Content\Compat\PropertyTag[]
      */
     public function getTags()
     {

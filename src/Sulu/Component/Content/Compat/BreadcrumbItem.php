@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 /**
  * Item for breadcrumb
- * @package Sulu\Component\Content
+ * @package Sulu\Component\Content\Compat
  */
 class BreadcrumbItem implements BreadcrumbItemInterface
 {

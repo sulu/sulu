@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use DateTime;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;

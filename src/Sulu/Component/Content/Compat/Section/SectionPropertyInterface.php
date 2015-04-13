@@ -13,7 +13,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
  * defines a section for properties
- * @package Sulu\Component\Content
+ * @package Sulu\Component\Content\Compat
  */
 interface SectionPropertyInterface extends PropertyInterface
 {

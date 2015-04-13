@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use Sulu\Component\Util\ArrayableInterface;
 
@@ -97,7 +97,7 @@ interface PropertyInterface extends ArrayableInterface
 
     /**
      * returns tags defined in xml
-     * @return \Sulu\Component\Content\PropertyTag[]
+     * @return \Sulu\Component\Content\Compat\PropertyTag[]
      */
     public function getTags();
 

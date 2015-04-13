@@ -28,13 +28,13 @@ class BlockProperty extends Property implements BlockPropertyInterface
     /**
      * properties managed by this block
      * @var BlockPropertyType[]
-     * @Type("array<string,Sulu\Component\Content\Block\BlockPropertyType>")
+     * @Type("array<string,Sulu\Component\Content\Compat\Block\BlockPropertyType>")
      */
     private $types = array();
 
     /**
      * @var BlockPropertyType[]
-     * @Type("array<integer,Sulu\Component\Content\Block\BlockPropertyType>")
+     * @Type("array<integer,Sulu\Component\Content\Compat\Block\BlockPropertyType>")
      */
     private $properties = array();
 

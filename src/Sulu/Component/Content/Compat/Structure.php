@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content;
+namespace Sulu\Component\Content\Compat;
 
 use DateTime;
-use Sulu\Component\Content\Exception\NoSuchPropertyException;
-use Sulu\Component\Content\Section\SectionPropertyInterface;
+use Sulu\Component\Content\Compat\Exception\NoSuchPropertyException;
+use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
 
@@ -73,7 +73,7 @@ abstract class Structure implements StructureInterface
     /**
      * array of properties
      * @var array
-     * @Type("array<string,Sulu\Component\Content\Property>")
+     * @Type("array<string,Sulu\Component\Content\Compat\Property>")
      */
     private $properties = array();
 
@@ -197,7 +197,7 @@ abstract class Structure implements StructureInterface
 
     /**
      * @var Metadata
-     * @Type("Sulu\Component\Content\Metadata")
+     * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metaData;
 
