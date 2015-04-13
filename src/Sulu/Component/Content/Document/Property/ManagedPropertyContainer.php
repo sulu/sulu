@@ -10,10 +10,10 @@
  
 namespace Sulu\Component\Content\Document\Property;
 
-use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Compat\Structure\Structure;
+use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 /**
  * Lazy loading container for content properties.
@@ -67,7 +67,6 @@ class ManagedPropertyContainer extends PropertyContainer
         $phpcrName = $this->propertyEncoder->fromProperty($structureProperty, $locale);
 
         $property = new Property($phpcrName, $this->document);
-        $property->setStructureProperty($structureProperty);
         $this->properties[$name] = $property;
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
