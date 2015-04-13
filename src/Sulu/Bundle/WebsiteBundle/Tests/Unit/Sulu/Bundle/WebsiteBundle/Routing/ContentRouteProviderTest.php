@@ -417,7 +417,7 @@ class ContentRouteProviderTest extends \PHPUnit_Framework_TestCase
     protected function getStructureMock($uuid, $state = Structure::STATE_PUBLISHED, $type = Structure::NODE_TYPE_CONTENT)
     {
         $structure = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
+            '\Sulu\Component\Content\Compat\Structure\Page',
             array(),
             '',
             false,

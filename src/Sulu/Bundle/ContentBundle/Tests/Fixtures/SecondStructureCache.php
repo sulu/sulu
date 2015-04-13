@@ -15,7 +15,7 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
-use Sulu\Component\Content\Structure\Page;
+use Sulu\Component\Content\Compat\Structure\Page;
 
 /**
  * This structure cache has more search features than DefaultStructureCache

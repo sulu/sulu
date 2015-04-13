@@ -24,7 +24,7 @@ class DefaultController extends WebsiteController
     /**
      * Loads the content from the request (filled by the route provider) and creates a response with this content and
      * the appropriate cache headers
-     * @param \Sulu\Component\Content\StructureInterface $structure
+     * @param \Sulu\Component\Content\Compat\StructureInterface $structure
      * @param bool $preview
      * @param bool $partial
      * @return Response

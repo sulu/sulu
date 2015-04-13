@@ -52,7 +52,7 @@ class StructureDriver implements DriverInterface
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
-        if (!$class->implementsInterface('Sulu\Component\Content\StructureInterface')) {
+        if (!$class->implementsInterface('Sulu\Component\Content\Compat\StructureInterface')) {
             return null;
         }
 

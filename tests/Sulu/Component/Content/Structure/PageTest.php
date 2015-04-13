@@ -19,7 +19,7 @@ class PageTest extends StructureTestCase
 {
     protected function getStructure()
     {
-        $structure = $this->getMockBuilder('Sulu\Component\Content\Structure\Page')
+        $structure = $this->getMockBuilder('Sulu\Component\Content\Compat\Structure\Page')
             ->disableOriginalConstructor()
             ->setMethods(null)
             ->getMock();

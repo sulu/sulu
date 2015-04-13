@@ -71,7 +71,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit);
         $this->assertCount($expectedCount, $snippets);
         foreach ($snippets as $snippet) {
-            $this->assertInstanceOf('Sulu\Component\Content\Structure\Snippet', $snippet);
+            $this->assertInstanceOf('Sulu\Component\Content\Compat\Structure\Snippet', $snippet);
         }
     }
 

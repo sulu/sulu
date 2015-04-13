@@ -100,7 +100,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     public function getStructureMock()
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
+            '\Sulu\Component\Content\Compat\Structure\Page',
             array('overview', 'asdf', 'asdf', 2400)
         );
 
@@ -135,7 +135,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     }
 
     /**
-     * @return \Sulu\Component\Content\StructureInterface
+     * @return \Sulu\Component\Content\Compat\StructureInterface
      */
     private function prepareGenerateTestData()
     {
@@ -159,7 +159,7 @@ class ResourceLocatorRepositoryTest extends PhpcrTestCase
     }
 
     /**
-     * @return \Sulu\Component\Content\StructureInterface
+     * @return \Sulu\Component\Content\Compat\StructureInterface
      */
     private function prepareHistoryTestData()
     {

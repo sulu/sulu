@@ -58,7 +58,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\Structure\Page');
+        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\Page');
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(array('excerpt' => array('test1' => 'test1')));
         $structure->getUuid()->willReturn('some-uuid');

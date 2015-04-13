@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Document\Property;
 use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Compat\Structure\Structure;
 
 /**
  * Lazy loading container for content properties.

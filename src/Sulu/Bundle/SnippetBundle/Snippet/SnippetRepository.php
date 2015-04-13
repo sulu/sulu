@@ -12,7 +12,7 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Jackalope\Query\Query;
 use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\Content\Structure\Snippet;
+use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;

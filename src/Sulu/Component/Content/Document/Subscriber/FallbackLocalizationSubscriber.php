@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Compat\Structure\Property;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;

@@ -268,7 +268,7 @@ class SmartContent extends ComplexContentType
      * @param SmartContentContainer $container
      * @param PropertyInterface $property
      * @param PropertyParameter[] $params
-     * @return array|\Sulu\Component\Content\StructureInterface[]
+     * @return array|\Sulu\Component\Content\Compat\StructureInterface[]
      */
     private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
     {
@@ -352,7 +352,7 @@ class SmartContent extends ComplexContentType
      * Returns not paged content
      * @param SmartContentContainer $container
      * @param string $excludeUuid
-     * @return \Sulu\Component\Content\StructureInterface[]
+     * @return \Sulu\Component\Content\Compat\StructureInterface[]
      */
     private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)
     {

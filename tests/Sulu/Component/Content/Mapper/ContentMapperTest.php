@@ -97,12 +97,12 @@ class ContentMapperTest extends PhpcrTestCase
 
         if ($type == 10) {
             $structureMock = $this->getMockForAbstractClass(
-                '\Sulu\Component\Content\Structure\Snippet',
+                '\Sulu\Component\Content\Compat\Structure\Snippet',
                 array($name[$type], 'asdf', 'asdf', 2400)
             );
         } else {
             $structureMock = $this->getMockForAbstractClass(
-                '\Sulu\Component\Content\Structure\Page',
+                '\Sulu\Component\Content\Compat\Structure\Page',
                 array($name[$type], 'asdf', 'asdf', 2400)
             );
         }

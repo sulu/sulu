@@ -48,7 +48,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')
             ->disableOriginalConstructor()
             ->getMock();
-        $structure = $this->getMockBuilder('Sulu\Component\Content\Structure\Page')
+        $structure = $this->getMockBuilder('Sulu\Component\Content\Compat\Structure\Page')
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -253,7 +253,7 @@ class NavigationTest extends PhpcrTestCase
     private function getStructureMock($name, $rlp = true)
     {
         $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Structure\Page',
+            '\Sulu\Component\Content\Compat\Structure\Page',
             array($name, 'asdf', 'asdf', 2400)
         );
 

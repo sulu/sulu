@@ -142,7 +142,7 @@ abstract class Structure implements StructureInterface
 
     /**
      * @var StructureType
-     * @Type("Sulu\Component\Content\StructureType")
+     * @Type("Sulu\Component\Content\Compat\StructureType")
      */
     private $type;
 
@@ -650,7 +650,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @param \Sulu\Component\Content\StructureType $type
+     * @param \Sulu\Component\Content\Compat\StructureType $type
      */
     public function setType($type)
     {
@@ -658,7 +658,7 @@ abstract class Structure implements StructureInterface
     }
 
     /**
-     * @return \Sulu\Component\Content\StructureType
+     * @return \Sulu\Component\Content\Compat\StructureType
      */
     public function getType()
     {

@@ -108,7 +108,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         foreach ($data as $key => $value) {
             $this->assertEquals($value, $page->getPropertyValue($key));
         }
-        $this->assertInstanceOf('Sulu\Component\Content\Structure\Page', $page);
+        $this->assertInstanceOf('Sulu\Component\Content\Compat\Structure\Page', $page);
         $this->assertEquals($templateKey, $page->getKey());
 
         $page = $this->contentMapper->load(
@@ -117,7 +117,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
             $locale
         );
 
-        $this->assertInstanceOf('Sulu\Component\Content\Structure\Page', $page);
+        $this->assertInstanceOf('Sulu\Component\Content\Compat\Structure\Page', $page);
         $this->assertEquals($templateKey, $page->getKey());
 
         foreach ($data as $key => $value) {

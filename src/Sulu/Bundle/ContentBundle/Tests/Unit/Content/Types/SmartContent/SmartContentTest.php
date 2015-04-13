@@ -357,7 +357,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $config = array('dataSource' => 'some-uuid');
@@ -430,7 +430,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue(1));
@@ -492,7 +492,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
@@ -539,7 +539,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $this->request->expects($this->any())->method('get')->will($this->returnValue($page));
@@ -604,7 +604,7 @@ class SmartContentTest extends \PHPUnit_Framework_TestCase
             array('getValue', 'getParams')
         );
         $structure = $this->getMockForAbstractClass(
-            'Sulu\Component\Content\StructureInterface'
+            'Sulu\Component\Content\Compat\StructureInterface'
         );
 
         $property->expects($this->exactly(1))->method('getValue')
