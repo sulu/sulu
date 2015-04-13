@@ -10,8 +10,8 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-use Sulu\Component\Content\Document\Property\PropertyInterface;
-use Sulu\Component\Content\Structure\PropertyTag;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyTag;
 
 /**
  * Wrapper for translated properties

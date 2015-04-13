@@ -19,4 +19,10 @@ class Section extends Item
      * @var integer
      */
     public $colSpan = null;
+
+    public function getColSpan() 
+    {
+        return $this->colSpan;
+    }
+    
 }

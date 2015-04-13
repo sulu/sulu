@@ -4,14 +4,15 @@ namespace Sulu\Component\Content\Document\Property;
 
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Structure\Structure;
-use Sulu\Component\Content\Type\ContentTypeManagerInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Document\Property\PropertyInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Structure\Property;
 use Prophecy\Argument;
-use Sulu\Component\Content\Type\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
+use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
 
 class PropertyContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +26,7 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->structureProperty = $this->prophesize(Property::class);
 
-        $this->propertyContainer = new PropertyContainer(
+        $this->propertyContainer = new ManagedPropertyContainer(
             $this->contentTypeManager->reveal(),
             $this->node->reveal(),
             $this->encoder->reveal(),
@@ -45,7 +46,7 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
         $locale = 'fr';
 
         $this->document->getLocale()->willReturn($locale);
-        $this->encoder->localizedContentName($name, $locale)->willReturn($phpcrName);
+        $this->encoder->fromProperty($this->structureProperty->reveal(), $locale)->willReturn($phpcrName);
             $this->structureProperty->isLocalized()->willReturn(true);
 
         $this->doGetProperty($name, $contentTypeName, $phpcrName, $locale);
@@ -92,13 +93,13 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
 
     private function doGetProperty($name, $contentTypeName, $phpcrName)
     {
-        $this->structureProperty->getType()->willReturn($contentTypeName);
+        $this->structureProperty->getContentTypeName()->willReturn($contentTypeName);
         $this->structure->getProperty($name)->willReturn($this->structureProperty);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
 
         $this->contentType->read(
             $this->node->reveal(),
-            Argument::type('Sulu\Component\Content\Document\Property\PropertyInterface'),
+            Argument::type('Sulu\Component\Content\Compat\PropertyInterface'),
             null,
             null,
             null

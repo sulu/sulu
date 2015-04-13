@@ -216,12 +216,15 @@ class Item
     }
 
     /**
-     * Return a description for this item
-     *
-     * @return string
+     * Return the parameters for this property
      */
-    public function getInfoText($locale) 
+    public function getParameters() 
     {
-        return $this->description[$locale];
+        return $this->parameters;
+    }
+
+    public function getDescription() 
+    {
+        return $this->description;
     }
 }
