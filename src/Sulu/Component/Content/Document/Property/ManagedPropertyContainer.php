@@ -14,6 +14,9 @@ use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Property\PropertyValue;
 
 /**
  * Lazy loading container for content properties.
@@ -21,10 +24,11 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 class ManagedPropertyContainer extends PropertyContainer
 {
     private $contentTypeManager;
-    private $structure;
-    private $node;
     private $document;
     private $legacyPropertyFactory;
+    private $inspector;
+    private $structure;
+    private $node;
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
@@ -35,16 +39,16 @@ class ManagedPropertyContainer extends PropertyContainer
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         LegacyPropertyFactory $legacyPropertyFactory,
-        NodeInterface $node,
+        DocumentInspector $inspector,
         Structure $structure,
         $document
     )
     {
         $this->contentTypeManager = $contentTypeManager;
-        $this->structure = $structure;
-        $this->node = $node;
         $this->document = $document;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
+        $this->structure = $structure;
+        $this->inspector = $inspector;
     }
 
     /**
@@ -58,27 +62,34 @@ class ManagedPropertyContainer extends PropertyContainer
             return $this->properties[$name];
         }
 
+        if (!$this->node) {
+            $this->node = $this->inspector->getNode($this->document);
+        }
+
         $structureProperty = $this->structure->getProperty($name);
 
-        $contentTypeName = $structureProperty->getContentTypeName();
+        $contentTypeName = $structureProperty->getType();
 
-        // TODO: Use inspector to get locale
-        $property = $this->legacyPropertyFactory->createTranslatedPropertyFrom($structureProperty, $locale);
+        if ($structureProperty->isLocalized()) {
+            $locale = $this->inspector->getLocale($this->document);
+            $property = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
+        } else {
+            $property = $this->legacyPropertyFactory->createProperty($structureProperty);
+        }
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
         $contentType->read(
             $this->node,
-            $structureProperty,
+            $property,
             null,
             null,
             null
         );
 
-        $valueProperty = new ValueProperty($name);
-        $valueProperty->setValue($structureProperty->getValue());
+        $valueProperty = new PropertyValue($name, $property->getValue());
         $this->properties[$name] = $valueProperty;
 
-        return $property;
+        return $valueProperty;
     }
 
     /**
