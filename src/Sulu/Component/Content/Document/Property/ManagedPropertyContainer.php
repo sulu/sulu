@@ -24,7 +24,7 @@ class ManagedPropertyContainer extends PropertyContainer
     private $structure;
     private $node;
     private $document;
-    private $propertyEncoder;
+    private $legacyPropertyFactory;
 
     /**
      * @param ContentTypeManagerInterface $contentTypeManager
@@ -34,8 +34,8 @@ class ManagedPropertyContainer extends PropertyContainer
      */
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
+        LegacyPropertyFactory $legacyPropertyFactory,
         NodeInterface $node,
-        PropertyEncoder $encoder,
         Structure $structure,
         $document
     )
@@ -44,7 +44,7 @@ class ManagedPropertyContainer extends PropertyContainer
         $this->structure = $structure;
         $this->node = $node;
         $this->document = $document;
-        $this->propertyEncoder = $encoder;
+        $this->legacyPropertyFactory = $legacyPropertyFactory;
     }
 
     /**
@@ -60,32 +60,42 @@ class ManagedPropertyContainer extends PropertyContainer
 
         $structureProperty = $this->structure->getProperty($name);
 
-        $contentTypeName = $structureProperty->getType();
+        $contentTypeName = $structureProperty->getContentTypeName();
 
         // TODO: Use inspector to get locale
-        $locale = $this->document->getLocale();
-        $phpcrName = $this->propertyEncoder->fromProperty($structureProperty, $locale);
-
-        $property = new Property($phpcrName, $this->document);
-        $this->properties[$name] = $property;
+        $property = $this->legacyPropertyFactory->createTranslatedPropertyFrom($structureProperty, $locale);
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
         $contentType->read(
             $this->node,
-            $property,
+            $structureProperty,
             null,
             null,
             null
         );
 
+        $valueProperty = new ValueProperty($name);
+        $valueProperty->setValue($structureProperty->getValue());
+        $this->properties[$name] = $valueProperty;
+
         return $property;
     }
 
+    /**
+     * Update the structure
+     *
+     * @param Structure $structure
+     */
     public function setStructure(Structure $structure) 
     {
         $this->structure = $structure;
     }
 
+    /**
+     * Return an array copy of the property data
+     *
+     * @return array
+     */
     public function getArrayCopy()
     {
         $values = array();
@@ -96,6 +106,9 @@ class ManagedPropertyContainer extends PropertyContainer
         return $values;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function offsetExists($offset)
     {
         return $this->structure->hasProperty($offset);

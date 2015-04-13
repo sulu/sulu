@@ -21,6 +21,7 @@ use Sulu\Component\Content\Structure\Item;
 use Sulu\Component\Content\Structure\Section;
 use Sulu\Component\Content\Structure\Block\BlockProperty;
 use Sulu\Component\Content\Structure\Block\BlockPropertyType;
+use Sulu\Component\Content\Structure\Block;
 
 /**
  * Load structure structure from an XML file
@@ -39,13 +40,12 @@ class XmlLoader extends XmlLegacyLoader
 
         $structure = new Structure();
         $structure->name = $data['key'];
-        $structure->title = $data['meta']['title'];
-        $structure->description = $data['meta']['info_text'];
         $structure->cacheLifetime = $data['cacheLifetime'];
         $structure->controller = $data['controller'];
         $structure->tags = $data['tags'];
         $structure->parameters = $data['params'];
         $structure->resource = $resource;
+        $this->mapMeta($structure, $data['meta']);
 
         foreach ($data['properties'] as $propertyName => $dataProperty) {
             $structure->children[$propertyName] = $this->createProperty($propertyName, $dataProperty);
@@ -85,12 +85,12 @@ class XmlLoader extends XmlLegacyLoader
 
     private function createBlock($propertyName, $data)
     {
-        $blockProperty = new BlockProperty();
+        $blockProperty = new Block();
         $blockProperty->name = $propertyName;
         $this->mapProperty($blockProperty, $data);
 
         foreach ($data['types'] as $name => $type) {
-            $blockType = new BlockPropertyType($name, $type['meta']);
+            $blockType = new Component();
             foreach ($type['properties'] as $propertyName => $propertyData) {
                 $property = new Property();
                 $property->name = $propertyName;
@@ -114,6 +114,7 @@ class XmlLoader extends XmlLegacyLoader
         $property->tags = $data['tags'];
         $property->minOccurs = $data['minOccurs'];
         $property->maxOccurs = $data['maxOccurs'];
+        $this->mapMeta($property, $data['meta']);
     }
 
     private function normalizePropertyData($data)
@@ -157,6 +158,16 @@ class XmlLoader extends XmlLegacyLoader
         ), $data);
 
         return $data;
+    }
+
+    private function mapMeta($item, $meta)
+    {
+        $item->title = $meta['title'];
+        $item->description = $meta['info_text'];
+
+        if (isset($item->placeholder)) {
+            $item->placeholder = $meta['info_text'];
+        }
     }
 
     /**

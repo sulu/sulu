@@ -15,7 +15,7 @@ use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\Content\Structure\Section;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
 
-class Structure extends Item implements StructureInterface
+class Structure extends Item
 {
     /**
      * The resource from which this structure was loaded
@@ -136,14 +136,5 @@ class Structure extends Item implements StructureInterface
     public function hasTag($tagName)
     {
         return (boolean) $this->getPropertiesByTagName($tagName);
-    }
-
-    /**
-     * @deprecated Use getName instead
-     * TODO: Remove this
-     */
-    public function getKey()
-    {
-        return $this->getName();
     }
 }

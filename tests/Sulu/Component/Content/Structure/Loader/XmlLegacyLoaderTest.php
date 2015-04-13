@@ -8,11 +8,11 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Template;
+namespace Sulu\Component\Content\Structure\Loader;
 
 use InvalidArgumentException;
 
-class TemplateReaderTest extends \PHPUnit_Framework_TestCase
+class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testReadTemplate()
     {
@@ -177,9 +177,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template.xml');
-
+        $result = $this->loadFixture('template.xml');
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
@@ -219,10 +217,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_title_in_section.xml'
-        );
+        $result = $this->loadFixture('template_title_in_section.xml');
 
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
@@ -234,10 +229,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadTypesInvalidPath()
     {
-        $templateReader = new TemplateReader();
-        $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_not_exists.xml'
-        );
+        $this->loadFixture('template_not_exists.xml');
     }
 
     public function testReadTypesEmptyProperties()
@@ -251,23 +243,19 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException',
+            '\Sulu\Component\Content\Structure\Loader\Exception\RequiredPropertyNameNotFoundException',
             'The property with the name "title" is required, but was not found in the template "template"'
         );
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_properties.xml'
-        );
+        $result = $this->loadFixture('template_missing_properties.xml');
         $this->assertEquals($template, $result);
     }
 
     /**
-     * @expectedException \Sulu\Component\Content\Template\Exception\InvalidXmlException
+     * @expectedException \Sulu\Component\Content\Structure\Loader\Exception\InvalidXmlException
      */
     public function testReadTypesMissingMandatory()
     {
-        $templateReader = new TemplateReader();
-        $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_mandatory.xml');
+        $this->loadFixture('template_missing_mandatory.xml');
     }
 
     public function testReadBlockTemplate()
@@ -545,9 +533,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template_block.xml');
-
+        $result = $this->loadFixture('template_block.xml');
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
@@ -718,9 +704,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template_block_types.xml');
-
+        $result = $this->loadFixture('template_block_types.xml');
         $this->assertEquals($template, $result);
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
@@ -919,9 +903,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template_sections.xml');
-
+        $result = $this->loadFixture('template_sections.xml');
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
     }
@@ -929,11 +911,10 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testReservedName()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\ReservedPropertyNameException'
+            '\Sulu\Component\Content\Structure\Loader\Exception\ReservedPropertyNameException'
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(__DIR__ . '/../../../../Resources/DataFixtures/Page/template_reserved.xml');
+        $result = $this->loadFixture('template_reserved.xml');
     }
 
     public function testNestingParams()
@@ -974,10 +955,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_nesting_params.xml'
-        );
+        $result = $this->loadFixture('template_nesting_params.xml');
 
         $x = $this->arrayRecursiveDiff($result, $template);
         $this->assertEquals(0, sizeof($x));
@@ -1017,10 +995,7 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
             )
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_meta_params.xml'
-        );
+        $result = $this->loadFixture('template_meta_params.xml');
 
         $this->assertEquals($template, $result);
     }
@@ -1028,14 +1003,11 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
     public function testWithoutTitle()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Content\Template\Exception\RequiredPropertyNameNotFoundException',
+            '\Sulu\Component\Content\Structure\Loader\Exception\RequiredPropertyNameNotFoundException',
             'The property with the name "title" is required, but was not found in the template "template"'
         );
 
-        $templateReader = new TemplateReader();
-        $result = $templateReader->load(
-            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_title.xml'
-        );
+        $this->loadFixture('template_missing_title.xml');
     }
 
     private function arrayRecursiveDiff($aArray1, $aArray2)
@@ -1060,5 +1032,15 @@ class TemplateReaderTest extends \PHPUnit_Framework_TestCase
         }
 
         return $aReturn;
+    }
+
+    private function loadFixture($name)
+    {
+        $xmlLegacyLoader = new XmlLegacyLoader();
+        $result = $xmlLegacyLoader->load(
+            __DIR__ . '/../../../../../Resources/DataFixtures/Page/' . $name
+        );
+
+        return $result;
     }
 }

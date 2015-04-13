@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Structure;
 
-class Property extends Item implements PropertyInterface
+class Property extends Item
 {
     /**
      * Type of this property (e.g. "text_line", "smart_content")
@@ -19,6 +19,11 @@ class Property extends Item implements PropertyInterface
      * @var string
      */
     public $type;
+
+    /**
+     * Placeholder for property
+     */
+    public $placeholder;
 
     /**
      * If the property should be available in different localizations
@@ -70,63 +75,6 @@ class Property extends Item implements PropertyInterface
      */
     public $structure;
 
-
-    /**
-     * @deprecated This should never be instantiated by anything other than the XML loader
-     *             and the XML loader does not use the constructor.
-     */
-    public function __construct(
-        $name = null,
-        $metaData = null,
-        $contentTypeName = null,
-        $mandatory = false,
-        $multilingual = true,
-        $maxOccurs = 1,
-        $minOccurs = 1,
-        $params = array(),
-        $tags = array(),
-        $col = null
-    ) {
-        $this->type = $contentTypeName;
-        $this->required = $mandatory;
-        $this->maxOccurs = $maxOccurs;
-        $this->minOccurs = $minOccurs;
-        $this->localized = $multilingual;
-        $this->name = $name;
-        $this->parameters = $params;
-        $this->tags = $tags;
-        $this->colSpan = $col;
-    }
-
-    public function getIsMultiple()
-    {
-        return $this->isMultiple();
-    }
-
-    /**
-     * @deprecated - use isRequired
-     */
-    public function getMandatory()
-    {
-        return $this->required;
-    }
-
-    /**
-     * @deprecated - use isLocalized
-     */
-    public function isMultilingual()
-    {
-        return $this->localized;
-    }
-
-    /**
-     * TODO: Remove this, it is a duplicate
-     */
-    public function getMultilingual()
-    {
-        return $this->localized;
-    }
-
     public function getMinOccurs()
     {
         return $this->minOccurs;
@@ -170,16 +118,6 @@ class Property extends Item implements PropertyInterface
         return $this->placeholder[$locale];
     }
 
-    /**
-     * Duplicate
-     *
-     * @deprecated - use isRequired
-     */
-    public function isMandatory()
-    {
-        return $this->required;
-    }
-
     public function isRequired()
     {
         return $this->required;
@@ -199,5 +137,4 @@ class Property extends Item implements PropertyInterface
     {
         return $this->type;
     }
-    
 }
