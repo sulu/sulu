@@ -54,16 +54,6 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     }
 
     /**
-     * It should not re-register the document if the resolved locale is the same as the given locale
-     */
-    public function testNoReRegister()
-    {
-        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(true);
-        $this->registry->registerDocument(Argument::cetera())->shouldNotBeCalled();
-        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
-    }
-
-    /**
      * If no webspace is available, then return the first available localization for the document
      */
     public function testNoWebspace()
@@ -71,11 +61,11 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
-        $this->registry->registerDocument(
+        $this->registry->updateLocale(
             $this->document->reveal(),
-            $this->node->reveal(),
             'de'
         )->shouldBeCalled();
+        $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -109,11 +99,11 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
         $this->node->hasProperty('prop2')->willReturn(true);
 
-        $this->registry->registerDocument(
+        $this->registry->updateLocale(
             $this->document->reveal(),
-            $this->node->reveal(),
             'at'
         )->shouldBeCalled();
+        $this->hydrateEvent->setLocale('at')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -139,11 +129,11 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
             $this->localization2->reveal()
         ));
 
-        $this->registry->registerDocument(
+        $this->registry->updateLocale(
             $this->document->reveal(),
-            $this->node->reveal(),
             'at'
         )->shouldBeCalled();
+        $this->hydrateEvent->setLocale('at')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
@@ -171,11 +161,11 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
             $this->localization2->reveal()
         ));
 
-        $this->registry->registerDocument(
+        $this->registry->updateLocale(
             $this->document->reveal(),
-            $this->node->reveal(),
             'at'
         )->shouldBeCalled();
+        $this->hydrateEvent->setLocale('at')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 }

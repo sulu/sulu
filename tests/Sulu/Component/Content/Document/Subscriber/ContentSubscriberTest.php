@@ -10,23 +10,26 @@
  
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\DocumentManager\PropertyEncoder;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
-use Sulu\Component\DocumentManager\Event\PersistEvent;
 use PHPCR\NodeInterface;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Prophecy\Argument;
-use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
-use Sulu\Component\Content\Document\Property\PropertyInterface;
-use Sulu\Component\DocumentManager\MetadataFactory;
-use Sulu\Component\Content\Type\ContentTypeManagerInterface;
 use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Type\ContentTypeInterface;
 use Sulu\Component\Content\Structure\Structure;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
+use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Metadata;
+use Sulu\Component\DocumentManager\MetadataFactory;
+use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Document\Property\PropertyValue;
 
 class ContentSubscriberTest extends SubscriberTestCase
 {
@@ -34,21 +37,21 @@ class ContentSubscriberTest extends SubscriberTestCase
     {
         parent::setUp();
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
-        $this->metadataFactory = $this->prophesize(MetadataFactory::class);
-        $this->metadata = $this->prophesize(Metadata::class);
-        $this->structureFactory = $this->prophesize(StructureFactory::class);
 
         $this->structureProperty = $this->prophesize(Property::class);
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
-        $this->contentProperty = $this->prophesize(PropertyInterface::class);
+        $this->propertyValue = $this->prophesize(PropertyValue::class);
+        $this->legacyProperty = $this->prophesize(TranslatedProperty::class);
         $this->structure = $this->prophesize(Structure::class);
         $this->propertyContainer = $this->prophesize(PropertyContainer::class);
+        $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
+        $this->inspector = $this->prophesize(DocumentInspector::class);
 
         $this->subscriber = new ContentSubscriber(
             $this->encoder->reveal(),
             $this->contentTypeManager->reveal(),
-            $this->metadataFactory->reveal(),
-            $this->structureFactory->reveal()
+            $this->inspector->reveal(),
+            $this->propertyFactory->reveal()
         );
     }
 
@@ -64,15 +67,13 @@ class ContentSubscriberTest extends SubscriberTestCase
     /**
      * It should return early if the structure type is empty
      */
-
     public function testPersistNoStructureType()
     {
         $document = new TestContentDocument($this->propertyContainer->reveal());
 
         // map the structure type
-        $this->persistEvent->getLocale()->willReturn('fr');
-        $this->encoder->localizedSystemName('template', 'fr')->willReturn('i18n:fr-template');
-        $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
+        $this->persistEvent->getDocument()->willReturn($document);
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
     /**
@@ -90,19 +91,23 @@ class ContentSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
 
         // map the content
-        $this->metadataFactory->getMetadataForClass(Argument::type('string'))->willReturn($this->metadata->reveal());
-        $this->metadata->getAlias()->willReturn('hello');
-        $this->structureFactory->getStructure('hello', 'foobar')->willReturn($this->structure->reveal());
+        $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
+        $this->inspector->getWebspace($document)->willReturn('webspace');
         $this->structure->getChildren()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
         $this->structureProperty->getContentTypeName()->willReturn('content_type');
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
-        $this->propertyContainer->getProperty('prop1')->willReturn($this->contentProperty->reveal());
+        $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), 'fr')->willReturn($this->legacyProperty->reveal());
+        $this->propertyContainer->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+
         $this->contentType->write(
             $this->node->reveal(),
-            $this->contentProperty->reveal(),
-            null, null, null, null
+            $this->legacyProperty->reveal(),
+            null,
+            'webspace',
+            'fr',
+            null
         )->shouldBeCalled();
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
@@ -132,10 +137,6 @@ class ContentSubscriberTest extends SubscriberTestCase
         $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn('foobar');
 
         // set the property container
-        $this->metadataFactory->getMetadataForClass(Argument::type('string'))->willReturn($this->metadata->reveal());
-        $this->metadata->getAlias()->willReturn('hello');
-        $this->structureFactory->getStructure('hello', 'foobar')->willReturn($this->structure->reveal());
-
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
         $this->assertEquals('foobar', $document->getStructureType());
         $this->accessor->set('content', Argument::type(PropertyContainer::class))->shouldHaveBeenCalled();
@@ -147,6 +148,7 @@ class TestContentDocument implements ContentBehavior
 {
     private $structureType;
     private $content;
+    private $locale;
 
     public function __construct(PropertyContainer $content = null)
     {
@@ -167,4 +169,10 @@ class TestContentDocument implements ContentBehavior
     {
         return $this->content;
     }
+
+    public function getLocale() 
+    {
+        return $this->locale;
+    }
+    
 }

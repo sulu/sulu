@@ -26,15 +26,15 @@ use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
     const STRUCTURE_TYPE_FIELD = 'template';
 
     private $contentTypeManager;
-    private $structureFactory;
-    private $metadataFactory;
-    private $documentInspector;
+    private $inspector;
+    private $legacyPropertyFactory;
 
     /**
      * @param PropertyEncoder $encoder<
@@ -44,16 +44,14 @@ class ContentSubscriber extends AbstractMappingSubscriber
     public function __construct(
         PropertyEncoder $encoder,
         ContentTypeManagerInterface $contentTypeManager,
-        DocumentMetadataFactory $metadataFactory,
-        StructureFactory $structureFactory,
-        DocumentInspector $documentInspector
+        DocumentInspector $inspector,
+        LegacyPropertyFactory $legacyPropertyFactory
     )
     {
         parent::__construct($encoder);
         $this->contentTypeManager = $contentTypeManager;
-        $this->structureFactory = $structureFactory;
-        $this->metadataFactory = $metadataFactory;
-        $this->documentInspector = $documentInspector;
+        $this->inspector = $inspector;
+        $this->legacyPropertyFactory = $legacyPropertyFactory;
     }
 
     /**
@@ -78,7 +76,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $document->setStructureType($value);
 
         if ($value) {
-            $container = $this->createPropertyContainer($document, $node);
+            $container = $this->createPropertyContainer($document);
         } else {
             $container = new PropertyContainer();
         }
@@ -97,42 +95,33 @@ class ContentSubscriber extends AbstractMappingSubscriber
     {
         // Set the structure type
         $document = $event->getDocument();
-        $node = $event->getNode();
 
         if (!$document->getStructureType()) {
             return;
         }
 
+        $node = $event->getNode();
+        $locale = $event->getLocale();
         $node->setProperty(
-            $this->encoder->localizedSystemName('template', $event->getLocale()),
+            $this->encoder->localizedSystemName('template', $locale),
             $document->getStructureType()
         );
 
-        $this->mapContentToNode($document, $node);
+        $this->mapContentToNode($document, $node, $locale);
     }
 
     /**
      * @param mixed $document
      * @param NodeInterface $node
      */
-    private function createPropertyContainer($document, NodeInterface $node)
+    private function createPropertyContainer($document)
     {
         return new ManagedPropertyContainer(
             $this->contentTypeManager,
-            $node,
-            $this->encoder,
-            $this->getStructure($document),
+            $this->legacyPropertyFactory,
+            $this->inspector,
             $document
         );
-    }
-
-    /**
-     * @param mixed $document
-     */
-    private function getStructure($document)
-    {
-        $documentAlias = $this->metadataFactory->getMetadataForClass(get_class($document))->getAlias();
-        return $this->structureFactory->getStructure($documentAlias, $document->getStructureType());
     }
 
     /**
@@ -141,36 +130,23 @@ class ContentSubscriber extends AbstractMappingSubscriber
      * @param mixed $document
      * @param NodeInterface $node
      */
-    private function mapContentToNode($document, NodeInterface $node)
+    private function mapContentToNode($document, NodeInterface $node, $locale)
     {
         $propertyContainer = $document->getContent();
-        $structure = $this->getStructure($document);
-        $webspaceName = $this->documentInspector->getWebspace($document);
-        $locale = $this->documentInspector->getLocale($document);
-
-        // If the content container is managed, then update the structure
-        // as it may have changed.
-        if ($propertyContainer instanceof ManagedPropertyContainer) {
-            $propertyContainer->setStructure($structure);
-        }
-
-        // Document title is mandatory
-        // TODO: This is duplicated inthe TitleSubscriber
-        $document->getContent()->getProperty('title')->setValue($document->getTitle());
+        $webspaceName = $this->inspector->getWebspace($document);
+        $structure = $this->inspector->getStructure($document);
 
         foreach ($structure->getChildren() as $propertyName => $structureProperty) {
             $contentTypeName = $structureProperty->getContentTypeName();
             $contentType = $this->contentTypeManager->get($contentTypeName);
 
-            $phpcrName = $this->encoder->fromProperty($structureProperty, $locale);
-
+            $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $realProperty = $propertyContainer->getProperty($propertyName);
-            $property = new Property($phpcrName, $document);
-            $property->setValue($realProperty->getValue());
+            $legacyProperty->setValue($realProperty->getValue());
 
             $contentType->write(
                 $node,
-                $property,
+                $legacyProperty,
                 null,
                 $webspaceName,
                 $locale,
