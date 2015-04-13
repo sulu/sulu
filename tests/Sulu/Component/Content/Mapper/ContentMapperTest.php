@@ -30,6 +30,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Extension\AbstractExtension;
 
 /**
  * tests content mapper with tree strategy and phpcr mapper
@@ -3676,7 +3677,7 @@ class ContentMapperTest extends PhpcrTestCase
     }
 }
 
-class TestExtension extends StructureExtension
+class TestExtension extends AbstractExtension
 {
     protected $properties = array(
         'a',
