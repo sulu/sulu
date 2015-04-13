@@ -25,7 +25,6 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\PathBehavior;
 
@@ -42,7 +41,6 @@ class PageDocument implements
     WorkflowStageBehavior,
     ShadowLocaleBehavior,
     UuidBehavior,
-    LocaleBehavior,
     ChildrenBehavior,
     PathBehavior
 {

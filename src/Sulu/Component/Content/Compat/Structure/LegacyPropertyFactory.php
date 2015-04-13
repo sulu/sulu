@@ -14,6 +14,7 @@ use Sulu\Component\Content\Structure\Block;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
+use Sulu\Component\Content\Compat\PropertyTag;
 
 /**
  * Creates legacy properties from "new" properties.
