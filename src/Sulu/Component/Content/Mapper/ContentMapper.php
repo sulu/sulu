@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\Compat\Mapper;
 
 use DateTime;
 use Doctrine\Common\Cache\ArrayCache;
@@ -20,10 +20,10 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\RepositoryException;
-use Sulu\Component\Content\BreadcrumbItem;
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Compat\BreadcrumbItem;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\Compat\ContentTypeManager;
+use Sulu\Component\Content\Compat\ContentEvents;
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Sulu\Component\Content\Exception\ExtensionNotFoundException;
@@ -35,14 +35,14 @@ use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Section\SectionPropertyInterface;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManagerInterface;
-use Sulu\Component\Content\StructureType;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Template\Exception\TemplateNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;

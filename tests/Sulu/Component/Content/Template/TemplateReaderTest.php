@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Template;
+namespace Sulu\Component\Content\Compat\Template;
 
 use InvalidArgumentException;
 

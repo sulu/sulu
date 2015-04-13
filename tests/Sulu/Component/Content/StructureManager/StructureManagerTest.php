@@ -8,19 +8,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\StructureManager;
+namespace Sulu\Component\Content\Compat\StructureManager;
 
 use PHPCR\NodeInterface;
 use Psr\Log\LoggerInterface;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyInterface;
-use Sulu\Component\Content\PropertyParameter;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Compat\PropertyParameter;
+use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\StructureManager;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManager;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -92,7 +92,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $structure = $this->structureManager->getStructure('template');
 
         // should implement interface
-        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+        $this->assertInstanceOf('\Sulu\Component\Content\Compat\StructureInterface', $structure);
 
         // check metadata
         $this->assertEquals('Das ist das Template 1', $structure->getLocalizedTitle('de'));
@@ -240,7 +240,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $structure = $this->structureManager->getStructure('template_block');
 
         // should implement interface
-        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+        $this->assertInstanceOf('\Sulu\Component\Content\Compat\StructureInterface', $structure);
 
         // check properties
         $this->assertEquals('template_block', $structure->getKey());
@@ -471,7 +471,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $structure = $this->structureManager->getStructure('template_block_types');
 
         // should implement interface
-        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+        $this->assertInstanceOf('\Sulu\Component\Content\Compat\StructureInterface', $structure);
 
         // check properties
         $this->assertEquals('template_block_types', $structure->getKey());
@@ -524,7 +524,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $structure = $this->structureManager->getStructure('template_sections');
 
         // should implement interface
-        $this->assertInstanceOf('\Sulu\Component\Content\StructureInterface', $structure);
+        $this->assertInstanceOf('\Sulu\Component\Content\Compat\StructureInterface', $structure);
 
         $this->assertEquals(4, sizeof($structure->getProperties()));
         $this->assertEquals('title', $structure->getProperty('title')->getName());
@@ -532,7 +532,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         /** @var SectionProperty $section */
         $section = $structure->getProperty('test');
         $this->assertInstanceOf('\Sulu\Component\Content\Section\SectionPropertyInterface', $section);
-        $this->assertInstanceOf('\Sulu\Component\Content\PropertyInterface', $section);
+        $this->assertInstanceOf('\Sulu\Component\Content\Compat\PropertyInterface', $section);
         $this->assertEquals('url', $section->getChildProperties()[0]->getName());
         $this->assertEquals('article', $section->getChildProperties()[1]->getName());
         $this->assertEquals('block', $section->getChildProperties()[2]->getName());

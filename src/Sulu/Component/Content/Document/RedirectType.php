@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Document;
+namespace Sulu\Component\Content\Compat\Document;
 
 /**
  * Constants class for redirect types

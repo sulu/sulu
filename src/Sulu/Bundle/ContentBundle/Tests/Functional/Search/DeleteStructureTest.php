@@ -11,9 +11,9 @@
 namespace Sulu\Bundle\ContentBundle\Tests\Functional\Search;
 
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\SecondStructureCache;
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\PropertyTag;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 
 class DeleteStructureTest extends BaseTestCase

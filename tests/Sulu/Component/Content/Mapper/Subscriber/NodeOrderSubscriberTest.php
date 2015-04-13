@@ -4,7 +4,7 @@ namespace Sulu\Component\Content\Mapper\Subscriber;
 
 use Sulu\Component\Content\Event\ContentNodeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Sulu\Component\Content\ContentEvents;
+use Sulu\Component\Content\Compat\ContentEvents;
 use PHPCR\PropertyType;
 use Sulu\Component\Content\Event\ContentNodeOrderEvent;
 use Prophecy\Argument;
@@ -20,7 +20,7 @@ class NodeOrderSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->orderBefore = $this->prophesize('PHPCR\NodeInterface');
         $this->node->getName()->willReturn('Node 1');
         $this->parent = $this->prophesize('PHPCR\NodeInterface');
-        $this->structure = $this->prophesize('Sulu\Component\Content\Structure');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure');
 
         for ($i = 0; $i <= 3; $i++) {
             $this->{'sibling' . $i} = $this->prophesize('PHPCR\NodeInterface');
@@ -28,7 +28,7 @@ class NodeOrderSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->{'sibling' . $i}->setProperty('sulu:order', Argument::any(), Argument::any())->willReturn('Sibling 1');
         }
 
-        $this->structure = $this->prophesize('Sulu\Component\Content\Structure');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure');
 
         $this->subscriber = new NodeOrderSubscriber();
         $this->nodeOrderEvent = new ContentNodeOrderEvent($this->node->reveal(), $this->orderBefore->reveal());

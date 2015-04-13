@@ -12,7 +12,7 @@ namespace Sulu\Component\HttpCache\EventListener;
 
 use Sulu\Component\HttpCache\EventSubscriber\ContentMapperSubscriber;
 use Sulu\Component\Content\Event\ContentNodeDeleteEvent;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 
 class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
@@ -43,7 +43,7 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->nodeEvent = $this->prophesize('Sulu\Component\Content\Event\ContentNodeEvent');
         $this->deleteEvent = $this->prophesize('Sulu\Component\Content\Event\ContentNodeDeleteEvent');
-        $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
 
         $this->subscriber = new ContentMapperSubscriber(

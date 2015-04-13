@@ -13,7 +13,7 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Preview;
 use Sulu\Bundle\ContentBundle\Preview\PreviewMessageHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Websocket\ConnectionContext\ConnectionContext;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;

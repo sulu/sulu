@@ -14,10 +14,10 @@ use InvalidArgumentException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
-use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 
 class SnippetContentTest extends BaseFunctionalTestCase
@@ -54,7 +54,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->loadFixtures();
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->property = $this->getMock('Sulu\Component\Content\PropertyInterface');
+        $this->property = $this->getMock('Sulu\Component\Content\Compat\PropertyInterface');
 
         $this->structureResolver = $this->getContainer()->get('sulu_website.resolver.structure');
         $this->contentType = new SnippetContent(

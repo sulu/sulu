@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Extension;
+namespace Sulu\Component\Content\Compat\Extension;
 
 use Sulu\Component\Content\Extension\ExtensionInterface;
 

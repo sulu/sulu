@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Mapper;
+namespace Sulu\Component\Content\Compat\Mapper;
 
 use PHPCR\ItemNotFoundException;
 use PHPCR\NodeInterface;
@@ -17,15 +17,15 @@ use ReflectionMethod;
 use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\BreadcrumbItemInterface;
-use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
+use Sulu\Component\Content\Compat\ContentEvents;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\StructureExtension\StructureExtensionInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -3597,8 +3597,8 @@ class ContentMapperTest extends PhpcrTestCase
         $node = $this->getMock('PHPCR\NodeInterface', array(), array(), '', false);
         $parentNode = $this->getMock('PHPCR\NodeInterface', array(), array(), '', false);
 
-        $property = $this->getMock('Sulu\Component\Content\Property', array(), array(), '', false);
-        $structure = $this->getMock('Sulu\Component\Content\Structure', array(), array(), '', false);
+        $property = $this->getMock('Sulu\Component\Content\Compat\Property', array(), array(), '', false);
+        $structure = $this->getMock('Sulu\Component\Content\Compat\Structure', array(), array(), '', false);
 
         $queryResult->expects($this->any())
             ->method('getRows')

@@ -12,11 +12,11 @@ namespace Sulu\Bundle\SnippetBundle\Content;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
-use Sulu\Component\Content\ComplexContentType;
+use Sulu\Component\Content\Compat\ComplexContentType;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\ContentTypeInterface;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Structure\Snippet;

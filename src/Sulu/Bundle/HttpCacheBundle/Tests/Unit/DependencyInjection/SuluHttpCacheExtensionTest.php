@@ -12,7 +12,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
         $this->container->setParameter('kernel.environment', 'test');
         $this->container->set('sulu_core.webspace.webspace_manager', $this->getMock('Sulu\Component\Webspace\Manager\WebspaceManagerInterface'));
-        $this->container->set('sulu.content.type_manager', $this->getMock('Sulu\Component\Content\ContentTypeManagerInterface'));
+        $this->container->set('sulu.content.type_manager', $this->getMock('Sulu\Component\Content\Compat\ContentTypeManagerInterface'));
         $this->container->set('logger', $this->getMock('Psr\Log\LoggerInterface'));
     }
 

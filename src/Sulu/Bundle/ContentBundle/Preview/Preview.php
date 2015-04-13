@@ -10,8 +10,8 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * handles preview start / stop / update / render

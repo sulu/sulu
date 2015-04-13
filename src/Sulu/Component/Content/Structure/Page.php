@@ -8,15 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Structure;
+namespace Sulu\Component\Content\Compat\Structure;
 
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\Metadata;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Metadata;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Util\ArrayableInterface;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
-use Sulu\Component\Content\PageInterface;
+use Sulu\Component\Content\Compat\PageInterface;
 
 /**
  * This structure represents a page in the CMS

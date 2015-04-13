@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Content\Types;
 
-use Sulu\Component\Content\SimpleContentType;
+use Sulu\Component\Content\Compat\SimpleContentType;
 
 /**
  * ContentType for Phone

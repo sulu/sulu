@@ -10,10 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Twig;
 
-use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\PropertyInterface;
-use Sulu\Component\Content\PropertyParameter;
+use Sulu\Component\Content\Compat\ContentTypeInterface;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\PropertyParameter;
 
 /**
  * Extension for content form generation

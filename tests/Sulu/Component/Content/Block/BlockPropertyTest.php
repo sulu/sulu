@@ -1,6 +1,6 @@
 <?php
 
-namespace vendor\sulu\sulu\tests\Sulu\Component\Content\Block;
+namespace vendor\sulu\sulu\tests\Sulu\Component\Content\Compat\Block;
 
 use Sulu\Component\Content\Block\BlockProperty;
 

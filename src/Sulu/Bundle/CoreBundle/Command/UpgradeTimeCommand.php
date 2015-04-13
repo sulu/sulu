@@ -16,7 +16,7 @@ use Sulu\Component\Content\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;

@@ -8,9 +8,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Exception;
+namespace Sulu\Component\Content\Compat\Exception;
 
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 class ExtensionNotFoundException extends \Exception
 {

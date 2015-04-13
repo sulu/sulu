@@ -19,13 +19,13 @@ use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Component\Content\Block\BlockContentType;
-use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Compat\ContentTypeManager;
+use Sulu\Component\Content\Compat\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Template\TemplateResolver;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
@@ -308,7 +308,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected function prepareStructureManager()
     {
         if ($this->structureManager === null) {
-            $this->structureManager = $this->getMock('\Sulu\Component\Content\StructureManagerInterface');
+            $this->structureManager = $this->getMock('\Sulu\Component\Content\Compat\StructureManagerInterface');
 
             $this->structureManager->expects($this->any())
                 ->method('getStructure')
