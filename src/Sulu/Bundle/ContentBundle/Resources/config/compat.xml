@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_content.compat.data_normalizer.class">Sulu\Component\Content\Compat\DataNormalizer</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="sulu_content.compat.data_normalizer" class="%sulu_content.compat.data_normalizer.class%" />
+
+    </services>
+
+</container>
+

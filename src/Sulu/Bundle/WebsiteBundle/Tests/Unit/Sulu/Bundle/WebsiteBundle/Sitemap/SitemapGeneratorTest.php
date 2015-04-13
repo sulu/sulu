@@ -27,6 +27,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\Content\Extension\AbstractExtension;
 
 class SitemapGeneratorTest extends PhpcrTestCase
 {
@@ -448,7 +449,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
     }
 }
 
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension

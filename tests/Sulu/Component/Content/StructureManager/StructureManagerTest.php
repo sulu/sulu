@@ -25,6 +25,7 @@ use Sulu\Component\Content\Template\Dumper\PhpTemplateDumper;
 use Sulu\Component\Content\Template\TemplateReader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Sulu\Component\Content\Extension\AbstractExtension;
 
 class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -616,7 +617,7 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class TestExtension extends StructureExtension
+class TestExtension extends AbstractExtension
 {
     protected $properties = array(
         'a',

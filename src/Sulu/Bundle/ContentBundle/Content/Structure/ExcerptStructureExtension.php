@@ -18,12 +18,13 @@ use Sulu\Component\Content\StructureExtension\StructureExtension;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Util\ArrayableInterface;
+use Sulu\Component\Content\Extension\AbstractExtension;
 
 /**
  * extends structure with seo content
  * @package Sulu\Bundle\ContentBundle\Content\Structure
  */
-class ExcerptStructureExtension extends StructureExtension
+class ExcerptStructureExtension extends AbstractExtension
 {
     /**
      * name of structure extension
