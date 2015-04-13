@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Exception;
+namespace Sulu\Component\Content\Exception;
 
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
