@@ -10,7 +10,7 @@
  
 namespace Sulu\Component\Content\Document\Property;
 
-use Sulu\Component\Content\Type\ContentTypeManagerInterface;
+use Sulu\Component\Content\Types\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Content\Compat\Structure\Structure;
