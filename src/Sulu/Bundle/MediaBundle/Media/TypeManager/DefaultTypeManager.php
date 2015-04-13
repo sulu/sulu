@@ -16,7 +16,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 
 class DefaultTypeManager implements TypeManagerInterface
 {
-
     /**
      * @var array
      */
