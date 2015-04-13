@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContentBundle\Search\EventListener;
 
 use Massive\Bundle\SearchBundle\Search\Event\SearchEvent;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 
 /**
  * Listen to for search to be sure that all structure cache classes are generated and loaded.

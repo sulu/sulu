@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Structure;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
@@ -126,7 +127,7 @@ abstract class SuluTestCase extends BaseTestCase
     {
         /** @var SessionInterface $session */
         $session = $this->db('PHPCR')->getOm()->getPhpcrSession();
-        $structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $structureFactory = $this->getContainer()->get('sulu_content.structure.factory');
 
         if ($session->nodeExists('/cmf')) {
             $session->getNode('/cmf')->remove();
@@ -137,19 +138,10 @@ abstract class SuluTestCase extends BaseTestCase
         $cmf = $session->getRootNode()->addNode('cmf');
 
         $snippetsNode = $cmf->addNode('snippets');
-        $snippetStructures = $structureManager->getStructures(Structure::TYPE_SNIPPET);
-
-        foreach ($snippetStructures as $snippetStructure) {
-            $snippetsNode->addNode($snippetStructure->getKey());
-        }
 
         // we should use the doctrinephpcrbundle repository initializer to do this.
         $webspace = $cmf->addNode('sulu_io');
-        $nodes = $webspace->addNode('routes');
-        $nodes->addNode('de');
-        $nodes->addNode('de_at');
-        $nodes->addNode('en');
-        $nodes->addNode('en_us');
+        $webspace->addMixin('mix:referenceable');
 
         $content = $webspace->addNode('contents');
         $content->setProperty('i18n:en-template', 'default');
@@ -157,9 +149,22 @@ abstract class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-created', new \DateTime());
         $content->setProperty('i18n:en-changer', 1);
         $content->setProperty('i18n:en-changed', new \DateTime());
-        $content->addMixin('sulu:content');
+        $content->setProperty('i18n:en-title', 'Homepage');
+        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
+        $content->setProperty('i18n:en-published', new \DateTime());
+        $content->setProperty('i18n:en-url', '/');
+        $content->addMixin('sulu:home');
 
         $webspace->addNode('temp');
+
+        $session->save();
+        $nodes = $webspace->addNode('routes');
+        foreach (array('de', 'de_at', 'en', 'en_us', 'fr') as $locale) {
+            $localeNode = $nodes->addNode($locale);
+            $localeNode->setProperty('sulu:content', $content);
+            $localeNode->setProperty('sulu:history', false);
+            $localeNode->addMixin('sulu:path');
+        }
 
         $session->save();
     }
