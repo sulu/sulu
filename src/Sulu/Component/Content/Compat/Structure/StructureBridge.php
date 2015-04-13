@@ -22,7 +22,7 @@ use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Structure\Item;
 use Sulu\Component\Content\Structure\Property as NewProperty;
 use Sulu\Component\Content\Structure\Section;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Compat\Structure;
 
 class StructureBridge implements StructureInterface
 {

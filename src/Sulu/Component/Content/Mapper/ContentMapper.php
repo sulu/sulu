@@ -28,7 +28,7 @@ use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Document\Property\PropertyInterface;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureType;

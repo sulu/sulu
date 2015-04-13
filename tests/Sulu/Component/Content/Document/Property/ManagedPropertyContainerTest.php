@@ -3,7 +3,7 @@
 namespace Sulu\Component\Content\Document\Property;
 
 use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Structure\Structure;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
