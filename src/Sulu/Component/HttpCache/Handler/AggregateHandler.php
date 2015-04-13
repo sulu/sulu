@@ -12,7 +12,7 @@ namespace Sulu\Component\HttpCache\Handler;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\HttpCache\HandlerFlushInterface;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
