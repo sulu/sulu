@@ -1,6 +1,6 @@
 <?php
 
-namespace Sulu\Component\Content\Compat\Mapper;
+namespace Sulu\Component\Content\Mapper;
 
 /**
  * Request class for content mapping.

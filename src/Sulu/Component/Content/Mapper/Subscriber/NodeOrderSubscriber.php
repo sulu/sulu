@@ -11,10 +11,10 @@
 namespace Sulu\Component\Content\Mapper\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\Content\Event\ContentNodeEvent;
+use Sulu\Component\Content\Mapper\ContentEvents;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use PHPCR\PropertyType;
-use Sulu\Component\Content\Event\ContentNodeOrderEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeOrderEvent;
 
 /**
  * Calculate the vertical position of the saved node relative to its siblings

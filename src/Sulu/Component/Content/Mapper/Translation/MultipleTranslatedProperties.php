@@ -10,10 +10,11 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Document\Property\Property;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
-use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * enables to translate multiple properties
@@ -39,7 +40,7 @@ class MultipleTranslatedProperties
     /**
      * @var string
      */
-    private $structureType = Structure::TYPE_PAGE;
+    private $structureType = LegacyStructureConstants::TYPE_PAGE;
 
     public function __construct(
         $names,
@@ -79,7 +80,7 @@ class MultipleTranslatedProperties
     public function getName($key)
     {
         // templates do not translate the template key
-        if ($this->structureType === Structure::TYPE_SNIPPET) {
+        if ($this->structureType === LegacyStructureConstants::TYPE_SNIPPET) {
             if ($key === 'template') {
                 return $key;
             }

@@ -8,14 +8,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Mapper;
+namespace Sulu\Component\Content\Mapper;
 
 use PHPCR\Query\QueryResultInterface;
-use Sulu\Component\Content\Compat\BreadcrumbItemInterface;
-use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\BreadcrumbItemInterface;
+use Sulu\Component\Content\Structure;
+use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 
 /**
  * Interface of ContentMapper
@@ -52,7 +53,7 @@ interface ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = Structure::TYPE_PAGE
+        $structureType = LegacyStructureConstants::TYPE_PAGE
     );
 
     /**
