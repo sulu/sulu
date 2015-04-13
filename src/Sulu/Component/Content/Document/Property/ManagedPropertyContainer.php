@@ -40,14 +40,12 @@ class ManagedPropertyContainer extends PropertyContainer
         ContentTypeManagerInterface $contentTypeManager,
         LegacyPropertyFactory $legacyPropertyFactory,
         DocumentInspector $inspector,
-        Structure $structure,
         $document
     )
     {
         $this->contentTypeManager = $contentTypeManager;
         $this->document = $document;
         $this->legacyPropertyFactory = $legacyPropertyFactory;
-        $this->structure = $structure;
         $this->inspector = $inspector;
     }
 
@@ -64,6 +62,10 @@ class ManagedPropertyContainer extends PropertyContainer
 
         if (!$this->node) {
             $this->node = $this->inspector->getNode($this->document);
+        }
+
+        if (!$this->structure) {
+            $this->structure = $this->inspector->getStructure($this->document);
         }
 
         $structureProperty = $this->structure->getProperty($name);

@@ -140,7 +140,7 @@ abstract class SuluTestCase extends BaseTestCase
         $snippetStructures = $structureFactory->getStructures('snippet');
 
         foreach ($snippetStructures as $snippetStructure) {
-            $snippetsNode->addNode($snippetStructure->getKey());
+            $snippetsNode->addNode($snippetStructure->getName());
         }
 
         // we should use the doctrinephpcrbundle repository initializer to do this.

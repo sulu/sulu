@@ -10,10 +10,12 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
+use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
+
 /**
  * The implementing document can have dynamic content assigned to it
  */
-interface ContentBehavior
+interface ContentBehavior extends LocaleBehavior
 {
     /**
      * Return the type of the structure used for the content

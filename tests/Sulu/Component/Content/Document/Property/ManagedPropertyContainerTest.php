@@ -11,20 +11,20 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Structure\Property;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
-use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
 use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
-class PropertyContainerTest extends \PHPUnit_Framework_TestCase
+class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
         $this->structure = $this->prophesize(Structure::class);
-        $this->document = $this->prophesize(LocaleBehavior::class);;
+        $this->document = $this->prophesize(ContentBehavior::class);
         $this->contentType = $this->prophesize(ContentTypeInterface::class);
         $this->encoder = $this->prophesize(PropertyEncoder::class);
         $this->structureProperty = $this->prophesize(Property::class);
@@ -36,11 +36,11 @@ class PropertyContainerTest extends \PHPUnit_Framework_TestCase
             $this->contentTypeManager->reveal(),
             $this->propertyFactory->reveal(),
             $this->inspector->reveal(),
-            $this->structure->reveal(),
             $this->document->reveal()
         );
 
         $this->inspector->getNode($this->document->reveal())->willReturn($this->node->reveal());
+        $this->inspector->getStructure($this->document->reveal())->willReturn($this->structure->reveal());
     }
 
     /**

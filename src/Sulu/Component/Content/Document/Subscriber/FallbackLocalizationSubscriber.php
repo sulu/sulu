@@ -117,23 +117,25 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
 
         $webspace = $this->inspector->getWebspace($document);
 
+        $fallbackLocale = null;
+
         if ($webspace) {
-            $locale = $this->getWebspaceLocale($node, $webspace, $locale);
+            $fallbackLocale = $this->getWebspaceLocale($node, $webspace, $locale);
         }
 
-        if (!$locale) {
+        if (!$fallbackLocale) {
             $locales = $this->inspector->getLocales($document);
-            $locale = reset($locales);
+            $fallbackLocale = reset($locales);
         }
 
-        if (!$locale) {
+        if (!$fallbackLocale) {
             throw new \RuntimeException(sprintf(
                 'Could not find any localizations for document at "%s". This should not happen.',
                 $node->getPath()
             ));
         }
 
-        return $locale;
+        return $fallbackLocale;
     }
 
     private function getWebspaceLocale($node, $webspaceKey, $locale)
