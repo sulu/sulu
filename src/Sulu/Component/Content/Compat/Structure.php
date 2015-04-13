@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Compat;
 
 use DateTime;
-use Sulu\Component\Content\Compat\Exception\NoSuchPropertyException;
+use Sulu\Component\Content\Exception\NoSuchPropertyException;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
