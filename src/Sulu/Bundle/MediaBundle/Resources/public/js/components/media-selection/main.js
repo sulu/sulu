@@ -277,7 +277,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
 
             // add image to the selected images grid
-            this.sandbox.on('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.item.select', function(itemId) {
+            this.sandbox.on('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.item.select', function(itemId, item) {
                 var data = this.getData(),
                     index = data.ids.indexOf(itemId);
 
@@ -286,8 +286,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 }
 
                 data.ids.push(itemId);
-                this.setData(data);
-                reloadGridGroup.call(this)
+                this.setData(data, false);
+                this.addItem(item);
             }.bind(this));
 
             // remove image to the selected images grid
@@ -299,8 +299,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     data.ids.splice(index, 1);
                 }
 
-                this.setData(data);
-                reloadGridGroup.call(this)
+                this.setData(data, false);
+                this.removeItemById(itemId);
             }.bind(this));
 
             this.sandbox.on('husky.overlay.dropzone-media-selection-ovelay.' + this.options.instanceName + '.opened', function() {

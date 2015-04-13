@@ -557,6 +557,7 @@ class MediaManager implements MediaManagerInterface
         $data['type'] = array(
             'id' => $this->getMediaType($uploadedFile)
         );
+
         return $this->createMedia($data, $user);
     }
 
@@ -594,6 +595,8 @@ class MediaManager implements MediaManagerInterface
             $data,
             $user
         );
+
+        $fileVersion->setDefaultMeta($fileVersion->getMeta()->first());
 
         $mediaEntity = $media->getEntity();
         $this->em->persist($mediaEntity);

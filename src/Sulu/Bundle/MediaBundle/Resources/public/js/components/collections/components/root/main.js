@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['sulumedia/model/media'], function(Media) {
 
     'use strict';
 
@@ -108,6 +108,9 @@ define(function() {
                 var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
+
+            // download media
+            this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
         },
 
         render: function() {
@@ -184,6 +187,40 @@ define(function() {
                         thumbnail: listViews[this.listView].thViewOptions || {}
                     }
                 });
+        },
+
+        /**
+         * Downloads a media for a given id
+         * @param id
+         */
+        download: function(id) {
+            this.getMedia(id).then(function(media) {
+                this.sandbox.dom.window.location.href = media.versions[media.version].url;
+            }.bind(this));
+        },
+
+        getMedia: function(id) {
+            var def = this.sandbox.data.deferred(),
+                media = Media.find({id: id});
+
+            if (media !== null) {
+                def.resolve(media.toJSON());
+
+                return def;
+            }
+
+            media = new Media();
+            media.set({id: id});
+            media.fetch({
+                success: function(media) {
+                    def.resolve(media.toJSON());
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log('Error while fetching a single media');
+                }.bind(this)
+            });
+
+            return def;
         }
     };
 });

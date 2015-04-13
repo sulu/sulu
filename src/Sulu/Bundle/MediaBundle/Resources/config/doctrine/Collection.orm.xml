@@ -6,6 +6,13 @@
 
     <entity name="Sulu\Bundle\MediaBundle\Entity\Collection" table="me_collections" repository-class="Sulu\Bundle\MediaBundle\Entity\CollectionRepository">
 
+        <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta">
+            <cascade>
+                <cascade-all />
+            </cascade>
+
+            <join-column name="idCollectionsMetaDefault" referenced-column-name="id" nullable="true" on-delete="CASCADE" />
+        </one-to-one>
         <one-to-many field="meta" target-entity="Sulu\Bundle\MediaBundle\Entity\CollectionMeta" mapped-by="collection">
             <cascade>
                 <cascade-persist />
