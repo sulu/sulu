@@ -40,7 +40,6 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
     {
         return array(
             KernelEvents::RESPONSE => 'onResponse',
-            KernelEvents::REQUEST => 'onRequest',
         );
     }
 
@@ -53,32 +52,6 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * If the structure object is present in the request, store a reference
-     * to it for later.
-     *
-     * @param GetResponseEvent $event
-     */
-    public function onRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        $request = $event->getRequest();
-
-        if (false === $request->attributes->has('structure')) {
-            return;
-        }
-
-        // do not cache preview
-        if (true === $request->query->has('preview')) {
-            return;
-        }
-
-        $this->structure = $request->attributes->get('structure');
-    }
-
-    /**
      * If the structure has been picked up from the request, updated
      * the response using the configured handler
      *
@@ -86,20 +59,17 @@ class UpdateResponseSubscriber implements EventSubscriberInterface
      */
     public function onResponse(FilterResponseEvent $event)
     {
-        if (null === $this->structure) {
-            return;
-        }
-
-        if (!$this->handler instanceof HandlerUpdateResponseInterface) {
-            return;
-        }
-
         $request = $event->getRequest();
 
-        if (!$request->isMethodSafe()) {
+        if (!$event->isMasterRequest()
+            || !$this->handler instanceof HandlerUpdateResponseInterface
+            || !$request->isMethodSafe()
+            || false === $request->attributes->has('structure')
+            || true === $request->query->has('preview')
+        ) {
             return;
         }
 
-        $this->handler->updateResponse($event->getResponse(), $this->structure);
+        $this->handler->updateResponse($event->getResponse(), $request->attributes->get('structure'));
     }
 }
