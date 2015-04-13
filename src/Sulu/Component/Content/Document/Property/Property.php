@@ -15,18 +15,12 @@ class Property implements PropertyInterface
 {
     private $value;
     private $name;
-    private $structureProperty;
-    private $child;
+    private $children;
 
     public function __construct($name, $document)
     {
         $this->name = $name;
         $this->document = $document;
-    }
-
-    public function setStructureProperty(StructurePropertyInterface $structureProperty)
-    {
-        $this->structureProperty = $structureProperty;
     }
 
     /**
@@ -64,14 +58,6 @@ class Property implements PropertyInterface
     public function getDocument() 
     {
         return $this->document;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getStructureProperty()
-    {
-        return $this->structureProperty;
     }
 
     public function getChildProperties()

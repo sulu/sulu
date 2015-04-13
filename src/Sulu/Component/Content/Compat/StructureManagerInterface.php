@@ -10,8 +10,8 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use Sulu\Component\Content\Compat\StructureExtension\StructureExtensionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Sulu\Component\Content\Extension\ExtensionInterface;
 
 /**
  * Interface of StructureManager
@@ -38,7 +38,7 @@ interface StructureManagerInterface extends ContainerAwareInterface
      * @param StructureExtensionInterface $extension
      * @param string $template default is all templates
      */
-    public function addExtension(StructureExtensionInterface $extension, $template = 'all');
+    public function addExtension(ExtensionInterface $extension, $template = 'all');
 
     /**
      * Returns extensions for structure

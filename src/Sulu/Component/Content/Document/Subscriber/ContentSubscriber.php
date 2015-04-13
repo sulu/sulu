@@ -19,13 +19,13 @@ use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\MetadataFactory as DocumentMetadataFactory;
-use Sulu\Component\Content\Type\ContentTypeManagerInterface;
-use Sulu\Component\Content\Compat\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Property\ManagedPropertyContainer;
 use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\ContentTypeManagerInterface;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
@@ -166,10 +166,6 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
             $realProperty = $propertyContainer->getProperty($propertyName);
             $property = new Property($phpcrName, $document);
-
-            // TODO: This is a hack to avoid breaking the content type API
-            $property->setStructureProperty($structureProperty);
-
             $property->setValue($realProperty->getValue());
 
             $contentType->write(
