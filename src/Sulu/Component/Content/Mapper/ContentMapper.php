@@ -636,9 +636,8 @@ class ContentMapper implements ContentMapperInterface
      */
     public function delete($uuid, $webspaceKey, $dereference = false)
     {
-        throw new \RuntimeException(
-            'Implement recursive deleting'
-        );
+        $document = $this->documentManager->find($uuid);
+        $this->documentManager->remove($document);
     }
 
     /**

@@ -256,7 +256,7 @@ class StructureBridge implements StructureInterface
      */
     public function getHasChildren()
     {
-        return $this->getDocument()->hasChildren();
+        return $this->getDocument()->getChildren()->count() ? true : false;
     }
 
     /**
@@ -335,8 +335,9 @@ class StructureBridge implements StructureInterface
     public function getType()
     {
         $document = $this->getDocument();
+        $localizationState = $this->inspector->getLocalizationState($document);
 
-        if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
+        if ($localizationState === LocalizationState::GHOST) {
             return StructureType::getGhost($this->getDocument()->getLocale());
         }
 
@@ -386,7 +387,7 @@ class StructureBridge implements StructureInterface
 
         $result = array(
             'id' => $this->inspector->getUuid($document),
-            'path' => $this->inspector->getPath($document),
+            'path' => $this->inspector->getContentPath($document),
             'nodeType' => $this->getNodeType(),
             'nodeState' => $this->getNodeState(),
             'internal' => false,
@@ -436,19 +437,6 @@ class StructureBridge implements StructureInterface
             ));
 
             $localizationState = $this->inspector->getLocalizationState($document);
-
-            if (in_array(
-                $localizationState,
-                array(
-                    LocalizationState::GHOST,
-                    LocalizationState::SHADOW,
-                )
-            )) {
-                $result['type'] = array(
-                    'name' => $localizationState,
-                    'value' => $this->inspector->getLocale($document),
-                );
-            }
 
             $result = array_merge($this->getDocument()->getContent()->getArrayCopy(), $result);
 

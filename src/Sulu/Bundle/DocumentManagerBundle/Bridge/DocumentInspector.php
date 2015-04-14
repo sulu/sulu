@@ -57,6 +57,31 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
+     * Return the path of the document in relation to the content root
+     *
+     * TODO: We need a better solution for retrieving webspace paths (the existing
+     *       "session manager" is not a good solution).
+     *
+     * @return string
+     */
+    public function getContentPath(ContentBehavior $document)
+    {
+        $path = $this->getPath($document);
+        $webspaceKey = $this->getWebspace($document);
+
+        return str_replace(
+            sprintf(
+                '/%s/%s/%s',
+                $this->pathSegmentRegistry->getPathSegment('base'),
+                $webspaceKey,
+                $this->pathSegmentRegistry->getPathSegment('content')
+            ),
+            '',
+            $path
+        );
+    }
+
+    /**
      * Return the structure for the given ContentBehavior implementing document
      *
      * @param ContentBehavior $document
