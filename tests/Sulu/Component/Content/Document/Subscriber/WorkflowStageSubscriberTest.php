@@ -40,17 +40,36 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
     public function testPublishedTransition()
     {
         $document = new TestWorkflowStageDocument(WorkflowStage::PUBLISHED);
+        $this->node->getPropertyValueWithDefault('stage', null)->willReturn(WorkflowStage::TEST);
+
         $this->persistEvent->getDocument()->willReturn($document);
         $this->persistEvent->getLocale()->willReturn('fr');
 
         $this->encoder->localizedSystemName(WorkflowStageSubscriber::PUBLISHED_FIELD, 'fr')->willReturn('published');
         $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, 'fr')->willReturn('stage');
-
-        $this->node->getPropertyValueWithDefault('stage', null)->willReturn($this->property->reveal());
-        $this->property->getValue()->willREturn(WorkflowStage::TEST);
-
         $this->node->setProperty('published', Argument::type('DateTime'), PropertyType::DATE)->shouldBeCalled();
         $this->node->setProperty('stage', WorkflowStage::PUBLISHED, PropertyType::LONG)->shouldBeCalled();
+
+        $this->subscriber->doPersist(
+            $this->persistEvent->reveal()
+        );
+    }
+
+    /**
+     * It should NOT set the published date when the stage has not changed
+     */
+    public function testPublishedNoTransition()
+    {
+        $document = new TestWorkflowStageDocument(WorkflowStage::PUBLISHED);
+        $this->node->getPropertyValueWithDefault('stage', null)->willReturn(WorkflowStage::PUBLISHED);
+
+        $this->persistEvent->getDocument()->willReturn($document);
+        $this->persistEvent->getLocale()->willReturn('fr');
+        $this->encoder->localizedSystemName(WorkflowStageSubscriber::PUBLISHED_FIELD, 'fr')->willReturn('published');
+        $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, 'fr')->willReturn('stage');
+        $this->node->setProperty('stage', WorkflowStage::PUBLISHED, PropertyType::LONG)->shouldBeCalled();
+
+        $this->node->setProperty('published', Argument::type('DateTime'), PropertyType::DATE)->shouldNotBeCalled();
 
         $this->subscriber->doPersist(
             $this->persistEvent->reveal()
