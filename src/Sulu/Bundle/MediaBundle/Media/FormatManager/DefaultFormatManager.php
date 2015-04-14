@@ -165,7 +165,9 @@ class DefaultFormatManager implements FormatManagerInterface
                 $image->strip();
 
                 // set Interlacing to plane for smaller image size
-                $image->interlace(ImageInterface::INTERLACE_PLANE);
+                if (count($image->layers()) == 1) {
+                    $image->interlace(ImageInterface::INTERLACE_PLANE);
+                }
 
                 // set extension
                 $imageExtension = $this->getImageExtension($fileName);
