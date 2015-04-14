@@ -136,7 +136,7 @@ class LegacyPropertyFactory
             $property->getColspan()
         );
 
-        foreach ($property->getChildren() as $component) {
+        foreach ($property->getComponents() as $component) {
             $blockPropertyType = new BlockPropertyType(
                 $component->getName(),
                 array(

@@ -9,9 +9,8 @@
         <service id="sulu_content.document.subscriber.content" class="Sulu\Component\Content\Document\Subscriber\ContentSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu.content.type_manager" />
-            <argument type="service" id="sulu_document_manager.metadata_factory" />
-            <argument type="service" id="sulu_content.structure.factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <tag name="kernel.event_subscriber" />
         </service>
 

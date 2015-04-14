@@ -44,6 +44,11 @@ class StructureBridge implements StructureInterface
     private $inspector;
 
     /**
+     * @var LegacyPropertyFactory
+     */
+    private $propertyFactory;
+
+    /**
      * @param Structure         $structure
      * @param object $document
      * @param PageUrlGenerator  $urlGenerator
@@ -51,11 +56,13 @@ class StructureBridge implements StructureInterface
     public function __construct(
         Structure $structure,
         DocumentInspector $inspector,
+        LegacyPropertyFactory $propertyFactory,
         $document = null
     ) {
         $this->structure = $structure;
         $this->inspector = $inspector;
         $this->document = $document;
+        $this->propertyFactory = $propertyFactory;
     }
 
     /**
@@ -200,7 +207,7 @@ class StructureBridge implements StructureInterface
     public function getProperty($name)
     {
         $property = $this->structure->getChild($name);
-        $propertyBridge = $this->createBridgeFromItem($name, $property);
+        $propertyBridge = $this->propertyFactory->createProperty($property);
 
         return $propertyBridge;
     }
@@ -226,7 +233,7 @@ class StructureBridge implements StructureInterface
 
         $propertyBridges = array();
         foreach ($items as $propertyName => $property) {
-            $propertyBridges[$propertyName] = $this->createBridgeFromItem($propertyName, $property);
+            $propertyBridges[$propertyName] = $this->propertyFactory->createProperty($property);
         }
 
         return $propertyBridges;
@@ -498,23 +505,7 @@ class StructureBridge implements StructureInterface
      */
     public function getNodeType()
     {
-        $redirectType = $this->getDocument()->getRedirectType();
-
-        if (null === $redirectType) {
-            return LegacyStructure::NODE_TYPE_CONTENT;
-        }
-
-        if (RedirectType::INTERNAL == $redirectType) {
-            return LegacyStructure::NODE_TYPE_INTERNAL_LINK;
-        }
-
-        if (RedirectType::EXTERNAL == $redirectType) {
-            return LegacyStructure::NODE_TYPE_EXTERNAL_LINK;
-        }
-
-        throw new \InvalidArgumentException(sprintf(
-            'Unknown redirect type "%s"', $redirectType
-        ));
+        return $this->getDocument()->getRedirectType();
     }
 
     /**
@@ -551,6 +542,16 @@ class StructureBridge implements StructureInterface
         }
 
         return StructureInterface::STATE_TEST;
+    }
+
+    public function getTitle()
+    {
+        return $this->getDocument()->getTitle();
+    }
+
+    public function getUrl()
+    {
+        return $this->getDocument()->getResourceSegment();
     }
 
     /**

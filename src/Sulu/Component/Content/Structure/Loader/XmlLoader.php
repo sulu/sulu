@@ -22,6 +22,7 @@ use Sulu\Component\Content\Structure\Section;
 use Sulu\Component\Content\Structure\Block\BlockProperty;
 use Sulu\Component\Content\Structure\Block\BlockPropertyType;
 use Sulu\Component\Content\Structure\Block;
+use Sulu\Component\Content\Structure\Component;
 
 /**
  * Load structure structure from an XML file
@@ -90,14 +91,15 @@ class XmlLoader extends XmlLegacyLoader
         $this->mapProperty($blockProperty, $data);
 
         foreach ($data['types'] as $name => $type) {
-            $blockType = new Component();
+            $component = new Component();
+            $component->name = $name;
             foreach ($type['properties'] as $propertyName => $propertyData) {
                 $property = new Property();
                 $property->name = $propertyName;
                 $this->mapProperty($property, $propertyData);
-                $blockType->addChild($property);
+                $component->addChild($property);
             }
-            $blockProperty->addType($blockType);
+            $blockProperty->addComponent($component);
         }
 
         return $blockProperty;
