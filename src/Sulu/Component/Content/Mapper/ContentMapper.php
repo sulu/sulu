@@ -434,13 +434,13 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $children = $this->inspector->getChildren($parent, null, $fetchDepth, $languageCode);
-        $children = $children->getArrayCopy();
+        $children = $this->documentsToStructureCollection($children->getArrayCopy());
 
         if ($flat) {
             foreach ($children as $child) {
                 if ($depth === null || $depth > 1) {
                     $childChildren = $this->loadByParent(
-                        $this->inspector->getUuid($child),
+                        $child->getUuid(),
                         $webspaceKey,
                         $languageCode,
                         $depth - 1,
@@ -453,7 +453,7 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        return $this->documentsToStructureCollection($children);
+        return $children;
     }
 
     /**
@@ -475,7 +475,7 @@ class ContentMapper implements ContentMapperInterface
         $startPage->setWorkflowStage(WorkflowStage::PUBLISHED);
         $startPage->setNavigationContexts(array());
 
-        return $this->documentToStructure($document);
+        return $this->documentToStructure($startPage);
     }
 
     /**
@@ -540,7 +540,7 @@ class ContentMapper implements ContentMapperInterface
             'exclude_ghost' => $excludeGhost,
         ));
 
-        return $this->documentsToStructureCollection($document);
+        return $this->documentsToStructureCollection($documents);
     }
 
     /**
@@ -1349,6 +1349,9 @@ class ContentMapper implements ContentMapperInterface
      */
     private function documentToStructure($document)
     {
+        if (null === $document) {
+            return null;
+        }
         $structure = $this->inspector->getStructure($document);
 
         $structureBridge = $this->structureManager->wrapStructure($structure);
@@ -1357,7 +1360,7 @@ class ContentMapper implements ContentMapperInterface
         return $structureBridge;
     }
 
-    private function documentsToStructureCollection(ContentBehavior $documents)
+    private function documentsToStructureCollection($documents)
     {
         $collection = array();
         foreach ($documents as $document) {
