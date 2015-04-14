@@ -10,28 +10,24 @@
 
 namespace Sulu\Bundle\SnippetBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
 /**
  * Class for snippet content navigation
  */
-class SuluSnippetContentNavigation extends ContentNavigation
+class SuluSnippetContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**
-     * Construct
+     * {@inheritdoc}
      */
-    public function __construct()
+    public function getNavigationItems(array $options = array())
     {
-        parent::__construct();
-
-        $this->setName('Snippets');
-
-        // details
         $details = new ContentNavigationItem('content-navigation.snippets.details');
         $details->setAction('details');
         $details->setGroups(array('snippet'));
         $details->setComponent('snippet/form/details@sulusnippet');
-        $this->addNavigationItem($details);
+
+        return array($details);
     }
 }

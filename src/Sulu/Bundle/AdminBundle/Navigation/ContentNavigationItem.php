@@ -247,25 +247,4 @@ class ContentNavigationItem
     {
         $this->position = $position;
     }
-
-    /**
-     * Returns an array representation of the content navigation item
-     * @return array
-     */
-    public function toArray(array $options = array())
-    {
-        $array = array(
-            'id' => ($this->getId() != null) ? $this->getId() : uniqid(),
-            'title' => $this->getName(),
-            'action' => $this->getAction(),
-            'display' => $this->getDisplay(),
-            'component' => $this->getComponent(),
-            'componentOptions' => array_merge($this->getComponentOptions(), $options),
-            'disabled' => $this->getDisabled(),
-            'resetStore' => $this->getResetStore(),
-            'position' => $this->getPosition()
-        );
-
-        return $array;
-    }
 }

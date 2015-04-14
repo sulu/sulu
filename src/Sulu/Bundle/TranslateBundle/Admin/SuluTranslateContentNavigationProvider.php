@@ -10,17 +10,13 @@
 
 namespace Sulu\Bundle\TranslateBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
-class SuluTranslateContentNavigation extends ContentNavigation
+class SuluTranslateContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function __construct()
+    public function getNavigationItems(array $options = array())
     {
-        parent::__construct();
-
-        $this->setName('Package');
-
         $details = new ContentNavigationItem('Details');
         $details->setAction('details');
         $details->setGroups(array('package'));
@@ -28,14 +24,12 @@ class SuluTranslateContentNavigation extends ContentNavigation
         $details->setComponentOptions(array('display' => 'details'));
         $details->setDisplay(array('edit'));
 
-        $this->addNavigationItem($details);
-
         $settings = new ContentNavigationItem('Settings');
         $settings->setAction('settings');
         $settings->setGroups(array('package'));
         $settings->setComponent('packages@sulutranslate');
         $settings->setComponentOptions(array('display' => 'settings'));
 
-        $this->addNavigationItem($settings);
+        return array($details, $settings);
     }
 }

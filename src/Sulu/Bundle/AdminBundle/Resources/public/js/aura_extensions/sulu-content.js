@@ -40,7 +40,7 @@ define([], function () {
             this.sandbox.emit('navigation.url', function (url) {
                 var items = [];
                 // check action
-                this.sandbox.util.foreach(navigation.items, function (content) {
+                this.sandbox.util.foreach(navigation, function (content) {
                     // check DisplayMode (new or edit) and show menu item or don't
                     hasNew = content.display.indexOf('new') >= 0;
                     hasEdit = content.display.indexOf('edit') >= 0;
@@ -52,15 +52,13 @@ define([], function () {
                         items.push(content);
                     }
                 }.bind(this));
-                navigation.url = url;
-                navigation.items = items;
 
                 // if callback isset call it
                 if (!!callback && typeof callback === 'function') {
                     callback(navigation);
                 } else { // else emit event "navigation.item.column.show"
                     this.sandbox.emit('navigation.item.column.show', {
-                        data: navigation
+                        data: items
                     });
                 }
             }.bind(this));

@@ -10,60 +10,16 @@
 
 namespace Sulu\Bundle\ContentBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
+use Sulu\Component\Content\Structure;
 
-class SuluContentContentNavigation extends ContentNavigation
+class SuluContentContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->setName('Content');
-
-        $this->addNavigationItem($this->getContent());
-        $this->addNavigationItem($this->getSeo());
-        $this->addNavigationItem($this->getExcerpt());
-        $this->addNavigationItem($this->getSettings());
-    }
-
-    private function getSeo()
-    {
-        $seo = new ContentNavigationItem('content-navigation.contents.seo');
-        $seo->setId('tab-seo');
-        $seo->setAction('seo');
-        $seo->setGroups(array('content'));
-        $seo->setComponent('content/seo@sulucontent');
-        $seo->setDisplay(array('edit'));
-
-        return $seo;
-    }
-
-    private function getExcerpt()
-    {
-        $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
-        $excerpt->setId('tab-excerpt');
-        $excerpt->setAction('excerpt');
-        $excerpt->setGroups(array('content'));
-        $excerpt->setComponent('content/excerpt@sulucontent');
-        $excerpt->setDisplay(array('edit'));
-
-        return $excerpt;
-    }
-
-    private function getSettings()
-    {
-        $settings = new ContentNavigationItem('content-navigation.contents.settings');
-        $settings->setId('tab-settings');
-        $settings->setAction('settings');
-        $settings->setGroups(array('content'));
-        $settings->setComponent('content/settings@sulucontent');
-        $settings->setDisplay(array('edit'));
-
-        return $settings;
-    }
-
-    private function getContent()
+    /**
+     * {@inheritdoc}
+     */
+    public function getNavigationItems(array $options = array())
     {
         $content = new ContentNavigationItem('content-navigation.contents.content');
         $content->setId('tab-content');
@@ -71,6 +27,44 @@ class SuluContentContentNavigation extends ContentNavigation
         $content->setGroups(array('content'));
         $content->setComponent('content/form@sulucontent');
 
-        return $content;
+        $seo = new ContentNavigationItem('content-navigation.contents.seo');
+        $seo->setId('tab-seo');
+        $seo->setAction('seo');
+        $seo->setGroups(array('content'));
+        $seo->setComponent('content/seo@sulucontent');
+        $seo->setDisplay(array('edit'));
+
+        $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
+        $excerpt->setId('tab-excerpt');
+        $excerpt->setAction('excerpt');
+        $excerpt->setGroups(array('content'));
+        $excerpt->setComponent('content/excerpt@sulucontent');
+        $excerpt->setDisplay(array('edit'));
+
+        $settings = new ContentNavigationItem('content-navigation.contents.settings');
+        $settings->setId('tab-settings');
+        $settings->setAction('settings');
+        $settings->setGroups(array('content'));
+        $settings->setComponent('content/settings@sulucontent');
+        $settings->setDisplay(array('edit'));
+
+        $navigation = array($content, $seo, $excerpt, $settings);
+
+        $permissions = new ContentNavigationItem('Permissions');
+        $permissions->setAction('permissions');
+        $permissions->setDisplay(array('edit'));
+        $permissions->setComponent('permission-tab@sulusecurity');
+        $permissions->setComponentOptions(
+            array(
+                'display' => 'form',
+                'type' => Structure::class,
+                'securityContext' => 'sulu.webspaces.' . $options['webspace']
+            )
+        );
+        $permissions->setGroups(array('content'));
+
+        $navigation[] = $permissions;
+
+        return $navigation;
     }
 }

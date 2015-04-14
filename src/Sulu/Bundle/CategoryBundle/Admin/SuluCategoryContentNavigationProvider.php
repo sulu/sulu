@@ -10,23 +10,22 @@
 
 namespace Sulu\Bundle\CategoryBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 
-class SuluCategoryContentNavigation extends ContentNavigation
+class SuluCategoryContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function __construct()
+    /**
+     * {@inheritdoc}
+     */
+    public function getNavigationItems(array $options = array())
     {
-        parent::__construct();
-
-        $this->setName('Category');
-
-        // details
         $details = new ContentNavigationItem('content-navigation.category.details');
         $details->setAction('details');
         $details->setGroups(array('category'));
         $details->setComponent('categories@sulucategory');
         $details->setComponentOptions(array('display'=>'form'));
-        $this->addNavigationItem($details);
+
+        return array($details);
     }
 }
