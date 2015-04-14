@@ -23,102 +23,87 @@ use JMS\Serializer\Annotation\Type;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Discriminator;
 use JMS\Serializer\Annotation\HandlerCallback;
+use Sulu\Component\Content\Document\Property\PropertyValue;
 
 /**
  * Property of Structure generated from Structure Manager to map a template
- *
- * @Discriminator(
- *     field = "propertyType",
- *     map = {
- *         "property": "Sulu\Component\Content\Compat\Property",
- *         "block": "Sulu\Component\Content\Compat\Block\BlockProperty",
- *         "section": "Sulu\Component\Content\Compat\Section\SectionProperty"
- *     }
- * )
  */
 class Property implements PropertyInterface, \JsonSerializable
 {
     /**
      * name of property
      * @var string
-     * @Type("string")
      */
     private $name;
 
     /**
      * @var Metadata
-     * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metadata;
 
     /**
      * is property mandatory
      * @var bool
-     * @Type("boolean")
      */
     private $mandatory;
 
     /**
      * is property multilingual
      * @var bool
-     * @Type("boolean")
      */
     private $multilingual;
 
     /**
      * min occurs of property value
      * @var int
-     * @Type("integer")
      */
     private $minOccurs;
 
     /**
      * max occurs of property value
      * @var int
-     * @Type("integer")
      */
     private $maxOccurs;
 
     /**
      * name of content type
      * @var string
-     * @Type("string")
      */
     private $contentTypeName;
 
     /**
      * parameter of property to merge with parameter of content type
      * @var array
-     * @Type("array<string,Sulu\Component\Content\Compat\PropertyParameter>")
      */
     private $params;
 
     /**
      * tags defined in xml
      * @var PropertyTag[]
-     * @Type("array<Sulu\Component\Content\Compat\PropertyTag>")
      */
     private $tags;
 
     /**
      * column span
      * @var string
-     * @Type("string")
      */
     private $col;
 
     /**
      * value of property
      * @var mixed
-     * @Exclude
      */
     private $value;
 
     /**
      * @var StructureInterface
-     * @Exclude
      */
     private $structure;
+
+    /**
+     * @var PropertyValue
+     */
+    private $propertyValue;
 
     /**
      * Constructor
@@ -145,6 +130,11 @@ class Property implements PropertyInterface, \JsonSerializable
         $this->params = $params;
         $this->tags = $tags;
         $this->col = $col;
+    }
+
+    public function setPropertyValue(PropertyValue $propertyValue)
+    {
+        $this->propertyValue = $propertyValue;
     }
 
     /**
@@ -292,6 +282,10 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     public function setValue($value)
     {
+        if ($this->propertyValue) {
+            $this->propertyValue->setValue($value);
+        }
+
         $this->value = $value;
     }
 
@@ -301,6 +295,10 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     public function getValue()
     {
+        if ($this->propertyValue) {
+            return $this->propertyValue->getValue();
+        }
+
         return $this->value;
     }
 
@@ -424,75 +422,5 @@ class Property implements PropertyInterface, \JsonSerializable
         } else {
             return $this->getValue();
         }
-    }
-
-    /**
-     * @HandlerCallback("json", direction = "serialization")
-     */
-    public function serializeToJson(JsonSerializationVisitor $visitor, $data, Context $context)
-    {
-        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
-        $graphNavigator = $context->getNavigator();
-
-        $data = array();
-
-        /**
-         * @var string $propertyName
-         * @var PropertyMetadata $propertyMetadata
-         */
-        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
-            $context->pushPropertyMetadata($propertyMetadata);
-            $data[$propertyName] = $graphNavigator->accept(
-                $propertyMetadata->getValue($this),
-                $propertyMetadata->type,
-                $context
-            );
-            $context->popPropertyMetadata();
-        }
-
-        $data['value'] = json_encode($this->getValue());
-
-        // set discriminator value
-        if ($this instanceof BlockPropertyInterface) {
-            $data['propertyType'] = 'block';
-        } elseif ($this instanceof SectionPropertyInterface) {
-            $data['propertyType'] = 'section';
-        } else {
-            $data['propertyType'] = 'property';
-        }
-
-        return $data;
-    }
-
-    /**
-     * @HandlerCallback("json", direction = "deserialization")
-     */
-    public function deserializeToJson(JsonDeserializationVisitor $visitor, $data, Context $context)
-    {
-        $classMetadata = $context->getMetadataFactory()->getMetadataForClass(get_class($this));
-        $graphNavigator = $context->getNavigator();
-
-        /**
-         * @var string $propertyName
-         * @var PropertyMetadata $propertyMetadata
-         */
-        foreach ($classMetadata->propertyMetadata as $propertyName => $propertyMetadata) {
-            if (!($propertyMetadata instanceof StaticPropertyMetadata)) {
-                $context->pushPropertyMetadata($propertyMetadata);
-                $value = $graphNavigator->accept(
-                    $data[$propertyName],
-                    $propertyMetadata->type,
-                    $context
-                );
-                $context->popPropertyMetadata();
-
-                $propertyMetadata->setValue($this, $value);
-            }
-        }
-
-        $this->setValue(json_decode($data['value'], true));
-        $this->structure = $visitor->getResult();
-
-        return $data;
     }
 }

@@ -20,6 +20,7 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\DocumentManager\Document\UnknownDocument;
 
 /**
  * Handle serializeation and deserialization of the PageBridge
