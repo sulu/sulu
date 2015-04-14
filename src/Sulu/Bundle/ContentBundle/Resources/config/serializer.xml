@@ -18,7 +18,7 @@
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_content.compat.structure.legacy_property_factory" />
             <argument type="service" id="sulu_content.structure.factory" />
-            <tag name="jms_serializer.subscribing_handler"/>
+           <tag nate="jms_serializer.subscribing_handler"/>
         </service>
 
     </services>

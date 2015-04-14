@@ -25,7 +25,7 @@ use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
-use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
+use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Template\TemplateResolver;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
@@ -95,9 +95,9 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
     protected $sessionManager;
 
     /**
-     * @var StructureFactoryInterface
+     * @var StructureManagerInterface
      */
-    protected $structureFactory;
+    protected $structureManager;
 
     /**
      * @var EventDispatcherInterface
@@ -208,14 +208,14 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
             $strategy = new TreeStrategy(
                 new PhpcrMapper($this->sessionManager, '/cmf/routes'),
                 $cleaner,
-                $this->structureFactory,
+                $this->structureManager,
                 $this->contentTypeManager,
                 $this->nodeHelper
             );
 
             $this->mapper = new ContentMapper(
                 $this->contentTypeManager,
-                $this->structureFactory,
+                $this->structureManager,
                 $this->sessionManager,
                 $this->eventDispatcher,
                 $this->localizationFinder,
@@ -230,7 +230,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->internalPrefix
             );
 
-            $structureResolver = new StructureResolver($this->contentTypeManager, $this->structureFactory);
+            $structureResolver = new StructureResolver($this->contentTypeManager, $this->structureManager);
 
             $snippet = new SnippetContent(
                 $this->mapper,
@@ -243,7 +243,7 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
                 $this->containerValueMap,
                 array(
                     'sulu.phpcr.session' => $this->sessionManager,
-                    'sulu_content.structure.factory' => $this->structureFactory,
+                    'sulu_content.structure.factory' => $this->structureManager,
                     'sulu.content.type.text_line' => new TextLine('not in use'),
                     'sulu.content.type.text_area' => new TextArea('not in use'),
                     'sulu.content.type.resource_locator' => $resourceLocator,
@@ -307,18 +307,18 @@ abstract class PhpcrTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function prepareStructureManager()
     {
-        if ($this->structureFactory === null) {
-            $this->structureFactory = $this->getMock('\Sulu\Component\Content\Structure\Factory\StructureFactoryInterface');
+        if ($this->structureManager === null) {
+            $this->structureManager = $this->getMock(StructureManagerInterface::class);
 
-            $this->structureFactory->expects($this->any())
+            $this->structureManager->expects($this->any())
                 ->method('getStructure')
                 ->will($this->returnCallback(array($this, 'structureCallback')));
 
-            $this->structureFactory->expects($this->any())
+            $this->structureManager->expects($this->any())
                 ->method('getExtensions')
                 ->will($this->returnCallback(array($this, 'getExtensionsCallback')));
 
-            $this->structureFactory->expects($this->any())
+            $this->structureManager->expects($this->any())
                 ->method('getExtension')
                 ->will($this->returnCallback(array($this, 'getExtensionCallback')));
         }
