@@ -291,7 +291,7 @@
             app.sandbox.sulu.cropAllLabels = function(form, className) {
                 var sandbox = app.sandbox;
                 if (!className) {
-                    className = 'crop'
+                    className = 'crop';
                 }
                 var elements = sandbox.dom.find('label.' + className, form), i, length;
                 for (i = -1, length = elements.length; ++i < length;) {
@@ -408,7 +408,7 @@
                             gridOptions;
 
                         if (!!limit) {
-                            gridDefaults['paginationOptions'] = paginationOptionsDefaults;
+                            gridDefaults.paginationOptions = paginationOptionsDefaults;
                         }
 
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);

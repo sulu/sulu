@@ -37,6 +37,7 @@ define(function() {
         };
 
     return {
+
         header: function() {
             // init locale
             this.locale = this.sandbox.sulu.user.locale;

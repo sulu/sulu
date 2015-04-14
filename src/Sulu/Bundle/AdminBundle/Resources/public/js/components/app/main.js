@@ -155,7 +155,7 @@ define(function() {
 
             // if response is symfony JSON exception
             if (request.responseJSON !== undefined) {
-                var response = request.responseJSON
+                var response = request.responseJSON;
 
                 this.sandbox.util.each(response, function(index) {
                     var exception = response[index];
@@ -234,7 +234,7 @@ define(function() {
                 if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
-                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
+                    this.emitNavigationEvent({ action: event.currentTarget.attributes.href.value }, true, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
 
@@ -249,20 +249,18 @@ define(function() {
          * @param forceReload {Boolean} force page to reload
          */
         navigate: function(route, trigger, noLoader, forceReload) {
+
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-            forceReload = forceReload === true ? true : false;
+            forceReload = forceReload === true;
 
             if (forceReload) {
                 this.sandbox.mvc.history.fragment = null;
             }
-            // only route if route has changed
-            if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
-                // todo: start loader
-            }
+
             // navigate
-            router.navigate(route, {trigger: trigger});
+            router.navigate(route, { trigger: trigger });
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
         },
 
@@ -303,17 +301,17 @@ define(function() {
                 }
             }.bind(this));
 
-            // FIXME aura cannot handle so fast navigates (https://github.com/sulu-cmf/sulu/issues/892)
-            this.sandbox.on('husky.data-navigation.select', _.debounce(function(item) {
+            this.sandbox.on('husky.data-navigation.select', function(item) {
                 if (!!item && !!item._links && !!item._links.admin) {
                     this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
                 }
-            }.bind(this), 1000));
+            }.bind(this));
 
             // content tabs event
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
+
             // content tabs event
             this.sandbox.on('husky.tabs.header.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
