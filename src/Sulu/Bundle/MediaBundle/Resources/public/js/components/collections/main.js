@@ -356,14 +356,14 @@ define([
             this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
 
-                var url = '/admin/api/collections/' + item.id + '?depth=1';
+                var url = '/admin/api/collections/' + item.id + '?depth=1&sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
 
             this.sandbox.on(BREADCRUMB_NAVIGATE_ROOT.call(this), function() {
                 this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
 
-                var url = '/admin/api/collections';
+                var url = '/admin/api/collections?sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
         },
@@ -571,7 +571,7 @@ define([
                     collection.destroy({
                         success: function() {
                             this.sandbox.sulu.unlockDeleteSuccessLabel();
-                            var url = '/admin/api/collections' + (!!this.options.data._embedded.parent ? '/' + this.options.data._embedded.parent.id + '?depth=1' : '');
+                            var url = '/admin/api/collections' + (!!this.options.data._embedded.parent ? '/' + this.options.data._embedded.parent.id + '?depth=1&sortBy=title' : '?sortBy=title');
                             this.sandbox.emit('husky.data-navigation.collections.set-url', url);
 
                             if (!!this.options.data._embedded.parent) {

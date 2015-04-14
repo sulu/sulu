@@ -34,7 +34,7 @@ class SuluMediaAdmin extends Admin
         $media->setIcon('image');
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
-            $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections', $media);
+            $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
             $collections->setId('collections-edit');
             $collections->setAction('media/collections/root');
             $collections->setInstanceName('collections');

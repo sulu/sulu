@@ -39,6 +39,10 @@ class Collection extends BaseCollection
      */
     private $parent;
 
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionMeta
+     */
+    private $defaultMeta;
 
     /**
      * Constructor
@@ -177,5 +181,28 @@ class Collection extends BaseCollection
     public function removeChildren(\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $children)
     {
         $this->children->removeElement($children);
+    }
+
+    /**
+     * Set defaultMeta
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $defaultMeta
+     * @return Collection
+     */
+    public function setDefaultMeta(CollectionMeta $defaultMeta = null)
+    {
+        $this->defaultMeta = $defaultMeta;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultMeta
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionMeta 
+     */
+    public function getDefaultMeta()
+    {
+        return $this->defaultMeta;
     }
 }

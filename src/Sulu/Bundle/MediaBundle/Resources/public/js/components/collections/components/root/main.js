@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(function() {
+define(['sulumedia/model/media'], function(Media) {
 
     'use strict';
 
@@ -71,7 +71,7 @@ define(function() {
             // extend defaults with options
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
 
-            var url = '/admin/api/collections';
+            var url = '/admin/api/collections?sortBy=title';
             this.sandbox.emit('husky.navigation.select-id', 'collections-edit', {dataNavigation: {url: url}});
 
             this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
@@ -89,13 +89,13 @@ define(function() {
 
             // change datagrid to thumbnail small
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-small', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']);
+                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailSmall']['thViewOptions']);
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailSmall');
             }.bind(this));
 
             // change datagrid to thumbnail large
             this.sandbox.on('sulu.list-toolbar.change.thumbnail-large', function() {
-                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']);
+                this.sandbox.emit('husky.datagrid.view.change', 'thumbnail', listViews['thumbnailLarge']['thViewOptions']);
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
 
@@ -105,9 +105,12 @@ define(function() {
                     'media/collections/edit:' + item.collection + '/files/edit:' + id
                 );
 
-                var url = '/admin/api/collections/' + item.collection + '?depth=1';
+                var url = '/admin/api/collections/' + item.collection + '?depth=1&sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
             }.bind(this));
+
+            // download media
+            this.sandbox.on('husky.datagrid.download-clicked', this.download.bind(this));
         },
 
         render: function() {
@@ -174,6 +177,7 @@ define(function() {
                     url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
                     view: listViews[this.listView].name,
                     resultKey: 'media',
+                    sortable: false,
                     viewOptions: {
                         table: {
                             selectItem: true,
@@ -183,6 +187,40 @@ define(function() {
                         thumbnail: listViews[this.listView].thViewOptions || {}
                     }
                 });
+        },
+
+        /**
+         * Downloads a media for a given id
+         * @param id
+         */
+        download: function(id) {
+            this.getMedia(id).then(function(media) {
+                this.sandbox.dom.window.location.href = media.versions[media.version].url;
+            }.bind(this));
+        },
+
+        getMedia: function(id) {
+            var def = this.sandbox.data.deferred(),
+                media = Media.find({id: id});
+
+            if (media !== null) {
+                def.resolve(media.toJSON());
+
+                return def;
+            }
+
+            media = new Media();
+            media.set({id: id});
+            media.fetch({
+                success: function(media) {
+                    def.resolve(media.toJSON());
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log('Error while fetching a single media');
+                }.bind(this)
+            });
+
+            return def;
         }
     };
 });

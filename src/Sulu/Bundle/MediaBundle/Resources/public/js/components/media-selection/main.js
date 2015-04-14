@@ -279,7 +279,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
 
             // add image to the selected images grid
-            this.sandbox.on('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.item.select', function(itemId) {
+            this.sandbox.on('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.item.select', function(itemId, item) {
                 var data = this.getData(),
                     index = data.ids.indexOf(itemId);
 
@@ -288,8 +288,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 }
 
                 data.ids.push(itemId);
-                this.setData(data);
-                reloadGridGroup.call(this)
+                this.setData(data, false);
+                this.addItem(item);
             }.bind(this));
 
             // remove image to the selected images grid
@@ -301,8 +301,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     data.ids.splice(index, 1);
                 }
 
-                this.setData(data);
-                reloadGridGroup.call(this)
+                this.setData(data, false);
+                this.removeItemById(itemId);
             }.bind(this));
 
             this.sandbox.on('husky.overlay.dropzone-media-selection-ovelay.' + this.options.instanceName + '.opened', function() {
@@ -534,8 +534,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             el: this.$el.find('.media-selection-overlay-navigation-container'),
                             resultKey: 'collections',
                             showAddButton: false,
-                            rootUrl: '/admin/api/collections',
-                            url: '/admin/api/collections',
+                            rootUrl: '/admin/api/collections?sortBy=title',
+                            url: '/admin/api/collections?sortBy=title',
                             nameKey: 'title',
                             instanceName: this.options.instanceName,
                             globalEvents: false
@@ -643,11 +643,12 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     },
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
-                        url: '/admin/api/media',
+                        url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
                         view: 'thumbnail',
                         resultKey: 'media',
                         instanceName: 'media-selection-ovelay.' + this.options.instanceName,
                         preselected: this.getData().ids,
+                        sortable: false,
                         viewOptions: {
                             table: {
                                 fullWidth: false,

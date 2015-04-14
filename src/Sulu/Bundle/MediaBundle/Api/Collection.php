@@ -31,7 +31,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
  *      "all",
  *      href = @Route(
  *          "cget_media",
- *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999  }
+ *          parameters = { "collection" = "expr(object.getId())", "limit" = 9999 }
  *      )
  * )
  * @Relation(
@@ -464,15 +464,13 @@ class Collection extends ApiWrapper
                 $this->entity->addMeta($meta);
 
                 return $meta;
-            } elseif (!$metaCollection->isEmpty()) {
-                // return first when create false
-                return $metaCollection->first();
             }
-        } else {
-            // return exists
-            return $metaCollectionFiltered->first();
+
+            // return first when create false
+            return $this->entity->getDefaultMeta();
         }
 
-        return null;
+        // return exists
+        return $metaCollectionFiltered->first();
     }
 }

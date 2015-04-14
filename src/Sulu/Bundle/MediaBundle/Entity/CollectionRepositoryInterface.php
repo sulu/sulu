@@ -23,7 +23,7 @@ interface CollectionRepositoryInterface
      * @param array $filter
      * @return Collection[]
      */
-    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null);
+    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null, $sortBy = array());
 
     /**
      * Finds the collection with a given id
