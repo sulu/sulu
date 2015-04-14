@@ -2,6 +2,10 @@
 
 ## dev-develop
 
+### Content
+
+Behaviour of internal links has changed. It returns the link title for navigation/smartcontent/internal-link.
+
 ### Media Types
 
 The media types are now set by wildcard check and need to be updated,
