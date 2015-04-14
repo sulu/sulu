@@ -36,7 +36,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     {
         $value = $event->getNode()->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $event->getLocale()),
-            null
+            false
         );
         $event->getDocument()->setShadowLocaleEnabled($value);
 

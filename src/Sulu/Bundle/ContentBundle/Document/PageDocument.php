@@ -57,6 +57,7 @@ class PageDocument implements
     private $redirectTarget;
     private $redirectExternal;
     private $workflowStage;
+    private $published;
     private $shadowLocaleEnabled;
     private $shadowLocale;
     private $uuid;
@@ -239,6 +240,14 @@ class PageDocument implements
     public function setWorkflowStage($workflowStage)
     {
         $this->workflowStage = $workflowStage;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPublished()
+    {
+        return $this->published;
     }
 
     /**
