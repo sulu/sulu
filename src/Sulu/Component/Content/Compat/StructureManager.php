@@ -17,6 +17,7 @@ use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Structure\Structure as NewStructure;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 
 /**
  * generates subclasses of structure to match template definitions.
@@ -27,6 +28,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $structureFactory;
     private $extensionManager;
     private $inspector;
+    private $propertyFactory;
 
     /**
      * @param StructureFactory  $structureFactory
@@ -36,11 +38,13 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     public function __construct(
         StructureFactory $structureFactory,
         ExtensionManager $extensionManager,
-        DocumentInspector $inspector
+        DocumentInspector $inspector,
+        LegacyPropertyFactory $propertyFactory
     ) {
         $this->structureFactory = $structureFactory;
         $this->extensionManager = $extensionManager;
         $this->inspector = $inspector;
+        $this->propertyFactory = $propertyFactory;
     }
 
     /**
@@ -107,6 +111,6 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function wrapStructure(NewStructure $structure)
     {
-        return new StructureBridge($structure, $this->inspector);
+        return new StructureBridge($structure, $this->inspector, $this->propertyFactory);
     }
 }

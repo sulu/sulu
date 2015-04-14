@@ -15,54 +15,56 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Util\PathHelper;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\BreadcrumbItem;
+use Sulu\Component\Content\Compat\DataNormalizer;
+use Sulu\Component\Content\Compat\Structure as LegacyStructure;
+use Sulu\Component\Content\Compat\Property as LegacyProperty;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureType;
+use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
-use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
+use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Document\Property\PropertyInterface;
+use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
+use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Form\Exception\InvalidFormException;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
-use Sulu\Component\Content\Document\Property\PropertyInterface;
-use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Structure\Page;
-use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\StructureType;
+use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\Content\Template\TemplateResolver;
 use Sulu\Component\Content\Types\ResourceLocatorInterface;
 use Sulu\Component\Content\Types\Rlp\Strategy\RlpStrategyInterface;
+use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Util\NodeHelper;
+use Sulu\Component\Util\SuluNodeHelper;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Sulu\Component\Util\SuluNodeHelper;
-use PHPCR\PropertyType;
-use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
-use Sulu\Component\Content\Extension\ExtensionManager;
-use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\Content\Compat\DataNormalizer;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Symfony\Component\Form\FormFactoryInterface;
-use Sulu\Component\Content\Form\Exception\InvalidFormException;
-use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Component\Content\Document\LocalizationState;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\Content\ContentTypeManagerInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -296,7 +298,7 @@ class ContentMapper implements ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = Structure::TYPE_PAGE
+        $structureType = LegacyStructure::TYPE_PAGE
     ) {
         // $event = new ContentNodeEvent($node, $structure);
         // $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
@@ -518,7 +520,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        return $this->documentManager->createQuery($query, $locale, Structure::TYPE_PAGE)->execute();
+        return $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
     }
 
     /**
@@ -666,7 +668,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $srcLanguageCode,
         $destLanguageCodes,
-        $structureType = Structure::TYPE_PAGE
+        $structureType = LegacyStructure::TYPE_PAGE
     ) {
         throw new \RuntimeException('Do this');
         if (!is_array($destLanguageCodes)) {
@@ -1154,7 +1156,7 @@ class ContentMapper implements ContentMapperInterface
     /**
      * Returns data for property
      */
-    private function getPropertyData($document, Property $property)
+    private function getPropertyData($document, LegacyProperty $property)
     {
         return $document->getContent()->getProperty($property->getName())->getValue();
     }
