@@ -47,41 +47,16 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.previews.limit', 3);
         $container->setParameter('sulu_media.collection.previews.format', '150x100');
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
-        $container->setParameter('sulu_media.media.blocked_file_types', array('file/exe'));
+        $container->setParameter('sulu_media.media.blocked_file_types', $config['format_manager']['blocked_file_types']);
+        $container->setParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
+        $container->setParameter('sulu_media.media.storage.local.segments', '10');
         $container->setParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
         $container->setParameter('sulu_media.format_cache.save_image', 'true');
         $container->setParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../' . $config['format_cache']['public_folder'] . '/uploads/media');
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
-        $container->setParameter('sulu_media.format_manager.mime_types', array(
-            'image/jpeg',
-            'image/jpg',
-            'image/gif',
-            'image/png',
-            'image/bmp',
-            'image/svg+xml',
-            'image/vnd.adobe.photoshop',
-            'application/pdf',
-        ));
-
-        $container->setParameter('sulu_media.media.types', array(
-            array(
-                'type' => 'document',
-                'mimeTypes' => array('*')
-            ),
-            array(
-                'type' => 'image',
-                'mimeTypes' => array('image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/vnd.adobe.photoshop')
-            ),
-            array(
-                'type' => 'video',
-                'mimeTypes' => array('video/mp4')
-            ),
-            array(
-                'type' => 'audio',
-                'mimeTypes' => array('audio/mpeg')
-            )
-        ));
+        $container->setParameter('sulu_media.format_manager.mime_types', $config['format_manager']['mime_types']);
+        $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');

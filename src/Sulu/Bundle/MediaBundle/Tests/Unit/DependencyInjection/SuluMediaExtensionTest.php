@@ -60,15 +60,15 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
             ),
             array(
                 'type' => 'image',
-                'mimeTypes' => array('image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/vnd.adobe.photoshop')
+                'mimeTypes' => array('image/*')
             ),
             array(
                 'type' => 'video',
-                'mimeTypes' => array('video/mp4')
+                'mimeTypes' => array('video/*')
             ),
             array(
                 'type' => 'audio',
-                'mimeTypes' => array('audio/mpeg')
+                'mimeTypes' => array('audio/*')
             )
         ));
     }
