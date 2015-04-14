@@ -134,7 +134,11 @@ define(['widget-groups'], function(WidgetGroups) {
             }, this);
 
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list');
+                if (this.options.params.type === 'account') {
+                    this.sandbox.emit('sulu.contacts.accounts.list');
+                } else {
+                    this.sandbox.emit('sulu.contacts.contacts.list');
+                }
             }, this);
 
             this.sandbox.on('sulu.media-selection.document-selection.data-changed', function() {
@@ -148,8 +152,8 @@ define(['widget-groups'], function(WidgetGroups) {
             this.sandbox.on('sulu.contacts.contacts.medias.saved', this.resetAndAddToCurrent.bind(this));
 
             this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
-            this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
             this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
+            this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
         },
 
         resetAndRemoveFromCurrent: function(data) {
@@ -212,7 +216,6 @@ define(['widget-groups'], function(WidgetGroups) {
          */
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
-
                 if (this.options.params.type === 'account') {
                     this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections);
                 } else if (this.options.params.type === 'contact') {

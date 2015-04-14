@@ -37,6 +37,8 @@ For a database upgrade you have to do following steps:
 
 * The Account has no `type` anymore. This column has to be removed from `co_accounts` table.
 * The table `co_account_categories` has to be removed manually.
+* The table `co_terms_of_delivery` has to be removed manually.
+* The table `co_terms_of_payment` has to be removed manually.
 * `app/console doctrine:schema:update --force`
 
 ### Security
