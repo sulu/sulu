@@ -2187,6 +2187,7 @@ class ContentMapper implements ContentMapperInterface
             $node->hasProperty($propertyTranslator->getName('template')) &&
             $node->hasProperty($propertyTranslator->getName('nodeType'))
         ) {
+            $originalNode = $node;
             if (
                 $node->getPropertyValue($propertyTranslator->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
             ) {
@@ -2280,7 +2281,7 @@ class ContentMapper implements ContentMapperInterface
                         'created' => $created,
                         'published' => $published,
                         'creator' => $creator,
-                        'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
+                        'title' => $this->getTitle($originalNode, $structure, $webspaceKey, $locale),
                         'url' => $url,
                         'urls' => $this->getLocalizedUrlsForPage($structure, $node, $webspaceKey, null),
                         'locale' => $locale,
