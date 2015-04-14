@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="sulu_content.document.serializer.handler.property_container" class="Sulu\Component\Content\Document\Serializer\Handler\PropertyContainerHandler">
+            <tag name="jms_serializer.subscribing_handler"/>
+        </service>
+
+        <service id="sulu_content.document.serializer.subscriber.property_container" class="Sulu\Component\Content\Document\Serializer\Subscriber\PropertyContainerSubscriber">
+            <tag name="jms_serializer.event_subscriber" />
+        </service>
+
+    </services>
+</container>
+

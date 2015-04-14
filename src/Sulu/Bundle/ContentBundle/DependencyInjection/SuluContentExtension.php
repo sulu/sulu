@@ -45,6 +45,23 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
 
             $container->prependExtensionConfig('sulu_core', $prepend);
         }
+
+        if ($container->hasExtension('jms_serializer')) {
+            $container->prependExtensionConfig('jms_serializer', array(
+                'metadata' => array(
+                    'directories' => array(
+                        array(
+                            'path' => __DIR__ . '/../Resources/config/serializer',
+                            'namespace_prefix' => 'Sulu\Bundle\ContentBundle',
+                        ),
+                        array(
+                            'path' => __DIR__ . '/../Resources/config/serializer',
+                            'namespace_prefix' => 'Sulu\Component\Content',
+                        ),
+                    ),
+                ),
+            ));
+        }
     }
 
     /**
@@ -74,6 +91,7 @@ class SuluContentExtension extends Extension implements PrependExtensionInterfac
         $loader->load('form.xml');
         $loader->load('compat.xml');
         $loader->load('document.xml');
+        $loader->load('serializer.xml');
     }
 
     private function processPreview(ContainerBuilder $container, $config)
