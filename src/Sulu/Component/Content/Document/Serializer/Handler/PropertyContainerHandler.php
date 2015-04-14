@@ -82,6 +82,10 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
         $content = $data['content'];
 
         foreach ($content as $key => $value) {
+            if (!isset($typeMap[$key])) {
+                continue;
+            }
+
             $type = $typeMap[$key];
             $deserialized = $context->accept(
                 $value,

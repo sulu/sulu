@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Content\Compat\Structure\Structure;
 use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Document\Property\PropertyValue;
 
 /**
  * Lazy loading container for content properties.
@@ -34,7 +35,7 @@ class PropertyContainer implements \ArrayAccess
             return $this->properties[$name];
         }
 
-        $property = new Property($name, null, null);
+        $property = new PropertyValue($name);
         $this->properties[$name] = $property;
 
         return $property;

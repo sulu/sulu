@@ -49,6 +49,11 @@ class StructureBridge implements StructureInterface
     private $propertyFactory;
 
     /**
+     * @var array
+     */
+    private $loadedProperties = array();
+
+    /**
      * @param Structure         $structure
      * @param object $document
      * @param PageUrlGenerator  $urlGenerator
@@ -206,12 +211,19 @@ class StructureBridge implements StructureInterface
      */
     public function getProperty($name)
     {
+        if (isset($this->loadedProperties[$name])) {
+            return $this->loadedProperties[$name];
+        }
+
         $property = $this->structure->getChild($name);
         $propertyBridge = $this->propertyFactory->createProperty($property);
 
         if ($this->document) {
-            $propertyBridge->setValue($this->document->getContent()->getProperty($name)->getValue());
+            $property = $this->document->getContent()->getProperty($name);
+            $propertyBridge->setPropertyValue($property);
         }
+
+        $this->loadedProperties[$name] = $propertyBridge;
 
         return $propertyBridge;
     }
@@ -238,6 +250,7 @@ class StructureBridge implements StructureInterface
         $propertyBridges = array();
         foreach ($items as $propertyName => $property) {
             $propertyBridges[$propertyName] = $this->propertyFactory->createProperty($property);
+            $propertyBridges[$propertyName]->setStructure($this);
         }
 
         return $propertyBridges;

@@ -34,6 +34,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $this->configureDocumentManager($config, $container);
         $loader->load('services.xml');
+        $loader->load('serializer.xml');
     }
 
     private function configureDocumentManager($config, ContainerBuilder $container)

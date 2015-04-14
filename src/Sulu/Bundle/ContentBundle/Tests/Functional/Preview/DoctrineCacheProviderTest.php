@@ -137,8 +137,8 @@ class DoctrineCacheProviderTest extends SuluTestCase
 
         $data = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
 
-        $this->assertEquals('Testtitle', json_decode($data['properties']['title']['value']));
-        $this->assertEquals('overview', $data['key']);
+        $this->assertEquals('Testtitle', $data['document']['content']['content']['title']);
+        $this->assertEquals('overview', $data['document']['structureType']);
     }
 
     public function testSaveStructure()
@@ -147,18 +147,21 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $data = $this->prepareData();
         $this->cache->warmUp(1, $data[0]->getUuid(), 'sulu_io', 'en');
 
-        $data[0]->getProperty('title')->setValue('TEST');
+        $structure = $data[0];
+        $structure->getProperty('title')->setValue('TEST');
 
         $this->cache->saveStructure($data[0], 1, $data[0]->getUuid(), 'sulu_io', 'en');
+
         $result = $this->cache->fetchStructure(1, $data[0]->getUuid(), 'sulu_io', 'en');
+
         $this->assertNotEquals(false, $result);
 
         $this->assertEquals('TEST', $result->getPropertyValue('title'));
         $this->assertEquals('overview', $result->getOriginTemplate());
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('TEST', json_decode($result['properties']['title']['value']));
-        $this->assertEquals('overview', $result['key']);
+        $this->assertEquals('TEST', $result['document']['content']['content']['title']);
+        $this->assertEquals('overview', $result['document']['structureType']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
@@ -182,8 +185,8 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('overview', $result->getOriginTemplate());
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('TEST', json_decode($result['properties']['title']['value']));
-        $this->assertEquals('overview', $result['key']);
+        $this->assertEquals('TEST', $result['document']['content']['content']['title']);
+        $this->assertEquals('overview', $result['document']['structureType']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
@@ -203,8 +206,8 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertNotEquals(false, $result);
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('Testtitle', json_decode($result['properties']['title']['value']));
-        $this->assertEquals('overview', $result['key']);
+        $this->assertEquals('Testtitle', $result['document']['content']['content']['title']);
+        $this->assertEquals('overview', $result['document']['structureType']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/sulu_io/contents/testtitle');

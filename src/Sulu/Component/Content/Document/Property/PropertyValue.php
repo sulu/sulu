@@ -2,8 +2,6 @@
 
 namespace Sulu\Component\Content\Document\Property;
 
-use Sulu\Component\Content\Compat\Structure\PropertyInterface as StructurePropertyInterface;
-
 /**
  * Value object for content type rendering.
  */
