@@ -6,9 +6,26 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
-class SuluDocumentManagerExtension extends Extension
+class SuluDocumentManagerExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('jms_serializer')) {
+            $container->prependExtensionConfig('jms_serializer', array(
+                'metadata' => array(
+                    'directories' => array(
+                        array(
+                            'path' => __DIR__ . '/../Resources/config/serializer',
+                            'namespace_prefix' => 'Sulu\Component\DocumentManager',
+                        ),
+                    ),
+                ),
+            ));
+        }
+    }
+
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
