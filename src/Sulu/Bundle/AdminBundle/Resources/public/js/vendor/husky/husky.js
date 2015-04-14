@@ -31729,7 +31729,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 resizeListeners: true,
                 resultKey: 'items',
                 selectedCounter: false,
-                selectedCounterText: 'public.elements-selected'
+                selectedCounterText: 'public.elements-selected',
+                viewSpacingBottom: 110
             },
 
             types = {
@@ -31752,10 +31753,6 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 paginations: {
                     dropdown: decoratorDropdownPagination
                 }
-            },
-
-            constants = {
-                viewSpacingBottom: 80
             },
 
             filters = {
@@ -33042,7 +33039,8 @@ define('husky_components/datagrid/decorators/dropdown-pagination',[],function() 
                 if (!!this.paginations[this.paginationId] && !!this.paginations[this.paginationId].getHeight) {
                     height -= this.paginations[this.paginationId].getHeight();
                 }
-                height -= constants.viewSpacingBottom;
+                height -= this.options.viewSpacingBottom;
+                
                 return height;
             },
 

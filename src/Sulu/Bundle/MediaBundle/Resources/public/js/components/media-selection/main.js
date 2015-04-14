@@ -649,6 +649,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                         instanceName: 'media-selection-ovelay.' + this.options.instanceName,
                         preselected: this.getData().ids,
                         sortable: false,
+                        viewSpacingBottom: 180,
                         viewOptions: {
                             table: {
                                 fullWidth: false,
