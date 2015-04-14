@@ -568,6 +568,24 @@ class StructureBridge implements StructureInterface
         $this->notImplemented(__METHOD__);
     }
 
+    /**
+     * Magic getter
+     *
+     * @deprecated Do not use magic getters. Use ArrayAccess instead.
+     */
+    public function __get($name)
+    {
+        return $this->getProperty($name)->getValue();
+    }
+
+    protected function readOnlyException($method)
+    {
+        throw new \BadMethodCallException(sprintf(
+            'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
+            $method
+        ));
+    }
+
     private function getDocument()
     {
         if (!$this->document) {
@@ -577,14 +595,6 @@ class StructureBridge implements StructureInterface
         }
 
         return $this->document;
-    }
-
-    protected function readOnlyException($method)
-    {
-        throw new \BadMethodCallException(sprintf(
-            'Compatibility layer StructureBridge instances are readonly. Tried to call "%s"',
-            $method
-        ));
     }
 
     private function getWorkflowDocument($method)
