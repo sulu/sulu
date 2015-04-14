@@ -2231,7 +2231,7 @@ class ContentMapper implements ContentMapperInterface
 
             $nodeState = $node->getPropertyValue($propertyTranslator->getName('state'));
 
-            // if page is not piblished ignore it
+            // if page is not published ignore it
             if ($nodeState !== Structure::STATE_PUBLISHED) {
                 return false;
             }
