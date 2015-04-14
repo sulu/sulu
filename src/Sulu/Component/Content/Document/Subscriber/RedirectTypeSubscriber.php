@@ -60,7 +60,7 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
 
         $redirectType = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            null
+            RedirectType::NONE
         );
         $document->setRedirectType($redirectType);
 

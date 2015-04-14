@@ -13,6 +13,8 @@ use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
+use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
 
 /**
  * This class infers information about documents, for example
@@ -23,6 +25,7 @@ class DocumentInspector extends BaseDocumentInspector
     private $metadataFactory;
     private $structureFactory;
     private $namespaceRegistry;
+    private $encoder;
 
     public function __construct(
         DocumentRegistry $documentRegistry,
@@ -30,13 +33,15 @@ class DocumentInspector extends BaseDocumentInspector
         NamespaceRegistry $namespaceRegistry,
         ProxyFactory $proxyFactory,
         MetadataFactory $metadataFactory,
-        StructureFactoryInterface $structureFactory
+        StructureFactoryInterface $structureFactory,
+        PropertyEncoder $encoder
     )
     {
         parent::__construct($documentRegistry, $pathSegmentRegistry, $proxyFactory);
         $this->metadataFactory = $metadataFactory;
         $this->structureFactory = $structureFactory;
         $this->namespaceRegistry = $namespaceRegistry;
+        $this->encoder = $encoder;
     }
 
     /**
@@ -129,6 +134,23 @@ class DocumentInspector extends BaseDocumentInspector
         }
 
         return array_values($locales);
+    }
+
+    public function getShadowLocales(ShadowLocaleBehavior $document)
+    {
+        $shadowLocales = array();
+        $locales = $this->getLocales($document);
+        $node = $this->getNode($document);
+        foreach ($locales as $locale) {
+            $shadowEnabledName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_ENABLED_FIELD, $locale);
+            $shadowLocaleName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, $locale);
+
+            if ($node->getPropertyValueWithDefault($shadowEnabledName, false)) {
+                $shadowLocales[] = $node->getPropertyValue($shadowLocaleName);
+            }
+        }
+
+        return $shadowLocales;
     }
 
     /**

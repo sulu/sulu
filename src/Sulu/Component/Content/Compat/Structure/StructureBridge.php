@@ -208,7 +208,10 @@ class StructureBridge implements StructureInterface
     {
         $property = $this->structure->getChild($name);
         $propertyBridge = $this->propertyFactory->createProperty($property);
-        $propertyBridge->setValue($this->document->getContent()->getProperty($name)->getValue());
+
+        if ($this->document) {
+            $propertyBridge->setValue($this->document->getContent()->getProperty($name)->getValue());
+        }
 
         return $propertyBridge;
     }
@@ -387,13 +390,14 @@ class StructureBridge implements StructureInterface
             'nodeType' => $this->getNodeType(),
             'nodeState' => $this->getNodeState(),
             'internal' => false,
-            'concreteLanguages' => $this->inspector->getLocales(),
+            'concreteLanguages' => $this->inspector->getLocales($document),
             'hasSub' => $this->inspector->getChildren($document)->count() ? true : false,
             'title' => $document->getTitle(), // legacy system returns diffent fields for title depending on $complete
         );
 
         if ($document instanceof RedirectTypeBehavior) {
             $redirectType = $document->getRedirectType();
+            $result['linked'] = null;
             if ($redirectType == RedirectType::INTERNAL) {
                 $result['linked'] = 'internal';
             } elseif ($redirectType == RedirectType::EXTERNAL) {
@@ -403,9 +407,10 @@ class StructureBridge implements StructureInterface
 
         if ($document instanceof WorkflowStageBehavior) {
             $result['publishedState'] = $document->getWorkflowStage() === WorkflowStage::PUBLISHED;
-            $result['published'] = $document->getWorkflowStage() === WorkflowStage::PUBLISHED;
+            $result['published'] = $document->getPublished();
         }
 
+        $result['navContexts'] = array();
         if ($document instanceof NavigationContextBehavior) {
             $result['navContexts'] = $document->getNavigationContexts();
         }
