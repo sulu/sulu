@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
     * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
     * ENHANCEMENT #988 [ContentBundle]   Set locale on render request
