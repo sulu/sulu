@@ -7,6 +7,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 
 class ContentMapper_loadTest extends SuluTestCase
 {
@@ -62,7 +63,7 @@ class ContentMapper_loadTest extends SuluTestCase
             return;
         }
 
-        $this->assertInstanceOf(PageDocument::class, $document);
+        $this->assertInstanceOf(StructureBridge::class, $document);
     }
 
     /**
