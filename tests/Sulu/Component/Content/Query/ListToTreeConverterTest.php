@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Content\Compat\Query;
+namespace Sulu\Component\Content\Query;
 
 class ListToTreeConverterTest extends \PHPUnit_Framework_TestCase
 {

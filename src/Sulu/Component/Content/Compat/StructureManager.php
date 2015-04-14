@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Extension\ExtensionManager;
+use Sulu\Component\Content\Structure\Structure as NewStructure;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 
 /**
@@ -24,21 +26,21 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 {
     private $structureFactory;
     private $extensionManager;
-    private $documentInspector;
+    private $inspector;
 
     /**
      * @param StructureFactory  $structureFactory
      * @param ExtensionManager  $extensionManager
-     * @param DocumentInspector $documentInspector
+     * @param DocumentInspector $inspector
      */
     public function __construct(
         StructureFactory $structureFactory,
         ExtensionManager $extensionManager,
-        DocumentInspector $documentInspector
+        DocumentInspector $inspector
     ) {
         $this->structureFactory = $structureFactory;
         $this->extensionManager = $extensionManager;
-        $this->documentInspector = $documentInspector;
+        $this->inspector = $inspector;
     }
 
     /**
@@ -46,7 +48,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        return $this->wrapStructure($this->structureFactory->getStructure($key, $type));
+        return $this->wrapStructure($this->structureFactory->getStructure($type, $key));
     }
 
     /**
@@ -77,7 +79,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getExtensions($key)
     {
-        return $this->extensionmanager->getExtensions($key);
+        return $this->extensionManager->getExtensions($key);
     }
 
     /**
@@ -85,7 +87,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function hasExtension($key, $name)
     {
-        return $this->extensionmanager->hasExtension($key);
+        return $this->extensionManager->hasExtension($key, $name);
     }
 
     /**
@@ -93,10 +95,17 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getExtension($key, $name)
     {
-        return $this->extensionmanager->getExtension($key, $name);
+        return $this->extensionManager->getExtension($key, $name);
     }
 
-    private function wrapStructure(Structure $structure)
+    /**
+     * Wrap the given Structure with a legacy (bridge) structure
+     *
+     * @param Structure
+     *
+     * @return StructureBridge
+     */
+    public function wrapStructure(NewStructure $structure)
     {
         return new StructureBridge($structure, $this->inspector);
     }

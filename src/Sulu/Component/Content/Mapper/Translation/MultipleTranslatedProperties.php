@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\Content\Mapper\Translation;
 
-use Sulu\Component\Content\Document\Property\Property;
-use Sulu\Component\Content\Document\Property\PropertyInterface;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Exception\NoSuchPropertyException;
-use Sulu\Component\Content\Structure;
-use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
+use Sulu\Component\Content\Compat\Structure;
 
 /**
  * enables to translate multiple properties

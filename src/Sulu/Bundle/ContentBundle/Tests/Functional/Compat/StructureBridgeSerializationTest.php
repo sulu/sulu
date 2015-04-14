@@ -64,10 +64,9 @@ class StructureBridgeSerializationTest extends SuluTestCase
     {
         $page = new PageDocument();
         $page->setTitle('Hello');
-        $page->setResourceSegment('hello');
-        $page->setLocale('fr');
+        $page->setResourceSegment('/hello');
         $page->setParent($this->contentDocument);
-        $page->setStructureType('internal_links');
+        $page->setStructureType('internallinks');
         $page->getContent()->bind(array(
             'title' => 'World',
             'internal_links' => array(
@@ -76,8 +75,8 @@ class StructureBridgeSerializationTest extends SuluTestCase
             ),
         ));
 
-        $this->getDm()->persist($page);
-        $this->getDm()->flush();
+        $this->documentManager->persist($page, 'fr');
+        $this->documentManager->flush();
 
         return $page;
     }

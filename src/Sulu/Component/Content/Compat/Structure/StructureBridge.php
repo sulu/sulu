@@ -2,14 +2,14 @@
 
 namespace Sulu\Component\Content\Compat\Structure;
 
-use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\Content\Structure as LegacyStructure;
+use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Structure as LegacyStructure;
 use Sulu\Component\Content\Property;
 use Sulu\Component\Content\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
-use Sulu\Component\Content\StructureType;
+use Sulu\Component\Content\Compat\StructureType;
 
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -22,7 +22,9 @@ use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Structure\Item;
 use Sulu\Component\Content\Structure\Property as NewProperty;
 use Sulu\Component\Content\Structure\Section;
-use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Structure\Structure;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -52,14 +54,14 @@ class StructureBridge implements StructureInterface
         $document = null
     ) {
         $this->structure = $structure;
-        $this->structureFactory = $structureFactory;
+        $this->inspector = $inspector;
         $this->document = $document;
     }
 
     /**
      * @param ContentDocumentInterface $document
      */
-    public function setDocument(ContentDocumentInterface $document)
+    public function setDocument(ContentBehavior $document)
     {
         $this->document = $document;
     }
@@ -323,7 +325,6 @@ class StructureBridge implements StructureInterface
     {
         $document = $this->getDocument();
 
-        if (!$document instanceof Locali
         if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
             return StructureType::getGhost($this->getDocument()->getLocale());
         }
