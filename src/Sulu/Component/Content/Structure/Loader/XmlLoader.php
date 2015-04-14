@@ -43,6 +43,7 @@ class XmlLoader extends XmlLegacyLoader
         $structure->name = $data['key'];
         $structure->cacheLifetime = $data['cacheLifetime'];
         $structure->controller = $data['controller'];
+        $structure->view = $data['view'];
         $structure->tags = $data['tags'];
         $structure->parameters = $data['params'];
         $structure->resource = $resource;
@@ -51,6 +52,8 @@ class XmlLoader extends XmlLegacyLoader
         foreach ($data['properties'] as $propertyName => $dataProperty) {
             $structure->children[$propertyName] = $this->createProperty($propertyName, $dataProperty);
         }
+
+        $structure->burnModelRepresentation();
 
         return $structure;
     }
@@ -78,7 +81,7 @@ class XmlLoader extends XmlLegacyLoader
         $section->name = $propertyName;
 
         foreach ($data['properties'] as $name => $property) {
-            $section->children[$name] = $this->createProperty($property);
+            $section->children[$name] = $this->createProperty($name, $property);
         }
 
         return $section;

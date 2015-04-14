@@ -11,7 +11,7 @@ class PageBridge extends StructureBridge implements PageInterface
      */
     public function getView()
     {
-        return $this->structure->getParameter('template');
+        return $this->structure->view;
     }
 
     /**
@@ -19,7 +19,12 @@ class PageBridge extends StructureBridge implements PageInterface
      */
     public function getController()
     {
-        return $this->structure->getParameter('controller');
+        return $this->structure->controller;
+    }
+
+    public function getUrls()
+    {
+        return array();
     }
 
     /**
@@ -27,7 +32,7 @@ class PageBridge extends StructureBridge implements PageInterface
      */
     public function getCacheLifeTime()
     {
-        return $this->structure->getParameter('cache_lifetime');
+        return $this->structure->cacheLifetime;
     }
 
     /**
@@ -51,7 +56,7 @@ class PageBridge extends StructureBridge implements PageInterface
      */
     public function getNavContexts()
     {
-        return $this->document->getNavContexts();
+        return $this->document->getNavigationContexts();
     }
 
     /**

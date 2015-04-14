@@ -107,7 +107,7 @@ class StructureBridge implements StructureInterface
      */
     public function getWebspaceKey()
     {
-        return $this->getDocument()->getWebspaceKey();
+        return $this->inspector->getWebspace($this->document);
     }
 
     /**
@@ -216,7 +216,15 @@ class StructureBridge implements StructureInterface
         }
 
         $property = $this->structure->getChild($name);
+
+
+        return $this->createLegacyPropertyFromItem($property);
+    }
+
+    private function createLegacyPropertyFromItem($property)
+    {
         $propertyBridge = $this->propertyFactory->createProperty($property);
+        $name = $property->getName();
 
         if ($this->document) {
             $property = $this->document->getContent()->getProperty($name);
@@ -299,7 +307,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPublishedState()
     {
-        return $this->getWorkflowDocument(__METHOD__)->getPublishedState();
+        return $this->getWorkflowDocument(__METHOD__)->getWorkflowStage();
     }
 
     /**
@@ -388,7 +396,7 @@ class StructureBridge implements StructureInterface
      */
     public function getHasTranslation()
     {
-        return $this->structure->getLocalizedProperties() ? true : false;
+        return true;
     }
 
     /**
@@ -449,8 +457,6 @@ class StructureBridge implements StructureInterface
                 'url' => $document->getResourceSegment(),
             ));
 
-            $localizationState = $this->inspector->getLocalizationState($document);
-
             $result = array_merge($this->getDocument()->getContent()->getArrayCopy(), $result);
 
             return $result;
@@ -475,7 +481,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPropertyByTagName($tagName, $highest = true)
     {
-        return $this->createBridgeFromItem($this->structure->getPropertyByTagName($tagName, $highest));
+        return $this->createLegacyPropertyFromItem($this->structure->getPropertyByTagName($tagName, $highest));
     }
 
     /**
@@ -485,7 +491,7 @@ class StructureBridge implements StructureInterface
     {
         $properties = array();
         foreach ($this->structure->getPropertiesByTagName($tagName) as $structureProperty) {
-            $properties[] = $this->createBridgeFromItem($structureProperty);
+            $properties[] = $this->createLegacyPropertyFromItem($structureProperty);
         }
 
         return $properties;
@@ -579,6 +585,27 @@ class StructureBridge implements StructureInterface
         return $this->getProperty($name)->getValue();
     }
 
+    public function getEnabledShadowLanguages()
+    {
+        return $this->inspector->getShadowLocales($this->getDocument());
+    }
+
+    public function getConcreteLanguages()
+    {
+        return $this->inspector->getLocales($this->getDocument());
+    }
+
+    public function getIsShadow()
+    {
+        return $this->getDocument()->isShadowLocaleEnabled();
+    }
+
+    public function getShadowBaseLanguage()
+    {
+        return $this->getDocument()->getShadowLocale();
+    }
+
+
     protected function readOnlyException($method)
     {
         throw new \BadMethodCallException(sprintf(
@@ -650,8 +677,8 @@ class StructureBridge implements StructureInterface
         return $value;
     }
 
-    private function documentToStructure(ContentDocumentInterface $document)
+    private function documentToStructure(ContentBehavior $document)
     {
-        return new $this($this->inspector->getStructure($document), $this->inspector, $document);
+        return new $this($this->inspector->getStructure($document), $this->inspector, $this->propertyFactory, $document);
     }
 }

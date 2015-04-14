@@ -3,7 +3,6 @@
 namespace Sulu\Component\Content\Compat;
 
 use Sulu\Component\Content\Structure as LegacyStructure;
-use DTL\Component\Content\Document\PageInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Component\Content\Document\WorkflowStage;
 

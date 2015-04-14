@@ -44,6 +44,11 @@ class Structure extends Item
     public $view;
 
     /**
+     * Same as $items but without Sections
+     */
+    public $modelProperties;
+
+    /**
      * Return all direct child properties of this structure, ignoring
      * Sections
      *
@@ -73,17 +78,42 @@ class Structure extends Item
      */
     public function getProperty($name)
     {
-        if (!isset($this->children[$name])) {
-            throw new NoSuchPropertyException($this->name, sprintf(
-                'Property "%s" does not exist in structure "%s" loaded from resource "%s". Known properties: "%s"',
-                $name,
-                $this->name,
-                $this->resource,
-                implode('", "', array_keys($this->children))
+        return $this->getChild($name);
+    }
+
+    /**
+     * Return a model property
+     *
+     * We keep two representations of the property data, one with
+     * Sections and one without.
+     */
+    public function getModelProperty($name)
+    {
+        if (!isset($this->modelProperties[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Unknown model property "%s", known model properties: "%s"',
+                $name, implode('", "', array_keys($this->modelProperties))
             ));
         }
 
-        return $this->children[$name];
+        return $this->modelProperties[$name];
+    }
+
+    public function getModelProperties()
+    {
+        return $this->modelProperties;
+    }
+
+    /**
+     * Create a copy of the properties excluding the section's
+     *
+     * Should only be called before writing to the cache.
+     *
+     * TODO: Do not use get|setProperties, use get|setChildren
+     */
+    public function burnModelRepresentation()
+    {
+        $this->modelProperties = $this->getProperties(true);
     }
 
     /**
@@ -91,19 +121,11 @@ class Structure extends Item
      */
     public function hasProperty($name)
     {
-        return isset($this->children[$name]);
+        return $this->hasChild($name);
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getPropertyNames()
-    {
-        return array_keys($this->children);
-    }
-
-    /**
-     * TODO: Implement this
+     * TODO: Implement highest
      *
      * {@inheritDoc}
      */

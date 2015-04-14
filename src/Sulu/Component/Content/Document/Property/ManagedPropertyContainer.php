@@ -68,7 +68,7 @@ class ManagedPropertyContainer extends PropertyContainer
             $this->structure = $this->inspector->getStructure($this->document);
         }
 
-        $structureProperty = $this->structure->getProperty($name);
+        $structureProperty = $this->structure->getModelProperty($name);
 
         $contentTypeName = $structureProperty->getType();
 
@@ -112,7 +112,7 @@ class ManagedPropertyContainer extends PropertyContainer
     public function getArrayCopy()
     {
         $values = array();
-        foreach ($this->structure->getChildren() as $childName => $structureChild) {
+        foreach ($this->structure->getModelProperties() as $childName => $structureChild) {
             $values[$childName] = $this->getProperty($childName)->getValue();
         }
 
