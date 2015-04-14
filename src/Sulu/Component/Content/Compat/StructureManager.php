@@ -30,6 +30,10 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
     private $inspector;
     private $propertyFactory;
 
+    private $typeMap = array(
+        'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+    );
+
     /**
      * @param StructureFactory  $structureFactory
      * @param ExtensionManager  $extensionManager
@@ -52,7 +56,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      */
     public function getStructure($key, $type = Structure::TYPE_PAGE)
     {
-        return $this->wrapStructure($this->structureFactory->getStructure($type, $key));
+        return $this->wrapStructure($type, $this->structureFactory->getStructure($type, $key));
     }
 
     /**
@@ -64,7 +68,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
         $structures = $this->structureFactory->getStructures($type);
 
         foreach ($structures as $structure) {
-            $wrappedStructures[] = $this->wrapStructure($structure);
+            $wrappedStructures[] = $this->wrapStructure($type, $structure);
         }
 
         return $wrappedStructures;
@@ -109,8 +113,17 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
      *
      * @return StructureBridge
      */
-    public function wrapStructure(NewStructure $structure)
+    public function wrapStructure($type, NewStructure $structure)
     {
-        return new StructureBridge($structure, $this->inspector, $this->propertyFactory);
+        if (!isset($this->typeMap[$type])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid legacy type "%s", known types: "%s"',
+                $type, implode('", "', array_keys($this->typeMap))
+            ));
+        }
+
+        $class = $this->typeMap[$type];
+
+        return new $class($structure, $this->inspector, $this->propertyFactory);
     }
 }

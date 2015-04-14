@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Content\Compat\Structure;
 
-use Sulu\Component\Content\PageInterface;
+use Sulu\Component\Content\Compat\PageInterface;
 
 class PageBridge extends StructureBridge implements PageInterface
 {

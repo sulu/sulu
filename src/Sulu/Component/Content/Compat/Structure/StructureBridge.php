@@ -208,6 +208,7 @@ class StructureBridge implements StructureInterface
     {
         $property = $this->structure->getChild($name);
         $propertyBridge = $this->propertyFactory->createProperty($property);
+        $propertyBridge->setValue($this->document->getContent()->getProperty($name)->getValue());
 
         return $propertyBridge;
     }

@@ -4,7 +4,7 @@ namespace DTL\Bundle\ContentBundle\Tests\Integration\Compat;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
-use Sulu\Component\Content\StructureInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use PHPCR\Util\NodeHelper;
 use DTL\Bundle\ContentBundle\Tests\Integration\BaseTestCase;
 
@@ -21,7 +21,7 @@ class StructureBridgeToArrayTest extends SuluTestCase
 
     public function testHomepage()
     {
-        $startDocument = $this->getDm()->find('/cmf/sulu_io/contents', 'en');
+        $startDocument = $this->manager->find('/cmf/sulu_io/contents', 'en');
         $startPage = $this->contentMapper->loadStartPage('sulu_io', 'en');
 
         $expected = array(

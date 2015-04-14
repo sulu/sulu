@@ -145,13 +145,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
             $contentType = $this->contentTypeManager->get($contentTypeName);
 
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
-            try {
-                $realProperty = $propertyContainer->getProperty($propertyName);
-            } catch (\Exception $e) {
-                var_dump($structure->getName());
-                var_dump($propertyName);die();;
-                var_dump($structure);die();;
-            }
+            $realProperty = $propertyContainer->getProperty($propertyName);
             $legacyProperty->setValue($realProperty->getValue());
 
             $contentType->write(
