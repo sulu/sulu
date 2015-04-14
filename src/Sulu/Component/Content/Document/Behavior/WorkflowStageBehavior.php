@@ -29,5 +29,14 @@ interface WorkflowStageBehavior
      * @param string|integer
      */
     public function setWorkflowStage($workflowStage);
+
+    /**
+     * Get the published date or return NULL if the 
+     * document has not yet been published
+     *
+     * @return null|\DateTime
+     */
+    public function getPublished();
+    
 }
 
