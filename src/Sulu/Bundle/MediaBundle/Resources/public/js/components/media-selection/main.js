@@ -538,7 +538,12 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             url: '/admin/api/collections?sortBy=title',
                             nameKey: 'title',
                             instanceName: this.options.instanceName,
-                            globalEvents: false
+                            globalEvents: false,
+                            translates: {
+                                noData: '',
+                                title: this.sandbox.translate('navigation.media.collections'),
+                                addButton: ''
+                            }
                         }
                     }
                 ]);
