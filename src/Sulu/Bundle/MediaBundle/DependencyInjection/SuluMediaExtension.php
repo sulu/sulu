@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class SuluMediaExtension extends Extension
 {
-    const DEFAULT_FORMAT_NAME = '170x170';
     const DEFAULT_FORMAT_CACHE_PUBLIC_FOLDER = 'web';
 
     /**
@@ -44,6 +43,7 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.collection.type.default', array(
             'id' => 1
         ));
+        $container->setParameter('sulu_media.format_manager.config_paths', $config['format_manager']['config_paths']);
         $container->setParameter('sulu_media.collection.previews.limit', 3);
         $container->setParameter('sulu_media.collection.previews.format', '150x100');
         $container->setParameter('sulu_media.media.max_file_size', '16MB');
@@ -56,49 +56,6 @@ class SuluMediaExtension extends Extension
         $container->setParameter('sulu_media.format_cache.segments', '10');
         $container->setParameter('ghost_script.path', $config['ghost_script']['path']);
         $container->setParameter('sulu_media.format_manager.mime_types', $config['format_manager']['mime_types']);
-
-        $container->setParameter('sulu_media.image.formats', array(
-            self::DEFAULT_FORMAT_NAME => array(
-                'name' => self::DEFAULT_FORMAT_NAME,
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '170',
-                            'y' => '170',
-                        )
-                    )
-                ),
-                'options' => $config['format_manager']['default_imagine_options']
-            ),
-            '50x50' => array(
-                'name' => '50x50',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' =>array(
-                            'x' => '50',
-                            'y' => '50',
-                        )
-                    )
-                ),
-                'options' => $config['format_manager']['default_imagine_options']
-            ),
-            '150x100' => array(
-                'name' => '150x100',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' =>array(
-                            'x' => '150',
-                            'y' => '100',
-                        )
-                    )
-                ),
-                'options' => $config['format_manager']['default_imagine_options']
-            ),
-        ));
-
         $container->setParameter('sulu_media.media.types', $config['format_manager']['types']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
