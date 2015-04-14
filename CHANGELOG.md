@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-master
+* 0.16.2 (2015-04-14)
     * HOTFIX      #997 [HttpCacheBundle] Fixed bug for caching ESI requests
 
 * 0.16.1 (2015-02-27)
