@@ -331,7 +331,7 @@ class ContentMapper implements ContentMapperInterface
         $this->documentManager->persist($document, $locale);
         $this->documentManager->flush();
 
-        return $document;
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -375,7 +375,7 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->flush();
 
-        return $document;
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -451,7 +451,7 @@ class ContentMapper implements ContentMapperInterface
             }
         }
 
-        return $children;
+        return $this->documentsToStructureCollection($children);
     }
 
     /**
@@ -459,7 +459,9 @@ class ContentMapper implements ContentMapperInterface
      */
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
-        return $this->documentManager->find($uuid, $locale);
+        $document = $this->documentManager->find($uuid, $locale);
+
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -471,7 +473,7 @@ class ContentMapper implements ContentMapperInterface
         $startPage->setWorkflowStage(WorkflowStage::PUBLISHED);
         $startPage->setNavigationContexts(array());
 
-        return $startPage;
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -486,9 +488,11 @@ class ContentMapper implements ContentMapperInterface
             $segmentKey
         );
 
-        return $this->loadDocument($uuid, $locale, array(
+        $document = $this->loadDocument($uuid, $locale, array(
             'exclude_shadow' => false,
         ));
+
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -499,7 +503,9 @@ class ContentMapper implements ContentMapperInterface
         $query = $this->documentManager->createQuery($sql2, $locale);
         $query->setMaxResults($limit);
 
-        return $query->execute();
+        $documents = $query->execute();
+
+        return $this->documentsToStructureCollection($documents);
     }
 
     /**
@@ -527,10 +533,12 @@ class ContentMapper implements ContentMapperInterface
     ) {
         $webspaceChildren = $this->inspector->getChildren($this->getContentDocument($webspaceKey, $locale));
 
-        return $this->filterDocuments($webspaceChildren, $locale, array(
+        $documents = $this->filterDocuments($webspaceChildren, $locale, array(
             'load_ghost_content' => $loadGhostContent,
             'exclude_ghost' => $excludeGhost,
         ));
+
+        return $this->documentsToStructureCollection($document);
     }
 
     /**
@@ -543,7 +551,8 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        return $this->loadTreeByUuid(null, $locale, null, $excludeGhost, $loadGhostContent);
+        $documents = $this->loadTreeByUuid(null, $locale, null, $excludeGhost, $loadGhostContent);
+        return $this->documentsToStructureCollection($documents);
     }
 
     /**
@@ -559,7 +568,9 @@ class ContentMapper implements ContentMapperInterface
      */
     public function loadShallowStructureByNode(NodeInterface $contentNode, $localization, $webspaceKey)
     {
-        return $this->documentManager->find($contentNode->getPath());
+        $document = $this->documentManager->find($contentNode->getPath());
+
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -573,7 +584,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false,
         $excludeShadow = true
     ) {
-        return $this->loadDocument(
+        $document = $this->loadDocument(
             $node->getIdentifier(),
             $locale,
             array(
@@ -582,6 +593,8 @@ class ContentMapper implements ContentMapperInterface
                 'exclude_shadow' => $excludeShadow,
             )
         );
+
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -1323,5 +1336,35 @@ class ContentMapper implements ContentMapperInterface
     private function initializeExtensionCache()
     {
         $this->extensionDataCache = new ArrayCache();
+    }
+
+    /**
+     * Return a structure bridge corresponding to the given document
+     *
+     * @param DocumentInterface $document
+     *
+     * @return StructureBridge
+     */
+    private function documentToStructure($document)
+    {
+        $structure = $this->inspector->getStructure($document);
+
+        $structureBridge = $this->structureManager->wrapStructure($structure);
+        $structureBridge->setDocument($document);
+
+        return $structureBridge;
+    }
+
+    private function documentsToStructureCollection(ContentBehavior $documents)
+    {
+        $collection = array();
+        foreach ($documents as $document) {
+            if (!$document instanceof ContentBehavior) {
+                continue;
+            }
+            $collection[] = $this->documentToStructure($document);
+        }
+
+        return $collection;
     }
 }
