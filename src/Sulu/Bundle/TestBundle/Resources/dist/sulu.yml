@@ -4,6 +4,8 @@ framework:
     templating: { engines: ['twig'] }
     form:
         enabled: true
+        csrf_protected:
+            enabled: false
     test: ~
     session:
         storage_id: session.storage.mock_file

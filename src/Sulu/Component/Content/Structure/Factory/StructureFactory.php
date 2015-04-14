@@ -104,7 +104,7 @@ class StructureFactory implements StructureFactoryInterface
                 ), null, $e);
             }
 
-            $metadata =  $this->loader->load($filePath);
+            $metadata =  $this->loader->load($filePath, $type);
             $resources = array(new FileResource($filePath));
 
             $cache->write(
