@@ -10,6 +10,8 @@ use Sulu\Bundle\ContentBundle\Tests\Integration\BaseTestCase;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Component\Content\Property as LegacyProperty;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\Property;
 
 class StructureBridgeSerializationTest extends SuluTestCase
 {
@@ -30,10 +32,10 @@ class StructureBridgeSerializationTest extends SuluTestCase
     public function testSerialize()
     {
         $pageDocument = $this->createPage();
-        $startPage = $this->contentMapper->load($pageDocument->getUuid(), 'sulu_io', 'en');
-        $this->assertInstanceOf(StructureBridge::class, $startPage);
+        $managedPage = $this->contentMapper->load($pageDocument->getUuid(), 'sulu_io', 'en');
+        $this->assertInstanceOf(StructureBridge::class, $managedPage);
 
-        $result = $this->serializer->serialize($startPage, 'json');
+        $result = $this->serializer->serialize($managedPage, 'json');
 
         return $result;
     }
@@ -43,21 +45,17 @@ class StructureBridgeSerializationTest extends SuluTestCase
      */
     public function testDeserialize($data)
     {
-        $result = $this->serializer->deserialize($data, StructureBridge::class, 'json');
+        $result = $this->serializer->deserialize($data, PageBridge::class, 'json');
 
         $this->assertInstanceOf(StructureBridge::class, $result);
-        $this->assertEquals('internal_links', $result->getKey());
+        $this->assertEquals('internallinks', $result->getKey());
 
-        $property = $result->getProperty('internal_links');
-        $this->assertInstanceOf(LegacyProperty::class, $property);
+        $property = $result->getProperty('internalLinks');
+        $this->assertInstanceOf(Property::class, $property);
 
         $value = $property->getValue();
         $this->assertInternalType('array', $value);
-        $this->assertCount(2, $value);
-        $this->assertContainsOnlyInstancesOf(StructureBridge::class, $value);
-        $first = reset($value);
-
-        $this->assertEquals($this->contentDocument->getPath(), $first->getPath());
+        $this->assertCount(1, $value);
     }
 
     private function createPage()
@@ -69,8 +67,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $page->setStructureType('internallinks');
         $page->getContent()->bind(array(
             'title' => 'World',
-            'internal_links' => array(
-                $this->contentDocument->getUuid(),
+            'internalLinks' => array(
                 $this->contentDocument->getUuid(),
             ),
         ));

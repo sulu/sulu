@@ -1353,8 +1353,9 @@ class ContentMapper implements ContentMapperInterface
             return null;
         }
         $structure = $this->inspector->getStructure($document);
+        $documentAlias = $this->inspector->getMetadata($document)->getAlias();
 
-        $structureBridge = $this->structureManager->wrapStructure($structure);
+        $structureBridge = $this->structureManager->wrapStructure($documentAlias, $structure);
         $structureBridge->setDocument($document);
 
         return $structureBridge;
