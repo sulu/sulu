@@ -132,7 +132,20 @@ class Structure extends Item
     public function getPropertyByTagName($tagName, $highest = true)
     {
         $properties = $this->getPropertiesByTagName($tagName);
+
+        if (!$properties) {
+            throw new \InvalidArgumentException(sprintf(
+                'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
+                $this->getName(), $this->resource
+            ));
+        }
+
         return reset($properties);
+    }
+
+    public function hasPropertyWithTagName($tagName)
+    {
+        return (boolean) count($this->getPropertiesByTagName($tagName));
     }
 
     /**
@@ -151,13 +164,5 @@ class Structure extends Item
         }
 
         return $properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function hasTag($tagName)
-    {
-        return (boolean) $this->getPropertiesByTagName($tagName);
     }
 }

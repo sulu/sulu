@@ -72,7 +72,7 @@ class PageBridge extends StructureBridge implements PageInterface
      */
     public function getExt()
     {
-        return array();
+        return $this->document->getExtensionsData();
     }
 
     /**

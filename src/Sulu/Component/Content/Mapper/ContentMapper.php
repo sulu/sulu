@@ -311,6 +311,14 @@ class ContentMapper implements ContentMapperInterface
         unset($data['content']);
         unset($data['extensions']);
 
+        if ($isShadow) {
+            $data['shadowLocaleEnabled'] = true;
+        }
+
+        if ($shadowBaseLanguage) {
+            $data['shadowLocale'] = $shadowBaseLanguage;
+        }
+
         if ($uuid) {
             $document = $this->documentManager->find($uuid, $locale, $structureType);
         } else {
@@ -1226,7 +1234,7 @@ class ContentMapper implements ContentMapperInterface
             return '/';
         }
 
-        if ($structure->hasTag('sulu.rlp')) {
+        if ($structure->hasPropertyWithTagName('sulu.rlp')) {
             $property = $structure->getPropertyByTagName('sulu.rlp');
 
             if ($property->getContentTypeName() !== 'resource_locator') {
