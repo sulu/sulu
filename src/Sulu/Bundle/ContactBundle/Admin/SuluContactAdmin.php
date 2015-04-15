@@ -17,6 +17,11 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SuluContactAdmin extends Admin
 {
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
     public function __construct(SecurityCheckerInterface $securityChecker, $title)
     {
         $this->securityChecker = $securityChecker;
