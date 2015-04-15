@@ -17,7 +17,7 @@
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
-        <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\DefaultTypeManager</parameter>
+        <parameter key="sulu_media.type_manager.class">Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager</parameter>
         <parameter key="sulu_media.collection_entity">SuluMediaBundle:Collection</parameter>
         <parameter key="sulu_category.entity.media">SuluMediaBundle:Media</parameter>
     </parameters>
