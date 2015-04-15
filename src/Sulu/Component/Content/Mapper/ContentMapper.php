@@ -65,6 +65,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Sulu\Component\Content\Extension\ExtensionInterface;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -306,7 +307,9 @@ class ContentMapper implements ContentMapperInterface
         $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
 
         $content = $data['content'];
+        $extensions = $data['extensions'];
         unset($data['content']);
+        unset($data['extensions']);
 
         if ($uuid) {
             $document = $this->documentManager->find($uuid, $locale, $structureType);
@@ -325,6 +328,10 @@ class ContentMapper implements ContentMapperInterface
         //       Currently it is not possible to map content with a form as content types
         //       can do whatever they want in terms of mapping.
         $document->getContent()->bind($content);
+
+        // TODO: As with content data, extensions should be set through the form
+        $document->setExtensionsData($extensions);
+
 
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
@@ -1165,7 +1172,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function getExtensionData(
         NodeInterface $node,
-        StructureExtension $extension,
+        ExtensionInterface $extension,
         $propertyName,
         $webspaceKey,
         $locale
@@ -1189,6 +1196,22 @@ class ContentMapper implements ContentMapperInterface
         // if property exists set it to target (with default value '')
         return isset($data[$propertyName]) ? $data[$propertyName] : null;
     }
+
+    /**
+     * load data from extension
+     */
+    private function loadExtensionData(NodeInterface $node, ExtensionInterface $extension, $webspaceKey, $locale)
+    {
+        $extension->setLanguageCode($locale, $this->languageNamespace, '');
+        $data = $extension->load(
+            $node,
+            $webspaceKey,
+            $locale
+        );
+
+        return $extension->getContentData($data);
+    }
+
 
     /**
      * Returns url of a row

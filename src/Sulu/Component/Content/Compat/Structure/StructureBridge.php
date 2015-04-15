@@ -25,6 +25,7 @@ use Sulu\Component\Content\Structure\Section;
 use Sulu\Component\Content\Structure\Structure;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Structure\Block;
 
 class StructureBridge implements StructureInterface
 {
@@ -54,6 +55,13 @@ class StructureBridge implements StructureInterface
     private $loadedProperties = array();
 
     /**
+     * Needed by structure extensions when the document has not been set..
+     *
+     * @var string
+     */
+    private $locale;
+
+    /**
      * @param Structure         $structure
      * @param object $document
      * @param PageUrlGenerator  $urlGenerator
@@ -81,9 +89,9 @@ class StructureBridge implements StructureInterface
     /**
      * {@inheritDoc}
      */
-    public function setLanguageCode($language)
+    public function setLanguageCode($locale)
     {
-        $this->readOnlyException(__METHOD__);
+        $this->locale = $locale;
     }
 
     /**
@@ -91,6 +99,10 @@ class StructureBridge implements StructureInterface
      */
     public function getLanguageCode()
     {
+        if (!$this->document) {
+            return $this->locale;
+        }
+
         return $this->getDocument()->getLocale();
     }
 
@@ -217,18 +229,22 @@ class StructureBridge implements StructureInterface
 
         $property = $this->structure->getChild($name);
 
-
         return $this->createLegacyPropertyFromItem($property);
     }
 
-    private function createLegacyPropertyFromItem($property)
+    private function createLegacyPropertyFromItem($item)
     {
-        $propertyBridge = $this->propertyFactory->createProperty($property);
-        $name = $property->getName();
+        $propertyBridge = $this->propertyFactory->createProperty($item);
+        $name = $item->getName();
 
         if ($this->document) {
             $property = $this->document->getContent()->getProperty($name);
-            $propertyBridge->setPropertyValue($property);
+
+            if ($item instanceof Block) {
+                $propertyBridge->setValue($property->getValue());
+            } else {
+                $propertyBridge->setPropertyValue($property);
+            }
         }
 
         $this->loadedProperties[$name] = $propertyBridge;

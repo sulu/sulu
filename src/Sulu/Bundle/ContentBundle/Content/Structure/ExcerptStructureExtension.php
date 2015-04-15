@@ -67,6 +67,11 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     private $languageNamespace;
 
+    /**
+     * @var string
+     */
+    private $languageCode;
+
     public function __construct(
         StructureManagerInterface $structureManager,
         ContentTypeManagerInterface $contentTypeManager
@@ -139,6 +144,7 @@ class ExcerptStructureExtension extends AbstractExtension
         if ($this->excerptStructure === null) {
             $this->initProperties();
         }
+        $this->languageCode = $languageCode;
 
         parent::setLanguageCode($languageCode, $languageNamespace, $namespace);
         $this->languageNamespace = $languageNamespace;
@@ -171,7 +177,9 @@ class ExcerptStructureExtension extends AbstractExtension
     {
         if($this->excerptStructure === null) {
             $this->excerptStructure = $this->structureManager->getStructure(self::EXCERPT_EXTENSION_NAME);
+            $this->excerptStructure->setLanguageCode($this->languageCode);
         }
+
 
         return $this->excerptStructure;
     }

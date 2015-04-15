@@ -148,6 +148,7 @@ class LegacyPropertyFactory
             foreach ($component->getChildren() as $property) {
                 $blockPropertyType->addChild($this->createProperty($property));
             }
+
             $blockProperty->addType($blockPropertyType);
         }
 
