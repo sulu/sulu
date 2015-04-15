@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
     * BUGFIX      #1021 [SecurityBundle] Only check security for not-null security contexts
     * BUGFIX      #1009 [MediaBundle]    Fix media download url
+    * ENHANCEMENT #999  [ContentBundle]  Show permission tab only when user has correct permissions
     * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
     * BUGFIX      #1008 [AdminBundle]    Fixed 1Password css bug on login screen
     * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
