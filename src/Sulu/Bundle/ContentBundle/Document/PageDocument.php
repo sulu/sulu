@@ -28,6 +28,7 @@ use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\DocumentManager\Behavior\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\PathBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 
 class PageDocument implements
     NodeNameBehavior,
@@ -44,7 +45,8 @@ class PageDocument implements
     UuidBehavior,
     ChildrenBehavior,
     PathBehavior,
-    ExtensionBehavior
+    ExtensionBehavior,
+    OrderBehavior
 {
     private $nodeName;
     private $created;
@@ -342,14 +344,27 @@ class PageDocument implements
         return $this->path;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public function getExtensionsData() 
     {
         return $this->extensions;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public function setExtensionsData($extensions)
     {
         $this->extensions = $extensions;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setExtension($name, $data)
+    {
+        $this->extensions[$name] = $data;
     }
 }

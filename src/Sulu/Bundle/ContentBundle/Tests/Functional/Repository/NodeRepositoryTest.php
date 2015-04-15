@@ -48,6 +48,11 @@ class NodeRepositoryTest extends SuluTestCase
     private $nodeRepository;
 
     /**
+     * @var ExtensionManagerInterface
+     */
+    private $extensionManager;
+
+    /**
      * @var ExtensionInterface[]
      */
     private $extensions;
@@ -58,6 +63,8 @@ class NodeRepositoryTest extends SuluTestCase
         $this->extensions = array(new TestExtension('test1', 'test1'));
         $this->mapper = $this->getContainer()->get('sulu.content.mapper');
         $this->nodeRepository = $this->getContainer()->get('sulu_content.node_repository');
+        $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
+        $this->extensionManager->addExtension(new TestExtension('test1', 'test1'));
     }
 
     private function prepareGetTestData()

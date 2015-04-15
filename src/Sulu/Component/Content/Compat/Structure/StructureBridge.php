@@ -388,7 +388,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPath()
     {
-        return $this->inspector->getPath($this->getDocument());
+        return $this->inspector->getContentPath($this->getDocument());
     }
 
     /**

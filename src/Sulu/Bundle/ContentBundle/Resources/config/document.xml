@@ -70,6 +70,11 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.order" class="Sulu\Component\Content\Document\Subscriber\OrderSubscriber">
+            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
     </services>
 
 </container>
