@@ -62,7 +62,7 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
         $locale = $event->getLocale();
         $persistedStage = $this->getWorkflowStage($node, $locale);
 
-        if ($stage === WorkflowStage::PUBLISHED && $stage !== $persistedStage) {
+        if ($stage == WorkflowStage::PUBLISHED && $stage !== $persistedStage) {
             $this->setPublishedDate($node, $locale);
         }
 
