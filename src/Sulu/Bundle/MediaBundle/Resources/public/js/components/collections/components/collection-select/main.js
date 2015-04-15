@@ -199,7 +199,7 @@ define(function() {
                     }
                 };
             } else {
-                options.url = '/admin/api/collections?sortBy=title';
+                options.url = '/admin/api/collections?sortBy=title&limit=9999';
             }
 
             this.sandbox.start(
