@@ -47,6 +47,8 @@ class StructureFactory implements StructureFactoryInterface
      */
     private $defaultTypes;
 
+    private $cache = array();
+
     /**
      * @param LoaderInterface $loader
      * @param array $typePaths

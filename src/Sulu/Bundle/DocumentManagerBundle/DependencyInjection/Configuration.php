@@ -19,6 +19,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('namespace')
                 ->useAttributeAsKey('role')
                     ->defaultValue(array(
+                        'extension_localized' => 'i18n',
                         'system' => null,
                         'system_localized' => 'i18n',
                         'content' => null,

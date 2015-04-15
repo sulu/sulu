@@ -22,34 +22,57 @@ class ExtensionManager implements ExtensionManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getExtensions($key)
+    public function getExtensions($structureType)
     {
-        $extensions = isset($this->extensions['all']) ? $this->extensions['all'] : array();
-        if (isset($this->extensions[$key])) {
-            $extensions = array_merge($extensions, $this->extensions[$key]);
+        if (!isset($this->extensions[$structureType])) {
+            throw new \InvalidArgumentException(sprintf(
+                'No extensions registered for structure type "%s"',
+                $structureType
+            ));
+        }
+
+        $extensions = array();
+        
+        if (isset($this->extensions['all'])) {
+            $extensions = $this->extensions['all'];
+        }
+
+        if (isset($this->extensions[$structureType])) {
+            $extensions = array_merge($extensions, $this->extensions[$structureType]);
         }
 
         return $extensions;
     }
 
     /**
-     * TODO: This is not efficient. The extensions should be indexed by key.
+     * TODO: This is not efficient. The extensions should be indexed by structureType.
      *
      * {@inheritdoc}
      */
-    public function hasExtension($key, $name)
+    public function hasExtension($structureType, $name)
     {
-        $extensions = $this->getExtensions($key);
+        if (!isset($this->extensions[$structureType])) {
+            return false;
+        }
 
-        return array_key_exists($name, $extensions);
+        $extensions = $this->getExtensions($structureType);
+
+        return isset($extensions[$structureType]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExtension($key, $name)
+    public function getExtension($structureType, $name)
     {
-        $extensions = $this->getExtensions($key);
+        $extensions = $this->getExtensions($structureType);
+
+        if (!isset($extensions[$name])) {
+            throw new \InvalidArgumentException(sprintf(
+                'Extension "%s" has not been registered for structure type "%s", registred extensions: "%s"',
+                $name, $structureType, implode('", "', array_structureTypes($extensions))
+            ));
+        }
 
         return isset($extensions[$name]) ? $extensions[$name] : null;
     }
@@ -57,14 +80,14 @@ class ExtensionManager implements ExtensionManagerInterface
     /**
      * {@inheritdoc}
      *
-     * TODO: Using "all" here is not a good idea. This means that nobody can create a template called "all"
+     * TODO: Using "all" here is not a good idea. This means that nobody can create a structureType called "all"
      */
-    public function addExtension(ExtensionInterface $extension, $template = 'all')
+    public function addExtension(ExtensionInterface $extension, $structureType = 'all')
     {
-        if (!isset($this->extensions[$template])) {
-            $this->extensions[$template] = array();
+        if (!isset($this->extensions[$structureType])) {
+            $this->extensions[$structureType] = array();
         }
 
-        $this->extensions[$template][$extension->getName()] = $extension;
+        $this->extensions[$structureType][$extension->getName()] = $extension;
     }
 }

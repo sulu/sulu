@@ -134,19 +134,19 @@ class SmartContentQueryBuilderTest extends SuluTestCase
                 $template = 'block';
                 $data['article'] = array(
                     array(
-                        'title' => 'Blocktitle ' . $i,
+                        'title' => 'Block Title ' . $i,
                         'article' => 'Blockarticle ' . $i,
                         'type' => 'test'
                     ),
                     array(
-                        'title' => 'Blocktitle2 ' . $i,
+                        'title' => 'Block Title 2 ' . $i,
                         'article' => 'Blockarticle2 ' . $i,
                         'type' => 'test'
                     )
                 );
             } elseif ($i > $max / 3) {
                 $template = 'article';
-                $data['article'] = 'Blockarticle ' . $i;
+                $data['article'] = 'Text article ' . $i;
             }
 
             $request = ContentMapperRequest::create()
