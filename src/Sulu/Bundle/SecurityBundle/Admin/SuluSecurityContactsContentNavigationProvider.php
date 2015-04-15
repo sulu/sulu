@@ -28,7 +28,6 @@ class SuluSecurityContactsContentNavigationProvider implements ContentNavigation
             $permissions->setComponent('users@sulusecurity');
             $permissions->setComponentOptions(array('display' => 'form'));
             $permissions->setDisplay(array('edit'));
-            $permissions->setGroups(array('contact'));
 
             $navigation[] = $permissions;
         }

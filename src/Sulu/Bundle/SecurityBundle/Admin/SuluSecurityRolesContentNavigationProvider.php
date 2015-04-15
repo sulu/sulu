@@ -11,7 +11,6 @@ class SuluSecurityRolesContentNavigationProvider implements ContentNavigationPro
     {
         $details = new ContentNavigationItem('content-navigation.security.details');
         $details->setAction('details');
-        $details->setGroups(array('roles'));
         $details->setComponent('roles@sulusecurity');
         $details->setComponentOptions(array('display'=>'form'));
 

@@ -22,7 +22,6 @@ class SuluCategoryContentNavigationProvider implements ContentNavigationProvider
     {
         $details = new ContentNavigationItem('content-navigation.category.details');
         $details->setAction('details');
-        $details->setGroups(array('category'));
         $details->setComponent('categories@sulucategory');
         $details->setComponentOptions(array('display'=>'form'));
 

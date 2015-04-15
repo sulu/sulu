@@ -20,21 +20,18 @@ class SuluAccountContentNavigationProvider implements ContentNavigationProviderI
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
         $details->setId('details');
-        $details->setGroups(array('account'));
         $details->setComponent('accounts@sulucontact');
         $details->setComponentOptions(array('display'=>'form'));
 
         $contacts = new ContentNavigationItem('content-navigation.contact.accounts.contacts');
         $contacts->setAction('contacts');
         $contacts->setId('contacts');
-        $contacts->setGroups(array('account'));
         $contacts->setComponent('accounts@sulucontact');
         $contacts->setComponentOptions(array('display'=>'contacts'));
         $contacts->setDisplay(array('edit'));
 
         $documents = new ContentNavigationItem('content-navigation.accounts.documents');
         $documents->setAction('documents');
-        $documents->setGroups(array('account'));
         $documents->setComponent('accounts@sulucontact');
         $documents->setComponentOptions(array('display'=>'documents'));
         $documents->setDisplay(array('edit'));

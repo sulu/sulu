@@ -19,14 +19,12 @@ class SuluTranslateContentNavigationProvider implements ContentNavigationProvide
     {
         $details = new ContentNavigationItem('Details');
         $details->setAction('details');
-        $details->setGroups(array('package'));
         $details->setComponent('packages@sulutranslate');
         $details->setComponentOptions(array('display' => 'details'));
         $details->setDisplay(array('edit'));
 
         $settings = new ContentNavigationItem('Settings');
         $settings->setAction('settings');
-        $settings->setGroups(array('package'));
         $settings->setComponent('packages@sulutranslate');
         $settings->setComponentOptions(array('display' => 'settings'));
 

@@ -39,13 +39,6 @@ class ContentNavigationItem
     private $action;
 
     /**
-     * An array of groups, which contain this navigation item.
-     * This is used for filtering the items for the navigation.
-     * @var array
-     */
-    private $groups;
-
-    /**
      * The name of the component to start
      * @var string
      */
@@ -150,22 +143,6 @@ class ContentNavigationItem
     public function setDisplay($display)
     {
         $this->display = $display;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
-     * @param array $groups
-     */
-    public function setGroups(array $groups)
-    {
-        $this->groups = $groups;
     }
 
     /**

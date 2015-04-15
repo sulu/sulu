@@ -24,27 +24,23 @@ class SuluContentContentNavigationProvider implements ContentNavigationProviderI
         $content = new ContentNavigationItem('content-navigation.contents.content');
         $content->setId('tab-content');
         $content->setAction('content');
-        $content->setGroups(array('content'));
         $content->setComponent('content/form@sulucontent');
 
         $seo = new ContentNavigationItem('content-navigation.contents.seo');
         $seo->setId('tab-seo');
         $seo->setAction('seo');
-        $seo->setGroups(array('content'));
         $seo->setComponent('content/seo@sulucontent');
         $seo->setDisplay(array('edit'));
 
         $excerpt = new ContentNavigationItem('content-navigation.contents.excerpt');
         $excerpt->setId('tab-excerpt');
         $excerpt->setAction('excerpt');
-        $excerpt->setGroups(array('content'));
         $excerpt->setComponent('content/excerpt@sulucontent');
         $excerpt->setDisplay(array('edit'));
 
         $settings = new ContentNavigationItem('content-navigation.contents.settings');
         $settings->setId('tab-settings');
         $settings->setAction('settings');
-        $settings->setGroups(array('content'));
         $settings->setComponent('content/settings@sulucontent');
         $settings->setDisplay(array('edit'));
 
@@ -61,7 +57,6 @@ class SuluContentContentNavigationProvider implements ContentNavigationProviderI
                 'securityContext' => 'sulu.webspaces.' . $options['webspace']
             )
         );
-        $permissions->setGroups(array('content'));
 
         $navigation[] = $permissions;
 

@@ -25,7 +25,6 @@ class SuluSnippetContentNavigationProvider implements ContentNavigationProviderI
     {
         $details = new ContentNavigationItem('content-navigation.snippets.details');
         $details->setAction('details');
-        $details->setGroups(array('snippet'));
         $details->setComponent('snippet/form/details@sulusnippet');
 
         return array($details);

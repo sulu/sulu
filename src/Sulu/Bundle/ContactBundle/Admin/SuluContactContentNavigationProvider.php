@@ -19,13 +19,11 @@ class SuluContactContentNavigationProvider implements ContentNavigationProviderI
     {
         $details = new ContentNavigationItem('content-navigation.contacts.details');
         $details->setAction('details');
-        $details->setGroups(array('contact'));
         $details->setComponent('contacts@sulucontact');
         $details->setComponentOptions(array('display'=>'form'));
 
         $documents = new ContentNavigationItem('content-navigation.contacts.documents');
         $documents->setAction('documents');
-        $documents->setGroups(array('contact'));
         $documents->setComponent('contacts@sulucontact');
         $documents->setComponentOptions(array('display'=>'documents'));
         $documents->setDisplay(array('edit'));

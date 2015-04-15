@@ -19,13 +19,11 @@ class SuluMediaContentNavigationProvider implements ContentNavigationProviderInt
     {
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
-        $files->setGroups(array('collection'));
         $files->setComponent('collections@sulumedia');
         $files->setComponentOptions(array('display'=>'files'));
 
         $settings = new ContentNavigationItem('content-navigation.media.settings');
         $settings->setAction('settings');
-        $settings->setGroups(array('collection'));
         $settings->setComponent('collections@sulumedia');
         $settings->setComponentOptions(array('display'=>'settings'));
 
