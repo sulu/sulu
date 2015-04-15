@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
     * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
     * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable

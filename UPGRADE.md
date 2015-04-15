@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Contact and Account Security
+
+The security checks are now also applied to contacts and accounts, make sure
+that the users you want to have access have the correct permissions.
+
 ### Media Types
 
 The media types are now set by wildcard check and need to be updated,
