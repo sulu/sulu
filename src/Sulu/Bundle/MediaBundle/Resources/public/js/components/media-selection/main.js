@@ -539,7 +539,8 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                             translates: {
                                 noData: '',
                                 title: this.sandbox.translate('navigation.media.collections'),
-                                addButton: ''
+                                addButton: '',
+                                search: this.sandbox.translate('navigation.media.collections.search')
                             }
                         }
                     }

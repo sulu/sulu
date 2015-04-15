@@ -10,6 +10,10 @@
                 <source>navigation.media.collections</source>
                 <target>Collections</target>
             </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
+                <source>navigation.media.collections.search</source>
+                <target>Filter collections ...</target>
+            </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
                 <target>Files</target>

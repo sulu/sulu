@@ -70,6 +70,12 @@ class DataNavigationItem extends NavigationItem
     protected $titleTranslationKey = 'sulu.data-navigation.title';
 
     /**
+     * Key to translate root node
+     * @var string
+     */
+    protected $searchTranslationKey = 'sulu.data-navigation.search';
+
+    /**
      * @param string $name The name of the item
      * @param string $dataUrl url to load data for data-navigation
      * @param NavigationItem $parent The parent of the item
@@ -218,6 +224,22 @@ class DataNavigationItem extends NavigationItem
     }
 
     /**
+     * @return string
+     */
+    public function getSearchTranslationKey()
+    {
+        return $this->searchTranslationKey;
+    }
+
+    /**
+     * @param string $searchTranslationKey
+     */
+    public function setSearchTranslationKey($searchTranslationKey)
+    {
+        $this->searchTranslationKey = $searchTranslationKey;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function copyChildless()
@@ -233,6 +255,7 @@ class DataNavigationItem extends NavigationItem
         $new->setNoDataTranslationKey($this->getNoDataTranslationKey());
         $new->setTitleTranslationKey($this->getTitleTranslationKey());
         $new->setAddButtonTranslationKey($this->getAddButtonTranslationKey());
+        $new->setSearchTranslationKey($this->getSearchTranslationKey());
 
         return $new;
     }
@@ -264,7 +287,8 @@ class DataNavigationItem extends NavigationItem
             'translates' => array(
                 'noData' => $this->noDataTranslationKey,
                 'title' => $this->titleTranslationKey,
-                'addButton' => $this->addButtonTranslationKey
+                'addButton' => $this->addButtonTranslationKey,
+                'search' => $this->searchTranslationKey
             )
         );
 
