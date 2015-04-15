@@ -3,6 +3,18 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #935 [MediaBundle]     Added new media selection
+    * BUGFIX      #1009 [MediaBundle]    Fix media download url
+    * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
+    * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
+    * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
+    * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
+    * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
+    * ENHANCEMENT #988 [ContentBundle]   Set locale on render request
+    * ENHANCEMENT #988 [MediaBundle]     Set working defaults for ghostscript and caching headers
+    * BUGFIX      #976 [MediaBundle]     Fix media scale mode parameter
+    * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
+    * BUGFIX      #973 [All]             Added handling of anonymous user token
+    * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles

@@ -21,6 +21,16 @@ app/console sulu:upgrade:0.17.0:collections
 app/console sulu:upgrade:0.17.0:media
 ```
 
+### Contact and Account Security
+
+The security checks are now also applied to contacts and accounts, make sure
+that the users you want to have access have the correct permissions.
+
+### Media Types
+
+The media types are now set by wildcard check and need to be updated,
+by running the following command: `sulu:media:type:update`.
+
 ### Media API Object
 
 The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).

@@ -30978,6 +30978,7 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
                 this.$thumbnails[id].find('img').remove();
             }.bind(this));
 
+<<<<<<< HEAD
             this.sandbox.dom.on(this.$thumbnails[id].find('img'), 'load', function() {
                 this.$thumbnails[id].find('.fa-coffee').remove();
             }.bind(this));
@@ -31003,6 +31004,15 @@ define('husky_components/datagrid/decorators/thumbnail-view',[],function() {
          */
         deselectAllRecords: function() {
             this.unselectAll();
+=======
+            this.sandbox.dom.on(this.$thumbnails[id].find('img'), 'error', function() {
+                this.$thumbnails[id].find('img').remove();
+            }.bind(this));
+
+            this.sandbox.dom.on(this.$thumbnails[id].find('img'), 'load', function() {
+                this.$thumbnails[id].find('.fa-coffee').remove();
+            }.bind(this));
+>>>>>>> 564ecf94ab822a16c3e035a8452724ed418b4519
         },
 
         /**
@@ -39384,11 +39394,17 @@ define('__component__$column-navigation@husky',[], function() {
          */
         renderItem: function(data) {
             var $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.item)({
+<<<<<<< HEAD
                     title: this.sandbox.util.escapeHtml(data[this.options.titleName]),
                     id: data[this.options.idName]
                 })),
                 disabled = (this.options.disableIds.indexOf(data[this.options.idName]) !== -1);
 
+=======
+                title: this.sandbox.util.escapeHtml(data[this.options.titleName]),
+                id: data[this.options.idName]
+            }));
+>>>>>>> 564ecf94ab822a16c3e035a8452724ed418b4519
             if (this.marked.indexOf(data[this.options.idName]) !== -1) { // if is marked
                 this.sandbox.dom.addClass($item, constants.markedClass);
             }

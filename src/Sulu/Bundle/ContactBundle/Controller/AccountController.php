@@ -27,13 +27,14 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Makes accounts available through a REST API
  */
-class AccountController extends AbstractContactController
+class AccountController extends AbstractContactController implements SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
@@ -1339,5 +1340,13 @@ class AccountController extends AbstractContactController
     protected function getAccountEntityName()
     {
         return $this->container->getParameter('sulu_contact.account.entity');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.contact.organizations';
     }
 }

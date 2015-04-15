@@ -165,13 +165,15 @@ class FormatManager implements FormatManagerInterface
                 $image->strip();
 
                 // set Interlacing to plane for smaller image size
-                $image->interlace(ImageInterface::INTERLACE_PLANE);
+                if (count($image->layers()) == 1) {
+                    $image->interlace(ImageInterface::INTERLACE_PLANE);
+                }
 
                 // set extension
                 $imageExtension = $this->getImageExtension($fileName);
 
                 // get image
-                $image = $image->get(
+                $responseContent = $image->get(
                     $imageExtension,
                     $this->getOptionsFromImage($image, $imageExtension, $formatOptions)
                 );
@@ -182,7 +184,7 @@ class FormatManager implements FormatManagerInterface
                 // save image
                 if ($this->saveImage) {
                     $this->formatCache->save(
-                        $this->createTmpFile($image),
+                        $this->createTmpFile($responseContent),
                         $media->getId(),
                         $this->replaceExtension($fileName, $imageExtension),
                         $storageOptions,
@@ -191,21 +193,23 @@ class FormatManager implements FormatManagerInterface
                 }
             } catch (MediaException $e) {
                 // return when available a file extension icon
-                list($image, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName));
+                list($responseContent, $status, $imageExtension) = $this->returnFileExtensionIcon($formatName, $this->getRealFileExtension($fileName), $e);
             }
+            $responseMimeType = 'image/' . $imageExtension;
         } catch (MediaException $e) {
-            // return default image
-            list($image, $status, $imageExtension) = $this->returnFallbackImage($formatName);
+            $responseContent = $e->getCode() . ': ' . $e->getMessage();
+            $status = 404;
+            $responseMimeType = 'text/plain';
         }
 
         // clear temp files
         $this->clearTempFiles();
 
         // set header
-        $headers = $this->getResponseHeaders($imageExtension);
+        $headers = $this->getResponseHeaders($responseMimeType);
 
         // return image
-        return new Response($image, $status, $headers);
+        return new Response($responseContent, $status, $headers);
     }
 
     /**
@@ -224,18 +228,21 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $format
-     * @param string $fileExtension
-     * @return Response
+     * @param $format
+     * @param $fileExtension
+     * @param MediaException $e
+     * @return array
+     * @throws ImageProxyInvalidImageFormat
+     * @throws MediaException
      */
-    protected function returnFileExtensionIcon($format, $fileExtension)
+    protected function returnFileExtensionIcon($format, $fileExtension, $e)
     {
         $imageExtension = 'png';
 
         $placeholder = dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png';
 
         if (!file_exists(dirname(__FILE__) . '/../../Resources/images/file-' . $fileExtension . '.png')) {
-            return $this->returnFallbackImage($format);
+            throw $e;
         }
 
         $image = $this->converter->convert($placeholder, $this->getFormat($format));
@@ -246,27 +253,10 @@ class FormatManager implements FormatManagerInterface
     }
 
     /**
-     * @param string $format
-     * @return Response
-     */
-    protected function returnFallbackImage($format)
-    {
-        $imageExtension = 'png';
-
-        $placeholder = dirname(__FILE__) . '/../../Resources/images/placeholder.png';
-
-        $image = $this->converter->convert($placeholder, $this->getFormat($format));
-
-        $image = $image->get($imageExtension);
-
-        return array($image, 404, $imageExtension);
-    }
-
-    /**
-     * @param $imageExtension
+     * @param $mimeType
      * @return array
      */
-    protected function getResponseHeaders($imageExtension = '')
+    protected function getResponseHeaders($mimeType = '')
     {
         $headers = array();
 
@@ -279,8 +269,8 @@ class FormatManager implements FormatManagerInterface
             }
         }
 
-        if (!empty($imageExtension)) {
-            $headers['Content-Type'] = 'image/' . $imageExtension;
+        if (!empty($mimeType)) {
+            $headers['Content-Type'] = $mimeType;
         }
 
         return $headers;

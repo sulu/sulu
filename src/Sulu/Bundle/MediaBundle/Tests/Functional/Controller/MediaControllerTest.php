@@ -269,6 +269,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals('2', $response->downloadCounter);
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
     }
 
     /**
@@ -523,6 +525,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
 
         $this->assertEquals(array(
             'en-gb'
@@ -702,6 +706,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(array(
             'en-gb'
         ), $response->contentLanguages);
@@ -749,6 +755,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
         $this->assertCount(2, (array) $response->versions);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
     }
 
     /**

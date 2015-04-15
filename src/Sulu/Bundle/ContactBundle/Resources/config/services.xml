@@ -20,9 +20,11 @@
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="%sulu_contact.admin.class%">
+            <argument type="service" id="sulu_security.security_checker" />
+            <argument>%sulu_admin.name%</argument>
+
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
-            <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_contact.admin.content_navigation" class="%sulu_contact.admin.content_navigation.class%">
             <tag name="sulu.context" context="admin"/>

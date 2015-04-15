@@ -11,7 +11,6 @@
 namespace Sulu\Component\Security\Authorization;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -134,7 +133,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeVote()
@@ -145,7 +144,37 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('security')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
+    }
+
+    public function testPositiveVoteWithoutGroup()
+    {
+        foreach ($this->user->getUserGroups() as $userGroup) {
+            $this->user->removeUserGroup($userGroup);
+        }
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles'),
+            array('view')
+        );
+
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
+    }
+
+    public function testNegativeVoteWithoutGroup()
+    {
+        foreach ($this->user->getUserGroups() as $userGroup) {
+            $this->user->removeUserGroup($userGroup);
+        }
+
+        $access = $this->voter->vote(
+            $this->token->reveal(),
+            new SecurityCondition('sulu.security.roles'),
+            array('security')
+        );
+
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
     }
 
     public function testPositiveGroupVote()
@@ -156,7 +185,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeGroupVote()
@@ -167,7 +196,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('security')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
     }
 
     public function testPositiveNestedGroupVote()
@@ -178,7 +207,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeNestedGroupVote()
@@ -189,7 +218,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('security')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
     }
 
     public function testAbstainWhenAclExistsWithoutLocalizationVote()
@@ -200,7 +229,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_ABSTAIN, $access);
+        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $access);
     }
 
     public function testPositiveWhenAclExistsVote()
@@ -213,7 +242,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeWhenAclExistsVote()
@@ -226,7 +255,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
     }
 
     public function testPositiveWhenAclNotExistsVote()
@@ -239,7 +268,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testPositiveVoteWithMultipleAttributes()
@@ -252,7 +281,7 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view', 'add')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $access);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $access);
     }
 
     public function testNegativeVoteWithMultipleAttributes()
@@ -265,6 +294,6 @@ class SecurityContextVoterTest extends \PHPUnit_Framework_TestCase
             array('view', 'security')
         );
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $access);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $access);
     }
 }
