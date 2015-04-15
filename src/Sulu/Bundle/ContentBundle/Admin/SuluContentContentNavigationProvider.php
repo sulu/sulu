@@ -17,6 +17,19 @@ use Sulu\Component\Content\Structure;
 class SuluContentContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**
+     * @var boolean
+     */
+    private $enabledSecurity;
+
+    /**
+     * @param boolean $enabledSecurity
+     */
+    public function __construct($enabledSecurity = false)
+    {
+        $this->enabledSecurity = $enabledSecurity;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getNavigationItems(array $options = array())
@@ -46,19 +59,21 @@ class SuluContentContentNavigationProvider implements ContentNavigationProviderI
 
         $navigation = array($content, $seo, $excerpt, $settings);
 
-        $permissions = new ContentNavigationItem('Permissions');
-        $permissions->setAction('permissions');
-        $permissions->setDisplay(array('edit'));
-        $permissions->setComponent('permission-tab@sulusecurity');
-        $permissions->setComponentOptions(
-            array(
-                'display' => 'form',
-                'type' => Structure::class,
-                'securityContext' => 'sulu.webspaces.' . $options['webspace']
-            )
-        );
+        if ($this->enabledSecurity) {
+            $permissions = new ContentNavigationItem('Permissions');
+            $permissions->setAction('permissions');
+            $permissions->setDisplay(array('edit'));
+            $permissions->setComponent('permission-tab@sulusecurity');
+            $permissions->setComponentOptions(
+                array(
+                    'display' => 'form',
+                    'type' => Structure::class,
+                    'securityContext' => 'sulu.webspaces.' . $options['webspace']
+                )
+            );
 
-        $navigation[] = $permissions;
+            $navigation[] = $permissions;
+        }
 
         return $navigation;
     }
