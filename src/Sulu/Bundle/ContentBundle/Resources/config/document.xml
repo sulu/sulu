@@ -60,7 +60,14 @@
             <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="kernel.event_subscriber" />
         </service>
+
+        <service id="sulu_document_manager.document.subscriber.extension" class="Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber">
+            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu_content.extension.manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.namespace_registry" />
+        </service>
+
     </services>
 
 </container>
-
