@@ -24,6 +24,10 @@ monolog:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: error
+        doctrine:
+            action_level: debug
+            type: stream
+            path:  %kernel.logs_dir%/%kernel.environment%_doctrine.log
 
 sulu_core:
     cache_dir: %kernel.root_dir%/cache/sulu

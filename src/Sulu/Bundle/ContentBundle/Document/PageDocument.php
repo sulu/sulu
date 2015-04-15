@@ -27,6 +27,7 @@ use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\DocumentManager\Behavior\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\PathBehavior;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 
 class PageDocument implements
     NodeNameBehavior,
@@ -42,7 +43,8 @@ class PageDocument implements
     ShadowLocaleBehavior,
     UuidBehavior,
     ChildrenBehavior,
-    PathBehavior
+    PathBehavior,
+    ExtensionBehavior
 {
     private $nodeName;
     private $created;
@@ -66,6 +68,7 @@ class PageDocument implements
     private $locale;
     private $children = array();
     private $path;
+    private $extensions;
 
     public function __construct()
     {
@@ -338,5 +341,15 @@ class PageDocument implements
     {
         return $this->path;
     }
+
+
+    public function getExtensionsData() 
+    {
+        return $this->extensions;
+    }
     
+    public function setExtensionsData($extensions)
+    {
+        $this->extensions = $extensions;
+    }
 }

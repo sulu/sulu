@@ -202,7 +202,7 @@ class SmartContentQueryBuilder extends ContentQueryBuilder
      */
     private function buildExtensionSelect($alias, $extension, $propertyName, $locale, &$additionalFields)
     {
-        $extension = $this->structureManager->getExtension('', $extension);
+        $extension = $this->structureManager->getExtension('all', $extension);
         $additionalFields[$locale][] = array(
             'name' => $alias,
             'extension' => $extension,

@@ -39,7 +39,7 @@ abstract class SuluTestCase extends BaseTestCase
 
         $kernel = new static::$class(
             isset($options['environment']) ? $options['environment'] : 'test',
-            isset($options['debug']) ? $options['debug'] : false,
+            isset($options['debug']) ? $options['debug'] : true,
             isset($options['sulu_context']) ? $options['sulu_context'] : 'admin'
         );
 

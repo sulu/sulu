@@ -49,6 +49,7 @@ class DataNormalizer
             'title' => $this->getAndUnsetValue($data, 'title'),
             'resourceSegment' => isset($data['url']) ? $data['url'] : null,
             'redirectType' => $this->getAndUnsetRedirectType($data),
+            'extensions' => $this->getAndUnsetValue($data, 'ext'),
             'redirectTarget' => $this->getAndUnsetValue($data, 'internal_link'),
             'redirectExternal' => $this->getAndUnsetValue($data, 'external'),
             'navigationContexts' => $this->getAndUnsetValue($data, 'navContexts'),

@@ -21,6 +21,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\DocumentManager\Events;
 
 class ExtensionSubscriber extends AbstractMappingSubscriber
 {
@@ -49,6 +50,20 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritDoc}
      */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            // persist should happen before content is mapped
+            Events::PERSIST => array('handlePersist', 10),
+
+            // hydrate should happen afterwards
+            Events::HYDRATE => array('handleHydrate', -10),
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function supports($document)
     {
         return $document instanceof ExtensionBehavior;
@@ -64,8 +79,13 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         $node = $event->getNode();
         $locale = $event->getLocale();
         $webspaceName = $this->inspector->getWebspace($document);
+        $structureType = $document->getStructureType();
 
-        $extensions = $this->extensionManager->getExtensions($document->getStructureType());
+        if (null === $structureType) {
+            return;
+        }
+
+        $extensions = $this->extensionManager->getExtensions($structureType);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
 
         foreach ($extensions as $extension) {
@@ -91,6 +111,11 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         $structureType = $document->getStructureType();
         $node = $event->getNode();
         $extensionsData = $document->getExtensionsData();
+
+        if (!$extensionsData) {
+            return;
+        }
+
         $locale = $event->getLocale();
         $webspaceName = $this->inspector->getWebspace($document);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');

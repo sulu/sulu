@@ -24,13 +24,6 @@ class ExtensionManager implements ExtensionManagerInterface
      */
     public function getExtensions($structureType)
     {
-        if (!isset($this->extensions[$structureType])) {
-            throw new \InvalidArgumentException(sprintf(
-                'No extensions registered for structure type "%s"',
-                $structureType
-            ));
-        }
-
         $extensions = array();
         
         if (isset($this->extensions['all'])) {

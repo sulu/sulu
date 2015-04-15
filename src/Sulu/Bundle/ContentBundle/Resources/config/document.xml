@@ -66,6 +66,7 @@
             <argument type="service" id="sulu_content.extension.manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.namespace_registry" />
+            <tag name="kernel.event_subscriber" />
         </service>
 
     </services>
