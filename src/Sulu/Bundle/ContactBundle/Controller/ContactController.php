@@ -31,6 +31,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
+use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -39,7 +40,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package Sulu\Bundle\ContactBundle\Controller
  */
-class ContactController extends AbstractContactController
+class ContactController extends AbstractContactController implements SecuredControllerInterface
 {
     /**
      * {@inheritdoc}
@@ -794,5 +795,13 @@ class ContactController extends AbstractContactController
     private function getAccountEntityName()
     {
         return $this->container->getParameter('sulu_contact.account.entity');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecurityContext()
+    {
+        return 'sulu.contact.people';
     }
 }
