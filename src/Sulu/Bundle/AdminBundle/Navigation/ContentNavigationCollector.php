@@ -33,6 +33,10 @@ class ContentNavigationCollector extends ContainerAware implements ContentNaviga
      */
     public function getNavigationItems($alias, array $options = array())
     {
+        if (!array_key_exists($alias, $this->providers)) {
+            throw new ContentNavigationAliasNotFoundException($alias);
+        }
+
         $navigationItems = array();
 
         foreach ($this->providers[$alias] as $providerId) {

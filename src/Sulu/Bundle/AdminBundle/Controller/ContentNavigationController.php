@@ -15,7 +15,9 @@ use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollectorInterface;
+use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,11 +52,27 @@ class ContentNavigationController implements ClassResourceInterface
      */
     public function cgetAction(Request $request)
     {
-        $alias = $request->get('alias');
-        $options = $request->query->all();
+        try {
+            $alias = $request->get('alias');
 
-        $contentNavigationItems = $this->contentNavigationCollector->getNavigationItems($alias, $options);
+            if (!$alias) {
+                throw new RestException('The alias attribute is required to load the content navigation');
+            }
 
-        return $this->viewHandler->handle(View::create($contentNavigationItems));
+            $options = $request->query->all();
+
+            $contentNavigationItems = $this->contentNavigationCollector->getNavigationItems($alias, $options);
+
+            $view = View::create($contentNavigationItems);
+        } catch (ContentNavigationAliasNotFoundException $exc) {
+            $restException = new RestException(
+                sprintf('The content navigation alias "%s" does not exist!', $exc->getAlias())
+            );
+            $view = View::create($restException->toArray(), 404);
+        } catch (RestException $exc) {
+            $view = View::create($exc->toArray(), 400);
+        }
+
+        return $this->viewHandler->handle($view);
     }
 }

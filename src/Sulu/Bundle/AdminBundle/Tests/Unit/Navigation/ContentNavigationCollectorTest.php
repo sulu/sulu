@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollector;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollectorInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
@@ -103,5 +104,12 @@ class ContentNavigationCollectorTest extends \PHPUnit_Framework_TestCase
         foreach ($results as $alias => $result) {
             $this->assertEquals($result, $this->contentNavigationCollector->getNavigationItems($alias, $options));
         }
+    }
+
+    public function testGetNavigationItemsWithNotExistentAlias()
+    {
+        $this->setExpectedException(ContentNavigationAliasNotFoundException::class);
+
+        $this->contentNavigationCollector->getNavigationItems('not_existent_alias');
     }
 }

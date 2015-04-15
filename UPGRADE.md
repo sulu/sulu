@@ -21,6 +21,23 @@ app/console sulu:upgrade:0.17.0:collections
 app/console sulu:upgrade:0.17.0:media
 ```
 
+### Content navigation
+
+The interfaces for the content navigation have been changed, so you have to
+apply these changes if you have used a content navigation in your bundle.
+
+Basically you can delete the `NavigationController` delivering the content
+navigation items together with its routes. It's now common to suffix the
+classes providing content navigation items with `ContentNavigationProvider`.
+
+These classes have to implement the `ContentNavigationProviderInterface` and be
+registered as services as described in the
+[documentation](http://docs.sulu.io/en/latest/cookbook/using-the-tab-navigation.html).
+
+Consider that the URL for the retrieval of the content navigation items have
+changed to `/admin/content-navigations?alias=your-alias` and have to be updated
+in your javascript components.
+
 ### Contact and Account Security
 
 The security checks are now also applied to contacts and accounts, make sure
