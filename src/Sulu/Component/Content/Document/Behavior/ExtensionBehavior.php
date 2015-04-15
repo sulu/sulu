@@ -19,5 +19,12 @@ interface ExtensionBehavior extends ContentBehavior
      * Set all the extension data
      */
     public function setExtensionsData($extensionData);
-    
+
+    /**
+     * Set data for a specific extension
+     *
+     * @param string $name Extension name
+     * @param array $data Extension data
+     */
+    public function setExtension($name, $data);
 }

@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
                 ->useAttributeAsKey('role')
                     ->defaultValue(array(
                         'extension_localized' => 'i18n',
-                        'system' => null,
+                        'system' => 'sulu',
                         'system_localized' => 'i18n',
                         'content' => null,
                         'content_localized' => 'i18n',

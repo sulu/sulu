@@ -66,6 +66,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -376,14 +377,9 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
-        // check if extension exists
-        if (false === $this->structureManager->hasExtension($document->getStructureType(), $extensionName)) {
-            throw new ExtensionNotFoundException($document->getStructureType(), $extensionName);
-        }
-
         // save data of extensions
         $extension = $this->structureManager->getExtension($document->getStructureType(), $extensionName);
-        $node = $this->documentRegistry->getNodeForDocument($document);
+        $node = $this->inspector->getNode($document);
 
         $extension->save($node, $data, $webspaceKey, $locale);
         $extensionData = $extension->load($node, $webspaceKey, $locale);
@@ -1085,7 +1081,7 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $structureType = $document->getStructureType();
-        $shortPath = str_replace($this->sessionManager->getContentPath($structureType), '', $document->getPath());
+        $shortPath = $this->inspector->getContentPath($document);
 
         return array_merge(
             array(
