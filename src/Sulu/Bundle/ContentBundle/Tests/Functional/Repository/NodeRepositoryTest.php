@@ -34,6 +34,7 @@ use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\Content\Extension\ExtensionInterface;
 
 /**
  * @group functional
@@ -47,7 +48,7 @@ class NodeRepositoryTest extends SuluTestCase
     private $nodeRepository;
 
     /**
-     * @var StructureExtensionInterface[]
+     * @var ExtensionInterface[]
      */
     private $extensions;
 

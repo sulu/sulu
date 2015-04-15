@@ -101,7 +101,6 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
             $this->stopwatch->start('ContentQuery::execute.rowsToList');
         }
 
-
         $result = $this->contentMapper->convertQueryResultToArray(
             $queryResult,
             $webspaceKey,
