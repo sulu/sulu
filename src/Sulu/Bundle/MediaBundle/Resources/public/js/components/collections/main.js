@@ -354,17 +354,17 @@ define([
             }.bind(this));
 
             this.sandbox.on(BREADCRUMB_NAVIGATE.call(this), function(item) {
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
-
                 var url = '/admin/api/collections/' + item.id + '?depth=1&sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+
+                this.sandbox.emit('sulu.router.navigate', 'media/collections/edit:' + item.id + '/' + this.options.display);
             }.bind(this));
 
             this.sandbox.on(BREADCRUMB_NAVIGATE_ROOT.call(this), function() {
-                this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
-
                 var url = '/admin/api/collections?sortBy=title';
                 this.sandbox.emit('husky.data-navigation.collections.set-url', url);
+
+                this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
             }.bind(this));
         },
 
