@@ -13,19 +13,27 @@ namespace Sulu\Bundle\ContentBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Component\Content\Structure;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SuluContentContentNavigationProvider implements ContentNavigationProviderInterface
 {
+    /**
+     * @var SecurityCheckerInterface
+     */
+    private $securityChecker;
+
     /**
      * @var boolean
      */
     private $enabledSecurity;
 
     /**
+     * @param SecurityCheckerInterface $securityChecker
      * @param boolean $enabledSecurity
      */
-    public function __construct($enabledSecurity = false)
+    public function __construct(SecurityCheckerInterface $securityChecker, $enabledSecurity = false)
     {
+        $this->securityChecker = $securityChecker;
         $this->enabledSecurity = $enabledSecurity;
     }
 
@@ -59,7 +67,9 @@ class SuluContentContentNavigationProvider implements ContentNavigationProviderI
 
         $navigation = array($content, $seo, $excerpt, $settings);
 
-        if ($this->enabledSecurity) {
+        $securityContext = 'sulu.webspaces.' . $options['webspace'];
+
+        if ($this->enabledSecurity && $this->securityChecker->hasPermission($securityContext, 'security')) {
             $permissions = new ContentNavigationItem('Permissions');
             $permissions->setAction('permissions');
             $permissions->setDisplay(array('edit'));
@@ -68,7 +78,7 @@ class SuluContentContentNavigationProvider implements ContentNavigationProviderI
                 array(
                     'display' => 'form',
                     'type' => Structure::class,
-                    'securityContext' => 'sulu.webspaces.' . $options['webspace']
+                    'securityContext' => $securityContext
                 )
             );
 

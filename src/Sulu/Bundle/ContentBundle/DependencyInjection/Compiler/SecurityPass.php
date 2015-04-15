@@ -21,7 +21,7 @@ class SecurityPass implements CompilerPassInterface
     {
         if ($container->hasDefinition('sulu_security.admin')) {
             $contentNavigationProviderDefinition = $container->findDefinition(
-                'sulu_content.admin.content_navigation_provider'
+                'sulu_content.content_navigation_provider'
             );
             $contentNavigationProviderDefinition->addArgument(true);
         }
