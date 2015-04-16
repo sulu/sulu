@@ -18,6 +18,8 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use PHPCR\NodeInterface;
+use Sulu\Component\DocumentManager\DocumentRegistry;
 
 class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 {
@@ -25,6 +27,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     const SHADOW_LOCALE_FIELD = 'shadow-base';
 
     private $inspector;
+    private $registry;
 
     /**
      * @param PropertyEncoder $encoder
@@ -32,11 +35,13 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
      */
     public function __construct(
         PropertyEncoder $encoder,
-        DocumentInspector $inspector
+        DocumentInspector $inspector,
+        DocumentRegistry $registry
     )
     {
         parent::__construct($encoder);
         $this->inspector = $inspector;
+        $this->registry = $registry;
     }
 
     /**
@@ -58,7 +63,10 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
                 array('handlePersistUpdateUrl', 20),
                 array('handlePersist', 0),
             ),
-            Events::HYDRATE => array('handleHydrate', 0),
+            Events::HYDRATE => array(
+                array('handleHydrate', 0),
+                array('handleUpdateToShadowLocale', 390),
+            ),
         );
     }
 
@@ -67,18 +75,35 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
      */
     public function doHydrate(HydrateEvent $event)
     {
-        $value = $event->getNode()->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $event->getLocale()),
-            false
-        );
-        $event->getDocument()->setShadowLocaleEnabled($value);
-
-        $value = $event->getNode()->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::SHADOW_LOCALE_FIELD, $event->getLocale()),
-            null
-        );
-        $event->getDocument()->setShadowLocale($value);
+        $locale = $event->getLocale();
+        $node = $event->getNode();
+        $event->getDocument()->setShadowLocale($this->getShadowLocale($node, $locale));
+        $event->getDocument()->setShadowLocaleEnabled($this->getShadowLocaleEnabled($node, $locale));
     }
+
+    /**
+     * Update the locale to the shadow locale, if it is enabled
+     *
+     * Note that this should happen before the fallback locale has been resolved
+     *
+     * @param HydrateEvent $event
+     */
+    public function handleUpdateToShadowLocale(HydrateEvent $event)
+    {
+        $node = $event->getNode();
+        $locale = $event->getLocale();
+
+        if (!$this->getShadowLocaleEnabled($node, $locale)) {
+            return;
+        }
+
+        $document = $event->getDocument();
+
+        $shadowLocale = $this->getShadowLocale($node, $locale);
+        $this->registry->updateLocale($document, $shadowLocale);
+        $event->setLocale($shadowLocale);
+    }
+
 
     /**
      * {@inheritDoc}
@@ -98,6 +123,8 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 
     /**
      * If this is a shadow document, update the URL to that of the shadowed document
+     *
+     * TODO: This is about caching and should be handled somewhere else.
      *
      * @param PersistEvent $event
      */
@@ -136,6 +163,22 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         $event->getAccessor()->set(
             'resourceSegment',
             $shadowLocator
+        );
+    }
+
+    private function getShadowLocaleEnabled(NodeInterface $node, $locale)
+    {
+        return $node->getPropertyValueWithDefault(
+            $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $locale),
+            false
+        );
+    }
+
+    private function getShadowLocale(NodeInterface $node, $locale)
+    {
+        return $node->getPropertyValueWithDefault(
+            $this->encoder->localizedSystemName(self::SHADOW_LOCALE_FIELD, $locale),
+            null
         );
     }
 }

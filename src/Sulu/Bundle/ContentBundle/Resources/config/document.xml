@@ -45,6 +45,7 @@
         <service id="sulu_document_manager.document.subscriber.shadow_locale" class="Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="kernel.event_subscriber" />
         </service>
 
