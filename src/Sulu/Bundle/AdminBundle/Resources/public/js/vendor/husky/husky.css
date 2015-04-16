@@ -9736,77 +9736,96 @@ a.btn-black, a.btn-highlight {
 .husky-datagrid tbody .grid-icon.right {
   float: right;
 }
-/* line 312, ../scss/modules/datagrid.scss */
+/* line 311, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .grid-image {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+}
+/* line 318, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .grid-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* line 324, ../scss/modules/datagrid.scss */
+.husky-datagrid tbody .grid-image .fa-coffee {
+  color: #ccc;
+  font-size: 1.6em;
+}
+/* line 331, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container {
   overflow: auto;
 }
-/* line 316, ../scss/modules/datagrid.scss */
+/* line 335, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head thead {
   display: none;
 }
-/* line 320, ../scss/modules/datagrid.scss */
+/* line 339, ../scss/modules/datagrid.scss */
 .husky-datagrid .table-container.no-head tbody tr:last-child {
   border-bottom: none;
 }
-/* line 327, ../scss/modules/datagrid.scss */
+/* line 346, ../scss/modules/datagrid.scss */
 .husky-datagrid .datagrid-loader {
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -50px 0 0 -50px;
 }
-/* line 334, ../scss/modules/datagrid.scss */
+/* line 353, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-menu {
   margin-top: 5px;
 }
-/* line 337, ../scss/modules/datagrid.scss */
+/* line 356, ../scss/modules/datagrid.scss */
 .husky-datagrid .dropdown-toggle::after {
   margin-left: 12px;
 }
-/* line 341, ../scss/modules/datagrid.scss */
+/* line 360, ../scss/modules/datagrid.scss */
 .husky-datagrid.loading {
   min-height: 150px;
 }
-/* line 345, ../scss/modules/datagrid.scss */
+/* line 364, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list {
   text-align: center;
   color: #ccc;
   padding: 20px 0;
   border-bottom: 2px solid #ccc;
 }
-/* line 351, ../scss/modules/datagrid.scss */
+/* line 370, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list .icon {
   display: block;
   font-size: 50px;
   padding-bottom: 5px;
 }
-/* line 356, ../scss/modules/datagrid.scss */
+/* line 375, ../scss/modules/datagrid.scss */
 .husky-datagrid .empty-list span {
   display: block;
 }
-/* line 361, ../scss/modules/datagrid.scss */
+/* line 380, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements {
   display: block;
   padding-bottom: 10px;
 }
-/* line 364, ../scss/modules/datagrid.scss */
+/* line 383, ../scss/modules/datagrid.scss */
 .husky-datagrid .selected-elements.indent {
   padding-left: 50px;
 }
-/* line 369, ../scss/modules/datagrid.scss */
+/* line 388, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader {
   overflow: hidden;
   height: 0px;
   transition: all 200ms;
   margin-top: 0px;
 }
-/* line 375, ../scss/modules/datagrid.scss */
+/* line 394, ../scss/modules/datagrid.scss */
 .husky-datagrid .medium-loader.show {
   height: 70px;
   margin-top: 10px;
 }
 
-/* line 385, ../scss/modules/datagrid.scss */
+/* line 404, ../scss/modules/datagrid.scss */
 .editable .husky-validate-error .husky-input input {
   height: 30px;
   margin-top: -30px;
@@ -11162,12 +11181,26 @@ a.btn-black, a.btn-highlight {
   background-color: #111417;
   color: #fff;
 }
-/* line 6, ../scss/modules/data-navigation.scss */
-.data-navigation .search {
+/* line 12, ../scss/modules/data-navigation.scss */
+.data-navigation.has-add-btn .data-navigation-list-container {
+  height: calc(100% - 100px);
+}
+/* line 16, ../scss/modules/data-navigation.scss */
+.data-navigation.has-add-btn .data-navigation-list-footer {
+  display: block;
+}
+
+/* line 23, ../scss/modules/data-navigation.scss */
+.data-navigation-search {
   margin: 20px 40px;
 }
 
-/* line 16, ../scss/modules/data-navigation.scss */
+/* line 27, ../scss/modules/data-navigation.scss */
+.data-navigation-list-scroll {
+  position: relative;
+}
+
+/* line 31, ../scss/modules/data-navigation.scss */
 .data-navigation-header {
   position: relative;
   height: 50px;
@@ -11176,25 +11209,25 @@ a.btn-black, a.btn-highlight {
   font-size: 16px;
   color: #999;
 }
-/* line 24, ../scss/modules/data-navigation.scss */
+/* line 39, ../scss/modules/data-navigation.scss */
 .data-navigation-header .root-text {
   padding-left: 20px;
 }
 
-/* line 29, ../scss/modules/data-navigation.scss */
+/* line 44, ../scss/modules/data-navigation.scss */
 .data-navigation-list-container {
-  height: calc(100% - 100px);
+  height: calc(100% - 50px);
   overflow: scroll;
   position: relative;
 }
 
-/* line 35, ../scss/modules/data-navigation.scss */
+/* line 50, ../scss/modules/data-navigation.scss */
 .data-navigation-list {
   width: 100%;
   height: 100%;
   background-color: #111417;
 }
-/* line 40, ../scss/modules/data-navigation.scss */
+/* line 55, ../scss/modules/data-navigation.scss */
 .data-navigation-list.is-animated {
   position: absolute;
   top: 0;
@@ -11202,13 +11235,14 @@ a.btn-black, a.btn-highlight {
   z-index: 5;
 }
 
-/* line 48, ../scss/modules/data-navigation.scss */
+/* line 63, ../scss/modules/data-navigation.scss */
 .data-navigation-list-footer {
+  display: none;
   padding: 10px 0;
   text-align: center;
 }
 
-/* line 53, ../scss/modules/data-navigation.scss */
+/* line 69, ../scss/modules/data-navigation.scss */
 .data-navigation-items {
   height: 100%;
   min-height: calc(100% - 150px);
@@ -11217,7 +11251,7 @@ a.btn-black, a.btn-highlight {
   list-style: none;
   overflow: auto;
 }
-/* line 61, ../scss/modules/data-navigation.scss */
+/* line 77, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li {
   position: relative;
   height: 50px;
@@ -11228,24 +11262,24 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
   cursor: pointer;
 }
-/* line 71, ../scss/modules/data-navigation.scss */
+/* line 87, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li:hover {
   background-color: #21272E;
 }
-/* line 75, ../scss/modules/data-navigation.scss */
+/* line 91, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li:focus {
   outline: 0;
 }
-/* line 79, ../scss/modules/data-navigation.scss */
+/* line 95, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li.not-selectable {
   cursor: default;
 }
-/* line 82, ../scss/modules/data-navigation.scss */
+/* line 98, ../scss/modules/data-navigation.scss */
 .data-navigation-items > li.not-selectable:hover {
   background-color: initial;
 }
 
-/* line 89, ../scss/modules/data-navigation.scss */
+/* line 105, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name {
   display: inline-block;
   width: calc(100% - 45px);
@@ -11253,7 +11287,7 @@ a.btn-black, a.btn-highlight {
   overflow: hidden;
   padding-left: 5px;
 }
-/* line 96, ../scss/modules/data-navigation.scss */
+/* line 112, ../scss/modules/data-navigation.scss */
 .data-navigation-item-name .fa-chevron-right {
   position: absolute;
   right: 10px;
@@ -11262,11 +11296,12 @@ a.btn-black, a.btn-highlight {
   color: #999;
 }
 
-/* line 105, ../scss/modules/data-navigation.scss */
+/* line 121, ../scss/modules/data-navigation.scss */
 .data-navigation-item-thumb {
   position: relative;
   top: 6px;
-  display: inline-block;
+  display: block;
+  float: left;
   width: 35px;
   height: 35px;
   margin-right: 10px;
@@ -11276,15 +11311,15 @@ a.btn-black, a.btn-highlight {
   background-repeat: no-repeat;
 }
 
-/* line 118, ../scss/modules/data-navigation.scss */
+/* line 135, ../scss/modules/data-navigation.scss */
 .data-navigation-back {
   height: 50px;
 }
-/* line 121, ../scss/modules/data-navigation.scss */
+/* line 138, ../scss/modules/data-navigation.scss */
 .data-navigation-back:focus {
   outline: 0;
 }
-/* line 125, ../scss/modules/data-navigation.scss */
+/* line 142, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back {
   position: absolute;
   font-size: 14px;
@@ -11295,12 +11330,12 @@ a.btn-black, a.btn-highlight {
   padding-top: 17px;
   padding-left: 22px;
 }
-/* line 136, ../scss/modules/data-navigation.scss */
+/* line 153, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-back:hover {
   background-color: #21272E;
   padding-bottom: 5px;
 }
-/* line 142, ../scss/modules/data-navigation.scss */
+/* line 159, ../scss/modules/data-navigation.scss */
 .data-navigation-back .data-navigation-parent-text {
   margin-left: 60px;
   padding-right: 20px;
@@ -11309,14 +11344,14 @@ a.btn-black, a.btn-highlight {
   text-overflow: ellipsis;
 }
 
-/* line 153, ../scss/modules/data-navigation.scss */
+/* line 170, ../scss/modules/data-navigation.scss */
 .data-navigation-add .fa-plus-circle {
   margin-right: 5px;
   float: left;
   font-size: 16px;
 }
 
-/* line 160, ../scss/modules/data-navigation.scss */
+/* line 177, ../scss/modules/data-navigation.scss */
 .data-navigation-loader-container {
   position: absolute;
   width: 100%;
@@ -11326,14 +11361,14 @@ a.btn-black, a.btn-highlight {
   padding: 4px 0;
 }
 
-/* line 169, ../scss/modules/data-navigation.scss */
+/* line 186, ../scss/modules/data-navigation.scss */
 .data-navigation-info {
   text-align: center;
   line-height: 50px;
   height: calc(100% - 150px);
 }
 
-/* line 175, ../scss/modules/data-navigation.scss */
+/* line 192, ../scss/modules/data-navigation.scss */
 .data-navigation-info-empty {
   color: #999;
   font-size: 14px;

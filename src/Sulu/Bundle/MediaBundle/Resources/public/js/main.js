@@ -34,9 +34,11 @@ define({
 
         // list all collections
         sandbox.mvc.routes.push({
-            route: 'media/collections',
+            route: 'media/collections/root',
             callback: function() {
-                this.html('<div data-aura-component="collections@sulumedia" data-aura-display="list"/>');
+                this.html(
+                    '<div data-aura-component="collections/components/root@sulumedia" />'
+                );
             }
         });
 
@@ -48,6 +50,58 @@ define({
                     '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '"/>'
                 );
             }
+        });
+
+        // show a single collection with files and upload
+        sandbox.mvc.routes.push({
+            route: 'media/collections/edit::id/:content/edit::mediaId',
+            callback: function(id, content, mediaId) {
+                this.html(
+                    '<div data-aura-component="collections/components/content@sulumedia" data-aura-content="' + content + '" data-aura-id="' + id + '" data-aura-media-id="' + mediaId + '"/>'
+                );
+            }
+        });
+
+        app.components.before('initialize', function() {
+            if (this.name !== 'Sulu App') {
+                return;
+            }
+
+            this.sandbox.on('husky.data-navigation.collections.select', function(item) {
+                if (item === null) {
+                    this.sandbox.emit('sulu.router.navigate', 'media/collections/root');
+                }
+            }.bind(this));
+
+            this.sandbox.on('husky.data-navigation.collections.add', function(item) {
+                var $element = this.sandbox.dom.createElement('<div id="collection-add"/>'),
+                    parentId = !!item && !!item.id ? item.id : null;
+
+                this.sandbox.dom.append('body', $element);
+
+                this.sandbox.start([{
+                    name: 'collections/components/collection-create@sulumedia',
+                    options: {
+                        el: $element,
+                        parent: parentId,
+                        createdCallback: function(collection) {
+                            this.sandbox.emit(
+                                'sulu.labels.success.show',
+                                'labels.success.collection-save-desc',
+                                'labels.success'
+                            );
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                'media/collections/edit:' + collection.get('id') + '/files'
+                            );
+                            this.sandbox.emit(
+                                'husky.data-navigation.collections.set-url',
+                                '/admin/api/collections/' + collection.get('id') + '?depth=1'
+                            );
+                        }.bind(this)
+                    }
+                }]);
+            }.bind(this));
         });
     }
 });

@@ -11,6 +11,35 @@ Pages and snippets are now indexed in separate indexes for pages and snippets.
 Replace all instances of `->index('content')` with `->indexes(array('page',
 'snippet')`.
 
+### Media
+
+Fill up the database column `me_collection_meta.locale` with the translated language like: `de` or `en`. If you
+know you have only added collections in only one language you can use following sql statement:
+
+```sql
+UPDATE `me_collection_meta` SET `locale` = 'de';
+``
+
+Due to this it is possible that one collection has multiple metadata for one language. You have to remove this
+duplicates by hand. For example one collection should have only one meta for the language `de`.
+
+The collection and media has now a specific field to indicate which meta is default. For this run following commands.
+
+```bash
+app/console sulu:upgrade:0.17.0:collections
+app/console sulu:upgrade:0.17.0:media
+```
+
+### Contact and Account Security
+
+The security checks are now also applied to contacts and accounts, make sure
+that the users you want to have access have the correct permissions.
+
+### Media Types
+
+The media types are now set by wildcard check and need to be updated,
+by running the following command: `sulu:media:type:update`.
+
 ### Media API Object
 
 The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).
@@ -27,6 +56,8 @@ For a database upgrade you have to do following steps:
 
 * The Account has no `type` anymore. This column has to be removed from `co_accounts` table.
 * The table `co_account_categories` has to be removed manually.
+* The table `co_terms_of_delivery` has to be removed manually.
+* The table `co_terms_of_payment` has to be removed manually.
 * `app/console doctrine:schema:update --force`
 
 ### Security

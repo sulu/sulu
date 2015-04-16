@@ -579,23 +579,24 @@ input, select {
   background: #52B6CA;
   height: 150px;
   width: 100%;
+  z-index: -1;
 }
-/* line 114, ../scss/modules/header.scss */
+/* line 116, ../scss/modules/header.scss */
 .sulu-header-background.has-tabs {
   height: 200px;
   border-bottom: 50px solid #fff;
 }
 
-/* line 121, ../scss/modules/header.scss */
+/* line 123, ../scss/modules/header.scss */
 .small-fixed .sulu-header .inner {
   margin-left: 10px;
   margin-right: 10px;
 }
-/* line 125, ../scss/modules/header.scss */
+/* line 127, ../scss/modules/header.scss */
 .small-fixed .tabs-container {
   padding-left: 10px;
 }
-/* line 128, ../scss/modules/header.scss */
+/* line 130, ../scss/modules/header.scss */
 .small-fixed .sulu-header .back {
   opacity: 0;
 }

@@ -84,8 +84,8 @@ class SecurityContextVoter implements VoterInterface
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        $roleVote = VoterInterface::ACCESS_GRANTED;
-        $groupVote = VoterInterface::ACCESS_GRANTED;
+        $attributeVotes = array();
+
         /** @var User $user */
         $user = $token->getUser();
 
@@ -104,30 +104,37 @@ class SecurityContextVoter implements VoterInterface
                 continue;
             }
 
+            $roleVotes = array();
+            $groupVotes = array();
+
             foreach ($user->getUserRoles() as $userRole) {
                 // check all given roles if they have the given attribute
                 /** @var UserRole $userRole */
-                if (!$this->checkPermissions(
-                        $object,
-                        $attribute,
-                        $userRole->getRole()->getPermissions(),
-                        $userRole->getLocales()
-                    )
-                ) {
-                    $roleVote = VoterInterface::ACCESS_DENIED;
-                }
+                $roleVotes[] = $this->checkPermissions(
+                    $object,
+                    $attribute,
+                    $userRole->getRole()->getPermissions(),
+                    $userRole->getLocales()
+                );
             }
 
             foreach ($user->getUserGroups() as $userGroup) {
                 // check if one of the user groups have the given attribute
                 /** @var UserGroup $userGroup */
-                if (!$this->checkUserGroup($object, $attribute, $userGroup->getGroup(), $userGroup->getLocales())) {
-                    $groupVote = VoterInterface::ACCESS_DENIED;
-                }
+                $groupVotes[] = $this->checkUserGroup(
+                    $object,
+                    $attribute,
+                    $userGroup->getGroup(),
+                    $userGroup->getLocales()
+                );
             }
+
+            // if one of the user's roles or groups is granted access the permission attribute is granted
+            $attributeVotes[] = in_array(true, $roleVotes) || in_array(true, $groupVotes);
         }
 
-        return $roleVote || $groupVote;
+        // only if all attributes are granted the access is granted
+        return in_array(false, $attributeVotes) ? VoterInterface::ACCESS_DENIED : VoterInterface::ACCESS_GRANTED;
     }
 
     /**
@@ -198,7 +205,8 @@ class SecurityContextVoter implements VoterInterface
         $hasContext = $permission->getContext() == $object->getSecurityContext();
         $hasLocale = $object->getLocale() == null || in_array($object->getLocale(), $locales);
 
-        if (!$object->getObjectId() || !$object->getObjectType()) {
+        // if there is a concrete object we only have to check for the locale and context
+        if ($object->getObjectId() || $object->getObjectType()) {
             return $hasContext && $hasLocale;
         }
 

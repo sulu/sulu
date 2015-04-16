@@ -378,6 +378,10 @@
                 <source>list-toolbar.column-options</source>
                 <target>Column options</target>
             </trans-unit>
+            <trans-unit id="ab1e276ea5cedf84599572e2dcf07f28" resname="list-toolbar.column-options.title">
+                <source>list-toolbar.column-options.title</source>
+                <target>Column options</target>
+            </trans-unit>
             <trans-unit id="2b8871c8001f2c3566269f5ad4515b89" resname="tags.name">
                 <source>tags.name</source>
                 <target>Title</target>

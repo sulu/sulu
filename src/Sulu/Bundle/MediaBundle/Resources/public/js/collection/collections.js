@@ -18,7 +18,7 @@ define([
 
         url: function() {
             // TODO remove high limit and paginate correctly
-            return '/admin/api/collections?limit=99999&depth=0';
+            return '/admin/api/collections?limit=99999&depth=99999&flat=true';
         },
 
         fetchSorted: function(sortBy, options) {

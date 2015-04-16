@@ -39,6 +39,10 @@ class Collection extends BaseCollection
      */
     private $parent;
 
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\CollectionMeta
+     */
+    private $defaultMeta;
 
     /**
      * Constructor
@@ -48,6 +52,22 @@ class Collection extends BaseCollection
         $this->meta = new \Doctrine\Common\Collections\ArrayCollection();
         $this->media = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $children
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
     }
 
     /**
@@ -164,12 +184,25 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Get children
+     * Set defaultMeta
      *
-     * @return \Doctrine\Common\Collections\CollectionInterface
+     * @param \Sulu\Bundle\MediaBundle\Entity\CollectionMeta $defaultMeta
+     * @return Collection
      */
-    public function getChildren()
+    public function setDefaultMeta(CollectionMeta $defaultMeta = null)
     {
-        return $this->children;
+        $this->defaultMeta = $defaultMeta;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultMeta
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\CollectionMeta 
+     */
+    public function getDefaultMeta()
+    {
+        return $this->defaultMeta;
     }
 }

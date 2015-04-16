@@ -10,7 +10,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -19,14 +23,14 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionTypeNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
-use Sulu\Bundle\MediaBundle\Api\Collection;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
-class DefaultCollectionManager implements CollectionManagerInterface
+/**
+ * Default implementation of collection manager
+ */
+class CollectionManager implements CollectionManagerInterface
 {
     private static $entityName = 'SuluMediaBundle:Collection';
     private static $entityCollectionType = 'SuluMediaBundle:Collection';
@@ -55,14 +59,9 @@ class DefaultCollectionManager implements CollectionManagerInterface
     private $userRepository;
 
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
     protected $em;
-
-    /**
-     * @var int
-     */
-    private $previewLimit;
 
     /**
      * @var DoctrineFieldDescriptor[]
@@ -84,33 +83,35 @@ class DefaultCollectionManager implements CollectionManagerInterface
         MediaRepositoryInterface $mediaRepository,
         FormatManagerInterface $formatManager,
         UserRepositoryInterface $userRepository,
-        ObjectManager $em,
-        $previewLimit,
+        EntityManager $em,
         $collectionPreviewFormat
-    )
-    {
+    ) {
         $this->em = $em;
         $this->userRepository = $userRepository;
         $this->collectionRepository = $collectionRepository;
         $this->mediaRepository = $mediaRepository;
         $this->formatManager = $formatManager;
-        $this->previewLimit = $previewLimit;
         $this->collectionPreviewFormat = $collectionPreviewFormat;
-
-        $this->initializeFieldDescriptors();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getById($id, $locale)
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array(), $sortBy = array())
     {
-        $collection = $this->collectionRepository->findCollectionById($id);
-        if (!$collection) {
+        $collectionEntity = $this->collectionRepository->findCollectionById($id);
+        if ($collectionEntity === null) {
             throw new CollectionNotFoundException($id);
         }
+        $filter['locale'] = $locale;
+        $collectionChildren = $this->collectionRepository->findCollectionSet($depth, $filter, $collectionEntity, $sortBy);
 
-        return $this->addPreviews(new Collection($collection, $locale));
+        $breadcrumbEntities = null;
+        if ($breadcrumb) {
+            $breadcrumbEntities = $this->collectionRepository->findCollectionBreadcrumbById($id);
+        }
+
+        return $this->getApiEntity($collectionEntity, $locale, $collectionChildren, $breadcrumbEntities);
     }
 
     /**
@@ -119,11 +120,40 @@ class DefaultCollectionManager implements CollectionManagerInterface
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array())
     {
         $collectionEntities = $this->collectionRepository->findCollections($filter, $limit, $offset, $sortBy);
-        $this->count = $collectionEntities instanceof Paginator ? $collectionEntities->count() : count($collectionEntities);
+        $this->count = $collectionEntities instanceof Paginator ?
+            $collectionEntities->count() : count($collectionEntities);
+
         $collections = [];
         foreach ($collectionEntities as $entity) {
-            $collections[] =  $this->addPreviews(new Collection($entity, $locale));
+            $collections[] = $this->getApiEntity($entity, $locale);
         }
+
+        return $collections;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array())
+    {
+        /** @var Paginator $collectionSet */
+        $collectionSet = $this->collectionRepository->findCollectionSet(
+            $depth,
+            array('offset' => $offset, 'limit' => $limit, 'search' => $search, 'locale' => $locale),
+            null,
+            $sortBy
+        );
+
+        $collections = [];
+        /** @var CollectionEntity[] $entities */
+        $entities = iterator_to_array($collectionSet);
+        foreach ($entities as $entity) {
+            if ($entity->getParent() === null) {
+                $collections[] = $this->getApiEntity($entity, $locale, $entities);
+            }
+        }
+
+        $this->count = $collectionSet->count();
 
         return $collections;
     }
@@ -247,16 +277,6 @@ class DefaultCollectionManager implements CollectionManagerInterface
             true,
             'thumbnails'
         );
-        $this->fieldDescriptors['mediaNumber'] = new DoctrineFieldDescriptor(
-            'mediaNumber',
-            'mediaNumber',
-            self::$entityName,
-            'mediaNumber',
-            array(),
-            false,
-            true,
-            'count'
-        );
 
         return $this->fieldDescriptors;
     }
@@ -266,6 +286,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
      */
     public function getFieldDescriptors()
     {
+        if ($this->fieldDescriptors === null) {
+            $this->initializeFieldDescriptors();
+        }
+
         return $this->fieldDescriptors;
     }
 
@@ -293,7 +317,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * Modified an exists collection
      * @param $data
      * @param $user
-     * @return object|\Sulu\Bundle\MediaBundle\Entity\Collection
+     * @return Collection
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function modifyCollection($data, $user)
@@ -317,7 +341,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
     /**
      * @param $data
      * @param $user
-     * @return CollectionEntity
+     * @return Collection
      */
     private function createCollection($data, $user)
     {
@@ -327,14 +351,16 @@ class DefaultCollectionManager implements CollectionManagerInterface
         $data['created'] = new \DateTime();
 
         $collectionEntity = new CollectionEntity();
-        $collection = new Collection($collectionEntity, $data['locale']);
+        $collection = $this->getApiEntity($collectionEntity, $data['locale']);
 
         $collection = $this->setDataToCollection(
             $collection,
             $data
         );
 
+        /** @var CollectionEntity $collectionEntity */
         $collectionEntity = $collection->getEntity();
+        $collectionEntity->setDefaultMeta($collectionEntity->getMeta()->first());
         $this->em->persist($collectionEntity);
         $this->em->flush();
 
@@ -343,16 +369,16 @@ class DefaultCollectionManager implements CollectionManagerInterface
 
     /**
      * Data can be set over by array
-     * @param $collection
-     * @param $data
-     * @return $this
+     * @param Collection $collection
+     * @param array $data
+     * @return Collection
      */
     protected function setDataToCollection(Collection $collection, $data)
     {
         // set parent
         if (!empty($data['parent'])) {
             $collectionEntity = $this->collectionRepository->findCollectionById($data['parent']);
-            $collection->setParent($collectionEntity); // set parent
+            $collection->setParent($this->getApiEntity($collectionEntity, $data['locale'])); // set parent
         } else {
             $collection->setParent(null); // is collection in root
         }
@@ -425,6 +451,32 @@ class DefaultCollectionManager implements CollectionManagerInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function move($id, $locale, $destinationId = null)
+    {
+        try {
+            $collectionEntity = $this->collectionRepository->findCollectionById($id);
+
+            if ($collectionEntity === null) {
+                throw new CollectionNotFoundException($id);
+            }
+
+            $destinationEntity = null;
+            if ($destinationId !== null) {
+                $destinationEntity = $this->collectionRepository->findCollectionById($destinationId);
+            }
+
+            $collectionEntity->setParent($destinationEntity);
+            $this->em->flush();
+
+            return $this->getApiEntity($collectionEntity, $locale);
+        } catch (DBALException $ex) {
+            throw new CollectionNotFoundException($destinationId);
+        }
+    }
+
+    /**
      * Returns a user for a given user-id
      * @param $userId
      * @return \Sulu\Component\Security\Authentication\UserInterface
@@ -438,10 +490,10 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * @param Collection $collection
      * @return Collection
      */
-    protected function addPreviews(Collection $collection)
+    protected function addPreview(Collection $collection)
     {
-        return $collection->setPreviews(
-            $this->getPreviews($collection->getId(), $collection->getLocale())
+        return $collection->setPreview(
+            $this->getPreview($collection->getId(), $collection->getLocale())
         );
     }
 
@@ -450,20 +502,20 @@ class DefaultCollectionManager implements CollectionManagerInterface
      * @param string $locale
      * @return array
      */
-    protected function getPreviews($id, $locale)
+    protected function getPreview($id, $locale)
     {
-        $formats = array();
-
+        $media = null;
         $medias = $this->mediaRepository
-            ->findMedia(array('collection' => $id), $this->previewLimit);
+            ->findMedia(array('collection' => $id, 'paginator' => false), 1);
 
-        foreach ($medias as $media) {
+        if (count($medias) > 0) {
+            $media = $medias[0];
             foreach ($media->getFiles() as $file) {
                 foreach ($file->getFileVersions() as $fileVersion) {
                     if ($fileVersion->getVersion() == $file->getVersion()) {
                         $format = $this->getPreviewsFromFileVersion($media->getId(), $fileVersion, $locale);
                         if (!empty($format)) {
-                            $formats[] = $format;
+                            $media = $format;
                         }
                         break;
                     }
@@ -472,7 +524,7 @@ class DefaultCollectionManager implements CollectionManagerInterface
             }
         }
 
-        return $formats;
+        return $media;
     }
 
     /**
@@ -496,7 +548,12 @@ class DefaultCollectionManager implements CollectionManagerInterface
             }
         }
 
-        $mediaFormats = $this->formatManager->getFormats($mediaId, $fileVersion->getName(), $fileVersion->getStorageOptions(), $fileVersion->getVersion());
+        $mediaFormats = $this->formatManager->getFormats(
+            $mediaId,
+            $fileVersion->getName(),
+            $fileVersion->getStorageOptions(),
+            $fileVersion->getVersion()
+        );
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
             if ($formatName == $this->collectionPreviewFormat) {
@@ -509,5 +566,44 @@ class DefaultCollectionManager implements CollectionManagerInterface
         }
 
         return array();
+    }
+
+    /**
+     * prepare an api entity
+     * @param CollectionEntity $entity
+     * @param string $locale
+     * @param CollectionEntity[] $entities nested set
+     * @param array $breadcrumbEntities
+     * @return Collection
+     */
+    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumbEntities = null)
+    {
+        $apiEntity = new Collection($entity, $locale);
+
+        $children = array();
+
+        if ($entities !== null) {
+            foreach ($entities as $possibleChild) {
+                if (($parent = $possibleChild->getParent()) !== null && $parent->getId() === $entity->getId()) {
+                    $children[] = $this->getApiEntity($possibleChild, $locale, $entities);
+                }
+            }
+        }
+
+        $apiEntity->setChildren($children);
+        if ($entity->getParent() !== null) {
+            $apiEntity->setParent($this->getApiEntity($entity->getParent(), $locale));
+        }
+
+        if ($breadcrumbEntities !== null) {
+            $breadcrumbApiEntities = array();
+            foreach ($breadcrumbEntities as $entity) {
+                $breadcrumbApiEntities[] = $this->getApiEntity($entity, $locale);
+            }
+            $apiEntity->setBreadcrumb($breadcrumbApiEntities);
+        }
+
+
+        return $this->addPreview($apiEntity);
     }
 }

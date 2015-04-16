@@ -82,7 +82,7 @@ class ListRestHelper implements ListRestHelperInterface
     public function getOffset()
     {
         $page = $this->getRequest()->get('page', 1);
-        $limit = $this->getRequest()->get('limit');
+        $limit = $this->getLimit();
 
         return ($limit != null) ? $limit * ($page - 1) : null;
     }

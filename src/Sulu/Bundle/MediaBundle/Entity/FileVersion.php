@@ -101,6 +101,11 @@ class FileVersion implements AuditableInterface
     private $creator;
 
     /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     */
+    private $defaultMeta;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -486,6 +491,29 @@ class FileVersion implements AuditableInterface
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * Set defaultMeta
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta
+     * @return FileVersion
+     */
+    public function setDefaultMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta = null)
+    {
+        $this->defaultMeta = $defaultMeta;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultMeta
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     */
+    public function getDefaultMeta()
+    {
+        return $this->defaultMeta;
     }
 
     /**

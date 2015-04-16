@@ -107,6 +107,7 @@ class ImagineImageConverter implements ImageConverterInterface
     {
         if (count($this->image->layers())) {
             $counter = 0;
+            $this->image->layers()->coalesce();
             foreach ($this->image->layers() as $layer) {
                 $counter++;
                 $this->commandManager->get($command)->execute($layer, $parameters);
