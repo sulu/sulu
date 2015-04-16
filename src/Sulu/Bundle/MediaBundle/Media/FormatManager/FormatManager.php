@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Sulu format manager for media
  */
-class DefaultFormatManager implements FormatManagerInterface
+class FormatManager implements FormatManagerInterface
 {
     /**
      * The repository for communication with the database

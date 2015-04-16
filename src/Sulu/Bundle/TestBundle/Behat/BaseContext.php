@@ -178,7 +178,7 @@ var f = function () {
     var items = document.querySelectorAll("%s");
 
     for (var i = 0; i < items.length; i++) {
-        if (items[i].textContent == '%s') {
+        if (items[i].textContent.trim() == '%s') {
             items[i].dispatchEvent(event);
             return;
         }

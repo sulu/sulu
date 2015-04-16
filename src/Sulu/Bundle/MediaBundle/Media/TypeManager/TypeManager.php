@@ -15,10 +15,10 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 
 /**
- * Class DefaultTypeManager
+ * Class TypeManager
  * Default Type Manager used to get correct media type by a mime type
  */
-class DefaultTypeManager implements TypeManagerInterface
+class TypeManager implements TypeManagerInterface
 {
     /**
      * @var ObjectManager

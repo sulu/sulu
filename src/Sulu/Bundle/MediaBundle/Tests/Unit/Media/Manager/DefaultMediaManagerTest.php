@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DefaultMediaManager
+     * @var MediaManager
      */
     private $mediaManager;
 
@@ -83,7 +83,7 @@ class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->tagManager = $this->prophesize('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
         $this->typeManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface');
 
-        $this->mediaManager = new DefaultMediaManager(
+        $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),

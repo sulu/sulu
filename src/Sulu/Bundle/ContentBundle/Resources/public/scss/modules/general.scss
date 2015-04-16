@@ -25,16 +25,17 @@
 
 .internal-links-overlay,
 .single-internal-overlay,
-.overlay-container {
-    .overlay-header {
-        margin-bottom: 1px;
-    }
+.node {
     .overlay-content {
         margin: 0px;
     }
 
+    .overlay-header {
+        margin-bottom: 0px !important;
+    }
+
     .overlay-footer {
-        margin: 0px;
+        margin-top: -1px !important;
     }
 }
 

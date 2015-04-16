@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\DefaultFormatManager;
+use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 
 class DefaultFormatManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -92,7 +92,7 @@ class DefaultFormatManagerTest extends \PHPUnit_Framework_TestCase
             '640x480'
         )->willReturn(null);
 
-        $formatManager = new DefaultFormatManager(
+        $formatManager = new FormatManager(
             $mediaRepository->reveal(),
             $originalStorage->reveal(),
             $formatCache->reveal(),

@@ -38,9 +38,9 @@ use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @package Sulu\Bundle\MediaBundle\Media\Manager
+ * Default implementation of media manager
  */
-class DefaultMediaManager implements MediaManagerInterface
+class MediaManager implements MediaManagerInterface
 {
     const ENTITY_NAME_MEDIA = 'SuluMediaBundle:Media';
     const ENTITY_NAME_COLLECTION = 'SuluMediaBundle:Collection';
@@ -543,6 +543,7 @@ class DefaultMediaManager implements MediaManagerInterface
         $data['type'] = array(
             'id' => $this->typeManager->getMediaType($uploadedFile->getMimeType())
         );
+
         return $this->createMedia($data, $user);
     }
 
@@ -580,6 +581,8 @@ class DefaultMediaManager implements MediaManagerInterface
             $data,
             $user
         );
+
+        $fileVersion->setDefaultMeta($fileVersion->getMeta()->first());
 
         $mediaEntity = $media->getEntity();
         $this->em->persist($mediaEntity);

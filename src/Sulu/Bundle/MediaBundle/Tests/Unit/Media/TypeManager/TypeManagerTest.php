@@ -16,10 +16,10 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class DefaultTypeManagerTest extends SuluTestCase
+class TypeManagerTest extends SuluTestCase
 {
     /**
-     * @var DefaultTypeManager
+     * @var TypeManager
      */
     private $typeManager;
 
@@ -62,7 +62,7 @@ class DefaultTypeManagerTest extends SuluTestCase
 
         $em->flush();
 
-        $this->typeManager = new DefaultTypeManager(
+        $this->typeManager = new TypeManager(
             $em,
             $this->mediaTypes,
             array('file/exe')
