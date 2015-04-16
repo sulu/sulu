@@ -64,21 +64,9 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
                 array('handlePersist', 0),
             ),
             Events::HYDRATE => array(
-                array('handleHydrate', 0),
-                array('handleUpdateToShadowLocale', 390),
+                array('handleHydrate', 390),
             ),
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function doHydrate(HydrateEvent $event)
-    {
-        $locale = $event->getLocale();
-        $node = $event->getNode();
-        $event->getDocument()->setShadowLocale($this->getShadowLocale($node, $locale));
-        $event->getDocument()->setShadowLocaleEnabled($this->getShadowLocaleEnabled($node, $locale));
     }
 
     /**
@@ -88,7 +76,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
      *
      * @param HydrateEvent $event
      */
-    public function handleUpdateToShadowLocale(HydrateEvent $event)
+    public function doHydrate(HydrateEvent $event)
     {
         $node = $event->getNode();
         $locale = $event->getLocale();
@@ -98,6 +86,8 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         }
 
         $document = $event->getDocument();
+        $event->getDocument()->setShadowLocale($this->getShadowLocale($node, $locale));
+        $event->getDocument()->setShadowLocaleEnabled($r = $this->getShadowLocaleEnabled($node, $locale));
 
         $shadowLocale = $this->getShadowLocale($node, $locale);
         $this->registry->updateLocale($document, $shadowLocale);
