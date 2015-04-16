@@ -95,7 +95,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         $newLocale = $this->getAvailableLocalization($node, $document, $locale);
-        $this->documentRegistry->updateLocale($document, $locale, $newLocale);
+        $this->documentRegistry->updateLocale($document, $newLocale, $locale);
         $event->setLocale($newLocale);
     }
 

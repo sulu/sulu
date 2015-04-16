@@ -459,7 +459,9 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $children = $this->inspector->getChildren($parent, null, $fetchDepth, $languageCode);
-        $children = $this->documentsToStructureCollection($children->getArrayCopy());
+        $children = $this->documentsToStructureCollection($children->getArrayCopy(), array(
+            'exclude_ghosts' => false,
+        ));
 
         if ($flat) {
             foreach ($children as $child) {
@@ -545,7 +547,12 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        return $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
+        $documents = $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
+
+        return $this->documentsToStructureCollection($documents, array(
+            'exclude_ghost' => $excludeGhost,
+            'load_ghost_content' => $loadGhostContent,
+        ));
     }
 
     /**
@@ -565,7 +572,10 @@ class ContentMapper implements ContentMapperInterface
             'exclude_ghost' => $excludeGhost,
         ));
 
-        return $this->documentsToStructureCollection($documents);
+        return $this->documentsToStructureCollection($documents, array(
+            'load_ghost_content' => $loadGhostContent,
+            'exclude_ghost' => $excludeGhost,
+        ));
     }
 
     /**
@@ -1341,12 +1351,6 @@ class ContentMapper implements ContentMapperInterface
 
     private function filterDocuments($documents, $locale, $options)
     {
-        $options = array_merge(array(
-            'load_ghost_content' => false,
-            'exclude_ghost' => true,
-            'exclude_shadow' => true,
-        ), $options);
-
         $collection = array();
         foreach ($documents as $document) {
             if ($this->optionsShouldExcludeDocument($document, $options)) {
@@ -1401,13 +1405,24 @@ class ContentMapper implements ContentMapperInterface
         return $structureBridge;
     }
 
-    private function documentsToStructureCollection($documents)
+    private function documentsToStructureCollection($documents, $filterOptions)
     {
+        $filterOptions = array_merge(array(
+            'load_ghost_content' => false,
+            'exclude_ghost' => true,
+            'exclude_shadow' => true,
+        ), $filterOptions);
+
         $collection = array();
         foreach ($documents as $document) {
             if (!$document instanceof ContentBehavior) {
                 continue;
             }
+
+            if ($this->optionsShouldExcludeDocument($document, $filterOptions)) {
+                continue;
+            }
+
             $collection[] = $this->documentToStructure($document);
         }
 

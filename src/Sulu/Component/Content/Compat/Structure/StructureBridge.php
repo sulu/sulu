@@ -103,7 +103,7 @@ class StructureBridge implements StructureInterface
             return $this->locale;
         }
 
-        return $this->getDocument()->getLocale();
+        return $this->inspector->getOriginalLocale($this->document);
     }
 
     /**
@@ -535,7 +535,11 @@ class StructureBridge implements StructureInterface
      */
     public function getNodeType()
     {
-        return $this->getDocument()->getRedirectType();
+        if ($this->getDocument() instanceof RedirectTypeBehavior) {
+            return $this->document->getRedirectType();
+        }
+
+        return RedirectType::NONE;
     }
 
     /**
