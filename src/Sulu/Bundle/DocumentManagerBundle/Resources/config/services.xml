@@ -6,7 +6,7 @@
 
     <services>
         <!-- Core -->
-        <service id="sulu_document_manager" class="Sulu\Component\DocumentManager\DocumentManager">
+        <service id="sulu_document_manager.document_manager" class="Sulu\Component\DocumentManager\DocumentManager">
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="sulu_document_manager.node_manager" />
         </service>

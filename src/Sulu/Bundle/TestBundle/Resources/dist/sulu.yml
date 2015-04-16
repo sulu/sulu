@@ -18,16 +18,12 @@ monolog:
     handlers:
         main:
             type:         stream
-            action_level: error
+            action_level: debug
             handler:      nested
         nested:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: error
-        doctrine:
-            action_level: debug
-            type: stream
-            path:  %kernel.logs_dir%/%kernel.environment%_doctrine.log
+            level: debug
 
 sulu_core:
     cache_dir: %kernel.root_dir%/cache/sulu
@@ -89,3 +85,6 @@ sulu_document_manager:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument
             phpcr_type: sulu:page
+        snippet:
+            class: Sulu\Bundle\SnippetBundle\Document\SnippetDocument
+            phpcr_type: sulu:snippet

@@ -15,6 +15,7 @@ use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 
 class ContentOnPageTest extends BaseFunctionalTestCase
 {
@@ -108,7 +109,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         foreach ($data as $key => $value) {
             $this->assertEquals($value, $page->getPropertyValue($key));
         }
-        $this->assertInstanceOf('Sulu\Component\Content\Compat\Structure\Page', $page);
+        $this->assertInstanceOf(PageBridge::class, $page);
         $this->assertEquals($templateKey, $page->getKey());
 
         $page = $this->contentMapper->load(
@@ -117,7 +118,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
             $locale
         );
 
-        $this->assertInstanceOf('Sulu\Component\Content\Compat\Structure\Page', $page);
+        $this->assertInstanceOf(PageBridge::class, $page);
         $this->assertEquals($templateKey, $page->getKey());
 
         foreach ($data as $key => $value) {

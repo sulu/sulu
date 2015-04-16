@@ -16,7 +16,7 @@ class StructureBridgeToArrayTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->manager = $this->getContainer()->get('sulu_document_manager');
+        $this->manager = $this->getContainer()->get('sulu_document_manager.document_manager');
     }
 
     public function testHomepage()

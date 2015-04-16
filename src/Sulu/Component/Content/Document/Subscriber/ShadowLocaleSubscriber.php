@@ -105,6 +105,10 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
 
+        if (!$this->supports($document)) {
+            return;
+        }
+
         if (!$document->isShadowLocaleEnabled()) {
             return;
         }

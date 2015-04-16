@@ -19,7 +19,7 @@ class ContentMapper_loadTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->inspector = $this->getContainer()->get('sulu_document_manager.document_inspector');
     }
 

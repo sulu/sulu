@@ -18,7 +18,7 @@ class ContentMapper_saveTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->parent = $this->documentManager->find('/cmf/sulu_io/contents', 'de');
     }
 
