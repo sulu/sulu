@@ -16,6 +16,7 @@ use Sulu\Component\Content\Compat\Structure\Snippet;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 /**
  * Repository class for snippets
@@ -78,7 +79,7 @@ class SnippetRepository
             try {
                 $snippet = $this->contentMapper->load($uuid, null, $languageCode);
                 $snippets[] = $snippet;
-            } catch (\PHPCR\ItemNotFoundException $e) {
+            } catch (DocumentNotFoundException $e) {
                 // ignore not found items
             }
         }
