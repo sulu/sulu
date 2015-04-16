@@ -112,7 +112,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
     public function testGetContentData()
     {
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels-page');
-        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de', 'sulu_io');
+        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de');
         $property = $pageStructure->getProperty('hotels');
         $data = $this->contentType->getContentData($property);
         $this->assertCount(2, $data);

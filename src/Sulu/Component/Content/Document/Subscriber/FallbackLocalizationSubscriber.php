@@ -95,12 +95,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         $newLocale = $this->getAvailableLocalization($node, $document, $locale);
-
-        if ($newLocale === $locale) {
-            return;
-        }
-
-        $this->documentRegistry->updateLocale($document, $newLocale);
+        $this->documentRegistry->updateLocale($document, $locale, $newLocale);
         $event->setLocale($newLocale);
     }
 
@@ -115,7 +110,6 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         if ($node->hasProperty($structureTypeName)) {
             return $locale;
         }
-
 
         $fallbackLocale = null;
 

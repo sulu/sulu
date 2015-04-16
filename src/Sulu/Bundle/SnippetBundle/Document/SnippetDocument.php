@@ -12,11 +12,13 @@ use Sulu\Component\DocumentManager\Behavior\TimestampBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
+use Sulu\Component\DocumentManager\Behavior\NodeNameBehavior;
 
 /**
  * Snippet document
  */
 class SnippetDocument implements
+    NodeNameBehavior,
     TimestampBehavior,
     BlameBehavior,
     AutoNameBehavior,
@@ -39,6 +41,7 @@ class SnippetDocument implements
     private $content;
     private $locale;
     private $path;
+    private $nodeName;
 
     public function __construct()
     {

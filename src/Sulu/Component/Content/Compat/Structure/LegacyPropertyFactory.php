@@ -91,8 +91,6 @@ class LegacyPropertyFactory
             $property->getColspan()
         );
 
-        $propertyBridge->setStructure($this);
-
         foreach ($property->tags as $tag) {
             $propertyBridge->addTag(new PropertyTag($tag['name'], $tag['priority'], $tag['attributes']));
         }

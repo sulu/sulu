@@ -136,7 +136,7 @@ class ContentMapper_loadTest extends SuluTestCase
 
         $paths = array();
         foreach ($result as $document) {
-            $paths[] = substr($document->getPath(), strlen($parent->getPath()) + 1);
+            $paths[] = substr($document->getPath(), strlen('/parent/'));
         }
 
         $this->assertEquals($expected, $paths);
@@ -145,13 +145,13 @@ class ContentMapper_loadTest extends SuluTestCase
     public function testLoadStartPage()
     {
         $startPage = $this->contentMapper->loadStartPage('sulu_io', 'de');
-        $this->assertEquals('/cmf/sulu_io/contents', $startPage->getPath());
+        $this->assertEquals('', $startPage->getPath());
     }
 
     public function testLoadByResourceLocator_startPage()
     {
         $content = $this->contentMapper->loadByResourceLocator('/', 'sulu_io', 'de');
-        $this->assertEquals('/cmf/sulu_io/contents', $content->getPath());
+        $this->assertEquals('', $content->getPath());
     }
 
     public function testLoadByResourceLocator()
@@ -160,7 +160,7 @@ class ContentMapper_loadTest extends SuluTestCase
         $this->documentManager->flush();
 
         $content = $this->contentMapper->loadByResourceLocator('/foo-bar', 'sulu_io', 'de');
-        $this->assertEquals('/cmf/sulu_io/contents/foo-bar', $content->getPath());
+        $this->assertEquals('/foo-bar', $content->getPath());
     }
 
     public function testLoadBySql2()
