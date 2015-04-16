@@ -245,6 +245,8 @@ class StructureBridge implements StructureInterface
             } else {
                 $propertyBridge->setPropertyValue($property);
             }
+
+            $propertyBridge->setStructure($this);
         }
 
         $this->loadedProperties[$name] = $propertyBridge;
@@ -273,8 +275,7 @@ class StructureBridge implements StructureInterface
 
         $propertyBridges = array();
         foreach ($items as $propertyName => $property) {
-            $propertyBridges[$propertyName] = $this->propertyFactory->createProperty($property);
-            $propertyBridges[$propertyName]->setStructure($this);
+            $propertyBridges[$propertyName] = $this->createLegacyPropertyFromItem($property);
         }
 
         return $propertyBridges;

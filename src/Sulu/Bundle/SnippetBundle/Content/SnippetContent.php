@@ -175,6 +175,7 @@ class SnippetContent extends ComplexContentType
         }
 
         $refs = $property->getValue();
+
         $contentData = array();
 
         $ids = $this->getUuids($refs);
@@ -222,9 +223,11 @@ class SnippetContent extends ComplexContentType
         foreach ($ids as $i => $ref) {
             if (!array_key_exists($ref, $this->snippetCache)) {
                 $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+
                 if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
                     $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
                 }
+
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
 
