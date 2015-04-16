@@ -23,8 +23,8 @@ use Sulu\Component\Content\Document\RedirectType;
 class RedirectTypeSubscriber extends AbstractMappingSubscriber
 {
     const REDIRECT_TYPE_FIELD = 'nodeType';
-    const INTERNAL_FIELD = 'intrenal_link';
-    const EXTERNAL_FIELD = 'external';
+    const INTERNAL_FIELD = 'internal_link';
+    const EXTERNAL_FIELD = 'external_link';
 
     private $proxyFactory;
     private $documentRegistry;
@@ -64,15 +64,13 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
         );
         $document->setRedirectType($redirectType);
 
-        // TODO: Performance issue we are fetching an extra node eagerly
-        $internalNode = $node->getPropertyValueWithDefault(
+        $internalUuid = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
             null
         );
 
-        if ($internalNode) {
-            $internalDocument = $this->proxyFactory->createProxyForNode($document, $internalNode);
-            $document->setRedirectTarget($internalDocument);
+        if ($internalUuid) {
+            $document->setRedirectTarget($internalUuid);
         }
 
         $externalUrl = $node->getPropertyValueWithDefault(
@@ -108,9 +106,10 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
 
         $internalNode = $this->documentRegistry->getNodeForDocument($internalDocument);
 
+        // TODO: This should not be a UUID
         $node->setProperty(
             $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-            $internalNode
+            $internalNode->getIdentifier()
         );
     }
 }

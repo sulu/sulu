@@ -493,7 +493,9 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Testtitle1', $result['title']);
         $this->assertEquals('/testtitle2/testtitle1', $result['path']);
         $this->assertEquals('/news/test2/test1', $result['url']);
-        $this->assertEquals(2, $result['changer']);
+
+        // Changer / Creator are now implicit -- I wonder if we should add a way to pass options to persist
+        // $this->assertEquals(2, $result['changer']);
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');
@@ -560,7 +562,6 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Testtitle1', $result['title']);
         $this->assertEquals('/testtitle2/testtitle1', $result['path']);
         $this->assertEquals($data[1]->getUuid(), $result['internal_link']);
-        $this->assertEquals(2, $result['changer']);
 
         // check none existing source node
         $firstLayerNodes = $this->nodeRepository->getNodes($rootNode['id'], 'sulu_io', 'en');

@@ -37,6 +37,10 @@ sulu_core:
                      path: %kernel.root_dir%/Resources/snippets
                      internal: false
                      type: snippet
+                 sulu:
+                     path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
+                     internal: true
+                     type: "page"
     webspace: ~
     locales: [ "en", "de" ]
 

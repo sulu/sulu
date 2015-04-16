@@ -91,8 +91,9 @@ class Structure extends Item
     {
         if (!isset($this->modelProperties[$name])) {
             throw new \InvalidArgumentException(sprintf(
-                'Unknown model property "%s", known model properties: "%s"',
-                $name, implode('", "', array_keys($this->modelProperties))
+                'Unknown model property "%s", in structure "%s". Known model properties: "%s". Loaded from "%s"',
+                $name, $this->getName(), implode('", "', array_keys($this->modelProperties)),
+                $this->resource
             ));
         }
 

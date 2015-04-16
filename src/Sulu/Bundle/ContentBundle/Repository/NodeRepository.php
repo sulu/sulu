@@ -25,6 +25,7 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 /**
  * repository for node objects
@@ -658,9 +659,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->move($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
-            throw new RestException($ex->getMessage(), 1, $ex);
-        } catch (RepositoryException $ex) {
+        } catch (\Exception $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         }
 
@@ -675,7 +674,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->copy($uuid, $destinationUuid, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
+        } catch (DocumentManagerException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);

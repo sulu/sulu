@@ -68,6 +68,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -680,8 +681,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function move($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
-        throw new \Exception('Do this');
-        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale);
     }
 
     /**
@@ -807,120 +807,62 @@ class ContentMapper implements ContentMapperInterface
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $localizations = $webspace->getAllLocalizations();
 
-        // prepare utility
-        $session = $this->getSession();
-
         // load from phpcr
-        $node = $session->getNodeByIdentifier($uuid);
-        $parentNode = $session->getNodeByIdentifier($destParentUuid);
-
-        // prepare content node
-        $content = $this->loadByNode($node, $locale, $webspaceKey, false, true);
-        $nodeName = $content->getPropertyValue('title');
-
-        // node name should not have a slash
-        $nodeName = str_replace('/', '-', $nodeName);
-
-        $nodeName = $this->cleaner->cleanup($nodeName, $locale);
-        $nodeName = $this->getUniquePath($nodeName, $parentNode);
-
-        // prepare pathes
-        $path = $node->getPath();
-        $destPath = $parentNode->getPath().'/'.$nodeName;
+        $document = $this->documentManager->find($uuid, $locale);
+        $parentDocument = $this->documentManager->find($destParentUuid, $locale);
 
         if ($move) {
             // move node
-            $session->move($path, $destPath);
+            $this->documentManager->move($document, $destParentUuid);
         } else {
             // copy node
-            $session->getWorkspace()->copy($path, $destPath);
-            $session->save();
-
-            // load new phpcr and content node
-            $node = $session->getNode($destPath);
+            $this->documentManager->copy($document, $destPath);
         }
+
 
         foreach ($localizations as $locale) {
-            $content = $this->loadByNode($node, $locale->getLocalization(), $webspaceKey, false, true);
+            $locale = $locale->getLocalization();
+
+            if (!$document instanceof ResourceSegmentBehavior) {
+                break;
+            }
 
             // prepare parent content node
-            $parentContent = $this->loadByNode($parentNode, $locale->getLocalization(), $webspaceKey, false, true);
+            $this->documentManager->find($document->getUuid(), $locale);
+            $this->documentManager->find($parentDocument->getUuid(), $locale);
+
             $parentResourceLocator = '/';
-            if ($parentContent->hasTag('sulu.rlp')) {
-                $parentResourceLocator = $parentContent->getPropertyValueByTagName('sulu.rlp');
+            if ($parentDocument instanceof ResourceSegmentBehavior) {
+                $parentResourceLocator = $parentDocument->getResourceSegment();
             }
-            // correct resource locator
-            if (
-                $content->getType() === null && $content->hasTag('sulu.rlp') &&
-                $content->getNodeType() === RedirectType::NONE
-            ) {
-                $this->adaptResourceLocator(
-                    $content,
-                    $node,
-                    $parentResourceLocator,
-                    $webspaceKey,
-                    $locale->getLocalization(),
-                    $userId
-                );
 
-                // set changer of node
-                $propertyTranslator->setLanguage($locale);
-                $node->setProperty($propertyTranslator->getName('changer'), $userId);
-                $node->setProperty($propertyTranslator->getName('changed'), new DateTime());
+            // TODO: This could be optimized
+            $localizationState = $this->inspector->getLocalizationState($document);
+            if ($localizationState !== LocalizationState::LOCALIZED) {
+                continue;
             }
+
+            if ($document->getRedirectType() !== RedirectType::NONE) {
+                continue;
+            }
+
+            $strategy = $this->getResourceLocator()->getStrategy();
+            $nodeName = PathHelper::getNodeName($document->getResourceSegment());
+            $newResourceLocator = $strategy->generate(
+                $nodeName,
+                $parentDocument->getResourceSegment(),
+                $webspaceKey,
+                $locale
+            );
+
+            $document->setResourceSegment($newResourceLocator);
+
+            $this->documentManager->persist($document, $locale);
         }
 
-        // set changer of node in specific language
-        $this->setChanger($node, $userId, $locale);
+        $this->documentManager->flush();
 
-        $session->save();
-
-        return $this->loadByNode($node, $locale, $webspaceKey);
-    }
-
-    /**
-     * adopts resource locator for just moved or copied node
-     * @param StructureInterface $content
-     * @param NodeInterface      $node
-     * @param string             $parentResourceLocator
-     * @param string             $webspaceKey
-     * @param string             $locale
-     * @param int                $userId
-     */
-    private function adaptResourceLocator(
-        StructureInterface $content,
-        NodeInterface $node,
-        $parentResourceLocator,
-        $webspaceKey,
-        $locale,
-        $userId
-    ) {
-        // prepare objects
-        $property = $content->getPropertyByTagName('sulu.rlp');
-        $translatedProperty = new TranslatedProperty($property, $locale, $this->languageNamespace);
-        $contentType = $this->getResourceLocator();
-        $strategy = $contentType->getStrategy();
-
-        // get resource locator pathes
-        $srcResourceLocator = $content->getPropertyValueByTagName('sulu.rlp');
-
-        if ($srcResourceLocator !== null) {
-            $resourceLocatorPart = PathHelper::getNodeName($srcResourceLocator);
-        } else {
-            $resourceLocatorPart = $content->getPropertyValue('title');
-        }
-
-        // generate new resourcelocator
-        $destResourceLocator = $strategy->generate(
-            $resourceLocatorPart,
-            $parentResourceLocator,
-            $webspaceKey,
-            $locale
-        );
-
-        // save new resource-locator
-        $property->setValue($destResourceLocator);
-        $contentType->write($node, $translatedProperty, $userId, $webspaceKey, $locale, null);
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -1047,6 +989,25 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param $name
+     * @param NodeInterface $parent
+     * @return string
+     */
+    private function getUniquePath($name, NodeInterface $parent)
+    {
+        if ($parent->hasNode($name)) {
+            $i = 0;
+            do {
+                $i++;
+            } while ($parent->hasNode($name . '-' . $i));
+
+            return $name . '-' . $i;
+        } else {
+            return $name;
+        }
     }
 
     /**
