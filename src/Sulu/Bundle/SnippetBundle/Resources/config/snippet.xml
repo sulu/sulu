@@ -8,6 +8,8 @@
         <parameter key="sulu_snippet.controller.snippet.class">Sulu\Bundle\SnippetBundle\Controller\SnippetController</parameter>
         <parameter key="sulu_snippet.twig.snippet.class">Sulu\Bundle\SnippetBundle\Twig\SnippetTwigExtension</parameter>
         <parameter key="sulu_snippet.twig.snippet.memoized.class">Sulu\Bundle\SnippetBundle\Twig\MemoizedSnippetTwigExtension</parameter>
+        <parameter key="sulu_snippet.document.subscriber.filing.class">Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber</parameter>
+        <parameter key="sulu_snippet.form.snippet.class">Sulu\Bundle\SnippetBundle\Form\SnippetType</parameter>
     </parameters>
 
     <services>
@@ -30,12 +32,24 @@
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
             <argument type="service" id="sulu_website.resolver.structure"/>
         </service>
+
         <service id="sulu_snippet.twig.snippet.memoized" class="%sulu_snippet.twig.snippet.memoized.class%">
             <argument type="service" id="sulu_snippet.twig.snippet"/>
             <argument type="service" id="sulu_core.cache.memoize"/>
             <argument type="string">%sulu_snippet.twig.snippet.cache_lifetime%</argument>
 
             <tag name="twig.extension"/>
+        </service>
+
+        <service id="sulu_snippet.document.subscriber.filing" class="%sulu_snippet.document.subscriber.filing.class%">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument>/%sulu.content.node_names.base%/%sulu.content.node_names.snippet%</argument>
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_snippet.form.snippet" class="%sulu_snippet.form.snippet.class%">
+            <tag name="form.type" alias="snippet" />
         </service>
     </services>
 </container>

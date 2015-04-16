@@ -29,6 +29,7 @@ use Sulu\Component\DocumentManager\Behavior\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\PathBehavior;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 
 class PageDocument implements
     NodeNameBehavior,
@@ -46,7 +47,8 @@ class PageDocument implements
     ChildrenBehavior,
     PathBehavior,
     ExtensionBehavior,
-    OrderBehavior
+    OrderBehavior,
+    WebspaceBehavior
 {
     private $nodeName;
     private $created;

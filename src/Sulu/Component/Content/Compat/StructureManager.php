@@ -32,6 +32,7 @@ class StructureManager extends ContainerAware implements StructureManagerInterfa
 
     private $typeMap = array(
         'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
+        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
     );
 
     /**

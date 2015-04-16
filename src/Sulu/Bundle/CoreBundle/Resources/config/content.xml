@@ -38,7 +38,7 @@
         <!-- content mapper -->
         <!-- optional stopwatch: in prod not available -->
         <service id="sulu.content.mapper" class="%sulu.content.mapper.class%">
-            <argument type="service" id="sulu_document_manager" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_content.compat.data_normalizer" />
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="form.factory" />

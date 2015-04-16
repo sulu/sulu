@@ -12,7 +12,7 @@ class DocumentManagerTest extends SuluTestCase
     public function setUp()
     {
         $this->initPhpcr();
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->dispatcher = $this->getContainer()->get('event_dispatcher');
     }
 

@@ -22,6 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 
 /**
  * Set a fallback locale for the document if necessary
@@ -115,12 +116,11 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             return $locale;
         }
 
-        $webspace = $this->inspector->getWebspace($document);
 
         $fallbackLocale = null;
 
-        if ($webspace) {
-            $fallbackLocale = $this->getWebspaceLocale($node, $webspace, $locale);
+        if ($document instanceof WebspaceBehavior) {
+            $fallbackLocale = $this->getWebspaceLocale($document, $node, $locale);
         }
 
         if (!$fallbackLocale) {
@@ -138,10 +138,16 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         return $fallbackLocale;
     }
 
-    private function getWebspaceLocale($node, $webspaceKey, $locale)
+    private function getWebspaceLocale($document, $node, $locale)
     {
+        $webspaceName = $this->inspector->getWebspace($document);
+
+        if (!$webspaceName) {
+            return;
+        }
+
         // get localization object for querying parent localizations
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceName);
         $localization = $webspace->getLocalization($locale);
 
         if (null === $localization) {

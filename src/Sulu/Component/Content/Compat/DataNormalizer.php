@@ -25,7 +25,6 @@ class DataNormalizer
             $data['linked'],
             $data['changer'],
             $data['breadcrumb'],
-            $data['template'],
             $data['originTemplate'],
             $data['changed'],
             $data['changer'],
@@ -54,10 +53,18 @@ class DataNormalizer
             'redirectExternal' => $this->getAndUnsetValue($data, 'external'),
             'navigationContexts' => $this->getAndUnsetValue($data, 'navContexts'),
             'workflowStage' => $this->getWorkflowStage($state),
-            'shadowLocaleEnabled' => (boolean) $this->getAndUnsetValue($data, 'shadowOn'),
+            'shadowLocaleEnabled' => $this->getAndUnsetValue($data, 'shadowOn'),
             'shadowLocale' => $this->getAndUnsetValue($data, 'shadowBaseLanguage'),
+            'structureType' => $this->getAndUnsetValue($data, 'template'),
             'content' => $data,
         );
+
+
+        foreach ($normalized as $key => $value) {
+            if (null === $value) {
+                unset($normalized[$key]);
+            }
+        }
 
         if ($parentUuid) {
             $normalized['parent'] = $parentUuid;

@@ -50,7 +50,6 @@ abstract class AbstractDocumentType extends AbstractType
     {
         $options->setRequired(array(
             'webspace_key',
-            'structure_name',
         ));
     }
 
@@ -61,11 +60,10 @@ abstract class AbstractDocumentType extends AbstractType
     {
         $builder->add('title', 'text');
         $builder->add('parent', 'document_object');
+        $builder->add('structureType', 'text');
         $builder->setAttribute('webspace_key', $options['webspace_key']);
-        $builder->setAttribute('structure_name', $options['structure_name']);
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitDocumentParent'));
-        $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'postSubmitStructureName'));
     }
 
     /**
@@ -95,17 +93,5 @@ abstract class AbstractDocumentType extends AbstractType
         }
 
         $document->setParent($parent);
-    }
-
-    /**
-     * Assign the name of the structure to the document
-     *
-     * @param FormEvent $event
-     */
-    public function postSubmitStructureName(FormEvent $event)
-    {
-        $document = $event->getData();
-        $structureName = $event->getForm()->getConfig()->getAttribute('structure_name');
-        $document->setStructureType($structureName);
     }
 }

@@ -67,6 +67,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
@@ -307,18 +308,10 @@ class ContentMapper implements ContentMapperInterface
 
         $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
 
-        $content = $data['content'];
-        $extensions = $data['extensions'];
+        $content = isset($data['content']) ? $data['content'] : null;
+        $extensions = isset($data['extensions']) ? $data['extensions'] : null;
         unset($data['content']);
         unset($data['extensions']);
-
-        if ($isShadow) {
-            $data['shadowLocaleEnabled'] = true;
-        }
-
-        if ($shadowBaseLanguage) {
-            $data['shadowLocale'] = $shadowBaseLanguage;
-        }
 
         if ($uuid) {
             $document = $this->documentManager->find($uuid, $locale, $structureType);
@@ -326,20 +319,41 @@ class ContentMapper implements ContentMapperInterface
             $document = $this->documentManager->create($structureType);
         }
 
-        $form = $this->formFactory->create($structureType, $document, array(
-            'webspace_key' => $webspaceKey,
-            'structure_name' => $templateKey,
-        ));
+        if ($document instanceof ShadowLocaleBehavior) {
+            if ($isShadow) {
+                $data['shadowLocaleEnabled'] = true;
+            }
+
+            if ($shadowBaseLanguage) {
+                $data['shadowLocale'] = $shadowBaseLanguage;
+            }
+        }
+
+        $options = array();
+
+        if ($document instanceof WebspaceBehavior) {
+            $options['webspace_key'] = $webspaceKey;
+        }
+
+        if ($document instanceof ContentBehavior) {
+            $data['structureType'] = $templateKey;
+        }
+
+        $form = $this->formFactory->create($structureType, $document, $options);
 
         $form->submit($data, false);
 
-        // TODO: Refactor the content so that conetnt types are agnostic to the node types
-        //       Currently it is not possible to map content with a form as content types
-        //       can do whatever they want in terms of mapping.
-        $document->getContent()->bind($content);
+        if ($document instanceof ContentBehavior) {
+            // TODO: Refactor the content so that conetnt types are agnostic to the node types
+            //       Currently it is not possible to map content with a form as content types
+            //       can do whatever they want in terms of mapping.
+            $document->getContent()->bind($content);
+        }
 
-        // TODO: As with content data, extensions should be set through the form
-        $document->setExtensionsData($extensions);
+        if ($document instanceof ExtensionBehavior) {
+            // TODO: As with content data, extensions should be set through the form
+            $document->setExtensionsData($extensions);
+        }
 
 
         if (!$form->isValid()) {
