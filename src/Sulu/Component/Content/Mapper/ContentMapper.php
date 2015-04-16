@@ -689,9 +689,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
-        throw new \RuntimeException('Do this');
-        $document = $this->documentManager->find($uuid);
-        $this->documentManager->copy($document, $destParentUuid);
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, false);
     }
 
     /**
@@ -816,7 +814,8 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->move($document, $destParentUuid);
         } else {
             // copy node
-            $this->documentManager->copy($document, $destPath);
+            $copiedPath = $this->documentManager->copy($document, $destParentUuid);
+            $document = $this->documentManager->find($copiedPath, $locale);
         }
 
 
@@ -861,6 +860,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $this->documentManager->flush();
+        $this->documentManager->clear();
 
         return $this->documentToStructure($document);
     }
