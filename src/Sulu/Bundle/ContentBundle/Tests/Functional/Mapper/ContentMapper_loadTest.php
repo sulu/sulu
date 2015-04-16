@@ -192,7 +192,7 @@ class ContentMapper_loadTest extends SuluTestCase
                 true, true,
                 1
             ),
-            // both documents are in the requested locale
+            // both documents are in the requested locale, ghost content is allowed (loads also the webspace document)
             array(
                 'fr', 
                 array(
@@ -200,7 +200,7 @@ class ContentMapper_loadTest extends SuluTestCase
                     'foo-bar/foo' => 'fr',
                 ),
                 false, true,
-                2
+                3
             ),
             // documents are in different locales but ghost content is allowed
             array(
@@ -210,7 +210,7 @@ class ContentMapper_loadTest extends SuluTestCase
                     'foo-bar/foo' => 'de',
                 ),
                 false, true,
-                2
+                3
             ),
         );
     }
@@ -235,7 +235,7 @@ class ContentMapper_loadTest extends SuluTestCase
             $loadGhostContent
         );
 
-        $this->assertCount(3, $result);
+        $this->assertCount($expectedNbResults, $result);
     }
 
     public function provideLoadTreeByUuid()

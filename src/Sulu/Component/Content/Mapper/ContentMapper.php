@@ -534,7 +534,7 @@ class ContentMapper implements ContentMapperInterface
 
         $documents = $query->execute();
 
-        return $this->documentsToStructureCollection($documents);
+        return $this->documentsToStructureCollection($documents, null);
     }
 
     /**
@@ -548,7 +548,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false
     ) {
         $documents = $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
-
+    
         return $this->documentsToStructureCollection($documents, array(
             'exclude_ghost' => $excludeGhost,
             'load_ghost_content' => $loadGhostContent,
@@ -1281,10 +1281,14 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey = $this->inspector->getWebspace($page);
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
 
+        $currentLocale = $this->inspector->getLocale($page);
         foreach ($webspace->getAllLocalizations() as $localization) {
             $page = $this->documentManager->find($page->getUuid(), $localization->getLocalization());
             $localizedUrls[$page->getLocale()] = $page->getResourceSegment();
         }
+
+        // reload document in current locale
+        $this->documentManager->find($page->getUuid(), $currentLocale);
 
         return $localizedUrls;
     }
@@ -1405,13 +1409,15 @@ class ContentMapper implements ContentMapperInterface
         return $structureBridge;
     }
 
-    private function documentsToStructureCollection($documents, $filterOptions)
+    private function documentsToStructureCollection($documents, $filterOptions = null)
     {
-        $filterOptions = array_merge(array(
-            'load_ghost_content' => false,
-            'exclude_ghost' => true,
-            'exclude_shadow' => true,
-        ), $filterOptions);
+        if (null !== $filterOptions) {
+            $filterOptions = array_merge(array(
+                'load_ghost_content' => false,
+                'exclude_ghost' => true,
+                'exclude_shadow' => true,
+            ), $filterOptions);
+        }
 
         $collection = array();
         foreach ($documents as $document) {
@@ -1419,8 +1425,10 @@ class ContentMapper implements ContentMapperInterface
                 continue;
             }
 
-            if ($this->optionsShouldExcludeDocument($document, $filterOptions)) {
-                continue;
+            if (null !== $filterOptions) {
+                if ($this->optionsShouldExcludeDocument($document, $filterOptions)) {
+                    continue;
+                }
             }
 
             $collection[] = $this->documentToStructure($document);

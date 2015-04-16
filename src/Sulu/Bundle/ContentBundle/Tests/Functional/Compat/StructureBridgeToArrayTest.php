@@ -40,7 +40,7 @@ class StructureBridgeToArrayTest extends SuluTestCase
             'changed' => $startDocument->getChanged(),
             'title' => 'Homepage',
             'url' => '/',
-            'path' => '/cmf/sulu_io/contents',
+            'path' => '',
             'nodeState' => 2,
             'originTemplate' => 'default',
             'published' => $startDocument->getPublished(),

@@ -246,9 +246,9 @@ class StructureBridge implements StructureInterface
                 $propertyBridge->setPropertyValue($property);
             }
 
-            $propertyBridge->setStructure($this);
         }
 
+        $propertyBridge->setStructure($this);
         $this->loadedProperties[$name] = $propertyBridge;
 
         return $propertyBridge;
