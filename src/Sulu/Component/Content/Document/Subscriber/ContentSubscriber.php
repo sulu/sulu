@@ -57,9 +57,48 @@ class ContentSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritDoc}
      */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            Events::PERSIST => array(
+                // persist should happen before content is mapped
+                array('handlePersist', 0),
+                // setting the structure should happen very early
+                array('handlePersistStructureType', 100),
+            ),
+            // hydrate should happen afterwards
+            Events::HYDRATE => array('handleHydrate', 0),
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     protected function supports($document)
     {
         return $document instanceof ContentBehavior;
+    }
+
+    /**
+     * Set the structure type early so that subsequent subscribers operate
+     * upon the correct structure type
+     *
+     * @param PersistEvent $event
+     */
+    public function handlePersistStructureType(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+
+        if (!$this->supports($document)) {
+            return;
+        }
+
+        $structure = $this->inspector->getStructure($document);
+
+        $propertyContainer = $document->getContent();
+        if ($propertyContainer instanceof ManagedPropertyContainer) {
+            $propertyContainer->setStructure($structure);
+        }
     }
 
     /**
@@ -135,10 +174,6 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $propertyContainer = $document->getContent();
         $webspaceName = $this->inspector->getWebspace($document);
         $structure = $this->inspector->getStructure($document);
-
-        if ($propertyContainer instanceof ManagedPropertyContainer) {
-            $propertyContainer->setStructure($structure);
-        }
 
         foreach ($structure->getProperties(true) as $propertyName => $structureProperty) {
             $contentTypeName = $structureProperty->getContentTypeName();

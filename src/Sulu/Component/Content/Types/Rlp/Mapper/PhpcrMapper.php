@@ -563,17 +563,19 @@ class PhpcrMapper extends RlpMapper
      * @return bool
      * @throws ResourceLocatorAlreadyExistsException
      */
-    private function checkResourceLocator(NodeInterface $routes, $resourceLocator, $contentNode)
+    private function checkResourceLocator(NodeInterface $routeNode, $resourceLocator, $contentNode)
     {
-        if (!$this->isUnique($routes, $resourceLocator)) {
-            $routeNode = $routes->getNode(ltrim($resourceLocator, '/'));
+        if (!$this->isUnique($routeNode, $resourceLocator)) {
+            $routeNode = $routeNode->getNode(ltrim($resourceLocator, '/'));
             if ($routeNode->hasProperty('sulu:content') &&
                 $routeNode->getPropertyValue('sulu:content') == $contentNode
             ) {
                 // route already exists and referenced on contentNode
                 return true;
             } else {
-                throw new ResourceLocatorAlreadyExistsException();
+                throw new ResourceLocatorAlreadyExistsException(sprintf(
+                    'Resource locator "%s" already exists. Route node at path "%s"', $resourceLocator, $routeNode->getPath()
+                ));
             }
         }
 

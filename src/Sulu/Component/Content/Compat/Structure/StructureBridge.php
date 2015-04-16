@@ -527,7 +527,7 @@ class StructureBridge implements StructureInterface
      */
     public function hasTag($tag)
     {
-        return $this->structure->hasTag($tag);
+        return $this->structure->hasPropertyWithTagName($tag);
     }
 
     /**

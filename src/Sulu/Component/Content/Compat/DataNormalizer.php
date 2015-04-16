@@ -50,7 +50,7 @@ class DataNormalizer
             'redirectType' => $this->getAndUnsetRedirectType($data),
             'extensions' => $this->getAndUnsetValue($data, 'ext'),
             'redirectTarget' => $this->getAndUnsetValue($data, 'internal_link'),
-            'redirectExternal' => $this->getAndUnsetValue($data, 'external'),
+            'redirectExternal' => $this->getAndUnsetValue($data, 'external_link'),
             'navigationContexts' => $this->getAndUnsetValue($data, 'navContexts'),
             'workflowStage' => $this->getWorkflowStage($state),
             'shadowLocaleEnabled' => $this->getAndUnsetValue($data, 'shadowOn'),
@@ -58,7 +58,6 @@ class DataNormalizer
             'structureType' => $this->getAndUnsetValue($data, 'template'),
             'content' => $data,
         );
-
 
         foreach ($normalized as $key => $value) {
             if (null === $value) {
