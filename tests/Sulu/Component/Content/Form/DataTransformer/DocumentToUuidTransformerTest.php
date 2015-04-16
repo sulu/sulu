@@ -4,9 +4,9 @@ namespace Sulu\Component\Content\Form\DataTransformer;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Doctrine\ODM\PHPCR\DocumentManager;
-use DTL\Bundle\ContentBundle\Form\DataTransformer\DocumentToUuidTransformer;
+use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 
-class DocumentToUuidTransformerTest extends ProphecyTestCase
+class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 {
     private $documentManager;
     private $node;

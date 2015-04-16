@@ -123,6 +123,11 @@ class TestExtensionDocument implements ExtensionBehavior
         $this->extensions = $data;
     }
 
+    public function setExtension($name, $data) 
+    {
+    }
+    
+
     public function getStructureType() 
     {
         return 'foobar';

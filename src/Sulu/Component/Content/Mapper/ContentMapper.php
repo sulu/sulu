@@ -656,8 +656,8 @@ class ContentMapper implements ContentMapperInterface
      */
     public function move($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
-        $document = $this->documentManager->find($uuid);
-        $this->documentManager->move($document, $destParentUuid);
+        throw new \Exception('Do this');
+        return $this->copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $languageCode);
     }
 
     /**
@@ -665,6 +665,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function copy($uuid, $destParentUuid, $userId, $webspaceKey, $locale)
     {
+        throw new \RuntimeException('Do this');
         $document = $this->documentManager->find($uuid);
         $this->documentManager->copy($document, $destParentUuid);
     }
@@ -778,7 +779,6 @@ class ContentMapper implements ContentMapperInterface
      */
     private function copyOrMove($uuid, $destParentUuid, $userId, $webspaceKey, $locale, $move = true)
     {
-        throw new \Exception('Do this');
         // find localizations
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $localizations = $webspace->getAllLocalizations();

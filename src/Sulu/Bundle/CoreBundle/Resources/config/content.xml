@@ -8,8 +8,6 @@
         <parameter key="sulu.content.template_resolver.class">Sulu\Component\Content\Template\TemplateResolver</parameter>
 
         <parameter key="sulu.content.mapper.class">Sulu\Component\Content\Mapper\ContentMapper</parameter>
-        <parameter key="sulu.content.mapper.subscriber.node_order.class">Sulu\Component\Content\Mapper\Subscriber\NodeOrderSubscriber</parameter>
-
         <parameter key="sulu.content.structure_manager.class">Sulu\Component\Content\Compat\StructureManager</parameter>
 
         <parameter key="sulu.content.type_manager.class">Sulu\Component\Content\ContentTypeManager</parameter>
@@ -65,10 +63,6 @@
             <argument>%sulu.content.language.namespace%</argument>
             <argument>%sulu.content.internal_prefix%</argument>
             <argument type="service" id="debug.stopwatch" on-invalid="null"/>
-        </service>
-
-        <service id="sulu.content.mapper.subscriber.node_order" class="%sulu.content.mapper.subscriber.node_order.class%">
-            <tag name="kernel.event_subscriber" />
         </service>
 
         <!-- localization finders -->
