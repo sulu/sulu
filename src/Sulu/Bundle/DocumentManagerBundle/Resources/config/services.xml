@@ -121,6 +121,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <!-- PHPCR subscribers -->
         <service id="sulu_document_manager.subscriber.phpcr.find" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\FindSubscriber">
             <argument type="service" id="sulu_document_manager.metadata_factory" />
             <argument type="service" id="sulu_document_manager.node_manager" />
@@ -128,15 +129,22 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.query" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber">
+        <service id="sulu_document_manager.subscriber.phpcr.query" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber">
             <argument type="service" id="doctrine_phpcr.default_session" />
             <argument type="service" id="event_dispatcher" />
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.general" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber">
+        <service id="sulu_document_manager.subscriber.phpcr.general" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="event_dispatcher" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.phpcr.reorder" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="kernel.event_subscriber" />
         </service>
 
