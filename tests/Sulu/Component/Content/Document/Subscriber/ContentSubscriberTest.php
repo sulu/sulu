@@ -19,7 +19,7 @@ use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -93,7 +93,7 @@ class ContentSubscriberTest extends SubscriberTestCase
         // map the content
         $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
         $this->inspector->getWebspace($document)->willReturn('webspace');
-        $this->structure->getChildren()->willReturn(array(
+        $this->structure->getModelProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
         $this->structureProperty->getContentTypeName()->willReturn('content_type');

@@ -22,6 +22,7 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 class ExtensionSubscriber extends AbstractMappingSubscriber
 {
@@ -74,7 +75,6 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
      */
     public function doHydrate(HydrateEvent $event)
     {
-        $data = array();
         $document = $event->getDocument();
         $node = $event->getNode();
         $locale = $event->getLocale();
@@ -85,21 +85,18 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
             return;
         }
 
-        $extensions = $this->extensionManager->getExtensions($structureType);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
+        $extensionContainer = new ExtensionContainer(
+            $structureType,
+            $this->extensionManager,
+            $node,
+            $locale,
+            $prefix,
+            $this->internalPrefix,
+            $webspaceName
+        );
 
-        foreach ($extensions as $extension) {
-            // TODO: should not pass namespace here.
-            //       and indeed this call should be removed and the extension should be
-            //       passed the document.
-            $extension->setLanguageCode($locale, $prefix, $this->internalPrefix);
-
-            // passing the webspace and locale would also be unnecessary if we passed the
-            // document
-            $data[$extension->getName()] = $extension->load($node, $webspaceName, $locale);
-        }
-
-        $document->setExtensionsData($data);
+        $document->setExtensionsData($extensionContainer);
     }
 
     /**

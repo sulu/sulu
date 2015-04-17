@@ -32,8 +32,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
             return;
         }
 
-        // TODO: Find a sensible way of getting the UUID from the document without
-        //       requiring this behavior (maybe the DocumentHelper ..)
+        // TODO: Use the document inspector instead of the UUID behavior
         if (!$document instanceof UuidBehavior) {
             throw new \RuntimeException(sprintf(
                 'Document must implement UuuidBehavior to be used in a form. Got "%s"',

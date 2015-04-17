@@ -8,6 +8,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Extension\ExtensionInterface;
+use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 
 class StructureManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,11 +19,13 @@ class StructureManagerTest extends \PHPUnit_Framework_TestCase
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->structure = $this->prophesize(Structure::class);
         $this->extension = $this->prophesize(ExtensionInterface::class);
+        $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
 
         $this->structureManager = new StructureManager(
             $this->factory->reveal(),
             $this->extensionManager->reveal(),
-            $this->inspector->reveal()
+            $this->inspector->reveal(),
+            $this->propertyFactory->reveal()
         );
     }
 

@@ -9,6 +9,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Prophecy\Argument;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Localization\Localization;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
@@ -23,7 +24,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector = $this->prophesize(DocumentInspector::class);
         $this->registry = $this->prophesize(DocumentRegistry::class);
 
-        $this->document = $this->prophesize(ContentBehavior::class);
+        $this->document = $this->prophesize(ContentBehavior::class)->willImplement(WebspaceBehavior::class);
         $this->webspace = $this->prophesize(Webspace::class);
         $this->localization1 = $this->prophesize(Localization::class);
         $this->localization2 = $this->prophesize(Localization::class);
@@ -63,7 +64,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'de'
+            'de',
+            'en'
         )->shouldBeCalled();
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
@@ -101,7 +103,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'at'
+            'at',
+            'en'
         )->shouldBeCalled();
         $this->hydrateEvent->setLocale('at')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
@@ -131,7 +134,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'at'
+            'at',
+            'en'
         )->shouldBeCalled();
         $this->hydrateEvent->setLocale('at')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
@@ -163,7 +167,8 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 
         $this->registry->updateLocale(
             $this->document->reveal(),
-            'at'
+            'at',
+            'en'
         )->shouldBeCalled();
         $this->hydrateEvent->setLocale('at')->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());

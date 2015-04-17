@@ -139,6 +139,9 @@ class LegacyPropertyFactoryTest extends \PHPUnit_Framework_TestCase
         $this->component->getChildren()->willReturn(array(
             $property->reveal()
         ));
+        $this->block->getComponents()->willReturn(array(
+            $this->component->reveal(),
+        ));
 
         $blockProperty = $this->factory->createProperty($this->block->reveal());
 

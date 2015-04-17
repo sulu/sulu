@@ -165,7 +165,7 @@ abstract class SuluTestCase extends BaseTestCase
             $localeNode = $nodes->addNode($locale);
             $localeNode->setProperty('sulu:content', $content);
             $localeNode->setProperty('sulu:history', false);
-            $localeNode->addMixin('mix:referenceable');
+            $localeNode->addMixin('sulu:path');
         }
 
         $session->save();

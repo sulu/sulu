@@ -3,7 +3,7 @@
 namespace Sulu\Component\Content\Document\Property;
 
 use Sulu\Component\Content\Document\Property\PropertyContainer;
-use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Structure\Structure;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -88,7 +88,7 @@ class ManagedPropertyContainerTest extends \PHPUnit_Framework_TestCase
     private function doGetProperty($name, $contentTypeName, $locale)
     {
         $this->structureProperty->getType()->willReturn($contentTypeName);
-        $this->structure->getProperty($name)->willReturn($this->structureProperty);
+        $this->structure->getModelProperty($name)->willReturn($this->structureProperty);
         $this->contentTypeManager->get($contentTypeName)->willReturn($this->contentType->reveal());
 
         if ($locale) {

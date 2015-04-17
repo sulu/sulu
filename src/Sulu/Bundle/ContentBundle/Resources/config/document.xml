@@ -60,6 +60,7 @@
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument>%sulu.content.language.default%</argument>
             <tag name="kernel.event_subscriber" />
         </service>
 

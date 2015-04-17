@@ -48,8 +48,10 @@ class ContentMapperSnippetTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
         $this->loadFixtures();
+        $this->parent = $this->documentManager->find('/cmf/sulu_io/contents');
     }
 
     public function loadFixtures()
@@ -145,7 +147,7 @@ class ContentMapperSnippetTest extends SuluTestCase
                 'title' => 'ElePHPant FOOBAR',
             ));
         $this->contentMapper->saveRequest($req);
-        $node = $this->session->getNode('/cmf/snippets/animal/elephpant-foobar');
+        $node = $this->session->getNode('/cmf/snippets/animal/elephpant');
         $node->getPropertyValue('template');
 
         $this->assertEquals($originalPosition, $this->getNodePosition($node));
@@ -163,31 +165,22 @@ class ContentMapperSnippetTest extends SuluTestCase
         }
     }
 
-    public function provideRemoveSnippetsWithReferences()
-    {
-        return array(
-            array('sulu:page', 'cannot be removed'),
-            array('sulu:content', 'cannot be removed'),
-            array('sulu:path'),
-        );
-    }
-
     /**
-     * @dataProvider provideRemoveSnippetsWithReferences
      */
-    public function testRemoveSnippetWithReferences($referrerType, $exceptionMessage = null)
+    public function testRemoveSnippetWithReferences()
     {
-        if (null !== $exceptionMessage) {
-            $this->setExpectedException('PHPCR\ReferentialIntegrityException', $exceptionMessage);
-        }
+        $document = $this->documentManager->create('page');
+        $document->setTitle('Hello');
+        $document->getContent()->bind(array(
+            'animals' => array($this->snippet1->getUuid()),
+        ));
+        $document->setParent($this->parent);
+        $document->setStructureType('test_page');
+        $document->setResourceSegment('/url/foo');
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
 
-        $node = $this->session->getNode('/cmf')->addNode('test');
-        $node->addMixin($referrerType);
-
-        $node->setProperty('sulu:content', $this->snippet1->getUuid(), PropertyType::REFERENCE);
-        $this->session->save();
-
-        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io');
+        $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io', true);
 
         try {
             $this->session->getNode($this->snippet1OriginalPath);
@@ -210,21 +203,25 @@ class ContentMapperSnippetTest extends SuluTestCase
      */
     public function testRemoveSnippetWithReferencesDereference($multiple = false)
     {
-        $referrerType = 'sulu:page';
-
-        $node = $this->session->getNode('/cmf')->addNode('test');
-        $node->addMixin($referrerType);
+        $document = $this->documentManager->create('page');
+        $document->setTitle('test');
+        $document->setResourceSegment('/url/foo');
 
         if ($multiple) {
-            $node->setProperty('sulu:content', array(
-                $this->snippet1->getUuid(),
-                $this->snippet2->getUuid()
-            ), PropertyType::REFERENCE);
+            $document->getContent()->bind(array(
+                'animals' => array($this->snippet1->getUuid(), $this->snippet2->getUuid()),
+            ));
         } else {
-            $node->setProperty('sulu:content', $this->snippet1->getUuid(), PropertyType::REFERENCE);
+            $document->getContent()->bind(array(
+                'animals' => $this->snippet1->getUuid(),
+            ));
         }
 
-        $this->session->save();
+        $document->setParent($this->parent);
+        $document->setStructureType('test_page');
+        $this->documentManager->persist($document, 'de');
+
+        $this->documentManager->flush();
 
         $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io', true);
 
@@ -235,20 +232,16 @@ class ContentMapperSnippetTest extends SuluTestCase
             $this->assertTrue(true, 'Snippet was removed');
         }
 
-        $referencingNode = $this->session->getNode('/cmf/test');
+        $referrer = $this->documentManager->find('/cmf/sulu_io/contents/test', 'de');
 
         if ($multiple) {
-            $contents = $referencingNode->getPropertyValue('sulu:content');
+            $contents = $referrer->getContent()->getProperty('animals')->getValue();
             $this->assertCount(1, $contents);
             $content = reset($contents);
-            $this->assertEquals($this->snippet2->getUuid(), $content->getIdentifier());
+            $this->assertEquals($this->snippet2->getUuid(), $content);
         } else {
-            try {
-                $referencingNode->getPropertyValue('sulu:content');
-                $this->assertTrue(false, 'Referencing property still exists. FAIL');
-            } catch (\PHPCR\PathNotFoundException $e) {
-                // nothing
-            }
+            $contents = $referrer->getContent()->getProperty('animals')->getValue();
+            $this->assertCount(0, $contents);
         }
     }
 
@@ -281,8 +274,9 @@ class ContentMapperSnippetTest extends SuluTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Cannot change the structure type of
+     * @expectedException Sulu\Component\DocumentManager\Exception\DocumentNotFoundException
+     * @expectedExceptionMessage Requested document of type "page" but got
+     *
      */
     public function testUpdatePageWrongType()
     {
