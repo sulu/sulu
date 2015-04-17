@@ -15,7 +15,7 @@ use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
-use Sulu\Component\Content\Type\Core\Rlp\ResourceLocatorInformation;
+use Sulu\Component\Content\Types\Rlp\ResourceLocatorInformation;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use DateTime;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -48,7 +48,7 @@ class PhpcrMapper extends RlpMapper
      */
     public function save(NodeInterface $contentNode, $path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
 
         // check if route already exists
         if ($this->checkResourceLocator($routes, $path, $contentNode)) {
@@ -245,7 +245,7 @@ class PhpcrMapper extends RlpMapper
         try {
             $path = sprintf(
                 '%s/%s',
-                $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey),
+                $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
                 $resourceLocator
             );
             if ($resourceLocator !== '') {
@@ -253,7 +253,7 @@ class PhpcrMapper extends RlpMapper
                 $route = $this->sessionManager->getSession()->getNode($path);
             } else {
                 // get home page route node
-                $route = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+                $route = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
             }
         } catch (PathNotFoundException $e) {
             throw new ResourceLocatorNotFoundException(sprintf('Path "%s" not found', $path), null, $e);
@@ -293,7 +293,7 @@ class PhpcrMapper extends RlpMapper
      */
     public function unique($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
 
         return $this->isUnique($routes, $path);
     }
@@ -308,7 +308,7 @@ class PhpcrMapper extends RlpMapper
      */
     public function getUniquePath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
 
         if ($this->isUnique($routes, $path)) {
             // path is already unique
@@ -349,7 +349,7 @@ class PhpcrMapper extends RlpMapper
         $session = $this->sessionManager->getSession();
         $rootNode = $session->getRootNode();
         $workspace = $session->getWorkspace();
-        $routes = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $routes = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
 
         $routeNode = $routes->getNode(ltrim($src, '/'));
         if (!$routeNode->hasProperty('sulu:content')) {
@@ -475,7 +475,7 @@ class PhpcrMapper extends RlpMapper
      */
     public function restoreByPath($path, $webspaceKey, $languageCode, $segmentKey = null)
     {
-        $rootNode = $this->getRoutes($webspaceKey, $languageCode, $segmentKey);
+        $rootNode = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
         $newRouteNode = $rootNode->getNode(ltrim($path, '/'));
         $currentRouteNode = $newRouteNode->getPropertyValue('sulu:content');
         $contentNode = $currentRouteNode->getPropertyValue('sulu:content');
@@ -601,7 +601,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $segmentKey
      * @return \PHPCR\NodeInterface base node of routes
      */
-    private function getRoutes($webspaceKey, $languageCode, $segmentKey)
+    private function getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey)
     {
         // trailing slash
         return $this->sessionManager->getRouteNode($webspaceKey, $languageCode, $segmentKey);
@@ -614,7 +614,7 @@ class PhpcrMapper extends RlpMapper
      * @param string $segmentKey
      * @return string
      */
-    private function getRoutesBasePath($webspaceKey, $languageCode, $segmentKey)
+    private function getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey)
     {
         return $this->sessionManager->getRoutePath($webspaceKey, $languageCode, $segmentKey);
     }
@@ -629,7 +629,7 @@ class PhpcrMapper extends RlpMapper
      */
     private function getPath($relPath, $webspaceKey, $languageCode, $segmentKey)
     {
-        $basePath = $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey);
+        $basePath = $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey);
 
         return '/' . ltrim($basePath, '/') . ($relPath !== '' ? '/' . ltrim($relPath, '/') : '');
     }
@@ -643,7 +643,7 @@ class PhpcrMapper extends RlpMapper
      */
     private function getResourceLocator($path, $webspaceKey, $languageCode, $segmentKey)
     {
-        $basePath = $this->getRoutesBasePath($webspaceKey, $languageCode, $segmentKey);
+        $basePath = $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey);
         if ($path === $basePath) {
             return '/';
         }
