@@ -23,7 +23,7 @@ use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\Content\Document\Behavior\ContentBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
 use Sulu\Component\Content\Document\Property\PropertyContainer;
 use Sulu\Component\DocumentManager\Behavior\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\PathBehavior;
@@ -37,7 +37,7 @@ class PageDocument implements
     BlameBehavior,
     ParentBehavior,
     AutoNameBehavior,
-    ContentBehavior,
+    LocalizedContentBehavior,
     ResourceSegmentBehavior,
     NavigationContextBehavior,
     RedirectTypeBehavior,

@@ -52,11 +52,17 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
      */
     private $documentRegistry;
 
+    /**
+     * @var string
+     */
+    private $defaultLocale;
+
     public function __construct(
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager,
         DocumentInspector $inspector,
-        DocumentRegistry $documentRegistry
+        DocumentRegistry $documentRegistry,
+        $defaultLocale
     )
     {
         $this->webspaceManager = $webspaceManager;
@@ -123,10 +129,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$fallbackLocale) {
-            throw new \RuntimeException(sprintf(
-                'Could not find any localizations for document at "%s". This should not happen.',
-                $node->getPath()
-            ));
+            $fallbackLocale = $this->defaultLocale;
         }
 
         return $fallbackLocale;

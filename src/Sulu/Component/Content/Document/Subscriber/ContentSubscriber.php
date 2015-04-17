@@ -27,6 +27,7 @@ use Sulu\Component\Content\Document\Property\Property;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
@@ -109,7 +110,8 @@ class ContentSubscriber extends AbstractMappingSubscriber
         // Set the structure type
         $node = $event->getNode();
         $document = $event->getDocument();
-        $propertyName = $this->encoder->localizedSystemName(self::STRUCTURE_TYPE_FIELD, $event->getLocale());
+
+        $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $value = $node->getPropertyValueWithDefault($propertyName, null);
 
         $document->setStructureType($value);
@@ -142,11 +144,21 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $node = $event->getNode();
         $locale = $event->getLocale();
         $node->setProperty(
-            $this->encoder->localizedSystemName('template', $locale),
+            $this->getStructureTypePropertyName($document, $locale),
             $document->getStructureType()
         );
 
         $this->mapContentToNode($document, $node, $locale);
+    }
+
+    private function getStructureTypePropertyName($document, $locale)
+    {
+        if ($document instanceof LocalizedContentBehavior) {
+            return $this->encoder->localizedSystemName(self::STRUCTURE_TYPE_FIELD, $locale);
+        }
+
+        // TODO: This is the wrong namespace, it should be the system namespcae, but we do this for initial BC
+        return $this->encoder->contentName(self::STRUCTURE_TYPE_FIELD);
     }
 
     /**
@@ -175,7 +187,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $webspaceName = $this->inspector->getWebspace($document);
         $structure = $this->inspector->getStructure($document);
 
-        foreach ($structure->getProperties(true) as $propertyName => $structureProperty) {
+        foreach ($structure->getModelProperties() as $propertyName => $structureProperty) {
             $contentTypeName = $structureProperty->getContentTypeName();
             $contentType = $this->contentTypeManager->get($contentTypeName);
 

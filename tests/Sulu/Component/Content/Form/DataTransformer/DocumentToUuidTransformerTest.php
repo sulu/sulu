@@ -3,8 +3,9 @@
 namespace Sulu\Component\Content\Form\DataTransformer;
 
 use Prophecy\PhpUnit\ProphecyTestCase;
-use Doctrine\ODM\PHPCR\DocumentManager;
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
+use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
 
 class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,22 +15,27 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->documentManager = $this->prophesize('Doctrine\ODM\PHPCR\DocumentManager');
+        $this->documentManager = $this->prophesize(DocumentManager::class);
         $this->node = $this->prophesize('PHPCR\NodeInterface');
-        $this->document = new \stdClass;
+        $this->document = $this->prophesize(UuidBehavior::class);
 
         $this->transformer = new DocumentToUuidTransformer($this->documentManager->reveal());
     }
 
+    /**
+     * It should transform a document to a UUID
+     */
     public function testTransform()
     {
-        $this->documentManager->getNodeForDocument($this->document)->willReturn($this->node);
-        $this->node->getIdentifier()->willReturn('1234');
+        $this->document->getUuid()->willReturn('1234');
 
-        $this->assertEquals(1234, $this->transformer->transform($this->document));
+        $this->assertEquals('1234', $this->transformer->transform($this->document->reveal()));
     }
 
     /**
+     * It should throw an exception if reverse transform is attempted with something
+     * that is not a UUID
+     *
      * @expectedException Symfony\Component\Form\Exception\TransformationFailedException
      * @expectedExceptionMessage Given UUID is not a UUID
      */
@@ -45,7 +51,7 @@ class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
     public function testReverseTransformNotFound()
     {
         $uuid = '9fce0181-fabf-43d5-9b73-79f100ce2a9b';
-        $this->documentManager->find(null, $uuid)->willReturn(null);
+        $this->documentManager->find($uuid)->willReturn(null);
         $this->transformer->reverseTransform($uuid);
     }
 }

@@ -89,6 +89,9 @@ sulu_document_manager:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument
             phpcr_type: sulu:page
+        route:
+            class: Sulu\Bundle\ContentBundle\Document\RouteDocument
+            phpcr_type: sulu:path
         snippet:
             class: Sulu\Bundle\SnippetBundle\Document\SnippetDocument
             phpcr_type: sulu:snippet

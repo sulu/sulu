@@ -97,6 +97,8 @@
 
         <service id="sulu_document_manager.suscriber.behavior.parent" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ParentSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_factory" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
             <tag name="kernel.event_subscriber" />
         </service>
 
@@ -110,6 +112,12 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.subscriber.behavior.remove_route" class="Sulu\Component\Content\Document\Subscriber\RouteRemoveSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
         <!-- Core Subscribers -->
         <service id="sulu_document_manager.subscriber.core.instantiator" class="Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber">
             <argument type="service" id="sulu_document_manager.metadata_factory" />
@@ -117,6 +125,12 @@
         </service>
 
         <service id="sulu_document_manager.subscriber.core.registrator" class="Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber">
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="sulu_document_manager.subscriber.phpcr.reorder" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber">
+            <argument type="service" id="sulu_document_manager.node_manager" />
             <argument type="service" id="sulu_document_manager.document_registry" />
             <tag name="kernel.event_subscriber" />
         </service>
@@ -142,9 +156,9 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.phpcr.reorder" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber">
-            <argument type="service" id="sulu_document_manager.node_manager" />
+        <service id="sulu_document_manager.subscriber.phpcr.remove" class="Sulu\Component\DocumentManager\Subscriber\Phpcr\RemoveSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="sulu_document_manager.node_manager" />
             <tag name="kernel.event_subscriber" />
         </service>
 

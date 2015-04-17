@@ -148,7 +148,7 @@ class DocumentInspector extends BaseDocumentInspector
 
         foreach ($node->getProperties() as $property) {
             preg_match(
-                sprintf('/^%s:([a-zA-Z_]*?)-%s/', $prefix, ContentSubscriber::STRUCTURE_TYPE_FIELD),
+                sprintf('/^%s:([a-zA-Z_]*?)-.*/', $prefix),
                 $property->getName(),
                 $matches
             );
@@ -158,7 +158,7 @@ class DocumentInspector extends BaseDocumentInspector
             }
         }
 
-        return array_values($locales);
+        return array_values(array_unique($locales));
     }
 
     public function getShadowLocales(ShadowLocaleBehavior $document)

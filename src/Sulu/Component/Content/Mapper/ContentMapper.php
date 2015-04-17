@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Mapper;
 
-use DateTime;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
@@ -29,7 +28,6 @@ use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Compat\StructureType;
-use Sulu\Component\Content\Compat\Stucture\LegacyStructureConstants;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -40,7 +38,6 @@ use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Exception\ExtensionNotFoundException;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
@@ -292,7 +289,7 @@ class ContentMapper implements ContentMapperInterface
      */
     public function save(
         $data,
-        $templateKey,
+        $structureType,
         $webspaceKey,
         $locale,
         $userId,
@@ -302,7 +299,7 @@ class ContentMapper implements ContentMapperInterface
         $state = null,
         $isShadow = null,
         $shadowBaseLanguage = null,
-        $structureType = LegacyStructure::TYPE_PAGE
+        $documentAlias = LegacyStructure::TYPE_PAGE
     ) {
         // $event = new ContentNodeEvent($node, $structure);
         // $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
@@ -315,10 +312,20 @@ class ContentMapper implements ContentMapperInterface
         unset($data['extensions']);
 
         if ($uuid) {
-            $document = $this->documentManager->find($uuid, $locale, $structureType);
+            $document = $this->documentManager->find($uuid, $locale, $documentAlias);
+
         } else {
-            $document = $this->documentManager->create($structureType);
+            $document = $this->documentManager->create($documentAlias);
         }
+
+        if (!$document instanceof ContentBehavior) {
+            throw new \RuntimeException(sprintf(
+                'The content mapper can only be used to save documents implementing the ContentBehavior interface, got: "%s"',
+                get_class($document)
+            ));
+        }
+
+        $data['structureType'] = $structureType;
 
         if ($document instanceof ShadowLocaleBehavior) {
             if ($isShadow) {
@@ -332,15 +339,16 @@ class ContentMapper implements ContentMapperInterface
 
         $options = array();
 
+
         if ($document instanceof WebspaceBehavior) {
             $options['webspace_key'] = $webspaceKey;
         }
 
         if ($document instanceof ContentBehavior) {
-            $data['structureType'] = $templateKey;
+            $data['structureType'] = $structureType;
         }
 
-        $form = $this->formFactory->create($structureType, $document, $options);
+        $form = $this->formFactory->create($documentAlias, $document, $options);
 
         $form->submit($data, false);
 
@@ -355,7 +363,6 @@ class ContentMapper implements ContentMapperInterface
             // TODO: As with content data, extensions should be set through the form
             $document->setExtensionsData($extensions);
         }
-
 
         if (!$form->isValid()) {
             throw new InvalidFormException($form);
@@ -549,7 +556,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false
     ) {
         $documents = $this->documentManager->createQuery($query, $locale, LegacyStructure::TYPE_PAGE)->execute();
-    
+
         return $this->documentsToStructureCollection($documents, array(
             'exclude_ghost' => $excludeGhost,
             'load_ghost_content' => $loadGhostContent,
@@ -590,6 +597,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false
     ) {
         $documents = $this->loadTreeByUuid(null, $locale, null, $excludeGhost, $loadGhostContent);
+
         return $this->documentsToStructureCollection($documents);
     }
 
@@ -673,7 +681,8 @@ class ContentMapper implements ContentMapperInterface
     public function delete($uuid, $webspaceKey, $dereference = false)
     {
         $document = $this->documentManager->find($uuid);
-        $this->documentManager->remove($document);
+        $this->documentManager->remove($document, $dereference);
+        $this->documentManager->flush();
     }
 
     /**
@@ -841,7 +850,8 @@ class ContentMapper implements ContentMapperInterface
             $this->documentManager->refresh($parentDocument);
         }
 
-
+        // modifiy the resource locators -- note this can be removed once the routing auto
+        // system is implemented.
         foreach ($localizations as $locale) {
             $locale = $locale->getLocalization();
 
@@ -885,59 +895,6 @@ class ContentMapper implements ContentMapperInterface
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);
-    }
-
-    /**
-     * Remove node with references (path, history path ...)
-     *
-     * @param NodeInterface $node
-     * @param string Webspace - required by event listeners
-     * @param boolean       $dereference Remove REFERENCE properties (or property
-     *                                   values in the case of multi-value) from referencing nodes
-     */
-    private function deleteRecursively(NodeInterface $node, $webspace, $dereference = false)
-    {
-        foreach ($node->getReferences() as $ref) {
-            if ($ref instanceof \PHPCR\PropertyInterface) {
-                $child = $ref->getParent();
-
-                if ($dereference) {
-                    if ($ref->isMultiple()) {
-                        $values = $ref->getValue();
-                        foreach ($values as $i => $referringNode) {
-                            if ($node->getIdentifier() === $referringNode->getIdentifier()) {
-                                unset($values[$i]);
-                            }
-                        }
-
-                        $ref->getParent()->setProperty($ref->getName(), $values, PropertyType::REFERENCE);
-                    } else {
-                        $ref->remove();
-                    }
-                }
-            } else {
-                $child = $ref;
-            }
-
-            if ($this->nodeHelper->hasSuluNodeType($child, array('sulu:path'))) {
-                $this->deleteRecursively($child, $webspace, $dereference);
-            }
-        }
-
-        $dispatchPost = false;
-
-        // if the node being deleted is a structure, dispatch an event
-        if ($this->nodeHelper->getStructureTypeForNode($node)) {
-            $event = new ContentNodeDeleteEvent($this, $this->nodeHelper, $node, $webspace);
-            $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_DELETE, $event);
-            $dispatchPost = true;
-        }
-
-        $node->remove();
-
-        if (true === $dispatchPost) {
-            $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_DELETE, $event);
-        }
     }
 
     /**
@@ -1015,7 +972,7 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * @param $name
-     * @param NodeInterface $parent
+     * @param  NodeInterface $parent
      * @return string
      */
     private function getUniquePath($name, NodeInterface $parent)
@@ -1024,9 +981,9 @@ class ContentMapper implements ContentMapperInterface
             $i = 0;
             do {
                 $i++;
-            } while ($parent->hasNode($name . '-' . $i));
+            } while ($parent->hasNode($name.'-'.$i));
 
-            return $name . '-' . $i;
+            return $name.'-'.$i;
         } else {
             return $name;
         }
@@ -1223,7 +1180,6 @@ class ContentMapper implements ContentMapperInterface
         return $extension->getContentData($data);
     }
 
-
     /**
      * Returns url of a row
      */
@@ -1302,23 +1258,6 @@ class ContentMapper implements ContentMapperInterface
         $this->sessionManager->getSession()->save();
     }
 
-    private function validateRequired(ContentMapperRequest $request, $keys)
-    {
-        foreach ($keys as $required) {
-            $method = 'get'.ucfirst($required);
-            $val = $request->$method();
-
-            if (null === $val) {
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'ContentMapperRequest "%s" cannot be null',
-                        $required
-                    )
-                );
-            }
-        }
-    }
-
     private function loadDocument($pathOrUuid, $locale, $options)
     {
         $options = array_merge(array(
@@ -1381,7 +1320,7 @@ class ContentMapper implements ContentMapperInterface
     private function documentToStructure($document)
     {
         if (null === $document) {
-            return null;
+            return;
         }
         $structure = $this->inspector->getStructure($document);
         $documentAlias = $this->inspector->getMetadata($document)->getAlias();
