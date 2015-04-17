@@ -691,7 +691,7 @@ class NodeRepository implements NodeRepositoryInterface
         try {
             // call mapper function
             $structure = $this->getMapper()->orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
-        } catch (PHPCRException $ex) {
+        } catch (DocumentManagerException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);

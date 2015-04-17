@@ -699,55 +699,40 @@ class ContentMapper implements ContentMapperInterface
         $uuid,
         $userId,
         $webspaceKey,
-        $srcLanguageCode,
-        $destLanguageCodes,
+        $srcLocale,
+        $destLocales,
         $structureType = LegacyStructure::TYPE_PAGE
     ) {
-        throw new \RuntimeException('Do this');
-        if (!is_array($destLanguageCodes)) {
-            $destLanguageCodes = array($destLanguageCodes);
+        if (!is_array($destLocales)) {
+            $destLocales = array($destLocales);
         }
 
-        $document = $this->documentManager->find($uuid, $srcLanguageCode);
+        $document = $this->documentManager->find($uuid, $srcLocale);
+        $parentDocument = $this->inspector->getParent($document);
 
-        $parentNode = $this->getSession()->getNodeByIdentifier($document->getUuid())->getParent();
-        $resourceLocator = $this->getResourceLocator();
+        $resourceLocatorType = $this->getResourceLocator();
 
-        $data = $structure->toArray(true);
-        foreach ($destLanguageCodes as $destLanguageCode) {
-            if ($structure->hasTag('sulu.rlp')) {
-                $parentUrl = $resourceLocator->getResourceLocatorByUuid(
-                    $parentNode->getIdentifier(),
+        foreach ($destLocales as $destLocale) {
+            if ($document instanceof ResourceSegmentBehavior) {
+                $parentResourceLocator = $resourceLocatorType->getResourceLocatorByUuid(
+                    $parentDocument->getUUid(),
                     $webspaceKey,
-                    $destLanguageCode
+                    $destLocale
                 );
-                $rlp = $this->getResourceLocator()->getStrategy()->generate(
+                $resourceLocator = $resourceLocatorType->getStrategy()->generate(
                     $document->getTitle(),
-                    $parentUrl,
+                    $parentResourceLocator,
                     $webspaceKey,
-                    $destLanguageCode
+                    $destLocale
                 );
 
-                $data[$structure->getPropertyByTagName('sulu.rlp')->getName()] = $rlp;
+                $document->setResourceSegment($resourceLocator);
             }
 
-            $this->save(
-                $data,
-                $structure->getKey(),
-                $webspaceKey,
-                $destLanguageCode,
-                $userId,
-                false,
-                $uuid,
-                null,
-                WorkflowStage::TEST,
-                $structure->getIsShadow(),
-                $structure->getShadowBaseLanguage(),
-                $structureType
-            );
+            $this->documentManager->persist($document, $destLocale);
         }
 
-        return $structure;
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -755,7 +740,10 @@ class ContentMapper implements ContentMapperInterface
      */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $locale)
     {
-        throw new \RuntimeException('Do this');
+        $document = $this->documentManager->find($uuid, $locale);
+        $this->documentManager->reorder($document, $beforeUuid);
+
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -763,7 +751,41 @@ class ContentMapper implements ContentMapperInterface
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $locale)
     {
-        throw new \RuntimeException('Do this');
+        $document = $this->documentManager->find($uuid, $locale);
+
+        $parentDocument = $this->inspector->getParent($document);
+        $siblingDocuments = $this->inspector->getChildren($parentDocument);
+
+        $siblings = array_values($siblingDocuments->getArrayCopy()); // get indexed array
+        $countSiblings = count($siblings);
+        $currentPosition = array_search($document, $siblings) + 1;
+
+        if ($countSiblings < $position || $position <= 0) {
+            throw new InvalidOrderPositionException(sprintf(
+                'Cannot order node "%s" at out-of-range position "%s", must be >= 0 && < %d"',
+                $this->inspector->getPath($document),
+                $position,
+                $countSiblings
+            ));
+        }
+
+        if ($position === $countSiblings) {
+            // move to the end
+            $this->documentManager->reorder($document, null);
+        } else {
+            if ($currentPosition < $position) {
+                $targetSibling = $siblings[$position];
+            } elseif ($currentPosition > $position) {
+                $targetSibling = $siblings[$position - 1];
+            }
+
+            $this->documentManager->reorder($document, $targetSibling->getPath());
+        }
+
+        $this->documentManager->persist($document, $locale);
+        $this->documentManager->flush();
+
+        return $this->documentToStructure($document);
     }
 
     /**
@@ -816,6 +838,7 @@ class ContentMapper implements ContentMapperInterface
             // copy node
             $copiedPath = $this->documentManager->copy($document, $destParentUuid);
             $document = $this->documentManager->find($copiedPath, $locale);
+            $this->documentManager->refresh($parentDocument);
         }
 
 
@@ -860,7 +883,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $this->documentManager->flush();
-        $this->documentManager->clear();
 
         return $this->documentToStructure($document);
     }
