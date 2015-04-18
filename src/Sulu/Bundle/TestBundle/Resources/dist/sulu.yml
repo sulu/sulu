@@ -37,8 +37,15 @@ sulu_core:
                      path: %kernel.root_dir%/Resources/snippets
                      internal: false
                      type: snippet
-                 sulu:
+
+                 # This configuration could be used either from a bundle or the "root" of the repsitory
+                 # We try both just to be sure
+                 sulu_1:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
+                     internal: true
+                     type: "page"
+                 sulu_2:
+                     path: "%kernel.root_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
                      internal: true
                      type: "page"
     webspace: ~

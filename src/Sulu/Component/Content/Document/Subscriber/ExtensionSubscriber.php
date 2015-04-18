@@ -23,6 +23,7 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+use Sulu\Component\DocumentManager\Event\AbstractDocumentNodeEvent;
 
 class ExtensionSubscriber extends AbstractMappingSubscriber
 {
@@ -75,6 +76,44 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
      */
     public function doHydrate(HydrateEvent $event)
     {
+        $this->hydrate($event);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function doPersist(PersistEvent $event)
+    {
+        $document = $event->getDocument();
+        $structureType = $document->getStructureType();
+        $node = $event->getNode();
+        $extensionsData = $document->getExtensionsData();
+
+        if (!$extensionsData) {
+            $this->hydrate($event);
+            return;
+        }
+
+        $locale = $event->getLocale();
+        $webspaceName = $this->inspector->getWebspace($document);
+        $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
+
+        foreach ($extensionsData as $extensionName => $extensionData) {
+            $extension = $this->extensionManager->getExtension($structureType, $extensionName);
+            $extension->setLanguageCode($locale, $prefix, $this->internalPrefix);
+            $extension->save(
+                $node,
+                $extensionData,
+                $webspaceName,
+                $locale
+            );
+        }
+
+        $this->hydrate($event);
+    }
+
+    private function hydrate(AbstractDocumentNodeEvent $event)
+    {
         $document = $event->getDocument();
         $node = $event->getNode();
         $locale = $event->getLocale();
@@ -97,35 +136,5 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         );
 
         $document->setExtensionsData($extensionContainer);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function doPersist(PersistEvent $event)
-    {
-        $document = $event->getDocument();
-        $structureType = $document->getStructureType();
-        $node = $event->getNode();
-        $extensionsData = $document->getExtensionsData();
-
-        if (!$extensionsData) {
-            return;
-        }
-
-        $locale = $event->getLocale();
-        $webspaceName = $this->inspector->getWebspace($document);
-        $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
-
-        foreach ($extensionsData as $extensionName => $extensionData) {
-            $extension = $this->extensionManager->getExtension($structureType, $extensionName);
-            $extension->setLanguageCode($locale, $prefix, $this->internalPrefix);
-            $extension->save(
-                $node,
-                $extensionData,
-                $webspaceName,
-                $locale
-            );
-        }
     }
 }
