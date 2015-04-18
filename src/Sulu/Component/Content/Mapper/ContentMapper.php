@@ -388,7 +388,13 @@ class ContentMapper implements ContentMapperInterface
         $locale,
         $userId
     ) {
-        $document = $this->documentManager->find($uuid, $locale);
+        $document = $this->loadDocument(
+            $uuid,
+            $locale,
+            array(
+                'exclude_ghost' => true,
+            )
+        );
 
         if ($document === null) {
             throw new TranslatedNodeNotFoundException($uuid, $locale);
@@ -598,9 +604,7 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $documents = $this->loadTreeByUuid(null, $locale, null, $excludeGhost, $loadGhostContent);
-
-        return $this->documentsToStructureCollection($documents);
+        return $this->loadTreeByUuid($path, $locale, $webspaceKey, $excludeGhost, $loadGhostContent);
     }
 
     /**
@@ -1262,12 +1266,6 @@ class ContentMapper implements ContentMapperInterface
 
     private function loadDocument($pathOrUuid, $locale, $options)
     {
-        $options = array_merge(array(
-            'load_ghost_content' => false,
-            'exclude_ghost' => true,
-            'exclude_shadow' => true,
-        ), $options);
-
         $document = $this->documentManager->find($pathOrUuid, $locale);
 
         if ($this->optionsShouldExcludeDocument($document, $options)) {
@@ -1293,11 +1291,17 @@ class ContentMapper implements ContentMapperInterface
 
     private function optionsShouldExcludeDocument($document, array $options = array())
     {
+        $options = array_merge(array(
+            'load_ghost_content' => false,
+            'exclude_ghost' => true,
+            'exclude_shadow' => true,
+        ), $options);
+
         $state = $this->inspector->getLocalizationState($document);
 
         $isShadowOrGhost = $state === LocalizationState::GHOST || $state === LocalizationState::SHADOW;
 
-        if (($options['exclude_ghost'] && $options['exclude_shadow']) && $isShadowOrGhost) {
+        if ((($options['exclude_ghost'] || $options['exclude_shadow'])) && $isShadowOrGhost) {
             return true;
         }
 

@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use PHPCR\PropertyType;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\DocumentAccessor;
 
 class WorkflowStageSubscriber extends AbstractMappingSubscriber
 {
@@ -63,7 +64,11 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
         $persistedStage = $this->getWorkflowStage($node, $locale);
 
         if ($stage == WorkflowStage::PUBLISHED && $stage !== $persistedStage) {
-            $this->setPublishedDate($node, $locale);
+            $this->setPublishedDate($event->getAccessor(), $node, $locale, new \DateTime());
+        }
+
+        if ($stage == WorkflowStage::TEST && $stage !== $persistedStage) {
+            $this->setPublishedDate($event->getAccessor(), $node, $locale, null);
         }
 
         $this->setWorkflowStage($node, $stage, $locale);
@@ -73,19 +78,20 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
     {
         $node->setProperty(
             $this->encoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),
-            $stage,
+            (integer) $stage,
             PropertyType::LONG
         );
 
     }
 
-    private function setPublishedDate(NodeInterface $node, $locale)
+    private function setPublishedDate(DocumentAccessor $accessor, NodeInterface $node, $locale, \DateTime $date = null)
     {
         $node->setProperty(
             $this->encoder->localizedSystemName(self::PUBLISHED_FIELD, $locale),
-            new \DateTime(),
+            $date,
             PropertyType::DATE
         );
+        $accessor->set('published', $date);
     }
 
     private function getWorkflowStage(NodeInterface $node, $locale)

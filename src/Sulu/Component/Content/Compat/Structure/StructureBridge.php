@@ -26,6 +26,7 @@ use Sulu\Component\Content\Structure\Structure;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Structure\Block;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -324,7 +325,7 @@ class StructureBridge implements StructureInterface
      */
     public function getPublishedState()
     {
-        return $this->getWorkflowDocument(__METHOD__)->getWorkflowStage();
+        return $this->getWorkflowDocument(__METHOD__)->getWorkflowStage() === WorkflowStage::PUBLISHED;
     }
 
     /**
@@ -474,6 +475,10 @@ class StructureBridge implements StructureInterface
                 'url' => $document->getResourceSegment(),
             ));
 
+            if ($document instanceof ExtensionBehavior) {
+                $result['ext'] = $document->getExtensionsData();
+            }
+
             $result = array_merge($this->getDocument()->getContent()->getArrayCopy(), $result);
 
             return $result;
@@ -569,13 +574,7 @@ class StructureBridge implements StructureInterface
             return WorkflowStage::PUBLISHED;
         }
 
-        $state = $this->getDocument()->getWorkflowStage();
-
-        if ($state == WorkflowStage::PUBLISHED) {
-            return StructureInterface::STATE_PUBLISHED;
-        }
-
-        return StructureInterface::STATE_TEST;
+        return $this->getDocument()->getWorkflowStage();
     }
 
     public function getTitle()
