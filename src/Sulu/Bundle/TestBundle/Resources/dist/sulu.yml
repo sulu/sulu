@@ -33,6 +33,11 @@ sulu_core:
                  pages:
                      path: %kernel.root_dir%/Resources/pages
                      internal: false
+                     type: page
+                 homepage:
+                     path: %kernel.root_dir%/Resources/pages
+                     internal: false
+                     type: home
                  templates:
                      path: %kernel.root_dir%/Resources/snippets
                      internal: false
@@ -96,6 +101,9 @@ sulu_document_manager:
         page:
             class: Sulu\Bundle\ContentBundle\Document\PageDocument
             phpcr_type: sulu:page
+        home:
+            class: Sulu\Bundle\ContentBundle\Document\HomeDocument
+            phpcr_type: sulu:home
         route:
             class: Sulu\Bundle\ContentBundle\Document\RouteDocument
             phpcr_type: sulu:path

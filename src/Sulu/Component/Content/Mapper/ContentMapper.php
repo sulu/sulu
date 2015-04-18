@@ -447,7 +447,8 @@ class ContentMapper implements ContentMapperInterface
             null,
             WorkflowStage::PUBLISHED,
             $isShadow,
-            $shadowBaseLanguage
+            $shadowBaseLanguage,
+            'home'
         );
     }
 
