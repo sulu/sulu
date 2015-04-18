@@ -149,7 +149,7 @@ abstract class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-title', 'Homepage');
         $content->setProperty('i18n:en-published', new \DateTime());
         $content->setProperty('i18n:en-url', '/');
-        $content->addMixin('sulu:page');
+        $content->addMixin('sulu:home');
 
         $webspace->addNode('temp');
 

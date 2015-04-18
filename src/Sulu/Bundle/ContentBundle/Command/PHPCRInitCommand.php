@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\PageNodeType;
+use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Sulu\Component\PHPCR\NodeTypes\Content\SnippetNodeType;
 
 /**
@@ -58,7 +59,8 @@ class PHPCRInitCommand extends ContainerAwareCommand
             new PathNodeType(),
             new ContentNodeType(),
             new SnippetNodeType(),
-            new PageNodeType()
+            new PageNodeType(),
+            new HomeNodeType()
         ) as $nodeType) {
             $output->writeln('  - ' . $nodeType->getName());
             $workspace->getNodeTypeManager()->registerNodeType($nodeType, true);

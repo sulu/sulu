@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PageDocumentType extends BasePageDocumentType
+class HomeDocumentType extends BasePageDocumentType
 {
     /**
      * {@inheritDoc}
@@ -22,7 +22,7 @@ class PageDocumentType extends BasePageDocumentType
     public function setDefaultOptions(OptionsResolverInterface $options)
     {
         $options->setDefaults(array(
-            'data_class' => 'Sulu\Bundle\ContentBundle\Document\PageDocument',
+            'data_class' => 'Sulu\Bundle\ContentBundle\Document\HomeDocument',
         ));
 
         parent::setDefaultOptions($options);
@@ -33,6 +33,6 @@ class PageDocumentType extends BasePageDocumentType
      */
     public function getName()
     {
-        return 'page';
+        return 'home';
     }
 }

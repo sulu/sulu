@@ -17,6 +17,12 @@
             <tag name="form.type" alias="page" />
         </service>
 
+        <service id="dtl_content.form.type.home" class="Sulu\Bundle\ContentBundle\Form\Type\HomeDocumentType">
+            <argument type="service" id="sulu.phpcr.session" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <tag name="form.type" alias="home" />
+        </service>
+
     </services>
 </container>
 

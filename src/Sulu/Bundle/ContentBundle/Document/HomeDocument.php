@@ -10,9 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
-use Sulu\Component\DocumentManager\Behavior\AutoNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
 
-class PageDocument extends BasePageDocument implements
-    AutoNameBehavior
+class HomeDocument extends BasePageDocument implements TitleBehavior
 {
+    public function getResourceSegment()
+    {
+        return '/';
+    }
 }
