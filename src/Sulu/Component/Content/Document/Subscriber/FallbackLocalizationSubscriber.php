@@ -61,8 +61,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager,
         DocumentInspector $inspector,
-        DocumentRegistry $documentRegistry,
-        $defaultLocale
+        DocumentRegistry $documentRegistry
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->encoder = $encoder;
@@ -128,7 +127,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$fallbackLocale) {
-            $fallbackLocale = $this->defaultLocale;
+            $fallbackLocale = $this->documentRegistry->getDefaultLocale();
         }
 
         return $fallbackLocale;

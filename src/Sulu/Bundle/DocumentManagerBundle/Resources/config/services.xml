@@ -11,27 +11,31 @@
             <argument type="service" id="sulu_document_manager.node_manager" />
         </service>
 
-        <service id="sulu_document_manager.document_registry" class="Sulu\Component\DocumentManager\DocumentRegistry" />
+        <service id="sulu_document_manager.document_registry" class="Sulu\Component\DocumentManager\DocumentRegistry" public="false">
+            <argument>%sulu.content.language.default%</argument>
+        </service>
 
-        <service id="sulu_document_manager.node_manager" class="Sulu\Component\DocumentManager\NodeManager">
+        <service id="sulu_document_manager.node_manager" class="Sulu\Component\DocumentManager\NodeManager" public="false">
             <argument type="service" id="doctrine_phpcr.default_session" />
         </service>
 
-        <service id="sulu_document_manager.metadata_factory" class="Sulu\Component\DocumentManager\MetadataFactory">
+        <service id="sulu_document_manager.metadata_factory" class="Sulu\Component\DocumentManager\MetadataFactory" public="false">
             <argument>%sulu_document_manager.mapping%</argument>
         </service>
 
-        <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier">
+        <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier" public="false">
             <argument>Ferrandini\Urlizer::urlize</argument>
         </service>
 
-        <service id="sulu_document_manager.namespace_registry" class="Sulu\Component\DocumentManager\NamespaceRegistry">
+        <service id="sulu_document_manager.namespace_registry" class="Sulu\Component\DocumentManager\NamespaceRegistry" public="false">
             <argument>%sulu_document_manager.namespace_mapping%</argument>
         </service>
 
-        <service id="sulu_document_manager.property_encoder" class="Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder">
+        <service id="sulu_document_manager.property_encoder" class="Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder" public="false">
             <argument type="service" id="sulu_document_manager.namespace_registry" />
         </service>
+
+        <service id="sulu_document_manager.name_resolver" class="Sulu\Component\DocumentManager\NameResolver" public="false" />
 
         <!-- Utilities -->
         <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
@@ -68,6 +72,8 @@
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.slugifier" />
             <argument type="service" id="sulu_document_manager.metadata_factory" />
+            <argument type="service" id="sulu_document_manager.name_resolver" />
+            <argument type="service" id="sulu_document_manager.node_manager" />
             <tag name="kernel.event_subscriber" />
         </service>
 

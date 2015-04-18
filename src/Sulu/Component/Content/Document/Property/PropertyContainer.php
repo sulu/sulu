@@ -78,7 +78,7 @@ class PropertyContainer implements \ArrayAccess
         return $values;
     }
 
-    public function bind($data)
+    public function bind($data, $clearMissing)
     {
         foreach ($data as $key => $value) {
             $property = $this->getProperty($key);
