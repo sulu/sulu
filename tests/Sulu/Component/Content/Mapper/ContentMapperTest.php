@@ -2948,6 +2948,7 @@ class ContentMapperTest extends SuluTestCase
 
     public function testOrderAt()
     {
+        $this->tokenStorage->setToken($this->createUserTokenWithId(17));
         $data = $this->prepareOrderAtData();
 
         $result = $this->mapper->orderAt($data[2]->getUuid(), 3, 17, 'sulu_io', 'en');

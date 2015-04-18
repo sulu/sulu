@@ -36,12 +36,14 @@
         </property>
 
         <section name="section">
-            <property name="blog" type="text_line" mandatory="false">
-                <meta>
-                    <title lang="de">Blog</title>
-                    <title lang="en">Blog</title>
-                </meta>
-            </property>
+            <properties>
+                <property name="blog" type="text_line" mandatory="false">
+                    <meta>
+                        <title lang="de">Blog</title>
+                        <title lang="en">Blog</title>
+                    </meta>
+                </property>
+            </properties>
         </section>
     </properties>
 </template>
