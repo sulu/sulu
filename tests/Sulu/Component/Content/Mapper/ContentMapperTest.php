@@ -2983,7 +2983,8 @@ class ContentMapperTest extends SuluTestCase
         $data = array(
             'title' => 'Page-1',
             'external' => 'www.google.at',
-            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
+            'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
+            'url' => '/url',
         );
 
         $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
@@ -2991,13 +2992,13 @@ class ContentMapperTest extends SuluTestCase
 
         // check save result
         $this->assertEquals('Page-1', $saveResult->title);
-        $this->assertEquals('Page-1', $saveResult->getNodeName());
+        $this->assertEquals('page-1', $saveResult->getNodeName());
         $this->assertEquals('www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
 
         // check load result
         $this->assertEquals('Page-1', $loadResult->title);
-        $this->assertEquals('Page-1', $loadResult->getNodeName());
+        $this->assertEquals('page-1', $loadResult->getNodeName());
         $this->assertEquals('www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
     }

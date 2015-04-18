@@ -19,6 +19,7 @@
         </property>
         <property name="article" type="text_area" mandatory="false"/>
         <property name="blog" type="text_area" mandatory="false"/>
+        <property name="external" type="url" mandatory="false" />
     </properties>
 </template>
 

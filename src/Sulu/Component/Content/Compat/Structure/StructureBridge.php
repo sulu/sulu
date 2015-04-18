@@ -552,7 +552,7 @@ class StructureBridge implements StructureInterface
      */
     public function getNodeName()
     {
-        return $this->inspector->getName();
+        return $this->inspector->getName($this->getDocument());
     }
 
     /**
@@ -626,6 +626,19 @@ class StructureBridge implements StructureInterface
         return $this->getDocument()->getShadowLocale();
     }
 
+    public function getResourceLocator()
+    {
+        $document = $this->getDocument();
+        if ($document->getRedirectType() == RedirectType::EXTERNAL) {
+            return 'http://' . $document->getRedirectExternal();
+        }
+
+        if ($document->getRedirectType() === RedirectType::INTERNAL) {
+            throw new \Exception('TODO');
+        }
+
+        return $document->getResourceSegment();
+    }
 
     protected function readOnlyException($method)
     {
