@@ -126,4 +126,18 @@ class ManagedPropertyContainer extends PropertyContainer
     {
         return $this->structure->hasProperty($offset);
     }
+
+    public function bind($data, $clearMissing = true)
+    {
+        foreach ($this->structure->getModelProperties() as $childName => $child) {
+            if (false === $clearMissing && !isset($data[$childName])) {
+                continue;
+            }
+
+            $value = isset($data[$childName]) ? $data[$childName] : null;
+
+            $property = $this->getProperty($childName);
+            $property->setValue($value);
+        }
+    }
 }
