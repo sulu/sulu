@@ -54,6 +54,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
     {
         $document = $event->getDocument();
         $title = $this->getTitle($document);
+
         $document->setTitle($title);
     }
 
