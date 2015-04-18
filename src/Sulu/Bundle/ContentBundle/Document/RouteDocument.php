@@ -5,17 +5,18 @@ namespace Sulu\Bundle\ContentBundle\Document;
 use Sulu\Component\DocumentManager\Behavior\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
+use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 
 class RouteDocument implements
     NodeNameBehavior,
     PathBehavior,
     UuidBehavior,
-    ParentBehavior
+    RouteBehavior
 {
     private $nodeName;
     private $path;
     private $uuid;
-    private $parent;
+    private $targetDocument;
 
     public function getNodeName() 
     {
@@ -31,4 +32,15 @@ class RouteDocument implements
     {
         return $this->uuid;
     }
+
+    public function getTargetDocument() 
+    {
+        return $this->targetDocument;
+    }
+    
+    public function setTargetDocument($targetDocument)
+    {
+        $this->targetDocument = $targetDocument;
+    }
+    
 }

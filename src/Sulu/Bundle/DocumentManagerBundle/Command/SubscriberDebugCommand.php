@@ -77,11 +77,20 @@ class SubscriberDebugCommand extends ContainerAwareCommand
 
         list($methodName, $priority) = $value;
 
-        if (is_string($methodName) && is_integer($priority)) {
-            return $priority;
+        if (is_string($methodName) && is_numeric($priority)) {
+            if ($methodName === $targetMethodName) {
+                return $priority;
+            }
+
+            return null;
         }
 
-        return $this->resolvePriority($methodName, $targetMethodName);
+        foreach ($value as $event) {
+            $resolved = $this->resolvePriority($event, $targetMethodName);
+            if (null !== $resolved) {
+                return $resolved;
+            }
+        }
     }
 
     private function showEventNames(OutputInterface $output)

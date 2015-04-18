@@ -41,9 +41,14 @@ class PropertyContainer implements \ArrayAccess
         return $property;
     }
 
+    public function hasProperty($name)
+    {
+        return $this->offsetExists($name);
+    }
+
     public function offsetExists($offset)
     {
-        return $this->properties[$offset];
+        return isset($this->properties[$offset]);
     }
 
     public function offsetGet($offset)

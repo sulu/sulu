@@ -137,7 +137,7 @@ class Structure extends Item
         if (!$properties) {
             throw new \InvalidArgumentException(sprintf(
                 'No property with tag "%s" exists. In structure "%s" loaded from "%s"',
-                $this->getName(), $this->resource
+                $tagName, $this->name, $this->resource
             ));
         }
 

@@ -618,7 +618,8 @@ class StructureBridge implements StructureInterface
 
     public function getIsShadow()
     {
-        return $this->getDocument()->isShadowLocaleEnabled();
+        $document = $this->getDocument();
+        return $document->isShadowLocaleEnabled();
     }
 
     public function getShadowBaseLanguage()

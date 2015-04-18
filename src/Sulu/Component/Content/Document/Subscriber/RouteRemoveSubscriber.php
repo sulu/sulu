@@ -2,7 +2,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Bundle\ContentBundle\Document\RouteDocument;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Events;
@@ -24,8 +23,7 @@ class RouteRemoveSubscriber implements EventSubscriberInterface
     public function __construct(
         DocumentManager $documentManager,
         DocumentInspector $inspector
-    )
-    {
+    ) {
         $this->documentManager = $documentManager;
         $this->inspector = $inspector;
     }

@@ -77,6 +77,14 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.document.subscriber.route" class="Sulu\Component\Content\Document\Subscriber\RouteSubscriber">
+            <argument type="service" id="sulu_document_manager.property_encoder" />
+            <argument type="service" id="sulu_document_manager.proxy_factory" />
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+
     </services>
 
 </container>

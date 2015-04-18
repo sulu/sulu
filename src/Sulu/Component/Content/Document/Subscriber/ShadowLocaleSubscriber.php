@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -30,15 +29,14 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     private $registry;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder   $encoder
      * @param DocumentInspector $inspector
      */
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector,
         DocumentRegistry $registry
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->inspector = $inspector;
         $this->registry = $registry;
@@ -61,7 +59,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
             Events::PERSIST => array(
                 // before resourceSegment and content
                 array('handlePersistUpdateUrl', 20),
-                array('handlePersist', 0),
+                array('handlePersist', 15),
             ),
             Events::HYDRATE => array(
                 array('handleHydrate', 390),
@@ -80,34 +78,41 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
     {
         $node = $event->getNode();
         $locale = $event->getLocale();
+        $document = $event->getDocument();
 
-        if (!$this->getShadowLocaleEnabled($node, $locale)) {
+        $shadowLocaleEnabled = $this->getShadowLocaleEnabled($node, $locale);
+        $document->setShadowLocaleEnabled($shadowLocaleEnabled);
+
+        if (!$shadowLocaleEnabled) {
             return;
         }
 
-        $document = $event->getDocument();
-        $event->getDocument()->setShadowLocale($this->getShadowLocale($node, $locale));
-        $event->getDocument()->setShadowLocaleEnabled($r = $this->getShadowLocaleEnabled($node, $locale));
+        $document->setShadowLocale($this->getShadowLocale($node, $locale));
 
         $shadowLocale = $this->getShadowLocale($node, $locale);
         $this->registry->updateLocale($document, $shadowLocale);
         $event->setLocale($shadowLocale);
     }
 
-
     /**
      * {@inheritDoc}
      */
     public function doPersist(PersistEvent $event)
     {
+        $document = $event->getDocument();
+
+        if ($document->isShadowLocaleEnabled()) {
+            $this->validateShadow($document);
+        }
+
         $event->getNode()->setProperty(
             $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $event->getLocale()),
-            $event->getDocument()->isShadowLocaleEnabled() ? : null
+            $document->isShadowLocaleEnabled() ?: null
         );
 
         $event->getNode()->setProperty(
             $this->encoder->localizedSystemName(self::SHADOW_LOCALE_FIELD, $event->getLocale()),
-            $event->getDocument()->getShadowLocale()
+            $document->getShadowLocale()
         );
     }
 
@@ -158,7 +163,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 
     private function getShadowLocaleEnabled(NodeInterface $node, $locale)
     {
-        return $node->getPropertyValueWithDefault(
+        return (boolean) $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::SHADOW_ENABLED_FIELD, $locale),
             false
         );
@@ -170,5 +175,27 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
             $this->encoder->localizedSystemName(self::SHADOW_LOCALE_FIELD, $locale),
             null
         );
+    }
+
+    private function validateShadow(ShadowLocaleBehavior $document)
+    {
+        if ($document->getLocale() === $document->getShadowLocale()) {
+            throw new \RuntimeException(sprintf(
+                'Document cannot be a shadow of itself for locale "%s"',
+                $document->getLocale()
+            ));
+        }
+
+        $locales = $this->inspector->getConcreteLocales($document);
+        if (!in_array($document->getShadowLocale(), $locales)) {
+            $this->inspector->getNode($document)->revert();
+            throw new \RuntimeException(sprintf(
+                'Attempting to create shadow for "%s" on a non-concrete locale "%s" for document at "%s". Concrete languages are "%s"',
+                $document->getLocale(),
+                $document->getShadowLocale(),
+                $this->inspector->getPath($document),
+                implode('", "', $locales)
+            ));
+        }
     }
 }

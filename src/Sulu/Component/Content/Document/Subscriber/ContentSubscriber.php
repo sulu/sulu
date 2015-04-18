@@ -191,6 +191,8 @@ class ContentSubscriber extends AbstractMappingSubscriber
             $contentTypeName = $structureProperty->getContentTypeName();
             $contentType = $this->contentTypeManager->get($contentTypeName);
 
+            // TODO: Only write if the property has been modified.
+
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $realProperty = $propertyContainer->getProperty($propertyName);
             $legacyProperty->setValue($realProperty->getValue());

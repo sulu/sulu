@@ -460,15 +460,14 @@ class ContentMapper implements ContentMapperInterface
         if (null === $parent) {
             $parent = $this->getContentDocument($webspaceKey, $languageCode);
         }
-
         $fetchDepth = -1;
         if (false === $flat) {
             $fetchDepth = $depth;
         }
 
-        $children = $this->inspector->getChildren($parent, null, $fetchDepth, $languageCode);
+        $children = $this->inspector->getChildren($parent);
         $children = $this->documentsToStructureCollection($children->getArrayCopy(), array(
-            'exclude_ghosts' => false,
+            'exclude_ghosts' => $excludeGhosts,
         ));
 
         if ($flat) {
