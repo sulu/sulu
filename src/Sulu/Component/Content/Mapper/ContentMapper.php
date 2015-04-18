@@ -461,6 +461,7 @@ class ContentMapper implements ContentMapperInterface
             $parent = $this->getContentDocument($webspaceKey, $languageCode);
         }
         $fetchDepth = -1;
+
         if (false === $flat) {
             $fetchDepth = $depth;
         }
