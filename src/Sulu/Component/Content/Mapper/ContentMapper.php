@@ -350,13 +350,15 @@ class ContentMapper implements ContentMapperInterface
 
         $form = $this->formFactory->create($documentAlias, $document, $options);
 
-        $form->submit($data, false);
+        $clearMissing = false;
+        $form->submit($data, $clearMissing);
 
         if ($document instanceof ContentBehavior) {
             // TODO: Refactor the content so that conetnt types are agnostic to the node types
             //       Currently it is not possible to map content with a form as content types
             //       can do whatever they want in terms of mapping.
-            $document->getContent()->bind($content);
+            $clearMissing = !$partialUpdate;
+            $document->getContent()->bind($content, $clearMissing);
         }
 
         if ($document instanceof ExtensionBehavior) {

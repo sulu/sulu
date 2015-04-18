@@ -46,6 +46,8 @@ class ContentMapperTest extends SuluTestCase
      */
     private $extensions = array();
 
+    private $languageNamespace = 'i18n';
+
     public function setUp()
     {
         $this->initPhpcr();
@@ -325,18 +327,9 @@ class ContentMapperTest extends SuluTestCase
         $this->session->removeItem($articleProperty->getPath());
         $this->session->save();
 
-        // simulates a new request
-        $this->mapper = null;
-        $this->session = null;
-        $this->sessionManager = null;
-        $this->structureValueMap = array(
-            'overview' => $this->getPageMock(1),
-            'sulu_io' => $this->getPageMock(2)
-        );
-        $this->prepareMapper();
-
         /** @var StructureInterface $content */
         $content = $this->mapper->load($contentBefore->getUuid(), 'sulu_io', 'de');
+
         // test values
         $this->assertEquals('Testname', $content->title);
         $this->assertEquals(null, $content->article);
@@ -607,7 +600,7 @@ class ContentMapperTest extends SuluTestCase
         );
 
         // update content
-        $this->mapper->save($data, 'sulu_io', 'sulu_io', 'de', 1, true, $structure->getUuid());
+        $this->mapper->save($data, 'default', 'sulu_io', 'de', 1, true, $structure->getUuid());
 
         // check read
         $content = $this->mapper->loadByResourceLocator('/news/test', 'sulu_io', 'de');
@@ -637,7 +630,7 @@ class ContentMapperTest extends SuluTestCase
         // property of new structure exists
         $this->assertEquals('Testname', $content->getProperty($this->languageNamespace . ':de-title')->getString());
         $this->assertEquals('this is a blog test', $content->getPropertyValue('blog'));
-        $this->assertEquals('sulu_io', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals('default', $content->getPropertyValue($this->languageNamespace . ':de-template'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
         $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
     }
