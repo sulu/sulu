@@ -136,13 +136,6 @@ abstract class SuluTestCase extends BaseTestCase
 
         $snippetsNode = $cmf->addNode('snippets');
 
-        // TODO: Snippets should have their own initializer
-        $snippetStructures = $structureFactory->getStructures('snippet');
-
-        foreach ($snippetStructures as $snippetStructure) {
-            $snippetsNode->addNode($snippetStructure->getName());
-        }
-
         // we should use the doctrinephpcrbundle repository initializer to do this.
         $webspace = $cmf->addNode('sulu_io');
         $webspace->addMixin('mix:referenceable');

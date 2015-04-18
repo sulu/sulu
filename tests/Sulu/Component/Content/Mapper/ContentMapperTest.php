@@ -1039,50 +1039,50 @@ class ContentMapperTest extends SuluTestCase
         // /News
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('News', $children[0]->title);
-        $this->assertEquals('/news', $children[0]->path);
+        $this->assertEquals('/news', $children[0]->getPath());
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->title);
-        $this->assertEquals('/news/testnews-1', $tmp->path);
+        $this->assertEquals('/news/testnews-1', $tmp->getPath());
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
-        $this->assertEquals(null, $tmp->getChildren());
+        $this->assertCount(1, $tmp->getChildren()); // children loaded lazily now
         $this->assertTrue($tmp->getHasChildren());
         $this->assertEquals('Testnews-2', $tmp->title);
-        $this->assertEquals('/news/testnews-2', $tmp->path);
+        $this->assertEquals('/news/testnews-2', $tmp->getPath());
 
         $children = $this->mapper->loadByParent(null, 'sulu_io', 'de', 3, false);
         // /News
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('News', $children[0]->title);
-        $this->assertEquals('/news', $children[0]->path);
+        $this->assertEquals('/news', $children[0]->getPath());
 
         // /News/Testnews-1
         $tmp = $children[0]->getChildren()[0];
         $this->assertEquals(0, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-1', $tmp->title);
-        $this->assertEquals('/news/testnews-1', $tmp->path);
+        $this->assertEquals('/news/testnews-1', $tmp->getPath());
 
         // /News/Testnews-2
         $tmp = $children[0]->getChildren()[1];
         $this->assertEquals(1, sizeof($tmp->getChildren()));
         $this->assertEquals('Testnews-2', $tmp->title);
-        $this->assertEquals('/news/testnews-2', $tmp->path);
+        $this->assertEquals('/news/testnews-2', $tmp->getPath());
 
         // /News/Testnews-2/Testnews-2-1
         $tmp = $children[0]->getChildren()[1]->getChildren()[0];
-        $this->assertEquals(null, $tmp->getChildren());
+        $this->assertCount(0, $tmp->getChildren()); // children loaded lazily
         $this->assertFalse($tmp->getHasChildren());
         $this->assertEquals('Testnews-2-1', $tmp->title);
-        $this->assertEquals('/news/testnews-2/testnews-2-1', $tmp->path);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $tmp->getPath());
 
         $children = $this->mapper->loadByParent($child->getUuid(), 'sulu_io', 'de', 3, false);
         $this->assertEquals(1, sizeof($children));
         $this->assertEquals('Testnews-2-1', $children[0]->title);
-        $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->path);
+        $this->assertEquals('/news/testnews-2/testnews-2-1', $children[0]->getPath());
     }
 
     public function testStartPage()
