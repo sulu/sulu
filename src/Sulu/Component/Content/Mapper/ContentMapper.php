@@ -293,7 +293,7 @@ class ContentMapper implements ContentMapperInterface
         $webspaceKey,
         $locale,
         $userId,
-        $partialUpdate = true,
+        $partialUpdate = true, // ignore missing property: clearMissing = false
         $uuid = null,
         $parentUuid = null,
         $state = null,
@@ -1290,8 +1290,12 @@ class ContentMapper implements ContentMapperInterface
         return $collection;
     }
 
-    private function optionsShouldExcludeDocument($document, array $options = array())
+    private function optionsShouldExcludeDocument($document, array $options = null)
     {
+        if ($options === null) {
+            return false;
+        }
+
         $options = array_merge(array(
             'load_ghost_content' => false,
             'exclude_ghost' => true,
@@ -1340,24 +1344,14 @@ class ContentMapper implements ContentMapperInterface
 
     private function documentsToStructureCollection($documents, $filterOptions = null)
     {
-        if (null !== $filterOptions) {
-            $filterOptions = array_merge(array(
-                'load_ghost_content' => false,
-                'exclude_ghost' => true,
-                'exclude_shadow' => true,
-            ), $filterOptions);
-        }
-
         $collection = array();
         foreach ($documents as $document) {
             if (!$document instanceof ContentBehavior) {
                 continue;
             }
 
-            if (null !== $filterOptions) {
-                if ($this->optionsShouldExcludeDocument($document, $filterOptions)) {
-                    continue;
-                }
+            if ($this->optionsShouldExcludeDocument($document, $filterOptions)) {
+                continue;
             }
 
             $collection[] = $this->documentToStructure($document);
