@@ -58,17 +58,16 @@ class ContentMapperTest extends SuluTestCase
         $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
         $this->extensionManager = $this->getContainer()->get('sulu_content.extension.manager');
 
-        $tokenStorage = $this->getContainer()->get('security.token_storage');
-        $user = $this->prophesize(UserInterface::class);
-        $user->getId()->willReturn(1);
-        $userToken = new UsernamePasswordToken('test', 'testpass', 'fake_provider');
-        $userToken->setUser($user->reveal());
-        $tokenStorage->setToken($userToken);
+        $this->tokenStorage = $this->getContainer()->get('security.token_storage');
+
+        $token = $this->createUserTokenWithId(1);
+        $this->tokenStorage->setToken($token);
 
         foreach ($this->extensions as $extension) {
             $this->extensionManager->addExtension($extension);
         }
     }
+
     public function testSave()
     {
         $data = array(
@@ -705,17 +704,17 @@ class ContentMapperTest extends SuluTestCase
         );
 
         // save content
-        $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
+        $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
 
         // change simple content
         $data['title'] = 'test';
 
         // update content
-        $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, $structure->getUuid());
+        $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $structure->getUuid());
 
         // TODO works after this issue is fixed? but its not necessary
 //        // check read
-//        $content = $this->mapper->loadByResourceLocator('/news/test', 'sulu_io', 'de');
+//        $content = $this->mapper->loadByResourceLocator('/news/test', 'sulu_io', 'en');
 //
 //        $this->assertEquals('sulu_io', $content->title);
 //        $this->assertEquals('sulu_io', $content->article);
@@ -728,16 +727,16 @@ class ContentMapperTest extends SuluTestCase
         $root = $this->session->getRootNode();
         $content = $root->getNode('cmf/sulu_io/contents/test');
 
-        $this->assertEquals('test', $content->getProperty($this->languageNamespace . ':de-title')->getString());
-        $this->assertEquals('sulu_io', $content->getProperty($this->languageNamespace . ':de-article')->getString());
-        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':de-tags'));
-        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':de-template'));
+        $this->assertEquals('test', $content->getProperty($this->languageNamespace . ':en-title')->getString());
+        $this->assertEquals('sulu_io', $content->getProperty($this->languageNamespace . ':en-article')->getString());
+        $this->assertEquals(array('tag1', 'tag2'), $content->getPropertyValue($this->languageNamespace . ':en-tags'));
+        $this->assertEquals('overview', $content->getPropertyValue($this->languageNamespace . ':en-template'));
         $this->assertEquals(
             StructureInterface::STATE_TEST,
-            $content->getPropertyValue($this->languageNamespace . ':de-state')
+            $content->getPropertyValue($this->languageNamespace . ':en-state')
         );
-        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-creator'));
-        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':de-changer'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':en-creator'));
+        $this->assertEquals(1, $content->getPropertyValue($this->languageNamespace . ':en-changer'));
     }
 
     public function testUpdateUrlTwice()
@@ -2794,11 +2793,12 @@ class ContentMapperTest extends SuluTestCase
     public function testMoveExistingName()
     {
         $data = $this->prepareCopyMoveTestData();
-
+        $userToken = $this->createUserTokenWithId(2);
+        $this->tokenStorage->setToken($userToken);
         $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
 
         $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
@@ -3010,7 +3010,7 @@ class ContentMapperTest extends SuluTestCase
             'title' => 'Page-1',
             'url' => '/page-1'
         );
-        $result = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1);
+        $result = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
 
         // turn it into a external link
         $data = array(
@@ -3018,19 +3018,19 @@ class ContentMapperTest extends SuluTestCase
             'external' => 'www.google.at',
             'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK
         );
-        $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, $result->getUuid());
-        $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'de');
+        $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $result->getUuid());
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'en');
 
         // check save result
         $this->assertEquals('External', $saveResult->title);
-        $this->assertEquals('External', $saveResult->getNodeName());
+        $this->assertEquals('external', $saveResult->getNodeName());
         $this->assertEquals('www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
         $this->assertEquals('overview', $saveResult->getOriginTemplate());
 
         // check load result
         $this->assertEquals('External', $loadResult->title);
-        $this->assertEquals('External', $loadResult->getNodeName());
+        $this->assertEquals('external', $loadResult->getNodeName());
         $this->assertEquals('www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
         $this->assertEquals('overview', $loadResult->getOriginTemplate());
@@ -3040,12 +3040,12 @@ class ContentMapperTest extends SuluTestCase
             'title' => 'Page-1',
             'nodeType' => Structure::NODE_TYPE_CONTENT
         );
-        $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, $result->getUuid());
-        $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'de');
+        $saveResult = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1, true, $result->getUuid());
+        $loadResult = $this->mapper->load($saveResult->getUuid(), 'sulu_io', 'en');
 
         // check load result
         $this->assertEquals('Page-1', $loadResult->title);
-        $this->assertEquals('Page-1', $loadResult->getNodeName());
+        $this->assertEquals('page-1', $loadResult->getNodeName());
         $this->assertEquals('/page-1', $loadResult->url);
         $this->assertEquals('/page-1', $loadResult->getResourceLocator());
     }
@@ -3366,6 +3366,16 @@ class ContentMapperTest extends SuluTestCase
             ),
             1
         );
+    }
+
+    private function createUserTokenWithId($id)
+    {
+        $user = $this->prophesize(UserInterface::class);
+        $user->getId()->willReturn($id);
+        $userToken = new UsernamePasswordToken('test', 'testpass', 'fake_provider');
+        $userToken->setUser($user->reveal());
+
+        return $userToken;
     }
 }
 

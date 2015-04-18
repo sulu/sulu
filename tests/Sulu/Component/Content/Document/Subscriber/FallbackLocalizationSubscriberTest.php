@@ -43,6 +43,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
             ContentSubscriber::STRUCTURE_TYPE_FIELD, self::FIX_LOCALE
         )->willReturn(self::FIX_PROPERTY_NAME);
         $this->webspaceManager->findWebspaceByKey(self::FIX_WEBSPACE)->willReturn($this->webspace);
+        $this->registry->getDefaultLocale()->willReturn('de');
     }
 
     /**
