@@ -2669,13 +2669,13 @@ class ContentMapperTest extends SuluTestCase
             )
         );
 
-        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'de', 1);
+        $this->mapper->saveStartPage(array('title' => 'Start Page'), 'overview', 'sulu_io', 'en', 1);
 
-        $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'de', 1);
-        $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
-        $data[2] = $this->mapper->save($data[2], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
-        $data[3] = $this->mapper->save($data[3], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
-        $data[4] = $this->mapper->save($data[4], 'overview', 'sulu_io', 'de', 1, true, null, $data[0]->getUuid());
+        $data[0] = $this->mapper->save($data[0], 'overview', 'sulu_io', 'en', 1);
+        $data[1] = $this->mapper->save($data[1], 'overview', 'sulu_io', 'en', 1, true, null, $data[0]->getUuid());
+        $data[2] = $this->mapper->save($data[2], 'overview', 'sulu_io', 'en', 1, true, null, $data[0]->getUuid());
+        $data[3] = $this->mapper->save($data[3], 'overview', 'sulu_io', 'en', 1, true, null, $data[0]->getUuid());
+        $data[4] = $this->mapper->save($data[4], 'overview', 'sulu_io', 'en', 1, true, null, $data[0]->getUuid());
 
         return $data;
     }

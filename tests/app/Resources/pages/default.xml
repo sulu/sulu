@@ -48,6 +48,6 @@
 
         <property name="blog" type="text_area" multilingual="false" mandatory="false"/>
 
-        <property name="article" type="text_area" mandatory="false" />
+        <property name="localized_blog" type="text_area" mandatory="false" />
     </properties>
 </template>
