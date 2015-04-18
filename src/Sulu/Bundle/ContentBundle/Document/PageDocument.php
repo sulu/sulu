@@ -64,7 +64,7 @@ class PageDocument implements
     private $redirectExternal;
     private $workflowStage;
     private $published;
-    private $shadowLocaleEnabled;
+    private $shadowLocaleEnabled = false;
     private $shadowLocale;
     private $uuid;
     private $structureType;

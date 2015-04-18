@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -30,16 +29,15 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     private $documentRegistry;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder  $encoder
      * @param DocumentAccessor $accessor
-     * @param ProxyFactory $proxyFactory
+     * @param ProxyFactory     $proxyFactory
      */
     public function __construct(
-        PropertyEncoder $encoder, 
+        PropertyEncoder $encoder,
         ProxyFactory $proxyFactory,
         DocumentRegistry $documentRegistry
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->proxyFactory = $proxyFactory;
         $this->documentRegistry = $documentRegistry;
@@ -90,7 +88,7 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
 
         $node->setProperty(
             $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            $document->getRedirectType() ? : RedirectType::NONE
+            $document->getRedirectType() ?: RedirectType::NONE
         );
 
         $node->setProperty(

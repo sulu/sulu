@@ -145,6 +145,7 @@ abstract class SuluTestCase extends BaseTestCase
 
         // we should use the doctrinephpcrbundle repository initializer to do this.
         $webspace = $cmf->addNode('sulu_io');
+        $webspace->addMixin('mix:referenceable');
 
         $content = $webspace->addNode('contents');
         $content->setProperty('i18n:en-template', 'default');

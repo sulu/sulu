@@ -161,6 +161,14 @@ class DocumentInspector extends BaseDocumentInspector
         return array_values(array_unique($locales));
     }
 
+    /**
+     * Return locales which are not shadows
+     */
+    public function getConcreteLocales($document)
+    {
+        return array_diff($this->getLocales($document), $this->getShadowLocales($document));
+    }
+
     public function getShadowLocales(ShadowLocaleBehavior $document)
     {
         $shadowLocales = array();

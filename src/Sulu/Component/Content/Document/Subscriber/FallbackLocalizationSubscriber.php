@@ -63,8 +63,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         DocumentInspector $inspector,
         DocumentRegistry $documentRegistry,
         $defaultLocale
-    )
-    {
+    ) {
         $this->webspaceManager = $webspaceManager;
         $this->encoder = $encoder;
         $this->inspector = $inspector;
@@ -148,7 +147,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $localization = $webspace->getLocalization($locale);
 
         if (null === $localization) {
-            return null;
+            return;
         }
 
         $resultLocalization = null;
@@ -176,7 +175,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         if (!$resultLocalization) {
-            return null;
+            return;
         }
 
         return $resultLocalization->getLocalization();
@@ -185,16 +184,15 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     /**
      * Finds the next available parent-localization in which the node has a translation
      *
-     * @param NodeInterface $node The node, which properties will be checked
-     * @param Localization $localization The localization to start the search for
+     * @param NodeInterface $node         The node, which properties will be checked
+     * @param Localization  $localization The localization to start the search for
      *
      * @return Localization|null
      */
     private function findAvailableParentLocalization(
         NodeInterface $node,
         Localization $localization
-    )
-    {
+    ) {
         do {
             $propertyName = $this->getPropertyName($localization->getLocalization());
 
@@ -206,22 +204,21 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             $localization = $localization->getParent();
         } while ($localization != null);
 
-        return null;
+        return;
     }
 
     /**
      * Finds the next available child-localization in which the node has a translation
      *
-     * @param NodeInterface $node The node, which properties will be checked
-     * @param Localization $localization The localization to start the search for
-     * @param TranslatedProperty $property The property which will be checked for the translation
+     * @param  NodeInterface      $node         The node, which properties will be checked
+     * @param  Localization       $localization The localization to start the search for
+     * @param  TranslatedProperty $property     The property which will be checked for the translation
      * @return null|Localization
      */
     private function findAvailableChildLocalization(
         NodeInterface $node,
         Localization $localization
-    )
-    {
+    ) {
         $childrenLocalizations = $localization->getChildren();
 
         if (!empty($childrenLocalizations)) {
@@ -238,21 +235,20 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         }
 
         // return null if nothing was found
-        return null;
+        return;
     }
 
     /**
      * Finds any localization, in which the node is translated
-     * @param NodeInterface $node The node, which properties will be checkec
-     * @param array $localizations The available localizations
-     * @param TranslatedProperty $property The property to check
+     * @param  NodeInterface      $node          The node, which properties will be checkec
+     * @param  array              $localizations The available localizations
+     * @param  TranslatedProperty $property      The property to check
      * @return null|Localization
      */
     private function findAvailableLocalization(
         NodeInterface $node,
         array $localizations
-    )
-    {
+    ) {
         foreach ($localizations as $localization) {
             $propertyName = $this->getPropertyName($localization->getLocalization());
 
@@ -267,7 +263,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
             }
         }
 
-        return null;
+        return;
     }
 
     private function getPropertyName($locale)

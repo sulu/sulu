@@ -7,7 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,7 +21,7 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
     protected $encoder;
 
     /**
-     * @param PropertyEncoder $encoder
+     * @param PropertyEncoder  $encoder
      * @param DocumentAccessor $accessor
      */
     public function __construct(PropertyEncoder $encoder)
@@ -83,4 +83,3 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
      */
     abstract protected function doHydrate(HydrateEvent $event);
 }
-

@@ -11,7 +11,6 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -18,8 +17,6 @@ use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
-use Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber;
-use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 
 class TitleSubscriber extends AbstractMappingSubscriber
 {
@@ -28,8 +25,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
     public function __construct(
         PropertyEncoder $encoder,
         DocumentInspector $inspector
-    )
-    {
+    ) {
         parent::__construct($encoder);
         $this->inspector = $inspector;
     }
@@ -42,7 +38,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
         return array(
             // should happen after content is hydrated
             Events::HYDRATE => array('handleHydrate', -10),
-            Events::PERSIST=> array('handlePersist', 10),
+            Events::PERSIST => array('handlePersist', 10),
         );
     }
 
@@ -90,6 +86,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
     private function hasTitle($document)
     {
         $structure = $this->inspector->getStructure($document);
+
         return $structure->hasProperty('title');
     }
 }
