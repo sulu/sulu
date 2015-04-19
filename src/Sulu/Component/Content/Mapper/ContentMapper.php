@@ -747,6 +747,7 @@ class ContentMapper implements ContentMapperInterface
 
             $this->documentManager->persist($document, $destLocale);
         }
+        $this->documentManager->flush();
 
         return $this->documentToStructure($document);
     }
