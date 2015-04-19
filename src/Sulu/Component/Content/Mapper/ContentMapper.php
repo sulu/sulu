@@ -325,6 +325,10 @@ class ContentMapper implements ContentMapperInterface
             ));
         }
 
+        if (!$document instanceof ResourceSegmentBehavior) {
+            unset($data['resourceSegment']);
+        }
+
         $data['structureType'] = $structureType;
 
         if ($document instanceof ShadowLocaleBehavior) {
@@ -370,7 +374,9 @@ class ContentMapper implements ContentMapperInterface
             throw new InvalidFormException($form);
         }
 
-        $this->documentManager->persist($document, $locale);
+        $this->documentManager->persist($document, $locale, array(
+            'blame.user' => $userId,
+        ));
         $this->documentManager->flush();
 
         return $this->documentToStructure($document);
@@ -886,7 +892,9 @@ class ContentMapper implements ContentMapperInterface
 
             $document->setResourceSegment($newResourceLocator);
 
-            $this->documentManager->persist($document, $locale);
+            $this->documentManager->persist($document, $locale, array(
+                'blame.user' => $userId
+            ));
         }
 
         $this->documentManager->flush();
