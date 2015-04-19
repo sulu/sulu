@@ -24,6 +24,8 @@ use Sulu\Component\Content\Document\WorkflowStage;
 /**
  * This class infers information about documents, for example
  * the documents locale, webspace, path, etc.
+ *
+ * TODO: Add feature to the document manager to map inspectors for each document class
  */
 class DocumentInspector extends BaseDocumentInspector
 {
@@ -171,12 +173,23 @@ class DocumentInspector extends BaseDocumentInspector
 
     /**
      * Return locales which are not shadows
+     *
+     * @param object $document
+     *
+     * @return array
      */
-    public function getConcreteLocales($document)
+    public function getConcreteLocales(ShadowLocaleBehavior $document)
     {
         return array_diff($this->getLocales($document), $this->getShadowLocales($document));
     }
 
+    /**
+     * Return the enabled shadow locales for the given document
+     * 
+     * @param ShadowLocaleBehavior $document
+     *
+     * @return array
+     */
     public function getShadowLocales(ShadowLocaleBehavior $document)
     {
         $shadowLocales = array();

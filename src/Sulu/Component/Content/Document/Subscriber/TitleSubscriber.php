@@ -17,6 +17,7 @@ use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class TitleSubscriber extends AbstractMappingSubscriber
 {
@@ -50,7 +51,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
         $title = $this->getTitle($document);

@@ -14,6 +14,7 @@ use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class NavigationContextSubscriber extends AbstractMappingSubscriber
 {
@@ -27,7 +28,7 @@ class NavigationContextSubscriber extends AbstractMappingSubscriber
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $node = $event->getNode();
         $value = $node->getPropertyValueWithDefault(

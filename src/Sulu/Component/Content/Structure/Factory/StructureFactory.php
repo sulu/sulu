@@ -69,6 +69,10 @@ class StructureFactory implements StructureFactoryInterface
      */
     public function getStructure($type, $structureType = null)
     {
+        if (isset($this->cache[$type.$structureType])) {
+            return $this->cache[$type.$structureType];
+        }
+
         $this->assertExists($type);
 
         if (!$structureType) {
@@ -118,6 +122,7 @@ class StructureFactory implements StructureFactoryInterface
         require($cachePath);
 
         $structure = unserialize($metadata);
+        $this->cache[$type.$structureType] = $structure;
 
         return $structure;
     }

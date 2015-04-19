@@ -17,6 +17,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class RouteSubscriber extends AbstractMappingSubscriber
 {
@@ -48,7 +49,7 @@ class RouteSubscriber extends AbstractMappingSubscriber
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $node = $event->getNode();
         $document = $event->getDocument();

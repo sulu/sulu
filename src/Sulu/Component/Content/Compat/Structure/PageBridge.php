@@ -88,7 +88,16 @@ class PageBridge extends StructureBridge implements PageInterface
      */
     public function getInternalLinkContent()
     {
-        throw new \Exception('TODO');
+        $target = $this->getDocument()->getRedirectTarget();
+        if (!$target) {
+            throw new \RuntimeException(sprintf(
+                'No redirect target set on document at path "%s" with redirect type "%s"',
+                $this->inspector->getPath($this->document),
+                $this->document->getRedirectType()
+            ));
+        }
+
+        return $this->documentToStructure($target);
     }
 
     /**
