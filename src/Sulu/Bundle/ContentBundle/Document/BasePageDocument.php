@@ -68,7 +68,7 @@ class BasePageDocument implements
     protected $structureType;
     protected $content;
     protected $locale;
-    protected $children = array();
+    protected $children;
     protected $path;
     protected $extensions;
 
@@ -77,6 +77,7 @@ class BasePageDocument implements
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
         $this->content = new PropertyContainer();
+        $this->children = new \ArrayIterator();
     }
 
     /**
