@@ -2713,9 +2713,12 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
-        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
+
+        // We need to clear the document manager in order for the moved children to be reloaded
+        $this->documentManager->clear();
 
         $page2Sub = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $page2SubSub = $this->mapper->load($data[7]->getUuid(), 'sulu_io', 'de');
@@ -2872,7 +2875,7 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/subpage', $test->getResourceLocator());
         $this->assertEquals(1, $test->getChanger());
 
