@@ -1377,7 +1377,6 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals(3, sizeof($result));
         $this->assertEquals(0, $result[0]->getDepth());
         $this->assertEquals('Start Page', $result[0]->getTitle());
-        $this->assertEquals($this->sessionManager->getContentNode('sulu_io')->getIdentifier(), $result[0]->getUuid());
 
         $this->assertEquals(1, $result[1]->getDepth());
         $this->assertEquals('News', $result[1]->getTitle());
@@ -2807,7 +2806,7 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
-        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
     }
@@ -2896,11 +2895,12 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-2/subpage/subpage', $page2SubSub->url);
         $this->assertEquals('/page-2/subpage/subpage/subpage', $page2SubSubSub->url);
 
+        $this->tokenStorage->setToken($this->createUserTokenWithId(2));
         $result = $this->mapper->copy($data[5]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'de');
 
         $this->assertNotEquals($data[5]->getUuid(), $result->getUuid());
         $this->assertEquals('/page-1/sub-1-1', $result->url);
-        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
         $test = $this->mapper->loadByParent($result->getUuid(), 'sulu_io', 'de', 2);
@@ -2914,11 +2914,11 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/sub-1', $test->getResourceLocator());
         $this->assertEquals(1, $test->getChanger());
 
-        $test = $this->mapper->load($result->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($result->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
 
@@ -3242,91 +3242,6 @@ class ContentMapperTest extends SuluTestCase
                 ) . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString()
             );
         }
-    }
-
-    public function testRowToArraySetLocaleWebspace()
-    {
-        $queryResult = $this->getMock('PHPCR\Query\QueryResultInterface');
-        $row = $this->getMock('Jackalope\Query\Row', array(), array(), '', false);
-        $node = $this->getMock('PHPCR\NodeInterface', array(), array(), '', false);
-        $parentNode = $this->getMock('PHPCR\NodeInterface', array(), array(), '', false);
-
-        $property = $this->getMock('Sulu\Component\Content\Compat\Property', array(), array(), '', false);
-        $structure = $this->getMock('Sulu\Component\Content\Compat\Structure', array(), array(), '', false);
-
-        $queryResult->expects($this->any())
-            ->method('getRows')
-            ->willReturn(array($row));
-
-        $row->expects($this->any())
-            ->method('getNode')
-            ->willReturn($node);
-
-        $row->expects($this->any())
-            ->method('getPath')
-            ->willReturn('/test');
-
-        $node->expects($this->any())
-            ->method('hasProperty')
-            ->willReturn(true);
-
-        $node->expects($this->any())
-            ->method('getPropertyValue')
-            ->willReturnCallback(
-                function ($propertyName) {
-                    switch ($propertyName) {
-                        case 'i18n:en-state':
-                            return Structure::STATE_PUBLISHED;
-                            break;
-                        case 'i18n:en-template':
-                            return 'overview';
-                            break;
-                        default:
-                            return 'fake';
-                            break;
-                    }
-                }
-            );
-
-        $node->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn('123-123-123');
-
-        $node->expects($this->any())
-            ->method('getParent')
-            ->willReturn($parentNode);
-
-        $parentNode->expects($this->any())
-            ->method('getIdentifier')
-            ->willReturn('312-312-312');
-
-        $property->expects($this->any())
-            ->method('getStructure')
-            ->willReturn($structure);
-
-        $property->expects($this->any())
-            ->method('getContentTypeName')
-            ->willReturn('text_line');
-
-        $structure->expects($this->exactly(1))
-            ->method('setLanguageCode')
-            ->with($this->equalTo('en'));
-
-        $structure->expects($this->exactly(1))
-            ->method('setWebspaceKey')
-            ->with($this->equalTo('sulu_io'));
-
-        $this->mapper->convertQueryResultToArray(
-            $queryResult,
-            'sulu_io',
-            array('en'),
-            array(
-                'en' => array(
-                    array('name' => 'test', 'property' => $property)
-                )
-            ),
-            1
-        );
     }
 
     private function createUserTokenWithId($id)

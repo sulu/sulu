@@ -187,7 +187,7 @@ class DocumentInspector extends BaseDocumentInspector
             $shadowLocaleName = $this->encoder->localizedSystemName(ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD, $locale);
 
             if ($node->getPropertyValueWithDefault($shadowEnabledName, false)) {
-                $shadowLocales[] = $node->getPropertyValue($shadowLocaleName);
+                $shadowLocales[$node->getPropertyValue($shadowLocaleName)] = $locale;
             }
         }
 

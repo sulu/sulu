@@ -84,6 +84,7 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
     public function handleHydrate(HydrateEvent $event)
     {
         $document = $event->getDocument();
+        $options = $event->getOptions();
 
         // we currently only support fallback on ContentBehavior implementors
         // because we use the template key to determine localization status
@@ -101,8 +102,13 @@ class FallbackLocalizationSubscriber implements EventSubscriberInterface
         $newLocale = $this->getAvailableLocalization($node, $document, $locale);
 
         if ($newLocale !== $locale) {
-            $this->documentRegistry->updateLocale($document, $newLocale, $locale);
+            if ($event->getOption('hydrate.load_ghost_content', true) === true) {
+                $this->documentRegistry->updateLocale($document, $newLocale, $locale);
+            } else {
+                $this->documentRegistry->updateLocale($document, $locale, $locale);
+            }
         }
+
         $event->setLocale($newLocale);
     }
 

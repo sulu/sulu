@@ -612,7 +612,7 @@ class StructureBridge implements StructureInterface
 
     public function getConcreteLanguages()
     {
-        return $this->inspector->getLocales($this->getDocument());
+        return $this->inspector->getConcreteLocales($this->getDocument());
     }
 
     public function getIsShadow()
