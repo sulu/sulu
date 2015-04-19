@@ -36,7 +36,7 @@ class DocumentToUuidTransformer implements DataTransformerInterface
         if (!$document instanceof UuidBehavior) {
             throw new \RuntimeException(sprintf(
                 'Document must implement UuuidBehavior to be used in a form. Got "%s"',
-                get_class($document)
+                is_object($document) ? get_class($document) : gettype($document)
             ));
         }
 

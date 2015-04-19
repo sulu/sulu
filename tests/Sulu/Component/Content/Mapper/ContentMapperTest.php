@@ -1702,14 +1702,17 @@ class ContentMapperTest extends SuluTestCase
         );
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'en', 1);
         $content = $this->mapper->load($structure->getUuid(), 'sulu_io', 'en');
-        $contentDE = $this->mapper->load($structure->getUuid(), 'sulu_io', 'de');
-        $nodeEN = $this->session->getNode('/cmf/sulu_io/routes/en/news/test');
+
         $this->assertEquals('/news/test', $content->url);
+
+        $contentDE = $this->mapper->load($structure->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('', $contentDE->url);
+
+        $nodeEN = $this->session->getNode('/cmf/sulu_io/routes/en/news/test');
         $this->assertNotNull($nodeEN);
         $this->assertFalse($nodeEN->getPropertyValue('sulu:history'));
         $this->assertFalse($this->session->getNode('/cmf/sulu_io/routes/de')->hasNode('news/test'));
-        $this->assertNotNull($this->languageRoutes['en']->getNode('news/test'));
+        $this->assertNotNull($this->session->getNode('/cmf/sulu_io/routes/en/news/test'));
 
         $data = array(
             'title' => 'Testname',
@@ -1717,17 +1720,20 @@ class ContentMapperTest extends SuluTestCase
         );
         $structure = $this->mapper->save($data, 'overview', 'sulu_io', 'de', 1, true, $structure->getUuid());
         $content = $this->mapper->load($structure->getUuid(), 'sulu_io', 'de');
-        $contentEN = $this->mapper->load($structure->getUuid(), 'sulu_io', 'en');
-        $nodeDE = $this->session->getNode('/cmf/sulu_io/routes/de/neuigkeiten/test');
         $this->assertEquals('/neuigkeiten/test', $content->url);
-        $this->assertEquals('/news/test', $contentEN->url);
+
+        $nodeDE = $this->session->getNode('/cmf/sulu_io/routes/de/neuigkeiten/test');
         $this->assertNotNull($nodeDE);
         $this->assertFalse($nodeDE->getPropertyValue('sulu:history'));
+
+        $contentEN = $this->mapper->load($structure->getUuid(), 'sulu_io', 'en');
+        $this->assertEquals('/news/test', $contentEN->url);
+
         $this->assertTrue($this->session->getNode('/cmf/sulu_io/routes/de')->hasNode('neuigkeiten/test'));
         $this->assertFalse($this->session->getNode('/cmf/sulu_io/routes/de')->hasNode('news/test'));
         $this->assertFalse($this->session->getNode('/cmf/sulu_io/routes/en')->hasNode('neuigkeiten/test'));
         $this->assertTrue($this->session->getNode('/cmf/sulu_io/routes/en')->hasNode('news/test'));
-        $this->assertNotNull($this->languageRoutes['de']->getNode('neuigkeiten/test'));
+        $this->assertNotNull($this->session->getNode('/cmf/sulu_io/routes/de/neuigkeiten/test'));
     }
 
     public function testBlock()
@@ -2751,6 +2757,8 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-2/test', $result->url);
         $this->assertEquals(2, $result->getChanger());
 
+        $this->documentManager->clear();
+
         $test = $this->mapper->loadByParent($data[0]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
@@ -2763,7 +2771,7 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(3, sizeof($test));
 
-        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-2/test', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
 
@@ -2791,7 +2799,7 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
-        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[6]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
     }
@@ -2825,14 +2833,14 @@ class ContentMapperTest extends SuluTestCase
         $result = $this->mapper->move($data[5]->getUuid(), $data[0]->getUuid(), 2, 'sulu_io', 'en');
 
         $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-2', $result->getPath());
+        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
         $this->assertEquals(2, $result->getChanger());
 
         $result = $this->mapper->load($result->getUuid(), 'sulu_io', 'en', true);
 
         $this->assertEquals($data[5]->getUuid(), $result->getUuid());
-        $this->assertEquals('/page-1/sub-2', $result->getPath());
-        $this->assertEquals(1, $result->getChanger());
+        $this->assertEquals('/page-1/sub-1-1', $result->getPath());
+        $this->assertEquals(2, $result->getChanger());
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de', $result->getType()->getValue());
 
@@ -2842,9 +2850,9 @@ class ContentMapperTest extends SuluTestCase
         $test = $this->mapper->loadByParent($data[3]->getUuid(), 'sulu_io', 'de', 4, false);
         $this->assertEquals(2, sizeof($test));
 
-        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($data[5]->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/sub-1-1', $test->getResourceLocator());
-        $this->assertEquals(1, $test->getChanger());
+        $this->assertEquals(2, $test->getChanger());
     }
 
     public function testCopy()
@@ -2879,7 +2887,7 @@ class ContentMapperTest extends SuluTestCase
         $this->assertEquals('/page-2/subpage', $test->getResourceLocator());
         $this->assertEquals(1, $test->getChanger());
 
-        $test = $this->mapper->load($result->getUuid(), 'sulu_io', 'de', 4);
+        $test = $this->mapper->load($result->getUuid(), 'sulu_io', 'de');
         $this->assertEquals('/page-1/subpage', $test->getResourceLocator());
         $this->assertEquals(2, $test->getChanger());
 
@@ -3189,66 +3197,60 @@ class ContentMapperTest extends SuluTestCase
 
     public function testContentTypeSwitch()
     {
-        try {
-            // REF
-            $internalLinkData = array(
-                'title' => 'Test',
-                'url' => '/test/test',
-                'blog' => 'Thats a good test'
-            );
-            $internalLink = $this->mapper->save($internalLinkData, 'extension', 'sulu_io', 'en', 1);
+        // REF
+        $internalLinkData = array(
+            'title' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+        $internalLink = $this->mapper->save($internalLinkData, 'default', 'sulu_io', 'en', 1);
 
-            // REF
-            $snippetData = array(
-                'title' => 'Test',
-                'url' => '/test/test',
-                'blog' => 'Thats a good test'
-            );
-            $snippet = $this->mapper->save(
-                $snippetData,
-                'default_snippet',
-                'sulu_io',
-                'en',
-                1,
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                Structure::TYPE_SNIPPET
-            );
+        // REF
+        $snippetData = array(
+            'title' => 'Test',
+            'url' => '/test/test',
+            'blog' => 'Thats a good test'
+        );
+        $snippet = $this->mapper->save(
+            $snippetData,
+            'hotel',
+            'sulu_io',
+            'en',
+            1,
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            Structure::TYPE_SNIPPET
+        );
 
 
-            // Internal Link with String Type
-            $testSiteData = array(
-                'title' => 'Test',
-                'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-                'internal' => $internalLink->getUuid()
-            );
-            $testSiteStructure = $this->mapper->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1);
+        // Internal Link with String Type
+        $testSiteData = array(
+            'title' => 'Test',
+            'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
+            'url' => '/test/123',
+            'the_internal_link' => $internalLink->getUuid()
+        );
+        $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link', 'sulu_io', 'en', 1);
 
-            $uuid = $testSiteStructure->getUuid();
+        $uuid = $testSiteStructure->getUuid();
 
-            // Change to Snippet Array
-            $testSiteData['internal'] = array(
-                $snippet->getUuid(),
-                $snippet->getUuid()
-            );
-            $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
+        // Change to Snippet Array
+        $testSiteData['internal'] = array(
+            $snippet->getUuid(),
+            $snippet->getUuid()
+        );
+        $testSiteData['nodeType'] = Structure::NODE_TYPE_CONTENT;
 
-            $this->mapper->save($testSiteData, 'with_snipplet', 'sulu_io', 'en', 1, true, $uuid);
+        $this->mapper->save($testSiteData, 'with_snippet', 'sulu_io', 'en', 1, true, $uuid);
 
-            // Change to Internal Link String
-            $testSiteData['internal'] = $internalLink->getUuid();
-            $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
-            $this->mapper->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1, true, $uuid);
-        } catch (\Exception $e) {
-            $this->fail(
-                'Exception thrown(' . get_class($e) . '): ' . $e->getMessage() . PHP_EOL . $e->getFile(
-                ) . ':' . $e->getLine() . PHP_EOL . PHP_EOL . $e->getTraceAsString()
-            );
-        }
+        // Change to Internal Link String
+        $testSiteData['internal'] = $internalLink->getUuid();
+        $testSiteData['nodeType'] = Structure::NODE_TYPE_INTERNAL_LINK;
+        $this->mapper->save($testSiteData, 'internal-link', 'sulu_io', 'en', 1, true, $uuid);
     }
 
     private function createUserTokenWithId($id)

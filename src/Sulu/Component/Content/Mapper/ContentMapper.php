@@ -769,6 +769,9 @@ class ContentMapper implements ContentMapperInterface
     {
         $document = $this->documentManager->find($uuid, $locale);
         $this->documentManager->reorder($document, $beforeUuid);
+        $this->documentManager->persist($document, $locale, array(
+            'blame.user' => $userId
+        ));
 
         return $this->documentToStructure($document);
     }

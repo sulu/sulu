@@ -231,6 +231,18 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
             $legacyProperty->setValue($value);
 
+            try {
+                $contentType->remove(
+                    $node,
+                    $legacyProperty,
+                    null,
+                    $webspaceName,
+                    $locale,
+                    null
+                );
+            } catch (\Exception $e) {
+            }
+
             $contentType->write(
                 $node,
                 $legacyProperty,
