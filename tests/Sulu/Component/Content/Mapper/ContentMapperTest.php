@@ -326,6 +326,7 @@ class ContentMapperTest extends SuluTestCase
         $articleProperty = $contentNode->getProperty($this->languageNamespace . ':de-article');
         $this->session->removeItem($articleProperty->getPath());
         $this->session->save();
+        $this->documentManager->clear();
 
         /** @var StructureInterface $content */
         $content = $this->mapper->load($contentBefore->getUuid(), 'sulu_io', 'de');
@@ -1596,12 +1597,14 @@ class ContentMapperTest extends SuluTestCase
         $this->assertNull($result->getType());
 
         // load content as de -> load ghost content
+        $this->documentManager->clear();
         $result = $this->mapper->load($data['news-de_at']->getUuid(), 'sulu_io', 'de', true);
         $this->assertEquals('de', $result->getLanguageCode());
         $this->assertEquals('News-DE_AT', $result->getPropertyValue('title'));
         $this->assertEquals('ghost', $result->getType()->getName());
         $this->assertEquals('de_at', $result->getType()->getValue());
 
+        $this->documentManager->clear();
         // load only in german available page in english
         $result = $this->mapper->load($data['team-de']->getUuid(), 'sulu_io', 'en', true);
         $this->assertEquals('en', $result->getLanguageCode());

@@ -585,15 +585,15 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhost = true,
         $loadGhostContent = false
     ) {
-        $webspaceChildren = $this->inspector->getChildren($this->getContentDocument($webspaceKey, $locale));
+        $webspaceChildren = $this->getContentDocument($webspaceKey, $locale, array(
+            'hydrate.load_ghost_content' => $loadGhostContent
+        ))->getChildren();
 
         $documents = $this->filterDocuments($webspaceChildren, $locale, array(
-            'load_ghost_content' => $loadGhostContent,
             'exclude_ghost' => $excludeGhost,
         ));
 
         return $this->documentsToStructureCollection($documents, array(
-            'load_ghost_content' => $loadGhostContent,
             'exclude_ghost' => $excludeGhost,
         ));
     }
