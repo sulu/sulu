@@ -90,7 +90,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
         $document->setShadowLocale($this->getShadowLocale($node, $locale));
 
         $shadowLocale = $this->getShadowLocale($node, $locale);
-        $this->registry->updateLocale($document, $shadowLocale);
+        $this->registry->updateLocale($document, $shadowLocale, $locale);
         $event->setLocale($shadowLocale);
     }
 

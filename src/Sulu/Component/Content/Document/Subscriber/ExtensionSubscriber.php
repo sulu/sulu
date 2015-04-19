@@ -23,7 +23,7 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
-use Sulu\Component\DocumentManager\Event\AbstractDocumentNodeEvent;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class ExtensionSubscriber extends AbstractMappingSubscriber
 {
@@ -112,7 +112,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         $this->hydrate($event);
     }
 
-    private function hydrate(AbstractDocumentNodeEvent $event)
+    private function hydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
         $node = $event->getNode();

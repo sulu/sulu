@@ -312,7 +312,7 @@ class ContentMapper implements ContentMapperInterface
         unset($data['extensions']);
 
         if ($uuid) {
-            $document = $this->documentManager->find($uuid, $locale, $documentAlias);
+            $document = $this->documentManager->find($uuid, $locale, array('type' => $documentAlias));
 
         } else {
             $document = $this->documentManager->create($documentAlias);
@@ -462,12 +462,13 @@ class ContentMapper implements ContentMapperInterface
         $excludeGhosts = false
     ) {
         $parent = null;
+        $options = array('hydrate.load_ghost_content' => true);
         if ($uuid) {
-            $parent = $this->documentManager->find($uuid, $languageCode);
+            $parent = $this->documentManager->find($uuid, $languageCode, $options);
         }
 
         if (null === $parent) {
-            $parent = $this->getContentDocument($webspaceKey, $languageCode);
+            $parent = $this->getContentDocument($webspaceKey, $languageCode, $options);
         }
         $fetchDepth = -1;
 
@@ -475,9 +476,9 @@ class ContentMapper implements ContentMapperInterface
             $fetchDepth = $depth;
         }
 
-        $children = $this->inspector->getChildren($parent);
+        $children = $parent->getChildren($parent);
         $children = $this->documentsToStructureCollection($children->getArrayCopy(), array(
-            'exclude_ghosts' => $excludeGhosts,
+            'exclude_ghost' => $excludeGhosts
         ));
 
         if ($flat) {
@@ -505,7 +506,9 @@ class ContentMapper implements ContentMapperInterface
      */
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
-        $document = $this->documentManager->find($uuid, $locale);
+        $document = $this->documentManager->find($uuid, $locale, array(
+            'hydrate.load_ghost_content' => $loadGhostContent
+        ));
 
         return $this->documentToStructure($document);
     }
@@ -660,6 +663,7 @@ class ContentMapper implements ContentMapperInterface
         $documents = array();
         $contentDocument = $this->getContentDocument($webspaceKey, $locale);
         $contentDepth = $this->inspector->getDepth($contentDocument);
+        $document = $this->inspector->getParent($document);
 
         do {
             $documents[] = $document;
@@ -912,11 +916,12 @@ class ContentMapper implements ContentMapperInterface
      * @param $webspaceKey
      * @return Document
      */
-    private function getContentDocument($webspaceKey, $locale)
+    private function getContentDocument($webspaceKey, $locale, array $options = array())
     {
         return $this->documentManager->find(
             $this->sessionManager->getContentPath($webspaceKey),
-            $locale
+            $locale,
+            $options
         );
     }
 
@@ -1052,7 +1057,7 @@ class ContentMapper implements ContentMapperInterface
                 'creator' => $document->getCreator(),
                 'title' => $document->getTitle(),
                 'url' => $url,
-                'urls' => $this->getLocalizedUrlsForPage($document),
+                'urls' => $this->inspector->getLocalizedUrlsForPage($document),
                 'locale' => $locale,
                 'webspaceKey' => $this->inspector->getWebspace($document),
                 'template' => $structureType,
@@ -1227,7 +1232,9 @@ class ContentMapper implements ContentMapperInterface
 
     private function loadDocument($pathOrUuid, $locale, $options)
     {
-        $document = $this->documentManager->find($pathOrUuid, $locale);
+        $document = $this->documentManager->find($pathOrUuid, $locale, array(
+            'hydrate.load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true
+        ));
 
         if ($this->optionsShouldExcludeDocument($document, $options)) {
             return;
@@ -1257,16 +1264,17 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $options = array_merge(array(
-            'load_ghost_content' => false,
             'exclude_ghost' => true,
             'exclude_shadow' => true,
         ), $options);
 
         $state = $this->inspector->getLocalizationState($document);
 
-        $isShadowOrGhost = $state === LocalizationState::GHOST || $state === LocalizationState::SHADOW;
+        if ($options['exclude_ghost'] && $state == LocalizationState::GHOST) {
+            return true;
+        }
 
-        if ((($options['exclude_ghost'] || $options['exclude_shadow'])) && $isShadowOrGhost) {
+        if ($options['exclude_shadow'] && $state == LocalizationState::SHADOW) {
             return true;
         }
 

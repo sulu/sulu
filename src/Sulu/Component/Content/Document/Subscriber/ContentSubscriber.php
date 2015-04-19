@@ -14,7 +14,6 @@ use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
-use Sulu\Component\DocumentManager\Event\AbstractDocumentNodeEvent;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -28,6 +27,8 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
+use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
+use Sulu\Component\Content\Document\LocalizationState;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
@@ -69,7 +70,22 @@ class ContentSubscriber extends AbstractMappingSubscriber
             ),
             // hydrate should happen afterwards
             Events::HYDRATE => array('handleHydrate', 0),
+            Events::CONFIGURE_OPTIONS => 'configureOptions',
         );
+    }
+
+    /**
+     * @param ConfigureOptionsEvent $event
+     */
+    public function configureOptions(ConfigureOptionsEvent $event)
+    {
+        $options = $event->getOptions();
+        $options->setDefaults(array(
+            'hydrate.load_ghost_content' => true
+        ));
+        $options->setAllowedTypes(array(
+            'hydrate.load_ghost_content' => 'bool',
+        ));
     }
 
     /**
@@ -113,8 +129,13 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
         $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
         $value = $node->getPropertyValueWithDefault($propertyName, null);
-
         $document->setStructureType($value);
+
+        if (false === $event->getOption('hydrate.load_ghost_content', false)) {
+            if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
+                $value = null;
+            }
+        }
 
         if ($value) {
             $container = $this->createPropertyContainer($document);
