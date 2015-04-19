@@ -19,6 +19,7 @@ use PHPCR\PropertyType;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentAccessor;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class WorkflowStageSubscriber extends AbstractMappingSubscriber
 {
@@ -33,7 +34,7 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $locale = $event->getLocale();
         $node = $event->getNode();

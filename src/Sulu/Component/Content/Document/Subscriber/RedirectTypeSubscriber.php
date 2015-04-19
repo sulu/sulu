@@ -10,6 +10,7 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
@@ -18,6 +19,8 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\Content\Document\RedirectType;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use PHPCR\PropertyType;
 
 class RedirectTypeSubscriber extends AbstractMappingSubscriber
 {
@@ -29,15 +32,16 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     private $documentRegistry;
 
     /**
-     * @param PropertyEncoder  $encoder
+     * @param PropertyEncoder $encoder
      * @param DocumentAccessor $accessor
-     * @param ProxyFactory     $proxyFactory
+     * @param ProxyFactory $proxyFactory
      */
     public function __construct(
-        PropertyEncoder $encoder,
+        PropertyEncoder $encoder, 
         ProxyFactory $proxyFactory,
         DocumentRegistry $documentRegistry
-    ) {
+    )
+    {
         parent::__construct($encoder);
         $this->proxyFactory = $proxyFactory;
         $this->documentRegistry = $documentRegistry;
@@ -51,7 +55,7 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $node = $event->getNode();
         $document = $event->getDocument();
@@ -62,13 +66,13 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
         );
         $document->setRedirectType($redirectType);
 
-        $internalUuid = $node->getPropertyValueWithDefault(
+        $internalNode = $node->getPropertyValueWithDefault(
             $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
             null
         );
 
-        if ($internalUuid) {
-            $document->setRedirectTarget($internalUuid);
+        if ($internalNode) {
+            $document->setRedirectTarget($this->proxyFactory->createProxyForNode($document, $internalNode));
         }
 
         $externalUrl = $node->getPropertyValueWithDefault(
@@ -88,7 +92,8 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
 
         $node->setProperty(
             $this->encoder->localizedSystemName(self::REDIRECT_TYPE_FIELD, $event->getLocale()),
-            $document->getRedirectType() ?: RedirectType::NONE
+            $document->getRedirectType() ? : RedirectType::NONE,
+            PropertyType::LONG
         );
 
         $node->setProperty(
@@ -97,7 +102,6 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
         );
 
         $internalDocument = $document->getRedirectTarget();
-
         if (!$internalDocument) {
             return;
         }
@@ -107,7 +111,9 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
         // TODO: This should not be a UUID
         $node->setProperty(
             $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-            $internalNode->getIdentifier()
+            $internalNode
         );
+
+        $this->doHydrate($event);
     }
 }

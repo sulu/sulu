@@ -552,6 +552,14 @@ class StructureBridge implements StructureInterface
      */
     public function getNodeName()
     {
+        if ($this->getDocument()->getRedirectType() == RedirectType::INTERNAL) {
+            return $this->inspector->getName($this->document->getRedirectTarget());
+        }
+
+        if ($this->getDocument()->getRedirectType() == RedirectType::EXTERNAL) {
+            return $this->document->getTitle();
+        }
+
         return $this->inspector->getName($this->getDocument());
     }
 
@@ -634,7 +642,7 @@ class StructureBridge implements StructureInterface
         }
 
         if ($document->getRedirectType() === RedirectType::INTERNAL) {
-            throw new \Exception('TODO');
+            return $document->getRedirectTarget()->getResourceSegment();
         }
 
         return $document->getResourceSegment();
@@ -711,7 +719,7 @@ class StructureBridge implements StructureInterface
         return $value;
     }
 
-    private function documentToStructure(ContentBehavior $document)
+    protected function documentToStructure(ContentBehavior $document)
     {
         return new $this($this->inspector->getStructure($document), $this->inspector, $this->propertyFactory, $document);
     }

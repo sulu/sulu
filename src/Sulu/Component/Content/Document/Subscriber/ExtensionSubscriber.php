@@ -74,7 +74,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritDoc}
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $this->hydrate($event);
     }

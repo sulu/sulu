@@ -15,6 +15,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 abstract class AbstractMappingSubscriber implements EventSubscriberInterface
 {
@@ -43,7 +44,7 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
     /**
      * @param HydrateEvent $event
      */
-    public function handleHydrate(HydrateEvent $event)
+    public function handleHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
 
@@ -81,5 +82,5 @@ abstract class AbstractMappingSubscriber implements EventSubscriberInterface
     /**
      * @param HydrateEvent $event
      */
-    abstract protected function doHydrate(HydrateEvent $event);
+    abstract protected function doHydrate(AbstractMappingEvent $event);
 }

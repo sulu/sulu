@@ -19,6 +19,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use PHPCR\NodeInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class ShadowLocaleSubscriber extends AbstractMappingSubscriber
 {
@@ -74,7 +75,7 @@ class ShadowLocaleSubscriber extends AbstractMappingSubscriber
      *
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $node = $event->getNode();
         $locale = $event->getLocale();

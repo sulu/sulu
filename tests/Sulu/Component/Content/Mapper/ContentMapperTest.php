@@ -2542,7 +2542,7 @@ class ContentMapperTest extends SuluTestCase
         $data2 = array(
             'title' => 'Test',
             'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
-            'internal' => $structure1->getUuid()
+            'internal_link' => $structure1->getUuid()
         );
         $structure2 = $this->mapper->save($data2, 'internal-link', 'sulu_io', 'en', 1);
 
@@ -3008,13 +3008,13 @@ class ContentMapperTest extends SuluTestCase
 
         // check save result
         $this->assertEquals('Page-1', $saveResult->title);
-        $this->assertEquals('page-1', $saveResult->getNodeName());
+        $this->assertEquals('Page-1', $saveResult->getNodeName());
         $this->assertEquals('www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
 
         // check load result
         $this->assertEquals('Page-1', $loadResult->title);
-        $this->assertEquals('page-1', $loadResult->getNodeName());
+        $this->assertEquals('Page-1', $loadResult->getNodeName());
         $this->assertEquals('www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
     }
@@ -3039,14 +3039,14 @@ class ContentMapperTest extends SuluTestCase
 
         // check save result
         $this->assertEquals('External', $saveResult->title);
-        $this->assertEquals('external', $saveResult->getNodeName());
+        $this->assertEquals('External', $saveResult->getNodeName());
         $this->assertEquals('www.google.at', $saveResult->external);
         $this->assertEquals('http://www.google.at', $saveResult->getResourceLocator());
         $this->assertEquals('overview', $saveResult->getOriginTemplate());
 
         // check load result
         $this->assertEquals('External', $loadResult->title);
-        $this->assertEquals('external', $loadResult->getNodeName());
+        $this->assertEquals('External', $loadResult->getNodeName());
         $this->assertEquals('www.google.at', $loadResult->external);
         $this->assertEquals('http://www.google.at', $loadResult->getResourceLocator());
         $this->assertEquals('overview', $loadResult->getOriginTemplate());
@@ -3234,7 +3234,7 @@ class ContentMapperTest extends SuluTestCase
             'url' => '/test/123',
             'the_internal_link' => $internalLink->getUuid()
         );
-        $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link', 'sulu_io', 'en', 1);
+        $testSiteStructure = $this->mapper->save($testSiteData, 'internal_link_page', 'sulu_io', 'en', 1);
 
         $uuid = $testSiteStructure->getUuid();
 

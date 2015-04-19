@@ -30,6 +30,7 @@ use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
@@ -122,7 +123,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
     /**
      * {@inheritDoc}
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         // Set the structure type
         $node = $event->getNode();

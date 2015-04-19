@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class ResourceSegmentSubscriber extends AbstractMappingSubscriber
 {
@@ -54,7 +55,7 @@ class ResourceSegmentSubscriber extends AbstractMappingSubscriber
     /**
      * @param HydrateEvent $event
      */
-    public function doHydrate(HydrateEvent $event)
+    public function doHydrate(AbstractMappingEvent $event)
     {
         $document = $event->getDocument();
         $property = $this->getResourceSegmentProperty($document);

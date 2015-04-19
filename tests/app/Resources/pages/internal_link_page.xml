@@ -35,6 +35,6 @@
             <tag name="sulu.rlp"/>
         </property>
 
-        <property name="internal_link" type="single_internal_link"/>
+        <property name="the_internal_link" type="single_internal_link"/>
     </properties>
 </template>
