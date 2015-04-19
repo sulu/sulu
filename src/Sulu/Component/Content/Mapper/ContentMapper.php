@@ -806,21 +806,6 @@ class ContentMapper implements ContentMapperInterface
     }
 
     /**
-     * TODO: Refactor this. This should not effect the global state of the object, this
-     *       should be scoped for each save request.
-     *
-     * TRUE dont rename pages on save
-     * @param  boolean $noRenamingFlag
-     * @return $this
-     */
-    public function setNoRenamingFlag($noRenamingFlag)
-    {
-        $this->noRenamingFlag = $noRenamingFlag;
-
-        return $this;
-    }
-
-    /**
      * TRUE ignores mandatory in save
      * @param  bool  $ignoreMandatoryFlag
      * @return $this
@@ -1212,32 +1197,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         return '';
-    }
-
-    /**
-     * Returns urls for given page for all locales in webspace
-     * @param  Page          $page
-     * @param  NodeInterface $node
-     * @param  string        $webspaceKey
-     * @param  string        $segmentKey
-     * @return array
-     */
-    private function getLocalizedUrlsForPage(PageDocument $page)
-    {
-        $localizedUrls = array();
-        $webspaceKey = $this->inspector->getWebspace($page);
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-
-        $currentLocale = $this->inspector->getLocale($page);
-        foreach ($webspace->getAllLocalizations() as $localization) {
-            $page = $this->documentManager->find($page->getUuid(), $localization->getLocalization());
-            $localizedUrls[$page->getLocale()] = $page->getResourceSegment();
-        }
-
-        // reload document in current locale
-        $this->documentManager->find($page->getUuid(), $currentLocale);
-
-        return $localizedUrls;
     }
 
     /**
