@@ -302,13 +302,6 @@ interface ContentMapperInterface
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 
     /**
-     * TRUE dont rename pages on save
-     * @param boolean $noRenamingFlag
-     * @return $this
-     */
-    public function setNoRenamingFlag($noRenamingFlag);
-
-    /**
      * TRUE ignores mandatory in save
      * @param bool $ignoreMandatoryFlag
      * @return $this

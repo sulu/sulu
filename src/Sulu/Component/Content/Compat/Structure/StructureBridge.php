@@ -43,7 +43,7 @@ class StructureBridge implements StructureInterface
     /**
      * @var DocumentInspector
      */
-    private $inspector;
+    protected $inspector;
 
     /**
      * @var LegacyPropertyFactory
@@ -648,7 +648,7 @@ class StructureBridge implements StructureInterface
         ));
     }
 
-    private function getDocument()
+    protected function getDocument()
     {
         if (!$this->document) {
             throw new \RuntimeException(

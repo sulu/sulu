@@ -15,6 +15,11 @@ use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber;
+use Sulu\Component\Webspace\Manager\WebspaceManager;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
+use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * This class infers information about documents, for example
@@ -26,6 +31,7 @@ class DocumentInspector extends BaseDocumentInspector
     private $structureFactory;
     private $namespaceRegistry;
     private $encoder;
+    private $webspaceManager;
 
     public function __construct(
         DocumentRegistry $documentRegistry,
@@ -34,7 +40,8 @@ class DocumentInspector extends BaseDocumentInspector
         ProxyFactory $proxyFactory,
         MetadataFactory $metadataFactory,
         StructureFactoryInterface $structureFactory,
-        PropertyEncoder $encoder
+        PropertyEncoder $encoder,
+        WebspaceManager $webspaceManager
     )
     {
         parent::__construct($documentRegistry, $pathSegmentRegistry, $proxyFactory);
@@ -42,6 +49,7 @@ class DocumentInspector extends BaseDocumentInspector
         $this->structureFactory = $structureFactory;
         $this->namespaceRegistry = $namespaceRegistry;
         $this->encoder = $encoder;
+        $this->webspaceManager = $webspaceManager;
     }
 
     /**
@@ -184,6 +192,56 @@ class DocumentInspector extends BaseDocumentInspector
         }
 
         return $shadowLocales;
+    }
+
+    /**
+     * Returns urls for given page for all locales in webspace
+     *
+     * TODO: Implement a router service instead of this.
+     *
+     * @param  Page          $page
+     * @param  NodeInterface $node
+     * @param  string        $webspaceKey
+     * @param  string        $segmentKey
+     * @return array
+     */
+    public function getLocalizedUrlsForPage(BasePageDocument $page)
+    {
+        $localizedUrls = array();
+        $webspaceKey = $this->getWebspace($page);
+        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
+        $node = $this->getNode($page);
+
+        $structure = $this->getStructure($page);
+        $rlpProperty = $structure->getPropertyByTagName('sulu.rlp');
+
+        foreach ($webspace->getAllLocalizations() as $localization) {
+            $locale = $localization->getLocalization();
+            $stageName = $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, $locale);
+
+            if (false === $node->hasProperty($stageName)) {
+                continue;
+            }
+
+            $stage = $node->getProperty($stageName);
+
+            if (WorkflowStage::PUBLISHED !== $stage->getValue()) {
+                continue;
+            }
+
+            $url = $node->getPropertyValueWithDefault(
+                $this->encoder->localizedContentName($rlpProperty->getName(), $locale),
+                null
+            );
+
+            if (null === $url) {
+                continue;
+            }
+
+            $localizedUrls[$locale] = $url;
+        }
+
+        return $localizedUrls;
     }
 
     /**

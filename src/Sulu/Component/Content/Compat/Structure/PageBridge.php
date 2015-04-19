@@ -24,7 +24,7 @@ class PageBridge extends StructureBridge implements PageInterface
 
     public function getUrls()
     {
-        return array();
+        return $this->inspector->getLocalizedUrlsForPage($this->getDocument());
     }
 
     /**

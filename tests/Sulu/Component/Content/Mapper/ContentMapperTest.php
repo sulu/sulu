@@ -3064,46 +3064,6 @@ class ContentMapperTest extends SuluTestCase
         $this->mapper->setIgnoreMandatoryFlag(true)->save($data, 'external-link', 'sulu_io', 'en', 1);
     }
 
-    public function testNoRenamingFlag()
-    {
-        $data = array(
-            'title' => 'News',
-            'external' => 'www.news.world'
-        );
-
-        $page = $this->mapper->save($data, 'external-link', 'sulu_io', 'de', 1);
-        $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/sulu_io/contents/news'));
-
-        $data = array('title' => 'Google', 'external' => 'www.google.at');
-        $this->mapper->setNoRenamingFlag(true)->save(
-            $data,
-            'external-link',
-            'sulu_io',
-            'de',
-            1,
-            true,
-            $page->getUuid()
-        );
-
-        $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/sulu_io/contents/news'));
-        $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/sulu_io/contents/google'));
-
-        $data = array('title' => 'Test', 'external' => 'www.test.at');
-        $this->mapper->setNoRenamingFlag(false)->save(
-            $data,
-            'external-link',
-            'sulu_io',
-            'de',
-            1,
-            true,
-            $page->getUuid()
-        );
-
-        $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/sulu_io/contents/news'));
-        $this->assertFalse($this->sessionManager->getSession()->nodeExists('/cmf/sulu_io/contents/google'));
-        $this->assertTrue($this->sessionManager->getSession()->nodeExists('/cmf/sulu_io/contents/test'));
-    }
-
     public function testSaveInvalidResourceLocator()
     {
         $data = array(
