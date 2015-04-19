@@ -1839,8 +1839,9 @@ class ContentMapperTest extends SuluTestCase
 
         $this->setExpectedException(
             '\Sulu\Component\Content\Exception\MandatoryPropertyException',
-            'Data for mandatory property blog in template mandatory not found'
+            'Property "mandatory" in structure "mandatory" is required but no value was given. Loaded from "/home/daniel/www/sulu-io/sulu/tests/app/Resources/pages/mandatory.xml'
         );
+
         $this->mapper->save($data, 'mandatory', 'sulu_io', 'de', 1);
     }
 

@@ -29,6 +29,7 @@ use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Document\Behavior\LocalizedContentBehavior;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Content\Document\LocalizationState;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
 
 class ContentSubscriber extends AbstractMappingSubscriber
 {
@@ -216,7 +217,19 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
             $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $realProperty = $propertyContainer->getProperty($propertyName);
-            $legacyProperty->setValue($realProperty->getValue());
+
+            $value = $realProperty->getValue();
+
+            if ($structureProperty->isRequired() && empty($value)) {
+                throw new MandatoryPropertyException(sprintf(
+                    'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
+                    $propertyName,
+                    $structure->getName(),
+                    $structure->resource
+                ));
+            }
+
+            $legacyProperty->setValue($value);
 
             $contentType->write(
                 $node,
