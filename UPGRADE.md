@@ -9,7 +9,7 @@ know you have only added collections in only one language you can use following 
 
 ```sql
 UPDATE `me_collection_meta` SET `locale` = 'de';
-``
+```
 
 Due to this it is possible that one collection has multiple metadata for one language. You have to remove this
 duplicates by hand. For example one collection should have only one meta for the language `de`.
