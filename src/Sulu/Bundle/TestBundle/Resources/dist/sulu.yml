@@ -49,10 +49,6 @@ sulu_core:
                      path: "%kernel.root_dir%/../../../CoreBundle/Content/templates"
                      internal: true
                      type: "page"
-                 sulu_2:
-                     path: "%kernel.root_dir%/../../src/Sulu/Bundle/CoreBundle/Content/templates"
-                     internal: true
-                     type: "page"
     webspace: ~
     locales: [ "en", "de" ]
 

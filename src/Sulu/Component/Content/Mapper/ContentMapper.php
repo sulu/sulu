@@ -14,11 +14,9 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Jackalope\Query\Row;
 use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Util\PathHelper;
-use Sulu\Bundle\ContentBundle\Document\PageDocument;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\BreadcrumbItem;
@@ -35,13 +33,11 @@ use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
-use Sulu\Component\Content\Document\Property\PropertyInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\ExtensionManager;
 use Sulu\Component\Content\Form\Exception\InvalidFormException;
-use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
@@ -99,38 +95,10 @@ class ContentMapper implements ContentMapperInterface
     private $eventDispatcher;
 
     /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
-
-    /**
      * namespace of translation
      * @var string
      */
     private $languageNamespace;
-
-    /**
-     * prefix for internal properties
-     * @var string
-     */
-    private $internalPrefix;
-
-    /**
-     * default language of translation
-     * @var string
-     */
-    private $defaultLanguage;
-
-    /**
-     * default template
-     * @var string[]
-     */
-    private $defaultTemplates;
-
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
 
     /**
      * @var PathCleanupInterface
@@ -224,16 +192,11 @@ class ContentMapper implements ContentMapperInterface
         ContentTypeManagerInterface $contentTypeManager,
         SessionManagerInterface $sessionManager,
         EventDispatcherInterface $eventDispatcher,
-        LocalizationFinderInterface $localizationFinder,
         PathCleanupInterface $cleaner,
         TemplateResolver $templateResolver,
         SuluNodeHelper $nodeHelper,
         RlpStrategyInterface $strategy,
-        $defaultLanguage,
-        $defaultTemplates,
-        $languageNamespace,
-        $internalPrefix,
-        $stopwatch = null
+        $languageNamespace
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -246,19 +209,12 @@ class ContentMapper implements ContentMapperInterface
         $this->encoder = $encoder;
 
         // deprecated
-        $this->localizationFinder = $localizationFinder;
         $this->eventDispatcher = $eventDispatcher;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->defaultTemplates = $defaultTemplates;
         $this->languageNamespace = $languageNamespace;
-        $this->internalPrefix = $internalPrefix;
         $this->cleaner = $cleaner;
         $this->templateResolver = $templateResolver;
         $this->nodeHelper = $nodeHelper;
         $this->strategy = $strategy;
-
-        // optional
-        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -313,7 +269,6 @@ class ContentMapper implements ContentMapperInterface
 
         if ($uuid) {
             $document = $this->documentManager->find($uuid, $locale, array('type' => $documentAlias));
-
         } else {
             $document = $this->documentManager->create($documentAlias);
         }
@@ -342,7 +297,6 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $options = array();
-
 
         if ($document instanceof WebspaceBehavior) {
             $options['webspace_key'] = $webspaceKey;
@@ -484,7 +438,7 @@ class ContentMapper implements ContentMapperInterface
 
         $children = $parent->getChildren($parent);
         $children = $this->documentsToStructureCollection($children->toArray(), array(
-            'exclude_ghost' => $excludeGhosts
+            'exclude_ghost' => $excludeGhosts,
         ));
 
         if ($flat) {
@@ -513,7 +467,7 @@ class ContentMapper implements ContentMapperInterface
     public function load($uuid, $webspaceKey, $locale, $loadGhostContent = false)
     {
         $document = $this->documentManager->find($uuid, $locale, array(
-            'hydrate.load_ghost_content' => $loadGhostContent
+            'hydrate.load_ghost_content' => $loadGhostContent,
         ));
 
         return $this->documentToStructure($document);
@@ -592,7 +546,7 @@ class ContentMapper implements ContentMapperInterface
         $loadGhostContent = false
     ) {
         $webspaceChildren = $this->getContentDocument($webspaceKey, $locale, array(
-            'hydrate.load_ghost_content' => $loadGhostContent
+            'hydrate.load_ghost_content' => $loadGhostContent,
         ))->getChildren();
 
         $documents = $this->filterDocuments($webspaceChildren, $locale, array(
@@ -770,7 +724,7 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->documentManager->find($uuid, $locale);
         $this->documentManager->reorder($document, $beforeUuid);
         $this->documentManager->persist($document, $locale, array(
-            'blame.user' => $userId
+            'blame.user' => $userId,
         ));
 
         return $this->documentToStructure($document);
@@ -896,7 +850,7 @@ class ContentMapper implements ContentMapperInterface
             $document->setResourceSegment($newResourceLocator);
 
             $this->documentManager->persist($document, $locale, array(
-                'blame.user' => $userId
+                'blame.user' => $userId,
             ));
         }
 
@@ -1244,7 +1198,7 @@ class ContentMapper implements ContentMapperInterface
     private function loadDocument($pathOrUuid, $locale, $options)
     {
         $document = $this->documentManager->find($pathOrUuid, $locale, array(
-            'hydrate.load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true
+            'hydrate.load_ghost_content' => isset($options['load_ghost_content']) ? $options['load_ghost_content'] : true,
         ));
 
         if ($this->optionsShouldExcludeDocument($document, $options)) {
