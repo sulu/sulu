@@ -11,27 +11,25 @@
 namespace Sulu\Bundle\CategoryBundle\Category;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\DBAL\DBALException;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
 use Sulu\Bundle\CategoryBundle\Api\Category as CategoryWrapper;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Bundle\CategoryBundle\Event\CategoryEvents;
 use Sulu\Bundle\CategoryBundle\Event\CategoryDeleteEvent;
-use Sulu\Component\Security\UserRepositoryInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sulu\Bundle\CategoryBundle\Category\Exception\KeyNotUniqueException;
 
 /**
  * Responsible for centralized Category Management
- * @package Sulu\Bundle\CategoryBundle\Category
  */
 class CategoryManager implements CategoryManagerInterface
 {
-    protected static $categoryEntityName = 'SuluCategoryBundle:Category';
+    public static $categoryEntityName = 'SuluCategoryBundle:Category';
 
-    protected static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
+    public static $catTranslationEntityName = 'SuluCategoryBundle:CategoryTranslation';
 
     /**
      * @var ObjectManager
@@ -206,6 +204,16 @@ class CategoryManager implements CategoryManagerInterface
     }
 
     /**
+     * Returns a category with a given key
+     * @param string $key the key of the category
+     * @return CategoryEntity
+     */
+    public function findByKey($key)
+    {
+        return $this->categoryRepository->findCategoryByKey($key);
+    }
+
+    /**
      * Returns the categories with the given ids
      * @param array $ids
      * @return CategoryEntity[]
@@ -231,6 +239,8 @@ class CategoryManager implements CategoryManagerInterface
                 return $this->createCategory($data, $this->getUser($userId));
             }
         } catch (\Doctrine\DBAL\DBALException $e) {
+            // FIXME: This hides any exceptions thrown by DBAL. 
+            //        See https://github.com/sulu-cmf/sulu/issues/871
             throw new KeyNotUniqueException();
         }
     }
@@ -295,7 +305,7 @@ class CategoryManager implements CategoryManagerInterface
     /**
      * Returns a user for a given user-id
      * @param $userId
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     private function getUser($userId)
     {
@@ -313,8 +323,6 @@ class CategoryManager implements CategoryManagerInterface
         $categoryEntity = new CategoryEntity();
         $categoryEntity->setCreator($user);
         $categoryEntity->setChanger($user);
-        $categoryEntity->setCreated(new \DateTime());
-        $categoryEntity->setChanged(new \DateTime());
 
         $categoryWrapper = $this->getApiObject($categoryEntity, $data['locale']);
         $categoryWrapper->setName($data['name']);
@@ -350,7 +358,6 @@ class CategoryManager implements CategoryManagerInterface
             throw new EntityNotFoundException($categoryEntity, $data['id']);
         }
 
-        $categoryEntity->setChanged(new \DateTime());
         $categoryEntity->setChanger($user);
 
         $categoryWrapper = $this->getApiObject($categoryEntity, $data['locale']);

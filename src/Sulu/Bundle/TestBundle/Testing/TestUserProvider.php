@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Entity\TestContact;
@@ -31,28 +31,53 @@ class TestUserProvider implements UserProviderInterface
      */
     private $user;
 
-    public function __construct(ObjectManager $em)
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $em)
     {
-        $this->user = $em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')->findOneByUsername('test');
-        if (!$this->user) {
+        $this->entityManager = $em;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUser()
+    {
+        if ($this->user) {
+            return $this->user;
+        }
+
+        $user = $this->entityManager
+            ->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
+            ->findOneByUsername('test');
+
+        if (!$user) {
             $contact = new Contact();
             $contact->setFirstName('Max');
             $contact->setLastName('Mustermann');
-            $contact->setCreated(new \DateTime());
-            $contact->setChanged(new \DateTime());
-            $em->persist($contact);
+            $this->entityManager->persist($contact);
 
-            $this->user = new User();
-            $this->setCredentials();
-            $this->user->setSalt('');
-            $this->user->setLocale('en');
-            $this->user->setContact($contact);
-            $em->persist($this->user);
+            $user = new User();
+            $this->setCredentials($user);
+            $user->setSalt('');
+            $user->setLocale('en');
+            $user->setContact($contact);
+            $this->entityManager->persist($user);
         } else {
-            $this->setCredentials();
+            $this->setCredentials($user);
         }
 
-        $em->flush();
+        $this->entityManager->flush();
+
+        $this->user = $user;
+
+        return $this->user;
     }
 
     /**
@@ -72,7 +97,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        return $this->user;
+        return $this->getUser();
     }
 
     /**
@@ -90,7 +115,7 @@ class TestUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        return $this->user;
+        return $this->getUser();
     }
 
     /**
@@ -108,10 +133,10 @@ class TestUserProvider implements UserProviderInterface
     /**
      * Sets the standard credentials for the user
      */
-    private function setCredentials()
+    private function setCredentials(UserInterface $user)
     {
-        $this->user->setUsername('test');
-        $this->user->setPassword('test');
-        $this->user->setSalt('');
+        $user->setUsername('test');
+        $user->setPassword('test');
+        $user->setSalt('');
     }
 }

@@ -216,7 +216,7 @@
             </trans-unit>
             <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
                 <source>smart-content.choose-data-source.cancel</source>
-                <target>Abbrechenk</target>
+                <target>Abbrechen</target>
             </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
@@ -320,7 +320,7 @@
             </trans-unit>
             <trans-unit id="abaaaaa371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.type.internal-link.title">
                 <source>sulu.content.form.settings.type.internal-link.title</source>
-                <target>Titel</target>
+                <target>Link Titel</target>
             </trans-unit>
             <trans-unit id="abaaaaa371239fbed4a73a4123dfdf011" resname="sulu.content.form.settings.type.internal-link.link">
                 <source>sulu.content.form.settings.type.internal-link.link</source>

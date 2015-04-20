@@ -18,13 +18,14 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionPublishLanguage;
 use Sulu\Bundle\MediaBundle\Entity\Media as Entity;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Sulu\Component\Rest\ApiWrapper;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -60,9 +61,19 @@ class Media extends ApiWrapper
     protected $version;
 
     /**
+     * @var array
+     */
+    protected $additionalVersionData = array();
+
+    /**
      * @var FileVersion
      */
     protected $fileVersion = null;
+
+    /**
+     * @var File
+     */
+    protected $file = null;
 
     public function __construct(Entity $media, $locale, $version = null)
     {
@@ -242,6 +253,24 @@ class Media extends ApiWrapper
     }
 
     /**
+     * @return array
+     */
+    public function getAdditionalVersionData()
+    {
+        return $this->additionalVersionData;
+    }
+
+    /**
+     * @param array $additionalVersionData
+     * @return $this
+     */
+    public function setAdditionalVersionData($additionalVersionData)
+    {
+        $this->additionalVersionData = $additionalVersionData;
+        return $this;
+    }
+
+    /**
      * @VirtualProperty
      * @SerializedName("versions")
      * @return array
@@ -249,13 +278,17 @@ class Media extends ApiWrapper
     public function getVersions()
     {
         $versions = array();
-        /** @var File $file */
-        foreach ($this->entity->getFiles() as $file) {
-            /** @var FileVersion $fileVersion */
-            foreach ($file->getFileVersions() as $fileVersion) {
-                $versions[] = $fileVersion->getVersion();
+        /** @var FileVersion $fileVersion */
+        foreach ($this->getFile()->getFileVersions() as $fileVersion) {
+            $versionData = array();
+            if (isset($this->additionalVersionData[$fileVersion->getVersion()])) {
+                $versionData = $this->additionalVersionData[$fileVersion->getVersion()];
             }
-            break; // currently only one file per media exists
+            $versionData['version'] = $fileVersion->getVersion();
+            $versionData['name'] = $fileVersion->getName();
+            $versionData['created'] = $fileVersion->getCreated();
+            $versionData['changed'] = $fileVersion->getChanged();
+            $versions[$fileVersion->getVersion()] = $versionData;
         }
 
         return $versions;
@@ -483,20 +516,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param DateTime|string $changed
-     * @return $this
-     */
-    public function setChanged($changed)
-    {
-        if (is_string($changed)) {
-            $changed = new \DateTime($changed);
-        }
-        $this->entity->setChanged($changed);
-
-        return $this;
-    }
-
-    /**
      * @VirtualProperty
      * @SerializedName("changed")
      * @return string
@@ -530,20 +549,6 @@ class Media extends ApiWrapper
         }
 
         return null;
-    }
-
-    /**
-     * @param DateTime|string $created
-     * @return $this
-     */
-    public function setCreated($created)
-    {
-        if (is_string($created)) {
-            $created = new \DateTime($created);
-        }
-        $this->entity->setCreated($created);
-
-        return $this;
     }
 
     /**
@@ -654,7 +659,7 @@ class Media extends ApiWrapper
      * @return FileVersion
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
      */
-    private function getFileVersion()
+    public function getFileVersion()
     {
         if ($this->fileVersion !== null) {
             return $this->fileVersion;
@@ -678,6 +683,26 @@ class Media extends ApiWrapper
             break; // currently only one file per media exists
         }
         throw new FileVersionNotFoundException($this->entity->getId(), $this->version);
+    }
+
+    /**
+     * @return File
+     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException
+     */
+    public function getFile()
+    {
+        if ($this->file !== null) {
+            return $this->file;
+        }
+
+        /** @var File $file */
+        foreach ($this->entity->getFiles() as $file) {
+            // currently only one file per media exists
+            $this->file = $file;
+            return $this->file;
+        }
+
+        throw new FileNotFoundException($this->entity->getId(), $this->version);
     }
 
     /**
@@ -709,15 +734,13 @@ class Media extends ApiWrapper
                 $this->getFileVersion()->addMeta($meta);
 
                 return $meta;
-            } elseif (!$metaCollection->isEmpty()) {
-                // return first when create false
-                return $metaCollection->first();
             }
-        } else {
-            // return exists
-            return $metaCollectionFiltered->first();
+
+            // return first when create false
+            return $this->getFileVersion()->getDefaultMeta();
         }
 
-        return null;
+        // return exists
+        return $metaCollectionFiltered->first();
     }
 }

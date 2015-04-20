@@ -234,8 +234,6 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
         }
 
         $collection = new Collection();
-        $collection->setCreated(new \DateTime());
-        $collection->setChanged(new \DateTime());
         $collection->setType($this->getOrCreateCollectionType('Default'));
         $collectionMeta = new CollectionMeta();
         $collectionMeta->setTitle($name);

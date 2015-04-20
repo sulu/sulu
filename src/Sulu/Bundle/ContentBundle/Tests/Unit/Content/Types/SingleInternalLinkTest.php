@@ -10,11 +10,10 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\ContentBundle\Content\Types\SingleInternalLink;
 use Sulu\Component\Content\PropertyInterface;
 
-class SingleInternalLinkTest extends ProphecyTestCase
+class SingleInternalLinkTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var PropertyInterface

@@ -2,10 +2,12 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 
 /**
  * User
@@ -15,7 +17,7 @@ use JMS\Serializer\Annotation\SerializedName;
 class User extends BaseUser
 {
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @var Contact
      * @Expose
      */
     private $contact;
@@ -38,12 +40,22 @@ class User extends BaseUser
     private $userSettings;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->userRoles = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
+        $this->userSettings = new ArrayCollection();
+    }
+
+    /**
      * Add userRoles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @param UserRole $userRoles
      * @return User
      */
-    public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
+    public function addUserRole(UserRole $userRoles)
     {
         $this->userRoles[] = $userRoles;
 
@@ -53,9 +65,9 @@ class User extends BaseUser
     /**
      * Remove userRoles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @param UserRole $userRoles
      */
-    public function removeUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
+    public function removeUserRole(UserRole $userRoles)
     {
         $this->userRoles->removeElement($userRoles);
     }
@@ -63,7 +75,7 @@ class User extends BaseUser
     /**
      * Get userRoles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUserRoles()
     {
@@ -71,12 +83,27 @@ class User extends BaseUser
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getRoles()
+    {
+        $roles = parent::getRoles();
+
+        foreach ($this->getUserRoles() as $userRole) {
+            /** @var UserRole $userRole */
+            $roles[] = $userRole->getRole()->getIdentifier();
+        }
+
+        return $roles;
+    }
+
+    /**
      * Add userGroups
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     * @param UserGroup $userGroups
      * @return User
      */
-    public function addUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    public function addUserGroup(UserGroup $userGroups)
     {
         $this->userGroups[] = $userGroups;
 
@@ -86,16 +113,16 @@ class User extends BaseUser
     /**
      * Remove userGroups
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     * @param UserGroup $userGroups
      */
-    public function removeUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    public function removeUserGroup(UserGroup $userGroups)
     {
         $this->userGroups->removeElement($userGroups);
     }
 
     /**
      * Get userGroups
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUserGroups()
     {
@@ -105,10 +132,10 @@ class User extends BaseUser
     /**
      * Add userSettings
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings
+     * @param UserSetting $userSettings
      * @return User
      */
-    public function addUserSetting(\Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings)
+    public function addUserSetting(UserSetting $userSettings)
     {
         $this->userSettings[] = $userSettings;
 
@@ -118,9 +145,9 @@ class User extends BaseUser
     /**
      * Remove userSettings
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings
+     * @param UserSetting $userSettings
      */
-    public function removeUserSetting(\Sulu\Bundle\SecurityBundle\Entity\UserSetting $userSettings)
+    public function removeUserSetting(UserSetting $userSettings)
     {
         $this->userSettings->removeElement($userSettings);
     }
@@ -138,10 +165,10 @@ class User extends BaseUser
     /**
      * Set contact
      *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Contact $contact
+     * @param Contact $contact
      * @return User
      */
-    public function setContact(\Sulu\Bundle\ContactBundle\Entity\Contact $contact = null)
+    public function setContact(Contact $contact = null)
     {
         $this->contact = $contact;
 
@@ -151,7 +178,7 @@ class User extends BaseUser
     /**
      * Get contact
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Contact
+     * @return Contact
      */
     public function getContact()
     {
@@ -167,15 +194,4 @@ class User extends BaseUser
     {
         return $this->getContact()->getFullName();
     }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->userRoles = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userGroups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->userSettings = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
 }

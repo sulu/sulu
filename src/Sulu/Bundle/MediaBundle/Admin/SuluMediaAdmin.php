@@ -11,10 +11,10 @@
 namespace Sulu\Bundle\MediaBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
+use Sulu\Bundle\AdminBundle\Navigation\DataNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
-use Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SuluMediaAdmin extends Admin
 {
@@ -34,8 +34,17 @@ class SuluMediaAdmin extends Admin
         $media->setIcon('image');
 
         if ($this->securityChecker->hasPermission('sulu.media.collections', 'view')) {
-            $collections = new NavigationItem('navigation.media.collections', $media);
-            $collections->setAction('media/collections');
+            $collections = new DataNavigationItem('navigation.media.collections', '/admin/api/collections?sortBy=title', $media);
+            $collections->setId('collections-edit');
+            $collections->setAction('media/collections/root');
+            $collections->setInstanceName('collections');
+            $collections->setDataNameKey('title');
+            $collections->setDataResultKey('collections');
+            $collections->setShowAddButton(true);
+            $collections->setTitleTranslationKey('navigation.media.collections');
+            $collections->setNoDataTranslationKey('');
+            $collections->setAddButtonTranslationKey('navigation.media.collections.add');
+            $collections->setSearchTranslationKey('navigation.media.collections.search');
         }
 
         if ($media->hasChildren()) {

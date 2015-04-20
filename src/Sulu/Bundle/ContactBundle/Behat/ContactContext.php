@@ -58,8 +58,6 @@ class ContactContext extends BaseContext implements SnippetAcceptingContext
         $email->setEmailType($type);
 
         $contact->addEmail($email);
-        $contact->setCreated(new \DateTime());
-        $contact->setChanged(new \DateTime());
         $contact->setDisabled(0);
         $contact->setFormOfAddress(0);
 

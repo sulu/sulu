@@ -11,11 +11,12 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * CollectionInterface
  */
-interface CollectionInterface
+interface CollectionInterface extends AuditableInterface
 {
     /**
      * Get id
@@ -27,30 +28,30 @@ interface CollectionInterface
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return CollectionInterface
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null);
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null);
 
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger();
 
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return CollectionInterface
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null);
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null);
 
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator();
 
@@ -115,27 +116,11 @@ interface CollectionInterface
     public function getDepth();
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return CollectionInterface
-     */
-    public function setCreated($created);
-
-    /**
      * Get created
      *
      * @return \DateTime
      */
     public function getCreated();
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return CollectionInterface
-     */
-    public function setChanged($changed);
 
     /**
      * Get changed
@@ -173,4 +158,9 @@ interface CollectionInterface
      * @return \Sulu\Bundle\MediaBundle\Entity\CollectionType
      */
     public function getType();
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $children
+     */
+    public function setChildren($children);
 }

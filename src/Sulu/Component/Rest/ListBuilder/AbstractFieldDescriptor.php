@@ -83,6 +83,13 @@ abstract class AbstractFieldDescriptor
      */
     private $editable;
 
+    /**
+     * The css class of the column
+     * @var string
+     * @Expose
+     */
+    private $class;
+
     public function __construct(
         $name,
         $translation = null,
@@ -92,7 +99,8 @@ abstract class AbstractFieldDescriptor
         $width = '',
         $minWidth = '',
         $sortable = true,
-        $editable = false
+        $editable = false,
+        $cssClass = ''
     )
     {
         $this->name = $name;
@@ -104,6 +112,7 @@ abstract class AbstractFieldDescriptor
         $this->minWidth = $minWidth;
         $this->editable = $editable;
         $this->translation = $translation == null ? $name : $translation;
+        $this->class= $cssClass;
     }
 
     /**
@@ -181,5 +190,13 @@ abstract class AbstractFieldDescriptor
     public function getMinWidth()
     {
         return $this->minWidth;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
     }
 }

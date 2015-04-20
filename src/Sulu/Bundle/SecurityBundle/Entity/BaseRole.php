@@ -10,12 +10,15 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Component\Security\Core\Role\Role;
+
 /**
  * BaseRole
  */
-abstract class BaseRole implements RoleInterface
+abstract class BaseRole extends Role implements RoleInterface
 {
-
     /**
      * @var string
      */
@@ -42,19 +45,21 @@ abstract class BaseRole implements RoleInterface
     private $id;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var UserInterface
      */
     private $creator;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\SecurityType
+     * @var SecurityType
      */
     private $securityType;
+
+    public function __construct() {}
 
     /**
      * Set name
@@ -77,6 +82,14 @@ abstract class BaseRole implements RoleInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRole()
+    {
+        return 'SULU_ROLE_' . strtoupper($this->name);
     }
 
     /**
@@ -103,19 +116,6 @@ abstract class BaseRole implements RoleInterface
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return BaseRole
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -123,19 +123,6 @@ abstract class BaseRole implements RoleInterface
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return BaseRole
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -161,10 +148,10 @@ abstract class BaseRole implements RoleInterface
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param UserInterface $changer
      * @return BaseRole
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -174,7 +161,7 @@ abstract class BaseRole implements RoleInterface
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -184,10 +171,10 @@ abstract class BaseRole implements RoleInterface
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param UserInterface $creator
      * @return BaseRole
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -197,7 +184,7 @@ abstract class BaseRole implements RoleInterface
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getCreator()
     {
@@ -207,10 +194,10 @@ abstract class BaseRole implements RoleInterface
     /**
      * Set securityType
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType
+     * @param SecurityType $securityType
      * @return BaseRole
      */
-    public function setSecurityType(\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null)
+    public function setSecurityType(SecurityType $securityType = null)
     {
         $this->securityType = $securityType;
 
@@ -220,10 +207,18 @@ abstract class BaseRole implements RoleInterface
     /**
      * Get securityType
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\SecurityType
+     * @return SecurityType
      */
     public function getSecurityType()
     {
         return $this->securityType;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier()
+    {
+        return 'SULU_ROLE_' . strtoupper($this->getName());
     }
 }

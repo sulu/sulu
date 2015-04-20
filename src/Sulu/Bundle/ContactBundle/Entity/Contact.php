@@ -15,13 +15,13 @@ use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Accessor;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Contact
  */
-class Contact extends ApiEntity
+class Contact extends ApiEntity implements AuditableInterface
 {
-
     /**
      * @var string
      */
@@ -74,18 +74,12 @@ class Contact extends ApiEntity
     private $locales;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     * @Exclude
-     */
-    private $activities;
-
-    /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $creator;
 
@@ -182,11 +176,6 @@ class Contact extends ApiEntity
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     */
-    private $assignedActivities;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
      * @Exclude
      */
     private $contactAddresses;
@@ -202,12 +191,21 @@ class Contact extends ApiEntity
     private $categories;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $urls;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $bankAccounts;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->locales = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
         $this->notes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->urls = new \Doctrine\Common\Collections\ArrayCollection();
@@ -386,19 +384,6 @@ class Contact extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Contact
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -406,19 +391,6 @@ class Contact extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Contact
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -475,45 +447,12 @@ class Contact extends ApiEntity
     }
 
     /**
-     * Add activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     * @return Contact
-     */
-    public function addActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities[] = $activities;
-
-        return $this;
-    }
-
-    /**
-     * Remove activities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $activities
-     */
-    public function removeActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $activities)
-    {
-        $this->activities->removeElement($activities);
-    }
-
-    /**
-     * Get activities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActivities()
-    {
-        return $this->activities;
-    }
-
-    /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return Contact
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -523,7 +462,7 @@ class Contact extends ApiEntity
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {
@@ -533,10 +472,10 @@ class Contact extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return Contact
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -546,7 +485,7 @@ class Contact extends ApiEntity
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {
@@ -699,11 +638,6 @@ class Contact extends ApiEntity
     {
         return $this->faxes;
     }
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $urls;
 
     /**
      * Add urls
@@ -1136,39 +1070,6 @@ class Contact extends ApiEntity
     }
 
     /**
-     * Add assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     * @return Contact
-     */
-    public function addAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities[] = $assignedActivities;
-
-        return $this;
-    }
-
-    /**
-     * Remove assignedActivities
-     *
-     * @param \Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities
-     */
-    public function removeAssignedActivitie(\Sulu\Bundle\ContactBundle\Entity\Activity $assignedActivities)
-    {
-        $this->assignedActivities->removeElement($assignedActivities);
-    }
-
-    /**
-     * Get assignedActivities
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAssignedActivities()
-    {
-        return $this->assignedActivities;
-    }
-
-    /**
      * Returns the main address
      *
      * @return mixed
@@ -1250,5 +1151,84 @@ class Contact extends ApiEntity
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    /**
+     * Add contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     * @return Contact
+     */
+    public function addContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses[] = $contactAddresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove contactAddresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses
+     */
+    public function removeContactAddress(\Sulu\Bundle\ContactBundle\Entity\ContactAddress $contactAddresses)
+    {
+        $this->contactAddresses->removeElement($contactAddresses);
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     * @return Contact
+     */
+    public function addCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \Sulu\Bundle\CategoryBundle\Entity\Category $categories
+     */
+    public function removeCategory(\Sulu\Bundle\CategoryBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Add bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     * @return Contact
+     */
+    public function addBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts[] = $bankAccounts;
+
+        return $this;
+    }
+
+    /**
+     * Remove bankAccounts
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts
+     */
+    public function removeBankAccount(\Sulu\Bundle\ContactBundle\Entity\BankAccount $bankAccounts)
+    {
+        $this->bankAccounts->removeElement($bankAccounts);
+    }
+
+    /**
+     * Get bankAccounts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBankAccounts()
+    {
+        return $this->bankAccounts;
     }
 }

@@ -11,17 +11,16 @@
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 
-class DefaultMediaManagerTest extends ProphecyTestCase
+class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DefaultMediaManager
+     * @var MediaManager
      */
     private $mediaManager;
 
@@ -65,20 +64,26 @@ class DefaultMediaManagerTest extends ProphecyTestCase
      */
     private $tagManager;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $typeManager;
+
     public function setUp()
     {
         parent::setUp();
 
         $this->mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface');
         $this->collectionRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface');
-        $this->userRepository = $this->prophesize('Sulu\Component\Security\UserRepositoryInterface');
+        $this->userRepository = $this->prophesize('Sulu\Component\Security\Authentication\UserRepositoryInterface');
         $this->em = $this->prophesize('Doctrine\ORM\EntityManager');
         $this->storage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
         $this->validator = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface');
         $this->formatManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface');
         $this->tagManager = $this->prophesize('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
+        $this->typeManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface');
 
-        $this->mediaManager = new DefaultMediaManager(
+        $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),
@@ -87,10 +92,9 @@ class DefaultMediaManagerTest extends ProphecyTestCase
             $this->validator->reveal(),
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
+            $this->typeManager->reveal(),
             '/',
-            0,
-            array(),
-            array()
+            0
         );
     }
 

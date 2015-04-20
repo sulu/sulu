@@ -55,8 +55,6 @@ class CategoryControllerTest extends SuluTestCase
         /* First Category
         -------------------------------------*/
         $category = new Category();
-        $category->setCreated(new \DateTime());
-        $category->setChanged(new \DateTime());
         $category->setKey('first-category-key');
 
         // name for first category
@@ -81,8 +79,6 @@ class CategoryControllerTest extends SuluTestCase
         /* Second Category
         -------------------------------------*/
         $category2 = new Category();
-        $category2->setCreated(new \DateTime());
-        $category2->setChanged(new \DateTime());
         $category2->setKey('second-category-key');
         $this->category2 = $category2;
 
@@ -113,8 +109,6 @@ class CategoryControllerTest extends SuluTestCase
         /* Third Category (child of first)
         -------------------------------------*/
         $category3 = new Category();
-        $category3->setCreated(new \DateTime());
-        $category3->setChanged(new \DateTime());
         $category3->setParent($category);
         $this->category3 = $category3;
 
@@ -138,8 +132,6 @@ class CategoryControllerTest extends SuluTestCase
         /* Fourth Category (child of third)
         -------------------------------------*/
         $category4 = new Category();
-        $category4->setCreated(new \DateTime());
-        $category4->setChanged(new \DateTime());
         $category4->setParent($category3);
         $this->category4 = $category4;
 

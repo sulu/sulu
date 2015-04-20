@@ -10,13 +10,12 @@
 
 namespace Sulu\Bundle\ContentBundle\Tests\Unit\Content\Types\InternalLink;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Symfony\Component\HttpKernel\Log\NullLogger;
 
-class InternalLinksContainerTest extends ProphecyTestCase
+class InternalLinksContainerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var InternalLinksContainer

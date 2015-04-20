@@ -11,9 +11,8 @@
 namespace Sulu\Component\Websocket;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Prophecy\PhpUnit\ProphecyTestCase;
 
-class AbstractWebsocketAppTest extends ProphecyTestCase
+class AbstractWebsocketAppTest extends \PHPUnit_Framework_TestCase
 {
     public function testOpen()
     {

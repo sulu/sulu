@@ -10,6 +10,10 @@
                 <source>navigation.media.collections</source>
                 <target>Collections</target>
             </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
+                <source>navigation.media.collections.search</source>
+                <target>Filter collections ...</target>
+            </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
                 <target>Files</target>
@@ -109,6 +113,50 @@
             <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
                 <source>labels.success.media-move-desc</source>
                 <target>Media successfully moved.</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
+                <source>labels.success.collection-move-desc</source>
+                <target>Collection successfully moved.</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
+                <source>sulu.media.edit.loading</source>
+                <target>Media loading</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
+                <source>sulu.collection.move</source>
+                <target>Move collection</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
+                <source>navigation.media.collections.empty</source>
+                <target>No sub-collections exist</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
+                <source>navigation.media.collections.add</source>
+                <target>Add collection</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22260" resname="sulu.collection.move.overlay-title">
+                <source>sulu.collection.move.overlay-title</source>
+                <target>Move collection</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-images">
+                <source>media-selection.overlay.all-images</source>
+                <target>All Images</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
+                <source>sulu.media.all</source>
+                <target>All medias</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
+                <source>sulu.media.history</source>
+                <target>History</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22259" resname="sulu.media.version">
+                <source>sulu.media.version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22260" resname="sulu.media.version.active">
+                <source>sulu.media.version.active</source>
+                <target>active</target>
             </trans-unit>
         </body>
     </file>

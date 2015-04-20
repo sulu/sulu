@@ -10,12 +10,11 @@
 
 namespace Sulu\Component\HttpCache\EventListener;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\HttpCache\EventSubscriber\KernelSubscriber;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\EventSubscriber\FlushSubscriber;
 
-class FlushSubscriberTest extends ProphecyTestCase
+class FlushSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var KernelSubscriber

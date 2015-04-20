@@ -124,13 +124,9 @@ class MediaControllerTest extends SuluTestCase
 
         // create some tags
         $tag1 = new Tag();
-        $tag1->setCreated(new DateTime());
-        $tag1->setChanged(new DateTime());
         $tag1->setName('Tag 1');
 
         $tag2 = new Tag();
-        $tag2->setCreated(new DateTime());
-        $tag2->setChanged(new DateTime());
         $tag2->setName('Tag 2');
 
         $this->em->persist($tag1);
@@ -145,22 +141,16 @@ class MediaControllerTest extends SuluTestCase
     protected function createMedia($name)
     {
         $media = new Media();
-        $media->setCreated(new DateTime());
-        $media->setChanged(new DateTime());
         $media->setType($this->imageType);
 
         // create file
         $file = new File();
         $file->setVersion(1);
-        $file->setCreated(new DateTime());
-        $file->setChanged(new DateTime());
         $file->setMedia($media);
 
         // create file version
         $fileVersion = new FileVersion();
         $fileVersion->setVersion(1);
-        $fileVersion->setCreated(new DateTime());
-        $fileVersion->setChanged(new DateTime());
         $fileVersion->setName($name . '.jpeg');
         $fileVersion->setMimeType('image/jpg');
         $fileVersion->setFile($file);
@@ -205,9 +195,6 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $this->collection->setStyle(json_encode($style));
-
-        $this->collection->setCreated(new DateTime());
-        $this->collection->setChanged(new DateTime());
 
         // Create Collection Type
         $this->collectionType = new CollectionType();
@@ -282,6 +269,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultTitle, $response->title);
         $this->assertEquals('2', $response->downloadCounter);
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
     }
 
     /**
@@ -536,6 +525,8 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals('photo.jpeg', $response->name);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
 
         $this->assertEquals(array(
             'en-gb'
@@ -661,6 +652,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
+        $this->assertCount(2, (array) $response->versions);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('New Image Title', $response->title);
         $this->assertEquals('New Image Description', $response->description);
@@ -710,9 +702,12 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($media->getId(), $response->id);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(1, $response->version);
+        $this->assertCount(1, (array) $response->versions);
         $this->assertEquals('en-gb', $response->locale);
         $this->assertEquals('Update Title', $response->title);
         $this->assertEquals('Update Description', $response->description);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
         $this->assertEquals(array(
             'en-gb'
         ), $response->contentLanguages);
@@ -759,6 +754,9 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals($this->mediaDefaultDescription, $response->description);
         $this->assertEquals($this->collection->getId(), $response->collection);
         $this->assertEquals(2, $response->version);
+        $this->assertCount(2, (array) $response->versions);
+        $this->assertNotEmpty($response->url);
+        $this->assertNotEmpty($response->thumbnails);
     }
 
     /**
@@ -877,9 +875,6 @@ class MediaControllerTest extends SuluTestCase
         );
 
         $destCollection->setStyle(json_encode($style));
-
-        $destCollection->setCreated(new DateTime());
-        $destCollection->setChanged(new DateTime());
         $destCollection->setType($this->collectionType);
         $destCollection->addMeta($this->collectionMeta);
 

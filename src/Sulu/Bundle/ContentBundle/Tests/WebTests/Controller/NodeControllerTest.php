@@ -39,8 +39,6 @@ class NodeControllerTest extends SuluTestCase
         $contact = new Contact();
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
         $this->em->persist($contact);
         $this->em->flush();
 
@@ -58,8 +56,6 @@ class NodeControllerTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
-        $role1->setChanged(new DateTime());
-        $role1->setCreated(new DateTime());
         $this->em->persist($role1);
         $this->em->flush();
 
@@ -87,29 +83,21 @@ class NodeControllerTest extends SuluTestCase
         $this->em->flush();
 
         $tag1 = new Tag();
-        $tag1->setChanged(new DateTime());
-        $tag1->setCreated(new DateTime());
         $tag1->setName('tag1');
         $this->em->persist($tag1);
         $this->em->flush();
 
         $tag2 = new Tag();
-        $tag2->setChanged(new DateTime());
-        $tag2->setCreated(new DateTime());
         $tag2->setName('tag2');
         $this->em->persist($tag2);
         $this->em->flush();
 
         $tag3 = new Tag();
-        $tag3->setChanged(new DateTime());
-        $tag3->setCreated(new DateTime());
         $tag3->setName('tag3');
         $this->em->persist($tag3);
         $this->em->flush();
 
         $tag4 = new Tag();
-        $tag4->setChanged(new DateTime());
-        $tag4->setCreated(new DateTime());
         $tag4->setName('tag4');
         $this->em->persist($tag4);
         $this->em->flush();
@@ -559,7 +547,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertTrue($items[1]->hasSub);
 
         // get subitems (remove /admin for test environment)
-        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
+        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children->href));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded->nodes;
@@ -571,7 +559,7 @@ class NodeControllerTest extends SuluTestCase
         $this->assertTrue($items[1]->hasSub);
 
         // get subitems (remove /admin for test environment)
-        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children));
+        $client->request('GET', str_replace('/admin', '', $items[1]->_links->children->href));
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $response = json_decode($client->getResponse()->getContent());
         $items = $response->_embedded->nodes;

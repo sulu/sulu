@@ -28,10 +28,10 @@ Feature: Manage snippets
             | winter | Penguin | {"color": "grey"} |
             | summer | Giraffe | {"color": "green"} |
             | winter | Snowman | {"color": "white"} |
-        And I am on "/admin/#snippet/snippets/de"
-        And I expect a data grid to appear
-        Then I expect to see "Penguin"
-        And I should see "Giraffe"
+        When I am on "/admin/#snippet/snippets/de"
+        And I wait for a data grid to appear
+        And I wait to see "Penguin"
+        Then I should see "Giraffe"
         And I should see "Snowman"
 
     Scenario: Edit snippet
@@ -39,8 +39,8 @@ Feature: Manage snippets
             | template | title | data |
             | winter | Penguin | {"color": "grey"} |
         And I am on "/admin/#snippet/snippets/de"
-        And I expect a data grid to appear
-        And I click the edit icon in the row containing "Penguin"
+        And I wait for a data grid to appear
+        When I click the edit icon in the row containing "Penguin"
         And I expect a form to appear
         And I expect to see "Penguin"
         And I fill in "title" with "Duck"
@@ -52,10 +52,10 @@ Feature: Manage snippets
             | template | title | data |
             | winter | Penguin | {"color": "grey"} |
         And I am on "/admin/#snippet/snippets/de"
-        And I expect a data grid to appear
-        And I click on the element "#snippet-list th .custom-checkbox input"
+        And I wait for a data grid to appear
+        When I click on the element "#snippet-list th .custom-checkbox input"
         And I click the trash icon
-        Then I expect a confirmation dialog to appear
+        And I expect a confirmation dialog to appear
         And I confirm
         And I wait a second
         Then I should not see "Penguin"
@@ -73,9 +73,9 @@ Feature: Manage snippets
         </property>
         """
         And I am on "/admin/#snippet/snippets/de"
-        And I expect a data grid to appear
+        And I wait for a data grid to appear
         And I wait a second
-        And I click the add icon
+        When I click the add icon
         And I expect a form to appear
         And I fill in "title" with "Cow"
         And I click the save icon

@@ -47,6 +47,15 @@ class TemplateController extends Controller
     }
 
     /**
+     * renders template for the media info-view
+     * @return Response
+     */
+    public function mediaVersionsAction()
+    {
+        return $this->render('SuluMediaBundle:Template:media-versions.html.twig');
+    }
+
+    /**
      * renders template for the new-collection-form
      * @return Response
      */
@@ -63,14 +72,4 @@ class TemplateController extends Controller
     {
         return $this->render('SuluMediaBundle:Template:media-multiple-edit.html.twig');
     }
-
-    /**
-     * renders template for the collection list
-     * @return Response
-     */
-    public function collectionListAction()
-    {
-        return $this->render('SuluMediaBundle:Template:collection-list.html.twig');
-    }
-
 }

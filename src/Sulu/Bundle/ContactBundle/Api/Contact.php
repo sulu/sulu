@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContactBundle\Api;
 
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Entity\Category as CategoryEntity;
-use Sulu\Bundle\ContactBundle\Entity\Activity as ActivityEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress as ContactAddressEntity;
 use Sulu\Bundle\ContactBundle\Entity\ContactLocale as ContactLocaleEntity;
 use Sulu\Bundle\ContactBundle\Entity\Email as EmailEntity;
@@ -20,11 +19,13 @@ use Sulu\Bundle\ContactBundle\Entity\Fax as FaxEntity;
 use Sulu\Bundle\ContactBundle\Entity\Note as NoteEntity;
 use Sulu\Bundle\ContactBundle\Entity\Phone as PhoneEntity;
 use Sulu\Bundle\ContactBundle\Entity\Url as UrlEntity;
+use Sulu\Bundle\ContactBundle\Entity\BankAccount as BankAccountEntity;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
+use Sulu\Bundle\TagBundle\Entity\Tag as TagEntity;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
-use Sulu\Component\Security\UserInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 use Hateoas\Configuration\Annotation\Relation;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
@@ -242,19 +243,6 @@ class Contact extends ApiWrapper
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Contact
-     */
-    public function setCreated($created)
-    {
-        $this->entity->setCreated($created);
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -265,19 +253,6 @@ class Contact extends ApiWrapper
     public function getCreated()
     {
         return $this->entity->getCreated();
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Contact
-     */
-    public function setChanged($changed)
-    {
-        $this->entity->setChanged($changed);
-
-        return $this;
     }
 
     /**
@@ -736,6 +711,27 @@ class Contact extends ApiWrapper
     }
 
     /**
+     * Get bank accounts
+     *
+     * @return array
+     * @VirtualProperty
+     * @SerializedName("bankAccounts")
+     * @Groups({"fullContact"})
+     */
+    public function getBankAccounts()
+    {
+        $bankAccounts = array();
+        if ($this->entity->getBankAccounts()) {
+            foreach ($this->entity->getBankAccounts() as $bankAccount) {
+                /** @var BankAccountEntity $bankAccount */
+                $bankAccounts[] = new BankAccount($bankAccount);
+            }
+        }
+
+        return $bankAccounts;
+    }
+
+    /**
      * Set newsletter
      *
      * @param boolean $newsletter
@@ -930,47 +926,6 @@ class Contact extends ApiWrapper
     public function getMainUrl()
     {
         return $this->entity->getMainUrl();
-    }
-
-    /**
-     * Add assignedActivities
-     *
-     * @param ActivityEntity $assignedActivities
-     * @return Contact
-     */
-    public function addAssignedActivitie(ActivityEntity $assignedActivities)
-    {
-        $this->entity->addAssignedActivitie($assignedActivities);
-    }
-
-    /**
-     * Remove assignedActivities
-     *
-     * @param ActivityEntity $assignedActivities
-     */
-    public function removeAssignedActivitie(ActivityEntity $assignedActivities)
-    {
-        $this->entity->removeAssignedActivitie($assignedActivities);
-    }
-
-    /**
-     * Get assignedActivities
-     *
-     * @return array
-     * @VirtualProperty
-     * @SerializedName("assignedActivities")
-     * @Groups({"fullContact"})
-     */
-    public function getAssignedActivities()
-    {
-        $entities = array();
-        if ($this->entity->getAssignedActivities()) {
-            foreach ($this->entity->getAssignedActivities() as $entity) {
-                $entities[] = new Activity($entity, $this->locale);
-            }
-        }
-
-        return $entities;
     }
 
     /**

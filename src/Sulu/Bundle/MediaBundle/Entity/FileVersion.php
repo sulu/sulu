@@ -11,11 +11,12 @@
 namespace Sulu\Bundle\MediaBundle\Entity;
 
 use JMS\Serializer\Annotation\Exclude;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * FileVersion
  */
-class FileVersion
+class FileVersion implements AuditableInterface
 {
 
     /**
@@ -90,14 +91,19 @@ class FileVersion
     private $tags;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var \Sulu\Component\Security\Authentication\UserInterface
      */
     private $creator;
+
+    /**
+     * @var \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     */
+    private $defaultMeta;
 
     /**
      * Constructor
@@ -249,19 +255,6 @@ class FileVersion
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return FileVersion
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -269,19 +262,6 @@ class FileVersion
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return FileVersion
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -470,10 +450,10 @@ class FileVersion
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param \Sulu\Component\Security\Authentication\UserInterface $changer
      * @return FileVersion
      */
-    public function setChanger(\Sulu\Component\Security\UserInterface $changer = null)
+    public function setChanger(\Sulu\Component\Security\Authentication\UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -483,7 +463,7 @@ class FileVersion
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getChanger()
     {
@@ -493,10 +473,10 @@ class FileVersion
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param \Sulu\Component\Security\Authentication\UserInterface $creator
      * @return FileVersion
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(\Sulu\Component\Security\Authentication\UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -506,11 +486,34 @@ class FileVersion
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return \Sulu\Component\Security\Authentication\UserInterface
      */
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * Set defaultMeta
+     *
+     * @param \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta
+     * @return FileVersion
+     */
+    public function setDefaultMeta(\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta = null)
+    {
+        $this->defaultMeta = $defaultMeta;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultMeta
+     *
+     * @return \Sulu\Bundle\MediaBundle\Entity\FileVersionMeta
+     */
+    public function getDefaultMeta()
+    {
+        return $this->defaultMeta;
     }
 
     /**

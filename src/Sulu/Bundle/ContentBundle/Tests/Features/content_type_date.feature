@@ -17,9 +17,8 @@ Feature: Date content type
     Scenario: Enter a valid date
         Given I am editing a page of type "date_page"
         And I expect the "husky.input.date.initialized" event
-        And I click on the element "input[name='husky-input-date']"
-        And I click on the element "input[name='husky-input-date']"
-        Then I should see the date picker
+        When I click on the element "input[name='husky-input-date']"
+        And I should see the date picker
         And I click on the element ".day"
         And I click the save icon
         Then I expect a success notification to appear

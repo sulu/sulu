@@ -50,16 +50,12 @@ class UserRepositoryTest extends SuluTestCase
         $contact1 = new Contact();
         $contact1->setFirstName('Max');
         $contact1->setLastName('Muster');
-        $contact1->setCreated(new DateTime());
-        $contact1->setChanged(new DateTime());
         $contact1->addEmail($email);
         $this->em->persist($contact1);
 
         $contact2 = new Contact();
         $contact2->setFirstName('Maria');
         $contact2->setLastName('Musterfrau');
-        $contact2->setCreated(new DateTime());
-        $contact2->setChanged(new DateTime());
         $contact2->addEmail($email2);
         $this->em->persist($contact2);
 
@@ -68,15 +64,11 @@ class UserRepositoryTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
-        $role1->setChanged(new DateTime());
-        $role1->setCreated(new DateTime());
         $this->em->persist($role1);
 
         $role2 = new Role();
         $role2->setName('Role2');
         $role2->setSystem('Test');
-        $role2->setChanged(new DateTime());
-        $role2->setCreated(new DateTime());
         $this->em->persist($role2);
 
         // User 1
@@ -84,6 +76,7 @@ class UserRepositoryTest extends SuluTestCase
         $user->setUsername('admin');
         $user->setEmail('user1@test.com');
         $user->setPassword('securepassword');
+        $user->setPasswordResetToken('mySuperSecretToken');
         $user->setSalt('salt');
         $user->setLocale('de');
         $user->setContact($contact1);
@@ -131,8 +124,6 @@ class UserRepositoryTest extends SuluTestCase
         $group1->setLft(0);
         $group1->setRgt(0);
         $group1->setDepth(0);
-        $group1->setCreated(new DateTime());
-        $group1->setChanged(new DateTime());
         $this->em->persist($group1);
 
         $group2 = new Group();
@@ -140,8 +131,6 @@ class UserRepositoryTest extends SuluTestCase
         $group2->setLft(0);
         $group2->setRgt(0);
         $group2->setDepth(0);
-        $group2->setCreated(new DateTime());
-        $group2->setChanged(new DateTime());
         $this->em->persist($group2);
 
         $this->em->flush();
@@ -225,6 +214,39 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $user->getUsername());
     }
 
+    public function testfindUserByIdentifier()
+    {
+        $this->prepareUser('sulu', 'sulu');
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $userByMail = $userRepository->findUserByIdentifier('user2@test.com');
+        $userByUsername = $userRepository->findUserByIdentifier('test');
+
+        $this->assertEquals('user2@test.com', $userByMail->getEmail());
+        $this->assertEquals('test', $userByMail->getUsername());
+        $this->assertEquals('user2@test.com', $userByUsername->getEmail());
+        $this->assertEquals('test', $userByUsername->getUsername());
+    }
+
+    public function testFindUserByToken()
+    {
+        $this->prepareUser('sulu', 'sulu');
+
+        $client = $this->createAuthenticatedClient();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = $client->getContainer()->get('sulu_security.user_repository_factory')->getRepository();
+
+        $user = $userRepository->findUserByToken('mySuperSecretToken');
+
+        $this->assertEquals('user1@test.com', $user->getEmail());
+        $this->assertEquals('admin', $user->getUsername());
+    }
+
     private function prepareUser($username, $password, $enabled = true, $locked = false)
     {
         $emailType = new EmailType();
@@ -239,8 +261,6 @@ class UserRepositoryTest extends SuluTestCase
         $contact1 = new Contact();
         $contact1->setFirstName('Max');
         $contact1->setLastName('Muster');
-        $contact1->setCreated(new DateTime());
-        $contact1->setChanged(new DateTime());
         $contact1->addEmail($email);
         $this->em->persist($contact1);
 
@@ -257,8 +277,6 @@ class UserRepositoryTest extends SuluTestCase
         $role = new Role();
         $role->setName('Sulu');
         $role->setSystem('Sulu');
-        $role->setCreated(new DateTime());
-        $role->setChanged(new DateTime());
         $this->em->persist($role);
 
         $userRole = new UserRole();

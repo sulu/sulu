@@ -66,6 +66,7 @@ class PreviewRenderer
 
         // get controller and invoke action
         $request = new Request();
+        $request->setLocale($content->getLanguageCode());
         $request->attributes->set('_controller', $content->getController());
         $controller = $this->controllerResolver->getController($request);
 

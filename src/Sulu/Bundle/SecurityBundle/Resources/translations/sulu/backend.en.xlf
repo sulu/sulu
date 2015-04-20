@@ -30,6 +30,10 @@
                 <source>security.roles.title</source>
                 <target>Permissions</target>
             </trans-unit>
+            <trans-unit id="5e201470bf51b79a16ef61543d22b1df" resname="security.roles">
+                <source>security.roles</source>
+                <target>Role</target>
+            </trans-unit>
             <trans-unit id="ae201470bf51b79a16ef61543d22b1df" resname="security.roles.name">
                 <source>security.roles.name</source>
                 <target>Role title</target>
@@ -109,6 +113,14 @@
             <trans-unit id="1cbc7d24ab0a482414bc0685517c236b" resname="security.permission.role.allLanguages">
                 <source>security.permission.role.allLanguages</source>
                 <target>all selected</target>
+            </trans-unit>
+            <trans-unit id="1cbc7d24ab0a482414bc0685517c721c" resname="security.reset.mail-subject">
+                <source>security.reset.mail-subject</source>
+                <target>Reset your Sulu password</target>
+            </trans-unit>
+            <trans-unit id="1cd67d24ab0a432414bc0685517c721c" resname="security.reset.mail-message">
+                <source>security.reset.mail-message</source>
+                <target>To reset your Sulu password please click on the following link or copy/paste it to your browser:</target>
             </trans-unit>
         </body>
     </file>

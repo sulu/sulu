@@ -15,6 +15,7 @@ use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
+use PHPCR\NodeInterface;
 
 /**
  * Interface of ContentMapper
@@ -131,6 +132,24 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
+
+    /**
+     * returns the data for the given node
+     * @param NodeInterface $contentNode The node for which to load the data
+     * @param string $languageCode The locale
+     * @param string $webspaceKey Key of the webspace
+     * @param boolean $excludeGhost Do not return Ghost structures (return null instead)
+     * @param boolean $loadGhostContent Load ghost content
+     * @param boolean $excludeShadow  Do not return shadow structures (return null instead)
+     */
+    public function loadByNode(
+        NodeInterface $contentNode,
+        $localization,
+        $webspaceKey = null,
+        $excludeGhost = true,
+        $loadGhostContent = false,
+        $excludeShadow = true
+    );
 
     /**
      * returns the data from the given id

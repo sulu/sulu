@@ -10,10 +10,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use Sulu\Bundle\CategoryBundle\Api\Category;
-use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact as AccountContactEntity;
-use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
 use JMS\Serializer\Annotation\VirtualProperty;
@@ -112,10 +110,10 @@ class AccountContact extends ApiWrapper
     /**
      * Set account
      *
-     * @param AccountEntity $account
+     * @param AccountInterface $account
      * @return AccountContact
      */
-    public function setAccount(AccountEntity $account)
+    public function setAccount(AccountInterface $account)
     {
         $this->entity->setAccount($account);
 

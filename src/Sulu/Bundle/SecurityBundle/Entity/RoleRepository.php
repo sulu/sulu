@@ -13,16 +13,18 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 
 /**
  * Repository for the User, implementing some additional functions
  * for querying objects
  */
-class RoleRepository extends EntityRepository
+class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 {
     /**
-     * Searches for a role with a specific id
-     * @param $id
+     * Finds a role with a specific id
+     *
+     * @param $id ID of the role
      * @return role
      */
     public function findRoleById($id)
@@ -49,6 +51,7 @@ class RoleRepository extends EntityRepository
 
     /**
      * Searches for all roles
+     *
      * @return array
      */
     public function findAllRoles()
@@ -69,5 +72,24 @@ class RoleRepository extends EntityRepository
         } catch (NoResultException $ex) {
             return null;
         }
+    }
+
+    /**
+     * Return an array containing the names of all the roles
+     *
+     * @return array
+     */
+    public function getRoleNames()
+    {
+        $query = $this->createQueryBuilder('role')
+            ->select('role.name')
+            ->getQuery();
+
+        $roles = array();
+        foreach ($query->getArrayResult() as $roleEntity) {
+            $roles[] = $roleEntity['name'];
+        }
+
+        return $roles;
     }
 }

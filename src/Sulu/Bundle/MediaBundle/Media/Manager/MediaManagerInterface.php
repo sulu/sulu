@@ -87,7 +87,7 @@ interface MediaManagerInterface
 
     /**
      * Return the FieldDescriptors
-     * @return $this
+     * @return array
      */
     public function getFieldDescriptors();
 

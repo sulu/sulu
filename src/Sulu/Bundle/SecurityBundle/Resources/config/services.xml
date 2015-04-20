@@ -15,15 +15,26 @@
         </parameter>
 
         <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
+        <parameter key="sulu_security.security_checker.class">Sulu\Component\Security\Authorization\SecurityChecker</parameter>
+        <parameter key="sulu_security.event_listener.security.class">Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener</parameter>
         <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
-        <parameter key="sulu_security.mask_converter.class">Sulu\Bundle\SecurityBundle\Permission\MaskConverter</parameter>
-        <parameter key="sulu_security.salt_generator.class">Sulu\Bundle\SecurityBundle\Permission\SaltGenerator</parameter>
-        <parameter key="sulu_security.admin.content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContentNavigation</parameter>
+        <parameter key="sulu_security.authentication_handler.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler</parameter>
+        <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
+        <parameter key="sulu_security.salt_generator.class">Sulu\Component\Security\Authentication\SaltGenerator</parameter>
+        <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
+        <parameter key="sulu_security.contacts_content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContactsContentNavigation</parameter>
+        <parameter key="sulu_security.nodes_content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityNodesContentNavigation</parameter>
         <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
-        <parameter key="sulu_security.permission_voter.class">Sulu\Bundle\SecurityBundle\Permission\PermissionVoter</parameter>
-        <parameter key="sulu_security.user_repository.class">Sulu\Bundle\SecurityBundle\Entity\UserRepository</parameter>
-        <parameter key="sulu_security.user_repository_factory.class">Sulu\Bundle\SecurityBundle\Factory\UserRepositoryFactory</parameter>
+        <parameter key="sulu_security.permission_map.class">Sulu\Component\Security\Authorization\AccessControl\PermissionMap</parameter>
+        <parameter key="sulu_security.security_context_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
+        <parameter key="sulu_security.access_control_manager.class">Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlManager</parameter>
+        <parameter key="sulu_security.permission_controller.class">Sulu\Bundle\SecurityBundle\Controller\PermissionController</parameter>
+        <parameter key="sulu_security.access_control_voter.class">Sulu\Component\Security\Authorization\AccessControl\AccessControlVoter</parameter>
+        <parameter key="sulu_security.role_repository.class">Sulu\Bundle\SecurityBundle\Entity\RoleRepository</parameter>
+        <parameter key="sulu_security.user_repository.class">Sulu\Component\Security\Authentication\UserRepository</parameter>
+        <parameter key="sulu_security.user_repository_factory.class">Sulu\Component\Security\Authentication\UserRepositoryFactory</parameter>
         <parameter key="sulu_security.build.user.class">Sulu\Bundle\SecurityBundle\Build\UserBuilder</parameter>
+        <parameter key="sulu_security.entity.role">SuluSecurityBundle:Role</parameter>
     </parameters>
 
     <services>
@@ -34,8 +45,25 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_security.security_checker" class="%sulu_security.security_checker.class%">
+            <argument type="service" id="security.token_storage"/>
+            <argument type="service" id="security.authorization_checker"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.event_listener.security" class="%sulu_security.event_listener.security.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <tag name="sulu.context" context="admin"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+        </service>
+
         <service id="sulu_security.authentication_entry_point" class="%sulu_security.authentication_entry_point.class%">
             <argument type="service" id="router"/>
+        </service>
+
+        <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
+            <argument type="service" id="router"/>
+            <argument type="service" id="session"/>
         </service>
 
         <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%">
@@ -45,24 +73,66 @@
         <service id="sulu_security.salt_generator" class="%sulu_security.salt_generator.class%">
         </service>
 
+        <service id="sulu_security.token_generator" class="%sulu_security.token_generator.class%">
+        </service>
+
         <service id="sulu_security.admin.roles_navigation" class="%sulu_security.admin.roles_navigation.class%">
         </service>
 
-        <service id="sulu_security.content_navigation" class="%sulu_security.admin.content_navigation.class%">
+        <service id="sulu_security.contacts_content_navigation" class="%sulu_security.contacts_content_navigation.class%">
             <argument type="service" id="sulu_security.security_checker"/>
             <tag name="sulu.contact.admin.content_navigation"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.permission_voter" class="%sulu_security.permission_voter.class%" public="false">
+        <service id="sulu_security.nodes_content_navigation" class="%sulu_security.nodes_content_navigation.class%">
+            <tag name="sulu_content.admin.content_navigation"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.permission_map" class="%sulu_security.permission_map.class%" public="false">
             <argument>%permissions%</argument>
+        </service>
+
+        <service id="sulu_security.security_context_voter" class="%sulu_security.security_context_voter.class%" public="false">
+            <argument>%permissions%</argument>
+            <argument type="service" id="security.acl.provider"/>
             <tag name="security.voter"/>
+        </service>
+
+        <service id="sulu_security.access_control_manager" class="%sulu_security.access_control_manager.class%">
+            <argument type="service" id="security.acl.provider"/>
+            <argument type="service" id="sulu_security.mask_converter"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.permission_controller" class="%sulu_security.permission_controller.class%">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="sulu_security.security_checker"/>
+            <argument type="service" id="sulu_security.role_repository"/>
+            <argument type="service" id="fos_rest.view_handler"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <service id="sulu_security.access_control_voter" class="%sulu_security.access_control_voter.class%" public="false">
+            <argument type="service" id="security.acl.provider" />
+            <argument type="service" id="security.acl.object_identity_retrieval_strategy" />
+            <argument type="service" id="security.acl.security_identity_retrieval_strategy" />
+            <argument type="service" id="sulu_security.permission_map" />
+            <argument type="service" id="logger" on-invalid="null" />
+            <tag name="security.voter" priority="255" />
+            <tag name="monolog.logger" channel="security" />
         </service>
 
         <service id="sulu_security.user_repository_factory" class="%sulu_security.user_repository_factory.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument>%sulu_security.system%</argument>
             <argument type="service" on-invalid="ignore" id="sulu_core.webspace.request_analyzer"/>
+        </service>
+
+        <service id="sulu_security.role_repository" class="%sulu_security.role_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>%sulu_security.entity.role%</argument>
         </service>
 
         <service id="sulu_security.user_repository" class="%sulu_security.user_repository.class%"

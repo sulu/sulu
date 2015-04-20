@@ -17,5 +17,5 @@ Feature: Checkbox content type
     Scenario: Enter a valid checkbox
         Given I am editing a page of type "checkbox_page"
         And I click on the element "#checkbox"
-        And I click the save icon
+        When I click the save icon
         Then I expect a success notification to appear

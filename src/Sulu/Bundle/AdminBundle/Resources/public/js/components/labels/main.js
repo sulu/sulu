@@ -81,29 +81,10 @@ define([], function() {
     return {
 
         /**
-         * Waits for the App-Component to start,
-         * then continues with the initialization
+         * Initializes the component
          */
         initialize: function() {
-            this.appStarted = false;
-            this.sandbox.emit('sulu.app.has-started', function(hasStarted) {
-                this.appStarted = hasStarted;
-            }.bind(this));
-
-            //if app-component is already started continue right ahead
-            if (this.appStarted === true) {
-                this.startComponent();
-            } else {
-                this.sandbox.on('sulu.app.initialized', this.startComponent.bind(this));
-            }
-        },
-
-        /**
-         * Starts the component
-         */
-        startComponent: function() {
             this.labelId = 0;
-
             this.bindCustomEvents();
         },
 

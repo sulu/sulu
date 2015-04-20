@@ -1,6 +1,55 @@
 CHANGELOG for Sulu
 ==================
 
+* 0.17.0 (2015-04-20)
+    * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
+    * BUGFIX      #1021 [SecurityBundle] Only check security for not-null security contexts
+    * BUGFIX      #1009 [MediaBundle]    Fix media download url
+    * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
+    * BUGFIX      #1008 [AdminBundle]    Fixed 1Password css bug on login screen
+    * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
+    * BUGFIX      #1002 [ContentBundle]  Changed internal link title for navigation, smartcontent and internal link
+    * FEATURE     #935 [MediaBundle]     Added new media selection
+    * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
+    * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
+    * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
+    * ENHANCEMENT #988 [ContentBundle]   Set locale on render request
+    * BUGFIX      #994 [CategoryBundle]  Fixed category search  
+    * ENHANCEMENT #988 [MediaBundle]     Set working defaults for ghostscript and caching headers
+    * BUGFIX      #976 [MediaBundle]     Fix media scale mode parameter
+    * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
+    * BUGFIX      #973 [All]             Added handling of anonymous user token
+    * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
+    * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
+    * FEATURE     #931 [MediaBundle]     Version History Tab
+    * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
+    * BUGFIX      #922 [ContentBundle]   Fixed URL Generation after copying language of a child node
+    * FEATURE     #732 [All]             Automatic mapping and assignation of changer, creator, changed and changer.
+    * FEATURE     #891 [All]             Added (css) class property to field descriptors, updated husky and fixed an issue when merging settings with matchings
+    * FEATURE     #884 [MediaBundle]     Loaders on media delete and media edit
+    * BUGFIX      #884 [AdminBundle]     Fix for login displacement issues
+    * BUGFIX      #884 [MediaBundle]     Fix for uploading bug on click on dropzone
+    * ENHANCEMENT #877 [SecurityBundle]  Extracted some classes to component
+    * BUGFIX      #863 [AdminBundle]     Fix for issue that navigation moved content on uncollapse
+    * BUGFIX      #863 [MediaBundle]     Fix for not working image upload with click on the dropzone
+    * BUGFIX      #863 [AdminBundle]     Workaround for chrome rendering-bug of overlay in the content-edit
+    * ENHANCEMENT #942 [ContactBundle]   Changed max characters of street from 60 to 150
+    * BUGFIX      #905 [ContactBundle]   Added Functionality for completing contact addresses
+    * FEATURE     #940 [ContactBundle]   Added command for fixing nested tree of accounts sulu:contacts:accounts:recover
+    * BUGFIX      #876 [ContactBundle]   Bugfix contact adresses and replacing husky select with native select
+    * FEATURE     #873 [ContactBundle]   Command-line data-completion-script: automatically set state of all
+                                         account-addresses in database. 'app/console sulu:contacts:data:complete -d state'
+    * BUGFIX      #908 [CategoryBundle]  Added script for recovering categories nested tree (fixing left/right and depths)
+    * FEATURE     #838 [SecurityBundle]  AJAX-Login and resetting of password
+    * FEATURE     #886 [AdminBundle]     Moved SuluVersionPass to Sulu\Compontents\Util to make it useable from webspace bundles
+    * FEATURE     #838 [AdminBundle]     Login UI
+    * FEATURE     #812 [MediaBundle]     Added nested collection API and UI
+    * FEATURE     #812 [MediaBundle]     Implemented move collections
+    * FEATURE     #805 [MediaBundle]     Implementing media move
+    * FEATURE     #909 [MediaBundle]     Added scroll down pagination for collection
+    * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
+    * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
+
 * 0.16.2 (2015-04-14)
     * HOTFIX      #997 [HttpCacheBundle] Fixed bug for caching ESI requests
 
@@ -18,6 +67,9 @@ CHANGELOG for Sulu
     * BUGFIX      #848 [ContactBundle]   Refactored delete dialog function to make it reuseable
     * BUGFIX      #846 [MediaBundle]     Added missing dot to create event name method (\cc Daniel)
     * ENHANCEMENT #841 [SecurityBundle]  Unique email per user
+    * BUGFIX      #698 [SecurityBundle]  Create user command - do not crash when no roles exist.
+    * ENHANCEMENT #698 [SecurityBundle]  Create user/role commands - exit gracefully if user / role already exists
+    * ENHANCEMENT #698 [SecurityBundle]  Create user command - validate locale when creating new user
     * BUGFIX      #837 [AdminBundle]     Javascript function for croping labels with a certain tag this.sandbox.sulu.cropAllLabels(className)
     * ENHANCEMENT #818 [ContentBundle]   Enhanced column-navigation ordering ui
     * BUGFIX      #857 [ContentBundle]   Added links without save could not be removed
@@ -49,7 +101,6 @@ CHANGELOG for Sulu
     * FEATURE     #820 [ContactBundle]   Contact-Import: define multiple tags: 'account_tag1 ..n'
     * FEATURE     #810 [ContactBundle]   Added command line tool for detecting missing country codes in import csv files
                                          that uses google geo api for finding the correct country code
-    * FEATURE     #805 [MediaBundle]     Implementing media move
     * FEATURE     #792 [ContactBundle]   Added widget to show all companys of contact
     * BUGFIX      #801 [ALL]             Removed unused clean task which is deleting the public directory when executed
                                          due to the symfony 2.6 changes to symlinks
@@ -77,7 +128,7 @@ CHANGELOG for Sulu
     * BUGFIX      #697 [CoreBundle]      Do not try and set the theme when the portal has not been found
     * FEATURE     #697 [HttpCacheBundle] Refactored HTTP cache, introduced Varnish support. See 38af8da73c929f9f57bb87a8973a1ee55dccee29
     * ENHANCEMENT #777 [ContentBundle]   Enable "copy language" on startpage
-    * HOTFIX      #788 [ContentBundle]  Fixed bug with empty selection with single internal link
+    * HOTFIX      #788 [ContentBundle]   Fixed bug with empty selection with single internal link
 
 * 0.14.2 (2015-02-02)
     * HOTFIX      #781 [CoreBundle]     HTTP Cache event listener uses the wrong event name due to recent change

@@ -11,12 +11,17 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
+use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Security\SecuredControllerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
-class SuluSecurityListenerTest extends ProphecyTestCase
+class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var SecurityListener
@@ -37,22 +42,70 @@ class SuluSecurityListenerTest extends ProphecyTestCase
     {
         parent::setUp();
 
-        $this->securityChecker = $this->prophesize('Sulu\Bundle\SecurityBundle\Permission\SecurityCheckerInterface');
+        $this->securityChecker = $this->prophesize(SecurityCheckerInterface::class);
         $this->securityListener = new SuluSecurityListener($this->securityChecker->reveal());
-        $this->filterControllerEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterControllerEvent');
+        $this->filterControllerEvent = $this->prophesize(FilterControllerEvent::class);
     }
 
-    public function tearDown()
+    public function testObjectRestController()
     {
-        $this->assertPostConditions();
+        $controller = $this->prophesize(SecuredObjectControllerInterface::class);
+        $controller->willImplement(SecuredControllerInterface::class);
+        $controller->getSecuredClass()->willReturn('Acme\Example');
+        $controller->getSecuredObjectId(Argument::any())->willReturn('1');
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn(null);
+
+        $request = $this->prophesize(Request::class);
+        $request->getMethod()->willReturn('GET');
+        $request->get('id')->willReturn('1');
+
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('security.context', null, 'Acme\Example', '1'),
+            'view',
+            null
+        )->shouldBeCalled();
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+    }
+
+    public function testObjectRestControllerWithContext()
+    {
+        $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->willImplement(SecuredObjectControllerInterface::class);
+        $controller->getSecuredClass()->willReturn('Acme\Example');
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getSecuredObjectId(Argument::any())->willReturn('1');
+        $controller->getLocale(Argument::any())->willReturn(null);
+
+        $request = $this->prophesize(Request::class);
+        $request->getMethod()->willReturn('GET');
+        $request->get('id')->willReturn('1');
+
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
+
+        $this->securityChecker->checkPermission(
+            new SecurityCondition('security.context', null, 'Acme\Example', '1'),
+            Argument::cetera(),
+            null
+        )->shouldBeCalled();
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
     }
 
     public function testRestController()
     {
-        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
+        $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn('de');
 
-        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn('GET');
+        $request->get('id')->willReturn('1');
 
         $this->filterControllerEvent->getController()->willReturn(array($controller));
         $this->filterControllerEvent->getRequest()->willReturn($request);
@@ -66,20 +119,25 @@ class SuluSecurityListenerTest extends ProphecyTestCase
     {
         $this->securityChecker->checkPermission(Argument::cetera())->shouldNotHaveBeenCalled();
 
-        $controller = $this->prophesize('Symfony\Bundle\FrameworkBundle\Controller\Controller');
+        $controller = $this->prophesize(Controller::class);
+
+        $request = $this->prophesize(Request::class);
 
         $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
+        $this->filterControllerEvent->getRequest()->willReturn($request);
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
     }
 
     public function testSubject()
     {
-        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
+        $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn('sulu.media.collection');
         $controller->getLocale(Argument::any())->willReturn(null);
 
-        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request = $this->prophesize(Request::class);
+        $request->getMethod()->willReturn('GET');
+        $request->get('id')->willReturn('1');
 
         $this->filterControllerEvent->getRequest()->willReturn($request);
         $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
@@ -94,10 +152,13 @@ class SuluSecurityListenerTest extends ProphecyTestCase
      */
     public function testMethodPermissionMapping($method, $action, $permission)
     {
-        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn($method);
+        $request->get('id')->willReturn('1');
 
-        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
+        $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn('de');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
         $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), $action));
@@ -110,10 +171,29 @@ class SuluSecurityListenerTest extends ProphecyTestCase
 
     public function testLocale()
     {
-        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn(null);
+        $request->get('id')->willReturn('1');
 
-        $controller = $this->prophesize('Sulu\Component\Security\SecuredControllerInterface');
+        $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn('de');
+
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+
+        $this->securityChecker->checkPermission(Argument::any(), Argument::any())->shouldHaveBeenCalled();
+    }
+
+    public function testNullSecurityContext()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getMethod()->willReturn(null);
+        $request->get('id')->willReturn('1');
+
+        $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn(null);
         $controller->getLocale(Argument::any())->willReturn('de');
 
@@ -122,7 +202,7 @@ class SuluSecurityListenerTest extends ProphecyTestCase
 
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
-        $this->securityChecker->checkPermission(Argument::any(), Argument::any(), 'de')->shouldHaveBeenCalled();
+        $this->securityChecker->checkPermission(Argument::any(), Argument::any())->shouldNotBeCalled();
     }
 
     public static function provideMethodActionMapping()

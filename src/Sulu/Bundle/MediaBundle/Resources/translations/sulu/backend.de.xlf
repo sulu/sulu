@@ -10,6 +10,10 @@
                 <source>navigation.media.collections</source>
                 <target>Kollektionen</target>
             </trans-unit>
+            <trans-unit id="3fd1f800bd2ecfb6af0abf750b716788" resname="navigation.media.collections.search">
+                <source>navigation.media.collections.search</source>
+                <target>Kollektionen filtern ...</target>
+            </trans-unit>
             <trans-unit id="ed961112240c7d99faeacb57a28aa6f6" resname="content-navigation.media.files">
                 <source>content-navigation.media.files</source>
                 <target>Dateien</target>
@@ -104,11 +108,55 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22256" resname="sulu.media.move.overlay-title">
                 <source>sulu.media.move.overlay-title</source>
-                <target>Neue Kollection wählen</target>
+                <target>Neue Kollektion wählen</target>
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22257" resname="labels.success.media-move-desc">
                 <source>labels.success.media-move-desc</source>
                 <target>Medien erfolgreich verschoben.</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652123a5ca2169f22257" resname="labels.success.collection-move-desc">
+                <source>labels.success.collection-move-desc</source>
+                <target>Kollektion erfolgreich verschoben.</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22257" resname="sulu.media.edit.loading">
+                <source>sulu.media.edit.loading</source>
+                <target>Medien werden geladen</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22258" resname="sulu.collection.move">
+                <source>sulu.collection.move</source>
+                <target>Kollektion verschieben</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22259" resname="navigation.media.collections.empty">
+                <source>navigation.media.collections.empty</source>
+                <target>Keine Subkollektionen</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22250" resname="navigation.media.collections.add">
+                <source>navigation.media.collections.add</source>
+                <target>Kollektion hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22260" resname="sulu.collection.move.overlay-title">
+                <source>sulu.collection.move.overlay-title</source>
+                <target>Kollektion verschieben</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22345" resname="media-selection.overlay.all-images">
+                <source>media-selection.overlay.all-images</source>
+                <target>Alle Bilder</target>
+            </trans-unit>
+            <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
+                <source>sulu.media.all</source>
+                <target>Alle Medien</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
+                <source>sulu.media.history</source>
+                <target>Verlauf</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22259" resname="sulu.media.version">
+                <source>sulu.media.version</source>
+                <target>Version</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22260" resname="sulu.media.version.active">
+                <source>sulu.media.version.active</source>
+                <target>aktiv</target>
             </trans-unit>
         </body>
     </file>

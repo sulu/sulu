@@ -10,16 +10,15 @@
 
 namespace Sulu\Component\HttpCache\EventListener;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Prophecy\Argument;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Sulu\Component\HttpCache\EventSubscriber\UpdateResponseSubscriber;
 
-class UpdateResponseSubscriberTest extends ProphecyTestCase
+class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Request

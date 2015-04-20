@@ -18,8 +18,6 @@
             <gedmo:tree-level/>
         </field>
         <field name="name" type="string" column="name" length="60"/>
-        <field name="created" type="datetime" column="created"/>
-        <field name="changed" type="datetime" column="changed"/>
 
         <one-to-many field="children" target-entity="Sulu\Bundle\SecurityBundle\Entity\Group" mapped-by="parent"/>
         <one-to-many field="userGroups" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserGroup" mapped-by="group"/>
@@ -30,18 +28,8 @@
             </join-columns>
             <gedmo:tree-parent/>
         </many-to-one>
-        <many-to-one field="changer" target-entity="Sulu\Component\Security\UserInterface">
-            <join-columns>
-                <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
-        <many-to-one field="creator" target-entity="Sulu\Component\Security\UserInterface">
-            <join-columns>
-                <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
-            </join-columns>
-        </many-to-one>
 
-        <many-to-many field="roles" target-entity="Sulu\Bundle\SecurityBundle\Entity\RoleInterface" inversed-by="groups">
+        <many-to-many field="roles" target-entity="Sulu\Component\Security\Authentication\RoleInterface" inversed-by="groups">
             <join-table name="se_group_roles">
                 <join-columns>
                     <join-column name="idGroups" referenced-column-name="id"/>
