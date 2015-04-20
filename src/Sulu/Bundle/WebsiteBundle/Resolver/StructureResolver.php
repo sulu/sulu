@@ -6,6 +6,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\Page;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 
 /**
  * Class that "resolves" the view data for a given structure.
@@ -51,7 +52,7 @@ class StructureResolver implements StructureResolverInterface
             'path' => $structure->getPath(),
         );
 
-        if ($structure instanceof Page) {
+        if ($structure instanceof PageBridge) {
             $data['extension'] = $structure->getExt();
             $data['urls'] = $structure->getUrls();
             $data['published'] = $structure->getPublished();
