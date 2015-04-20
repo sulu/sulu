@@ -143,13 +143,10 @@ class NavigationMapper implements NavigationMapperInterface
 
         $result = array();
         foreach ($breadcrumbItems as $item) {
-            if ($item->getDepth() === 0) {
-                $result[] = $this->contentMapper->loadStartPage($webspace, $language);
-            } else {
-                $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
-            }
+            $result[] = $this->contentMapper->load($item->getUuid(), $webspace, $language);
         }
         $result[] = $this->contentMapper->load($uuid, $webspace, $language);
+
 
         return $this->generateNavigation($result, $webspace, $language, false, null, true);
     }

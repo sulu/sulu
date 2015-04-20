@@ -565,7 +565,7 @@ class StructureBridge implements StructureInterface
             return $this->document->getTitle();
         }
 
-        return $this->inspector->getName($this->getDocument());
+        return $this->document->getTitle();
     }
 
     /**
