@@ -8,6 +8,18 @@ The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
 been removed. You have to change these names in all usages of this classes in
 your own code.
 
+### Media preview urls
+
+The thumbnail url will only be generated for supported mime-types. Otherwise it returns a zero length array.
+
+To be sure that it is possible to generate a preview image you should check if the thumbnail url isset:
+
+```twig
+{% if media.thumbnails['200x200'] is defined %}
+<img src="{{ media.thumbnails['200x200'] }}"/>
+{% endif %}
+```
+
 ## 0.17.0
 
 ### Media
