@@ -82,7 +82,6 @@ class WorkflowStageSubscriber extends AbstractMappingSubscriber
             (integer) $stage,
             PropertyType::LONG
         );
-
     }
 
     private function setPublishedDate(DocumentAccessor $accessor, NodeInterface $node, $locale, \DateTime $date = null)

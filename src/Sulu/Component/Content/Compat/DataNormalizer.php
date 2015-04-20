@@ -52,7 +52,7 @@ class DataNormalizer
             'redirectTarget' => $this->getAndUnsetValue($data, 'internal_link'),
             'redirectExternal' => $this->getAndUnsetValue($data, 'external'),
             'navigationContexts' => $this->getAndUnsetValue($data, 'navContexts'),
-            'workflowStage' => $this->getWorkflowStage($state),
+            'workflowStage' => $state,
             'shadowLocaleEnabled' => $this->getAndUnsetValue($data, 'shadowOn'),
             'shadowLocale' => $this->getAndUnsetValue($data, 'shadowBaseLanguage'),
             'structureType' => $this->getAndUnsetValue($data, 'template'),
@@ -82,15 +82,6 @@ class DataNormalizer
         }
 
         return $value;
-    }
-
-    private function getWorkflowStage($state)
-    {
-        if ($state === WorkflowStage::PUBLISHED) {
-            return WorkflowStage::PUBLISHED;
-        }
-
-        return WorkflowStage::TEST;
     }
 
     private function getAndUnsetRedirectType(&$data)
