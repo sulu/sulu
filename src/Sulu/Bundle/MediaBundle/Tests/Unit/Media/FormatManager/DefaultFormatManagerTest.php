@@ -12,10 +12,10 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
+use Prophecy\Prediction\NoCallsPrediction;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager;
 
 class DefaultFormatManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -108,5 +108,115 @@ class DefaultFormatManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Image-Content', $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
+    }
+
+    public function testGetFormats()
+    {
+        $mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepository');
+        $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
+        $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
+        $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
+
+        $ghostScriptPath = '';
+        $saveImage = true;
+        $previewMimeTypes = array('gif');
+        $responseHeaders = array();
+        $formats = array(
+            '640x480' => array(
+                'name' => '640x480',
+                'commands' => array(
+                    array(
+                        'action' => 'resize',
+                        'parameters' => array(
+                            'x' => 640,
+                            'y' => 480
+                        )
+                    )
+                ),
+                'options' => array(
+                    'jpeg_quality' => 70,
+                    'png_compression_level' => 6
+                )
+            )
+        );
+
+        $formatCache->getMediaUrl(1, 'dummy.gif', array('a' => 'b'), '640x480', 1)->willReturn('/my-url.gif');
+
+        $formatManager = new FormatManager(
+            $mediaRepository->reveal(),
+            $originalStorage->reveal(),
+            $formatCache->reveal(),
+            $converter->reveal(),
+            $ghostScriptPath,
+            $saveImage,
+            $previewMimeTypes,
+            $responseHeaders,
+            $formats
+        );
+
+        $result = $formatManager->getFormats(
+            1,
+            'dummy.gif',
+            array('a' => 'b'),
+            1,
+            'gif'
+        );
+
+        $this->assertEquals(array('640x480' => '/my-url.gif'), $result);
+    }
+
+    public function testGetFormatsNotSupportedMimeType()
+    {
+        $mediaRepository = $this->prophesize('Sulu\Bundle\MediaBundle\Entity\MediaRepository');
+        $originalStorage = $this->prophesize('Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface');
+        $formatCache = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface');
+        $converter = $this->prophesize('Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface');
+
+        $ghostScriptPath = '';
+        $saveImage = true;
+        $previewMimeTypes = array('gif');
+        $responseHeaders = array();
+        $formats = array(
+            '640x480' => array(
+                'name' => '640x480',
+                'commands' => array(
+                    array(
+                        'action' => 'resize',
+                        'parameters' => array(
+                            'x' => 640,
+                            'y' => 480
+                        )
+                    )
+                ),
+                'options' => array(
+                    'jpeg_quality' => 70,
+                    'png_compression_level' => 6
+                )
+            )
+        );
+
+        $formatCache->getMediaUrl(1, 'dummy.mp3', array('a' => 'b'), '640x480', 1)->should(new NoCallsPrediction());
+
+        $formatManager = new FormatManager(
+            $mediaRepository->reveal(),
+            $originalStorage->reveal(),
+            $formatCache->reveal(),
+            $converter->reveal(),
+            $ghostScriptPath,
+            $saveImage,
+            $previewMimeTypes,
+            $responseHeaders,
+            $formats
+        );
+
+        $result = $formatManager->getFormats(
+            1,
+            'dummy.mp3',
+            array('a' => 'b'),
+            1,
+            'mp3'
+        );
+
+        $this->assertEquals(array(), $result);
     }
 }
