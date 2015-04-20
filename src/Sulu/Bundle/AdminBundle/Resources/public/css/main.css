@@ -276,7 +276,6 @@ input, select {
   position: relative;
   top: 0px;
   left: 0px;
-  transition: left 300ms;
 }
 /* line 50, ../scss/modules/login.scss */
 .sulu-login .box .frame {
@@ -743,4 +742,8 @@ input, select {
 /* line 22, ../scss/modules/headlines.scss */
 .options-dropdown-toggler:hover .options-dropdown-container {
   display: block;
+}
+
+.hide {
+  display: none !important;
 }
