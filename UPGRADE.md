@@ -26,6 +26,10 @@ app/console sulu:upgrade:0.17.0:media
 The security checks are now also applied to contacts and accounts, make sure
 that the users you want to have access have the correct permissions.
 
+### Content
+
+Behaviour of internal links has changed. It returns the link title for navigation/smartcontent/internal-link.
+
 ### Media Types
 
 The media types are now set by wildcard check and need to be updated,

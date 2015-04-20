@@ -2,10 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * FEATURE     #935 [MediaBundle]     Added new media selection
     * BUGFIX      #1009 [MediaBundle]    Fix media download url
     * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
     * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
+    * BUGFIX      #1002 [ContentBundle]  Changed internal link title for navigation, smartcontent and internal link
+    * FEATURE     #935 [MediaBundle]     Added new media selection
     * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
     * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
