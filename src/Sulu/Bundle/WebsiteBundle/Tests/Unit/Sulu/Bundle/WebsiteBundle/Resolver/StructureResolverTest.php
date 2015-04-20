@@ -50,7 +50,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\StructureExtension\StructureExtension');
+        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\ExtensionInterface');
         $excerptExtension->getContentData(array('test1' => 'test1'))->willReturn(array('test1' => 'test1'));
         $this->structureManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
@@ -58,7 +58,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\Page');
+        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(array('excerpt' => array('test1' => 'test1')));
         $structure->getUuid()->willReturn('some-uuid');
