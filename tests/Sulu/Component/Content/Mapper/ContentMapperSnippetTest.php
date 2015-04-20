@@ -59,7 +59,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $req = ContentMapperRequest::create()
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
-            ->setLocale('de')
+            ->setLocale('en')
             ->setUserId(1)
             ->setData(array(
                 'title' => 'ElePHPant',
@@ -87,7 +87,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setUuid($this->snippet1->getUuid())
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
-            ->setLocale('en')
+            ->setLocale('de')
             ->setUserId(1)
             ->setData(array(
                 'title' => 'English ElePHPant',
@@ -140,7 +140,7 @@ class ContentMapperSnippetTest extends SuluTestCase
             ->setUuid($this->snippet1->getUuid())
             ->setType(Structure::TYPE_SNIPPET)
             ->setTemplateKey('animal')
-            ->setLocale('en')
+            ->setLocale('de')
             ->setState(StructureInterface::STATE_PUBLISHED)
             ->setUserId(1)
             ->setData(array(
@@ -173,7 +173,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $document->setTitle('Hello');
         $document->getContent()->bind(array(
             'animals' => array($this->snippet1->getUuid()),
-        ));
+        ), false);
         $document->setParent($this->parent);
         $document->setStructureType('test_page');
         $document->setResourceSegment('/url/foo');
@@ -210,11 +210,11 @@ class ContentMapperSnippetTest extends SuluTestCase
         if ($multiple) {
             $document->getContent()->bind(array(
                 'animals' => array($this->snippet1->getUuid(), $this->snippet2->getUuid()),
-            ));
+            ), false);
         } else {
             $document->getContent()->bind(array(
                 'animals' => $this->snippet1->getUuid(),
-            ));
+            ), false);
         }
 
         $document->setParent($this->parent);
