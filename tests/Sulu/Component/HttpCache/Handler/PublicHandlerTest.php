@@ -44,7 +44,7 @@ class PublicHandlerTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\Page');
+        $this->structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
         $this->parameterBag = $this->prophesize('Symfony\Component\HttpFoundation\ParameterBag');
         $this->response = $this->prophesize('Symfony\Component\HttpFoundation\Response');
         $this->response->headers = $this->parameterBag;
