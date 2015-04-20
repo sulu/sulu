@@ -50,8 +50,10 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
     public function testObjectRestController()
     {
         $controller = $this->prophesize(SecuredObjectControllerInterface::class);
+        $controller->willImplement(SecuredControllerInterface::class);
         $controller->getSecuredClass()->willReturn('Acme\Example');
         $controller->getSecuredObjectId(Argument::any())->willReturn('1');
+        $controller->getSecurityContext()->willReturn('security.context');
         $controller->getLocale(Argument::any())->willReturn(null);
 
         $request = $this->prophesize(Request::class);
@@ -62,7 +64,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
 
         $this->securityChecker->checkPermission(
-            new SecurityCondition(null, null, 'Acme\Example', '1'),
+            new SecurityCondition('security.context', null, 'Acme\Example', '1'),
             'view',
             null
         )->shouldBeCalled();
@@ -98,6 +100,8 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
     public function testRestController()
     {
         $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn('de');
 
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn('GET');
@@ -116,6 +120,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $this->securityChecker->checkPermission(Argument::cetera())->shouldNotHaveBeenCalled();
 
         $controller = $this->prophesize(Controller::class);
+
         $request = $this->prophesize(Request::class);
 
         $this->filterControllerEvent->getController()->willReturn(array($controller->reveal()));
@@ -152,6 +157,8 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $request->get('id')->willReturn('1');
 
         $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn('security.context');
+        $controller->getLocale(Argument::any())->willReturn('de');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
         $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), $action));
@@ -169,7 +176,7 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $request->get('id')->willReturn('1');
 
         $controller = $this->prophesize(SecuredControllerInterface::class);
-        $controller->getSecurityContext()->willReturn(null);
+        $controller->getSecurityContext()->willReturn('security.context');
         $controller->getLocale(Argument::any())->willReturn('de');
 
         $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
@@ -178,6 +185,24 @@ class SuluSecurityListenerTest extends \PHPUnit_Framework_TestCase
         $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
 
         $this->securityChecker->checkPermission(Argument::any(), Argument::any())->shouldHaveBeenCalled();
+    }
+
+    public function testNullSecurityContext()
+    {
+        $request = $this->prophesize(Request::class);
+        $request->getMethod()->willReturn(null);
+        $request->get('id')->willReturn('1');
+
+        $controller = $this->prophesize(SecuredControllerInterface::class);
+        $controller->getSecurityContext()->willReturn(null);
+        $controller->getLocale(Argument::any())->willReturn('de');
+
+        $this->filterControllerEvent->getRequest()->willReturn($request->reveal());
+        $this->filterControllerEvent->getController()->willReturn(array($controller->reveal(), 'getAction'));
+
+        $this->securityListener->onKernelController($this->filterControllerEvent->reveal());
+
+        $this->securityChecker->checkPermission(Argument::any(), Argument::any())->shouldNotBeCalled();
     }
 
     public static function provideMethodActionMapping()

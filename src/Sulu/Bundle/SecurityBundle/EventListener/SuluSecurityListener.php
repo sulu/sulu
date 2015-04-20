@@ -90,9 +90,11 @@ class SuluSecurityListener
             $securityContext = $controller->getSecurityContext();
         }
 
-        $this->securityChecker->checkPermission(
-            new SecurityCondition($securityContext, $locale, $objectType, $objectId),
-            $permission
-        );
+        if ($securityContext !== null) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition($securityContext, $locale, $objectType, $objectId),
+                $permission
+            );
+        }
     }
 } 
