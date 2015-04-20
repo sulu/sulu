@@ -19,11 +19,11 @@ class SecurityPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ($container->hasDefinition('sulu_security.admin')) {
-            $contentNavigationProviderDefinition = $container->findDefinition(
-                'sulu_content.content_navigation_provider'
-            );
-            $contentNavigationProviderDefinition->addArgument(true);
+        if (false === $container->hasDefinition('sulu_security.admin')) {
+            return;
         }
+
+        $contentNavigationProviderDefinition = $container->findDefinition('sulu_content.content_navigation_provider');
+        $contentNavigationProviderDefinition->addArgument(true);
     }
 }

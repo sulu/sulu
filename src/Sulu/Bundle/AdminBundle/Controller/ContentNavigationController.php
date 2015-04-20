@@ -16,7 +16,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollectorInterface;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Component\Rest\Exception\RestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,9 +28,9 @@ use Symfony\Component\HttpFoundation\Response;
 class ContentNavigationController implements ClassResourceInterface
 {
     /**
-     * @var ContentNavigationCollectorInterface
+     * @var ContentNavigationRegistryInterface
      */
-    private $contentNavigationCollector;
+    private $contentNavigationRegistry;
 
     /**
      * @var ViewHandler
@@ -38,10 +38,10 @@ class ContentNavigationController implements ClassResourceInterface
     private $viewHandler;
 
     public function __construct(
-        ContentNavigationCollectorInterface $contentNavigationCollector,
+        ContentNavigationRegistryInterface $contentNavigationRegistry,
         ViewHandlerInterface $viewHandler
     ) {
-        $this->contentNavigationCollector = $contentNavigationCollector;
+        $this->contentNavigationRegistry = $contentNavigationRegistry;
         $this->viewHandler = $viewHandler;
     }
 
@@ -61,12 +61,14 @@ class ContentNavigationController implements ClassResourceInterface
 
             $options = $request->query->all();
 
-            $contentNavigationItems = $this->contentNavigationCollector->getNavigationItems($alias, $options);
+            $contentNavigationItems = $this->contentNavigationRegistry->getNavigationItems($alias, $options);
 
             $view = View::create($contentNavigationItems);
         } catch (ContentNavigationAliasNotFoundException $exc) {
             $restException = new RestException(
-                sprintf('The content navigation alias "%s" does not exist!', $exc->getAlias())
+                $exc->getMessage(),
+                0,
+                $exc
             );
             $view = View::create($restException->toArray(), 404);
         } catch (RestException $exc) {

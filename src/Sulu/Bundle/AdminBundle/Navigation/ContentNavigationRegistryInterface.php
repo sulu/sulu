@@ -13,7 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Navigation;
 /**
  * Defines the interface for retrieving all the content navigation items for a specific alias
  */
-interface ContentNavigationCollectorInterface
+interface ContentNavigationRegistryInterface
 {
     /**
      * Returns all the navigation items for the given alias

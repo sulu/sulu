@@ -20,10 +20,22 @@ class ContentNavigationAliasNotFoundException extends \Exception
      */
     private $alias;
 
-    public function __construct($alias)
+    /**
+     * @var string[]
+     */
+    private $availableAliases;
+
+    public function __construct($alias, array $availableAliases)
     {
         $this->alias = $alias;
-        parent::__construct(sprintf('The content navigation alias "%s" does not exist!', $this->alias));
+        $this->availableAliases = $availableAliases;
+        parent::__construct(
+            sprintf(
+                'The content navigation alias "%s" does not exist, registered aliases: "%s"',
+                $this->alias,
+                implode('", "', $this->availableAliases)
+            )
+        );
     }
 
     /**
@@ -33,5 +45,14 @@ class ContentNavigationAliasNotFoundException extends \Exception
     public function getAlias()
     {
         return $this->alias;
+    }
+
+    /**
+     * Returns the available aliases in this syste
+     * @return string[]
+     */
+    public function getAvailableAliases()
+    {
+        return $this->availableAliases;
     }
 }

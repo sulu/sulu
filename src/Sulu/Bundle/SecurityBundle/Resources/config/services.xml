@@ -76,13 +76,13 @@
         </service>
 
         <service id="sulu_security.roles_content_navigation_provider" class="%sulu_security.roles_content_navigation_provider.class%">
-            <tag name="sulu.admin.content_navigation" alias="roles"/>
+            <tag name="sulu_admin.content_navigation" alias="roles"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 
         <service id="sulu_security.contacts_content_navigation_provider" class="%sulu_security.contacts_content_navigation_provider.class%">
             <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu.admin.content_navigation" alias="contact"/>
+            <tag name="sulu_admin.content_navigation" alias="contact"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

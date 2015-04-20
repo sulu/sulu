@@ -24,7 +24,7 @@
         <!-- content -->
         <service id="sulu_content.content_navigation_provider" class="%sulu_content.content_navigation_provider.class%">
             <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu.admin.content_navigation" alias="content"/>
+            <tag name="sulu_admin.content_navigation" alias="content"/>
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_content.twig_extension" class="%sulu_content.twig_extension.class%">

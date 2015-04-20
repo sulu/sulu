@@ -19,7 +19,7 @@
         </service>
 
         <service id="sulu_snippet.content_navigation_provider" class="%sulu_snippet.content_navigation_provider.class%">
-            <tag name="sulu.admin.content_navigation" alias="snippet"/>
+            <tag name="sulu_admin.content_navigation" alias="snippet"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

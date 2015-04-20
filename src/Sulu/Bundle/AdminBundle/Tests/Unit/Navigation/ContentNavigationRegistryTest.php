@@ -11,15 +11,15 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Navigation;
 
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollector;
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollectorInterface;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistry;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ContentNavigationCollectorTest extends \PHPUnit_Framework_TestCase
+class ContentNavigationRegistryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ContentNavigationCollectorInterface
+     * @var ContentNavigationRegistryInterface
      */
     private $contentNavigationCollector;
 
@@ -31,7 +31,7 @@ class ContentNavigationCollectorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->container = $this->prophesize(ContainerInterface::class);
-        $this->contentNavigationCollector = new ContentNavigationCollector($this->container->reveal());
+        $this->contentNavigationCollector = new ContentNavigationRegistry($this->container->reveal());
     }
 
     public function provideContentNavigationMappings()

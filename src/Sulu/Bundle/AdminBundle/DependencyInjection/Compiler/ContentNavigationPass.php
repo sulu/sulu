@@ -24,9 +24,9 @@ class ContentNavigationPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $contentNavigationCollector = $container->getDefinition('sulu_admin.content_navigation_collector');
+        $contentNavigationCollector = $container->getDefinition('sulu_admin.content_navigation_registry');
 
-        $taggedServices = $container->findTaggedServiceIds('sulu.admin.content_navigation');
+        $taggedServices = $container->findTaggedServiceIds('sulu_admin.content_navigation');
 
         foreach ($taggedServices as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {

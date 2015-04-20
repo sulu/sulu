@@ -34,7 +34,7 @@ These classes have to implement the `ContentNavigationProviderInterface` and be
 registered as services as described in the
 [documentation](http://docs.sulu.io/en/latest/cookbook/using-the-tab-navigation.html).
 
-Consider that the URL for the retrieval of the content navigation items have
+Consider that the URLs for the retrieval of the content navigation items have
 changed to `/admin/content-navigations?alias=your-alias` and have to be updated
 in your javascript components.
 

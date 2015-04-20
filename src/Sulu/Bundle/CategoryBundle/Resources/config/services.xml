@@ -18,7 +18,7 @@
             <argument>%sulu_admin.name%</argument>
         </service>
         <service id="sulu_category.content_navigation_provider" class="%sulu_category.content_navigation_provider.class%">
-            <tag name="sulu.admin.content_navigation" alias="category"/>
+            <tag name="sulu_admin.content_navigation" alias="category"/>
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_category.category_repository" class="%sulu_category.category_repository.class%"

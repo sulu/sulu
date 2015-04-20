@@ -14,7 +14,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationAliasNotFoundException;
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationCollectorInterface;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationRegistryInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -28,7 +28,7 @@ class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
     private $contentNavigationController;
 
     /**
-     * @var ContentNavigationCollectorInterface
+     * @var ContentNavigationRegistryInterface
      */
     private $contentNavigationCollector;
 
@@ -37,14 +37,9 @@ class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
      */
     private $viewHandler;
 
-    /**
-     * @var Request
-     */
-    private $request;
-
     public function setUp()
     {
-        $this->contentNavigationCollector = $this->prophesize(ContentNavigationCollectorInterface::class);
+        $this->contentNavigationCollector = $this->prophesize(ContentNavigationRegistryInterface::class);
         $this->viewHandler = $this->prophesize(ViewHandlerInterface::class);
 
         $this->contentNavigationController = new ContentNavigationController(
@@ -81,9 +76,17 @@ class ContentNavigationControllerTest extends \PHPUnit_Framework_TestCase
         $query = array('alias' => 'not_existent_alias');
         $request = new Request($query);
 
-        $exception = new RestException('The content navigation alias "not_existent_alias" does not exist!');
+        $contentNavigationAliasNotFoundException = new ContentNavigationAliasNotFoundException(
+            $query['alias'], array()
+        );
         $this->contentNavigationCollector->getNavigationItems(Argument::cetera())->willThrow(
-            new ContentNavigationAliasNotFoundException($query['alias'])
+            $contentNavigationAliasNotFoundException
+        );
+
+        $exception = new RestException(
+            $contentNavigationAliasNotFoundException->getMessage(),
+            0,
+            $contentNavigationAliasNotFoundException
         );
         $this->viewHandler->handle(View::create($exception->toArray(), 404))->shouldBeCalled();
 

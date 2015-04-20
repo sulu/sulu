@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Collects all the content navigations from all bundles using a specific alias
  */
-class ContentNavigationCollector extends ContainerAware implements ContentNavigationCollectorInterface
+class ContentNavigationRegistry extends ContainerAware implements ContentNavigationRegistryInterface
 {
     /**
      * @var array
@@ -34,7 +34,7 @@ class ContentNavigationCollector extends ContainerAware implements ContentNaviga
     public function getNavigationItems($alias, array $options = array())
     {
         if (!array_key_exists($alias, $this->providers)) {
-            throw new ContentNavigationAliasNotFoundException($alias);
+            throw new ContentNavigationAliasNotFoundException($alias, array_keys($this->providers));
         }
 
         $navigationItems = array();

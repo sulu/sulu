@@ -21,7 +21,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
         <service id="sulu_translate.content_navigation_provider" class="%sulu_translate.content_navigation_provider.class%">
-            <tag name="sulu.admin.content_navigation" alias="translate"/>
+            <tag name="sulu_admin.content_navigation" alias="translate"/>
         </service>
         <service id="sulu.translate.build.builder.translation" class="%sulu.translate.build.builder.translation.class%">
             <tag name="massive_build.builder"/>
