@@ -57,6 +57,8 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should throw an exception if a non existing document alias is given
+     *
      * @expectedException Sulu\Component\Content\Structure\Factory\Exception\DocumentTypeNotFoundException
      * @expectedExceptionMessage Structure path for document type "non_existing" is not mapped. Mapped structure types: "page
      */
@@ -66,6 +68,8 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * It should throw an exception if a non existing structure type is given
+     *
      * @expectedException Sulu\Component\Content\Structure\Factory\Exception\StructureTypeNotFoundException
      * @expectedExceptionMessage Could not load structure type "overview_not_existing" for document type "page", looked in "
      */
@@ -79,9 +83,22 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructureDefault()
     {
-        $this->loader->load($this->mappingFile)->willReturn($this->structure->reveal());
-        $this->loader->load($this->mappingFile)->shouldBeCalledTimes(1);
+        $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
+        $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
 
+        $this->factory->getStructure('page');
+    }
+
+    /**
+     * It should cache the result
+     */
+    public function testCacheResult()
+    {
+        $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
+        $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
+
+        $this->factory->getStructure('page');
+        $this->factory->getStructure('page');
         $this->factory->getStructure('page');
     }
 
@@ -102,8 +119,8 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructure()
     {
-        $this->loader->load($this->mappingFile)->willReturn($this->structure->reveal());
-        $this->loader->load($this->mappingFile)->shouldBeCalledTimes(1);
+        $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
+        $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
 
         $structure = $this->factory->getStructure('page', 'something');
 
@@ -118,8 +135,8 @@ class StructureFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetStructures()
     {
-        $this->loader->load($this->mappingFile)->willReturn($this->structure->reveal());
-        $this->loader->load($this->mappingFile)->shouldBeCalledTimes(1);
+        $this->loader->load($this->mappingFile, 'page')->willReturn($this->structure->reveal());
+        $this->loader->load($this->mappingFile, 'page')->shouldBeCalledTimes(1);
 
         $structures = $this->factory->getStructures('page');
         $this->assertEquals($this->structure->reveal(), $structures[0]);
