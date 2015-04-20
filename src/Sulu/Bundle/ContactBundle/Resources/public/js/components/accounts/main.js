@@ -96,14 +96,7 @@ define([
             this.sandbox.on('sulu.contacts.accounts.contacts.set-main', this.setMainContact.bind(this));
 
             // load list view
-            this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
-                this.sandbox.emit(
-                    'sulu.router.navigate', 'contacts/accounts',
-                    !noReload,
-                    true,
-                    true
-                );
-            }, this);
+            this.sandbox.on('sulu.contacts.accounts.list', this.goToList.bind(this));
 
             // handling documents
             this.sandbox.on('sulu.contacts.accounts.medias.save', this.saveDocuments.bind(this));
@@ -121,6 +114,20 @@ define([
 
             // add a new contact
             this.sandbox.on('sulu.contacts.accounts.new.contact', this.createNewContact.bind(this));
+        },
+
+        /**
+         * go to accounts list
+         * @param account
+         * @param noReload
+         */
+        goToList: function(account, noReload) {
+            this.sandbox.emit(
+                'sulu.router.navigate', 'contacts/accounts',
+                !noReload,
+                true,
+                true
+            );
         },
 
         /**

@@ -375,7 +375,7 @@ define(['config', 'widget-groups'], function(Config, WidgetGroups) {
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list');
+                this.sandbox.emit('sulu.contacts.accounts.list', this.options.data);
             }, this);
 
             this.sandbox.on('sulu.contact-form.added.bank-account', function() {
