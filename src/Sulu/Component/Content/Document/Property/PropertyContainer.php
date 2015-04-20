@@ -68,7 +68,7 @@ class PropertyContainer implements \ArrayAccess
         unset($this->properties[$offset]);
     }
 
-    public function getArrayCopy()
+    public function toArray()
     {
         $values = array();
         foreach ($this->properties as $name => $property) {

@@ -479,7 +479,7 @@ class StructureBridge implements StructureInterface
                 $result['ext'] = $document->getExtensionsData();
             }
 
-            $result = array_merge($this->getDocument()->getContent()->getArrayCopy(), $result);
+            $result = array_merge($this->getDocument()->getContent()->toArray(), $result);
 
             return $result;
         }

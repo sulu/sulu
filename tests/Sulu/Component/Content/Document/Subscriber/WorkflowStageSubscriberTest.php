@@ -49,6 +49,7 @@ class WorkflowStageSubscriberTest extends SubscriberTestCase
         $this->encoder->localizedSystemName(WorkflowStageSubscriber::WORKFLOW_STAGE_FIELD, 'fr')->willReturn('stage');
         $this->node->setProperty('published', Argument::type('DateTime'), PropertyType::DATE)->shouldBeCalled();
         $this->node->setProperty('stage', WorkflowStage::PUBLISHED, PropertyType::LONG)->shouldBeCalled();
+        $this->persistEvent->getAccessor()->willReturn($this->accessor->reveal());
 
         $this->subscriber->doPersist(
             $this->persistEvent->reveal()

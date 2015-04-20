@@ -166,4 +166,15 @@ class Structure extends Item
 
         return $properties;
     }
+
+    /**
+     * Return the resource from which this structure was loaded
+     *
+     * @return string
+     */
+    public function getResource() 
+    {
+        return $this->resource;
+    }
+    
 }

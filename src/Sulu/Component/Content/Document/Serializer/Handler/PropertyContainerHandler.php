@@ -52,7 +52,7 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $array = $container->getArrayCopy();
+        $array = $container->toArray();
 
         return $context->accept(array(
             'typeMap' => $this->getContentTypeMap($array),
