@@ -129,14 +129,6 @@ class StructureDriver implements AdvancedDriverInterface
             }
         }
 
-        $indexMeta->addFieldMapping(
-            $property->getName(),
-            array(
-                'type' => 'string',
-                'field' => $this->factory->createMetadataField($property->getName()),
-            )
-        );
-
         if ($structure->hasTag('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
             $indexMeta->setUrlField($this->factory->createMetadataField($prop->getName()));
