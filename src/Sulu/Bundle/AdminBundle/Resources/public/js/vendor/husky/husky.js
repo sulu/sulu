@@ -29830,38 +29830,36 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
         renderBodyRow: function(record, prepend) {
             this.removeNewRecordRow();
 
-            if (!this.table.rows[record.id]) {
-                var $row = this.sandbox.dom.createElement(templates.row),
-                    $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null,
-                    hasParent = this.hasParent(record);
+            var $row = this.sandbox.dom.createElement(templates.row),
+                $overrideElement = (!!this.table.rows[record.id]) ? this.table.rows[record.id].$el : null,
+                hasParent = this.hasParent(record);
 
-                record.id = (!!record.id) ? record.id : constants.newRecordId;
-                this.sandbox.dom.data($row, 'id', record.id);
+            record.id = (!!record.id) ? record.id : constants.newRecordId;
+            this.sandbox.dom.data($row, 'id', record.id);
 
-                // render the parents before rendering the children
-                if (hasParent) {
-                    if (!this.table.rows[record.parent]) {
-                        this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
-                    }
-                    this.table.rows[record.parent].childrenLoaded = true;
+            // render the parents before rendering the children
+            if (hasParent) {
+                if (!this.table.rows[record.parent]) {
+                    this.renderBodyRow(this.data.embedded[this.datagrid.getRecordIndexById(record.parent)], prepend);
                 }
-
-                this.table.rows[record.id] = {
-                    $el: $row,
-                    cells: {},
-                    childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
-                    childrenExpanded: false,
-                    parent: hasParent ? record.parent : null,
-                    hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
-                    level: 1
-                };
-
-                this.renderRowSelectItem(record.id);
-                this.renderBodyCellsForRow(record);
-                this.renderRowRemoveItem(record.id);
-                this.insertBodyRow(record, $overrideElement, prepend);
-                this.executeRowPostRenderActions(record);
+                this.table.rows[record.parent].childrenLoaded = true;
             }
+
+            this.table.rows[record.id] = {
+                $el: $row,
+                cells: {},
+                childrenLoaded: !!this.table.rows[record.id] ? this.table.rows[record.id].childrenLoaded : false,
+                childrenExpanded: false,
+                parent: hasParent ? record.parent : null,
+                hasChildren: (!!record[this.datagrid.options.childrenPropertyName]) ? record[this.datagrid.options.childrenPropertyName] : false,
+                level: 1
+            };
+
+            this.renderRowSelectItem(record.id);
+            this.renderBodyCellsForRow(record);
+            this.renderRowRemoveItem(record.id);
+            this.insertBodyRow(record, $overrideElement, prepend);
+            this.executeRowPostRenderActions(record);
         },
 
         /**

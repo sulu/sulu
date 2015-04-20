@@ -1,7 +1,7 @@
 CHANGELOG for Sulu
 ==================
 
-* dev-develop
+* 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
     * BUGFIX      #1021 [SecurityBundle] Only check security for not-null security contexts
     * BUGFIX      #1009 [MediaBundle]    Fix media download url
@@ -49,8 +49,6 @@ CHANGELOG for Sulu
     * FEATURE     #909 [MediaBundle]     Added scroll down pagination for collection
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
     * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
-
-* dev-master
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
     * HOTFIX      #880 [AdminBundle]     Fixed user link if user and contact has not the same id
     * HOTFIX      #880 [ContentBundle]   Fixed content type time to allow empty time values
