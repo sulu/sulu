@@ -27,6 +27,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Structure\Block;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -414,7 +415,7 @@ class StructureBridge implements StructureInterface
      */
     public function getHasTranslation()
     {
-        return true;
+        return $this->getTitle() ? true : false;
     }
 
     /**
@@ -472,8 +473,12 @@ class StructureBridge implements StructureInterface
                 'created' => $document->getCreated(),
                 'changed' => $document->getChanged(),
                 'title' => $document->getTitle(),
-                'url' => $document->getResourceSegment(),
+                'url' => null,
             ));
+
+            if ($document instanceof ResourceSegmentBehavior) {
+                $result['url'] = $document->getResourceSegment();
+            }
 
             if ($document instanceof ExtensionBehavior) {
                 $result['ext'] = $document->getExtensionsData();

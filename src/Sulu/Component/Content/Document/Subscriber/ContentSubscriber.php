@@ -133,6 +133,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $value = $node->getPropertyValueWithDefault($propertyName, null);
         $document->setStructureType($value);
 
+
         if (false === $event->getOption('hydrate.load_ghost_content', false)) {
             if ($this->inspector->getLocalizationState($document) === LocalizationState::GHOST) {
                 $value = null;
@@ -215,7 +216,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
             $realProperty = $propertyContainer->getProperty($propertyName);
             $value = $realProperty->getValue();
 
-            if ($structureProperty->isRequired() && empty($value)) {
+            if ($structureProperty->isRequired() && null === $value) {
                 throw new MandatoryPropertyException(sprintf(
                     'Property "%s" in structure "%s" is required but no value was given. Loaded from "%s"',
                     $propertyName,
