@@ -87,7 +87,7 @@ class ContentSubscriberTest extends SubscriberTestCase
 
         // map the structure type
         $this->persistEvent->getLocale()->willReturn('fr');
-        $this->encoder->localizedSystemName('template', 'fr')->willReturn('i18n:fr-template');
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
         $this->node->setProperty('i18n:fr-template', 'foobar')->shouldBeCalled();
 
         // map the content
@@ -96,10 +96,12 @@ class ContentSubscriberTest extends SubscriberTestCase
         $this->structure->getModelProperties()->willReturn(array(
             'prop1' => $this->structureProperty->reveal()
         ));
+        $this->structureProperty->isRequired()->willReturn(true);
         $this->structureProperty->getContentTypeName()->willReturn('content_type');
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType->reveal());
         $this->propertyFactory->createTranslatedProperty($this->structureProperty->reveal(), 'fr')->willReturn($this->legacyProperty->reveal());
         $this->propertyContainer->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+        $this->propertyValue->getValue()->willReturn('test');
 
         $this->contentType->write(
             $this->node->reveal(),
@@ -109,6 +111,35 @@ class ContentSubscriberTest extends SubscriberTestCase
             'fr',
             null
         )->shouldBeCalled();
+
+        $this->subscriber->handlePersist($this->persistEvent->reveal());
+    }
+
+    /**
+     * It should throw an exception if the property is required but the value is null
+     *
+     * @expectedException Sulu\Component\Content\Exception\MandatoryPropertyException
+     */
+    public function testThrowExceptionPropertyRequired()
+    {
+        $document = new TestContentDocument($this->propertyContainer->reveal());
+        $document->setStructureType('foobar');
+        $this->persistEvent->getDocument()->willReturn($document);
+
+        // map the structure type
+        $this->persistEvent->getLocale()->willReturn('fr');
+
+        // map the content
+        $this->inspector->getStructure($document)->willReturn($this->structure->reveal());
+        $this->inspector->getWebspace($document)->willReturn('webspace');
+        $this->structure->getModelProperties()->willReturn(array(
+            'prop1' => $this->structureProperty->reveal()
+        ));
+        $this->structureProperty->isRequired()->willReturn(true);
+        $this->propertyContainer->getProperty('prop1')->willReturn($this->propertyValue->reveal());
+        $this->propertyValue->getValue()->willReturn(null);
+        $this->structure->getName()->willReturn('test');
+        $this->structure->getResource()->willReturn('/path/to/resource.xml');
 
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
@@ -131,9 +162,10 @@ class ContentSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getDocument()->willReturn($document);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getLocale()->willReturn('fr');
+        $this->hydrateEvent->getOption('hydrate.load_ghost_content', false)->willReturn(true);
 
         // set the structure type
-        $this->encoder->localizedSystemName('template', 'fr')->willReturn('i18n:fr-template');
+        $this->encoder->contentName('template')->willReturn('i18n:fr-template');
         $this->node->getPropertyValueWithDefault('i18n:fr-template', null)->willReturn('foobar');
 
         // set the property container

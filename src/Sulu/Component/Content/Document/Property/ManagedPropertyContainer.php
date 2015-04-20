@@ -109,7 +109,7 @@ class ManagedPropertyContainer extends PropertyContainer
      *
      * @return array
      */
-    public function getArrayCopy()
+    public function toArray()
     {
         $values = array();
         foreach ($this->structure->getModelProperties() as $childName => $structureChild) {

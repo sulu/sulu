@@ -166,12 +166,13 @@ class ContentSubscriber extends AbstractMappingSubscriber
 
         $node = $event->getNode();
         $locale = $event->getLocale();
+
+        $this->mapContentToNode($document, $node, $locale);
+
         $node->setProperty(
             $this->getStructureTypePropertyName($document, $locale),
             $document->getStructureType()
         );
-
-        $this->mapContentToNode($document, $node, $locale);
     }
 
     private function getStructureTypePropertyName($document, $locale)
@@ -211,14 +212,7 @@ class ContentSubscriber extends AbstractMappingSubscriber
         $structure = $this->inspector->getStructure($document);
 
         foreach ($structure->getModelProperties() as $propertyName => $structureProperty) {
-            $contentTypeName = $structureProperty->getContentTypeName();
-            $contentType = $this->contentTypeManager->get($contentTypeName);
-
-            // TODO: Only write if the property has been modified.
-
-            $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $realProperty = $propertyContainer->getProperty($propertyName);
-
             $value = $realProperty->getValue();
 
             if ($structureProperty->isRequired() && empty($value)) {
@@ -230,6 +224,12 @@ class ContentSubscriber extends AbstractMappingSubscriber
                 ));
             }
 
+            $contentTypeName = $structureProperty->getContentTypeName();
+            $contentType = $this->contentTypeManager->get($contentTypeName);
+
+            // TODO: Only write if the property has been modified.
+
+            $legacyProperty = $this->legacyPropertyFactory->createTranslatedProperty($structureProperty, $locale);
             $legacyProperty->setValue($value);
 
             try {

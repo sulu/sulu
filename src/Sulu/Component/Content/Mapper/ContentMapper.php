@@ -483,7 +483,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         $children = $parent->getChildren($parent);
-        $children = $this->documentsToStructureCollection($children->getArrayCopy(), array(
+        $children = $this->documentsToStructureCollection($children->toArray(), array(
             'exclude_ghost' => $excludeGhosts
         ));
 
@@ -786,7 +786,7 @@ class ContentMapper implements ContentMapperInterface
         $parentDocument = $this->inspector->getParent($document);
         $siblingDocuments = $this->inspector->getChildren($parentDocument);
 
-        $siblings = array_values($siblingDocuments->getArrayCopy()); // get indexed array
+        $siblings = array_values($siblingDocuments->toArray()); // get indexed array
         $countSiblings = count($siblings);
         $currentPosition = array_search($document, $siblings) + 1;
 

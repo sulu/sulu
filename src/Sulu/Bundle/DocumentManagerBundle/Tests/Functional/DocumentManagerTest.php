@@ -93,7 +93,7 @@ class DocumentManagerTest extends SuluTestCase
         $results = $query->execute();
 
         $this->assertInstanceOf(ResultCollection::class, $results);
-        $results = $results->getArrayCopy();
+        $results = $results->toArray();
 
         foreach ($this->dispatcher->getCalledListeners() as $listener) {
         }

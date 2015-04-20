@@ -10,9 +10,9 @@ use Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 class ExtensionSubscriberTest extends SubscriberTestCase
 {
@@ -56,9 +56,9 @@ class ExtensionSubscriberTest extends SubscriberTestCase
         $this->hydrateEvent->getDocument()->willReturn($document);
         $this->inspector->getWebspace($document)->willReturn('sulu_io');
         $this->namespaceRegistry->getPrefix('extension_localized')->willReturn('ext_prefix');
-        $this->extensionManager->getExtensions('foobar')->willReturn(array(
+        $this->extensionManager->getExtension('foobar', 'ext_1')->willReturn(
             $this->extension->reveal()
-        ));
+        );
         $this->extension->getName()->willReturn('ext_1');
         $this->extension->setLanguageCode('de', 'ext_prefix', '')->shouldBeCalled();
         $this->extension->load(
@@ -69,9 +69,10 @@ class ExtensionSubscriberTest extends SubscriberTestCase
 
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
 
-        $this->assertEquals(array(
-            'ext_1' => $expectedData,
-        ), $document->getExtensionsData());
+        $this->assertEquals(
+            $document->getExtensionsData()->offsetGet('ext_1'),
+            $expectedData
+        );
     }
 
     /**

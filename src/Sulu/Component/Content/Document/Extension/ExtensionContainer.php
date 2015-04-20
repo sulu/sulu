@@ -4,6 +4,7 @@ namespace Sulu\Component\Content\Document\Extension;
 
 use Sulu\Component\Content\Extension\ExtensionManager;
 use PHPCR\NodeInterface;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 class ExtensionContainer implements \ArrayAccess
 {
@@ -18,7 +19,7 @@ class ExtensionContainer implements \ArrayAccess
 
     public function __construct(
         $structureType,
-        ExtensionManager $extensionManager,
+        ExtensionManagerInterface $extensionManager,
         NodeInterface $node,
         $locale,
         $prefix,

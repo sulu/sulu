@@ -69,8 +69,29 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
             'en'
         )->shouldBeCalled();
         $this->hydrateEvent->setLocale('de')->shouldBeCalled();
+        $this->hydrateEvent->getOption('hydrate.load_ghost_content', true)->willReturn(true);
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
+
+    /**
+     * It should reset the original locale if the load_ghost_content option is false
+     */
+    public function testNoWebspaceDoNotLoadGhostContent()
+    {
+        $this->node->hasProperty(self::FIX_PROPERTY_NAME)->willReturn(false);
+        $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
+        $this->inspector->getLocales($this->document)->willReturn(array('de', 'fr'));
+        $this->hydrateEvent->setLocale('de')->shouldBeCalled();
+
+        $this->hydrateEvent->getOption('hydrate.load_ghost_content', true)->willReturn(false);
+        $this->registry->updateLocale(
+            $this->document->reveal(),
+            self::FIX_LOCALE,
+            self::FIX_LOCALE
+        )->shouldBeCalled();
+        $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
+    }
+
 
     /**
      * It should throw an exception if no locale can be determined
@@ -101,6 +122,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->localization1->getParent()->willReturn($this->localization2->reveal());
         $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
         $this->node->hasProperty('prop2')->willReturn(true);
+        $this->hydrateEvent->getOption('hydrate.load_ghost_content', true)->willReturn(true);
 
         $this->registry->updateLocale(
             $this->document->reveal(),
@@ -127,6 +149,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->node->hasProperty('prop1')->willReturn(false);
         $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
         $this->node->hasProperty('prop2')->willReturn(true);
+        $this->hydrateEvent->getOption('hydrate.load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
         $this->localization1->getChildren()->willReturn(array(
@@ -158,6 +181,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
         $this->node->hasProperty('prop1')->willReturn(false);
         $this->encoder->localizedSystemName(ContentSubscriber::STRUCTURE_TYPE_FIELD, 'at')->willReturn('prop2');
         $this->node->hasProperty('prop2')->willReturn(true);
+        $this->hydrateEvent->getOption('hydrate.load_ghost_content', true)->willReturn(true);
 
         $this->localization1->getParent()->willReturn(null);
         $this->localization1->getChildren()->willReturn(array());
