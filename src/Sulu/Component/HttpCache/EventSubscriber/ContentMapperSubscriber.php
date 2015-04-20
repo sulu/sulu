@@ -10,12 +10,12 @@
 
 namespace Sulu\Component\HttpCache\EventSubscriber;
 
-use Sulu\Component\Content\Compat\Event\ContentNodeEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeEvent;
+use Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sulu\Component\Content\ContentEvents;
-use Sulu\Component\Content\Compat\Event\ContentNodeDeleteEvent;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\HttpCache\HandlerInvalidateStructureInterface;
+use Sulu\Component\Content\Mapper\ContentEvents;
 
 /**
  * Listen to the content mapper and invalidate structures
