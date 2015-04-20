@@ -25,7 +25,7 @@ use Sulu\Component\Content\Mapper\ContentMapper;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\LocalizationFinderInterface;
 use Sulu\Component\Content\Mapper\LocalizationFinder\ParentChildAnyFinder;
-use Sulu\Component\Content\StructureManagerInterface;
+use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Template\TemplateResolver;
 use Sulu\Component\Content\Template\TemplateResolverInterface;
 use Sulu\Component\Content\Types\ResourceLocator;
