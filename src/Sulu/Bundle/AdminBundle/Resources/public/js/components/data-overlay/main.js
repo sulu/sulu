@@ -21,18 +21,18 @@ define(function() {
     'use strict';
 
     var defaults = {
-            instanceName: '',
-            component: ''
-        },
+        instanceName: '',
+        component: ''
+    },
 
-        templates = {
-            main: [
-                '<div class="data-overlay">',
-                    '<button class="fa-times data-overlay-close btn btn-link"></button>',
-                    '<div class="data-overlay-content"></div>',
-                '</div>'
-            ].join('')
-        };
+    templates = {
+        main: [
+            '<div class="data-overlay">',
+                '<button class="fa-times data-overlay-close btn btn-link"></button>',
+                '<div class="data-overlay-content"></div>',
+            '</div>'
+        ].join('')
+    },
 
     createEventName = function(postfix) {
         return 'sulu.data-overlay.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
@@ -69,7 +69,7 @@ define(function() {
         initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.mainTpl = this.sandbox.util.template(templates.mainTpl);
+            this.mainTpl = this.sandbox.util.template(templates.main);
 
             this.render();
             this.startComponent();

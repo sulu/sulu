@@ -161,7 +161,7 @@ input, select {
 .sidebar-column {
   height: 100%;
   overflow: hidden;
-  z-index: 101;
+  z-index: 99;
   position: relative;
 }
 /* line 112, ../scss/modules/layout.scss */
