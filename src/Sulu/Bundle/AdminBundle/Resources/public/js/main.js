@@ -39,6 +39,7 @@ require.config({
         'aura_extensions/backbone-relational',
         'aura_extensions/sulu-content',
         'aura_extensions/sulu-extension',
+        'aura_extensions/url-manager',
         'widget-groups',
 
         '__component__$app@suluadmin',
