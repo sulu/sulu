@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
     * BUGFIX      #1009 [MediaBundle]    Fix media download url
     * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
     * BUGFIX      #1008 [AdminBundle]    Fixed 1Password css bug on login screen

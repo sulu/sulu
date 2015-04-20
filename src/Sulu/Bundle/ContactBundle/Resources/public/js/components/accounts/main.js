@@ -97,13 +97,9 @@ define([
 
             // load list view
             this.sandbox.on('sulu.contacts.accounts.list', function(type, noReload) {
-                var typeString = '';
-                if (!!type) {
-                    typeString = '/type:' + type;
-                }
                 this.sandbox.emit(
-                    'sulu.router.navigate', 'contacts/accounts' + typeString,
-                    !noReload ? true : false,
+                    'sulu.router.navigate', 'contacts/accounts',
+                    !noReload,
                     true,
                     true
                 );
