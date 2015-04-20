@@ -49,6 +49,11 @@ CHANGELOG for Sulu
     * FEATURE     #909 [MediaBundle]     Added scroll down pagination for collection
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
     * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
+
+* 0.16.2 (2015-04-14)
+    * HOTFIX      #997 [HttpCacheBundle] Fixed bug for caching ESI requests
+
+* 0.16.1 (2015-02-27)
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
     * HOTFIX      #880 [AdminBundle]     Fixed user link if user and contact has not the same id
     * HOTFIX      #880 [ContentBundle]   Fixed content type time to allow empty time values
