@@ -50,19 +50,11 @@
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.phpcr.session"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="sulu.content.localization_finder"/>
             <argument type="service" id="sulu.content.path_cleaner"/>
             <argument type="service" id="sulu.content.template_resolver"/>
             <argument type="service" id="sulu.util.node_helper"/>
             <argument type="service" id="sulu.content.rlp.strategy.tree"/>
-            <argument>%sulu.content.language.default%</argument>
-            <argument type="collection">
-                <argument key="page">%sulu.content.structure.default_type.page%</argument>
-                <argument key="snippet">%sulu.content.structure.default_type.snippet%</argument>
-            </argument>
             <argument>%sulu.content.language.namespace%</argument>
-            <argument>%sulu.content.internal_prefix%</argument>
-            <argument type="service" id="debug.stopwatch" on-invalid="null"/>
         </service>
 
         <!-- localization finders -->
