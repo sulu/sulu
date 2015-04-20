@@ -83,6 +83,14 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <!-- Compat -->
+        <service id="sulu_document_manager.document.subscriber.compat.mapper_remove" class="Sulu\Component\Content\Document\Subscriber\Compat\MapperRemoveSubscriber">
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu.util.node_helper" />
+            <tag name="kernel.event_subscriber" />
+        </service>
 
     </services>
 

@@ -257,9 +257,6 @@ class ContentMapper implements ContentMapperInterface
         $shadowBaseLanguage = null,
         $documentAlias = LegacyStructure::TYPE_PAGE
     ) {
-        // $event = new ContentNodeEvent($node, $structure);
-        // $this->eventDispatcher->dispatch(ContentEvents::NODE_PRE_SAVE, $event);
-
         $data = $this->dataNormalizer->normalize($data, $state, $parentUuid);
 
         $content = isset($data['content']) ? $data['content'] : null;
@@ -333,7 +330,12 @@ class ContentMapper implements ContentMapperInterface
         ));
         $this->documentManager->flush();
 
-        return $this->documentToStructure($document);
+        $structure = $this->documentToStructure($document);
+
+        $event = new ContentNodeEvent($this->inspector->getNode($document), $structure);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
+
+        return $structure;
     }
 
     /**
@@ -378,7 +380,12 @@ class ContentMapper implements ContentMapperInterface
 
         $this->documentManager->flush();
 
-        return $this->documentToStructure($document);
+        $structure = $this->documentToStructure($document);
+
+        $event = new ContentNodeEvent($node, $structure);
+        $this->eventDispatcher->dispatch(ContentEvents::NODE_POST_SAVE, $event);
+
+        return $structure;
     }
 
     /**
