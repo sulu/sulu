@@ -77,6 +77,7 @@ class NavigationTest extends SuluTestCase
                 'title' => 'News',
                 'url' => '/news',
                 'ext' => array('excerpt' => array('title' => 'Excerpt News')),
+                'url' => '/news',
                 'navContexts' => array('footer')
             ),
             'products' => array(

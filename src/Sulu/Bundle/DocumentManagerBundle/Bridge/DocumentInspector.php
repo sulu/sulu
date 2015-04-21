@@ -144,6 +144,16 @@ class DocumentInspector extends BaseDocumentInspector
     }
 
     /**
+     * Return the locale for the given document
+     *
+     * @return string
+     */
+    public function getLocale($document)
+    {
+        return $this->documentRegistry->getLocaleForDocument($document);
+    }
+
+    /**
      * Return the concrete localizations for the given document
      *
      * @param ContentBehavior $document

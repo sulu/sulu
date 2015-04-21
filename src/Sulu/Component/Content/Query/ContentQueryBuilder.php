@@ -149,7 +149,7 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
         $sql2 = sprintf(
             "SELECT %s
              FROM [nt:unstructured] AS page
-             WHERE page.[jcr:mixinTypes] = 'sulu:page'
+             WHERE (page.[jcr:mixinTypes] = 'sulu:page' OR page.[jcr:mixinTypes] = 'sulu:home')
                 AND (%s)
                 %s %s",
             implode(', ', $select),

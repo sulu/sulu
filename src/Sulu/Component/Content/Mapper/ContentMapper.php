@@ -930,10 +930,13 @@ class ContentMapper implements ContentMapperInterface
                 if ($maxDepth === null || $maxDepth < 0 || ($maxDepth > 0 && $pageDepth <= $maxDepth)) {
                     $item = $this->rowToArray($row, $locale, $webspaceKey, $fields);
 
-                    if (false !== $item && !in_array($item, $result)) {
-                        $result[] = $item;
+                    if (false === $item || in_array($item, $result)) {
+                        continue;
                     }
+
+                    $result[] = $item;
                 }
+
             };
         }
 
@@ -964,6 +967,7 @@ class ContentMapper implements ContentMapperInterface
      */
     private function rowToArray(Row $row, $locale, $webspaceKey, $fields)
     {
+        static $count;
         // reset cache
         $this->initializeExtensionCache();
         $templateName = $this->encoder->localizedSystemName('template', $locale);
@@ -972,11 +976,27 @@ class ContentMapper implements ContentMapperInterface
         // check and determine shadow-nodes
         $node = $row->getNode('page');
         $document = $this->documentManager->find($node->getIdentifier(), $locale);
+        $originalDocument = $document;
+
+        if (!$node->hasProperty($templateName) && !$node->hasProperty($nodeTypeName)) {
+            return false;
+        }
 
         $redirectType = $document->getRedirectType();
 
         if ($redirectType === RedirectType::INTERNAL) {
-            throw new \InvalidArgumentException('WTF');
+            $target = $document->getRedirectTarget();
+
+            if ($target) {
+                $url = $target->getResourceSegment();
+
+                $document = $target;
+                $node = $this->inspector->getNode($document);
+            }
+        }
+
+        if ($redirectType === RedirectType::EXTERNAL) {
+            $url = 'http://' . $document->getRedirectExternal();
         }
 
         $originLocale = $locale;
@@ -989,14 +1009,14 @@ class ContentMapper implements ContentMapperInterface
             $nodeState = $document->getWorkflowStage();
         }
 
+
         // if page is not piblished ignore it
         if ($nodeState !== WorkflowStage::PUBLISHED) {
             return false;
         }
 
         if (!isset($url)) {
-            $structure = $this->inspector->getStructure($document);
-            $url = $this->getRowUrl($document, $structure, $webspaceKey);
+            $url = $document->getResourceSegment();
         }
 
         if (false === $url) {
@@ -1015,25 +1035,25 @@ class ContentMapper implements ContentMapperInterface
         );
 
         $structureType = $document->getStructureType();
-        $shortPath = $this->inspector->getContentPath($document);
+        $shortPath = $this->inspector->getContentPath($originalDocument);
 
         return array_merge(
             array(
                 'uuid' => $document->getUuid(),
-                'nodeType' => $document->getRedirectType(),
+                'nodeType' => $redirectType,
                 'path' => $shortPath,
                 'changed' => $document->getChanged(),
                 'changer' => $document->getChanger(),
                 'created' => $document->getCreated(),
                 'published' => $document->getWorkflowStage() === WorkflowStage::PUBLISHED,
                 'creator' => $document->getCreator(),
-                'title' => $document->getTitle(),
+                'title' => $originalDocument->getTitle(),
                 'url' => $url,
                 'urls' => $this->inspector->getLocalizedUrlsForPage($document),
                 'locale' => $locale,
                 'webspaceKey' => $this->inspector->getWebspace($document),
                 'template' => $structureType,
-                'parent' => $document->getParent()->getUuid(),
+                'parent' => $this->inspector->getParent($document)->getUuid(),
                 'order' => null, // TODO: Implement order
             ),
             $fieldsData
@@ -1148,32 +1168,6 @@ class ContentMapper implements ContentMapperInterface
         );
 
         return $extension->getContentData($data);
-    }
-
-    /**
-     * Returns url of a row
-     */
-    private function getRowUrl(
-        $document,
-        Structure $structure,
-        $webspaceKey
-    ) {
-        // if homepage
-        if ($webspaceKey !== null && $this->sessionManager->getContentPath($webspaceKey) === $document->getPath()) {
-            return '/';
-        }
-
-        if ($structure->hasPropertyWithTagName('sulu.rlp')) {
-            $property = $structure->getPropertyByTagName('sulu.rlp');
-
-            if ($property->getContentTypeName() !== 'resource_locator') {
-                return 'http://'.$document->getContent()->getProperty($property->getName())->getValue();
-            }
-
-            return $document->getResourceSegment();
-        }
-
-        return '';
     }
 
     /**
