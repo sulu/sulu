@@ -277,7 +277,7 @@ class StructureBridge implements StructureInterface
 
         $propertyBridges = array();
         foreach ($items as $propertyName => $property) {
-            $propertyBridges[$propertyName] = $this->createLegacyPropertyFromItem($property);
+            $propertyBridges[$propertyName] = $this->getProperty($propertyName);
         }
 
         return $propertyBridges;
