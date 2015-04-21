@@ -69,6 +69,7 @@ class StructureResolver implements StructureResolverInterface
             $data['content'][$property->getName()] = $contentType->getContentData($property);
         }
 
+
         return $data;
     }
 }
