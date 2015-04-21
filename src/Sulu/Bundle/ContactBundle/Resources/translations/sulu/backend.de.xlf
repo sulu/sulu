@@ -494,7 +494,7 @@
             </trans-unit>
             <trans-unit id="2745c23db7c8055c84ecba422b39e8e6" resname="contact.contacts.title">
                 <source>contact.contacts.title</source>
-                <target>Person</target>
+                <target>Personen</target>
             </trans-unit>
             <trans-unit id="bce12aa0a40b4a95a3bfc133a6bf286f" resname="contact.contacts.contactTitle">
                 <source>contact.contacts.contactTitle</source>
