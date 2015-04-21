@@ -67,29 +67,6 @@ class Filter
     }
 
     /**
-     * Set entity
-     *
-     * @param string $entity
-     * @return Filter
-     */
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-
-        return $this;
-    }
-
-    /**
-     * Get entity
-     *
-     * @return string 
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    /**
      * Get id
      *
      * @return integer 
@@ -163,5 +140,33 @@ class Filter
     public function getConditionGroups()
     {
         return $this->conditionGroups;
+    }
+    /**
+     * @var string
+     */
+    private $entityName;
+
+
+    /**
+     * Set entityName
+     *
+     * @param string $entityName
+     * @return Filter
+     */
+    public function setEntityName($entityName)
+    {
+        $this->entityName = $entityName;
+
+        return $this;
+    }
+
+    /**
+     * Get entityName
+     *
+     * @return string 
+     */
+    public function getEntityName()
+    {
+        return $this->entityName;
     }
 }
