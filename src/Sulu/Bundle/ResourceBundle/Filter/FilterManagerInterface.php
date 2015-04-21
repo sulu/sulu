@@ -19,4 +19,6 @@ interface FilterManagerInterface {
     public function getFieldDescriptors($getLocale);
 
     public function findByIdAndLocale($id, $locale);
+
+    public function findAllByLocale($getLocale);
 }

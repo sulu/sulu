@@ -30,6 +30,20 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
     }
 
     /**
+     * Returns all products in the given locale
+     * @param string $locale The locale of the product to load
+     * @return Filter[]
+     */
+    public function findAllByLocale($locale)
+    {
+        try {
+            return $this->getFilterQuery($locale)->getQuery()->getResult();
+        } catch (NoResultException $exc) {
+            return null;
+        }
+    }
+
+    /**
      * Returns the query for products
      * @param string $locale The locale to load
      * @return \Doctrine\ORM\QueryBuilder
