@@ -7,7 +7,7 @@
         </id>
 
         <field name="name" type="string" length="255" nullable="true"/>
-        <field name="locale" type="string" length="10"/>
+        <field name="locale" type="string" length="10" nullable="false"/>
         <field name="shortDescription" type="text" nullable="true"/>
         <field name="longDescription" type="text" nullable="true"/>
 

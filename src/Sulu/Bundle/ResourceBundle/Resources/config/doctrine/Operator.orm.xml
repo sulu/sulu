@@ -7,7 +7,9 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="operator" type="text" column="operator" nullable="false"/>
+        <field name="operator" type="string" length="255" column="operator" nullable="false"/>
+        <field name="type" type="string" length="255" column="type" nullable="false"/>
+        <field name="inputType" type="string" length="255" column="inputType" nullable="true"/>
 
         <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation" mapped-by="operator"
                      field="translations">
@@ -15,9 +17,6 @@
                 <cascade-persist/>
             </cascade>
         </one-to-many>
-
-        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorType" mapped-by="operator"
-                     field="types"/>
 
         <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorValue" mapped-by="operator"
                      field="values"/>

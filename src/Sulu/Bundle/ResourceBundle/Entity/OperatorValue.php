@@ -97,4 +97,32 @@ class OperatorValue
     {
         return $this->operator;
     }
+    /**
+     * @var int
+     */
+    private $type;
+
+
+    /**
+     * Set type
+     *
+     * @param \int $type
+     * @return OperatorValue
+     */
+    public function setType(\int $type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \int 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 }
