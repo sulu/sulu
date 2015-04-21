@@ -597,6 +597,6 @@ class NodeController extends RestController
      */
     public function getSecuredObjectId(Request $request)
     {
-        return $request->get('uuid');
+        return $request->get('uuid') ?: $request->get('parent');
     }
 }

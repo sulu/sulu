@@ -64,92 +64,83 @@ class ContentRouteProvider implements RouteProviderInterface
         $htmlExtension = '.html';
         $resourceLocator = $this->requestAnalyzer->getResourceLocator();
 
-        if ($this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
+        if (
+            $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_REDIRECT
             || $this->requestAnalyzer->getMatchType() == RequestAnalyzerInterface::MATCH_TYPE_PARTIAL
         ) {
-            // redirect by information from webspace config
-            $route = new Route(
-                $request->getRequestUri(), array(
-                    '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
-                    'url' => $this->requestAnalyzer->getPortalUrl(),
-                    'redirect' => $this->requestAnalyzer->getRedirect()
-                )
+            // redirect webspace correctly with language
+            $collection->add(
+                'redirect_' . uniqid(),
+                $this->getRedirectWebSpaceRoute($request)
             );
-
-            $collection->add('redirect_' . uniqid(), $route);
         } elseif (
             $request->getRequestFormat() === 'html' &&
             substr($request->getPathInfo(), -strlen($htmlExtension)) === $htmlExtension
         ) {
-            $url = rtrim(
-                $this->requestAnalyzer->getResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
-                '/'
-            );
-
             // redirect *.html to * (without url)
-            $route = new Route(
-                $request->getRequestUri(), array(
-                    '_controller' => 'SuluWebsiteBundle:Default:redirect',
-                    'url' => $url
+            $collection->add(
+                'redirect_' . uniqid(),
+                $this->getRedirectRoute(
+                    $request,
+                    $this->getUrlWithoutEndingTrailingSlash($resourceLocator)
                 )
             );
-
-            $collection->add('redirect_' . uniqid(), $route);
         } else {
             // just show the page
             $portal = $this->requestAnalyzer->getPortal();
             $language = $this->requestAnalyzer->getCurrentLocalization()->getLocalization();
 
             try {
+                // load content by url ignore ending trailing slash
                 $content = $this->contentMapper->loadByResourceLocator(
-                    $resourceLocator,
+                    rtrim($resourceLocator, '/'),
                     $portal->getWebspace()->getKey(),
                     $language
                 );
 
-                if (
+                if ($this->hasTrailingSlash($resourceLocator)) {
+                    // redirect page to page without slash at the end
+                    $collection->add(
+                        'redirect_' . uniqid(),
+                        $this->getRedirectWebSpaceRoute($request)
+                    );
+                } elseif (
                     $content->getNodeType() === Structure::NODE_TYPE_INTERNAL_LINK &&
                     $content->getNodeState() === StructureInterface::STATE_PUBLISHED
                 ) {
-                    // redirect to linked page
-                    $route = new Route(
-                        $request->getRequestUri(), array(
-                            '_controller' => 'SuluWebsiteBundle:Default:redirect',
-                            'url' => $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator()
+                    // redirect internal link
+                    $collection->add(
+                        $content->getKey() . '_' . uniqid(),
+                        $this->getRedirectRoute(
+                            $request,
+                            $this->requestAnalyzer->getResourceLocatorPrefix() . $content->getResourceLocator()
                         )
                     );
-
-                    $collection->add($content->getKey() . '_' . uniqid(), $route);
                 } elseif (
                     $content->getNodeState() === StructureInterface::STATE_TEST ||
                     !$content->getHasTranslation() ||
                     !$this->checkResourceLocator()
                 ) {
+                    // error 404 page not published
                     throw new ResourceLocatorNotFoundException();
                 } else {
-                    $route = new Route(
-                        $request->getPathInfo(), array(
-                            '_controller' => $content->getController(),
-                            'structure' => $content
-                        )
+                    // show the page
+                    $collection->add(
+                        $content->getKey() . '_' . uniqid(),
+                        $this->getStructureRoute($request, $content)
                     );
-
-                    $collection->add($content->getKey() . '_' . uniqid(), $route);
                 }
             } catch (ResourceLocatorNotFoundException $exc) {
                 // just do not add any routes to the collection
             } catch (ResourceLocatorMovedException $exc) {
-                $newUrl = $this->requestAnalyzer->getResourceLocatorPrefix() . $exc->getNewResourceLocator();
-
-                // redirect to new url
-                $route = new Route(
-                    $request->getRequestUri(), array(
-                        '_controller' => 'SuluWebsiteBundle:Default:redirect',
-                        'url' => $newUrl
+                // old url resource was moved
+                $collection->add(
+                    $exc->getNewResourceLocatorUuid() . '_' . uniqid(),
+                    $this->getRedirectRoute(
+                        $request,
+                        $this->requestAnalyzer->getResourceLocatorPrefix() . $exc->getNewResourceLocator()
                     )
                 );
-
-                $collection->add($exc->getNewResourceLocatorUuid() . '_' . uniqid(), $route);
             } catch (RepositoryException $exc) {
                 // just do not add any routes to the collection
             }
@@ -210,5 +201,73 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         return !($this->requestAnalyzer->getResourceLocator() === '/'
             && $this->requestAnalyzer->getResourceLocatorPrefix());
+    }
+
+    /**
+     * @param Request $request
+     * @return Route
+     */
+    protected function getRedirectWebSpaceRoute(Request $request)
+    {
+        // redirect by information from webspace config
+        return new Route(
+            $request->getPathInfo(), array(
+                '_controller' => 'SuluWebsiteBundle:Default:redirectWebspace',
+                'url' => $this->requestAnalyzer->getPortalUrl(),
+                'redirect' => $this->requestAnalyzer->getRedirect()
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param $url
+     * @return Route
+     */
+    protected function getRedirectRoute(Request $request, $url)
+    {
+        // redirect to linked page
+        return new Route(
+            $request->getPathInfo(), array(
+                '_controller' => 'SuluWebsiteBundle:Default:redirect',
+                'url' => $url
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param StructureInterface $content
+     * @return Route
+     */
+    protected function getStructureRoute(Request $request, $content)
+    {
+        return new Route(
+            $request->getPathInfo(), array(
+                '_controller' => $content->getController(),
+                'structure' => $content
+            )
+        );
+    }
+
+    /**
+     * @param $resourceLocator
+     * @return string
+     */
+    protected function getUrlWithoutEndingTrailingSlash($resourceLocator)
+    {
+        return rtrim(
+            $this->requestAnalyzer->getResourceLocatorPrefix() . ($resourceLocator ? $resourceLocator : '/'),
+            '/'
+        );
+    }
+
+    /**
+     * @param $resourceLocator
+     * @return int
+     */
+    protected function hasTrailingSlash($resourceLocator)
+    {
+        return preg_match('/\/$/', $resourceLocator) && $resourceLocator != '/';
     }
 }

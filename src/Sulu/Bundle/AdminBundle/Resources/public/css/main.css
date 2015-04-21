@@ -295,11 +295,15 @@ input, select {
   position: relative;
   padding: 0 50px;
 }
-/* line 61, ../scss/modules/login.scss */
+/* line 59, ../scss/modules/login.scss */
+.sulu-login .box .frame .hide {
+  display: none;
+}
+/* line 65, ../scss/modules/login.scss */
 .sulu-login .box .inputs .form-element {
   padding-left: 5px;
 }
-/* line 67, ../scss/modules/login.scss */
+/* line 71, ../scss/modules/login.scss */
 .sulu-login .box .error-message {
   color: #EA524E;
   display: block;
@@ -307,7 +311,7 @@ input, select {
   overflow: hidden;
   transition: height 200ms;
 }
-/* line 75, ../scss/modules/login.scss */
+/* line 79, ../scss/modules/login.scss */
 .sulu-login .box .login-logo {
   width: 100%;
   height: 180px;
@@ -315,25 +319,25 @@ input, select {
   background-size: auto 122px;
   margin-bottom: 10px;
 }
-/* line 82, ../scss/modules/login.scss */
+/* line 86, ../scss/modules/login.scss */
 .sulu-login .box .login-loader {
   float: right;
   margin: 20px 15px 0 0;
 }
-/* line 86, ../scss/modules/login.scss */
+/* line 90, ../scss/modules/login.scss */
 .sulu-login .box .reset-mail-message .login-loader {
   float: none;
   margin-right: 0;
   margin-left: 0;
 }
-/* line 91, ../scss/modules/login.scss */
+/* line 95, ../scss/modules/login.scss */
 .sulu-login .box .btn.action {
   float: right;
   margin-top: 10px;
   padding-left: 45px;
   padding-right: 45px;
 }
-/* line 98, ../scss/modules/login.scss */
+/* line 102, ../scss/modules/login.scss */
 .sulu-login .box .bottom-container {
   position: absolute;
   bottom: 0px;
@@ -347,7 +351,7 @@ input, select {
   content: ' ';
   display: block;
 }
-/* line 106, ../scss/modules/login.scss */
+/* line 110, ../scss/modules/login.scss */
 .sulu-login .box .bottom-container span {
   display: block;
   padding: 10px 0 10px 10px;
@@ -355,46 +359,46 @@ input, select {
   color: #999;
   float: right;
 }
-/* line 112, ../scss/modules/login.scss */
+/* line 116, ../scss/modules/login.scss */
 .sulu-login .box .bottom-container span:hover {
   color: #000;
 }
-/* line 116, ../scss/modules/login.scss */
+/* line 120, ../scss/modules/login.scss */
 .sulu-login .box .bottom-container .website-switch {
   float: left;
   padding-left: 0;
 }
-/* line 123, ../scss/modules/login.scss */
+/* line 127, ../scss/modules/login.scss */
 .sulu-login .box .reset-mail .bottom-container span:not(.website-switch) {
   color: #000;
 }
-/* line 128, ../scss/modules/login.scss */
+/* line 132, ../scss/modules/login.scss */
 .sulu-login .box .reset-mail-message {
   text-align: center;
 }
-/* line 130, ../scss/modules/login.scss */
+/* line 134, ../scss/modules/login.scss */
 .sulu-login .box .reset-mail-message .message {
   display: block;
   color: #999;
   padding-bottom: 20px;
 }
-/* line 135, ../scss/modules/login.scss */
+/* line 139, ../scss/modules/login.scss */
 .sulu-login .box .reset-mail-message .btn.action {
   float: none;
   margin: 0;
   padding: 0 15px;
 }
-/* line 142, ../scss/modules/login.scss */
+/* line 146, ../scss/modules/login.scss */
 .sulu-login .box label {
   text-align: center;
   padding-bottom: 5px;
 }
-/* line 148, ../scss/modules/login.scss */
+/* line 152, ../scss/modules/login.scss */
 .sulu-login .background {
   display: none;
   position: absolute;
 }
-/* line 152, ../scss/modules/login.scss */
+/* line 156, ../scss/modules/login.scss */
 .sulu-login .background .image {
   position: relative;
   display: block;
@@ -412,7 +416,7 @@ input, select {
   filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='3');
   z-index: 10;
 }
-/* line 164, ../scss/modules/login.scss */
+/* line 168, ../scss/modules/login.scss */
 .sulu-login .background .darkener {
   position: absolute;
   top: 0px;
@@ -425,7 +429,7 @@ input, select {
   transition: opacity 450ms;
   z-index: 20;
 }
-/* line 178, ../scss/modules/login.scss */
+/* line 182, ../scss/modules/login.scss */
 .sulu-login .background.active .darkener {
   opacity: 0.15;
 }

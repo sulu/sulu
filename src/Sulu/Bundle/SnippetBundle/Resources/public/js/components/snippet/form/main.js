@@ -46,7 +46,7 @@ define([
             breadcrumb: this.breadcrumb,
 
             tabs: {
-                url: '/admin/snippet/navigation/snippet'
+                url: '/admin/content-navigations?alias=snippet'
             },
 
             toolbar: {

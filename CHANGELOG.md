@@ -2,22 +2,33 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #797 [SearchBundle]    Rebuild command removed, now hooks into massive:search:index:rebuild
-    * ENHANCEMENT #797 [ContactBundle]   Contacts and Accounts have massive search mappings
-    * FEATURE     #935 [MediaBundle]     Added new media selection
+    * ENHANCEMENT #797  [SearchBundle]   Rebuild command removed, now hooks into massive:search:index:rebuild
+    * ENHANCEMENT #797  [ContactBundle]  Contacts and Accounts have massive search mappings
+    * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
+    * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
+
+* 0.17.0 (2015-04-20)
+    * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
+    * BUGFIX      #1021 [SecurityBundle] Only check security for not-null security contexts
     * BUGFIX      #1009 [MediaBundle]    Fix media download url
+    * ENHANCEMENT #999  [ContentBundle]  Show permission tab only when user has correct permissions
     * ENHANCEMENT #1005 [ContactBundle]  Added security checks for contacts and accounts
+    * BUGFIX      #1008 [AdminBundle]    Fixed 1Password css bug on login screen
     * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
+    * BUGFIX      #1002 [ContentBundle]  Changed internal link title for navigation, smartcontent and internal link
+    * FEATURE     #935 [MediaBundle]     Added new media selection
     * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
     * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
     * ENHANCEMENT #988 [ContentBundle]   Set locale on render request
+    * BUGFIX      #994 [CategoryBundle]  Fixed category search  
     * ENHANCEMENT #988 [MediaBundle]     Set working defaults for ghostscript and caching headers
     * BUGFIX      #976 [MediaBundle]     Fix media scale mode parameter
     * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable
     * BUGFIX      #973 [All]             Added handling of anonymous user token
     * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
+    * BUGFIX      #948 [MediaBundle]     Add ForceRation Parameter to Scale Command
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
     * BUGFIX      #922 [ContentBundle]   Fixed URL Generation after copying language of a child node
@@ -47,7 +58,10 @@ CHANGELOG for Sulu
     * ENHANCEMENT #907 [ContentBundle]   Added ability to define custom homepage template
     * BUGFIX      #955 [ContentBundle]   Added webspace and locale to page in smart-content to load snippet in correct language
 
-* dev-master
+* 0.16.2 (2015-04-14)
+    * HOTFIX      #997 [HttpCacheBundle] Fixed bug for caching ESI requests
+
+* 0.16.1 (2015-02-27)
     * HOTFIX      #880 [ContentBundle]   Fixed changelog if user and contact has not the same id
     * HOTFIX      #880 [AdminBundle]     Fixed user link if user and contact has not the same id
     * HOTFIX      #880 [ContentBundle]   Fixed content type time to allow empty time values

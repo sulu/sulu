@@ -12,8 +12,8 @@ define(['config', 'sulusecurity/collections/roles'], function(Config, Roles) {
     'use strict';
 
     var permissionUrl = '/admin/api/permissions',
-        permissions = Config.get('sulusecurity.permissions'),
-        permissionTitles = Config.get('sulusecurity.permission_titles'),
+        permissions = Config.get('sulusecurity.permissions').slice(0, -1), // removes the security permission
+        permissionTitles = Config.get('sulusecurity.permission_titles').slice(0, -1),
         matrixContainerSelector = '#matrix-container',
         matrixSelector = '#matrix',
         permissionData = {

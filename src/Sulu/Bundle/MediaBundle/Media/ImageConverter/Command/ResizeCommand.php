@@ -11,13 +11,14 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 
 class ResizeCommand implements CommandInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function execute(&$image, $parameters)
+    public function execute(ImageInterface &$image, $parameters)
     {
         $size = $image->getSize();
 

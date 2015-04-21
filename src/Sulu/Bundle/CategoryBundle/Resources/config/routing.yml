@@ -1,7 +1,3 @@
-navigation_category:
-    path: /navigation/category
-    defaults: { _controller: SuluCategoryBundle:Navigation:category }
-
 sulu_category.template.category.list:
     pattern: /template/category/list.html
     defaults: { _controller: SuluCategoryBundle:Template:categoriesList }
