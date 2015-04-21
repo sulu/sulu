@@ -4,8 +4,8 @@ namespace Sulu\Component\Content\Compat\Structure;
 
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\Structure as LegacyStructure;
-use Sulu\Component\Content\Property;
-use Sulu\Component\Content\PropertyTag;
+use Sulu\Component\Content\Compat\Property;
+use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Section\SectionProperty;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
