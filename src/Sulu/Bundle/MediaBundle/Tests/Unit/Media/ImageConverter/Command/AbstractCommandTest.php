@@ -64,6 +64,4 @@ abstract class AbstractCommandTest extends SuluTestCase
             $this->assertEquals($data['height'], $image->getSize()->getHeight());
         }
     }
-
-
 }
