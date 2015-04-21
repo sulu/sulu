@@ -8,14 +8,17 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Admin;
+namespace Sulu\Bundle\SnippetBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SuluCategoryAdmin extends Admin
+/**
+ * Admin for snippet
+ */
+class SnippetAdmin extends Admin
 {
     /**
      * @var SecurityCheckerInterface
@@ -27,18 +30,21 @@ class SuluCategoryAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
 
-        $settings = new NavigationItem('navigation.settings');
-        $settings->setIcon('cog');
+        $section = new NavigationItem('navigation.webspaces');
 
-        if ($this->securityChecker->hasPermission('sulu.settings.categories', 'view')) {
-            $categories = new NavigationItem('navigation.settings.categories', $settings);
-            $categories->setAction('settings/categories');
+        $global = new NavigationItem('navigation.global-content');
+        $global->setIcon('globe');
+        $section->addChild($global);
+
+        if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
+            $snippet = new NavigationItem('navigation.snippets');
+            $snippet->setIcon('bullseye');
+            $snippet->setAction('snippet/snippets');
+            $global->addChild($snippet);
         }
 
-        if ($settings->hasChildren()) {
-            $section->addChild($settings);
+        if ($global->hasChildren()) {
             $rootNavigationItem->addChild($section);
         }
 
@@ -58,7 +64,7 @@ class SuluCategoryAdmin extends Admin
      */
     public function getJsBundleName()
     {
-        return 'sulucategory';
+        return 'sulusnippet';
     }
 
     /**
@@ -68,8 +74,8 @@ class SuluCategoryAdmin extends Admin
     {
         return array(
             'Sulu' => array(
-                'Settings' => array(
-                    'sulu.settings.categories'
+                'Global' => array(
+                    'sulu.global.snippets'
                 )
             )
         );

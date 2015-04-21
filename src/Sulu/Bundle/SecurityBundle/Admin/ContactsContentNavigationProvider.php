@@ -6,7 +6,7 @@ use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SuluSecurityContactsContentNavigationProvider implements ContentNavigationProviderInterface
+class ContactsContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**
      * @var SecurityCheckerInterface

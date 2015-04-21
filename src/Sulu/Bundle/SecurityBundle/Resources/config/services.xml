@@ -14,7 +14,7 @@
             <parameter key="security">1</parameter>
         </parameter>
 
-        <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
+        <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin</parameter>
         <parameter key="sulu_security.security_checker.class">Sulu\Component\Security\Authorization\SecurityChecker</parameter>
         <parameter key="sulu_security.event_listener.security.class">Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener</parameter>
         <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
@@ -22,8 +22,8 @@
         <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
         <parameter key="sulu_security.salt_generator.class">Sulu\Component\Security\Authentication\SaltGenerator</parameter>
         <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
-        <parameter key="sulu_security.contacts_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContactsContentNavigationProvider</parameter>
-        <parameter key="sulu_security.roles_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigationProvider</parameter>
+        <parameter key="sulu_security.contacts_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\ContactsContentNavigationProvider</parameter>
+        <parameter key="sulu_security.roles_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\RolesContentNavigationProvider</parameter>
         <parameter key="sulu_security.permission_map.class">Sulu\Component\Security\Authorization\AccessControl\PermissionMap</parameter>
         <parameter key="sulu_security.security_context_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
         <parameter key="sulu_security.access_control_manager.class">Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlManager</parameter>

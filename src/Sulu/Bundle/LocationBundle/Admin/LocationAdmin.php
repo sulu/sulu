@@ -8,28 +8,18 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\WebsiteBundle\Admin;
+namespace Sulu\Bundle\LocationBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
-class SuluWebsiteAdmin extends Admin
+class LocationAdmin extends Admin
 {
+
     public function __construct($title)
     {
         $rootNavigationItem = new NavigationItem($title);
-        $section = new NavigationItem('');
-
-        $settings = new NavigationItem('navigation.settings');
-        $settings->setIcon('gear');
-
-        $roles = new NavigationItem('navigation.settings.cache', $settings);
-        $roles->setAction('settings/cache');
-        $roles->setIcon('hdd-o');
-
-        $section->addChild($settings);
-        $rootNavigationItem->addChild($section);
         $this->setNavigation(new Navigation($rootNavigationItem));
     }
 
@@ -41,11 +31,8 @@ class SuluWebsiteAdmin extends Admin
         return array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getJsBundleName()
     {
-        return 'suluwebsite';
+        return 'sululocation';
     }
 }

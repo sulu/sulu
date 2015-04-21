@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SuluMediaAdmin extends Admin
+class MediaAdmin extends Admin
 {
     /**
      * @var SecurityCheckerInterface

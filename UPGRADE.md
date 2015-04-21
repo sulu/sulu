@@ -1,5 +1,13 @@
 # Upgrade
 
+## dev-develop
+
+### Admin
+
+The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
+been removed. You have to change these names in all usages of this classes in
+your own code.
+
 ## 0.17.0
 
 ### Media

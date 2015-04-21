@@ -8,22 +8,24 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\CategoryBundle\Admin;
+namespace Sulu\Bundle\SnippetBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
-class SuluCategoryContentNavigationProvider implements ContentNavigationProviderInterface
+/**
+ * Class for snippet content navigation
+ */
+class SnippetContentNavigationProvider implements ContentNavigationProviderInterface
 {
     /**
      * {@inheritdoc}
      */
     public function getNavigationItems(array $options = array())
     {
-        $details = new ContentNavigationItem('content-navigation.category.details');
+        $details = new ContentNavigationItem('content-navigation.snippets.details');
         $details->setAction('details');
-        $details->setComponent('categories@sulucategory');
-        $details->setComponentOptions(array('display'=>'form'));
+        $details->setComponent('snippet/form/details@sulusnippet');
 
         return array($details);
     }

@@ -13,7 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
-class SuluMediaContentNavigationProvider implements ContentNavigationProviderInterface
+class MediaContentNavigationProvider implements ContentNavigationProviderInterface
 {
     public function getNavigationItems(array $options = array())
     {
