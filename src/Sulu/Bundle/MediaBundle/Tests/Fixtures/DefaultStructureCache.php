@@ -3,10 +3,10 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Fixtures;
 
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Block\BlockProperty;
-use Sulu\Component\Content\Block\BlockPropertyType;
+use Sulu\Component\Content\Compat\Block\BlockProperty;
+use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Section\SectionProperty;
+use Sulu\Component\Content\Compat\Section\SectionProperty;
 
 /**
  * DefaultStructureCache

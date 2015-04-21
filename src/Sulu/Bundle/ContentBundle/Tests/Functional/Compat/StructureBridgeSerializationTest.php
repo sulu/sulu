@@ -9,7 +9,7 @@ use PHPCR\Util\NodeHelper;
 use Sulu\Bundle\ContentBundle\Tests\Integration\BaseTestCase;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\Content\Property as LegacyProperty;
+use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Property;
 
