@@ -10,29 +10,23 @@
 
 namespace Sulu\Bundle\MediaBundle\Admin;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigation;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
-class SuluMediaContentNavigation extends ContentNavigation
+class SuluMediaContentNavigationProvider implements ContentNavigationProviderInterface
 {
-    public function __construct()
+    public function getNavigationItems(array $options = array())
     {
-        parent::__construct();
-
-        $this->setName('Collection');
-
         $files = new ContentNavigationItem('content-navigation.media.files');
         $files->setAction('files');
-        $files->setGroups(array('collection'));
         $files->setComponent('collections@sulumedia');
         $files->setComponentOptions(array('display'=>'files'));
-        $this->addNavigationItem($files);
 
         $settings = new ContentNavigationItem('content-navigation.media.settings');
         $settings->setAction('settings');
-        $settings->setGroups(array('collection'));
         $settings->setComponent('collections@sulumedia');
         $settings->setComponentOptions(array('display'=>'settings'));
-        $this->addNavigationItem($settings);
+
+        return array($files, $settings);
     }
 }

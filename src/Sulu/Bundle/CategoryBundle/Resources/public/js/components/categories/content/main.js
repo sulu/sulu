@@ -16,7 +16,7 @@ define(function () {
         header: function () {
             return {
                 tabs: {
-                    url: '/admin/category/navigation/category'
+                    url: '/admin/content-navigations?alias=category'
                 },
                 toolbar: {
                     template: 'default',
