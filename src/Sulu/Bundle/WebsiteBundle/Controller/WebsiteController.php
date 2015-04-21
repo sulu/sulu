@@ -79,51 +79,7 @@ abstract class WebsiteController extends Controller
      */
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
-
-        /** @var RequestAnalyzerInterface $requestAnalyzer */
-        $requestAnalyzer = $this->get('sulu_core.webspace.request_analyzer');
-
-        if ($structure !== null) {
-            $structureData = $this->get('sulu_website.resolver.structure')->resolve($structure);
-        } else {
-            $structureData = array();
-        }
-
-        if (!$preview) {
-            $requestAnalyzerData = $this->get('sulu_website.resolver.request_analyzer')
-                ->resolve($requestAnalyzer);
-        } else {
-            $requestAnalyzerData = $this->get('sulu_website.resolver.request_analyzer')
-                ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
-        }
-
-        if (null !== ($portal = $requestAnalyzer->getPortal())) {
-            $allLocalizations = $portal->getLocalizations();
-        } else {
-            $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
-        }
-
-        $urls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
-        $localizations = array();
-
-        foreach ($allLocalizations as $localization) {
-            /** @var Localization $localization */
-            $locale = $localization->getLocalization();
-
-            if (array_key_exists($locale, $urls)) {
-                $localizations[$locale] = $urls[$locale];
-            } else {
-                $localizations[$locale] = '';
-            }
-        }
-
-        $structureData['urls'] = $localizations;
-
-        return array_merge(
-            $attributes,
-            $structureData,
-            $requestAnalyzerData
-        );
+        // TODO call paramter resolver
     }
 
     /**

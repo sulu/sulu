@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
+use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,15 +35,21 @@ class ExceptionController extends BaseExceptionController
     private $error404Template;
 
     /**
-     * @varstring
+     * @var string
      */
     private $error500Template;
+
+    /**
+     * @var RequestAnalyzerResolverInterface
+     */
+    private $analyzerResolver;
 
     public function __construct(
         \Twig_Environment $twig,
         $debug,
         $error404Template,
         $error500Template,
+    RequestAnalyzerResolverInterface $analyzerResolver,
         RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         parent::__construct($twig, $debug);
@@ -50,6 +57,7 @@ class ExceptionController extends BaseExceptionController
         $this->requestAnalyzer = $requestAnalyzer;
         $this->error404Template = $error404Template;
         $this->error500Template = $error500Template;
+        $this->analyzerResolver = $analyzerResolver;
     }
 
     public function showAction(
@@ -64,6 +72,8 @@ class ExceptionController extends BaseExceptionController
         }
 
         if ($request->getRequestFormat() === 'html') {
+            $data = $this->analyzerResolver->resolve($this->requestAnalyzer);
+
             if ($exception->getStatusCode() == 404) {
                 return new Response(
                     $this->twig->render(
