@@ -12,6 +12,10 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 
 use Sulu\Component\Rest\RestController;
 
+/**
+ * Class TemplateController
+ * @package Sulu\Bundle\ResourceBundle\Controller
+ */
 class TemplateController extends RestController
 {
     /**
