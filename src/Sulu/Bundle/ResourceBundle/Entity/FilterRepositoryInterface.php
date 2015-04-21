@@ -17,4 +17,6 @@ namespace Sulu\Bundle\ResourceBundle\Entity;
 interface FilterRepositoryInterface {
 
     public function findByIdAndLocale($id, $locale);
+
+    public function findAllByLocale($locale);
 }
