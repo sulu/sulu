@@ -5,6 +5,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete 
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
+    * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests 
 
 * 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
