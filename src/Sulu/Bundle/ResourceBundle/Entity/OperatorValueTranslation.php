@@ -35,7 +35,7 @@ class OperatorValueTranslation
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ResourceBundle\Entity\Operator
+     * @var \Sulu\Bundle\ResourceBundle\Entity\OperatorValue
      */
     private $operatorValue;
 
@@ -145,10 +145,10 @@ class OperatorValueTranslation
     /**
      * Set operatorValue
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\Operator $operatorValue
+     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorValue $operatorValue
      * @return OperatorValueTranslation
      */
-    public function setOperatorValue(\Sulu\Bundle\ResourceBundle\Entity\Operator $operatorValue)
+    public function setOperatorValue(\Sulu\Bundle\ResourceBundle\Entity\OperatorValue $operatorValue)
     {
         $this->operatorValue = $operatorValue;
 
@@ -158,7 +158,7 @@ class OperatorValueTranslation
     /**
      * Get operatorValue
      *
-     * @return \Sulu\Bundle\ResourceBundle\Entity\Operator 
+     * @return \Sulu\Bundle\ResourceBundle\Entity\OperatorValue 
      */
     public function getOperatorValue()
     {

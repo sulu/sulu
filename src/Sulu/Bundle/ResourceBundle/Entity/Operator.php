@@ -175,4 +175,60 @@ class Operator
     {
         return $this->values;
     }
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $inputType;
+
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return Operator
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set inputType
+     *
+     * @param string $inputType
+     * @return Operator
+     */
+    public function setInputType($inputType)
+    {
+        $this->inputType = $inputType;
+
+        return $this;
+    }
+
+    /**
+     * Get inputType
+     *
+     * @return string 
+     */
+    public function getInputType()
+    {
+        return $this->inputType;
+    }
 }

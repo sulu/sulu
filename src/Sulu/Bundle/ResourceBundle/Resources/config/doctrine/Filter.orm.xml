@@ -11,7 +11,6 @@
 
         <field name="andCombination" type="boolean" column="andCombination" nullable="false"/>
         <field name="entity" type="string" column="entity" length="255" nullable="false"/>
-        <field name="conditions" type="text" column="conditions" nullable="true"/>
 
         <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\FilterTranslation" mapped-by="filter"
                      field="translations">
@@ -19,6 +18,9 @@
                 <cascade-persist/>
             </cascade>
         </one-to-many>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\ConditionGroup" mapped-by="filter"
+                     field="conditionGroups"/>
 
     </entity>
 </doctrine-mapping>

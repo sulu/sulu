@@ -1,0 +1,19 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ResourceBundle\Entity\Condition" table="re_conditions">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="field" type="string" length="255" nullable="false"/>
+        <field name="operator" type="string" length="255" nullable="false"/>
+        <field name="type" type="integer" nullable="false"/>
+        <field name="value" type="string" length="255" nullable="false"/>
+
+        <many-to-one target-entity="Sulu\Bundle\ResourceBundle\Entity\ConditionGroup" field="conditionGroup"
+                     inversed-by="conditions">
+            <join-column name="idConditionGroups" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

@@ -15,6 +15,11 @@ class OperatorType
     private $name;
 
     /**
+     * @var string
+     */
+    private $inputType;
+
+    /**
      * @var integer
      */
     private $id;
@@ -46,6 +51,29 @@ class OperatorType
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set inputType
+     *
+     * @param string $inputType
+     * @return OperatorType
+     */
+    public function setInputType($inputType)
+    {
+        $this->inputType = $inputType;
+
+        return $this;
+    }
+
+    /**
+     * Get inputType
+     *
+     * @return string 
+     */
+    public function getInputType()
+    {
+        return $this->inputType;
     }
 
     /**
