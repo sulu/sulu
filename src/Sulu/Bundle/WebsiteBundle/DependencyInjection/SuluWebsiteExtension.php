@@ -48,6 +48,14 @@ class SuluWebsiteExtension extends Extension
             'sulu_website.sitemap.cache.lifetime',
             $config['twig']['content']['cache_lifetime']
         );
+        $container->setParameter(
+            'sulu_website.error_templates.500',
+            $config['error_templates']['500']
+        );
+        $container->setParameter(
+            'sulu_website.error_templates.404',
+            $config['error_templates']['404']
+        );
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

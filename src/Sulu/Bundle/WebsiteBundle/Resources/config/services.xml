@@ -135,6 +135,8 @@
         <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
+            <argument>%sulu_website.error_templates.404%</argument>
+            <argument>%sulu_website.error_templates.500%</argument>
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
         </service>
 

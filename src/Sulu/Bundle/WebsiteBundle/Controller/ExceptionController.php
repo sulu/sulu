@@ -28,11 +28,28 @@ class ExceptionController extends BaseExceptionController
      */
     private $requestAnalyzer;
 
-    public function __construct(\Twig_Environment $twig, $debug, RequestAnalyzerInterface $requestAnalyzer = null)
-    {
+    /**
+     * @var string
+     */
+    private $error404Template;
+
+    /**
+     * @varstring
+     */
+    private $error500Template;
+
+    public function __construct(
+        \Twig_Environment $twig,
+        $debug,
+        $error404Template,
+        $error500Template,
+        RequestAnalyzerInterface $requestAnalyzer = null
+    ) {
         parent::__construct($twig, $debug);
 
         $this->requestAnalyzer = $requestAnalyzer;
+        $this->error404Template = $error404Template;
+        $this->error500Template = $error500Template;
     }
 
     public function showAction(
@@ -50,7 +67,7 @@ class ExceptionController extends BaseExceptionController
             if ($exception->getStatusCode() == 404) {
                 return new Response(
                     $this->twig->render(
-                        'ClientWebsiteBundle:views:error404.html.twig',
+                        $this->error404Template,
                         array(
                             'request' => array(
                                 'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
@@ -62,7 +79,8 @@ class ExceptionController extends BaseExceptionController
                                 'post' => $this->requestAnalyzer->getPostParameters(),
                                 'analyticsKey' => $this->requestAnalyzer->getAnalyticsKey()
                             ),
-                            'path' => $request->getPathInfo()
+                            'path' => $request->getPathInfo(),
+                            'urls' => array()
                         )
                     ),
                     404
@@ -73,7 +91,7 @@ class ExceptionController extends BaseExceptionController
 
                 return new Response(
                     $this->twig->render(
-                        'ClientWebsiteBundle:views:error.html.twig',
+                        $this->error500Template,
                         array(
                             'status_code' => $code,
                             'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
@@ -82,7 +100,8 @@ class ExceptionController extends BaseExceptionController
                             'request' => array(
                                 'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
                                 'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
-                            )
+                            ),
+                            'urls' => array()
                         )
                     ),
                     $exception->getStatusCode()
