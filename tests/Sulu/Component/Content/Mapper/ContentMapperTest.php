@@ -3061,7 +3061,7 @@ class ContentMapperTest extends SuluTestCase
 
         // check load result
         $this->assertEquals('Page-1', $loadResult->title);
-        $this->assertEquals('page-1', $loadResult->getNodeName());
+        $this->assertEquals('Page-1', $loadResult->getNodeName());
         $this->assertEquals('/page-1', $loadResult->url);
         $this->assertEquals('/page-1', $loadResult->getResourceLocator());
     }
