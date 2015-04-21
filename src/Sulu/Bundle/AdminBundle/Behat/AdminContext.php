@@ -105,6 +105,15 @@ class AdminContext extends BaseContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given I click the close icon
+     * @Given I click the close icon in container ":selector"
+     */
+    public function iClickOnTheCloseIcon($selector = '')
+    {
+        $this->clickSelector($selector.' .fa-times');
+    }
+
+    /**
      * @Then I click the add icon
      */
     public function iClickOnTheAddIcon()

@@ -84,7 +84,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
 
         $data = array(
             'id' => null,
-            'locale' => 'de',
+            'locale' => 'en',
             'type' => $mediaType->getId(),
             'collection' => $collection->getId(),
             'name' => basename($name),
