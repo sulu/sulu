@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 
 class PreviewRenderer
 {
@@ -58,7 +59,7 @@ class PreviewRenderer
      * @param bool $partial
      * @return string
      */
-    public function render(Page $content, $partial = false)
+    public function render(PageBridge $content, $partial = false)
     {
         // set active theme
         $webspace = $this->webspaceManager->findWebspaceByKey($content->getWebspaceKey());

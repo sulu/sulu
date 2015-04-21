@@ -9,6 +9,12 @@
             <tag name="jms_serializer.subscribing_handler"/>
         </service>
 
+        <service id="sulu_content.document.serializer.handler.page_document" class="Sulu\Component\Content\Document\Serializer\Subscriber\PageDocumentSubscriber">
+            <argument type="service" id="sulu_document_manager.document_registry" />
+            <argument type="service" id="doctrine_phpcr.default_session" />
+            <tag name="jms_serializer.event_subscriber" />
+        </service>
+
         <service id="sulu_content.document.serializer.subscriber.property_container" class="Sulu\Component\Content\Document\Serializer\Subscriber\PropertyContainerSubscriber">
             <tag name="jms_serializer.event_subscriber" />
         </service>

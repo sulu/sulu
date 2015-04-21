@@ -22,7 +22,7 @@ class SitemapContentQueryBuilder extends ContentQueryBuilder
      */
     protected function buildWhere($webspaceKey, $locale)
     {
-        return sprintf("
+         sprintf("
         (
             (
                 ISDESCENDANTNODE('/cmf/%s/contents')

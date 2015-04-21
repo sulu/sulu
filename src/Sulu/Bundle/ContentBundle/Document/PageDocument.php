@@ -15,5 +15,4 @@ use Sulu\Component\DocumentManager\Behavior\AutoNameBehavior;
 class PageDocument extends BasePageDocument implements
     AutoNameBehavior
 {
-
 }

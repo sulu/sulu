@@ -96,7 +96,6 @@ class PageDocumentSerializationTest extends SuluTestCase
 
         $result = $this->serializer->serialize($page, 'json');
 
-        //var_dump(json_decode($result, true));die();;
         return $result;
     }
 
@@ -120,7 +119,7 @@ class PageDocumentSerializationTest extends SuluTestCase
         $page->setParent($this->parent);
         $page->setStructureType('contact');
         $page->setResourceSegment('/foo');
-        $page->getContent()->bind($data);
+        $page->getContent()->bind($data, true);
 
         return $page;
     }

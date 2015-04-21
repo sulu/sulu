@@ -76,8 +76,8 @@ class StructureBridge implements StructureInterface
     ) {
         $this->structure = $structure;
         $this->inspector = $inspector;
-        $this->document = $document;
         $this->propertyFactory = $propertyFactory;
+        $this->document = $document;
     }
 
     /**

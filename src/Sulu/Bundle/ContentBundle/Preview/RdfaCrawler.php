@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Preview;
 
-use Sulu\Component\Content\Block\BlockPropertyInterface;
+use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\DomCrawler\Crawler;
 

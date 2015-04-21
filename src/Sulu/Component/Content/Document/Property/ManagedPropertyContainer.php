@@ -56,16 +56,14 @@ class ManagedPropertyContainer extends PropertyContainer
      */
     public function getProperty($name)
     {
+        $this->init();
+
         if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
 
         if (!$this->node) {
             $this->node = $this->inspector->getNode($this->document);
-        }
-
-        if (!$this->structure) {
-            $this->structure = $this->inspector->getStructure($this->document);
         }
 
         $structureProperty = $this->structure->getModelProperty($name);
@@ -111,6 +109,7 @@ class ManagedPropertyContainer extends PropertyContainer
      */
     public function toArray()
     {
+        $this->init();
         $values = array();
         foreach ($this->structure->getModelProperties() as $childName => $structureChild) {
             $values[$childName] = $this->getProperty($childName)->getValue();
@@ -124,6 +123,7 @@ class ManagedPropertyContainer extends PropertyContainer
      */
     public function offsetExists($offset)
     {
+        $this->init();
         return $this->structure->hasProperty($offset);
     }
 
@@ -138,6 +138,13 @@ class ManagedPropertyContainer extends PropertyContainer
 
             $property = $this->getProperty($childName);
             $property->setValue($value);
+        }
+    }
+
+    private function init()
+    {
+        if (!$this->structure) {
+            $this->structure = $this->inspector->getStructure($this->document);
         }
     }
 }

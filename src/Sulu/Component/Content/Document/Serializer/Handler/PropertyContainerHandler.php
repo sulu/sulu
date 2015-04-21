@@ -55,7 +55,6 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
         $array = $container->toArray();
 
         return $context->accept(array(
-            'typeMap' => $this->getContentTypeMap($array),
             'content' => $array,
         ));
     }
@@ -74,61 +73,13 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
     ) {
         $container = new PropertyContainer();
 
-        if (!isset($data['content'])) {
-            return $container;
-        }
-
-        $typeMap = $data['typeMap'];
         $content = $data['content'];
 
         foreach ($content as $key => $value) {
-            if (!isset($typeMap[$key])) {
-                continue;
-            }
-
-            $type = $typeMap[$key];
-            $deserialized = $context->accept(
-                $value,
-                array(
-                    'name' => $type[0],
-                    'params' => isset($type[1]) ? array(array('name' => $type[1])) : array()
-                )
-            );
-
-            $container->getProperty($key)->setValue($deserialized);
+            $container->getProperty($key)->setValue($value);
         }
 
         return $container;
-    }
-
-    /**
-     * Recursively map the type of each content
-     *
-     * @param array $content
-     * @return array
-     */
-    private function getContentTypeMap($content)
-    {
-        $typeMap = array();
-        foreach ($content as $key => $value) {
-            if (is_array($value) || $value instanceof \Traversable) {
-                if (!count($value)) {
-                    continue;
-                }
-
-                $typeMap[$key] = array('array', $this->getType(reset($value)));
-                continue;
-            }
-
-            $typeMap[$key] = array($this->getType($value), null);
-        }
-
-        return $typeMap;
-    }
-
-    private function getType($value)
-    {
-        return is_object($value) ? get_class($value) : gettype($value);
     }
 
 }
