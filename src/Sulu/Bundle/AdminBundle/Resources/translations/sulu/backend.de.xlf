@@ -190,9 +190,6 @@
                 <source>navigation.settings.translate</source>
                 <target>Übersetzungen</target>
             </trans-unit>
-<<<<<<< HEAD
-=======
->>>>>>> f54e0014a8fbc2c7d273aa5d1332023da4f99250
             <trans-unit id="883c0562a1ae3578239d1803dfe61292" resname="navigation.webspaces">
                 <source>navigation.webspaces</source>
                 <target>Globale Inhalte &amp; Webspaces</target>

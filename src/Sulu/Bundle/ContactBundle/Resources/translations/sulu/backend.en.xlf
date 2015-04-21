@@ -554,18 +554,6 @@
                 <source>navigation.search</source>
                 <target>Search</target>
             </trans-unit>
-            <trans-unit id="61788b1f08f29f6e5f1cb4076fd81272" resname="navigation.contacts">
-                <source>navigation.contacts</source>
-                <target>Contacts</target>
-            </trans-unit>
-            <trans-unit id="a5483734334073f618ff019ef3a41470" resname="navigation.contacts.people">
-                <source>navigation.contacts.people</source>
-                <target>People</target>
-            </trans-unit>
-            <trans-unit id="b819087c400da29fa73c69eb259d6fbe" resname="navigation.contacts.companies">
-                <source>navigation.contacts.companies</source>
-                <target>Organizations</target>
-            </trans-unit>
         </body>
     </file>
 </xliff>
