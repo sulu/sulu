@@ -12,9 +12,6 @@ namespace Sulu\Bundle\WebsiteBundle\Controller;
 
 use InvalidArgumentException;
 use Sulu\Component\Content\StructureInterface;
-use Sulu\Component\HttpCache\HttpCache;
-use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -79,7 +76,12 @@ abstract class WebsiteController extends Controller
      */
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
-        // TODO call paramter resolver
+        return $this->get('sulu_website.resolver.parameter')->resolve(
+            $attributes,
+            $this->get('sulu_core.webspace.request_analyzer'),
+            $structure,
+            $preview
+        );
     }
 
     /**

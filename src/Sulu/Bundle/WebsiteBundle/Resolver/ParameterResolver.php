@@ -9,13 +9,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * Implements logic to resolve parameters for website rendering
  */
-class ParametersResolver implements ParametersResolverInterface
+class ParameterResolver implements ParameterResolverInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
     /**
      * @var StructureResolverInterface
      */
@@ -27,17 +22,14 @@ class ParametersResolver implements ParametersResolverInterface
     private $requestAnalyzerResolver;
 
     /**
-     * ParametersResolver constructor.
-     * @param RequestAnalyzerInterface $requestAnalyzer
+     * ParameterResolver constructor.
      * @param StructureResolverInterface $structureResolver
      * @param RequestAnalyzerResolverInterface $requestAnalyzerResolver
      */
     public function __construct(
-        RequestAnalyzerInterface $requestAnalyzer,
         StructureResolverInterface $structureResolver,
         RequestAnalyzerResolverInterface $requestAnalyzerResolver
     ) {
-        $this->requestAnalyzer = $requestAnalyzer;
         $this->structureResolver = $structureResolver;
         $this->requestAnalyzerResolver = $requestAnalyzerResolver;
     }
@@ -45,7 +37,12 @@ class ParametersResolver implements ParametersResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(array $parameters, StructureInterface $structure = null, $preview = false)
+    public function resolve(
+        array $parameter,
+        RequestAnalyzerInterface $requestAnalyzer = null,
+        StructureInterface $structure = null,
+        $preview = false
+    )
     {
         if ($structure !== null) {
             $structureData = $this->structureResolver->resolve($structure);
@@ -54,16 +51,16 @@ class ParametersResolver implements ParametersResolverInterface
         }
 
         if (!$preview) {
-            $requestAnalyzerData = $this->requestAnalyzerResolver->resolve($this->requestAnalyzer);
+            $requestAnalyzerData = $this->requestAnalyzerResolver->resolve($requestAnalyzer);
         } else {
             $requestAnalyzerData = $this->requestAnalyzerResolver
                 ->resolveForPreview($structure->getWebspaceKey(), $structure->getLanguageCode());
         }
 
-        if (null !== ($portal = $this->requestAnalyzer->getPortal())) {
+        if (null !== ($portal = $requestAnalyzer->getPortal())) {
             $allLocalizations = $portal->getLocalizations();
         } else {
-            $allLocalizations = $this->requestAnalyzer->getWebspace()->getLocalizations();
+            $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
         }
 
         $urls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
@@ -83,7 +80,7 @@ class ParametersResolver implements ParametersResolverInterface
         $structureData['urls'] = $localizations;
 
         return array_merge(
-            $parameters,
+            $parameter,
             $structureData,
             $requestAnalyzerData
         );

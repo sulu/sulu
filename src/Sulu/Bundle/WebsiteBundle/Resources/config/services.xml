@@ -20,6 +20,7 @@
         <parameter key="sulu_website.exception.controller.class">Sulu\Bundle\WebsiteBundle\Controller\ExceptionController</parameter>
         <parameter key="sulu_website.resolver.request_analyzer.class">Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver</parameter>
         <parameter key="sulu_website.resolver.structure.class">Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver</parameter>
+        <parameter key="sulu_website.resolver.parameter.class">Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver</parameter>
 
         <parameter key="sulu_website.navigation_mapper.query_builder.class">Sulu\Bundle\WebsiteBundle\Navigation\NavigationQueryBuilder</parameter>
         <parameter key="sulu_website.sitemap.query_builder.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder</parameter>
@@ -131,15 +132,6 @@
             <tag name="routing.loader"/>
         </service>
 
-        <!-- exception controller -->
-        <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
-            <argument type="service" id="twig" />
-            <argument>%kernel.debug%</argument>
-            <argument>%sulu_website.error_templates.404%</argument>
-            <argument>%sulu_website.error_templates.500%</argument>
-            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
-        </service>
-
         <service id="sulu_website.resolver.structure" class="%sulu_website.resolver.structure.class%">
             <argument type="service" id="sulu.content.type_manager" />
             <argument type="service" id="sulu.content.structure_manager"/>
@@ -153,5 +145,22 @@
             </argument>
         </service>
 
+        <service id="sulu_website.resolver.parameter" class="%sulu_website.resolver.parameter.class%">
+            <argument type="service" id="sulu_website.resolver.structure"/>
+            <argument type="service" id="sulu_website.resolver.request_analyzer"/>
+        </service>
+
+        <!-- exception controller -->
+        <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
+            <argument type="service" id="twig" />
+            <argument>%kernel.debug%</argument>
+            <argument type="collection">
+                <argument key="404">%sulu_website.error_templates.404%</argument>
+                <argument key="500">%sulu_website.error_templates.500%</argument>
+            </argument>
+            <argument type="service" id="sulu_website.resolver.parameter" />
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
+        </service>
     </services>
 </container>

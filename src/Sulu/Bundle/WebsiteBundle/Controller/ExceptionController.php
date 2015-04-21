@@ -10,7 +10,8 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
+use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
+use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController as BaseExceptionController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,32 +33,32 @@ class ExceptionController extends BaseExceptionController
     /**
      * @var string
      */
-    private $error404Template;
+    private $errorTemplates;
 
     /**
-     * @var string
+     * @var ParameterResolverInterface
      */
-    private $error500Template;
+    private $parameterResolver;
 
     /**
-     * @var RequestAnalyzerResolverInterface
+     * @var ContentMapperInterface
      */
-    private $analyzerResolver;
+    private $contentMapper;
 
     public function __construct(
         \Twig_Environment $twig,
         $debug,
-        $error404Template,
-        $error500Template,
-    RequestAnalyzerResolverInterface $analyzerResolver,
+        array $errorTemplates,
+        ParameterResolverInterface $parameterResolver,
+        ContentMapperInterface $contentMapper,
         RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         parent::__construct($twig, $debug);
 
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->error404Template = $error404Template;
-        $this->error500Template = $error500Template;
-        $this->analyzerResolver = $analyzerResolver;
+        $this->errorTemplates = $errorTemplates;
+        $this->contentMapper = $contentMapper;
+        $this->parameterResolver = $parameterResolver;
     }
 
     public function showAction(
@@ -72,49 +73,30 @@ class ExceptionController extends BaseExceptionController
         }
 
         if ($request->getRequestFormat() === 'html') {
-            $data = $this->analyzerResolver->resolve($this->requestAnalyzer);
+            $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+            $code = $exception->getStatusCode();
+            $parameter = array(
+                'status_code' => $code,
+                'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+                'exception' => $exception,
+                'currentContent' => $currentContent
+            );
+            $data = $this->parameterResolver->resolve(
+                $parameter,
+                $this->requestAnalyzer,
+                $this->contentMapper->loadStartPage(
+                    $this->requestAnalyzer->getWebspace()->getKey(),
+                    $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
+                )
+            );
 
-            if ($exception->getStatusCode() == 404) {
+            if (array_key_exists($code, $this->errorTemplates)) {
                 return new Response(
                     $this->twig->render(
-                        $this->error404Template,
-                        array(
-                            'request' => array(
-                                'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
-                                'locale' => $this->requestAnalyzer->getCurrentLocalization(),
-                                'portalUrl' => $this->requestAnalyzer->getPortalUrl(),
-                                'resourceLocatorPrefix' => $this->requestAnalyzer->getResourceLocatorPrefix(),
-                                'resourceLocator' => $this->requestAnalyzer->getResourceLocator(),
-                                'get' => $this->requestAnalyzer->getGetParameters(),
-                                'post' => $this->requestAnalyzer->getPostParameters(),
-                                'analyticsKey' => $this->requestAnalyzer->getAnalyticsKey()
-                            ),
-                            'path' => $request->getPathInfo(),
-                            'urls' => array()
-                        )
+                        $this->errorTemplates[$code],
+                        $data
                     ),
-                    404
-                );
-            } elseif ($exception->getStatusCode() < 500) {
-                $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-                $code = $exception->getStatusCode();
-
-                return new Response(
-                    $this->twig->render(
-                        $this->error500Template,
-                        array(
-                            'status_code' => $code,
-                            'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                            'exception' => $exception,
-                            'currentContent' => $currentContent,
-                            'request' => array(
-                                'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
-                                'locale' => $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
-                            ),
-                            'urls' => array()
-                        )
-                    ),
-                    $exception->getStatusCode()
+                    $code
                 );
             }
         }
