@@ -238,7 +238,7 @@ class MediaContext extends BaseContext implements SnippetAcceptingContext
         $collectionMeta = new CollectionMeta();
         $collectionMeta->setTitle($name);
         $collectionMeta->setDescription('Dies ist eine Test Beschreibung');
-        $collectionMeta->setLocale('de');
+        $collectionMeta->setLocale('en');
         $collectionMeta->setCollection($collection);
         $collection->addMeta($collectionMeta);
 
