@@ -106,3 +106,9 @@ sulu_document_manager:
         snippet:
             class: Sulu\Bundle\SnippetBundle\Document\SnippetDocument
             phpcr_type: sulu:snippet
+
+jms_serializer:
+    property_naming:
+        enable_cache: false
+    metadata:
+        debug: %kernel.debug%

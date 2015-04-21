@@ -32,7 +32,8 @@ class StructureBridgeSerializationTest extends SuluTestCase
     public function testSerialize()
     {
         $pageDocument = $this->createPage();
-        $managedPage = $this->contentMapper->load($pageDocument->getUuid(), 'sulu_io', 'en');
+        $managedPage = $this->contentMapper->load($pageDocument->getUuid(), 'sulu_io', 'fr');
+
         $this->assertInstanceOf(StructureBridge::class, $managedPage);
 
         $result = $this->serializer->serialize($managedPage, 'json');
@@ -70,7 +71,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
             'internalLinks' => array(
                 $this->contentDocument->getUuid(),
             ),
-        ));
+        ), true);
 
         $this->documentManager->persist($page, 'fr');
         $this->documentManager->flush();

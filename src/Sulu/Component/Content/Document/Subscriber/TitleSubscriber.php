@@ -74,6 +74,7 @@ class TitleSubscriber extends AbstractMappingSubscriber
         }
 
         $document->getContent()->getProperty('title')->setValue($title);
+        $this->doHydrate($event);
     }
 
     private function getTitle($document)

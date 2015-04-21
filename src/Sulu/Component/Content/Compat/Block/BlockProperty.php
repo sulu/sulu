@@ -20,27 +20,23 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 /**
- * representation of a block node in template xml
- * @Discriminator(disabled=true)
+ * Representation of a block node in template xml
  */
 class BlockProperty extends Property implements BlockPropertyInterface
 {
     /**
      * properties managed by this block
      * @var BlockPropertyType[]
-     * @Type("array<string,Sulu\Component\Content\Compat\Block\BlockPropertyType>")
      */
     private $types = array();
 
     /**
      * @var BlockPropertyType[]
-     * @Type("array<integer,Sulu\Component\Content\Compat\Block\BlockPropertyType>")
      */
     private $properties = array();
 
     /**
      * @var string
-     * @Type("string")
      */
     private $defaultTypeName;
 
@@ -158,6 +154,12 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function getProperties($index)
     {
+        if (!isset($this->properties[$index])) {
+            throw new \OutOfRangeException(sprintf(
+                'No properties at index "%s" in block "%s". Valid indexes: [%s]',
+                $index, $this->getName(), implode(', ', array_keys($this->properties))
+            ));
+        }
         return $this->properties[$index];
     }
 
