@@ -127,7 +127,9 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
         $property = $pageStructure->getProperty('hotels');
+
         $data = $this->contentType->getContentData($property);
+
         $this->assertCount(2, $data);
         $hotel1 = reset($data);
         $this->assertEquals('Le grande budapest (en)', $hotel1['title']);

@@ -28,8 +28,9 @@ use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Content\Extension\AbstractExtension;
+use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
-class SitemapGeneratorTest extends PhpcrTestCase
+class SitemapGeneratorTest extends SuluTestCase
 {
     /**
      * @var StructureInterface[]
@@ -53,13 +54,18 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     protected function setUp()
     {
-        $this->prepareMapper();
+        $this->initPhpcr();
+        $this->mapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->session = $this->getContainer()->get('doctrine_phpcr.default_session');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->webspaceManager = $this->getContainer()->get('sulu_core.webspace.webspace_manager');
+        $this->structureManager = $this->getContainer()->get('sulu.content.structure_manager');
+        $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
+
         $this->dataEn = $this->prepareTestData();
         $this->dataEnUs = $this->prepareTestData('en_us');
 
-        $this->structureManager->expects($this->any())
-            ->method('getStructures')
-            ->will($this->returnCallback(array($this, 'structuresCallback')));
+        $this->contents = $this->session->getNode('/cmf/sulu_io/contents');
 
         $this->contents->setProperty('i18n:en-state', Structure::STATE_PUBLISHED);
         $this->contents->setProperty('i18n:en-nodeType', Structure::NODE_TYPE_CONTENT);
@@ -84,7 +90,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         }
 
         $this->webspace = new Webspace();
-        $this->webspace->setKey('default');
+        $this->webspace->setKey('sulu_io');
 
         $local1 = new Localization();
         $local1->setLanguage('en');
@@ -112,41 +118,6 @@ class SitemapGeneratorTest extends PhpcrTestCase
             ->will($this->returnValue($this->webspace));
     }
 
-    public function structureCallback()
-    {
-        $args = func_get_args();
-        $structureKey = $args[0];
-
-        switch ($structureKey) {
-            case 'default_template':
-                return $this->getStructureMock($structureKey);
-            case 'excerpt':
-                return $this->getStructureMock($structureKey, false);
-            case 'simple':
-                return $this->getStructureMock($structureKey);
-            case 'overview':
-                return $this->getStructureMock($structureKey);
-            case 'external-link':
-                return $this->getStructureMock($structureKey, false);
-            case 'internal-link':
-                return $this->getStructureMock($structureKey, false);
-            default:
-                return null;
-        }
-    }
-
-    public function structuresCallback()
-    {
-        return array(
-            $this->getStructureMock('default_template'),
-            $this->getStructureMock('excerpt', 'name', false),
-            $this->getStructureMock('simple', 'title'),
-            $this->getStructureMock('overview'),
-            $this->getStructureMock('external-link', 'test', false),
-            $this->getStructureMock('internal-link', 'test', false)
-        );
-    }
-
     public function getExtensionCallback()
     {
         return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
@@ -166,43 +137,46 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data = array(
             'news' => array(
                 'title' => 'News ' . $locale,
-                'rl' => '/news',
+                'url' => '/news',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
                 'navContexts' => array('footer')
             ),
             'products' => array(
                 'title' => 'Products ' . $locale,
-                'rl' => '/products',
+                'url' => '/products',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
                 'navContexts' => array('main')
             ),
             'news/news-1' => array(
                 'title' => 'News-1 ' . $locale,
-                'rl' => '/news/news-1',
+                'url' => '/news/news-1',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
                 'navContexts' => array('main', 'footer')
             ),
             'news/news-2' => array(
                 'title' => 'News-2 ' . $locale,
-                'rl' => '/news/news-2',
+                'url' => '/news/news-2',
                 'nodeType' => Structure::NODE_TYPE_CONTENT,
                 'navContexts' => array('main')
             ),
             'products/products-1' => array(
                 'title' => 'Products-1 ' . $locale,
-                'external_url' => '123-123-123',
+                'external' => '123-123-123',
+                'url' => '/products/product-1',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'navContexts' => array('main', 'footer')
             ),
             'products/products-2' => array(
                 'title' => 'Products-2 ' . $locale,
-                'external_url' => 'www.asdf.at',
+                'url' => '/products/product-2',
+                'external' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_EXTERNAL_LINK,
                 'navContexts' => array('main')
             ),
             'products/products-3' => array(
                 'title' => 'Products-3 ' . $locale,
-                'external_url' => 'www.asdf.at',
+                'url' => '/products/product-3',
+                'external' => 'www.asdf.at',
                 'nodeType' => Structure::NODE_TYPE_INTERNAL_LINK,
                 'navContexts' => array('main')
             )
@@ -211,7 +185,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data['news'] = $this->mapper->save(
             $data['news'],
             'overview',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -222,7 +196,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data['news/news-1'] = $this->mapper->save(
             $data['news/news-1'],
             'simple',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -233,7 +207,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data['news/news-2'] = $this->mapper->save(
             $data['news/news-2'],
             'simple',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -245,7 +219,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data['products'] = $this->mapper->save(
             $data['products'],
             'overview',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -254,11 +228,11 @@ class SitemapGeneratorTest extends PhpcrTestCase
             StructureInterface::STATE_TEST
         );
 
-        $data['products/products-1']['external_url'] = $data['products']->getUuid();
+        $data['products/products-1']['internal_link'] = $data['products']->getUuid();
         $data['products/products-1'] = $this->mapper->save(
             $data['products/products-1'],
             'overview',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -269,7 +243,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $data['products/products-2'] = $this->mapper->save(
             $data['products/products-2'],
             'overview',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -277,11 +251,11 @@ class SitemapGeneratorTest extends PhpcrTestCase
             $data['products']->getUuid(),
             StructureInterface::STATE_PUBLISHED
         );
-        $data['products/products-3']['external_url'] = $data['news']->getUuid();
+        $data['products/products-3']['internal_link'] = $data['news']->getUuid();
         $data['products/products-3'] = $this->mapper->save(
             $data['products/products-3'],
             'overview',
-            'default',
+            'sulu_io',
             $locale,
             1,
             true,
@@ -293,61 +267,12 @@ class SitemapGeneratorTest extends PhpcrTestCase
         return $data;
     }
 
-    private function getStructureMock($structureKey, $addResourceLocatorProperty = true)
-    {
-        $structureMock = $this->getMockForAbstractClass(
-            '\Sulu\Component\Content\Compat\Structure\Page',
-            array($structureKey, 'asdf', 'asdf', 2400)
-        );
-
-        $method = new ReflectionMethod(
-            get_class($structureMock), 'addChild'
-        );
-
-        $method->setAccessible(true);
-        $property = new Property('title', '', 'text_line', false, false, 1, 1, array());
-        $property->setStructure($structureMock);
-        $method->invokeArgs($structureMock, array($property));
-
-        if ($addResourceLocatorProperty) {
-            $property = new Property(
-                'rl',
-                '',
-                'resource_locator',
-                false,
-                false,
-                1,
-                1,
-                array(),
-                array(new PropertyTag('sulu.rlp', 1))
-            );
-            $property->setStructure($structureMock);
-            $method->invokeArgs($structureMock, array($property));
-        } else {
-            $property = new Property(
-                'external_url',
-                '',
-                'text_line',
-                false,
-                false,
-                1,
-                1,
-                array(),
-                array(new PropertyTag('sulu.rlp', 1))
-            );
-            $property->setStructure($structureMock);
-            $method->invokeArgs($structureMock, array($property));
-        }
-
-        return $structureMock;
-    }
-
     public function testGenerateAllFlat()
     {
-        $result = $this->sitemapGenerator->generateAllLocals('default', true);
+        $result = $this->sitemapGenerator->generateAllLocals('sulu_io', true);
 
         $this->assertEquals(11, sizeof($result));
-        $this->assertEquals('', $result[0]['title']);
+        $this->assertEquals('Homepage', $result[0]['title']);
         $this->assertEquals('News en', $result[1]['title']);
         $this->assertEquals('News-1 en', $result[2]['title']);
         $this->assertEquals('News-2 en', $result[3]['title']);
@@ -387,10 +312,10 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function testGenerateFlat()
     {
-        $result = $this->sitemapGenerator->generate('default', 'en', true);
+        $result = $this->sitemapGenerator->generate('sulu_io', 'en', true);
 
         $this->assertEquals(6, sizeof($result));
-        $this->assertEquals('', $result[0]['title']);
+        $this->assertEquals('Homepage', $result[0]['title']);
         $this->assertEquals('News en', $result[1]['title']);
         $this->assertEquals('News-1 en', $result[2]['title']);
         $this->assertEquals('News-2 en', $result[3]['title']);
@@ -414,10 +339,10 @@ class SitemapGeneratorTest extends PhpcrTestCase
 
     public function testGenerateTree()
     {
-        $result = $this->sitemapGenerator->generate('default', 'en');
+        $result = $this->sitemapGenerator->generate('sulu_io', 'en');
 
         $root = $result;
-        $this->assertEquals('', $root['title']);
+        $this->assertEquals('Homepage', $root['title']);
         $this->assertEquals('/', $root['url']);
         $this->assertEquals(1, $root['nodeType']);
 

@@ -12,6 +12,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 /**
  * Base test case for functional tests in Sulu
@@ -147,6 +148,7 @@ abstract class SuluTestCase extends BaseTestCase
         $content->setProperty('i18n:en-changer', 1);
         $content->setProperty('i18n:en-changed', new \DateTime());
         $content->setProperty('i18n:en-title', 'Homepage');
+        $content->setProperty('i18n:en-state', WorkflowStage::PUBLISHED);
         $content->setProperty('i18n:en-published', new \DateTime());
         $content->setProperty('i18n:en-url', '/');
         $content->addMixin('sulu:home');
