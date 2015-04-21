@@ -3,10 +3,10 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_category.admin.class">Sulu\Bundle\CategoryBundle\Admin\SuluCategoryAdmin</parameter>
+        <parameter key="sulu_category.admin.class">Sulu\Bundle\CategoryBundle\Admin\CategoryAdmin</parameter>
         <parameter key="sulu_category.category_manager.class">Sulu\Bundle\CategoryBundle\Category\CategoryManager</parameter>
         <parameter key="sulu_category.category_repository.class">Sulu\Bundle\CategoryBundle\Entity\CategoryRepository</parameter>
-        <parameter key="sulu_category.content_navigation_provider.class">Sulu\Bundle\CategoryBundle\Admin\SuluCategoryContentNavigationProvider</parameter>
+        <parameter key="sulu_category.content_navigation_provider.class">Sulu\Bundle\CategoryBundle\Admin\CategoryContentNavigationProvider</parameter>
         <parameter key="sulu_category.content.type.category_list.class">Sulu\Bundle\CategoryBundle\Content\Types\CategoryList</parameter>
         <parameter key="sulu_category.entity.category">SuluCategoryBundle:Category</parameter>
     </parameters>

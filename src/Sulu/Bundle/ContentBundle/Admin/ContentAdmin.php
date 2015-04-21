@@ -17,7 +17,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 
-class SuluContentAdmin extends Admin
+class ContentAdmin extends Admin
 {
     /**
      * @var WebspaceManagerInterface

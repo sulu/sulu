@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SuluContactAdmin extends Admin
+class ContactAdmin extends Admin
 {
     /**
      * @var SecurityCheckerInterface

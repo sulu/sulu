@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SecurityBundle\Admin;
+namespace Sulu\Bundle\CategoryBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-class SuluSecurityAdmin extends Admin
+class CategoryAdmin extends Admin
 {
     /**
      * @var SecurityCheckerInterface
@@ -30,12 +30,11 @@ class SuluSecurityAdmin extends Admin
         $section = new NavigationItem('');
 
         $settings = new NavigationItem('navigation.settings');
-        $settings->setIcon('gear');
+        $settings->setIcon('cog');
 
-        if ($this->securityChecker->hasPermission('sulu.security.roles', 'view')) {
-            $roles = new NavigationItem('navigation.settings.roles', $settings);
-            $roles->setAction('settings/roles');
-            $roles->setIcon('gear');
+        if ($this->securityChecker->hasPermission('sulu.settings.categories', 'view')) {
+            $categories = new NavigationItem('navigation.settings.categories', $settings);
+            $categories->setAction('settings/categories');
         }
 
         if ($settings->hasChildren()) {
@@ -54,24 +53,25 @@ class SuluSecurityAdmin extends Admin
         return array();
     }
 
-    public function getSecurityContexts()
-    {
-        return array(
-            'Sulu' => array(
-                'Security' => array(
-                    'sulu.security.roles',
-                    'sulu.security.groups',
-                    'sulu.security.users',
-                )
-            )
-        );
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getJsBundleName()
     {
-        return 'sulusecurity';
+        return 'sulucategory';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSecurityContexts()
+    {
+        return array(
+            'Sulu' => array(
+                'Settings' => array(
+                    'sulu.settings.categories'
+                )
+            )
+        );
     }
 }

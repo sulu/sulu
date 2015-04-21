@@ -5,7 +5,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationItem;
 use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 
-class SuluSecurityRolesContentNavigationProvider implements ContentNavigationProviderInterface
+class RolesContentNavigationProvider implements ContentNavigationProviderInterface
 {
     public function getNavigationItems(array $options = array())
     {

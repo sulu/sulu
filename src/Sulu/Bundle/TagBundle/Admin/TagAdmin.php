@@ -8,17 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\SnippetBundle\Admin;
+namespace Sulu\Bundle\TagBundle\Admin;
 
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
-/**
- * Admin for snippet
- */
-class SuluSnippetAdmin extends Admin
+class TagAdmin extends Admin
 {
     /**
      * @var SecurityCheckerInterface
@@ -30,21 +27,19 @@ class SuluSnippetAdmin extends Admin
         $this->securityChecker = $securityChecker;
 
         $rootNavigationItem = new NavigationItem($title);
+        $section = new NavigationItem('');
 
-        $section = new NavigationItem('navigation.webspaces');
+        $settings = new NavigationItem('navigation.settings');
+        $settings->setIcon('settings');
 
-        $global = new NavigationItem('navigation.global-content');
-        $global->setIcon('globe');
-        $section->addChild($global);
-
-        if ($this->securityChecker->hasPermission('sulu.global.snippets', 'view')) {
-            $snippet = new NavigationItem('navigation.snippets');
-            $snippet->setIcon('bullseye');
-            $snippet->setAction('snippet/snippets');
-            $global->addChild($snippet);
+        if ($this->securityChecker->hasPermission('sulu.settings.tags', 'view')) {
+            $roles = new NavigationItem('navigation.settings.tags', $settings);
+            $roles->setAction('settings/tags');
+            $roles->setIcon('settings');
         }
 
-        if ($global->hasChildren()) {
+        if ($settings->hasChildren()) {
+            $section->addChild($settings);
             $rootNavigationItem->addChild($section);
         }
 
@@ -64,7 +59,7 @@ class SuluSnippetAdmin extends Admin
      */
     public function getJsBundleName()
     {
-        return 'sulusnippet';
+        return 'sulutag';
     }
 
     /**
@@ -74,8 +69,8 @@ class SuluSnippetAdmin extends Admin
     {
         return array(
             'Sulu' => array(
-                'Global' => array(
-                    'sulu.global.snippets'
+                'Settings' => array(
+                    'sulu.settings.tags'
                 )
             )
         );
