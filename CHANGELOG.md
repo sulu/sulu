@@ -1,6 +1,9 @@
 CHANGELOG for Sulu
 ==================
 
+* dev-develop
+    * BUGFIX      #945 [WebsiteBundle]   Fix Redirect url with query string correctly and trailing slash
+
 * 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
     * BUGFIX      #1021 [SecurityBundle] Only check security for not-null security contexts
@@ -22,7 +25,6 @@ CHANGELOG for Sulu
     * BUGFIX      #973 [All]             Added handling of anonymous user token
     * BUGFIX      #970 [SecurityBundle]  Fixed select all bug in permissions tab
     * FEATURE     #941 [SecurityBundle]  Adding permissions on an object basis
-    * BUGFIX      #945 [WebsiteBundle]   Fix Redirect url with query string correctly and trailing slash
     * FEATURE     #931 [MediaBundle]     Version History Tab
     * FEATURE     #923 [ContactBundle]   Extract CRM to own Bundles
     * BUGFIX      #922 [ContentBundle]   Fixed URL Generation after copying language of a child node
