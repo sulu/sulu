@@ -15,6 +15,16 @@ class Operator
     private $operator;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $inputType;
+
+    /**
      * @var integer
      */
     private $id;
@@ -27,11 +37,6 @@ class Operator
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $types;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $values;
 
     /**
@@ -40,7 +45,6 @@ class Operator
     public function __construct()
     {
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->types = new \Doctrine\Common\Collections\ArrayCollection();
         $this->values = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -60,7 +64,7 @@ class Operator
     /**
      * Get operator
      *
-     * @return string 
+     * @return string
      */
     public function getOperator()
     {
@@ -68,13 +72,69 @@ class Operator
     }
 
     /**
+     * Set type
+     *
+     * @param string $type
+     * @return Operator
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set inputType
+     *
+     * @param string $inputType
+     * @return Operator
+     */
+    public function setInputType($inputType)
+    {
+        $this->inputType = $inputType;
+
+        return $this;
+    }
+
+    /**
+     * Get inputType
+     *
+     * @return string
+     */
+    public function getInputType()
+    {
+        return $this->inputType;
+    }
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set id
+     *
+     * @param $id integer
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -103,44 +163,11 @@ class Operator
     /**
      * Get translations
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTranslations()
     {
         return $this->translations;
-    }
-
-    /**
-     * Add types
-     *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorType $types
-     * @return Operator
-     */
-    public function addType(\Sulu\Bundle\ResourceBundle\Entity\OperatorType $types)
-    {
-        $this->types[] = $types;
-
-        return $this;
-    }
-
-    /**
-     * Remove types
-     *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\OperatorType $types
-     */
-    public function removeType(\Sulu\Bundle\ResourceBundle\Entity\OperatorType $types)
-    {
-        $this->types->removeElement($types);
-    }
-
-    /**
-     * Get types
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getTypes()
-    {
-        return $this->types;
     }
 
     /**
@@ -169,66 +196,10 @@ class Operator
     /**
      * Get values
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getValues()
     {
         return $this->values;
-    }
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $inputType;
-
-
-    /**
-     * Set type
-     *
-     * @param string $type
-     * @return Operator
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return string 
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set inputType
-     *
-     * @param string $inputType
-     * @return Operator
-     */
-    public function setInputType($inputType)
-    {
-        $this->inputType = $inputType;
-
-        return $this;
-    }
-
-    /**
-     * Get inputType
-     *
-     * @return string 
-     */
-    public function getInputType()
-    {
-        return $this->inputType;
     }
 }

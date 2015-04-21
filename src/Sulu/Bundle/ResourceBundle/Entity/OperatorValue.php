@@ -12,6 +12,11 @@ class OperatorValue
     /**
      * @var integer
      */
+    private $type;
+
+    /**
+     * @var integer
+     */
     private $id;
 
     /**
@@ -30,6 +35,29 @@ class OperatorValue
     public function __construct()
     {
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set type
+     *
+     * @param integer $type
+     * @return OperatorValue
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return integer 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -96,33 +124,5 @@ class OperatorValue
     public function getOperator()
     {
         return $this->operator;
-    }
-    /**
-     * @var int
-     */
-    private $type;
-
-
-    /**
-     * Set type
-     *
-     * @param \int $type
-     * @return OperatorValue
-     */
-    public function setType(\int $type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return \int 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }
