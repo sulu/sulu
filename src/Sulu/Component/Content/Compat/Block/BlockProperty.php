@@ -64,6 +64,7 @@ class BlockProperty extends Property implements BlockPropertyInterface
             $tags,
             $col
         );
+
         $this->defaultTypeName = $defaultTypeName;
     }
 
