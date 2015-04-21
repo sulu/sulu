@@ -10,11 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Filter
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @var boolean
      */
     private $andCombination;
@@ -25,37 +20,27 @@ class Filter
     private $entity;
 
     /**
-     * @var string
-     */
-    private $conditions;
-
-    /**
      * @var integer
      */
     private $id;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $translations;
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return Filter
+     * @var \Doctrine\Common\Collections\Collection
      */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
+    private $conditionGroups;
 
     /**
-     * Get name
-     *
-     * @return string 
+     * Constructor
      */
-    public function getName()
+    public function __construct()
     {
-        return $this->name;
+        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->conditionGroups = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -105,29 +90,6 @@ class Filter
     }
 
     /**
-     * Set conditions
-     *
-     * @param string $conditions
-     * @return Filter
-     */
-    public function setConditions($conditions)
-    {
-        $this->conditions = $conditions;
-
-        return $this;
-    }
-
-    /**
-     * Get conditions
-     *
-     * @return string 
-     */
-    public function getConditions()
-    {
-        return $this->conditions;
-    }
-
-    /**
      * Get id
      *
      * @return integer 
@@ -135,18 +97,6 @@ class Filter
     public function getId()
     {
         return $this->id;
-    }
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $translations;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -180,5 +130,38 @@ class Filter
     public function getTranslations()
     {
         return $this->translations;
+    }
+
+    /**
+     * Add conditionGroups
+     *
+     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups
+     * @return Filter
+     */
+    public function addConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups)
+    {
+        $this->conditionGroups[] = $conditionGroups;
+
+        return $this;
+    }
+
+    /**
+     * Remove conditionGroups
+     *
+     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups
+     */
+    public function removeConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups)
+    {
+        $this->conditionGroups->removeElement($conditionGroups);
+    }
+
+    /**
+     * Get conditionGroups
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getConditionGroups()
+    {
+        return $this->conditionGroups;
     }
 }
