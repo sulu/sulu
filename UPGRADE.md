@@ -20,6 +20,28 @@ To be sure that it is possible to generate a preview image you should check if t
 {% endif %}
 ```
 
+### Exception templates
+
+Variables of exception template `ClientWebsiteBundle:error404.html.twig` has changed. It is basically the same as on
+the startpage but contains this additional values.
+
+* `status_code`: response code 
+* `status_text`: response text
+* `exception`: whole exception object
+* `currentContent`: content which was rendered before exception was thrown
+
+Especially for 404 exception the `path` variable has been removed.
+
+Before:
+```twig
+<p>The path "<em>{{ path }}</em>" does not exist.</p>
+```
+
+After:
+```twig
+<p>The path "<em>{{ request.resourceLocator }}</em>" does not exist.</p>
+```
+
 ## 0.17.0
 
 ### Media

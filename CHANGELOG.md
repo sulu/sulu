@@ -8,6 +8,8 @@ CHANGELOG for Sulu
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
     * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay
     * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests 
+    * BUGFIX      #1030 [WebsiteBundle]  Fixed exception-controller to resolve parameters like website-controller
+    * FEATURE     #1030 [WebsiteBundle]  Added configuration for error templates to webspace-config
 
 * 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
