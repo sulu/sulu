@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use PHPCR\ItemNotFoundException;
 
 /**
  * Handle document re-registration upon deserialization.
@@ -58,7 +59,15 @@ class PageDocumentSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $node = $this->session->getNodeByIdentifier($document->getUuid());
+        if (!$document->getUuid()) {
+            return;
+        }
+
+        try {
+            $node = $this->session->getNodeByIdentifier($document->getUuid());
+        } catch (ItemNotFoundException $e) {
+            return;
+        }
 
         if ($this->registry->hasNode($node)) {
             $registeredDocument = $this->registry->getDocumentForNode($node);
