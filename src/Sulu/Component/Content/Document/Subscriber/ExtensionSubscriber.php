@@ -89,17 +89,17 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         $node = $event->getNode();
         $extensionsData = $document->getExtensionsData();
 
-        if (!$extensionsData) {
-            $this->hydrate($event);
-            return;
-        }
-
         $locale = $event->getLocale();
         $webspaceName = $this->inspector->getWebspace($document);
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
 
-        foreach ($extensionsData as $extensionName => $extensionData) {
-            $extension = $this->extensionManager->getExtension($structureType, $extensionName);
+        $extensions = $this->extensionManager->getExtensions($structureType);
+
+        foreach ($extensions as $extension) {
+            $extensionData = null;
+            if (isset($extensionsData[$extension->getName()])) {
+                $extensionData = $extensionsData[$extension->getName()];
+            }
             $extension->setLanguageCode($locale, $prefix, $this->internalPrefix);
             $extension->save(
                 $node,

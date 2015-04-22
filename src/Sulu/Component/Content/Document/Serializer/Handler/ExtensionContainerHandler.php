@@ -15,12 +15,12 @@ use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonDeserializationVisitor;
-use Sulu\Component\Content\Document\Property\PropertyContainer;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 /**
  * Handle serializeation and deserialization of document content
  */
-class PropertyContainerHandler implements SubscribingHandlerInterface
+class ExtensionContainerHandler implements SubscribingHandlerInterface
 {
     public static function getSubscribingMethods()
     {
@@ -28,13 +28,13 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
             array(
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                 'format' => 'json',
-                'type' => PropertyContainer::class,
+                'type' => ExtensionContainer::class,
                 'method' => 'doSerialize',
             ),
             array(
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
                 'format' => 'json',
-                'type' => PropertyContainer::class,
+                'type' => ExtensionContainer::class,
                 'method' => 'doDeserialize',
             ),
         );
@@ -48,13 +48,11 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
      */
     public function doSerialize(
         JsonSerializationVisitor $visitor,
-        PropertyContainer $container,
+        ExtensionContainer $container,
         array $type,
         Context $context
     ) {
-        $array = $container->toArray();
-
-        return $context->accept($array);
+        return $context->accept($container->toArray());
     }
 
     /**
@@ -69,13 +67,7 @@ class PropertyContainerHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        $container = new PropertyContainer();
-
-        foreach ($data as $key => $value) {
-            $container->getProperty($key)->setValue($value);
-        }
-
-        return $container;
+        return $data;
     }
 
 }

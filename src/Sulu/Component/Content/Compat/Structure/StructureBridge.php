@@ -428,7 +428,6 @@ class StructureBridge implements StructureInterface
             $result['publishedState'] = $document->getWorkflowStage() === WorkflowStage::PUBLISHED;
             $result['published'] = $document->getPublished();
         }
-
         $result['navContexts'] = array();
         if ($document instanceof NavigationContextBehavior) {
             $result['navContexts'] = $document->getNavigationContexts();

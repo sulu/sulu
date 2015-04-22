@@ -19,7 +19,7 @@
         <property name="structureType" type="string" />
         <property name="locale" type="string" />
         <property name="path" type="string" />
-        <property name="extensions" type="array" />
+        <property name="extensions" type="Sulu\Component\Content\Document\Extension\ExtensionContainer" />
 
         <property name="content" type="Sulu\Component\Content\Document\Property\PropertyContainer" />
         <property name="children" exclude="true" type="Sulu\Component\DocumentManager\Collection\ChildrenCollection" />

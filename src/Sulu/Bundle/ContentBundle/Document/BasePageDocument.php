@@ -70,7 +70,7 @@ class BasePageDocument implements
     protected $locale;
     protected $children;
     protected $path;
-    protected $extensions;
+    protected $extensions = array();
 
     public function __construct()
     {
