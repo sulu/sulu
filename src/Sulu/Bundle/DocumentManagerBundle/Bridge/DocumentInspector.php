@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Bundle\ContentBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
  * This class infers information about documents, for example
@@ -43,7 +44,7 @@ class DocumentInspector extends BaseDocumentInspector
         MetadataFactory $metadataFactory,
         StructureFactoryInterface $structureFactory,
         PropertyEncoder $encoder,
-        WebspaceManager $webspaceManager
+        WebspaceManagerInterface $webspaceManager
     )
     {
         parent::__construct($documentRegistry, $pathSegmentRegistry, $proxyFactory);
