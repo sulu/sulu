@@ -111,8 +111,8 @@ class ManagedPropertyContainer extends PropertyContainer
     {
         $this->init();
         $values = array();
-        foreach ($this->structure->getModelProperties() as $childName => $structureChild) {
-            $values[$childName] = $this->getProperty($childName)->getValue();
+        foreach (array_keys($this->structure->getModelProperties()) as $childName) {
+            $values[$childName] = $this->normalize($this->getProperty($childName)->getValue());
         }
 
         return $values;

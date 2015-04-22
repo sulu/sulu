@@ -18,6 +18,7 @@ use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Document\Property\PropertyValue;
 
 /**
  * Representation of a block node in template xml
@@ -179,19 +180,42 @@ class BlockProperty extends Property implements BlockPropertyInterface
      */
     public function setValue($value)
     {
-        if ($value == null) {
+        $this->doSetValue($value);
+    }
+
+    public function setPropertyValue(PropertyValue $value)
+    {
+        parent::setPropertyValue($value);
+        $this->doSetValue($value);
+    }
+
+    /**
+     * Sub properties need to be referenced to the PropertyValue so
+     * that the "real" property is updated.
+     *
+     * TODO: This is very tedious code. It is important to factor this out.
+     */
+    public function doSetValue($value)
+    {
+        $items = $value;
+        if ($value instanceof PropertyValue) {
+            $items = $value->getValue();
+        }
+
+        if ($items == null) {
             return;
         }
 
         // check value for single value
-        if (array_keys($value) !== range(0, count($value) - 1)) {
-            $value = array($value);
+        if (array_keys($items) !== range(0, count($items) - 1)) {
+            $items = array($items);
         }
 
         $this->properties = array();
-        $len = count($value);
-        for ($i = 0; $i < $len; $i++) {
-            $item = $value[$i];
+
+        for ($i = 0; $i < count($items); $i++) {
+
+            $item = $items[$i];
             $type = $this->initProperties($i, $item['type']);
 
             /** @var PropertyInterface $subProperty */
@@ -200,8 +224,23 @@ class BlockProperty extends Property implements BlockPropertyInterface
                     continue;
                 }
 
-                $subProperty->setValue($item[$subProperty->getName()]);
+                $subName = $subProperty->getName();
+                $subValue = $item[$subName];
+
+                if ($value instanceof PropertyValue) {
+                    $subValueProperty = new PropertyValue($subName, $subValue);
+                    $subProperty->setPropertyValue($subValueProperty);
+                    $item[$subName] = $subValueProperty;
+                } else {
+                    $subProperty->setValue($subValue);
+                }
             }
+
+            $items[$i] = $item;
+        }
+
+        if ($value instanceof PropertyValue) {
+            $value->setValue($items);
         }
     }
 

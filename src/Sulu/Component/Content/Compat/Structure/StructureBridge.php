@@ -234,28 +234,6 @@ class StructureBridge implements StructureInterface
         return $this->createLegacyPropertyFromItem($property);
     }
 
-    private function createLegacyPropertyFromItem($item)
-    {
-        $propertyBridge = $this->propertyFactory->createProperty($item);
-        $name = $item->getName();
-
-        if ($this->document) {
-            $property = $this->document->getContent()->getProperty($name);
-
-            if ($item instanceof Block) {
-                $propertyBridge->setValue($property->getValue());
-            } else {
-                $propertyBridge->setPropertyValue($property);
-            }
-
-        }
-
-        $propertyBridge->setStructure($this);
-        $this->loadedProperties[$name] = $propertyBridge;
-
-        return $propertyBridge;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -672,6 +650,11 @@ class StructureBridge implements StructureInterface
         return $this->document;
     }
 
+    protected function documentToStructure(ContentBehavior $document)
+    {
+        return new $this($this->inspector->getStructure($document), $this->inspector, $this->propertyFactory, $document);
+    }
+
     private function getWorkflowDocument($method)
     {
         $document = $this->getDocument();
@@ -724,8 +707,20 @@ class StructureBridge implements StructureInterface
         return $value;
     }
 
-    protected function documentToStructure(ContentBehavior $document)
+    private function createLegacyPropertyFromItem($item)
     {
-        return new $this($this->inspector->getStructure($document), $this->inspector, $this->propertyFactory, $document);
+        $propertyBridge = $this->propertyFactory->createProperty($item);
+        $name = $item->getName();
+
+        if ($this->document) {
+            $property = $this->document->getContent()->getProperty($name);
+            $propertyBridge->setPropertyValue($property);
+        }
+
+        $propertyBridge->setStructure($this);
+        $this->loadedProperties[$name] = $propertyBridge;
+
+        return $propertyBridge;
     }
+
 }

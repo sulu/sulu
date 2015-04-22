@@ -103,7 +103,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * @var PropertyValue
      */
-    private $propertyValue;
+    protected $propertyValue;
 
     /**
      * Constructor
@@ -286,6 +286,11 @@ class Property implements PropertyInterface, \JsonSerializable
             $this->propertyValue->setValue($value);
         }
 
+        $this->value = $value;
+    }
+
+    public function setValueByReference(&$value)
+    {
         $this->value = $value;
     }
 
