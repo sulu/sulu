@@ -137,7 +137,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
 
         $data = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
         $this->assertEquals('Testtitle', $data['document']['content']['title']);
-        $this->assertEquals('overview', $data['document']['structure_type']);
+        $this->assertEquals('overview', $data['document']['structureType']);
     }
 
     public function testSaveStructure()
@@ -160,7 +160,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
         $this->assertEquals('TEST', $result['document']['content']['title']);
-        $this->assertEquals('overview', $result['document']['structure_type']);
+        $this->assertEquals('overview', $result['document']['structureType']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
@@ -185,7 +185,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
         $this->assertEquals('TEST', $result['document']['content']['title']);
-        $this->assertEquals('overview', $result['document']['structure_type']);
+        $this->assertEquals('overview', $result['document']['structureType']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
@@ -206,7 +206,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
         $this->assertEquals('Testtitle', $result['document']['content']['title']);
-        $this->assertEquals('overview', $result['document']['structure_type']);
+        $this->assertEquals('overview', $result['document']['structureType']);
 
         $session = $this->sessionManager->getSession();
         $node = $session->getNode('/cmf/sulu_io/contents/testtitle');
