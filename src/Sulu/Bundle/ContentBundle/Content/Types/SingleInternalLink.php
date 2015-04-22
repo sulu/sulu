@@ -60,6 +60,26 @@ class SingleInternalLink extends SimpleContentType
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
+    {
+        $value = $this->defaultValue;
+        if ($node->hasProperty($property->getName())) {
+            $value = $node->getPropertyValue($property->getName());
+        }
+
+        // the RedirectType subscriber sets the internal link as a reference
+        if ($value instanceof NodeInterface) {
+            $value = $value->getIdentifier();
+        }
+
+        $property->setValue($value);
+
+        return $value;
+    }
+
+    /**
      * returns a template to render a form
      * @return string
      */
