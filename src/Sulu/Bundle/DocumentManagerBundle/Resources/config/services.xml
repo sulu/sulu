@@ -119,12 +119,6 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.behavior.remove_route" class="Sulu\Component\Content\Document\Subscriber\RouteRemoveSubscriber">
-            <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_document_manager.document_inspector" />
-            <tag name="kernel.event_subscriber" />
-        </service>
-
         <!-- Core Subscribers -->
         <service id="sulu_document_manager.subscriber.core.instantiator" class="Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber">
             <argument type="service" id="sulu_document_manager.metadata_factory" />

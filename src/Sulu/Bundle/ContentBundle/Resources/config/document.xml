@@ -92,6 +92,14 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="sulu_document_manager.subscriber.behavior.remove_content" class="Sulu\Component\Content\Document\Subscriber\ContentRemoveSubscriber">
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_document_manager.document_inspector" />
+            <argument type="service" id="sulu_document_manager.metadata_factory" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+
     </services>
 
 </container>
