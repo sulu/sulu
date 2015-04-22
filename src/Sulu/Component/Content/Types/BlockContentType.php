@@ -207,6 +207,7 @@ class BlockContentType extends ComplexContentType
             }
 
             $data = $blockProperty->getValue();
+
             if (!$blockProperty->getIsMultiple()) {
                 $data = array($data);
             }

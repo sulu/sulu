@@ -124,7 +124,7 @@ class LegacyPropertyFactory
                 'title' => $property->title,
                 'info_text' => $property->description,
             ),
-            'block',
+            $property->getDefaultComponentName(),
             $property->isRequired(),
             $property->isLocalized(),
             $property->getMaxOccurs(),

@@ -72,10 +72,28 @@ class PropertyContainer implements \ArrayAccess
     {
         $values = array();
         foreach ($this->properties as $name => $property) {
-            $values[$name] = $property->getValue();
+            $values[$name] = $this->normalize($property->getValue());
         }
 
         return $values;
+    }
+
+    protected function normalize($value)
+    {
+        if ($value instanceof PropertyValue) {
+            $value = $value->getValue();
+        }
+
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        $ret = array();
+        foreach ($value as $key => $value) {
+            $ret[$key] = $this->normalize($value);
+        }
+
+        return $ret;
     }
 
     public function bind($data, $clearMissing)

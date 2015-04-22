@@ -18,7 +18,7 @@ namespace Sulu\Component\Content\Structure;
 class Block extends Property
 {
     public $components = array();
-    public $defaultComponent;
+    public $defaultComponentName;
 
     public function getType() 
     {
@@ -30,9 +30,9 @@ class Block extends Property
      *
      * @return string
      */
-    public function getDefaultComponent()
+    public function getDefaultComponentName()
     {
-        return $this->defaultComponent;
+        return $this->defaultComponentName;
     }
 
     /**
