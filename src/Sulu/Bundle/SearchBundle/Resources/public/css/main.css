@@ -100,6 +100,24 @@
   margin: 50px 0 0;
 }
 
+/* line 94, ../scss/modules/search-results.scss */
+.search-results-info-subline {
+  margin: 20px 0;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
+}
+
+/* line 101, ../scss/modules/search-results.scss */
+.search-results-no-results {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+  color: #999;
+  text-align: center;
+  margin: 60px;
+}
+
 /* line 1, ../scss/modules/dropdown-input.scss */
 .dropdown-input-container,
 .dropdown-input-entry {

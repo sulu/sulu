@@ -10,6 +10,14 @@
                 <source>search-overlay.placeholder.all</source>
                 <target>Search everything...</target>
             </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede200b7f5656d39e" resname="search-overlay.asterix-info-text">
+                <source>search-overlay.asterix-info-text</source>
+                <target>Use (*) in your query as a placeholder for parts of a word.</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede21265f5656d39e" resname="search-overlay.no-results-text">
+                <source>search-overlay.no-results-text</source>
+                <target>No documents could be found for your search term.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
