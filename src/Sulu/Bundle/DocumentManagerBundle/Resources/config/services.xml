@@ -13,6 +13,8 @@
 
         <service id="sulu_document_manager.document_registry" class="Sulu\Component\DocumentManager\DocumentRegistry" public="false">
             <argument>%sulu.content.language.default%</argument>
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="document_manager" />
         </service>
 
         <service id="sulu_document_manager.node_manager" class="Sulu\Component\DocumentManager\NodeManager" public="false">

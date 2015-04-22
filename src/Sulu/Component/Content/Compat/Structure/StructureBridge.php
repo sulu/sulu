@@ -28,6 +28,7 @@ use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Structure\Block;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 
 class StructureBridge implements StructureInterface
 {
@@ -406,7 +407,7 @@ class StructureBridge implements StructureInterface
         $result = array(
             'id' => $this->inspector->getUuid($document),
             'path' => $this->inspector->getContentPath($document),
-            'nodeType' => $this->getNodeType(),
+            'nodeType' => (string) $this->getNodeType(),
             'nodeState' => $this->getNodeState(),
             'internal' => false,
             'concreteLanguages' => $this->inspector->getLocales($document),

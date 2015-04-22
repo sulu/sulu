@@ -90,8 +90,9 @@ class TagList extends ComplexContentType
     )
     {
         $tagIds = array();
+        $tags = $property->getValue() === null ? array() : $property->getValue();
 
-        foreach ($property->getValue() as $tag) {
+        foreach ($tags as $tag) {
             $tagIds[] = $this->tagManager->findOrCreateByName($tag, $userId)->getId();
         }
 

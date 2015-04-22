@@ -62,6 +62,7 @@ use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes
