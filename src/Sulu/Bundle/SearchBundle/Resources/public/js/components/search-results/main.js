@@ -73,6 +73,7 @@ define([
          * @method bindEvents
          */
         bindEvents: function() {
+            this.sandbox.on('sulu.data-overlay.show', this.focusInput.bind(this));
             this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.action', this.dropDownInputActionHandler.bind(this));
             this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.clear', this.dropDownInputClearHandler.bind(this));
             this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.change', this.dropDownInputActionHandler.bind(this));
@@ -93,6 +94,13 @@ define([
             
             this.$el.html(tpl);
             this.createSearchInput();
+        },
+
+        /**
+         * @method focusInput
+         */
+        focusInput: function() {
+            this.sandbox.emit('sulu.dropdown-input.' + this.dropDownInputInstance + '.focus');
         },
 
         /**
@@ -141,7 +149,8 @@ define([
                     el: this.$el.find('.search-results-bar'),
                     instanceName: this.dropDownInputInstance,
                     preSelectedElement: 'all',
-                    data: this.enabledCategories
+                    data: this.enabledCategories,
+                    focused: true
                 }
             }]);
         },

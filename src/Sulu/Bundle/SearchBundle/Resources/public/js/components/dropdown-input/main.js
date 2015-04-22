@@ -18,6 +18,7 @@
  * @param {String} [options.valueName] The property name to get the option label
  * @param {Number} [options.preSelectedElement] The preselcted element
  * @param {Object} [options.icons] Collection of all icons
+ * @param {Bool} [options.focused] Focus the input on render
  */
 define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl) {
 
@@ -28,6 +29,7 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
         data: [],
         valueName: 'name',
         preSelectedElement: 0,
+        focused: false,
         icons: {
             inputIcon: 'fa-search'
         }
@@ -131,6 +133,10 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
             this.storeSelectors();
             this.updatePlaceHolder();
             this.createDropdown();
+
+            if (this.options.focused) {
+                this.focusInputhandler();
+            }
         },
 
         /**
