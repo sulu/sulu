@@ -128,4 +128,37 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             $locales
         );
     }
+
+    /**
+     * It should return the webspace name for a given node
+     *
+     * @dataProvider provideWebspace
+     */
+    public function testWebspace($path, $expectedWebspace)
+    {
+        $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
+        $this->node->getPath()->willReturn($path);
+        $this->pathRegistry->getPathSegment('base')->willReturn('cmf');
+        $webspace = $this->documentInspector->getWebspace($this->document);
+
+        $this->assertEquals($expectedWebspace, $webspace);
+    }
+
+    public function provideWebspace()
+    {
+        return array(
+            array(
+                '/cmf/foobar/bar',
+                'foobar',
+            ),
+            array(
+                '/foo/foo',
+                null,
+            ),
+            array(
+                '/cmf/hello',
+                null
+            ),
+        );
+    }
 }
