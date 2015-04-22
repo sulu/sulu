@@ -1,5 +1,0 @@
-sulu_document_manager:
-    mapping:
-        page:
-            class: Sulu\Bundle\DocumentManagerBundle\Tests\Document\PageDocument
-            phpcr_type: sulu:page

@@ -21,6 +21,8 @@ use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use PHPCR\PropertyInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 
 class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,13 +37,17 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
         $this->structureFactory = $this->prophesize(StructureFactoryInterface::class);
         $this->metadata = $this->prophesize(Metadata::class);
         $this->proxyFactory = $this->prophesize(ProxyFactory::class);
+        $this->encoder = $this->prophesize(PropertyEncoder::class);
+        $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->documentInspector = new DocumentInspector(
             $this->documentRegistry->reveal(),
             $this->pathRegistry->reveal(),
             $this->namespaceRegistry->reveal(),
             $this->proxyFactory->reveal(),
             $this->metadataFactory->reveal(),
-            $this->structureFactory->reveal()
+            $this->structureFactory->reveal(),
+            $this->encoder->reveal(),
+            $this->webspaceManager->reveal()
         );
     }
 
@@ -101,7 +107,7 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
             'foo:ee-template',
         );
 
-        $expectedLocales = array('aa', 'bb', 'ee');
+        $expectedLocales = array('aa', 'bb', 'cc', 'ee');
 
         $properties = array();
         foreach ($propertyNames as $propertyName) {
