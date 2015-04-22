@@ -72,4 +72,15 @@ class ExtensionContainer implements \ArrayAccess
     {
         unset($this->data[$extensionName]);
     }
+
+    public function toArray()
+    {
+        $result = array();
+
+        foreach ($this->extensionManager->getExtensions($this->structureType) as $extension) {
+            $result[$extension->getName()] = $this->offsetGet($extension->getName());
+        }
+
+        return $result;
+    }
 }

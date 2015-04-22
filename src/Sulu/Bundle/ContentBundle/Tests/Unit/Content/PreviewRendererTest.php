@@ -14,6 +14,7 @@ use Sulu\Bundle\ContentBundle\Preview\PreviewRenderer;
 use Sulu\Component\Webspace\Theme;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Response;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 
 class PreviewRendererTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,7 +49,7 @@ class PreviewRendererTest extends \PHPUnit_Framework_TestCase
         $requestStack = $this->getMockBuilder('Symfony\Component\HttpFoundation\RequestStack')
             ->disableOriginalConstructor()
             ->getMock();
-        $structure = $this->getMockBuilder('Sulu\Component\Content\Compat\Structure\Page')
+        $structure = $this->getMockBuilder(PageBridge::class)
             ->disableOriginalConstructor()
             ->getMock();
 
