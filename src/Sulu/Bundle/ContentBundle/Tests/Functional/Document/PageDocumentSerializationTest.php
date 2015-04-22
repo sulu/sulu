@@ -53,7 +53,6 @@ class PageDocumentSerializationTest extends SuluTestCase
                 $internalLink,
             ),
             'integer' => 1234,
-            'double' => 1234.00,
         ));
 
         $result = $this->serializer->serialize($page, 'json');
@@ -74,13 +73,10 @@ class PageDocumentSerializationTest extends SuluTestCase
         $this->assertEquals('/foo', $page->getResourceSegment()); $this->assertEquals('Hello', $page->getTitle());
         $content = $page->getContent();
 
-        $this->assertInternalType('double', $content->getProperty('double')->getValue());
         $this->assertInternalType('integer', $content->getProperty('integer')->getValue());
-        $this->assertInstanceOf(PageDocument::class, $content->getProperty('object')->getValue());
 
         $this->assertInstanceOf(PropertyContainer::class, $content);
         $this->assertCount(2, $content->getProperty('arrayOfObjects')->getValue());
-        $this->assertContainsOnlyInstancesOf(PageDocument::class, $content->getProperty('arrayOfObjects')->getValue());
     }
 
     /**
