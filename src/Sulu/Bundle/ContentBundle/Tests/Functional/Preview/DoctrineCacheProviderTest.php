@@ -136,7 +136,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         }
 
         $data = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('Testtitle', $data['document']['content']['content']['title']);
+        $this->assertEquals('Testtitle', $data['document']['content']['title']);
         $this->assertEquals('overview', $data['document']['structure_type']);
     }
 
@@ -159,7 +159,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('overview', $result->getOriginTemplate());
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('TEST', $result['document']['content']['content']['title']);
+        $this->assertEquals('TEST', $result['document']['content']['title']);
         $this->assertEquals('overview', $result['document']['structure_type']);
 
         $session = $this->sessionManager->getSession();
@@ -184,7 +184,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertEquals('overview', $result->getOriginTemplate());
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('TEST', $result['document']['content']['content']['title']);
+        $this->assertEquals('TEST', $result['document']['content']['title']);
         $this->assertEquals('overview', $result['document']['structure_type']);
 
         $session = $this->sessionManager->getSession();
@@ -205,7 +205,7 @@ class DoctrineCacheProviderTest extends SuluTestCase
         $this->assertNotEquals(false, $result);
 
         $result = json_decode($this->dataCache->fetch($this->getId(1, $data[0]->getUuid(), 'en')), true);
-        $this->assertEquals('Testtitle', $result['document']['content']['content']['title']);
+        $this->assertEquals('Testtitle', $result['document']['content']['title']);
         $this->assertEquals('overview', $result['document']['structure_type']);
 
         $session = $this->sessionManager->getSession();

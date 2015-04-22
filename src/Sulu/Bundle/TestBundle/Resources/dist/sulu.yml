@@ -17,10 +17,6 @@ fos_rest:
 monolog:
     handlers:
         main:
-            type:         stream
-            action_level: debug
-            handler:      nested
-        nested:
             type:  stream
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
