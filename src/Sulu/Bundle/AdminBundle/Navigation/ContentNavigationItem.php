@@ -39,13 +39,6 @@ class ContentNavigationItem
     private $action;
 
     /**
-     * An array of groups, which contain this navigation item.
-     * This is used for filtering the items for the navigation.
-     * @var array
-     */
-    private $groups;
-
-    /**
      * The name of the component to start
      * @var string
      */
@@ -153,22 +146,6 @@ class ContentNavigationItem
     }
 
     /**
-     * @return array
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
-     * @param array $groups
-     */
-    public function setGroups(array $groups)
-    {
-        $this->groups = $groups;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -246,26 +223,5 @@ class ContentNavigationItem
     public function setPosition($position)
     {
         $this->position = $position;
-    }
-
-    /**
-     * Returns an array representation of the content navigation item
-     * @return array
-     */
-    public function toArray(array $options = array())
-    {
-        $array = array(
-            'id' => ($this->getId() != null) ? $this->getId() : uniqid(),
-            'title' => $this->getName(),
-            'action' => $this->getAction(),
-            'display' => $this->getDisplay(),
-            'component' => $this->getComponent(),
-            'componentOptions' => array_merge($this->getComponentOptions(), $options),
-            'disabled' => $this->getDisabled(),
-            'resetStore' => $this->getResetStore(),
-            'position' => $this->getPosition()
-        );
-
-        return $array;
     }
 }

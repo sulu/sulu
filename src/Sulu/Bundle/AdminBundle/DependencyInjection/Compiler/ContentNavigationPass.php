@@ -10,34 +10,38 @@
 
 namespace Sulu\Bundle\AdminBundle\DependencyInjection\Compiler;
 
-use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationInterface;
+use Sulu\Bundle\AdminBundle\Navigation\ContentNavigationProviderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Add all services with given tag to the bundle content navigation
  */
-abstract class ContentNavigationPass implements CompilerPassInterface
+class ContentNavigationPass implements CompilerPassInterface
 {
-    protected $tag = null;
-    protected $serviceName = null;
-
     /**
      * {@inheritDoc}
      */
     public function process(ContainerBuilder $container)
     {
-        if (null !== $this->tag && null !== $this->serviceName && $container->hasDefinition($this->serviceName)) {
-            $contentNavigation = $container->getDefinition($this->serviceName);
+        $contentNavigationCollector = $container->getDefinition('sulu_admin.content_navigation_registry');
 
-            $taggedServices = $container->findTaggedServiceIds($this->tag);
+        $taggedServices = $container->findTaggedServiceIds('sulu_admin.content_navigation');
 
-            foreach ($taggedServices as $id => $attributes) {
-                /** @var ContentNavigationInterface $navigation */
-                $navigation = $container->getDefinition($id);
-
-                $contentNavigation->addMethodCall('addNavigation', array($navigation));
+        foreach ($taggedServices as $id => $attributes) {
+            if (!isset($attributes[0]['alias'])) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'No "alias" specified for content navigation provider with service ID: "%s"',
+                        $id
+                    )
+                );
             }
+
+            $contentNavigationCollector->addMethodCall(
+                'addContentNavigationProvider',
+                array($attributes[0]['alias'], $id)
+            );
         }
     }
 }

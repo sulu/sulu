@@ -111,7 +111,7 @@ class ReindexListener
             $locales = $this->nodeHelper->getLanguagesForNode($node);
 
             foreach ($locales as $locale) {
-                $structure = $this->contentMapper->loadByNode($node, $locale);
+                $structure = $this->contentMapper->loadByNode($node, $locale, null, false, true, false);
                 $structureClass = get_class($structure);
 
                 if (!isset($count[$structureClass])) {

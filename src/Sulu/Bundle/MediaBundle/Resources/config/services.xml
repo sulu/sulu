@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaAdmin</parameter>
-        <parameter key="sulu_media.admin.content_navigation.class">Sulu\Bundle\MediaBundle\Admin\SuluMediaContentNavigation</parameter>
+        <parameter key="sulu_media.admin.class">Sulu\Bundle\MediaBundle\Admin\MediaAdmin</parameter>
         <parameter key="sulu_media.media_manager.class">Sulu\Bundle\MediaBundle\Media\Manager\MediaManager</parameter>
+        <parameter key="sulu_media.admin.content_navigation_provider.class">Sulu\Bundle\MediaBundle\Admin\MediaContentNavigationProvider</parameter>
         <parameter key="sulu_media.media_repository.class">Sulu\Bundle\MediaBundle\Entity\MediaRepository</parameter>
         <parameter key="sulu_media.collection_repository.class">Sulu\Bundle\MediaBundle\Entity\CollectionRepository</parameter>
         <parameter key="sulu_media.storage.class">Sulu\Bundle\MediaBundle\Media\Storage\LocalStorage</parameter>
@@ -14,6 +14,7 @@
         <parameter key="sulu_media.image.command_manager.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\Manager\CommandManager</parameter>
         <parameter key="sulu_media.image.command.resize.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ResizeCommand</parameter>
         <parameter key="sulu_media.image.command.scale.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\ScaleCommand</parameter>
+        <parameter key="sulu_media.image.command.crop.class">Sulu\Bundle\MediaBundle\Media\ImageConverter\Command\CropCommand</parameter>
         <parameter key="sulu_media.media_selection.class">Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType</parameter>
         <parameter key="sulu_media.media_selection.template">SuluMediaBundle:Template:content-types/media-selection.html.twig</parameter>
         <parameter key="sulu_media.collection_manager.class">Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager</parameter>
@@ -28,7 +29,8 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument>%sulu_admin.name%</argument>
         </service>
-        <service id="sulu_media.admin.content_navigation" class="%sulu_media.admin.content_navigation.class%">
+        <service id="sulu_media.admin.content_navigation_provider" class="%sulu_media.admin.content_navigation_provider.class%">
+            <tag name="sulu_admin.content_navigation" alias="media"/>
             <tag name="sulu.context" context="admin"/>
         </service>
         <service id="sulu_media.media_repository"
@@ -70,9 +72,11 @@
 
         <service id="sulu_media.image.command.resize" class="%sulu_media.image.command.resize.class%" />
         <service id="sulu_media.image.command.scale" class="%sulu_media.image.command.scale.class%" />
+        <service id="sulu_media.image.command.crop" class="%sulu_media.image.command.crop.class%" />
 
         <service id="%sulu_media.image.command.prefix%scale" alias="sulu_media.image.command.scale" />
         <service id="%sulu_media.image.command.prefix%resize" alias="sulu_media.image.command.resize" />
+        <service id="%sulu_media.image.command.prefix%crop" alias="sulu_media.image.command.crop" />
 
         <service id="sulu_media.media_manager" class="%sulu_media.media_manager.class%">
             <argument type="service" id="sulu_media.media_repository" />

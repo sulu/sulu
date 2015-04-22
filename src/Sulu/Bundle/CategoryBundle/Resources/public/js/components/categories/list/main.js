@@ -74,6 +74,7 @@ define(function () {
                     url: '/admin/api/categories?flat=true&sortBy=depth&sortOrder=asc',
                     childrenPropertyName: 'hasChildren',
                     resultKey: 'categories',
+                    searchFields: ['name'],
                     pagination: false,
                     viewOptions: {
                         table: {

@@ -16,13 +16,22 @@
  * @param {String} [options.instanceName] The instance name of the sidebar
  * @param {String} [options.component] The component to start
  */
-define(['text!components/data-overlay/main.html'], function(mainTpl) {
+define(function() {
 
     'use strict';
 
     var defaults = {
         instanceName: '',
         component: ''
+    },
+
+    templates = {
+        main: [
+            '<div class="data-overlay">',
+                '<button class="fa-times data-overlay-close btn btn-link"></button>',
+                '<div class="data-overlay-content"></div>',
+            '</div>'
+        ].join('')
     },
 
     createEventName = function(postfix) {
@@ -60,7 +69,7 @@ define(['text!components/data-overlay/main.html'], function(mainTpl) {
         initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.mainTpl = this.sandbox.util.template(mainTpl);
+            this.mainTpl = this.sandbox.util.template(templates.main);
 
             this.render();
             this.startComponent();

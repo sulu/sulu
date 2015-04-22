@@ -24,5 +24,5 @@ interface CommandInterface
      * @param $parameters
      * @return mixed
      */
-    public function execute(&$image, $parameters);
+    public function execute(ImageInterface &$image, $parameters);
 }

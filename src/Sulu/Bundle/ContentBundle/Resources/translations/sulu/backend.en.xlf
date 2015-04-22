@@ -320,7 +320,7 @@
             </trans-unit>
             <trans-unit id="abaaaaa371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.type.internal-link.title">
                 <source>sulu.content.form.settings.type.internal-link.title</source>
-                <target>Title</target>
+                <target>Link title</target>
             </trans-unit>
             <trans-unit id="abaaaaa371239fbed4a73a4123dfdf011" resname="sulu.content.form.settings.type.internal-link.link">
                 <source>sulu.content.form.settings.type.internal-link.link</source>

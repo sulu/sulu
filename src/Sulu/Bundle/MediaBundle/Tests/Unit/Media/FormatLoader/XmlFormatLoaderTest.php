@@ -34,10 +34,11 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                     'name' => '640x480',
                     'commands' => array(
                         array(
-                            'action' => 'resize',
+                            'action' => 'scale',
                             'parameters' => array(
                                 'x' => 640,
-                                'y' => 480
+                                'y' => 480,
+                                'forceRatio' => true
                             )
                         )
                     ),
@@ -85,10 +86,11 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                     'name' => '640x480',
                     'commands' => array(
                         array(
-                            'action' => 'resize',
+                            'action' => 'scale',
                             'parameters' => array(
                                 'x' => 640,
-                                'y' => 480
+                                'y' => 480,
+                                'forceRatio' => false
                             )
                         )
                     ),
@@ -147,10 +149,11 @@ class XmlFormatLoaderTest extends \PHPUnit_Framework_TestCase
                     'name' => '640x480',
                     'commands' => array(
                         array(
-                            'action' => 'resize',
+                            'action' => 'scale',
                             'parameters' => array(
                                 'x' => 640,
-                                'y' => 480
+                                'y' => 480,
+                                'forceRatio' => true
                             )
                         )
                     ),

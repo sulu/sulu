@@ -7,10 +7,11 @@
         <name>640x480</name>
         <commands>
             <command>
-                <action>resize</action>
+                <action>scale</action>
                 <parameters>
                     <parameter name="x">640</parameter>
                     <parameter name="y">480</parameter>
+                    <parameter name="forceRatio">false</parameter>
                 </parameters>
             </command>
         </commands>

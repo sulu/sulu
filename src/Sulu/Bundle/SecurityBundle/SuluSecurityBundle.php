@@ -22,6 +22,5 @@ class SuluSecurityBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new CurrentUserDataCompilerPass());
-        $container->addCompilerPass(new AddContentNavigationPass());
     }
 }
