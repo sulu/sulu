@@ -91,7 +91,10 @@ class ExtensionSubscriberTest extends SubscriberTestCase
         $this->persistEvent->getDocument()->willReturn($document);
         $this->inspector->getWebspace($document)->willReturn('sulu_io');
         $this->namespaceRegistry->getPrefix('extension_localized')->willReturn('ext_prefix');
-        $this->extensionManager->getExtension('foobar', 'ext_1')->willReturn($this->extension->reveal());
+        $this->extensionManager->getExtensions('foobar')->willReturn(array(
+            'ext_1' => $this->extension->reveal(),
+        ));
+        $this->extension->getName()->willReturn('ext_1');
         $this->extension->setLanguageCode('de', 'ext_prefix', '')->shouldBeCalled();
         $this->extension->save(
             $this->node->reveal(),

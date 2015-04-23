@@ -97,9 +97,14 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
 
         foreach ($extensions as $extension) {
             $extensionData = null;
-            if (isset($extensionsData[$extension->getName()])) {
-                $extensionData = $extensionsData[$extension->getName()];
+
+            if (!isset($extensionsData[$extension->getName()])) {
+                continue;
             }
+
+            $extensionData = $extensionsData[$extension->getName()];
+
+
             $extension->setLanguageCode($locale, $prefix, $this->internalPrefix);
             $extension->save(
                 $node,
