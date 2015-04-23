@@ -26,4 +26,26 @@ interface PropertyContainerInterface extends \ArrayAccess
      * @param string $name
      */
     public function getProperty($name);
+
+    /**
+     * Return true if the container has the named property
+     *
+     * @param string $name
+     */
+    public function hasProperty($name);
+
+    /**
+     * Bind data to the container
+     *
+     * @param array $data
+     * @param boolean $clearMissing
+     */
+    public function bind($data, $clearMissing);
+
+    /**
+     * Return an array representation of the containers property values
+     *
+     * @return array
+     */
+    public function toArray();
 }

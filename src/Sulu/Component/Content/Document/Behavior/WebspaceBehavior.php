@@ -15,4 +15,8 @@ namespace Sulu\Component\Content\Document\Behavior;
  */
 interface WebspaceBehavior
 {
+    /**
+     * Return the webspace name
+     */
+    public function getWebspaceName();
 }

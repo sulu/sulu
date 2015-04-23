@@ -16,11 +16,13 @@ use Symfony\Component\Filesystem\Filesystem;
 use Sulu\Bundle\SearchBundle\Tests\Fixtures\DefaultStructureCache;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\ContentBundle\Document\PageDocument;
+use Sulu\Component\Content\Document\WorkflowStage;
 
 class BaseTestCase extends SuluTestCase
 {
     protected $session;
-    protected $contentMapper;
+    protected $documentManager;
 
     public function setUp()
     {
@@ -29,7 +31,8 @@ class BaseTestCase extends SuluTestCase
         $fs->remove(__DIR__ . '/../app/data');
 
         $this->session = $this->getContainer()->get('doctrine_phpcr')->getConnection();
-        $this->contentMapper = $this->getContainer()->get('sulu.content.mapper');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
     }
 
     public function getSearchManager()
@@ -39,20 +42,22 @@ class BaseTestCase extends SuluTestCase
         return $searchManager;
     }
 
-    public function generateStructureIndex($count, $webspaceName = 'sulu_io')
+    public function generateStructureIndex($count)
     {
+        $documents = array();
         for ($i = 1; $i <= $count; $i++) {
-            $structure = new DefaultStructureCache();
-            $structure->setUuid($webspaceName . $i);
-            $structure->setWebspaceKey($webspaceName);
-            $structure->getProperty('title')->setValue('Structure Title ' . $i);
+            $pageDocument = new PageDocument();
+            $pageDocument->setParent($this->webspaceDocument);
+            $pageDocument->setTitle('Structure Title ' . $i);
+            $pageDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
 
-            $structure->getProperty('url')->setValue('/');
-            $structure->setNodeState(StructureInterface::STATE_PUBLISHED);
-            $structure->setLanguageCode('de');
-
-            $this->getSearchManager()->index($structure);
+            $this->documentManager->persist($pageDocument, 'de');
+            $documents[] = $pageDocument;
         }
+
+        $this->documentManager->flush();
+
+        return $documents;
     }
 
     public function indexStructure($title, $url)

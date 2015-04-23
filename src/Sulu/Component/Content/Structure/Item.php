@@ -204,6 +204,17 @@ class Item
         }
     }
 
+    public function hasTag($name)
+    {
+        foreach ($this->tags as $tag) {
+            if ($tag['name'] == $name) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * TODO: This is duplicated
      * @deprecated
