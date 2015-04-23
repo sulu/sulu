@@ -38,6 +38,26 @@ class Media extends ApiWrapper
     /**
      * @var string
      */
+    const MEDIA_TYPE_IMAGE = 'image';
+
+    /**
+     * @var string
+     */
+    const MEDIA_TYPE_VIDEO = 'video';
+
+    /**
+     * @var string
+     */
+    const MEDIA_TYPE_AUDIO = 'audio';
+
+    /**
+     * @var string
+     */
+    const MEDIA_TYPE_DOCUMENT = 'document';
+
+    /**
+     * @var string
+     */
     protected $url;
 
     /**
@@ -334,6 +354,55 @@ class Media extends ApiWrapper
         $this->entity->setType($type);
 
         return $this;
+    }
+
+    /**
+     * @param string $type
+     * @return boolean
+     */
+    public function isTypeOf($type)
+    {
+        return $this->getType()->getName() == $type;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("isImage")
+     * @return boolean
+     */
+    public function isImage()
+    {
+        return $this->isTypeOf(self::MEDIA_TYPE_IMAGE);
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("isVideo")
+     * @return boolean
+     */
+    public function isVideo()
+    {
+        return $this->isTypeOf(self::MEDIA_TYPE_VIDEO);
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("isAudio")
+     * @return boolean
+     */
+    public function isAudio()
+    {
+        return $this->isTypeOf(self::MEDIA_TYPE_AUDIO);
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("isDocument")
+     * @return boolean
+     */
+    public function isDocument()
+    {
+        return $this->isTypeOf(self::MEDIA_TYPE_DOCUMENT);
     }
 
     /**
