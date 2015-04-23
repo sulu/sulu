@@ -41,8 +41,8 @@ class ContentMapperSubscriberTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->nodeEvent = $this->prophesize('Sulu\Component\Content\Compat\Event\ContentNodeEvent');
-        $this->deleteEvent = $this->prophesize('Sulu\Component\Content\Compat\Event\ContentNodeDeleteEvent');
+        $this->nodeEvent = $this->prophesize('Sulu\Component\Content\Mapper\Event\ContentNodeEvent');
+        $this->deleteEvent = $this->prophesize('Sulu\Component\Content\Mapper\Event\ContentNodeDeleteEvent');
         $this->structure = $this->prophesize('Sulu\Component\Content\Compat\StructureInterface');
         $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
 
