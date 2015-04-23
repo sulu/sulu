@@ -93,6 +93,16 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
         $document->setImageUrl($this->getImageUrl($media, $locale));
 
+        $document->addField($this->factory->createField(
+            'media_id',
+            $media->getId()
+        ));
+
+        $document->addField($this->factory->createField(
+            'media_mime',
+            $fileVersion->getMimeType()
+        ));
+
         if ($collection = $media->getCollection()) {
             $document->addField($this->factory->createField(
                 'collection_id',
