@@ -71,6 +71,7 @@ class BasePageDocument implements
     protected $children;
     protected $path;
     protected $extensions = array();
+    protected $webspaceName;
 
     public function __construct()
     {
@@ -367,5 +368,13 @@ class BasePageDocument implements
     public function setExtension($name, $data)
     {
         $this->extensions[$name] = $data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getWebspaceName()
+    {
+        return $this->webspaceName;
     }
 }

@@ -21,88 +21,96 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
+use Sulu\Component\DocumentManager\MetadataFactory;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentStructureFactory;
+use Sulu\Component\Content\Structure\Factory\StructureFactory;
+use Sulu\Component\Content\Structure\Block;
+use Sulu\Component\Content\Document\ContentInstanceFactory;
+use Sulu\Component\Content\Structure\Property;
+use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
- * @package Sulu\Bundle\SearchBundle\Metadata
  */
 class StructureDriver implements DriverInterface
 {
     /**
      * @var Factory
      */
-    protected $factory;
+    private $factory;
 
     /**
-     * @var EventDispatcherInterface
+     * @var DocumentStructureFactory
      */
-    protected $eventDispatcher;
+    private $structureFactory;
 
-    public function __construct(Factory $factory, EventDispatcherInterface $eventDispatcher)
+    /**
+     * @var MetadataFactory
+     */
+    private $metadataFactory;
+
+    public function __construct(
+        Factory $factory, 
+        MetadataFactory $metadataFactory,
+        StructureFactory $structureFactory
+    )
     {
         $this->factory = $factory;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->metadataFactory = $metadataFactory;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
-     * loads metadata for a given class if its derived from StructureInterface
+     * Loads metadata for a given class if its derived from StructureInterface
+     *
      * @param \ReflectionClass $class
      * @throws \InvalidArgumentException
      * @return IndexMetadataInterface|null
      */
     public function loadMetadataForClass(\ReflectionClass $class)
     {
-        if (!$class->implementsInterface('Sulu\Component\Content\Compat\StructureInterface')) {
-            return null;
+        if (!ContentInstanceFactory::isWrapped($class->name)) {
+            return;
         }
-
-        if ($class->isAbstract()) {
-            return null;
-        }
-
-        /** @var StructureInterface $structure */
-        $structure = $class->newInstance();
 
         $indexMeta = $this->factory->makeIndexMetadata($class->name);
+        $documentMeta = $this->metadataFactory->getMetadataForClass(ContentInstanceFactory::getRealName($class->name));
+        $structureType = ContentInstanceFactory::getStructureType($class->name);
+
+        $structure = $this->structureFactory->getStructure($documentMeta->getAlias(), $structureType);
 
         $indexMeta->setIndexName('content');
         $indexMeta->setIdField('uuid');
-        $indexMeta->setLocaleField('languageCode');
+        $indexMeta->setLocaleField('locale');
 
-        $allProperties = array();
+        foreach ($structure->getModelProperties() as $property) {
 
-        foreach ($structure->getProperties(true) as $property) {
-
-            if ($property instanceof BlockProperty) {
+            if ($property instanceof Block) {
                 $propertyMapping = new ComplexMetadata();
-                foreach ($property->getTypes() as $type) {
-                    foreach ($type->getChildProperties() as $typeProperty) {
-                        $this->mapProperty($typeProperty, $propertyMapping);
+                foreach ($property->getComponents() as $component) {
+                    $index = 0;
+                    foreach ($component->getChildren() as $componentProperty) {
+                        $indexMeta->addFieldMapping(
+                            'content.' . $property->getName() . '.value[' . $index++ . '][' . $componentProperty->getName() .']',
+                            array(
+                                'type' => 'string',
+                            )
+                        );
                     }
                 }
-                $indexMeta->addFieldMapping(
-                    $property->getName(),
-                    array(
-                        'type' => 'complex',
-                        'mapping' => $propertyMapping,
-                    )
-                );
             } else {
                 $this->mapProperty($property, $indexMeta);
             }
         }
 
-        if ($structure->hasTag('sulu.rlp')) {
+        if ($structure->hasPropertyWithTagName('sulu.rlp')) {
             $prop = $structure->getPropertyByTagName('sulu.rlp');
-            $indexMeta->setUrlField($prop->getName());
+            $indexMeta->setUrlField($this->getPropertyName($prop));
         }
 
-        if (!$indexMeta->getTitleField()) {
-            $prop = $structure->getProperty('title');
-            $indexMeta->setTitleField($prop->getName());
-
+        if ($class->isSubclassOf(TitleBehavior::class) && !$indexMeta->getTitleField()) {
             $indexMeta->addFieldMapping(
-                $prop->getName(),
+                'title',
                 array(
                     'type' => 'string',
                 )
@@ -110,52 +118,58 @@ class StructureDriver implements DriverInterface
         }
 
         // index the webspace
-        $indexMeta->addFieldMapping('webspaceKey', array('type' => 'string'));
-
-        $this->eventDispatcher->dispatch(
-            SuluSearchEvents::STRUCTURE_LOAD_METADATA,
-            new StructureMetadataLoadEvent($structure, $indexMeta)
-        );
+        $indexMeta->addFieldMapping('webspaceName', array('type' => 'string'));
 
         return $indexMeta;
     }
 
-    private function mapProperty(PropertyInterface $property, $metadata)
+    private function mapProperty(Property $property, $metadata)
     {
-        if ($property->hasTag('sulu.search.field')) {
-            $tag = $property->getTag('sulu.search.field');
-            $tagAttributes = $tag->getAttributes();
-
-            if ($metadata instanceof ClassMetadata && isset($tagAttributes['role'])) {
-                switch ($tagAttributes['role']) {
-                    case 'title':
-                        $metadata->setTitleField($property->getName());
-                        $metadata->addFieldMapping($property->getName(), array('type' => 'string'));
-                        break;
-                    case 'description':
-                        $metadata->setDescriptionField($property->getName());
-                        $metadata->addFieldMapping($property->getName(), array('type' => 'string'));
-                        break;
-                    case 'image':
-                        $metadata->setImageUrlField($property->getName());
-                        break;
-                    default:
-                        throw new \InvalidArgumentException(
-                            sprintf(
-                                'Unknown search field role "%s", role must be one of "%s"',
-                                $tagAttributes['role'],
-                                implode(', ', array('title', 'description', 'image'))
-                            )
-                        );
-                }
-            } elseif (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
-                $metadata->addFieldMapping(
-                    $property->getName(),
-                    array(
-                        'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
-                    )
-                );
-            }
+        if (!$property->hasTag('sulu.search.field')) {
+            return;
         }
+
+        $tag = $property->getTag('sulu.search.field');
+        $tagAttributes = $tag['attributes'];
+
+        if ($metadata instanceof ClassMetadata && isset($tagAttributes['role'])) {
+            switch ($tagAttributes['role']) {
+                case 'title':
+                    $metadata->setTitleField($property->getName());
+                    $metadata->addFieldMapping($this->getPropertyName($property), array('type' => 'string'));
+                    break;
+                case 'description':
+                    $metadata->setDescriptionField($this->getPropertyName($property));
+                    $metadata->addFieldMapping($this->getPropertyName($property), array('type' => 'string'));
+                    break;
+                case 'image':
+                    $metadata->setImageUrlField($this->getPropertyName($property));
+                    break;
+                default:
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'Unknown search field role "%s", role must be one of "%s"',
+                            $tagAttributes['role'],
+                            implode(', ', array('title', 'description', 'image'))
+                        )
+                    );
+            }
+
+            return;
+        }
+
+        if (!isset($tagAttributes['index']) || $tagAttributes['index'] !== 'false') {
+            $metadata->addFieldMapping(
+                $this->getPropertyName($property),
+                array(
+                    'type' => isset($tagAttributes['type']) ? $tagAttributes['type'] : 'string',
+                )
+            );
+        }
+    }
+
+    private function getPropertyName(Property $property)
+    {
+        return 'content.' . $property->getName() . '.value';
     }
 }

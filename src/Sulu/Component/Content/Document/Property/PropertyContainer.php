@@ -16,11 +16,12 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\Content\Compat\Structure\Structure;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Document\Property\PropertyContainerInterface;
 
 /**
  * Lazy loading container for content properties.
  */
-class PropertyContainer implements \ArrayAccess
+class PropertyContainer implements PropertyContainerInterface
 {
     protected $properties = array();
 
@@ -102,5 +103,10 @@ class PropertyContainer implements \ArrayAccess
             $property = $this->getProperty($key);
             $property->setValue($value);
         }
+    }
+
+    public function __get($name)
+    {
+        return $this->offsetGet($name);
     }
 }

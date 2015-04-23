@@ -176,5 +176,4 @@ class Structure extends Item
     {
         return $this->resource;
     }
-    
 }
