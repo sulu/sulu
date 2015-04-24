@@ -148,6 +148,10 @@ class DocumentInspectorTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
+                '/cmf/sulu.io/contents',
+                'sulu.io',
+            ),
+            array(
                 '/cmf/foobar/bar',
                 'foobar',
             ),

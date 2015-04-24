@@ -277,7 +277,7 @@ class DocumentInspector extends BaseDocumentInspector
     private function extractWebspaceFromPath($path)
     {
         $match = preg_match(sprintf(
-            '/^\/%s\/(\w*)\/.*$/',
+            '/^\/%s\/([\w\.]*?)\/.*$/',
             $this->pathSegmentRegistry->getPathSegment('base')
         ), $path, $matches);
 
