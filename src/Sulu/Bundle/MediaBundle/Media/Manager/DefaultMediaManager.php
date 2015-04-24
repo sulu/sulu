@@ -841,10 +841,10 @@ class DefaultMediaManager implements MediaManagerInterface
 
         // Set Current Url
         if (
-            isset($versionUrls[$media->getVersion()])
-            && isset($versionUrls[$media->getVersion()]['url'])
+            isset($versionData[$media->getVersion()])
+            && isset($versionData[$media->getVersion()]['url'])
         ) {
-            $media->setUrl($versionUrls[$media->getVersion()]['url']);
+            $media->setUrl($versionData[$media->getVersion()]['url']);
         }
 
         return $media;
