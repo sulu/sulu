@@ -166,6 +166,12 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <!-- Initializer -->
+        <service id="sulu_document_manager.initializer" class="Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer">
+            <argument type="service" id="service_container" />
+            <argument type="collection" />
+        </service>
+
     </services>
 
 </container>
