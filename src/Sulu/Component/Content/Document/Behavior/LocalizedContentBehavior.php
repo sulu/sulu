@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**
  * All content documents can have localized content, but only

@@ -2,9 +2,9 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
-use Sulu\Component\DocumentManager\Behavior\NodeNameBehavior;
-use Sulu\Component\DocumentManager\Behavior\PathBehavior;
-use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 
 class RouteDocument implements

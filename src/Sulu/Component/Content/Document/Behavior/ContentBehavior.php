@@ -10,7 +10,7 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\DocumentManager\Behavior\LocaleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 
 /**
  * The implementing document can have dynamic content assigned to it

@@ -11,7 +11,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use Sulu\Component\DocumentManager\MetadataFactory;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
 /**
  * Remove routes and references associated with content
@@ -25,7 +25,7 @@ class ContentRemoveSubscriber implements EventSubscriberInterface
     public function __construct(
         DocumentManager $documentManager,
         DocumentInspector $inspector,
-        MetadataFactory $metadataFactory
+        MetadataFactoryInterface $metadataFactory
     ) {
         $this->documentManager = $documentManager;
         $this->inspector = $inspector;

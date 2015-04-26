@@ -39,28 +39,29 @@ class WebspaceInitializer implements InitializerInterface
     public function initialize(OutputInterface $output)
     {
         $this->start = microtime(true);
-        $this->initializeBase();
+        $this->initializeBase($output);
 
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $output->writeln(sprintf('Initializing webspace "%s"', $webspace->getKey()));
-            $this->initializeWebspace($webspace);
+            $this->initializeWebspace($output, $webspace);
         }
 
         $this->documentManager->flush();
     }
 
-    private function initializeBase()
+    private function initializeBase(OutputInterface $output)
     {
         $basePath = '/' . $this->pathSegmentRegistry->getPathSegment('base');
+        $output->writeln(sprintf('<info>Base</info>: %s', $basePath));
 
         if (!$this->nodeManager->has($basePath)) {
             $this->nodeManager->createPath($basePath);
         }
     }
 
-    private function initializeWebspace(Webspace $webspace)
+    private function initializeWebspace(OutputInterface $output, Webspace $webspace)
     {
         $webspacePath = '/' . $this->pathSegmentRegistry->getPathSegment('base') . '/' . $webspace->getKey();
+        $output->writeln(sprintf('<info>Webspace</info>: %s', $webspacePath));
 
         $webspaceLocales = array();
 
@@ -98,6 +99,7 @@ class WebspaceInitializer implements InitializerInterface
         }
 
         foreach ($webspaceLocales as $webspaceLocale) {
+            $output->writeln(sprintf('<info>Homepage</info>: %s (%s)', $homePath, $webspaceLocale));
             if (in_array($webspaceLocale, $existingLocales)) {
                 continue;
             }

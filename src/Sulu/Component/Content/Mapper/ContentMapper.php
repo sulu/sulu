@@ -444,7 +444,7 @@ class ContentMapper implements ContentMapperInterface
             $fetchDepth = $depth;
         }
 
-        $children = $parent->getChildren($parent);
+        $children = $this->inspector->getChildren($parent);
         $children = $this->documentsToStructureCollection($children->toArray(), array(
             'exclude_ghost' => $excludeGhosts,
         ));
@@ -634,7 +634,9 @@ class ContentMapper implements ContentMapperInterface
         $document = $this->inspector->getParent($document);
 
         do {
-            $documents[] = $document;
+            if ($document instanceof ContentBehavior) {
+                $documents[] = $document;
+            }
 
             $document = $this->inspector->getParent($document);
             $documentDepth = $this->inspector->getDepth($document);

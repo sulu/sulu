@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
-use Sulu\Component\DocumentManager\Behavior\AutoNameBehavior;
+use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 
 class PageDocument extends BasePageDocument implements
     AutoNameBehavior

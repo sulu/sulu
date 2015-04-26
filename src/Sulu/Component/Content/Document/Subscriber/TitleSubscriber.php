@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\DocumentManager\Events;
-use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 
 class TitleSubscriber extends AbstractMappingSubscriber
