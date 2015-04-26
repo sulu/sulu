@@ -27,7 +27,8 @@ use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Structure\Block;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Structure\Property;
-use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -117,8 +118,10 @@ class StructureDriver implements DriverInterface
             );
         }
 
-        // index the webspace
-        $indexMeta->addFieldMapping('webspaceName', array('type' => 'string'));
+        if ($class->isSubclassOf(WebspaceBehavior::class)) {
+            // index the webspace
+            $indexMeta->addFieldMapping('webspaceName', array('type' => 'string'));
+        }
 
         return $indexMeta;
     }

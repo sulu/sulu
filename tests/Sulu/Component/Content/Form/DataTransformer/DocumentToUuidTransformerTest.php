@@ -5,7 +5,7 @@ namespace Sulu\Component\Content\Form\DataTransformer;
 use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 class DocumentToUuidTransformerTest extends \PHPUnit_Framework_TestCase
 {

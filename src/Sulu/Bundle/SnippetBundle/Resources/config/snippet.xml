@@ -10,6 +10,7 @@
         <parameter key="sulu_snippet.twig.snippet.memoized.class">Sulu\Bundle\SnippetBundle\Twig\MemoizedSnippetTwigExtension</parameter>
         <parameter key="sulu_snippet.document.subscriber.filing.class">Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber</parameter>
         <parameter key="sulu_snippet.form.snippet.class">Sulu\Bundle\SnippetBundle\Form\SnippetType</parameter>
+        <parameter key="sulu_snippet.document.snippet_initializer.class">Sulu\Bundle\SnippetBundle\Document\SnippetInitializer</parameter>
     </parameters>
 
     <services>
@@ -50,6 +51,12 @@
 
         <service id="sulu_snippet.form.snippet" class="%sulu_snippet.form.snippet.class%">
             <tag name="form.type" alias="snippet" />
+        </service>
+
+        <service id="sulu_snippet.document.snippet_initializer" class="%sulu_snippet.document.snippet_initializer.class%">
+            <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.path_segment_registry" />
+            <tag name="sulu_document_manager.initializer"/>
         </service>
     </services>
 </container>

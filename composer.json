@@ -83,5 +83,10 @@
         "psr-0": {
             "Sulu\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Sulu\\": "tests/"
+        }
     }
 }

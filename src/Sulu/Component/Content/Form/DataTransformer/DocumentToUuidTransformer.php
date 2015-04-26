@@ -15,7 +15,7 @@ use DTL\Component\Content\Document\DocumentInterface;
 use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 class DocumentToUuidTransformer implements DataTransformerInterface
 {

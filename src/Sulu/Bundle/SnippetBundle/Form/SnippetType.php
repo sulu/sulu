@@ -26,6 +26,10 @@ class SnippetType extends AbstractType
         $builder->add('title', 'text');
         $builder->add('workflowStage');
         $builder->add('structureType', 'text');
+
+        // TODO: Fix the admin interface to not send this junk (not required for snippets)
+        $builder->add('redirectType', 'text', array('mapped' => false));
+        $builder->add('navigationContexts', 'text', array('mapped' => false));
     }
 
     /**

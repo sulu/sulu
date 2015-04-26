@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle\Document;
 
-use Sulu\Component\DocumentManager\Behavior\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 
 class HomeDocument extends BasePageDocument implements TitleBehavior
 {

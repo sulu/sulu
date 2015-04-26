@@ -12,7 +12,7 @@ namespace Sulu\Component\Content\Document\Serializer\Subscriber;
 
 use Sulu\Component\Content\Compat\Structure\Document;
 use Sulu\Bundle\ContentBundle\Document\PageDocument;
-use Sulu\Component\DocumentManager\Behavior\UuidBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use JMS\Serializer\EventDispatcher\Events;

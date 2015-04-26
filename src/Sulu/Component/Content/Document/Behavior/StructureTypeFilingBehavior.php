@@ -2,7 +2,7 @@
 
 namespace Sulu\Component\Content\Document\Behavior;
 
-use Sulu\Component\DocumentManager\Behavior\ParentBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 
 /**

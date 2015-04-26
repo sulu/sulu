@@ -8,7 +8,7 @@ use Sulu\Component\DocumentManager\DocumentInspector as BaseDocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Content\Structure\Factory\StructureFactoryInterface;
-use Sulu\Component\DocumentManager\MetadataFactory;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Document\Subscriber\ContentSubscriber;
@@ -41,7 +41,7 @@ class DocumentInspector extends BaseDocumentInspector
         PathSegmentRegistry $pathSegmentRegistry,
         NamespaceRegistry $namespaceRegistry,
         ProxyFactory $proxyFactory,
-        MetadataFactory $metadataFactory,
+        MetadataFactoryInterface $metadataFactory,
         StructureFactoryInterface $structureFactory,
         PropertyEncoder $encoder,
         WebspaceManagerInterface $webspaceManager

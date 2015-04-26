@@ -21,8 +21,13 @@
             <argument type="service" id="doctrine_phpcr.default_session" />
         </service>
 
-        <service id="sulu_document_manager.metadata_factory" class="Sulu\Component\DocumentManager\MetadataFactory" public="false">
+        <service id="sulu_document_manager.metadata_factory.base" class="Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory" public="false">
             <argument>%sulu_document_manager.mapping%</argument>
+        </service>
+
+        <service id="sulu_document_manager.metadata_factory" class="Sulu\Component\DocumentManager\Metadata\MetadataFactory" public="false">
+            <argument type="service" id="sulu_document_manager.metadata_factory.base" />
+            <argument type="service" id="sulu_document_manager.document_strategy" />
         </service>
 
         <service id="sulu_document_manager.slugifier" class="Symfony\Cmf\Bundle\CoreBundle\Slugifier\CallbackSlugifier" public="false">
@@ -38,6 +43,10 @@
         </service>
 
         <service id="sulu_document_manager.name_resolver" class="Sulu\Component\DocumentManager\NameResolver" public="false" />
+
+        <service id="sulu_document_manager.document_strategy" class="Sulu\Component\DocumentManager\Strategy\MixinStrategy">
+            <argument type="service" id="sulu_document_manager.metadata_factory.base" />
+        </service>
 
         <!-- Utilities -->
         <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
@@ -71,53 +80,53 @@
         <service id="sulu_document_manager.proxy_manager.factory.ghost" class="ProxyManager\Factory\LazyLoadingGhostFactory" />
 
         <!-- Behavior Subscribers !-->
-        <service id="sulu_document_manager.subscriber.behavior.auto_name" class="Sulu\Component\DocumentManager\Subscriber\Behavior\AutoNameSubscriber">
+        <service id="sulu_document_manager.subscriber.behavior.auto_name" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AutoNameSubscriber">
             <argument type="service" id="sulu_document_manager.document_registry" />
             <argument type="service" id="sulu_document_manager.slugifier" />
-            <argument type="service" id="sulu_document_manager.metadata_factory" />
             <argument type="service" id="sulu_document_manager.name_resolver" />
             <argument type="service" id="sulu_document_manager.node_manager" />
+            <argument type="service" id="sulu_document_manager.document_strategy" />
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.blame" class="Sulu\Component\DocumentManager\Subscriber\Behavior\BlameSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.blame" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\BlameSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <argument type="service" id="security.token_storage" />
             <tag name="kernel.event_subscriber" />
             <tag name="sulu.context" context="admin" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.timestamp" class="Sulu\Component\DocumentManager\Subscriber\Behavior\TimestampSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.timestamp" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\TimestampSubscriber">
             <argument type="service" id="sulu_document_manager.property_encoder" />
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.node_name" class="Sulu\Component\DocumentManager\Subscriber\Behavior\NodeNameSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.node_name" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\NodeNameSubscriber">
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.uuid" class="Sulu\Component\DocumentManager\Subscriber\Behavior\UuidSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.uuid" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\UuidSubscriber">
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.locale" class="Sulu\Component\DocumentManager\Subscriber\Behavior\LocaleSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.locale" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\LocaleSubscriber">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="sulu_document_manager.document_registry" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.parent" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ParentSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.parent" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ParentSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <argument type="service" id="sulu_document_manager.document_manager" />
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.suscriber.behavior.children" class="Sulu\Component\DocumentManager\Subscriber\Behavior\ChildrenSubscriber">
+        <service id="sulu_document_manager.suscriber.behavior.children" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ChildrenSubscriber">
             <argument type="service" id="sulu_document_manager.proxy_factory" />
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="sulu_document_manager.subscriber.behavior.path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\PathSubscriber">
+        <service id="sulu_document_manager.subscriber.behavior.path" class="Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber">
             <argument type="service" id="sulu_document_manager.document_inspector" />
             <tag name="kernel.event_subscriber" />
         </service>

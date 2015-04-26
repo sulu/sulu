@@ -11,7 +11,7 @@
 namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
-use Sulu\Component\DocumentManager\Subscriber\Behavior\AbstractFilingSubscriber;
+use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AbstractFilingSubscriber;
 
 /**
  * Automatically set the parnet at a pre-determined location
