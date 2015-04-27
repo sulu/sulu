@@ -22,8 +22,8 @@ Feature: Collection management
         And I am on "/admin/#media/collections/root"
         And I expect a data-navigation to appear
         When I click on the element ".data-navigation-item"
-        And I expect the "husky.loader.initialized" event
-        Then I should see "Foobar"
+        Then I expect the "husky.loader.initialized" event
+        And I should see "Foobar"
 
     Scenario: Delete collection
         Given the media collection "Foobar" exists
