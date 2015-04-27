@@ -62,7 +62,8 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
                 ),
                 'options' => array(
                     'id' => 'test'
-                )
+                ),
+                'error' => false
             ),
             $result
         );
@@ -82,7 +83,50 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
 
         $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, array('id' => 'test'), $context->reveal());
 
-        $this->assertEquals(null, $result);
+        $this->assertEquals(
+            array(
+                'handler' => 'test',
+                'message' => null,
+                'options' => array(
+                    'id' => 'test'
+                ),
+                'error' => false
+            ),
+            $result
+        );
+    }
+
+    public function testDispatchMessageHandlerException()
+    {
+        $context = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext');
+        $conn = $this->prophesize('Ratchet\ConnectionInterface');
+        $message = array('test' => '1');
+
+        $ex = new \Exception('Thats my message', 4211);
+
+        $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
+        $handler->handle($conn->reveal(), $message, $context->reveal())->wilLThrow(new MessageHandlerException($ex));
+
+        $dispatcher = new MessageDispatcher();
+        $dispatcher->add('test', $handler->reveal());
+
+        $result = $dispatcher->dispatch($conn->reveal(), 'test', $message, array('id' => 'test'), $context->reveal());
+
+        $this->assertEquals(
+            array(
+                'handler' => 'test',
+                'message' => array(
+                    'code' => 4211,
+                    'message' => 'Thats my message',
+                    'type' => 'Exception'
+                ),
+                'options' => array(
+                    'id' => 'test'
+                ),
+                'error' => true
+            ),
+            $result
+        );
     }
 
     public function testDispatchNonHandler()
