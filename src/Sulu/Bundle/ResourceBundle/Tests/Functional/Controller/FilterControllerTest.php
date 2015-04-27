@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ResourceBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
+use stdClass;
 use Sulu\Bundle\ResourceBundle\Entity\Condition;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup;
 use Sulu\Bundle\ResourceBundle\Entity\Filter;
@@ -78,16 +79,24 @@ class FilterControllerTest extends SuluTestCase
 
         $conditionGroup1 = new ConditionGroup();
         $conditionGroup1->setFilter($filter);
-        $conditionGroup1->addCondition($this->createCondition($conditionGroup1, Condition::TYPE_STRING, 'test', 'LIKE', 'name'));
+        $conditionGroup1->addCondition(
+            $this->createCondition($conditionGroup1, Condition::TYPE_STRING, 'test', 'LIKE', 'name')
+        );
 
         $conditionGroup2 = new ConditionGroup();
         $conditionGroup2->setFilter($filter);
-        $conditionGroup2->addCondition($this->createCondition($conditionGroup2, Condition::TYPE_NUMBER, '2', '=', 'id'));
+        $conditionGroup2->addCondition(
+            $this->createCondition($conditionGroup2, Condition::TYPE_NUMBER, '2', '=', 'id')
+        );
 
         $conditionGroup3 = new ConditionGroup();
         $conditionGroup3->setFilter($filter);
-        $conditionGroup3->addCondition($this->createCondition($conditionGroup3, Condition::TYPE_DATETIME, '2015-01-01', '>', 'created'));
-        $conditionGroup3->addCondition($this->createCondition($conditionGroup3, Condition::TYPE_DATETIME, '2015-02-02', '<', 'created'));
+        $conditionGroup3->addCondition(
+            $this->createCondition($conditionGroup3, Condition::TYPE_DATETIME, '2015-01-01', '>', 'created')
+        );
+        $conditionGroup3->addCondition(
+            $this->createCondition($conditionGroup3, Condition::TYPE_DATETIME, '2015-02-02', '<', 'created')
+        );
 
         $filter->addConditionGroup($conditionGroup1);
         $filter->addConditionGroup($conditionGroup2);
@@ -123,7 +132,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $this->client->request(
             'GET',
-            '/api/filters/' . $this->filter1->getId()
+            '/api/filters/'.$this->filter1->getId()
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -132,7 +141,39 @@ class FilterControllerTest extends SuluTestCase
         $this->assertEquals($this->filter1->getAndCombination(), $response->andCombination);
         $this->assertEquals($this->filter1->getEntityName(), $response->entityName);
         $this->assertNotEmpty($response->conditionGroups);
+
         $this->assertEquals(count($this->filter1->getConditionGroups()), count($response->conditionGroups));
+
+        /** @var ConditionGroup $cg */
+        $cg = $this->filter1->getConditionGroups()[0];
+        $cgData = $this->getElementById($cg->getId(), $response->conditionGroups);
+        $this->assertEquals($cg->getId(), $cgData->id);
+        $this->assertEquals(count($cg->getConditions()), count($cgData->conditions));
+
+        /** @var Condition $condition */
+        $condition = $cg->getConditions()[0];
+        $conditionData = $this->getElementById($condition->getId(), $cgData->conditions);
+        $this->assertEquals($condition->getId(), $conditionData->id);
+        $this->assertEquals($condition->getField(), $conditionData->field);
+        $this->assertEquals($condition->getOperator(), $conditionData->operator);
+        $this->assertEquals($condition->getType(), $conditionData->type);
+        $this->assertEquals($condition->getValue(), $conditionData->value);
+    }
+
+    /**
+     * @param $id
+     * @param array $group
+     * @return null|stdClass
+     */
+    protected function getElementById($id, array $group)
+    {
+        foreach ($group as $el) {
+            if ($id === $el->id) {
+                return $el;
+            }
+        }
+
+        return null;
     }
 
     /**
