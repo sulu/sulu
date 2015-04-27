@@ -40,6 +40,29 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }
         },
 
+        listViews = {
+            table: {
+                itemId: 'table',
+                name: 'table'
+            },
+            thumbnailSmall: {
+                itemId: 'small-thumbnails',
+                name: 'thumbnail',
+                thViewOptions: {
+                    large: false,
+                    unselectOnBackgroundClick: false
+                }
+            },
+            thumbnailLarge: {
+                itemId: 'big-thumbnails',
+                name: 'thumbnail',
+                thViewOptions: {
+                    large: true,
+                    unselectOnBackgroundClick: false
+                }
+            }
+        },
+
         constants = {
             lastVisitedCollectionKey: 'last-visited-collection',
             listViewStorageKey: 'mediaOverlayListView'
@@ -84,14 +107,21 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     '   <div class="media-selection-overlay-content">',
                     '       <div class="fa-times media-selection-overlay-close"></div>',
                     '       <div class="media-selection-overlay-dropzone-container"></div>',
-                    '       <div class="media-selection-overlay-toolbar-container"></div>',
-                    '       <div class="media-selection-overlay-content-area">',
+                    '       <div class="media-selection-overlay-header" ondragstart="return false;">',
+                    '           <div class="media-selection-overlay-toolbar-container"></div>',
+                    '           <div id="selected-images-count" class="media-selection-overlay-selected-info"></div>',
+                    '       </div>',
+                    '       <div class="media-selection-overlay-content-area" ondragstart="return false;">',
                     '           <div class="media-selection-overlay-content-title">' + options.contentDefaultTitle + '</div>',
                     '           <div class="media-selection-overlay-datagrid-container"></div>',
                     '       </div>',
                     '   </div>',
                     '</div>'
                 ].join('');
+            },
+
+            mediaSelectedInfo: function(options) {
+                return options.selectedCounter + ' ' + options.selectedImagesLabel;
             },
 
             contentItem: function(title, thumbnails) {
@@ -167,10 +197,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 collectionId = collection.id;
                 collectionTitle = collection.title;
 
-                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.enable', 'add');
+                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.show', 'add');
                 this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.enable');
             } else {
-                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.disable', 'add');
+                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.hide', 'add');
                 this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.disable');
             }
 
@@ -180,6 +210,20 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             });
             changeUploadCollection.call(this, collectionId);
             this.$el.find('.media-selection-overlay-content-title').html(collectionTitle);
+        },
+
+        updateSelectedCounter = function(data) {
+            var tpl = '',
+                selectedCount = (data.ids || []).length;
+
+            if (selectedCount) {
+                tpl = templates.mediaSelectedInfo({
+                    selectedCounter: selectedCount,
+                    selectedImagesLabel: this.sandbox.translate('media-selection.overlay.selected-images-label')
+                });
+            }
+
+            this.$el.find('#selected-images-count').html(tpl);
         },
 
         /**
@@ -259,6 +303,11 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 this.sandbox.sulu.saveUserSetting(constants.listViewStorageKey, 'thumbnailLarge');
             }.bind(this));
 
+            // premark the current view in the toolbar
+            this.sandbox.on('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.initialized', function() {
+                this.sandbox.emit('husky.toolbar.media-selection-ovelay.' + this.options.instanceName + '.item.mark', listViews[this.listView].itemId);
+            }.bind(this));
+
             // load collections list if back icon is clicked
             this.sandbox.on('sulu.header.back', function() {
                 this.sandbox.emit('sulu.media.collections.list');
@@ -287,6 +336,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                 data.ids.push(itemId);
                 this.setData(data, false);
                 this.addItem(item);
+                updateSelectedCounter.call(this, data);
             }.bind(this));
 
             // remove image to the selected images grid
@@ -300,6 +350,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
 
                 this.setData(data, false);
                 this.removeItemById(itemId);
+                updateSelectedCounter.call(this, data);
             }.bind(this));
 
             this.sandbox.on('husky.overlay.dropzone-media-selection-ovelay.' + this.options.instanceName + '.opened', function() {
@@ -311,8 +362,10 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
             }.bind(this));
 
             this.sandbox.on('husky.overlay.' + this.options.instanceName + '.add.opened', function() {
-                var selectedItems = this.getData().ids || [];
+                var data = this.getData(),
+                    selectedItems = data.ids || [];
                 this.sandbox.emit('husky.datagrid.media-selection-ovelay.' + this.options.instanceName + '.selected.update', selectedItems);
+                updateSelectedCounter.call(this, data);
             }.bind(this));
         },
 
@@ -491,6 +544,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
         startAddOverlay = function() {
             var $element = this.sandbox.dom.createElement('<div/>');
             this.sandbox.dom.append(this.$el, $element);
+            this.listView = this.sandbox.sulu.getUserSetting(constants.listViewStorageKey) || 'thumbnailSmall';
 
             this.sandbox.start([
                 {
@@ -602,11 +656,14 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     {
                         el: this.$el.find('.media-selection-overlay-toolbar-container'),
                         instanceName: 'media-selection-ovelay.' + this.options.instanceName,
+                        showTitleAsTooltip: false,
                         template: [
                             {
                                 id: 'add',
                                 icon: 'plus-circle',
-                                disabled: true,
+                                title: this.sandbox.translate('media-selection.list-toolbar.upload-info'),
+                                hideTitle: false,
+                                hidden: true,
                                 callback: function() {
                                     this.sandbox.emit('husky.dropzone.media-selection-ovelay.' + this.options.instanceName + '.open-data-source');
                                 }.bind(this)
@@ -647,7 +704,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                     {
                         el: this.$el.find('.media-selection-overlay-datagrid-container'),
                         url: '/admin/api/media?orderBy=media.changed&orderSort=DESC',
-                        view: 'thumbnail',
+                        view: listViews[this.listView].name,
                         resultKey: 'media',
                         instanceName: 'media-selection-ovelay.' + this.options.instanceName,
                         preselected: this.getData().ids,
@@ -658,10 +715,7 @@ define(['sulumedia/collection/collections', 'sulumedia/model/collection'], funct
                                 fullWidth: false,
                                 rowClickSelect: true
                             },
-                            thumbnail: {
-                                large: false,
-                                unselectOnBackgroundClick: false
-                            }
+                            thumbnail: listViews[this.listView].thViewOptions || {}
                         },
                         paginationOptions: {
                             dropdown: {

@@ -165,6 +165,13 @@
             <trans-unit id="e4b1428ja8a085e2kt45sds5acb2d39e" resname="search-overlay.placeholder.media">
                 <source>search-overlay.placeholder.media</source>
                 <target>Search media...</target>
+            <trans-unit id="243d88cf2f64652633a5ca2169f22456" resname="media-selection.overlay.selected-images-label">
+                <source>media-selection.overlay.selected-images-label</source>
+                <target>images selected</target>
+            </trans-unit>
+            <trans-unit id="243d88cf2f64652633a5ca2169f27623" resname="media-selection.list-toolbar.upload-info">
+                <source>media-selection.list-toolbar.upload-info</source>
+                <target>Click or drag'n'drop</target>
             </trans-unit>
         </body>
     </file>
