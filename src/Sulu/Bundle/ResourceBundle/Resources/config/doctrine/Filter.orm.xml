@@ -21,6 +21,9 @@
             </cascade>
         </one-to-many>
 
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\ConditionGroup" mapped-by="filter"
+                     field="conditionGroups"/>
+
         <many-to-one field="changer" target-entity="Sulu\Component\Security\Authentication\UserInterface">
             <join-columns>
                 <join-column name="idUsersChanger" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
@@ -31,17 +34,6 @@
                 <join-column name="idUsersCreator" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
         </many-to-one>
-
-        <many-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\Condition" field="conditions">
-            <join-table name="pr_filter_conditions">
-                <join-columns>
-                    <join-column name="idAttributeSets" referenced-column-name="id" nullable="false"/>
-                </join-columns>
-                <inverse-join-columns>
-                    <join-column name="idAttributes" referenced-column-name="id" nullable="false"/>
-                </inverse-join-columns>
-            </join-table>
-        </many-to-many>
 
     </entity>
 </doctrine-mapping>

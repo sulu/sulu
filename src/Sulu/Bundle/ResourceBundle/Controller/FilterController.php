@@ -134,6 +134,36 @@ class FilterController extends RestController implements ClassResourceInterface
         return $this->handleView($view);
     }
 
+    /**
+     * Change a filter by the given id.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $id the attribute id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function putAction(Request $request, $id)
+    {
+        try {
+            $filter = $this->getManager()->save(
+                $request->request->all(),
+                $this->getLocale($request),
+                $this->getUser()->getId(),
+                $id
+            );
+            $view = $this->view($filter, 200);
+        } catch (FilterDependencyNotFoundException $exc) {
+            $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (FilterNotFoundException $exc) {
+            $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
+            $view = $this->view($exception->toArray(), 404);
+        } catch (MissingFilterException $exc) {
+            $exception = new MissingArgumentException(self::$entityName, $exc->getFilter());
+            $view = $this->view($exception->toArray(), 400);
+        }
+        return $this->handleView($view);
+    }
+
 
     /**
      * Delete an product attribute with the given id.
