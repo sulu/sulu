@@ -11,7 +11,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use Sulu\Component\DocumentManager\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\MetadataFactoryInterfaceparent;
 
 /**
  * Remove routes and references associated with content

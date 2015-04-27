@@ -23,6 +23,10 @@
             <tag name="jms_serializer.event_subscriber" />
         </service>
 
+        <service id="sulu_content.document.serializer.subscriber.extension_container" class="Sulu\Component\Content\Document\Serializer\Subscriber\ExtensionContainerSubscriber">
+            <tag name="jms_serializer.event_subscriber" />
+        </service>
+
         <!-- Serializer for Compat PageBridge (legacy) -->
         <service id="sulu_content.compat.serializer.handler.page_bridge" class="Sulu\Component\Content\Compat\Serializer\PageBridgeHandler">
             <argument type="service" id="sulu_document_manager.document_inspector" />
