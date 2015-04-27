@@ -71,6 +71,8 @@ class ParameterResolver implements ParameterResolverInterface
 
             if (array_key_exists($locale, $urls)) {
                 $localizations[$locale] = $urls[$locale];
+            } elseif ($structure === null) {
+                $localizations[$locale] = '/';
             } else {
                 $localizations[$locale] = '';
             }

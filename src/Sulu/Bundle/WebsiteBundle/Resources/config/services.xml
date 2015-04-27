@@ -154,10 +154,7 @@
         <service id="sulu_website.exception.controller" class="%sulu_website.exception.controller.class%">
             <argument type="service" id="twig" />
             <argument>%kernel.debug%</argument>
-            <argument type="collection">
-                <argument key="404">%sulu_website.error_templates.404%</argument>
-                <argument key="500">%sulu_website.error_templates.500%</argument>
-            </argument>
+            <argument>%sulu_website.error_templates%</argument>
             <argument type="service" id="sulu_website.resolver.parameter" />
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_core.webspace.request_analyzer" on-invalid="ignore"/>
