@@ -75,8 +75,12 @@ class ExceptionController extends BaseExceptionController
         if ($request->getRequestFormat() === 'html') {
             $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
             $code = $exception->getStatusCode();
+
+            // symfony exception template uses status_code and status_text
             $parameter = array(
+                'statusCode' => $code,
                 'status_code' => $code,
+                'statusText' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
                 'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
                 'exception' => $exception,
                 'currentContent' => $currentContent
