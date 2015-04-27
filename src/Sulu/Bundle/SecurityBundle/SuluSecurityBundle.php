@@ -10,7 +10,6 @@
 
 namespace Sulu\Bundle\SecurityBundle;
 
-use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\AddContentNavigationPass;
 use Sulu\Bundle\SecurityBundle\DependencyInjection\Compiler\CurrentUserDataCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;

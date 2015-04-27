@@ -10,11 +10,8 @@
 
 namespace Sulu\Bundle\ContactBundle;
 
-use Sulu\Bundle\ContactBundle\DependencyInjection\Compiler\AddContentNavigationPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SuluContactBundle extends Bundle
 {
-
 }
