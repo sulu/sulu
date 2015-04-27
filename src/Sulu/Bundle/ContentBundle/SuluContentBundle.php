@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ContentBundle;
 
-use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\AddContentNavigationPass;
+use Sulu\Bundle\ContentBundle\DependencyInjection\Compiler\SecurityPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -20,6 +20,6 @@ class SuluContentBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new AddContentNavigationPass());
+        $container->addCompilerPass(new SecurityPass());
     }
 }

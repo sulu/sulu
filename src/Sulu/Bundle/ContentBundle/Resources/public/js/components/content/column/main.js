@@ -359,7 +359,9 @@ define(function() {
                             showStatus: false,
                             responsive: false,
                             sortable: false,
-                            skin: 'fixed-height-small'
+                            skin: 'fixed-height-small',
+                            disableIds: [id],
+                            disabledChildren: true
                         }
                     }
                 ]

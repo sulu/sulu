@@ -10,7 +10,6 @@
     </parameters>
 
     <services>
-
         <service id="sulu_http_cache.event_subscriber.content_mapper" class="%sulu_http_cache.event_subscriber.content_mapper.class%">
             <argument type="service" id="sulu_http_cache.handler"/>
             <tag name="kernel.event_subscriber"/>
@@ -25,7 +24,5 @@
             <argument type="service" id="sulu_http_cache.handler"/>
             <tag name="kernel.event_subscriber"/>
         </service>
-
     </services>
-
 </container>

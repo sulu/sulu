@@ -137,9 +137,15 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $structure->getUuid() . ($extension !== null ? '/' . $extension : ''),
-            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid()
-                . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            'self' => array(
+                'href' => $this->apiBasePath . '/' . $structure->getUuid() .
+                    ($extension !== null ? '/' . $extension : '')
+            ),
+            'children' => array(
+                'href' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=' . $depth .
+                    '&webspace=' . $webspaceKey . '&language=' . $languageCode .
+                    ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            )
         );
 
         return $result;
@@ -293,7 +299,7 @@ class NodeRepository implements NodeRepositoryInterface
             ),
             'total' => sizeof($result),
             '_links' => array(
-                'self' => $this->apiBasePath . '?ids=' . $idString
+                'self' => array('href' => $this->apiBasePath . '?ids=' . $idString)
             )
         );
     }
@@ -316,7 +322,10 @@ class NodeRepository implements NodeRepositoryInterface
         );
         // add api links
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+            'self' => array(
+                'href' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey .
+                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            )
         );
 
         return $data;
@@ -337,7 +346,9 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/entry?language=' . $languageCode
+            'self' => array(
+                'href' => $this->apiBasePath . '/entry?language=' . $languageCode
+            )
         );
 
         return $data;
@@ -377,7 +388,10 @@ class NodeRepository implements NodeRepositoryInterface
             'publishedState' => true,
             '_embedded' => $embedded,
             '_links' => array(
-                'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                'children' => array(
+                    'href' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey .
+                        '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                )
             )
         );
     }
@@ -548,8 +562,10 @@ class NodeRepository implements NodeRepositoryInterface
                                 )
                             ),
                             '_links' => array(
-                                'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
-                                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                                'children' => array(
+                                    'href' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey . '&language=' .
+                                        $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                                )
                             )
                         )
                     )
@@ -565,9 +581,11 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
-                $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
-                ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+            'self' => array(
+                'href' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
+                    $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
+                    ($appendWebspaceNode === true ? '&webspace-node=true' : '')
+            ),
         );
 
         return $result;
@@ -590,8 +608,10 @@ class NodeRepository implements NodeRepositoryInterface
 
         // prepare data
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
-                '&language=' . $languageCode,
+            'self' => array(
+                'href' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                    '&language=' . $languageCode
+            )
         );
 
         return $data;
@@ -621,8 +641,10 @@ class NodeRepository implements NodeRepositoryInterface
 
         // prepare data
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
-                '&language=' . $languageCode,
+            'self' => array(
+                'href' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                    '&language=' . $languageCode
+            )
         );
 
         return $data;

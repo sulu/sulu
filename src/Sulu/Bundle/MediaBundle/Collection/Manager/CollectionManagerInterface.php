@@ -16,7 +16,8 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
-use Sulu\Component\Rest\ListBuilder\FieldDescriptor\DoctrineFieldDescriptor;
+use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 
 interface CollectionManagerInterface
 {
@@ -24,9 +25,12 @@ interface CollectionManagerInterface
      * Returns a collection with a given id
      * @param int $id the id of the collection
      * @param int $locale the locale which the collection should be return
+     * @param int $depth if depth > 1 children will returned also
+     * @param bool $breadcrumb if true breadcrumb will be appended
+     * @param array $filter array of cafeteria's
      * @return Collection
      */
-    public function getById($id, $locale);
+    public function getById($id, $locale, $depth = 0, $breadcrumb = false, $filter = array(), $sortBy = array());
 
     /**
      * Returns collections with a given parent and/or a given depth-level
@@ -39,6 +43,18 @@ interface CollectionManagerInterface
      * @return Paginator
      */
     public function get($locale, $filter = array(), $limit = null, $offset = null, $sortBy = array());
+
+    /**
+     * Returns collections from root with given depth
+     * @param string $locale the locale which the collection should be return
+     * @param int $offset
+     * @param int $limit
+     * @param string $search
+     * @param int $depth maximum depth for query
+     * @param array $sortBy
+     * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
+     */
+    public function getTree($locale, $offset, $limit, $search, $depth = 0, $sortBy = array());
 
     /**
      * Returns a collection count
@@ -59,6 +75,17 @@ interface CollectionManagerInterface
      * @param int $id the id of the category to delete
      */
     public function delete($id);
+
+    /**
+     * Moves a collection into another collection
+     * If you pass parentId = null i moves to the root
+     * @param int $id the id of the category to move
+     * @param string $locale the locale which the collection should be return
+     * @param int|null $destinationId the parent where the collection should be placed
+     * @return Collection
+     * @throws CollectionNotFoundException
+     */
+    public function move($id, $locale, $destinationId = null);
 
     /**
      * Return the FieldDescriptors

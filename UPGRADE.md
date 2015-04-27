@@ -2,6 +2,64 @@
 
 ## dev-develop
 
+### Admin
+
+The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
+been removed. You have to change these names in all usages of this classes in
+your own code.
+
+## 0.17.0
+
+### Media
+
+Fill up the database column `me_collection_meta.locale` with the translated language like: `de` or `en`. If you
+know you have only added collections in only one language you can use following sql statement:
+
+```sql
+UPDATE `me_collection_meta` SET `locale` = 'de';
+```
+
+Due to this it is possible that one collection has multiple metadata for one language. You have to remove this
+duplicates by hand. For example one collection should have only one meta for the language `de`.
+
+The collection and media has now a specific field to indicate which meta is default. For this run following commands.
+
+```bash
+app/console sulu:upgrade:0.17.0:collections
+app/console sulu:upgrade:0.17.0:media
+```
+
+### Content navigation
+
+The interfaces for the content navigation have been changed, so you have to
+apply these changes if you have used a content navigation in your bundle.
+
+Basically you can delete the `NavigationController` delivering the content
+navigation items together with its routes. It's now common to suffix the
+classes providing content navigation items with `ContentNavigationProvider`.
+
+These classes have to implement the `ContentNavigationProviderInterface` and be
+registered as services as described in the
+[documentation](http://docs.sulu.io/en/latest/cookbook/using-the-tab-navigation.html).
+
+Consider that the URLs for the retrieval of the content navigation items have
+changed to `/admin/content-navigations?alias=your-alias` and have to be updated
+in your javascript components.
+
+### Contact and Account Security
+
+The security checks are now also applied to contacts and accounts, make sure
+that the users you want to have access have the correct permissions.
+
+### Content
+
+Behaviour of internal links has changed. It returns the link title for navigation/smartcontent/internal-link.
+
+### Media Types
+
+The media types are now set by wildcard check and need to be updated,
+by running the following command: `sulu:media:type:update`.
+
 ### Media API Object
 
 The `versions` attribute of the media API object changed from [array to object list](https://github.com/sulu-io/docs/pull/14/files).
@@ -18,6 +76,8 @@ For a database upgrade you have to do following steps:
 
 * The Account has no `type` anymore. This column has to be removed from `co_accounts` table.
 * The table `co_account_categories` has to be removed manually.
+* The table `co_terms_of_delivery` has to be removed manually.
+* The table `co_terms_of_payment` has to be removed manually.
 * `app/console doctrine:schema:update --force`
 
 ### Security

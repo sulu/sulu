@@ -2187,6 +2187,7 @@ class ContentMapper implements ContentMapperInterface
             $node->hasProperty($propertyTranslator->getName('template')) &&
             $node->hasProperty($propertyTranslator->getName('nodeType'))
         ) {
+            $originalNode = $node;
             if (
                 $node->getPropertyValue($propertyTranslator->getName('nodeType')) === Structure::NODE_TYPE_INTERNAL_LINK
             ) {
@@ -2231,7 +2232,7 @@ class ContentMapper implements ContentMapperInterface
 
             $nodeState = $node->getPropertyValue($propertyTranslator->getName('state'));
 
-            // if page is not piblished ignore it
+            // if page is not published ignore it
             if ($nodeState !== Structure::STATE_PUBLISHED) {
                 return false;
             }
@@ -2280,7 +2281,7 @@ class ContentMapper implements ContentMapperInterface
                         'created' => $created,
                         'published' => $published,
                         'creator' => $creator,
-                        'title' => $this->getTitle($node, $structure, $webspaceKey, $locale),
+                        'title' => $this->getTitle($originalNode, $structure, $webspaceKey, $locale),
                         'url' => $url,
                         'urls' => $this->getLocalizedUrlsForPage($structure, $node, $webspaceKey, null),
                         'locale' => $locale,

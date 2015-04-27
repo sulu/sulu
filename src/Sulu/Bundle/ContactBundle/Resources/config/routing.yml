@@ -1,11 +1,3 @@
-navigation_contact:
-    path: /navigation/contact
-    defaults: { _controller: SuluContactBundle:Navigation:contact }
-
-navigation_account:
-    path: /navigation/account
-    defaults: { _controller: SuluContactBundle:Navigation:account }
-
 contact_form:
     pattern: /template/contact/form.html
     defaults: { _controller: SuluContactBundle:Template:contactForm }

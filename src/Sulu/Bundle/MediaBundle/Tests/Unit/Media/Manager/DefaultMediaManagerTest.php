@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var DefaultMediaManager
+     * @var MediaManager
      */
     private $mediaManager;
 
@@ -64,6 +64,11 @@ class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
      */
     private $tagManager;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $typeManager;
+
     public function setUp()
     {
         parent::setUp();
@@ -76,8 +81,9 @@ class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
         $this->validator = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface');
         $this->formatManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface');
         $this->tagManager = $this->prophesize('Sulu\Bundle\TagBundle\Tag\TagManagerInterface');
+        $this->typeManager = $this->prophesize('Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface');
 
-        $this->mediaManager = new DefaultMediaManager(
+        $this->mediaManager = new MediaManager(
             $this->mediaRepository->reveal(),
             $this->collectionRepository->reveal(),
             $this->userRepository->reveal(),
@@ -86,10 +92,9 @@ class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
             $this->validator->reveal(),
             $this->formatManager->reveal(),
             $this->tagManager->reveal(),
+            $this->typeManager->reveal(),
             '/',
-            0,
-            array(),
-            array()
+            0
         );
     }
 
