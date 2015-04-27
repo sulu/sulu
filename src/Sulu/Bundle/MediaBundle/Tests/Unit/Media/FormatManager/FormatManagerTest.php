@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 
-class DefaultFormatManagerTest extends \PHPUnit_Framework_TestCase
+class FormatManagerTest extends \PHPUnit_Framework_TestCase
 {
     protected function setUp()
     {
