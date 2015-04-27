@@ -63,6 +63,9 @@ define(['app-config', 'config', 'websocket-manager'], function(AppConfig, Config
                     });
 
                     def.then(applyChanges.bind(this));
+                    def.fail(function(handler, message) {
+                        this.sandbox.logger.error('Error in rendering preview:', message.code, message.message, message.type);
+                    }.bind(this));
 
                     return def.promise();
                 }

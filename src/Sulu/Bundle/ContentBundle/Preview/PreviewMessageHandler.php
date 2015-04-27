@@ -19,6 +19,7 @@ use Ratchet\ConnectionInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Websocket\Exception\MissingParameterException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerContext;
+use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerException;
 use Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface;
 use Sulu\Component\Webspace\Analyzer\AdminRequestAnalyzer;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -86,18 +87,8 @@ class PreviewMessageHandler implements MessageHandlerInterface
 
         try {
             return $this->execute($conn, $context, $message);
-        } catch (\Exception $e) {
-            // send fail message
-            $conn->send(
-                json_encode(
-                    array(
-                        'command' => 'fail',
-                        'code' => $e->getCode(),
-                        'msg' => $e->getMessage(),
-                        'parentMsg' => $message
-                    )
-                )
-            );
+        } catch (PreviewException $ex) {
+            throw new MessageHandlerException($ex);
         }
     }
 
