@@ -83,22 +83,21 @@ class ExceptionController extends BaseExceptionController
             );
             $data = $this->parameterResolver->resolve(
                 $parameter,
-                $this->requestAnalyzer,
-                $this->contentMapper->loadStartPage(
-                    $this->requestAnalyzer->getWebspace()->getKey(),
-                    $this->requestAnalyzer->getCurrentLocalization()->getLocalization()
-                )
+                $this->requestAnalyzer
             );
 
+            $template = $this->errorTemplates['default'];
             if (array_key_exists($code, $this->errorTemplates)) {
-                return new Response(
-                    $this->twig->render(
-                        $this->errorTemplates[$code],
-                        $data
-                    ),
-                    $code
-                );
+                $template = $this->errorTemplates[$code];
             }
+
+            return new Response(
+                $this->twig->render(
+                    $template,
+                    $data
+                ),
+                $code
+            );
         }
 
         return parent::showAction($request, $exception, $logger, $request->getRequestFormat());
