@@ -18,6 +18,7 @@ use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use Hateoas\Configuration\Annotation\Relation;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * The Filter class which will be exported to the API
@@ -113,33 +114,30 @@ class Filter extends ApiWrapper
      * Set andCombination
      *
      * @param boolean $andCombination
-     * @return Filter
      */
     public function setAndCombination($andCombination)
     {
-        return $this->entity->setAndCombination($andCombination);
+        $this->entity->setAndCombination($andCombination);
     }
 
     /**
      * Set entity
      *
      * @param $name
-     * @return Filter
      */
     public function setEntityName($name)
     {
-        return $this->entity->setEntityName($name);
+        $this->entity->setEntityName($name);
     }
 
     /**
      * Add translations
      *
      * @param FilterTranslation $translation
-     * @return Filter
      */
     public function addTranslation(FilterTranslation $translation)
     {
-        return $this->entity->addTranslation($translation);
+        $this->entity->addTranslation($translation);
     }
 
     /**
@@ -190,7 +188,6 @@ class Filter extends ApiWrapper
      *
      * @param ConditionGroup $conditionGroup
      * @return Filter
-     * @internal param ConditionGroup $conditionGroups
      */
     public function addConditionGroup(ConditionGroup $conditionGroup)
     {
@@ -205,6 +202,87 @@ class Filter extends ApiWrapper
     public function removeConditionGroup(ConditionGroup $conditionGroup)
     {
         $this->entity->removeConditionGroup($conditionGroup->getEntity());
+    }
+
+    /**
+     * Sets the changer of the filter
+     *
+     * @param UserInterface $user The changer of the filter
+     */
+    public function setChanger(UserInterface $user)
+    {
+        $this->entity->setChanger($user);
+    }
+
+    /**
+     * Sets the changer of the filter
+     *
+     * @return UserInterface creator/owner filter
+     */
+    public function getChanger()
+    {
+        return $this->entity->getChanger();
+    }
+
+    /**
+     * Sets the creator of the product
+     *
+     * @param UserInterface $user The creator of the filter
+     */
+    public function setCreator(UserInterface $user)
+    {
+        $this->entity->setCreator($user);
+    }
+
+    /**
+     * Returns the creator of the filter
+     *
+     * @return UserInterface creator/owner of the filter
+     */
+    public function getCreator()
+    {
+        return $this->entity->getCreator();
+    }
+
+    /**
+     * Sets the change time of the filter
+     *
+     * @param \DateTime $changed
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->entity->setChanged($changed);
+    }
+
+    /**
+     * Sets the created time of the filter
+     *
+     * @param \DateTime $created
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->entity->setCreated($created);
+    }
+
+    /**
+     * Sets the change time of the filter
+     *
+     * @return \DateTime
+     */
+    public function getChanged()
+    {
+        return $this->entity->getChanged();
+    }
+
+    /**
+     * Sets the created time of the filter
+     *
+     * @return \DateTime
+     *
+     */
+    public function getCreated()
+    {
+        return $this->entity->getCreated();
     }
 
 }

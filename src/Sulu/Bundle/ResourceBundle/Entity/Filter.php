@@ -169,4 +169,116 @@ class Filter
     {
         return $this->entityName;
     }
+    /**
+     * @var \DateTime
+     */
+    private $created;
+
+    /**
+     * @var \DateTime
+     */
+    private $changed;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $changer;
+
+    /**
+     * @var \Sulu\Bundle\SecurityBundle\Entity\User
+     */
+    private $creator;
+
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return Filter
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set changed
+     *
+     * @param \DateTime $changed
+     * @return Filter
+     */
+    public function setChanged($changed)
+    {
+        $this->changed = $changed;
+
+        return $this;
+    }
+
+    /**
+     * Get changed
+     *
+     * @return \DateTime 
+     */
+    public function getChanged()
+    {
+        return $this->changed;
+    }
+
+    /**
+     * Set changer
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $changer
+     * @return Filter
+     */
+    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    {
+        $this->changer = $changer;
+
+        return $this;
+    }
+
+    /**
+     * Get changer
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     */
+    public function getChanger()
+    {
+        return $this->changer;
+    }
+
+    /**
+     * Set creator
+     *
+     * @param \Sulu\Bundle\SecurityBundle\Entity\User $creator
+     * @return Filter
+     */
+    public function setCreator(\Sulu\Bundle\SecurityBundle\Entity\User $creator = null)
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get creator
+     *
+     * @return \Sulu\Bundle\SecurityBundle\Entity\User 
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
 }

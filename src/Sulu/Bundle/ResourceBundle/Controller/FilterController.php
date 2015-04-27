@@ -13,7 +13,12 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ResourceBundle\Api\Filter;
+use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterDependencyNotFoundException;
+use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterNotFoundException;
+use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingFilterException;
 use Sulu\Bundle\ResourceBundle\Filter\FilterManagerInterface;
+use Sulu\Component\Rest\Exception\EntityNotFoundException;
+use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestController;
@@ -102,6 +107,50 @@ class FilterController extends RestController implements ClassResourceInterface
         );
 
         return $list;
+    }
+
+    /**
+     * Creates and stores a new filter.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postAction(Request $request)
+    {
+        try {
+            $filter = $this->getManager()->save(
+                $request->request->all(),
+                $this->getLocale($request),
+                $this->getUser()->getId()
+            );
+            $view = $this->view($filter, 200);
+        } catch (FilterDependencyNotFoundException $exc) {
+            $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (MissingFilterException $exc) {
+            $exception = new MissingArgumentException(self::$entityName, $exc->getFilter());
+            $view = $this->view($exception->toArray(), 400);
+        }
+        return $this->handleView($view);
+    }
+
+
+    /**
+     * Delete an product attribute with the given id.
+     *
+     * @param integer $id the attribute id
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteAction($id)
+    {
+        try {
+            $this->getManager()->delete($id, $this->getUser()->getId());
+            $view = $this->view($id, 204);
+        } catch (FilterNotFoundException $exc) {
+            $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
+            $view = $this->view($exception->toArray(), 404);
+        }
+        return $this->handleView($view);
     }
 
     /**
