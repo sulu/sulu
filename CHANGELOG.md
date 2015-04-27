@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
@@ -16,7 +17,6 @@ CHANGELOG for Sulu
     * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
     * BUGFIX      #1002 [ContentBundle]  Changed internal link title for navigation, smartcontent and internal link
     * FEATURE     #935 [MediaBundle]     Added new media selection
-    * BUGFIX      #1004 [MediaBundle]    Fix animated gifs
     * BUGFIX      #952 [MediaBundle]     Fix coffee icon fallback in media thumbnail view
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
     * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
