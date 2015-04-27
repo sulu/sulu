@@ -344,10 +344,12 @@ define([
                     'PATCH',
                     changedData)
                     .then(function(response) {
+                        var preselected = response[response.length - 1];
+
                         this.sandbox.emit(
                                 instance + '.update',
                             response,
-                            null,
+                            [preselected],
                             true,
                             true);
                     }.bind(this)).fail(function(status, error) {
