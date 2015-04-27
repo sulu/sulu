@@ -181,6 +181,7 @@ class FilterManager implements FilterManagerInterface
             $filter->setCreated(new \DateTime());
             $filter->setChanged(new \DateTime());
             $filter->setCreator($user);
+            $this->em->persist($filter->getEntity());
         }
         $this->checkData($data, $id === null);
         $user = $this->userRepository->findUserById($userId);
@@ -190,7 +191,7 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
         $filter->setEntityName($this->getProperty($data, 'entityName', $filter->getEntityName()));
-        $filter->setAndCombination($this->getProperty($data, 'entityName', $filter->getAndCombination()));
+        $filter->setAndCombination($this->getProperty($data, 'andCombination', $filter->getAndCombination()));
         $filter->setChanger($user);
         $filter->setChanged(new \DateTime());
 
@@ -311,15 +312,14 @@ class FilterManager implements FilterManagerInterface
      */
     protected function addConditionGroup(Filter $filter, $locale, $conditionGroupData)
     {
-        if (isset($conditionGroupData['id'])) {
+        if (array_key_exists('id', $conditionGroupData)) {
             throw new EntityIdAlreadySetException(self::$conditionGroupEntityName, $conditionGroupData['id']);
-        } elseif ($conditionGroupData['conditions']) {
-
+        } elseif (array_key_exists('conditions', $conditionGroupData)) {
             $conditionGroup = new ConditionGroup(new ConditionGroupEntity(), $locale);
             $conditionGroup->setFilter($filter);
 
             foreach ($conditionGroupData['conditions'] as $conditionData) {
-                if ($conditionData['id']) {
+                if (array_key_exists('id', $conditionData)) {
                     throw new EntityIdAlreadySetException(self::$conditionEntityName, $conditionData['id']);
                 } elseif ($this->isValidConditionData($conditionData)) {
                     $condition = new Condition(new ConditionEntity(), $locale);
@@ -329,12 +329,12 @@ class FilterManager implements FilterManagerInterface
                     $condition->setField($conditionData['field']);
                     $condition->setConditionGroup($conditionGroup);
                     $conditionGroup->addCondition($condition);
-                    $this->em->persist($condition);
+                    $this->em->persist($condition->getEntity());
                 }
             }
 
             $filter->addConditionGroup($conditionGroup);
-            $this->em->persist($conditionGroup);
+            $this->em->persist($conditionGroup->getEntity());
         }
 
         return true;
@@ -361,9 +361,9 @@ class FilterManager implements FilterManagerInterface
      */
     protected function checkData($data, $create)
     {
-        // TODO adjust for filter
-        $this->checkDataSet($data, 'type', $create) && $this->checkDataSet($data['type'], 'id', $create);
-        $this->checkDataSet($data, 'status', $create) && $this->checkDataSet($data['status'], 'id', $create);
+        $this->checkDataSet($data, 'name', $create) && $this->checkDataSet($data, 'andCombination', $create);
+        $this->checkDataSet($data, 'andCombination', $create) && $this->checkDataSet($data, 'andCombination', $create);
+        $this->checkDataSet($data, 'entityName', $create) && $this->checkDataSet($data, 'entityName', $create);
     }
 
     /**
@@ -394,16 +394,16 @@ class FilterManager implements FilterManagerInterface
      */
     private function isValidConditionData($data)
     {
-        if (array_key_exists('field', $data)) {
+        if (!array_key_exists('field', $data)) {
             throw new MissingConditionAttributeException('field');
         }
-        if (array_key_exists('operator', $data)) {
+        if (!array_key_exists('operator', $data)) {
             throw new MissingConditionAttributeException('operator');
         }
-        if (array_key_exists('type', $data)) {
+        if (!array_key_exists('type', $data)) {
             throw new MissingConditionAttributeException('type');
         }
-        if (array_key_exists('value', $data)) {
+        if (!array_key_exists('value', $data)) {
             throw new MissingConditionAttributeException('value');
         }
 

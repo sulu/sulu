@@ -66,7 +66,6 @@ class FilterControllerTest extends SuluTestCase
         $filter->setChanged(new \DateTime());
         $filter->setCreated(new \DateTime());
 
-        // TODO
         $filter->setCreator($this->getTestUser());
         $filter->setChanger($this->getTestUser());
 
@@ -176,7 +175,8 @@ class FilterControllerTest extends SuluTestCase
         return null;
     }
 
-    public function testCgetFlat(){
+    public function testCgetFlat()
+    {
         $this->client->request(
             'GET',
             '/api/filters?flat=true'
@@ -205,7 +205,52 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPost()
     {
+        $filter = $this->createFilterAsArray('newFilter', false, 'Media');
+        $this->client->request('POST', '/api/filters', $filter);
+        $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->client->request('GET', '/api/filters/'.$response->id);
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertEquals($filter['andCombination'], $response->andCombination);
+        $this->assertEquals($filter['entityName'], $response->entityName);
+        $this->assertEquals($filter['name'], $response->name);
+
+        $this->assertEquals(count($filter['conditionGroups']), count($response->conditionGroups));
+        $this->assertEquals(count($filter['conditionGroups'][0]['conditions']), count($response->conditionGroups[0]->conditions));
+    }
+
+    public function createFilterAsArray($name, $andCombination, $entityName, $partial = false)
+    {
+        $result = [
+            'name' => $name,
+            'andCombination' => $andCombination,
+            'entityName' => $entityName,
+        ];
+
+        if (!$partial) {
+            $result['conditionGroups'] = [
+                [
+                    'conditions' => [
+                        [
+                            'value' => '5',
+                            'field' => 'id',
+                            'operator' => '>',
+                            'type' => Condition::TYPE_NUMBER,
+                        ],
+                        [
+                            'value' => 'test',
+                            'field' => 'name',
+                            'operator' => 'LIKE',
+                            'type' => Condition::TYPE_STRING,
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -213,7 +258,17 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPostWithoutConditions()
     {
+        $filter = $this->createFilterAsArray('newFilter', false, 'Media', true);
+        $this->client->request('POST', '/api/filters', $filter);
+        $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->client->request('GET', '/api/filters/'.$response->id);
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->assertEquals($filter['andCombination'], $response->andCombination);
+        $this->assertEquals($filter['entityName'], $response->entityName);
+        $this->assertEquals($filter['name'], $response->name);
     }
 
     /**
@@ -249,5 +304,7 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testDeleteByIdNotExisting()
     {
+        $this->client->request('GET', '/api/filters/666');
+        $this->assertEquals('404', $this->client->getResponse()->getStatusCode());
     }
 }
