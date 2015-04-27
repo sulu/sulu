@@ -42,8 +42,7 @@ class ParameterResolver implements ParameterResolverInterface
         RequestAnalyzerInterface $requestAnalyzer = null,
         StructureInterface $structure = null,
         $preview = false
-    )
-    {
+    ) {
         if ($structure !== null) {
             $structureData = $this->structureResolver->resolve($structure);
         } else {
