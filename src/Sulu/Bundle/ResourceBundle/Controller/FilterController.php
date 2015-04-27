@@ -174,7 +174,7 @@ class FilterController extends RestController implements ClassResourceInterface
     public function deleteAction($id)
     {
         try {
-            $this->getManager()->delete($id, $this->getUser()->getId());
+            $this->getManager()->delete($id);
             $view = $this->view($id, 204);
         } catch (FilterNotFoundException $exc) {
             $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());

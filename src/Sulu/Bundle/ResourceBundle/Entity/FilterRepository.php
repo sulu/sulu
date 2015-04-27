@@ -64,6 +64,14 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
 
     public function findById($id)
     {
-        // TODO: Implement findById() method.
+        try {
+            $qb = $this->createQueryBuilder('filter')
+                ->andWhere('filter.id = :filterId')
+                ->setParameter('filterId', $id);
+
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $exc) {
+            return null;
+        }
     }
 }

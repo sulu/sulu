@@ -176,12 +176,16 @@ class FilterControllerTest extends SuluTestCase
         return null;
     }
 
-    /**
-     * Test GET all filters
-     */
-    public function testCget()
-    {
+    public function testCgetFlat(){
+        $this->client->request(
+            'GET',
+            '/api/filters?flat=true'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
 
+        $this->assertNotEmpty($response);
+        $this->assertEquals(2, $response->total);
     }
 
     /**
@@ -189,7 +193,11 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testGetByIdNotExisting()
     {
-
+        $this->client->request(
+            'GET',
+            '/api/filters/666'
+        );
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -229,6 +237,11 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testDeleteById()
     {
+        $this->client->request('DELETE', '/api/filters/'.$this->filter1->getId());
+        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/filters/'.$this->filter1->getId());
+        $this->assertEquals('404', $this->client->getResponse()->getStatusCode());
     }
 
     /**

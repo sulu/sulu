@@ -127,8 +127,11 @@ class FilterManager implements FilterManagerInterface
     public function findByIdAndLocale($id, $locale)
     {
         $filter = $this->filterRepository->findByIdAndLocale($id, $locale);
-
-        return new Filter($filter, $locale);
+        if ($filter) {
+            return new Filter($filter, $locale);
+        } else {
+            return null;
+        }
     }
 
     /**
