@@ -207,6 +207,21 @@ class Category extends ApiEntityWrapper
     }
 
     /**
+     * Returns a parent category if one exists
+     *
+     * @return null|Category
+     */
+    public function getParent()
+    {
+        $parent = $this->getEntity()->getParent();
+        if ($parent) {
+            return new Category($parent, $this->locale);
+        }
+
+        return null;
+    }
+
+    /**
      * Sets a given category as the parent of the entity
      *
      * @param Entity $parent
