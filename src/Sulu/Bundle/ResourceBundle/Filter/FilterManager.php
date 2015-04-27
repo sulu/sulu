@@ -165,6 +165,8 @@ class FilterManager implements FilterManagerInterface
      */
     public function save(array $data, $locale, $userId, $id = null)
     {
+        $user = $this->userRepository->findUserById($userId);
+
         if ($id) {
             $filter = $this->filterRepository->findByIdAndLocale($id, $locale);
             if (!$filter) {
@@ -173,6 +175,9 @@ class FilterManager implements FilterManagerInterface
             $filter = new Filter($filter, $locale);
         } else {
             $filter = new Filter(new FilterEntity(), $locale);
+            $filter->setCreated(new \DateTime());
+            $filter->setChanged(new \DateTime());
+            $filter->setCreator($user);
         }
         $this->checkData($data, $id === null);
         $user = $this->userRepository->findUserById($userId);
@@ -183,6 +188,8 @@ class FilterManager implements FilterManagerInterface
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
         $filter->setEntityName($this->getProperty($data, 'entityName', $filter->getEntityName()));
         $filter->setAndCombination($this->getProperty($data, 'entityName', $filter->getAndCombination()));
+        $filter->setChanger($user);
+        $filter->setChanged(new \DateTime());
 
         // update condition groups and conditions
         if (isset($data['conditionGroups'])) {
