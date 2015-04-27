@@ -218,15 +218,20 @@ define([
             this.totals = response.totals;
 
             data.forEach(function(entry) {
+                var options;
+
                 category = entry.document.category;
                 deepUrl = this.getEntryDeepUrl(category, entry.document);
                 entry.document.deepUrl = deepUrl;
+                options = Config.get('sulusearch.' + category + '.options') || {};
 
                 if (!preparedData[category]) {
                     preparedData[category] = {
                         category: category,
                         results: [entry.document],
-                        options: Config.get('sulusearch.' + category + '.options') || {}
+                        options: this.sandbox.util.extend(true, {}, {
+                            image: true
+                        }, options)
                     };
                 } else {
                     preparedData[category].results.push(entry.document);
