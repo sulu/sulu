@@ -99,55 +99,50 @@ class Condition extends ApiWrapper
      * Set field
      *
      * @param string $field
-     * @return Condition
      */
     public function setField($field)
     {
-        return $this->entity->setField($field);
+        $this->entity->setField($field);
     }
 
     /**
      * Set operator
      *
      * @param string $operator
-     * @return Condition
      */
     public function setOperator($operator)
     {
-        return $this->entity->setOperator($operator);
+        $this->entity->setOperator($operator);
     }
 
     /**
      * Set type
      *
      * @param integer $type
-     * @return Condition
      */
     public function setType($type)
     {
-        return $this->entity->setType($type);
+        $this->entity->setType($type);
     }
 
     /**
      * Set value
      *
      * @param string $value
-     * @return Condition
      */
     public function setValue($value)
     {
-        return $this->entity->setValue($value);
+        $this->entity->setValue($value);
     }
 
     /**
      * Set conditionGroup
      *
      * @param ConditionGroup $conditionGroup
-     * @return Condition
      */
     public function setConditionGroup(ConditionGroup $conditionGroup)
     {
-        return $this->entity->setConditionGroup($conditionGroup->getEntity());
+        $this->entity->setConditionGroup($conditionGroup->getEntity());
     }
 
     /**

@@ -62,4 +62,8 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
         return $qb;
     }
 
+    public function findById($id)
+    {
+        // TODO: Implement findById() method.
+    }
 }

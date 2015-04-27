@@ -5,16 +5,23 @@
     <parameters>
         <parameter key="sulu_resource.filter_manager.class">Sulu\Bundle\ResourceBundle\Filter\FilterManager</parameter>
         <parameter key="sulu_resource.filter_repository.class">Sulu\Bundle\ResourceBundle\Entity\FilterRepository</parameter>
+        <parameter key="sulu_resource.conditionGroup_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepository</parameter>
     </parameters>
 
     <services>
         <service id="sulu_resource.filter_manager" class="%sulu_resource.filter_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_resource.filter_repository"/>
+            <argument type="service" id="sulu_security.user_repository" />
+            <argument type="service" id="sulu_resource.conditionGroup_repository"/>
         </service>
         <service id="sulu_resource.filter_repository" class="%sulu_resource.filter_repository.class%"
                  factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
             <argument>SuluResourceBundle:Filter</argument>
+        </service>
+        <service id="sulu_resource.conditionGroup_repository" class="%sulu_resource.conditionGroup_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluResourceBundle:ConditionGroup</argument>
         </service>
     </services>
 
