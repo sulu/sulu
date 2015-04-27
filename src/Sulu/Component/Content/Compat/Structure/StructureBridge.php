@@ -407,7 +407,7 @@ class StructureBridge implements StructureInterface
         $result = array(
             'id' => $this->inspector->getUuid($document),
             'path' => $this->inspector->getContentPath($document),
-            'nodeType' => (string) $this->getNodeType(),
+            'nodeType' => $this->getNodeType(),
             'nodeState' => $this->getNodeState(),
             'internal' => false,
             'concreteLanguages' => $this->inspector->getLocales($document),

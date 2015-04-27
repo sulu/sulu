@@ -63,7 +63,7 @@ class ExtensionManager implements ExtensionManagerInterface
         if (!isset($extensions[$name])) {
             throw new \InvalidArgumentException(sprintf(
                 'Extension "%s" has not been registered for structure type "%s", registred extensions: "%s"',
-                $name, $structureType, implode('", "', array_structureTypes($extensions))
+                $name, $structureType, implode('", "', array_keys($extensions))
             ));
         }
 

@@ -67,7 +67,7 @@ class ExtensionContainerHandler implements SubscribingHandlerInterface
         array $type,
         Context $context
     ) {
-        return $data;
+        return new ExtensionContainer($data);
     }
 
 }

@@ -24,6 +24,7 @@ use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
+use Sulu\Component\Content\Document\Extension\ManagedExtensionContainer;
 
 class ExtensionSubscriber extends AbstractMappingSubscriber
 {
@@ -130,7 +131,7 @@ class ExtensionSubscriber extends AbstractMappingSubscriber
         }
 
         $prefix = $this->namespaceRegistry->getPrefix('extension_localized');
-        $extensionContainer = new ExtensionContainer(
+        $extensionContainer = new ManagedExtensionContainer(
             $structureType,
             $this->extensionManager,
             $node,
