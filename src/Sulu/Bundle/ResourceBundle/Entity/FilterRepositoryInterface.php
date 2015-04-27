@@ -16,7 +16,28 @@ namespace Sulu\Bundle\ResourceBundle\Entity;
  */
 interface FilterRepositoryInterface {
 
+    /**
+     * Searches for a filter by id and locale
+     *
+     * @param $id
+     * @param $locale
+     * @return mixed
+     */
     public function findByIdAndLocale($id, $locale);
 
+    /**
+     * Searches for all filters by locale
+     *
+     * @param $locale
+     * @return mixed
+     */
     public function findAllByLocale($locale);
+
+    /**
+     * Searches for a filter by id
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function findById($id);
 }
