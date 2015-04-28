@@ -21,7 +21,6 @@ use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Metadata\ClassMetadata;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
-use Sulu\Component\DocumentManager\MetadataFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentStructureFactory;
 use Sulu\Component\Content\Structure\Factory\StructureFactory;
 use Sulu\Component\Content\Structure\Block;
@@ -29,6 +28,7 @@ use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
