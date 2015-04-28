@@ -28,7 +28,7 @@ use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Structure\Property;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
-use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
 /**
  * Provides a Metadata Driver for massive search-bundle
@@ -46,13 +46,13 @@ class StructureDriver implements DriverInterface
     private $structureFactory;
 
     /**
-     * @var MetadataFactory
+     * @var MetadataFactoryInterface
      */
     private $metadataFactory;
 
     public function __construct(
         Factory $factory, 
-        MetadataFactory $metadataFactory,
+        MetadataFactoryInterface $metadataFactory,
         StructureFactory $structureFactory
     )
     {
