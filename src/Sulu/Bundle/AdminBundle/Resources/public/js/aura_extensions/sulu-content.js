@@ -55,7 +55,7 @@ define([], function () {
 
                 // if callback isset call it
                 if (!!callback && typeof callback === 'function') {
-                    callback(navigation);
+                    callback(items);
                 } else { // else emit event "navigation.item.column.show"
                     this.sandbox.emit('navigation.item.column.show', {
                         data: items
