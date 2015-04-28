@@ -450,4 +450,24 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('400'));
         $this->assertEquals('ClientWebsiteBundle:views:error.html.twig', $theme->getErrorTemplate('409'));
     }
+
+    public function testErrorTemplatesDefaultFalse()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException'
+        );
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/sulu.io_error_templates_default_false.xml'
+        );
+    }
+
+    public function testErrorTemplatesManyDefaults()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException'
+        );
+        $this->loader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/sulu.io_error_templates_many_defaults.xml'
+        );
+    }
 }

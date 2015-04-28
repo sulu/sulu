@@ -315,7 +315,7 @@ class XmlFileLoader extends FileLoader
             if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
                 $code = $codeNode->nodeValue;
             } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
-                $default = $defaultNode->nodeValue;
+                $default = $defaultNode->nodeValue === 'true';
                 if (!$default) {
                     throw new InvalidDefaultErrorTemplateException();
                 }
