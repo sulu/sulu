@@ -8,6 +8,7 @@ The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
 been removed. You have to change these names in all usages of this classes in
 your own code.
 
+<<<<<<< HEAD
 ### Media preview urls
 
 The thumbnail url will only be generated for supported mime-types. Otherwise it returns a zero length array.
@@ -20,13 +21,12 @@ To be sure that it is possible to generate a preview image you should check if t
 {% endif %}
 ```
 
-### Exception templates
+### Error templates
 
-Variables of exception template `ClientWebsiteBundle:error404.html.twig` has changed. It is basically the same as on
-the startpage but contains this additional values.
+Variables of exception template `ClientWebsiteBundle:error404.html.twig` has changed.
 
-* `status_code`: response code 
-* `status_text`: response text
+* `statusCode`: response code 
+* `statusText`: response text
 * `exception`: whole exception object
 * `currentContent`: content which was rendered before exception was thrown
 
@@ -41,6 +41,15 @@ After:
 ```twig
 <p>The path "<em>{{ request.resourceLocator }}</em>" does not exist.</p>
 ```
+
+The behaviour of the errors has changed. In dev mode no custom error pages appears.
+To see them you have to open following url:
+
+```
+{portal-prefix}/_error/{statusCode}
+```
+
+More Information can be found in [sulu-docs](http://docs.sulu.io/en/latest/cookbook/custom-error-page.html).
 
 ## 0.17.0
 
