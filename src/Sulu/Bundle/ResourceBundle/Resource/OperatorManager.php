@@ -15,7 +15,6 @@ use Sulu\Bundle\ResourceBundle\Entity\OperatorRepositoryInterface;
 
 class OperatorManager implements OperatorManagerInterface
 {
-
     /**
      * @var OperatorRepositoryInterface
      */

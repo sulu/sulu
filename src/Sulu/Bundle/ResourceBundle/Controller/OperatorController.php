@@ -38,7 +38,6 @@ class OperatorController extends RestController implements ClassResourceInterfac
         $view = $this->view($list, 200);
 
         return $this->handleView($view);
-
     }
 
     /**
