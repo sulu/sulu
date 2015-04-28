@@ -15,6 +15,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ResourceBundle\Api\Filter;
 use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterNotFoundException;
+use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingFilterAttributeException;
 use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingFilterException;
 use Sulu\Bundle\ResourceBundle\Filter\FilterManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -129,6 +130,9 @@ class FilterController extends RestController implements ClassResourceInterface
             $view = $this->view($exception->toArray(), 400);
         } catch (MissingFilterException $exc) {
             $exception = new MissingArgumentException(self::$entityName, $exc->getFilter());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (MissingFilterAttributeException $exc) {
+            $exception = new MissingArgumentException(self::$entityName, $exc->getAttribute());
             $view = $this->view($exception->toArray(), 400);
         }
 
