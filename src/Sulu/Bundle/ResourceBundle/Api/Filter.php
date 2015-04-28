@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ResourceBundle\Api;
 use Sulu\Bundle\ResourceBundle\Entity\FilterTranslation;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
-use Sulu\Bundle\ResourceBundle\Api\ConditionGroup;
 use JMS\Serializer\Annotation\VirtualProperty;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -29,7 +28,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
  */
 class Filter extends ApiWrapper
 {
-
     /**
      * @param FilterEntity $entity
      * @param string $locale

@@ -24,7 +24,6 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
  */
 class ConditionGroup extends ApiWrapper
 {
-
     /**
      * @param ConditionGroupEntity $entity
      * @param string $locale
