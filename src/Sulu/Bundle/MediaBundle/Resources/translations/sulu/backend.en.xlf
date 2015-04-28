@@ -44,7 +44,7 @@
             </trans-unit>
             <trans-unit id="642c992f1929652633a5ce2178d2219f" resname="sulu.media.multiple-edit.title">
                 <source>sulu.media.multiple-edit.title</source>
-                <target>Edit medias</target>
+                <target>Edit media</target>
             </trans-unit>
             <trans-unit id="643c99ff1964652633a5ca2178d2219f" resname="labels.success.media-save-desc">
                 <source>labels.success.media-save-desc</source>
@@ -144,7 +144,7 @@
             </trans-unit>
             <trans-unit id="243d99ff2f64652633a5ca2169f22261" resname="sulu.media.all">
                 <source>sulu.media.all</source>
-                <target>All medias</target>
+                <target>All media</target>
             </trans-unit>
             <trans-unit id="243d88cf2f64652633a5ca2169f22258" resname="sulu.media.history">
                 <source>sulu.media.history</source>
