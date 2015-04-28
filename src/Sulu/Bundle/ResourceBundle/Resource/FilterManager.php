@@ -11,8 +11,6 @@
 namespace Sulu\Bundle\ResourceBundle\Resource;
 
 use Doctrine\ORM\EntityManager;
-use Sulu\Bundle\ResourceBundle\Api\ConditionGroup;
-use Sulu\Bundle\ResourceBundle\Api\Condition;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
 use Sulu\Bundle\ResourceBundle\Api\Filter;
@@ -63,7 +61,7 @@ class FilterManager implements FilterManagerInterface
     protected $conditionGroupRepository;
 
     public function __construct(
-        $em,
+        EntityManager $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
         ConditionGroupRepositoryInterface $conditionGroupRepository
@@ -101,11 +99,11 @@ class FilterManager implements FilterManagerInterface
                 ),
             )
         );
-        $fieldDescriptors['andCombination'] = new DoctrineFieldDescriptor(
-            'andCombination',
-            'andCombination',
+        $fieldDescriptors['conjunction'] = new DoctrineFieldDescriptor(
+            'conjunction',
+            'conjunction',
             self::$filterEntityName,
-            'resource.filter.andCombination',
+            'resource.filter.conjunction',
             array(),
             true
         );
@@ -189,13 +187,12 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
         $filter->setEntityName($this->getProperty($data, 'entityName', $filter->getEntityName()));
-        $filter->setAndCombination($this->getProperty($data, 'andCombination', $filter->getAndCombination()));
+        $filter->setConjunction($this->getProperty($data, 'conjunction', $filter->getConjunction()));
         $filter->setChanger($user);
         $filter->setChanged(new \DateTime());
 
         // update condition groups and conditions
         if (isset($data['conditionGroups'])) {
-
             $get = function (ConditionGroupEntity $conditionGroup) {
                 return $conditionGroup->getId();
             };
@@ -244,7 +241,6 @@ class FilterManager implements FilterManagerInterface
             foreach ($matchedEntry['conditions'] as $conditionData) {
 
                 if (array_key_exists('id', $conditionData)) {
-
                     /** @var ConditionEntity $conditionEntity */
                     $conditionEntity = $this->conditionGroupRepository->findById($conditionData['id']);
                     if (!$conditionEntity) {
@@ -267,7 +263,6 @@ class FilterManager implements FilterManagerInterface
                 $conditionEntity->setType($this->getProperty($conditionData, 'type', $conditionEntity->getType()));
                 $conditionGroup->addCondition($conditionEntity);
             }
-
         }
 
         return true;
@@ -335,7 +330,7 @@ class FilterManager implements FilterManagerInterface
     protected function checkData($data, $create)
     {
         $this->checkDataSet($data, 'name', $create);
-        $this->checkDataSet($data, 'andCombination', $create);
+        $this->checkDataSet($data, 'conjunction', $create);
         $this->checkDataSet($data, 'entityName', $create);
     }
 

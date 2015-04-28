@@ -14,6 +14,10 @@ use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Navigation\Navigation;
 use Sulu\Bundle\AdminBundle\Navigation\NavigationItem;
 
+/**
+ * Class SuluResourceAdmin
+ * @package Sulu\Bundle\ResourceBundle\Admin
+ */
 class SuluResourceAdmin extends Admin
 {
     /**
