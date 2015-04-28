@@ -18,7 +18,6 @@ use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\Types\SmartContent\SmartContentQueryBuilder;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepository;
 use Sulu\Bundle\ContentBundle\Repository\NodeRepositoryInterface;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Query\ContentQueryExecutor;

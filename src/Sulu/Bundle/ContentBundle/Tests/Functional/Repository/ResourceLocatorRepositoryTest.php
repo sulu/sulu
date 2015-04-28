@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContentBundle\Tests\Functional\Repository;
 use ReflectionMethod;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepository;
 use Sulu\Bundle\ContentBundle\Repository\ResourceLocatorRepositoryInterface;
-use Sulu\Bundle\TestBundle\Testing\PhpcrTestCase;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyTag;
 use Sulu\Component\Content\Types\Rlp\Mapper\PhpcrMapper;
