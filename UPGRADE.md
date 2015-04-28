@@ -170,6 +170,10 @@ After running this script please check the changed files for conflicts and wrong
 Children of pages with the state "test" or pages which have the desired navigaiton context not assigned won't be moved
 up in the hierarchy, instead they won't show up in the navigation at all.
 
+### Page-Templates
+
+The tag `sulu.rlp` is now mandatory for page templates.
+
 ## 1.0.0-RC1
 
 ### Security Roles
