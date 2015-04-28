@@ -65,7 +65,7 @@ class {{ cache_class }} extends {{ base_class }}
         $theme->setKey('{{ webspace.theme.key }}');
 {% for excludedTemplate in webspace.theme.excludedTemplates %}        $theme->addExcludedTemplate('{{ excludedTemplate }}');
 {% endfor %}
-{% for code,errorTemplate in webspace.theme.errorTemplates %}        $theme->addErrorTemplate({{ code='default'?"'"~code~"'":code }}, '{{ errorTemplate }}');
+{% for code,errorTemplate in webspace.theme.errorTemplates %}        $theme->addErrorTemplate({{ (code=='default'?"'default'":code)|raw }}, '{{ errorTemplate }}');
 {% endfor %}        $webspace->setTheme($theme);
 
         // add navigation

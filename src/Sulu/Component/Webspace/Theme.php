@@ -121,7 +121,8 @@ class Theme implements ArrayableInterface
     {
         return array(
             'key' => $this->getKey(),
-            'excludedTemplates' => $this->getExcludedTemplates()
+            'excludedTemplates' => $this->getExcludedTemplates(),
+            'errorTemplates' => $this->getErrorTemplates(),
         );
     }
 }
