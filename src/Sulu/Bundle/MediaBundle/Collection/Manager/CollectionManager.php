@@ -552,7 +552,8 @@ class CollectionManager implements CollectionManagerInterface
             $mediaId,
             $fileVersion->getName(),
             $fileVersion->getStorageOptions(),
-            $fileVersion->getVersion()
+            $fileVersion->getVersion(),
+            $fileVersion->getMimeType()
         );
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
