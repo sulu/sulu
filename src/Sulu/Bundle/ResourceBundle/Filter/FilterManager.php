@@ -237,7 +237,7 @@ class FilterManager implements FilterManagerInterface
      * @return bool
      * @throws FilterDependencyNotFoundException
      */
-    private function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
+    protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
         if (isset($matchedEntry['conditions'])) {
 
@@ -348,7 +348,7 @@ class FilterManager implements FilterManagerInterface
      * @return bool
      * @throws Exception\MissingFilterAttributeException
      */
-    private function checkDataSet(array $data, $key, $create)
+    protected function checkDataSet(array $data, $key, $create)
     {
         $keyExists = array_key_exists($key, $data);
         if (($create && !($keyExists && $data[$key] !== null)) || (!$keyExists || $data[$key] === null)) {
@@ -365,7 +365,7 @@ class FilterManager implements FilterManagerInterface
      * @return bool
      * @throws MissingConditionAttributeException
      */
-    private function isValidConditionData($data)
+    protected function isValidConditionData($data)
     {
         if (!array_key_exists('field', $data)) {
             throw new MissingConditionAttributeException('field');

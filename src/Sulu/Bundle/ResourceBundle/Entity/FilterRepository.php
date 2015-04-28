@@ -30,9 +30,7 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
     }
 
     /**
-     * Returns all filters in the given locale
-     * @param string $locale The locale of the filter to load
-     * @return Filter[]
+     * {@inheritDoc}
      */
     public function findAllByLocale($locale)
     {
@@ -48,7 +46,7 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
      * @param string $locale The locale to load
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function getFilterQuery($locale)
+    protected function getFilterQuery($locale)
     {
         $qb = $this->createQueryBuilder('filter')
             ->addSelect('conditionGroups')
@@ -62,6 +60,9 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
         return $qb;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function findById($id)
     {
         try {
