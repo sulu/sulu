@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the Sulu CMS.
+ *
+ * (c) MASSIVE ART WebServices GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
@@ -10,14 +18,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Filter
 {
     /**
-     * @var boolean
+     * @var string
      */
-    private $andCombination;
+    private $conjunction;
 
     /**
      * @var string
      */
-    private $entity;
+    private $entityName;
 
     /**
      * @var integer
@@ -41,29 +49,6 @@ class Filter
     {
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
         $this->conditionGroups = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Set andCombination
-     *
-     * @param boolean $andCombination
-     * @return Filter
-     */
-    public function setAndCombination($andCombination)
-    {
-        $this->andCombination = $andCombination;
-
-        return $this;
-    }
-
-    /**
-     * Get andCombination
-     *
-     * @return boolean 
-     */
-    public function getAndCombination()
-    {
-        return $this->andCombination;
     }
 
     /**
@@ -141,11 +126,6 @@ class Filter
     {
         return $this->conditionGroups;
     }
-    /**
-     * @var string
-     */
-    private $entityName;
-
 
     /**
      * Set entityName
@@ -169,6 +149,7 @@ class Filter
     {
         return $this->entityName;
     }
+
     /**
      * @var \DateTime
      */
@@ -280,5 +261,28 @@ class Filter
     public function getCreator()
     {
         return $this->creator;
+    }
+
+    /**
+     * Set conjunction
+     *
+     * @param string $conjunction
+     * @return Filter
+     */
+    public function setConjunction($conjunction)
+    {
+        $this->conjunction = $conjunction;
+
+        return $this;
+    }
+
+    /**
+     * Get conjunction
+     *
+     * @return string 
+     */
+    public function getConjunction()
+    {
+        return $this->conjunction;
     }
 }
