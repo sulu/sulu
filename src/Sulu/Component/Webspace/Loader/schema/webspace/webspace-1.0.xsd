@@ -111,7 +111,21 @@
         <xs:sequence>
             <xs:element type="xs:string" name="key"/>
             <xs:element type="excludedType" name="excluded" minOccurs="0"/>
+            <xs:element type="errorTemplatesType" name="error-templates" minOccurs="0"/>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="errorTemplatesType">
+        <xs:sequence>
+            <xs:element type="errorTemplateType" name="error-template" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="errorTemplateType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="default" type="xs:boolean"/>
+                <xs:attribute name="code" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="excludedType">
         <xs:sequence>

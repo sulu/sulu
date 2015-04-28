@@ -22,8 +22,8 @@ class InvalidPortalDefaultLocalizationException extends WebspaceException
     private $portal;
 
     /**
-     * @param Webspace $portal
-     * @internal param string $urlPattern
+     * @param Webspace $webspace
+     * @param Portal $portal
      */
     public function __construct(Webspace $webspace, Portal $portal)
     {

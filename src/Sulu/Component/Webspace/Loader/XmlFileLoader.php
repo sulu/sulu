@@ -12,12 +12,15 @@ namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidPortalDefaultLocalizationException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
+use Sulu\Component\Webspace\Loader\Exception\MissingErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
@@ -294,6 +297,39 @@ class XmlFileLoader extends FileLoader
         foreach ($this->xpath->query('/x:webspace/x:theme/x:excluded/x:template') as $templateNode) {
             /** @var \DOMNode $templateNode */
             $theme->addExcludedTemplate($templateNode->nodeValue);
+        }
+
+        $this->generateErrorTemplates($theme);
+
+        return $theme;
+    }
+
+    private function generateErrorTemplates(Theme $theme)
+    {
+        $errorTemplates = 0;
+        $defaultErrorTemplates = 0;
+
+        foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
+            /** @var \DOMNode $errorTemplateNode */
+            $errorTemplates++;
+            if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
+                $code = $codeNode->nodeValue;
+            } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
+                $default = $defaultNode->nodeValue;
+                if (!$default) {
+                    throw new InvalidDefaultErrorTemplateException();
+                }
+                $defaultErrorTemplates++;
+                $code = 'default';
+            } else {
+                throw new InvalidErrorTemplateException();
+            }
+
+            $theme->addErrorTemplate($code, $errorTemplateNode->nodeValue);
+        }
+
+        if ($errorTemplates > 0 && $defaultErrorTemplates > 1) {
+            throw new InvalidDefaultErrorTemplateException();
         }
 
         return $theme;
