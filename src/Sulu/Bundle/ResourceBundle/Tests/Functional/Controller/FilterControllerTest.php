@@ -218,7 +218,10 @@ class FilterControllerTest extends SuluTestCase
         $this->assertEquals($filter['name'], $response->name);
 
         $this->assertEquals(count($filter['conditionGroups']), count($response->conditionGroups));
-        $this->assertEquals(count($filter['conditionGroups'][0]['conditions']), count($response->conditionGroups[0]->conditions));
+        $this->assertEquals(
+            count($filter['conditionGroups'][0]['conditions']),
+            count($response->conditionGroups[0]->conditions)
+        );
     }
 
     public function createFilterAsArray($name, $andCombination, $entityName, $partial = false)
@@ -276,7 +279,99 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPut()
     {
+        $newName = 'The new name';
+        $newAndCombination = false;
+        $newEntityName = 'New Entity';
 
+        // remove old condition group and add a new one
+        $this->client->request(
+            'PUT',
+            '/api/filters/'.$this->filter1->getId(),
+            [
+                'name' => $newName,
+                'andCombination' => $newAndCombination,
+                'entityName' => $newEntityName,
+                'conditionGroups' => [
+                    [
+                        'conditions' => [
+                            [
+                                'value' => '6',
+                                'field' => 'nr',
+                                'operator' => '<',
+                                'type' => Condition::TYPE_NUMBER,
+                            ],
+                            [
+                                'value' => 'test',
+                                'field' => 'comment',
+                                'operator' => '%LIKE%',
+                                'type' => Condition::TYPE_STRING,
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($newName, $response->name);
+        $this->assertEquals($newAndCombination, $response->andCombination);
+        $this->assertEquals($newEntityName, $response->entityName);
+        $this->assertEquals(1, count($response->conditionGroups));
+
+        $conditionGroupId = $response->conditionGroups[0]->id;
+
+        // remove old condition group and add a new one
+        $this->client->request(
+            'PUT',
+            '/api/filters/'.$this->filter1->getId(),
+            [
+                'conditionGroups' => [
+                    [
+                        'id' => $conditionGroupId,
+                        'conditions' => [
+                            [
+                                'value' => '7',
+                                'field' => 'id',
+                                'operator' => 'LIKE',
+                                'type' => Condition::TYPE_STRING,
+                            ],
+                            [
+                                'value' => 'test2',
+                                'field' => 'nr',
+                                'operator' => '>',
+                                'type' => Condition::TYPE_NUMBER,
+                            ],
+                        ],
+                    ],
+                    [
+                        'conditions' => [
+                            [
+                                'value' => '123',
+                                'field' => 'nr',
+                                'operator' => '=<',
+                                'type' => Condition::TYPE_NUMBER,
+                            ],
+                            [
+                                'value' => 'test17',
+                                'field' => 'comment',
+                                'operator' => '%LIKE%',
+                                'type' => Condition::TYPE_STRING,
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($newName, $response->name);
+        $this->assertEquals($newAndCombination, $response->andCombination);
+        $this->assertEquals($newEntityName, $response->entityName);
+        $this->assertEquals(2, count($response->conditionGroups));
     }
 
     /**
@@ -284,7 +379,39 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPutWithoutConditions()
     {
+        $newName = 'The new name';
+        $newAndCombination = false;
+        $newEntityName = 'New Entity';
 
+        $this->client->request(
+            'PUT',
+            '/api/filters/'.$this->filter1->getId(),
+            [
+                'name' => $newName,
+                'andCombination' => $newAndCombination,
+                'entityName' => $newEntityName,
+            ]
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals($newName, $response->name);
+        $this->assertEquals($newAndCombination, $response->andCombination);
+        $this->assertEquals($newEntityName, $response->entityName);
+    }
+
+    /**
+     * Test PUT to update a not existing filter
+     */
+    public function testPutNotExisting()
+    {
+        $this->client->request('PUT', '/api/filters/666', array('code' => 'Missing filter'));
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(
+            'Entity with the type "SuluResourceBundle:Filter" and the id "666" not found.',
+            $response->message
+        );
     }
 
     /**
