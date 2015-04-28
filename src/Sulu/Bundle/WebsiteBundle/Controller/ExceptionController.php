@@ -53,42 +53,41 @@ class ExceptionController extends BaseExceptionController
         $this->parameterResolver = $parameterResolver;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function showAction(
         Request $request,
         FlattenException $exception,
         DebugLoggerInterface $logger = null
     ) {
-        // remove empty first line
-        if (ob_get_length()) {
-            ob_clean();
-        }
-
         $code = $exception->getStatusCode();
+        $showException = $request->attributes->get('showException', $this->debug);
         $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
 
-        if ($request->getRequestFormat() === 'html' && $template !== null) {
-            $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-
-            $parameter = array(
-                'statusCode' => $code,
-                'statusText' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                'exception' => $exception,
-                'currentContent' => $currentContent
-            );
-            $data = $this->parameterResolver->resolve(
-                $parameter,
-                $this->requestAnalyzer
-            );
-
-            return new Response(
-                $this->twig->render(
-                    $template,
-                    $data
-                ),
-                $code
-            );
+        if ($showException || $request->getRequestFormat() !== 'html' || $template === null) {
+            return parent::showAction($request, $exception, $logger);
         }
 
-        return parent::showAction($request, $exception, $logger);
+        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+
+        $parameter = array(
+            'statusCode' => $code,
+            'statusText' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+            'exception' => $exception,
+            'currentContent' => $currentContent
+        );
+        $data = $this->parameterResolver->resolve(
+            $parameter,
+            $this->requestAnalyzer
+        );
+
+        return new Response(
+            $this->twig->render(
+                $template,
+                $data
+            ),
+            $code
+        );
     }
 }
