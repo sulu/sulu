@@ -196,6 +196,7 @@ define(function () {
                         el: $container,
                         title: this.sandbox.translate(this.options.loadingTitle),
                         data: $loader,
+                        skin: 'wide',
                         openOnStart: false,
                         removeOnClose: false,
                         instanceName: 'media-edit.loading',
@@ -225,6 +226,7 @@ define(function () {
                             {title: this.sandbox.translate(this.options.infoKey), data: this.$info},
                             {title: this.sandbox.translate(this.options.versionsKey), data: this.$versions}
                         ],
+                        skin: 'wide',
                         openOnStart: true,
                         instanceName: 'media-edit',
                         propagateEvents: false,

@@ -15,6 +15,18 @@
         </commands>
     </format>
     <format>
+        <name>200x200</name>
+        <commands>
+            <command>
+                <action>scale</action>
+                <parameters>
+                    <parameter name="x">200</parameter>
+                    <parameter name="y">200</parameter>
+                </parameters>
+            </command>
+        </commands>
+    </format>
+    <format>
         <name>50x50</name>
         <commands>
             <command>

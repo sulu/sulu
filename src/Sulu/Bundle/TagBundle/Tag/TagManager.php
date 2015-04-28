@@ -167,7 +167,7 @@ class TagManager implements TagManagerInterface
 
             return $tag;
         } catch (DBALException $exc) {
-            if ($exc->getPrevious()->getCode() === '23000') { // Check if unique constraint fails
+            if ($exc->getPrevious()->getCode() == 23000) { // Check if unique constraint fails
                 throw new TagAlreadyExistsException($name);
             } else {
                 throw $exc;

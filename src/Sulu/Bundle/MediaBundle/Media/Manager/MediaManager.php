@@ -772,7 +772,8 @@ class MediaManager implements MediaManagerInterface
                 $media->getId(),
                 $media->getName(),
                 $media->getStorageOptions(),
-                $media->getVersion()
+                $media->getVersion(),
+                $media->getMimeType()
             )
         );
 
