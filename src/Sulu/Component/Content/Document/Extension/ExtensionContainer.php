@@ -10,7 +10,7 @@ class ExtensionContainer implements \ArrayAccess, \Iterator
 {
     protected $data;
 
-    public function __construct(array $data)
+    public function __construct(array $data = array())
     {
         $this->data = $data;
     }
