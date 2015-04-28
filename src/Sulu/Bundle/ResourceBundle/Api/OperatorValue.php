@@ -81,7 +81,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Set type
+     * Set value
      *
      * @param string $value
      * @return OperatorValue
@@ -92,7 +92,7 @@ class OperatorValue extends ApiWrapper
     }
 
     /**
-     * Get type
+     * Get value
      *
      * @return string
      * @VirtualProperty
