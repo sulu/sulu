@@ -46,6 +46,7 @@ CHANGELOG for Sulu
     * BUGFIX      #1026 [MediaBundle]    Fixed collection and category behat tests 
     * BUGFIX      #1030 [WebsiteBundle]  Fixed exception-controller to resolve parameters like website-controller
     * FEATURE     #1030 [WebsiteBundle]  Added configuration for error templates to webspace-config
+    * BUGFIX      #1044 [ContentBundle]  Update CKEditor parameters to snake_case and allow dynamic override of ckeditor config
 
 * 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug

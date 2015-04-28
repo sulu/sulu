@@ -40405,14 +40405,10 @@ define('__component__$ckeditor@husky',[], function() {
     var defaults = {
             initializedCallback: null,
             instanceName: null,
-            tableEnabled: true,
-            linksEnabled: true,
-            scriptEnabled: true,
-            iframeEnabled: true,
+            table: true,
+            link: true,
             pasteFromWord: true,
-            height: null,
-            maxHeight: null,
-            enterMode: 'p'
+            height: 200
         },
 
         /**
@@ -40473,13 +40469,13 @@ define('__component__$ckeditor@husky',[], function() {
             }
 
             // activate embed links
-            if (this.options.linksEnabled === true) {
+            if (this.options.link === true) {
                 config.toolbar.push({ name: 'links', items: [ 'Link', 'Unlink' ] });
                 config.linkShowTargetTab = false;
             }
 
             // activate tables
-            if (this.options.tableEnabled === true) {
+            if (this.options.table === true) {
                 config.toolbar.push({ name: 'insert', items: [ 'Table' ] });
             }
 
@@ -40494,7 +40490,7 @@ define('__component__$ckeditor@husky',[], function() {
                 config.autoGrow_maxHeight = this.options.maxHeight;
                 // if height bigger maxHeight height = maxHeight
                 if (config.height > config.autoGrow_maxHeight) {
-                    config.autoGrow_maxHeight = config.height;
+                    config.height = config.autoGrow_maxHeight;
                 }
             }
 
@@ -40503,17 +40499,9 @@ define('__component__$ckeditor@husky',[], function() {
                 config.enterMode = CKEDITOR['ENTER_' + this.options.enterMode.toUpperCase()];
             }
 
-            // extra allowed
-            var extraAllowedContent = '';
-
-            // extra allowed content iframe
-            if (this.options.iframeEnabled === true) {
-                extraAllowedContent += ' iframe(*)[src,border,frameborder,width,height,style,allowfullscreen,name,marginheight,marginwidth,seamless,srcdoc];';
-            }
-
-            // extra allowed content iframe
-            if (this.options.scriptEnabled === true) {
-                extraAllowedContent += ' script(*)[src,type,defer,async,charset];';
+            // Styles
+            if (!!config.stylesSet && config.stylesSet.length > 0) {
+                config.toolbar.push({ name: 'styles', items: [ 'Styles' ] });
             }
 
             config.toolbar.push({ name: 'code', items: [ 'Source' ] });
@@ -40527,14 +40515,9 @@ define('__component__$ckeditor@husky',[], function() {
             delete config._ref;
             delete config.require;
             delete config.element;
-            delete config.linksEnabled;
-            delete config.tableEnabled;
-            delete config.scriptEnabled;
-            delete config.iframeEnabled;
+            delete config.link;
+            delete config.table;
             delete config.maxHeight;
-
-            // allow img tags to have any class (*) and any attribute [*]
-            config.extraAllowedContent = 'img(*)[src,width,height,title,alt]; a(*)[href,target,type,rel,name,title];' + extraAllowedContent;
 
             return config;
         };
@@ -45125,7 +45108,9 @@ define('__component__$data-navigation@husky',[
                 removePlugins: 'elementspath,magicline',
                 removeDialogTabs: 'image:advanced;link:advanced',
                 extraPlugins: 'justify,format,sourcearea,link,table,pastefromword,autogrow',
+                extraAllowedContent: 'img(*)[*]; span(*)[*]; div(*)[*]; iframe(*)[*]; script(*)[*]',
                 resize_enabled: false,
+                enterMode: 'P',
                 uiColor: '#ffffff',
                 skin: 'husky'
             };
@@ -45142,9 +45127,8 @@ define('__component__$data-navigation@husky',[
                     // callback when editor is ready
                     init: function(selector, callback, config) {
 
-                        var configuration = app.sandbox.util.extend(true, {}, config, getConfig.call()),
+                        var configuration = app.sandbox.util.extend(true, {}, getConfig.call(), config),
                             $editor;
-
                         if (!!callback && typeof callback === 'function') {
                             $editor = $(selector).ckeditor(callback, configuration);
                         } else {
