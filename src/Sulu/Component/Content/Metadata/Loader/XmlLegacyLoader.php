@@ -42,7 +42,8 @@ class XmlLegacyLoader implements LoaderInterface
      * @var array
      */
     private $requiredTagNames = array(
-        'sulu.rlp'
+        Structure::TYPE_PAGE => array('sulu.rlp'),
+        Structure::TYPE_SNIPPET => array()
     );
 
     /**
@@ -111,9 +112,8 @@ class XmlLegacyLoader implements LoaderInterface
             }
         }
 
-        $tagNames = array_keys($tags);
-        foreach ($this->requiredTagNames as $requiredTagName) {
-            if (!in_array($requiredTagName, $tagNames)) {
+        foreach ($this->requiredTagNames[$type] as $requiredTagName) {
+            if (!array_key_exists($requiredTagName, $tags)) {
                 throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
             }
         }
