@@ -83,24 +83,24 @@ class OperatorValue extends ApiWrapper
     /**
      * Set type
      *
-     * @param integer $type
+     * @param string $value
      * @return OperatorValue
      */
-    public function setType($type)
+    public function setValue($value)
     {
-        $this->entity->setType($type);
+        $this->entity->setValue($value);
     }
 
     /**
      * Get type
      *
-     * @return integer
+     * @return string
      * @VirtualProperty
-     * @SerializedName("type")
+     * @SerializedName("value")
      */
-    public function getType()
+    public function getValue()
     {
-        return $this->entity->getType();
+        return $this->entity->getValue();
     }
 
     /**
@@ -119,7 +119,6 @@ class OperatorValue extends ApiWrapper
      * Add translations
      *
      * @param OperatorValueTranslation $translations
-     * @return OperatorValue
      */
     public function addTranslation(OperatorValueTranslation $translations)
     {
@@ -150,7 +149,6 @@ class OperatorValue extends ApiWrapper
      * Set operator
      *
      * @param Operator $operator
-     * @return OperatorValue
      */
     public function setOperator(Operator $operator)
     {
@@ -164,6 +162,6 @@ class OperatorValue extends ApiWrapper
      */
     public function getOperator()
     {
-        new Operator($this->entity->getOperator(), $this->locale);
+        return new Operator($this->entity->getOperator(), $this->locale);
     }
 }
