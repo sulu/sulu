@@ -17,7 +17,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 
-class DefaultMediaManagerTest extends \PHPUnit_Framework_TestCase
+class MediaManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var MediaManager
