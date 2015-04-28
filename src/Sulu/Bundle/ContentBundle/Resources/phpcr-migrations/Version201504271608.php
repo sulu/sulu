@@ -5,9 +5,18 @@ namespace Sulu\Bundle\ContentBundle;
 use DTL\PhpcrMigrations\VersionInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Version201504271608 implements VersionInterface
+class Version201504271608 implements VersionInterface, ContainerAwareInterface
 {
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     public function up(SessionInterface $session)
     {
         $workspace = $session->getWorkspace();
@@ -27,18 +36,15 @@ class Version201504271608 implements VersionInterface
 
     private function migrateHome(SessionInterface $session, $from, $to, $referenceWebspace)
     {
-        $workspace = $session->getWorkspace();
-        $sql2 = <<<EOT
-SELECT * FROM [nt:unstructured] AS webspace INNER JOIN [nt:unstructured] AS home ON ISCHILDNODE(home, webspace) WHERE home.[jcr:mixinTypes] = '%s'
-EOT
-        ;
+        $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
+        $pathRegistry = $this->container->get('sulu_document_manager.path_segment_registry');
 
-        $queryManager = $workspace->getQueryManager();
-        $query = $queryManager->createQuery(sprintf($sql2, $from), 'JCR-SQL2');
-        $results = $query->execute();
+        $webspaces = $webspaceManager->getWebspaceCollection();
 
-        foreach ($results->getRows() as $result) {
-            $webspace = $result->getNode('webspace');
+        foreach ($webspaces as $webspace) {
+            $webspacePath = sprintf('/%s/%s', $pathRegistry->getPathSegment('base'), $webspace->getKey());
+            $homeNodeName = $pathRegistry->getPathSegment('content');
+            $webspace = $session->getNode($webspacePath);
 
             if ($referenceWebspace) {
                 $webspace->addMixin('mix:referenceable');
@@ -46,9 +52,9 @@ EOT
                 $webspace->removeMixin('mix:referenceable');
             }
 
-            $node = $result->getNode('home');
-            $node->removeMixin($from);
-            $node->addMixin($to);
+            $homeNode = $webspace->getNode($homeNodeName);
+            $homeNode->addMixin($to);
+            $homeNode->removeMixin($from);
         }
     }
 }
