@@ -32,8 +32,8 @@ class FilterDependencyNotFoundException extends FilterException
         $this->entityName = $entityName;
         $this->id = $id;
         parent::__construct(
-            'The filter dependency "'.$this->entityName.
-            ' with the id "'.$this->id.
+            'The filter dependency "' . $this->entityName .
+            ' with the id "' . $this->id .
             '" was not found.',
             0
         );

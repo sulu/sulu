@@ -13,10 +13,10 @@ namespace Sulu\Bundle\ResourceBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Class SuluResourceBundle
+ * @package Sulu\Bundle\ResourceBundle
+ */
 class SuluResourceBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-    }
 }

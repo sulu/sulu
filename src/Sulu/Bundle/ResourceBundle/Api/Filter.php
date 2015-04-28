@@ -63,15 +63,15 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Get andCombination
+     * Get conjunction
      *
      * @VirtualProperty
-     * @SerializedName("andCombination")
+     * @SerializedName("conjunction")
      * @return boolean
      */
-    public function getAndCombination()
+    public function getConjunction()
     {
-        return $this->entity->getAndCombination();
+        return $this->entity->getConjunction();
     }
 
     /**
@@ -109,13 +109,13 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Set andCombination
+     * Set conjunction
      *
-     * @param boolean $andCombination
+     * @param boolean $conjunction
      */
-    public function setAndCombination($andCombination)
+    public function setConjunction($conjunction)
     {
-        $this->entity->setAndCombination($andCombination);
+        $this->entity->setConjunction($conjunction);
     }
 
     /**
