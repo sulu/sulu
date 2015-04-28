@@ -16,7 +16,7 @@ use Sulu\Bundle\ResourceBundle\Entity\Condition;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup;
 use Sulu\Bundle\ResourceBundle\Entity\Filter;
 use Sulu\Bundle\ResourceBundle\Entity\FilterTranslation;
-use Sulu\Bundle\ResourceBundle\Filter\DataTypes;
+use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpKernel\Client;
 

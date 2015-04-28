@@ -4,12 +4,12 @@
 
     <parameters>
         <!-- Filters -->
-        <parameter key="sulu_resource.filter_manager.class">Sulu\Bundle\ResourceBundle\Filter\FilterManager</parameter>
+        <parameter key="sulu_resource.filter_manager.class">Sulu\Bundle\ResourceBundle\Resource\FilterManager</parameter>
         <parameter key="sulu_resource.filter_repository.class">Sulu\Bundle\ResourceBundle\Entity\FilterRepository</parameter>
         <parameter key="sulu_resource.conditionGroup_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepository</parameter>
 
         <!-- Operators -->
-        <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Filter\OperatorManager</parameter>
+        <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Resource\OperatorManager</parameter>
         <parameter key="sulu_resource.operator_repository.class">Sulu\Bundle\ResourceBundle\Entity\OperatorRepository</parameter>
     </parameters>
 
