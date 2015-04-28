@@ -49,15 +49,6 @@ class SuluWebsiteExtension extends Extension
             $config['twig']['content']['cache_lifetime']
         );
 
-        $defaultErrorTemplates = array(
-            404 => 'ClientWebsiteBundle:views:error404.html.twig',
-            'default' => 'ClientWebsiteBundle:views:error.html.twig'
-        );
-        $container->setParameter(
-            'sulu_website.error_templates',
-            array_replace($defaultErrorTemplates, $config['error_templates'])
-        );
-
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 

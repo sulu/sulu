@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 
 /**
  * Custom exception controller
- * @package Sulu\Bundle\WebsiteBundle\Controller
  */
 class ExceptionController extends BaseExceptionController
 {
@@ -29,11 +28,6 @@ class ExceptionController extends BaseExceptionController
      * @var RequestAnalyzerInterface
      */
     private $requestAnalyzer;
-
-    /**
-     * @var string
-     */
-    private $errorTemplates;
 
     /**
      * @var ParameterResolverInterface
@@ -48,7 +42,6 @@ class ExceptionController extends BaseExceptionController
     public function __construct(
         \Twig_Environment $twig,
         $debug,
-        array $errorTemplates,
         ParameterResolverInterface $parameterResolver,
         ContentMapperInterface $contentMapper,
         RequestAnalyzerInterface $requestAnalyzer = null
@@ -56,7 +49,6 @@ class ExceptionController extends BaseExceptionController
         parent::__construct($twig, $debug);
 
         $this->requestAnalyzer = $requestAnalyzer;
-        $this->errorTemplates = $errorTemplates;
         $this->contentMapper = $contentMapper;
         $this->parameterResolver = $parameterResolver;
     }
@@ -64,24 +56,22 @@ class ExceptionController extends BaseExceptionController
     public function showAction(
         Request $request,
         FlattenException $exception,
-        DebugLoggerInterface $logger = null,
-        $_format = 'html'
+        DebugLoggerInterface $logger = null
     ) {
         // remove empty first line
         if (ob_get_length()) {
             ob_clean();
         }
 
-        if ($request->getRequestFormat() === 'html') {
-            $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-            $code = $exception->getStatusCode();
+        $code = $exception->getStatusCode();
+        $template = $this->requestAnalyzer->getWebspace()->getTheme()->getErrorTemplate($code);
 
-            // symfony exception template uses status_code and status_text
+        if ($request->getRequestFormat() === 'html' && $template !== null) {
+            $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+
             $parameter = array(
                 'statusCode' => $code,
-                'status_code' => $code,
                 'statusText' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
-                'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
                 'exception' => $exception,
                 'currentContent' => $currentContent
             );
@@ -89,11 +79,6 @@ class ExceptionController extends BaseExceptionController
                 $parameter,
                 $this->requestAnalyzer
             );
-
-            $template = $this->errorTemplates['default'];
-            if (array_key_exists($code, $this->errorTemplates)) {
-                $template = $this->errorTemplates[$code];
-            }
 
             return new Response(
                 $this->twig->render(
@@ -104,6 +89,6 @@ class ExceptionController extends BaseExceptionController
             );
         }
 
-        return parent::showAction($request, $exception, $logger, $request->getRequestFormat());
+        return parent::showAction($request, $exception, $logger);
     }
 }

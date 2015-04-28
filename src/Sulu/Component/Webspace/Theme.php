@@ -33,6 +33,15 @@ class Theme implements ArrayableInterface
     private $errorTemplates;
 
     /**
+     * Theme constructor.
+     */
+    public function __construct()
+    {
+        $this->excludedTemplates = array();
+        $this->errorTemplates = array();
+    }
+
+    /**
      * Sets the key of the theme
      * @param string $key The key of the theme
      */
