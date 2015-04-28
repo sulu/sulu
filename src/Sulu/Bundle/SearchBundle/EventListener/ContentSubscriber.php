@@ -20,7 +20,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
+use Sulu\Component\DocumentManager\Metadata\MetadataFactoryInterface;
 
 /**
  * Listen to sulu node save event and index the document
@@ -54,7 +54,7 @@ class ContentSubscriber implements EventSubscriberInterface
     private $instanceFactory;
 
     /**
-     * @var MetadataFactory
+     * @var MetadataFactoryInterface
      */
     private $metadataFactory;
 
@@ -63,7 +63,7 @@ class ContentSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         SearchManagerInterface $searchManager,
-        MetadataFactory $metadataFactory,
+        MetadataFactoryInterface $metadataFactory,
         ContentInstanceFactory $instanceFactory
     ) {
         $this->searchManager = $searchManager;
