@@ -53,7 +53,7 @@ interface FilterManagerInterface
     public function delete($id);
 
     /**
-     * Saves the given product
+     * Saves the given filter
      *
      * @param array $data
      * @param string $locale
