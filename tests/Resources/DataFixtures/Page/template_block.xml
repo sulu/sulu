@@ -15,7 +15,7 @@
             <tag name="sulu.node.title" priority="10"/>
         </property>
         <property name="url" type="resource_locator" mandatory="true">
-            <tag name="sulu.rlp.part" priority="1"/>
+            <tag name="sulu.rlp" priority="1"/>
         </property>
         <property name="article" type="text_editor" mandatory="true"/>
         <block name="block1" default-type="default" minOccurs="2" maxOccurs="10" mandatory="true">

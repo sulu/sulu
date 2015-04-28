@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Metadata\Loader;
 use Exception;
 use Sulu\Component\Content\Metadata\Loader\Exception\InvalidXmlException;
 use Sulu\Component\Content\Metadata\Loader\Exception\RequiredPropertyNameNotFoundException;
+use Sulu\Component\Content\Metadata\Loader\Exception\RequiredTagNotFoundException;
 use Sulu\Component\Content\Metadata\Loader\Exception\ReservedPropertyNameException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -33,6 +34,15 @@ class XmlLegacyLoader implements LoaderInterface
      */
     private $requiredPropertyNames = array(
         'title',
+    );
+
+    /**
+     * tags that are required in template
+     * TODO should be possible to inject from config
+     * @var array
+     */
+    private $requiredTagNames = array(
+        'sulu.rlp'
     );
 
     /**
@@ -98,6 +108,13 @@ class XmlLegacyLoader implements LoaderInterface
 
             if (!$requiredPropertyNameFound) {
                 throw new RequiredPropertyNameNotFoundException($result['key'], $requiredPropertyName);
+            }
+        }
+
+        $tagNames = array_keys($tags);
+        foreach ($this->requiredTagNames as $requiredTagName) {
+            if (!in_array($requiredTagName, $tagNames)) {
+                throw new RequiredTagNotFoundException($result['key'], $requiredTagName);
             }
         }
 

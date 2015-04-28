@@ -89,7 +89,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(
                         array(
-                            'name' => 'sulu.rlp.part',
+                            'name' => 'sulu.rlp',
                             'priority' => 1,
                             'attributes' => array(),
                         ),
@@ -214,6 +214,25 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                 ),
+                'url' => array(
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp',
+                            'priority' => 1,
+                            'attributes' => array(),
+                        ),
+                    ),
+                    'params' => array(),
+                    'meta' => array()
+                ),
             ),
         );
 
@@ -296,7 +315,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(
                         array(
-                            'name' => 'sulu.rlp.part',
+                            'name' => 'sulu.rlp',
                             'priority' => 1,
                             'attributes' => array(),
                         ),
@@ -577,7 +596,7 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     'multilingual' => true,
                     'tags' => array(
                         array(
-                            'name' => 'sulu.rlp.part',
+                            'name' => 'sulu.rlp',
                             'priority' => 1,
                             'attributes' => array(),
                         ),
@@ -816,8 +835,14 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                             'mandatory' => true,
                             'multilingual' => true,
                             'tags' => array(
+<<<<<<< HEAD
                                 '0' => array(
                                     'name' => 'sulu.rlp.part',
+=======
+                                '0' => array
+                                (
+                                    'name' => 'sulu.rlp',
+>>>>>>> added required tag name
                                     'priority' => 1,
                                     'attributes' => array(),
                                 ),
@@ -988,7 +1013,30 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ),
                     'meta' => array(),
                 ),
+<<<<<<< HEAD
             ),
+=======
+                'url' => array(
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp',
+                            'priority' => 1,
+                            'attributes' => array(),
+                        ),
+                    ),
+                    'params' => array(),
+                    'meta' => array()
+                ),
+            )
+>>>>>>> added required tag name
         );
 
         $result = $this->loadFixture('template_nesting_params.xml');
@@ -1028,7 +1076,30 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
                     ),
                     'meta' => array(),
                 ),
+<<<<<<< HEAD
             ),
+=======
+                'url' => array(
+                    'name' => 'url',
+                    'type' => 'resource_locator',
+                    'minOccurs' => null,
+                    'maxOccurs' => null,
+                    'colspan' => null,
+                    'cssClass' => null,
+                    'mandatory' => true,
+                    'multilingual' => true,
+                    'tags' => array(
+                        array(
+                            'name' => 'sulu.rlp',
+                            'priority' => 1,
+                            'attributes' => array(),
+                        ),
+                    ),
+                    'params' => array(),
+                    'meta' => array()
+                ),
+            )
+>>>>>>> added required tag name
         );
 
         $result = $this->loadFixture('template_meta_params.xml');
@@ -1044,6 +1115,19 @@ class XmlLegacyLoaderTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->loadFixture('template_missing_title.xml');
+    }
+
+    public function testWithoutRlpTag()
+    {
+        $this->setExpectedException(
+            '\Sulu\Component\Content\Template\Exception\RequiredTagNotFoundException',
+            'The tag with the name "sulu.rlp" is required, but was not found in the template "template"'
+        );
+
+        $templateReader = new TemplateReader();
+        $result = $templateReader->load(
+            __DIR__ . '/../../../../Resources/DataFixtures/Page/template_missing_rlp_tag.xml'
+        );
     }
 
     private function arrayRecursiveDiff($aArray1, $aArray2)

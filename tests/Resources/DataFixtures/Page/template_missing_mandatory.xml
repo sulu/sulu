@@ -10,7 +10,9 @@
 
     <properties>
         <property name="title" type="textLine" mandatory="true"/>
-        <property name="url" type="resourceLocator" mandatory="true"/>
+        <property name="url" type="resourceLocator" mandatory="true">
+            <tag name="sulu.rlp" />
+        </property>
         <property name="article" type="textArea" mandatory="false"/>
         <property name="pages" type="smartContentSelection" mandatory="false"/>
 
