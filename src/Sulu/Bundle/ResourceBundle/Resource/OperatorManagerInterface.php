@@ -10,9 +10,8 @@
 
 namespace Sulu\Bundle\ResourceBundle\Resource;
 
-
-interface OperatorManagerInterface {
-
+interface OperatorManagerInterface
+{
     /**
      * Returns all operators with a specific locale
      *
