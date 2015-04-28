@@ -20,7 +20,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\MetadataFactory;
+use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
 
 /**
  * Listen to sulu node save event and index the document
@@ -54,7 +54,7 @@ class ContentSubscriber implements EventSubscriberInterface
     private $instanceFactory;
 
     /**
-     * @var DocumentMetadataFactory
+     * @var MetadataFactory
      */
     private $metadataFactory;
 
