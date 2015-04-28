@@ -29,6 +29,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 class BasePageDocument implements
     NodeNameBehavior,
@@ -70,7 +71,7 @@ class BasePageDocument implements
     protected $locale;
     protected $children;
     protected $path;
-    protected $extensions = array();
+    protected $extensions;
     protected $webspaceName;
 
     public function __construct()
@@ -78,6 +79,7 @@ class BasePageDocument implements
         $this->workflowStage = WorkflowStage::TEST;
         $this->redirectType = RedirectType::NONE;
         $this->content = new PropertyContainer();
+        $this->extensions =  new ExtensionContainer();
         $this->children = new \ArrayIterator();
     }
 
