@@ -131,6 +131,7 @@ class FilterController extends RestController implements ClassResourceInterface
             $exception = new MissingArgumentException(self::$entityName, $exc->getFilter());
             $view = $this->view($exception->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
 
@@ -161,9 +162,9 @@ class FilterController extends RestController implements ClassResourceInterface
             $exception = new MissingArgumentException(self::$entityName, $exc->getFilter());
             $view = $this->view($exception->toArray(), 400);
         }
+
         return $this->handleView($view);
     }
-
 
     /**
      * Delete an product attribute with the given id.
@@ -180,6 +181,7 @@ class FilterController extends RestController implements ClassResourceInterface
             $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
             $view = $this->view($exception->toArray(), 404);
         }
+
         return $this->handleView($view);
     }
 
