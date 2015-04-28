@@ -1,0 +1,24 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="Sulu\Bundle\ResourceBundle\Entity\OperatorValue" table="re_operator_values">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="value" type="string" length="255" column="value" nullable="false"/>
+
+        <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation" mapped-by="operatorValue"
+                     field="translations">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <many-to-one target-entity="Sulu\Bundle\ResourceBundle\Entity\Operator" field="operator"
+                     inversed-by="values">
+            <join-column name="idOperators" referenced-column-name="id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+
+    </entity>
+</doctrine-mapping>

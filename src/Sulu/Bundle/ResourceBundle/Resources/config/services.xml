@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- Filters -->
+        <parameter key="sulu_resource.filter_manager.class">Sulu\Bundle\ResourceBundle\Resource\FilterManager</parameter>
+        <parameter key="sulu_resource.filter_repository.class">Sulu\Bundle\ResourceBundle\Entity\FilterRepository</parameter>
+        <parameter key="sulu_resource.conditionGroup_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepository</parameter>
+
+        <!-- Operators -->
+        <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Resource\OperatorManager</parameter>
+        <parameter key="sulu_resource.operator_repository.class">Sulu\Bundle\ResourceBundle\Entity\OperatorRepository</parameter>
+    </parameters>
+
+    <services>
+        <!-- Filters -->
+        <service id="sulu_resource.filter_repository" class="%sulu_resource.filter_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluResourceBundle:Filter</argument>
+        </service>
+        <service id="sulu_resource.conditionGroup_repository" class="%sulu_resource.conditionGroup_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluResourceBundle:ConditionGroup</argument>
+        </service>
+        <service id="sulu_resource.filter_manager" class="%sulu_resource.filter_manager.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="sulu_resource.filter_repository"/>
+            <argument type="service" id="sulu_security.user_repository" />
+            <argument type="service" id="sulu_resource.conditionGroup_repository"/>
+        </service>
+
+        <!-- Operators -->
+        <service id="sulu_resource.operator_repository" class="%sulu_resource.operator_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluResourceBundle:Operator</argument>
+        </service>
+        <service id="sulu_resource.operator_manager" class="%sulu_resource.operator_manager.class%">
+            <argument type="service" id="sulu_resource.operator_repository"/>
+        </service>
+    </services>
+
+</container>
