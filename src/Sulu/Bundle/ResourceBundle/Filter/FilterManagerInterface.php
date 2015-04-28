@@ -48,7 +48,6 @@ interface FilterManagerInterface
      * Removes a filter with the given id
      *
      * @param $id
-     * @return mixed
      */
     public function delete($id);
 

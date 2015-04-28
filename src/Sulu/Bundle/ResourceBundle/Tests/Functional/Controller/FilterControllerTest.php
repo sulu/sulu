@@ -52,16 +52,16 @@ class FilterControllerTest extends SuluTestCase
 
     protected function setUpFilter()
     {
-        $this->filter1 = $this->createFilter('filter1', true, 'Contact');
-        $this->filter2 = $this->createFilter('filter2', false, 'Product');
+        $this->filter1 = $this->createFilter('filter1', 'and', 'Contact');
+        $this->filter2 = $this->createFilter('filter2', 'or', 'Product');
 
         $this->em->flush();
     }
 
-    protected function createFilter($name, $andCombination, $entityName)
+    protected function createFilter($name, $conjunction, $entityName)
     {
         $filter = new Filter();
-        $filter->setAndCombination($andCombination);
+        $filter->setConjunction($conjunction);
         $filter->setEntityName($entityName);
         $filter->setChanged(new \DateTime());
         $filter->setCreated(new \DateTime());
@@ -137,7 +137,7 @@ class FilterControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($this->filter1->getId(), $response->id);
-        $this->assertEquals($this->filter1->getAndCombination(), $response->andCombination);
+        $this->assertEquals($this->filter1->getConjunction(), $response->conjunction);
         $this->assertEquals($this->filter1->getEntityName(), $response->entityName);
         $this->assertNotEmpty($response->conditionGroups);
 
@@ -213,7 +213,7 @@ class FilterControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals($filter['andCombination'], $response->andCombination);
+        $this->assertEquals($filter['conjunction'], $response->conjunction);
         $this->assertEquals($filter['entityName'], $response->entityName);
         $this->assertEquals($filter['name'], $response->name);
 
@@ -230,7 +230,7 @@ class FilterControllerTest extends SuluTestCase
     public function testInvalidPost()
     {
         $filter = [
-            'andCombination' => false,
+            'conjunction' => false,
             'entityName' => 'contact'
         ];
         $this->client->request('POST', '/api/filters', $filter);
@@ -247,18 +247,18 @@ class FilterControllerTest extends SuluTestCase
 
         $filter = [
             'name' => 'name',
-            'andCombination' => false
+            'conjunction' => false
         ];
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
-    public function createFilterAsArray($name, $andCombination, $entityName, $partial = false)
+    public function createFilterAsArray($name, $conjunction, $entityName, $partial = false)
     {
         $result = [
             'name' => $name,
-            'andCombination' => $andCombination,
+            'conjunction' => $conjunction,
             'entityName' => $entityName,
         ];
 
@@ -291,7 +291,7 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testPostWithoutConditions()
     {
-        $filter = $this->createFilterAsArray('newFilter', false, 'Media', true);
+        $filter = $this->createFilterAsArray('newFilter', 'and', 'Media', true);
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
 
@@ -299,7 +299,7 @@ class FilterControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertEquals($filter['andCombination'], $response->andCombination);
+        $this->assertEquals($filter['conjunction'], $response->conjunction);
         $this->assertEquals($filter['entityName'], $response->entityName);
         $this->assertEquals($filter['name'], $response->name);
     }
@@ -310,7 +310,7 @@ class FilterControllerTest extends SuluTestCase
     public function testPut()
     {
         $newName = 'The new name';
-        $newAndCombination = false;
+        $conjunction = false;
         $newEntityName = 'New Entity';
 
         // remove old condition group and add a new one
@@ -319,7 +319,7 @@ class FilterControllerTest extends SuluTestCase
             '/api/filters/'.$this->filter1->getId(),
             [
                 'name' => $newName,
-                'andCombination' => $newAndCombination,
+                'conjunction' => $conjunction,
                 'entityName' => $newEntityName,
                 'conditionGroups' => [
                     [
@@ -346,7 +346,7 @@ class FilterControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
-        $this->assertEquals($newAndCombination, $response->andCombination);
+        $this->assertEquals($conjunction, $response->conjunction);
         $this->assertEquals($newEntityName, $response->entityName);
         $this->assertEquals(1, count($response->conditionGroups));
 
@@ -399,7 +399,7 @@ class FilterControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
-        $this->assertEquals($newAndCombination, $response->andCombination);
+        $this->assertEquals($conjunction, $response->conjunction);
         $this->assertEquals($newEntityName, $response->entityName);
         $this->assertEquals(2, count($response->conditionGroups));
     }
@@ -410,7 +410,7 @@ class FilterControllerTest extends SuluTestCase
     public function testPutWithoutConditions()
     {
         $newName = 'The new name';
-        $newAndCombination = false;
+        $conjunction = false;
         $newEntityName = 'New Entity';
 
         $this->client->request(
@@ -418,7 +418,7 @@ class FilterControllerTest extends SuluTestCase
             '/api/filters/'.$this->filter1->getId(),
             [
                 'name' => $newName,
-                'andCombination' => $newAndCombination,
+                'conjunction' => $conjunction,
                 'entityName' => $newEntityName,
             ]
         );
@@ -426,7 +426,7 @@ class FilterControllerTest extends SuluTestCase
         $response = json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals($newName, $response->name);
-        $this->assertEquals($newAndCombination, $response->andCombination);
+        $this->assertEquals($conjunction, $response->conjunction);
         $this->assertEquals($newEntityName, $response->entityName);
     }
 

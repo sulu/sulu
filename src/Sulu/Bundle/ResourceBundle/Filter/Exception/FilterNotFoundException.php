@@ -30,7 +30,7 @@ class FilterNotFoundException extends FilterException
     {
         $this->entityName = 'SuluResourceBundle:Filter';
         $this->id = $id;
-        parent::__construct('The filter with the id "'.$this->id.'" was not found.', 0);
+        parent::__construct('The filter with the id "' . $this->id . '" was not found.', 0);
     }
 
     /**

@@ -25,7 +25,7 @@ class MissingConditionAttributeException extends FilterException
     public function __construct($attribute)
     {
         $this->attribute = $attribute;
-        parent::__construct('The attribute with the name "'.$this->attribute.'" is missing.', 0);
+        parent::__construct('The attribute with the name "' . $this->attribute . '" is missing.', 0);
     }
 
     /**

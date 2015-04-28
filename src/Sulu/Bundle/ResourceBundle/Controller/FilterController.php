@@ -49,10 +49,7 @@ class FilterController extends RestController implements ClassResourceInterface
         $view = $this->responseGetById(
             $id,
             function ($id) use ($locale) {
-                /** @var Filter $filter */
-                $filter = $this->getManager()->findByIdAndLocale($id, $locale);
-
-                return $filter;
+                return $this->getManager()->findByIdAndLocale($id, $locale);
             }
         );
 
@@ -60,7 +57,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns a list of attributes
+     * Returns a list of filters
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response

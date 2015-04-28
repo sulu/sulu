@@ -28,7 +28,7 @@ class MissingFilterException extends FilterException
     public function __construct($filter)
     {
         $this->filter = $filter;
-        parent::__construct('The filter with the name "'.$this->filter.'" is missing.', 0);
+        parent::__construct('The filter with the name "' . $this->filter . '" is missing.', 0);
     }
 
     /**

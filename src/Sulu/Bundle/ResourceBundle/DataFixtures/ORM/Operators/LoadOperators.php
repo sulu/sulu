@@ -19,9 +19,12 @@ use Sulu\Bundle\ResourceBundle\Entity\OperatorTranslation;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorValue;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation;
 
+/**
+ * Class LoadOperators
+ * @package Sulu\Bundle\ResourceBundle\DataFixtures\ORM\Operators
+ */
 class LoadOperators implements FixtureInterface, OrderedFixtureInterface
 {
-
     /**
      * {@inheritDoc}
      */
@@ -92,7 +95,6 @@ class LoadOperators implements FixtureInterface, OrderedFixtureInterface
     {
         /** @var $node DOMNode */
         foreach ($values as $node) {
-
             $value = new OperatorValue();
             $value->setType($node->getAttribute('type'));
 
