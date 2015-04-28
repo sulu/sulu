@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ResourceBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\ResourceBundle\Filter\OperatorManagerInterface;
+use Sulu\Bundle\ResourceBundle\Resource\OperatorManagerInterface;
 use Sulu\Component\Rest\RestController;
 use Hateoas\Representation\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;

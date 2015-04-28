@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ResourceBundle\Filter;
+namespace Sulu\Bundle\ResourceBundle\Resource;
 
 use Sulu\Bundle\ResourceBundle\Api\Operator;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorRepositoryInterface;
