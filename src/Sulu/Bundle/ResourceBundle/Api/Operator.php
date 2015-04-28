@@ -85,7 +85,6 @@ class Operator extends ApiWrapper
      * Set operator
      *
      * @param string $operator
-     * @return Operator
      */
     public function setOperator($operator)
     {
@@ -108,7 +107,6 @@ class Operator extends ApiWrapper
      * Set type
      *
      * @param string $type
-     * @return Operator
      */
     public function setType($type)
     {
@@ -118,7 +116,7 @@ class Operator extends ApiWrapper
     /**
      * Get type
      *
-     * @return string
+     * @return integer
      * @VirtualProperty
      * @SerializedName("type")
      */
@@ -130,8 +128,7 @@ class Operator extends ApiWrapper
     /**
      * Set inputType
      *
-     * @param string $inputType
-     * @return Operator
+     * @param integer $inputType
      */
     public function setInputType($inputType)
     {
@@ -166,7 +163,6 @@ class Operator extends ApiWrapper
      * Add translations
      *
      * @param OperatorTranslation $translations
-     * @return Operator
      */
     public function addTranslation(OperatorTranslation $translations)
     {
@@ -197,7 +193,6 @@ class Operator extends ApiWrapper
      * Add values
      *
      * @param OperatorValue $value
-     * @return Operator
      */
     public function addValue(OperatorValue $value)
     {

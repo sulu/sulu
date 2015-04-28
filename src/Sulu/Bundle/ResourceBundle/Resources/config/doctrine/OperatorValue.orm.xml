@@ -6,7 +6,7 @@
             <generator strategy="AUTO"/>
         </id>
 
-        <field name="type" type="integer" column="type" nullable="false"/>
+        <field name="value" type="string" length="255" column="value" nullable="false"/>
 
         <one-to-many target-entity="Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation" mapped-by="operatorValue"
                      field="translations">
