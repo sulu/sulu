@@ -54,7 +54,6 @@ class OperatorControllerTest extends SuluTestCase
     {
         $this->op1 = $this->createSimpleOperator(DataTypes::NUMBER_TYPE, 'input', '>', 'groesser');
         $this->op2 = $this->createSimpleOperator(DataTypes::NUMBER_TYPE, 'input', '<', 'kleiner');
-
         $this->op3 = $this->createOperator(DataTypes::DATETIME_TYPE, 'datepicker', '<', 'kleiner');
 
         $this->em->flush();
@@ -123,19 +122,22 @@ class OperatorControllerTest extends SuluTestCase
         $translation->setName($name);
         $translation->setOperator($operator);
 
+        $this->em->persist($operator);
+        $this->em->persist($translation);
+
         return $operator;
     }
 
     public function testCget()
     {
-//        $this->client->request(
-//            'GET',
-//            '/api/operators'
-//        );
-//        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-//        $response = json_decode($this->client->getResponse()->getContent());
-//
-//        $this->assertNotEmpty($response);
-//        $this->assertEquals(2, $response->total);
+        $this->client->request(
+            'GET',
+            '/api/operators'
+        );
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertNotEmpty($response);
+        $this->assertEquals(3, count($response->_embedded->items));
     }
 }
