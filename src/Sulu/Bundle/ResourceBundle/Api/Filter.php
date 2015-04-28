@@ -175,8 +175,8 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the name of the product
-     * @param string $name The name of the product
+     * Sets the name of the filter
+     * @param string $name The name of the filter
      */
     public function setName($name)
     {
@@ -225,7 +225,7 @@ class Filter extends ApiWrapper
     }
 
     /**
-     * Sets the creator of the product
+     * Sets the creator of the filter
      *
      * @param UserInterface $user The creator of the filter
      */
