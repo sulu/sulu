@@ -224,6 +224,36 @@ class FilterControllerTest extends SuluTestCase
         );
     }
 
+    /**
+     * Test POST to create a new filter with invalid data
+     */
+    public function testInvalidPost()
+    {
+        $filter = [
+            'andCombination' => false,
+            'entityName' => 'contact'
+        ];
+        $this->client->request('POST', '/api/filters', $filter);
+
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $filter = [
+            'name' => 'name',
+            'entityName' => 'contact'
+        ];
+        $this->client->request('POST', '/api/filters', $filter);
+
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+
+        $filter = [
+            'name' => 'name',
+            'andCombination' => false
+        ];
+        $this->client->request('POST', '/api/filters', $filter);
+
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+    }
+
     public function createFilterAsArray($name, $andCombination, $entityName, $partial = false)
     {
         $result = [

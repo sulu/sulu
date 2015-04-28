@@ -177,7 +177,7 @@ class FilterManager implements FilterManagerInterface
             }
             $filter = new Filter($filter, $locale);
         } else {
-            $this->checkData($data, true); // TODO
+            $this->checkData($data, true);
             $filter = new Filter(new FilterEntity(), $locale);
             $filter->setCreated(new \DateTime());
             $filter->setCreator($user);
