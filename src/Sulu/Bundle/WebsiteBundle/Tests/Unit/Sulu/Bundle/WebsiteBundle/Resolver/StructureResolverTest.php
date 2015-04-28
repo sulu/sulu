@@ -6,6 +6,7 @@ use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 
 class StructureResolverTest extends \PHPUnit_Framework_TestCase
 {
@@ -60,7 +61,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
 
         $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
         $structure->getKey()->willReturn('test');
-        $structure->getExt()->willReturn(array('excerpt' => array('test1' => 'test1')));
+        $structure->getExt()->willReturn(new ExtensionContainer(array('excerpt' => array('test1' => 'test1'))));
         $structure->getUuid()->willReturn('some-uuid');
         $structure->getProperties(true)->willReturn(array($property->reveal()));
         $structure->getCreator()->willReturn(1);
@@ -73,7 +74,7 @@ class StructureResolverTest extends \PHPUnit_Framework_TestCase
 
         $expected = array(
             'extension' => array(
-                'excerpt' => array('test1' => 'test1')
+                'excerpt' => array('test1' => 'test1'),
             ),
             'uuid' => 'some-uuid',
             'view' => array(
