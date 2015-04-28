@@ -171,7 +171,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Delete an product attribute with the given id.
+     * Delete an filter with the given id.
      *
      * @param integer $id the attribute id
      * @return \Symfony\Component\HttpFoundation\Response
@@ -203,7 +203,7 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Returns the repository object for AdvancedProduct
+     * Returns the manager for filters
      *
      * @return FilterManagerInterface
      */
