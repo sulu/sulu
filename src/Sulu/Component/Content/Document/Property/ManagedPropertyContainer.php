@@ -17,6 +17,7 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Property\PropertyValue;
+use Sulu\Component\Content\Compat\Structure\StructureBridge;
 
 /**
  * Lazy loading container for content properties.
@@ -76,6 +77,9 @@ class ManagedPropertyContainer extends PropertyContainer
         } else {
             $property = $this->legacyPropertyFactory->createProperty($structureProperty);
         }
+
+        $bridge = new StructureBridge($this->structure, $this->inspector, $this->legacyPropertyFactory, $this->document);
+        $property->setStructure($bridge);
 
         $contentType = $this->contentTypeManager->get($contentTypeName);
         $contentType->read(

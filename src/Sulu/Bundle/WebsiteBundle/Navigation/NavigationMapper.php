@@ -147,8 +147,7 @@ class NavigationMapper implements NavigationMapperInterface
         }
         $result[] = $this->contentMapper->load($uuid, $webspace, $language);
 
-
-        return $this->generateNavigation($result, $webspace, $language, false, null, true);
+        return $this->generateNavigation($result, $webspace, $language, false, null, true, false);
     }
 
     /**
@@ -160,7 +159,8 @@ class NavigationMapper implements NavigationMapperInterface
         $language,
         $flat = false,
         $context = null,
-        $breakOnNotInNavigation = false
+        $breakOnNotInNavigation = false,
+        $recursive = true
     ) {
         $result = array();
 
@@ -169,7 +169,7 @@ class NavigationMapper implements NavigationMapperInterface
             if ($this->inNavigation($content, $context)) {
                 $url = $content->getResourceLocator();
                 $title = $content->getNodeName();
-                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : array();
 
                 if (false === $flat) {
                     $result[] = new NavigationItem(
@@ -192,7 +192,7 @@ class NavigationMapper implements NavigationMapperInterface
                     $result = array_merge($result, $children);
                 }
             } elseif (true === $flat) {
-                $children = $this->generateChildNavigation($content, $webspace, $language, $flat, $context);
+                $children = $recursive ? $this->generateChildNavigation($content, $webspace, $language, $flat, $context) : array();
                 $result = array_merge($result, $children);
             } elseif ($breakOnNotInNavigation) {
                 break;

@@ -226,10 +226,6 @@ class StructureBridge implements StructureInterface
      */
     public function getProperty($name)
     {
-        if (isset($this->loadedProperties[$name])) {
-            return $this->loadedProperties[$name];
-        }
-
         $property = $this->structure->getChild($name);
 
         return $this->createLegacyPropertyFromItem($property);
@@ -249,14 +245,14 @@ class StructureBridge implements StructureInterface
     public function getProperties($flatten = false)
     {
         if ($flatten) {
-            $items = $this->structure->getProperties();
+            $items = $this->structure->getModelProperties();
         } else {
             $items = $this->structure->getChildren();
         }
 
         $propertyBridges = array();
-        foreach ($items as $propertyName => $property) {
-            $propertyBridges[$propertyName] = $this->getProperty($propertyName);
+        foreach ($items as $property) {
+            $propertyBridges[$property->getName()] = $this->createLegacyPropertyFromItem($property);
         }
 
         return $propertyBridges;
@@ -293,7 +289,7 @@ class StructureBridge implements StructureInterface
     {
         $children = array();
 
-        foreach ($this->inspector->getChildren($this->getDocument()) as $child) {
+        foreach ($this->document->getChildren() as $child) {
             $children[] = $this->documentToStructure($child);
         }
 
@@ -593,7 +589,7 @@ class StructureBridge implements StructureInterface
      */
     public function __get($name)
     {
-        return $this->getProperty($name)->getValue();
+        return $this->eetProperty($name)->getValue();
     }
 
     public function getEnabledShadowLanguages()
@@ -709,15 +705,18 @@ class StructureBridge implements StructureInterface
 
     private function createLegacyPropertyFromItem($item)
     {
-        $propertyBridge = $this->propertyFactory->createProperty($item);
         $name = $item->getName();
+        if (isset($this->loadedProperties[$name])) {
+            return $this->loadedProperties[$name];
+        }
+
+        $propertyBridge = $this->propertyFactory->createProperty($item, $this);
 
         if ($this->document) {
             $property = $this->document->getContent()->getProperty($name);
             $propertyBridge->setPropertyValue($property);
         }
 
-        $propertyBridge->setStructure($this);
         $this->loadedProperties[$name] = $propertyBridge;
 
         return $propertyBridge;
