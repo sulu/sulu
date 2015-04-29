@@ -206,6 +206,8 @@ define([
             this.collections = new Collections();
             this.medias = new Medias();
 
+            this.instanceName = 'collection';
+
             this.getLocale().then(function(locale) {
                 this.locale = locale;
                 this.bindCustomEvents();
@@ -214,10 +216,12 @@ define([
                     this.renderList();
                 } else if (this.options.display === 'files') {
                     this.renderCollectionEdit({
+                        instanceName: this.instanceName,
                         activeTab: 'files'
                     });
                 } else if (this.options.display === 'settings') {
                     this.renderCollectionEdit({
+                        instanceName: this.instanceName,
                         activeTab: 'settings'
                     });
                 } else {
@@ -230,6 +234,10 @@ define([
                         this.editMedia(this.options.mediaId);
 
                         this.sandbox.emit('husky.tabs.header.option.unset', 'mediaId');
+                    }.bind(this));
+
+                    this.sandbox.once('husky.dropzone.'+this.instanceName+'.initialized', function(){
+                        this.sandbox.emit('husky.dropzone.' + this.instanceName + '.lock-popup');
                     }.bind(this));
                 }
             }.bind(this));
