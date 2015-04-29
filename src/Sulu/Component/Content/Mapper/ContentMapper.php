@@ -632,15 +632,14 @@ class ContentMapper implements ContentMapperInterface
         $contentDocument = $this->getContentDocument($webspaceKey, $locale);
         $contentDepth = $this->inspector->getDepth($contentDocument);
         $document = $this->inspector->getParent($document);
+        $documentDepth = $this->inspector->getDepth($document);
 
-        do {
-            if ($document instanceof ContentBehavior) {
-                $documents[] = $document;
-            }
+        while ($document instanceof ContentBehavior && $documentDepth >= $contentDepth){
+            $documents[] = $document;
 
             $document = $this->inspector->getParent($document);
             $documentDepth = $this->inspector->getDepth($document);
-        } while ($document instanceof ContentBehavior && $documentDepth >= $contentDepth);
+        }
 
         $items = array();
         foreach ($documents as $document) {

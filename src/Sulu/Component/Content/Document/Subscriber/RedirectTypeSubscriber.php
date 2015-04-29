@@ -66,20 +66,24 @@ class RedirectTypeSubscriber extends AbstractMappingSubscriber
         );
         $document->setRedirectType($redirectType);
 
-        $internalNode = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
-            null
-        );
+        if ($redirectType === RedirectType::INTERNAL) {
+            $internalNode = $node->getPropertyValueWithDefault(
+                $this->encoder->localizedSystemName(self::INTERNAL_FIELD, $event->getLocale()),
+                null
+            );
 
-        if ($internalNode) {
-            $document->setRedirectTarget($this->proxyFactory->createProxyForNode($document, $internalNode));
+            if ($internalNode) {
+                $document->setRedirectTarget($this->proxyFactory->createProxyForNode($document, $internalNode));
+            }
         }
 
-        $externalUrl = $node->getPropertyValueWithDefault(
-            $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
-            null
-        );
-        $document->setRedirectExternal($externalUrl);
+        if ($redirectType === RedirectType::EXTERNAL) {
+            $externalUrl = $node->getPropertyValueWithDefault(
+                $this->encoder->localizedSystemName(self::EXTERNAL_FIELD, $event->getLocale()),
+                null
+            );
+            $document->setRedirectExternal($externalUrl);
+        }
     }
 
     /**

@@ -15,6 +15,7 @@ use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Compat\PropertyTag;
+use Sulu\Component\Content\Compat\StructureInterface;
 
 /**
  * Creates legacy properties from "new" properties.
@@ -40,10 +41,10 @@ class LegacyPropertyFactory
      * @param string $locale
      * @return PropertyInterface
      */
-    public function createTranslatedProperty($property, $locale)
+    public function createTranslatedProperty($property, $locale, StructureInterface $structure = null)
     {
         $property = new TranslatedProperty(
-            $this->createProperty($property),
+            $this->createProperty($property, $structure),
             $locale,
             $this->namespaceRegistry->getPrefix('content_localized')
         );
@@ -57,14 +58,14 @@ class LegacyPropertyFactory
      * @param Item $item
      * @return PropertyInterface $property
      */
-    public function createProperty(Item $property)
+    public function createProperty(Item $property, StructureInterface $structure = null)
     {
         if ($property instanceof Section) {
-            return $this->createSectionProperty($property);
+            return $this->createSectionProperty($property, $structure);
         }
 
         if ($property instanceof Block) {
-            return $this->createBlockProperty($property);
+            return $this->createBlockProperty($property, $structure);
         }
 
         if (null === $property->getType()) {
@@ -95,10 +96,12 @@ class LegacyPropertyFactory
             $propertyBridge->addTag(new PropertyTag($tag['name'], $tag['priority'], $tag['attributes']));
         }
 
+        $propertyBridge->setStructure($structure);
+
         return $propertyBridge;
     }
 
-    private function createSectionProperty(Section $property)
+    private function createSectionProperty(Section $property, StructureInterface $structure = null)
     {
         $sectionProperty = new SectionProperty(
             $property->getName(),
@@ -110,13 +113,13 @@ class LegacyPropertyFactory
         );
 
         foreach ($property->getChildren() as $child) {
-            $sectionProperty->addChild($this->createProperty($child));
+            $sectionProperty->addChild($this->createProperty($child, $structure));
         }
 
         return $sectionProperty;
     }
 
-    private function createBlockProperty(Block $property)
+    private function createBlockProperty(Block $property, StructureInterface $structure = null)
     {
         $blockProperty = new BlockProperty(
             $property->getName(),
@@ -133,6 +136,7 @@ class LegacyPropertyFactory
             array(),
             $property->getColspan()
         );
+        $blockProperty->setStructure($structure);
 
         foreach ($property->getComponents() as $component) {
             $blockPropertyType = new BlockPropertyType(
@@ -144,7 +148,7 @@ class LegacyPropertyFactory
             );
 
             foreach ($component->getChildren() as $property) {
-                $blockPropertyType->addChild($this->createProperty($property));
+                $blockPropertyType->addChild($this->createProperty($property, $structure));
             }
 
             $blockProperty->addType($blockPropertyType);
