@@ -2,7 +2,7 @@
 
 namespace Sulu\Bundle\ContentBundle;
 
-use DTL\PhpcrMigrations\VersionInterface;
+use PHPCR\Migrations\VersionInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
