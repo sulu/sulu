@@ -102,8 +102,7 @@ abstract class SuluTestCase extends BaseTestCase
                 'PHP_AUTH_USER' => 'test',
                 'PHP_AUTH_PW' => 'test',
             )
-        );
-    }
+        ); }
 
     /**
      * Create client for tests on the "website" context

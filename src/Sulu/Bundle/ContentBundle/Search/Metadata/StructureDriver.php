@@ -49,11 +49,11 @@ class StructureDriver implements AdvancedDriverInterface
     private $mapping;
 
     /**
-     * @param Factory                   $factory
-     * @param EventDispatcherInterface  $eventDispatcher
+     * @param Factory $factory
+     * @param EventDispatcherInterface $eventDispatcher
      * @param StructureManagerInterface $structureManager
-     * @param string                    $pageIndexName
-     * @param string                    $snippetIndexName
+     * @param string $pageIndexName
+     * @param string $snippetIndexName
      */
     public function __construct(
         Factory $factory,
@@ -69,7 +69,7 @@ class StructureDriver implements AdvancedDriverInterface
 
     /**
      * loads metadata for a given class if its derived from StructureInterface
-     * @param  \ReflectionClass            $class
+     * @param \ReflectionClass $class
      * @throws \InvalidArgumentException
      * @return IndexMetadataInterface|null
      */
@@ -95,8 +95,8 @@ class StructureDriver implements AdvancedDriverInterface
         $indexName = 'content';
         $categoryName = 'content';
 
-        foreach ($this->mapping as $classFqn => $mapping) {
-            if (!$classMetadata->reflection->isSubclassOf($classFqn)) {
+        foreach ($this->mapping as $className => $mapping) {
+            if (!$classMetadata->reflection->isSubclassOf($className)) {
                 continue;
             }
 
@@ -158,6 +158,24 @@ class StructureDriver implements AdvancedDriverInterface
         return $classMetadata;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getAllClassNames()
+    {
+        $structures = array_merge(
+            $this->structureManager->getStructures(Structure::TYPE_PAGE),
+            $this->structureManager->getStructures(Structure::TYPE_SNIPPET)
+        );
+        $classes = array();
+
+        foreach ($structures as $structure) {
+            $classes[] = get_class($structure);
+        }
+
+        return $classes;
+    }
+
     private function mapProperty(PropertyInterface $property, $metadata)
     {
         if ($property->hasTag('sulu.search.field')) {
@@ -202,23 +220,5 @@ class StructureDriver implements AdvancedDriverInterface
                 );
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getAllClassNames()
-    {
-        $structures = array_merge(
-            $this->structureManager->getStructures(Structure::TYPE_PAGE),
-            $this->structureManager->getStructures(Structure::TYPE_SNIPPET)
-        );
-        $classes = array();
-
-        foreach ($structures as $structure) {
-            $classes[] = get_class($structure);
-        }
-
-        return $classes;
     }
 }

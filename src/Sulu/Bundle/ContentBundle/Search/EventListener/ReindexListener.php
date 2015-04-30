@@ -96,7 +96,7 @@ class ReindexListener
         $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"';
         $queryManager = $session->getWorkspace()->getQueryManager();
         $query = $queryManager->createQuery($sql2, 'JCR-SQL2');
-        $res = $query->execute();
+        $result = $query->execute();
 
         $count = array();
 
