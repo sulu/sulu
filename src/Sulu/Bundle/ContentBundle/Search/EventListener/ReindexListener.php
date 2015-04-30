@@ -20,6 +20,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Massive\Bundle\SearchBundle\Search\Event\IndexRebuildEvent;
 use Sulu\Component\Content\StructureManagerInterface;
 use Sulu\Component\Content\Structure;
+use Symfony\Component\Console\Helper\ProgressHelper;
 
 /**
  * Listen to for new hits. If document instance of structure
@@ -92,6 +93,8 @@ class ReindexListener
         $filter = $event->getFilter();
         $session = $this->sessionManager->getSession();
 
+        $output->writeln('<info>Rebuilding content index</info>');
+
         // TODO: We cannot select all contents via. the parent type, see: https://github.com/jackalope/jackalope-doctrine-dbal/issues/217
         $sql2 = 'SELECT * FROM [nt:unstructured] AS a WHERE [jcr:mixinTypes] = "sulu:page" or [jcr:mixinTypes] = "sulu:snippet"';
         $queryManager = $session->getWorkspace()->getQueryManager();
@@ -104,28 +107,33 @@ class ReindexListener
             $this->purgeContentIndexes($output);
         }
 
+        $rows = $res->getRows();
+
+        $progress = new ProgressHelper();
+        $progress->start($output, count($rows));
+
         /** @var Row $row */
-        foreach ($res->getRows() as $row) {
+        foreach ($rows as $row) {
             $node = $row->getNode('a');
 
             $locales = $this->nodeHelper->getLanguagesForNode($node);
 
             foreach ($locales as $locale) {
-                $structure = $this->contentMapper->loadByNode($node, $locale, null, false, true, false);
-                $structureClass = get_class($structure);
-
-                if (!isset($count[$structureClass])) {
-                    $count[$structureClass] = array(
-                        'indexed' => 0,
-                        'deindexed' => 0,
-                    );
-                }
-
-                if ($filter && !preg_match('{' . $filter . '}', get_class($structure))) {
-                    continue;
-                }
-
                 try {
+                    $structure = $this->contentMapper->loadByNode($node, $locale, null, false, true, false);
+                    $structureClass = get_class($structure);
+
+                    if (!isset($count[$structureClass])) {
+                        $count[$structureClass] = array(
+                            'indexed' => 0,
+                            'deindexed' => 0,
+                        );
+                    }
+
+                    if ($filter && !preg_match('{' . $filter . '}', get_class($structure))) {
+                        continue;
+                    }
+
                     if ($structure->getNodeState() === Structure::STATE_PUBLISHED) {
                         $this->searchManager->index($structure, $locale);
                         $count[$structureClass]['indexed']++;
@@ -140,7 +148,11 @@ class ReindexListener
                     );
                 }
             }
+
+            $progress->advance();
         }
+
+        $output->writeln('');
 
         foreach ($count as $className => $stats) {
             if ($stats['indexed'] == 0 && $stats['deindexed'] == 0) {
