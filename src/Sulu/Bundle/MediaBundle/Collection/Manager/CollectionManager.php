@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -26,7 +27,6 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 
 /**
  * Default implementation of collection manager
@@ -105,7 +105,12 @@ class CollectionManager implements CollectionManagerInterface
             throw new CollectionNotFoundException($id);
         }
         $filter['locale'] = $locale;
-        $collectionChildren = $this->collectionRepository->findCollectionSet($depth, $filter, $collectionEntity, $sortBy);
+        $collectionChildren = $this->collectionRepository->findCollectionSet(
+            $depth,
+            $filter,
+            $collectionEntity,
+            $sortBy
+        );
 
         $breadcrumbEntities = null;
         if ($breadcrumb) {
