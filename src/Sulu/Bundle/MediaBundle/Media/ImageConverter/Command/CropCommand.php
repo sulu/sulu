@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 
 class CropCommand implements CommandInterface
@@ -18,7 +19,7 @@ class CropCommand implements CommandInterface
     /**
      * {@inheritdoc}
      */
-    public function execute(&$image, $parameters)
+    public function execute(ImageInterface &$image, $parameters)
     {
         $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
         $x = isset($parameters['x']) ? intval($parameters['x']) * $retina : 0;

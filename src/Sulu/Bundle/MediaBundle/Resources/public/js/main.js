@@ -25,9 +25,9 @@ define({
 
         app.components.addSource('sulumedia', '/bundles/sulumedia/js/components');
 
-        sandbox.urlManager.setUrl('media', 'media/collections/edit:<%= collectionId %>/files/edit:<%= id %>', function(data) {
+        sandbox.urlManager.setUrl('media', 'media/collections/edit:<%= collectionId %>/files/edit:<%= mediaId %>', function(data) {
             return {
-                id: data.id,
+                mediaId: data.properties.media_id,
                 collectionId: data.properties.collection_id
             };
         });

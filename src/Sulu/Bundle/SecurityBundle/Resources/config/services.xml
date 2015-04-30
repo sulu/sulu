@@ -14,7 +14,7 @@
             <parameter key="security">1</parameter>
         </parameter>
 
-        <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityAdmin</parameter>
+        <parameter key="sulu_security.admin.class">Sulu\Bundle\SecurityBundle\Admin\SecurityAdmin</parameter>
         <parameter key="sulu_security.security_checker.class">Sulu\Component\Security\Authorization\SecurityChecker</parameter>
         <parameter key="sulu_security.event_listener.security.class">Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener</parameter>
         <parameter key="sulu_security.authentication_entry_point.class">Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint</parameter>
@@ -22,9 +22,8 @@
         <parameter key="sulu_security.mask_converter.class">Sulu\Component\Security\Authorization\MaskConverter</parameter>
         <parameter key="sulu_security.salt_generator.class">Sulu\Component\Security\Authentication\SaltGenerator</parameter>
         <parameter key="sulu_security.token_generator.class">Sulu\Bundle\SecurityBundle\Util\TokenGenerator</parameter>
-        <parameter key="sulu_security.contacts_content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityContactsContentNavigation</parameter>
-        <parameter key="sulu_security.nodes_content_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityNodesContentNavigation</parameter>
-        <parameter key="sulu_security.admin.roles_navigation.class">Sulu\Bundle\SecurityBundle\Admin\SuluSecurityRolesContentNavigation</parameter>
+        <parameter key="sulu_security.contacts_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\ContactsContentNavigationProvider</parameter>
+        <parameter key="sulu_security.roles_content_navigation_provider.class">Sulu\Bundle\SecurityBundle\Admin\RolesContentNavigationProvider</parameter>
         <parameter key="sulu_security.permission_map.class">Sulu\Component\Security\Authorization\AccessControl\PermissionMap</parameter>
         <parameter key="sulu_security.security_context_voter.class">Sulu\Component\Security\Authorization\SecurityContextVoter</parameter>
         <parameter key="sulu_security.access_control_manager.class">Sulu\Component\Security\Authorization\AccessControl\SymfonyAccessControlManager</parameter>
@@ -76,17 +75,14 @@
         <service id="sulu_security.token_generator" class="%sulu_security.token_generator.class%">
         </service>
 
-        <service id="sulu_security.admin.roles_navigation" class="%sulu_security.admin.roles_navigation.class%">
-        </service>
-
-        <service id="sulu_security.contacts_content_navigation" class="%sulu_security.contacts_content_navigation.class%">
-            <argument type="service" id="sulu_security.security_checker"/>
-            <tag name="sulu.contact.admin.content_navigation"/>
+        <service id="sulu_security.roles_content_navigation_provider" class="%sulu_security.roles_content_navigation_provider.class%">
+            <tag name="sulu_admin.content_navigation" alias="roles"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_security.nodes_content_navigation" class="%sulu_security.nodes_content_navigation.class%">
-            <tag name="sulu_content.admin.content_navigation"/>
+        <service id="sulu_security.contacts_content_navigation_provider" class="%sulu_security.contacts_content_navigation_provider.class%">
+            <argument type="service" id="sulu_security.security_checker"/>
+            <tag name="sulu_admin.content_navigation" alias="contact"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

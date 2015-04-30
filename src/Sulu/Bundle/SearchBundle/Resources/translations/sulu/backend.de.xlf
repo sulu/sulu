@@ -10,6 +10,14 @@
                 <source>search-overlay.placeholder.all</source>
                 <target>Alles durchsuchen...</target>
             </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede200b7f5656d39e" resname="search-overlay.asterix-info-text">
+                <source>search-overlay.asterix-info-text</source>
+                <target>Ein (*) kann als Platzhalter für Wortteile verwendet werden.</target>
+            </trans-unit>
+            <trans-unit id="e4b1428ja8a085ede21265f5656d39e" resname="search-overlay.no-results-text">
+                <source>search-overlay.no-results-text</source>
+                <target>Für diesen Suchbegriff konnten keine Dokumente gefunden werden.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

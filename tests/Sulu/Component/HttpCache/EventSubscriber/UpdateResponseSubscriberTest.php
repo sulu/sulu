@@ -11,18 +11,28 @@
 namespace Sulu\Component\HttpCache\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
+use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Sulu\Component\HttpCache\EventSubscriber\KernelSubscriber;
 use Prophecy\Argument;
 use Sulu\Component\HttpCache\HandlerInterface;
 use Sulu\Component\Content\StructureInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Sulu\Component\HttpCache\EventSubscriber\UpdateResponseSubscriber;
 
 class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var KernelSubscriber
+     * @var Request
+     */
+    private $request;
+
+    /**
+     * @var Response
+     */
+    private $response;
+
+    /**
+     * @var UpdateResponseSubscriber
      */
     private $subscriber;
 
@@ -37,11 +47,6 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
     private $structure;
 
     /**
-     * @var GetResponseEvent
-     */
-    private $getResponseEvent;
-
-    /**
      * @var FilterResponseEvent
      */
     private $filterResponseEvent;
@@ -52,7 +57,6 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $this->getResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $this->filterResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
-        $this->postResponseEvent = $this->prophesize('Symfony\Component\HttpKernel\Event\PostResponseEvent');
         $this->structure = $this->prophesize('Sulu\Component\Content\StructureInterface');
         $this->handler = $this->prophesize('Sulu\Component\HttpCache\HandlerUpdateResponseInterface')
             ->willImplement('Sulu\Component\HttpCache\HandlerInvalidateStructureInterface');
@@ -63,7 +67,6 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber = new UpdateResponseSubscriber(
             $this->handler->reveal()
         );
-        UpdateResponseSubscriber::getSubscribedEvents();
     }
 
     public function provideLifecycle()
@@ -104,8 +107,6 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
      */
     public function testLifecycle($options, $shouldInvalidate)
     {
-        $this->getResponseEvent->isMasterRequest()->willReturn($options['is_master_request']);
-
         if ($options['has_structure']) {
             $this->request->attributes->set('structure', $this->structure->reveal());
         }
@@ -114,9 +115,9 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
             $this->request->query->set('preview', true);
         }
 
-        $this->getResponseEvent->getRequest()->willReturn($this->request);
         $this->filterResponseEvent->getResponse()->willReturn($this->response);
         $this->filterResponseEvent->getRequest()->willReturn($this->request);
+        $this->filterResponseEvent->isMasterRequest()->willReturn($options['is_master_request']);
 
         $invalidateProphecy = $this->handler->updateResponse($this->response, Argument::any());
 
@@ -126,7 +127,6 @@ class UpdateResponseSubscriberTest extends \PHPUnit_Framework_TestCase
             $invalidateProphecy->shouldNotBeCalled();
         }
 
-        $this->subscriber->onRequest($this->getResponseEvent->reveal());
         $this->subscriber->onResponse($this->filterResponseEvent->reveal());
     }
 }

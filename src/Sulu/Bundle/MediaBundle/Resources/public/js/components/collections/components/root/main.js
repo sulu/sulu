@@ -78,6 +78,9 @@ define(['sulumedia/model/media'], function(Media) {
 
             this.bindCustomEvents();
             this.render();
+
+            // shows a delete success label. If a collection just got deleted
+            this.sandbox.sulu.triggerDeleteSuccessLabel('labels.success.collection-deleted-desc');
         },
 
         bindCustomEvents: function() {

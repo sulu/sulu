@@ -1232,7 +1232,8 @@ define([
                         }
                     }
 
-                    navigationUrl = '/admin/content/navigation/content';
+                    navigationUrl = '/admin/content-navigations';
+                    navigationUrlParams.push('alias=content');
 
                     if (!!this.data.id) {
                         navigationUrlParams.push('id=' + this.data.id);

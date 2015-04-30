@@ -22,6 +22,8 @@ use Sulu\Bundle\SearchBundle\Search\Document;
 use Prophecy\Argument;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use Massive\Bundle\SearchBundle\Search\Factory;
+use Massive\Bundle\SearchBundle\Search\Field;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
 
 class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
 {
@@ -55,9 +57,14 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->fileVersion = $this->prophesize(FileVersion::class);
         $this->file = $this->prophesize(File::class);
         $this->media = $this->prophesize(Media::class);
+        $this->collection = $this->prophesize(Collection::class);
         $this->event = $this->prophesize(PreIndexEvent::class);
         $this->document = $this->prophesize(Document::class);
         $this->reflection = $this->prophesize(\ReflectionClass::class);
+
+        $this->field1 = $this->prophesize(Field::class);
+        $this->field2 = $this->prophesize(Field::class);
+        $this->field3 = $this->prophesize(Field::class);
 
         $this->event->getMetadata()->willReturn($this->indexMetadata->reveal());
         $this->event->getDocument()->willReturn($this->document->reveal());
@@ -69,6 +76,9 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->metadata->reflection = $this->reflection;
     }
 
+    /**
+     * It should return early if the entity is not a FileVersionMeta instance
+     */
     public function testNotMedia()
     {
         $this->indexMetadata->getName()->willReturn('Foo');
@@ -79,20 +89,39 @@ class MediaSearchSubscriberTest extends \PHPUnit_Framework_TestCase
         $this->subscriber->handlePreIndex($this->event->reveal());
     }
 
+    /**
+     * It should set the image URL, ID and mime type
+     */
     public function testSubscriber()
     {
+        $mediaId = 123;
+        $mediaMime = 'mime/type';
+        $imageUrl = 'foo';
+        $collectionId = 321;
+
         $this->reflection->isSubclassOf(FileVersionMeta::class)->willReturn(true);
         $this->metadata->getName()->willReturn(FileVersionMeta::class);
         $this->event->getSubject()->willReturn($this->fileVersionMeta->reveal());
         $this->fileVersionMeta->getLocale()->willReturn('de');
-        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) {
+        $this->mediaManager->addFormatsAndUrl(Argument::any())->will(function ($args) use ($imageUrl) {
             $mediaApi = $args[0];
             $mediaApi->setFormats(array(
-                'test_format' => 'foo',
+                'test_format' => $imageUrl,
             ));
         });
 
-        $this->document->setImageUrl('foo')->shouldBeCalled();
+
+        $this->media->getId()->willReturn($mediaId);
+        $this->media->getCollection()->willReturn($this->collection->reveal());
+        $this->collection->getId()->willReturn($collectionId);
+        $this->fileVersion->getMimeType()->willReturn($mediaMime);
+        $this->document->setImageUrl($imageUrl)->shouldBeCalled();
+        $this->factory->createField('media_id', $mediaId)->willReturn($this->field1->reveal());
+        $this->factory->createField('media_mime', $mediaMime)->willReturn($this->field2->reveal());
+        $this->factory->createField('collection_id', $collectionId)->willReturn($this->field3->reveal());
+        $this->document->addField($this->field1->reveal())->shouldBeCalled();
+        $this->document->addField($this->field2->reveal())->shouldBeCalled();
+        $this->document->addField($this->field3->reveal())->shouldBeCalled();
 
         $this->subscriber->handlePreIndex($this->event->reveal());
     }

@@ -4,8 +4,8 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="sulu_snippet.admin.class">Sulu\Bundle\SnippetBundle\Admin\SuluSnippetAdmin</parameter>
-        <parameter key="sulu_snippet.admin.snippet_navigation.class">Sulu\Bundle\SnippetBundle\Admin\SuluSnippetContentNavigation</parameter>
+        <parameter key="sulu_snippet.admin.class">Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin</parameter>
+        <parameter key="sulu_snippet.content_navigation_provider.class">Sulu\Bundle\SnippetBundle\Admin\SnippetContentNavigationProvider</parameter>
         <parameter key="sulu_snippet.jsconfig.class">Sulu\Bundle\AdminBundle\Admin\JsConfig</parameter>
     </parameters>
 
@@ -18,7 +18,8 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
-        <service id="sulu_snippet.admin.snippet_navigation" class="%sulu_snippet.admin.snippet_navigation.class%">
+        <service id="sulu_snippet.content_navigation_provider" class="%sulu_snippet.content_navigation_provider.class%">
+            <tag name="sulu_admin.content_navigation" alias="snippet"/>
             <tag name="sulu.context" context="admin"/>
         </service>
 

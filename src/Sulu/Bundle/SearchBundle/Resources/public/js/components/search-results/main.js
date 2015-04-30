@@ -13,9 +13,10 @@
  * @constructor
  */
 define([
+    'config',
     'text!sulusearch/components/search-results/main.html',
     'text!sulusearch/components/search-results/search-results.html'
-    ], function(mainTpl, searchResultsTpl) {
+    ], function(Config, mainTpl, searchResultsTpl) {
 
     'use strict';
 
@@ -73,6 +74,7 @@ define([
          * @method bindEvents
          */
         bindEvents: function() {
+            this.sandbox.on('sulu.data-overlay.show', this.focusInput.bind(this));
             this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.action', this.dropDownInputActionHandler.bind(this));
             this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.clear', this.dropDownInputClearHandler.bind(this));
             this.sandbox.on('sulu.dropdown-input.' + this.dropDownInputInstance + '.change', this.dropDownInputActionHandler.bind(this));
@@ -89,10 +91,19 @@ define([
          * @method render
          */
         render: function() {
-            var tpl = this.mainTpl();
+            var tpl = this.mainTpl({
+                translate: this.sandbox.translate
+            });
             
             this.$el.html(tpl);
             this.createSearchInput();
+        },
+
+        /**
+         * @method focusInput
+         */
+        focusInput: function() {
+            this.sandbox.emit('sulu.dropdown-input.' + this.dropDownInputInstance + '.focus');
         },
 
         /**
@@ -141,7 +152,8 @@ define([
                     el: this.$el.find('.search-results-bar'),
                     instanceName: this.dropDownInputInstance,
                     preSelectedElement: 'all',
-                    data: this.enabledCategories
+                    data: this.enabledCategories,
+                    focused: true
                 }
             }]);
         },
@@ -150,8 +162,14 @@ define([
          * Fetch the data from the server
          * @method load
          */
-        load: function() {
-            var url = this.options.searchUrl + '/query?q=' + this.state.query + '&page=' + this.state.page,
+        load: function(params) {
+            params = $.extend({
+                q: this.state.query,
+                page: this.state.page,
+                limit: 100
+            }, params);
+
+            var url = this.options.searchUrl + '/query?' + $.param(params),
                 category = this.state.category;
 
             // if category is 'all' search for everything
@@ -174,7 +192,7 @@ define([
 
                 this.state.page++;
 
-                return this.load()
+                return this.load({ limit: 20 })
                     .then(this.mergeResults.bind(this))
                     .then(this.updateResults.bind(this));
             } else {
@@ -200,14 +218,20 @@ define([
             this.totals = response.totals;
 
             data.forEach(function(entry) {
+                var options;
+
                 category = entry.document.category;
                 deepUrl = this.getEntryDeepUrl(category, entry.document);
                 entry.document.deepUrl = deepUrl;
+                options = Config.get('sulusearch.' + category + '.options') || {};
 
                 if (!preparedData[category]) {
                     preparedData[category] = {
                         category: category,
-                        results: [entry.document]
+                        results: [entry.document],
+                        options: this.sandbox.util.extend(true, {}, {
+                            image: true
+                        }, options)
                     };
                 } else {
                     preparedData[category].results.push(entry.document);
@@ -288,9 +312,11 @@ define([
          * @param {Object} data
          */
         getTemplate: function(data) {
-            var sections = [];
+            var sections = null;
 
             if (data) {
+                sections = [];
+
                 Object.keys(data).forEach(function(key) {
                     sections.push(data[key]);
                 }.bind(this));

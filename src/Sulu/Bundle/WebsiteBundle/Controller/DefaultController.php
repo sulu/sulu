@@ -76,13 +76,23 @@ class DefaultController extends WebsiteController
         $redirectInfo = $this->parseUrl($redirectUrl);
         $requestInfo = $this->parseUrl($requestUri);
 
-        $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
+        $url = sprintf('%s://%s', $requestInfo['scheme'], $requestInfo['host']);
+
+        if (isset($redirectInfo['host'])) {
+            $url = sprintf('%s://%s', $requestInfo['scheme'], $redirectInfo['host']);
+        }
 
         if (isset($requestInfo['port'])) {
             $url .= ':' . $requestInfo['port'];
         }
 
-        if (isset($redirectInfo['path'])) {
+        if (
+            isset($redirectInfo['path'])
+            && (
+                // if requested url not starting with redirectUrl it need to be added
+                !isset($requestInfo['path'])
+                || strpos($requestInfo['path'], $redirectInfo['path'] . '/') !== 0
+        )) {
             $url .= $redirectInfo['path'];
         }
 
@@ -98,7 +108,6 @@ class DefaultController extends WebsiteController
         if (isset($requestInfo['fragment'])) {
             $url .= '#' . $requestInfo['fragment'];
         }
-
 
         return $url;
     }

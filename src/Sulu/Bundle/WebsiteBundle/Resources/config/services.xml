@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="sulu_website.admin.class">Sulu\Bundle\WebsiteBundle\Admin\SuluWebsiteAdmin</parameter>
+        <parameter key="sulu_website.admin.class">Sulu\Bundle\WebsiteBundle\Admin\WebsiteAdmin</parameter>
         <parameter key="sulu_website.navigation_mapper.class">Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper</parameter>
         <parameter key="sulu_website.sitemap.class">Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGenerator</parameter>
         <parameter key="sulu_website.twig.content_path.class">Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension</parameter>

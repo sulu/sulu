@@ -48,5 +48,5 @@ interface MediaRepositoryInterface
      * @param $offset
      * @return mixed
      */
-    public function findSupplierMedia($collectionId, $limit, $offset);
+    public function findMediaByCollectionId($collectionId, $limit, $offset);
 }

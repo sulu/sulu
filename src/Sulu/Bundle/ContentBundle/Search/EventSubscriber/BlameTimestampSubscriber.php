@@ -138,7 +138,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
         $creator = null;
         $changer = null;
 
-        // fo not try to do this if the Sulu Security component is not registered
+        // do not try to do this if the Sulu Security component is not registered
         // for some reason.
         //
         // TODO: ->find does not seem to work when using the UserInterface, so we

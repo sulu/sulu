@@ -14,7 +14,7 @@ define(function() {
     return {
         header: {
             tabs: {
-                url: '/admin/translate/navigation/content?type=package'
+                url: '/admin/content-navigations?alias=translate'
             },
             toolbar: {
                 template: 'default'

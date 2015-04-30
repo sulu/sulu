@@ -2,7 +2,7 @@
 
 ## dev-develop
 
-## Search
+### Search
 
 Adapter name changed e.g. from `massive_search_adapter.<adaptername>` to just `<adaptername>` in
 configuration.
@@ -11,6 +11,26 @@ Pages and snippets are now indexed in separate indexes for pages and snippets.
 Replace all instances of `->index('content')` with `->indexes(array('page',
 'snippet')`.
 
+### Admin
+
+The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
+been removed. You have to change these names in all usages of this classes in
+your own code.
+
+### Media preview urls
+
+The thumbnail url will only be generated for supported mime-types. Otherwise it returns a zero length array.
+
+To be sure that it is possible to generate a preview image you should check if the thumbnail url isset:
+
+```twig
+{% if media.thumbnails['200x200'] is defined %}
+<img src="{{ media.thumbnails['200x200'] }}"/>
+{% endif %}
+```
+
+## 0.17.0
+
 ### Media
 
 Fill up the database column `me_collection_meta.locale` with the translated language like: `de` or `en`. If you
@@ -18,7 +38,7 @@ know you have only added collections in only one language you can use following 
 
 ```sql
 UPDATE `me_collection_meta` SET `locale` = 'de';
-``
+```
 
 Due to this it is possible that one collection has multiple metadata for one language. You have to remove this
 duplicates by hand. For example one collection should have only one meta for the language `de`.
@@ -30,10 +50,31 @@ app/console sulu:upgrade:0.17.0:collections
 app/console sulu:upgrade:0.17.0:media
 ```
 
+### Content navigation
+
+The interfaces for the content navigation have been changed, so you have to
+apply these changes if you have used a content navigation in your bundle.
+
+Basically you can delete the `NavigationController` delivering the content
+navigation items together with its routes. It's now common to suffix the
+classes providing content navigation items with `ContentNavigationProvider`.
+
+These classes have to implement the `ContentNavigationProviderInterface` and be
+registered as services as described in the
+[documentation](http://docs.sulu.io/en/latest/cookbook/using-the-tab-navigation.html).
+
+Consider that the URLs for the retrieval of the content navigation items have
+changed to `/admin/content-navigations?alias=your-alias` and have to be updated
+in your javascript components.
+
 ### Contact and Account Security
 
 The security checks are now also applied to contacts and accounts, make sure
 that the users you want to have access have the correct permissions.
+
+### Content
+
+Behaviour of internal links has changed. It returns the link title for navigation/smartcontent/internal-link.
 
 ### Media Types
 

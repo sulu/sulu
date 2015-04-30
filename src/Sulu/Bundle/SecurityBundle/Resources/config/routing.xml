@@ -3,9 +3,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing
         http://symfony.com/schema/routing/routing-1.0.xsd">
-    <route id="sulu_security.roles_navigation" path="/navigation/roles">
-        <default key="_controller">SuluSecurityBundle:Navigation:roles</default>
-    </route>
     <route id="sulu_security.template.role.form" path="/template/role/form.html">
         <default key="_controller">SuluSecurityBundle:Template:roleForm</default>
     </route>

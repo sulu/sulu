@@ -44,7 +44,7 @@ define(function() {
 
             return {
                 tabs: {
-                    url: '/admin/media/navigation/collection'
+                    url: '/admin/content-navigations?alias=media'
                 },
                 toolbar: {
                     template: [
