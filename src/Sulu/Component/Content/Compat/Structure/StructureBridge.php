@@ -589,7 +589,7 @@ class StructureBridge implements StructureInterface
      */
     public function __get($name)
     {
-        return $this->eetProperty($name)->getValue();
+        return $this->getProperty($name)->getValue();
     }
 
     public function getEnabledShadowLanguages()
