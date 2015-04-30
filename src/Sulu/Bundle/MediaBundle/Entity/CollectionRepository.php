@@ -14,6 +14,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 
 /**
  * CollectionRepository
@@ -57,7 +58,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     /**
      * {@inheritdoc}
      */
-    public function findCollectionSet($depth = 0, $filter = array(), Collection $collection = null, $sortBy = array())
+    public function findCollectionSet($depth = 0, $filter = array(), CollectionInterface $collection = null, $sortBy = array())
     {
         try {
             $dql = sprintf(

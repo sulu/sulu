@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 
 /**
  * Default implementation of collection manager
@@ -577,7 +578,7 @@ class CollectionManager implements CollectionManagerInterface
      * @param array $breadcrumbEntities
      * @return Collection
      */
-    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumbEntities = null)
+    protected function getApiEntity(CollectionInterface $entity, $locale, $entities = null, $breadcrumbEntities = null)
     {
         $apiEntity = new Collection($entity, $locale);
 
