@@ -87,10 +87,7 @@ class WebspaceInitializer implements InitializerInterface
             $homeDocument = $this->documentManager->find($homePath, null);
             $existingLocales = $this->inspector->getLocales($homeDocument);
         } else {
-            $homeNode = $this->nodeManager->createPath($homePath);
-            $homeNode->addMixin('sulu:home');
-
-            $homeDocument = $this->documentManager->find($homePath, null, array('type' => 'home'));
+            $homeDocument = new HomeDocument();
             $homeDocument->setTitle('Homepage');
             $homeDocument->setStructureType('overview');
             $homeDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
@@ -105,7 +102,9 @@ class WebspaceInitializer implements InitializerInterface
             }
 
             $this->nodeManager->createPath($routesPath . '/' . $webspaceLocale);
-            $this->documentManager->persist($homeDocument, $webspaceLocale);
+            $this->documentManager->persist($homeDocument, $webspaceLocale, array(
+                'path' => $homePath
+            ));
         }
     }
 }
