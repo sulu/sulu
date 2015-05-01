@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * CLEANUP     #1053 [Util]           Remove unused UuidUtils class
     * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
     * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
