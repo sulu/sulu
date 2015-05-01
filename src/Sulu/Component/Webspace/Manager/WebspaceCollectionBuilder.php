@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Exception\NoValidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -121,6 +122,10 @@ class WebspaceCollectionBuilder
                     'Error: "' . $iude->getMessage() . '" in "' . $file->getRealPath() . '". File was skipped'
                 );
             }
+        }
+
+        if (0 === count($this->webspaces)) {
+            throw new NoValidWebspaceException($this->path);
         }
 
         $environments = array_keys($this->portalInformations);

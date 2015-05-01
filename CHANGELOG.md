@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * BUGFIX      #1051 [Website]        Throw NoValidWebspaceException if no valid webspaces are found
     * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * BUGFIX      #1072 [ContentBundle]  Cropping of long rlps in history overlay
     * BUGFIX      #1067 [SecurityBundle] Increase locale db field for big locale jsons
