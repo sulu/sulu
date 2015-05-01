@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
+use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -104,7 +105,12 @@ class CollectionManager implements CollectionManagerInterface
             throw new CollectionNotFoundException($id);
         }
         $filter['locale'] = $locale;
-        $collectionChildren = $this->collectionRepository->findCollectionSet($depth, $filter, $collectionEntity, $sortBy);
+        $collectionChildren = $this->collectionRepository->findCollectionSet(
+            $depth,
+            $filter,
+            $collectionEntity,
+            $sortBy
+        );
 
         $breadcrumbEntities = null;
         if ($breadcrumb) {
@@ -552,7 +558,8 @@ class CollectionManager implements CollectionManagerInterface
             $mediaId,
             $fileVersion->getName(),
             $fileVersion->getStorageOptions(),
-            $fileVersion->getVersion()
+            $fileVersion->getVersion(),
+            $fileVersion->getMimeType()
         );
 
         foreach ($mediaFormats as $formatName => $formatUrl) {
@@ -576,7 +583,7 @@ class CollectionManager implements CollectionManagerInterface
      * @param array $breadcrumbEntities
      * @return Collection
      */
-    protected function getApiEntity(CollectionEntity $entity, $locale, $entities = null, $breadcrumbEntities = null)
+    protected function getApiEntity(CollectionInterface $entity, $locale, $entities = null, $breadcrumbEntities = null)
     {
         $apiEntity = new Collection($entity, $locale);
 

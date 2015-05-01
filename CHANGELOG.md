@@ -2,9 +2,11 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
-    * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete 
+    * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
+    * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
     * ENHANCEMENT #1029 [All]            Removed prefixes from content navigation providers and admins
+    * FEATURE     #1014 [MediaBundle]    Added media preview in edit overlay
 
 * 0.17.0 (2015-04-20)
     * BUGFIX      #1020 [ContactBundle]  Fixed organization go back type bug
@@ -20,7 +22,7 @@ CHANGELOG for Sulu
     * ENHANCEMENT #951 [MediaBundle]     Made path to image-formats.xml configurateable
     * BUGFIX      #968 [MediaBundle]     Add wildcard support for media type check
     * ENHANCEMENT #988 [ContentBundle]   Set locale on render request
-    * BUGFIX      #994 [CategoryBundle]  Fixed category search  
+    * BUGFIX      #994 [CategoryBundle]  Fixed category search
     * ENHANCEMENT #988 [MediaBundle]     Set working defaults for ghostscript and caching headers
     * BUGFIX      #976 [MediaBundle]     Fix media scale mode parameter
     * FEATURE     #975 [MediaBundle]     Make Storage path and segments configurateable

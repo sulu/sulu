@@ -142,7 +142,7 @@ class MediaManager implements MediaManagerInterface
         StorageInterface $storage,
         FileValidatorInterface $validator,
         FormatManagerInterface $formatManager,
-        TagmanagerInterface $tagManager,
+        TagManagerInterface $tagManager,
         TypeManagerInterface $typeManager,
         $downloadPath,
         $maxFileSize
@@ -362,7 +362,9 @@ class MediaManager implements MediaManagerInterface
         $mediaEntities = $this->mediaRepository->findMedia(array('pagination' => false, 'ids' => $ids));
         $this->count = count($mediaEntities);
         foreach ($mediaEntities as $mediaEntity) {
-            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(new Media($mediaEntity, $locale, null));
+            $media[array_search($mediaEntity->getId(), $ids)] = $this->addFormatsAndUrl(
+                new Media($mediaEntity, $locale, null)
+            );
         }
 
         ksort($media);
@@ -772,7 +774,8 @@ class MediaManager implements MediaManagerInterface
                 $media->getId(),
                 $media->getName(),
                 $media->getStorageOptions(),
-                $media->getVersion()
+                $media->getVersion(),
+                $media->getMimeType()
             )
         );
 
@@ -790,8 +793,7 @@ class MediaManager implements MediaManagerInterface
         $media->setAdditionalVersionData($versionData);
 
         // Set Current Url
-        if (
-            isset($versionData[$media->getVersion()])
+        if (isset($versionData[$media->getVersion()])
             && isset($versionData[$media->getVersion()]['url'])
         ) {
             $media->setUrl($versionData[$media->getVersion()]['url']);

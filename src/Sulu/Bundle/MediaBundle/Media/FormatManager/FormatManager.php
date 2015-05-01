@@ -24,9 +24,9 @@ use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMimeTypeForPreviewException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
+use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
-use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -483,18 +483,19 @@ class FormatManager implements FormatManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormats($id, $fileName, $storageOptions, $version)
+    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType)
     {
         $formats = array();
-
-        foreach ($this->formats as $format) {
-            $formats[$format['name']] = $this->formatCache->getMediaUrl(
-                $id,
-                $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
-                $storageOptions,
-                $format['name'],
-                $version
-            );
+        if (in_array($mimeType, $this->previewMimeTypes)) {
+            foreach ($this->formats as $format) {
+                $formats[$format['name']] = $this->formatCache->getMediaUrl(
+                    $id,
+                    $this->replaceExtension($fileName, $this->getImageExtension($fileName)),
+                    $storageOptions,
+                    $format['name'],
+                    $version
+                );
+            }
         }
 
         return $formats;

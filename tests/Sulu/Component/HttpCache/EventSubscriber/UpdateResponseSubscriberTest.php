@@ -11,6 +11,7 @@
 namespace Sulu\Component\HttpCache\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
+use Prophecy\PhpUnit\ProphecyTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Prophecy\Argument;
 use Sulu\Component\HttpCache\HandlerInterface;
