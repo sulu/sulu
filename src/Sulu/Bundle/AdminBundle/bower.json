@@ -13,6 +13,7 @@
     ],
     "dependencies": {
         "husky": "0.11.*",
+        "backbone": "~1.0.0",
         "backbone-relational": "0.8.*",
         "globalize": "0.1.*",
         "jquery": "1.10.*"

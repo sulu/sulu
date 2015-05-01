@@ -54,6 +54,13 @@ module.exports = function(grunt) {
                     {
                         expand: true,
                         flatten: true,
+                        cwd: 'bower_components/backbone',
+                        src: ['backbone.js'],
+                        dest: 'Resources/public/js/vendor/backbone'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
                         src: ['bower_components/backbone-relational/backbone-relational.js'],
                         dest: 'Resources/public/js/vendor/backbone-relational'
                     },

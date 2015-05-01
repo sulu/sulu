@@ -15,11 +15,13 @@ require.config({
         'main': 'login',
 
         'cultures': 'vendor/globalize/cultures',
+        'aura_extensions/backbone': 'aura_extensions/backbone',
         'aura_extensions/backbone-relational': 'aura_extensions/backbone-relational',
         'husky': 'vendor/husky/husky',
         '__component__$login@suluadmin': 'components/login/main'
     },
     include: [
+        'aura_extensions/backbone',
         'aura_extensions/backbone-relational',
         '__component__$login@suluadmin'
     ],
@@ -55,6 +57,7 @@ require(['husky'], function(Husky) {
             }
         });
 
+        app.use('aura_extensions/backbone');
         app.use('aura_extensions/backbone-relational');
         app.components.addSource('suluadmin', '/bundles/suluadmin/js/components');
         app.start();
