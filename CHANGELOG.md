@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #1052 [MediaBundle]     Clear local image cache via cache clear service and command
     * BUGFIX      #1893 [ContentBundle]   Fixed resource locator deferred for edit
     * BUGIFX      #1871 [ContentBundle]   Fixed url-generation and save button
 
