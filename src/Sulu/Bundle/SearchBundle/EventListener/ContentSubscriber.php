@@ -20,7 +20,7 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\Content\Document\Behavior\ContentBehavior;
 use Sulu\Component\Content\Document\ContentInstanceFactory;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\Metadata\MetadataFactoryInterface;
+use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
 /**
  * Listen to sulu node save event and index the document

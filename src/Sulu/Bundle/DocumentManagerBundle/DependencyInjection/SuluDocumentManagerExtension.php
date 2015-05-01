@@ -33,7 +33,8 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
 
         $this->configureDocumentManager($config, $container);
-        $loader->load('services.xml');
+        $loader->load('core.xml');
+        $loader->load('behaviors.xml');
         $loader->load('serializer.xml');
     }
 
