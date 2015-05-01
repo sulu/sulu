@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * FEATURE     #2001 [MediaBundle]         Clear local image cache via cache clear service and command
     * BUGFIX      #1986 [All]                 Fixed naming of serializer properties
     * BUGFIX      #1985 [CollaborationBundle] Removed leaking connections
     * ENHANCEMENT #1973 [All]                 Moved tests from /tests to component directories.

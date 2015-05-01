@@ -2,6 +2,11 @@
 
 ## dev-develop
 
+### Media uploads
+
+Write permissions for the webserver must be set on `web/uploads` instead of
+`web/uploads/media` alone to support simple cache clearing.
+
 ### Admin Commands
 
 The method `getCommands` on the Admin has been removed, because Symfony can
