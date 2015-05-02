@@ -72,6 +72,30 @@ The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
 been removed. You have to change these names in all usages of this classes in
 your own code.
 
+### Media image converter commands
+
+The image converter commands are now handled via service container tags. No need for the 
+`sulu_media.image.command.prefix` anymore. If you have created your own command, you have to
+tag your image converter command service with `sulu_media.image.command`.
+
+Before:
+
+```xml
+<services>
+    <service id="%sulu_media.image.command.prefix%blur" class="%acme.image.command.blur.class%" />
+</services>
+```
+
+Change to:
+
+```xml
+<services>
+    <service id="acme.image.command.blur" class="%acme.image.command.blur.class%">
+        <tag name="sulu_media.image.command" alias="resize" />
+    </service>
+</services>
+```
+
 ### Media preview urls
 
 The thumbnail url will only be generated for supported mime-types. Otherwise it returns a zero length array.
