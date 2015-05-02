@@ -10,29 +10,32 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
+use FOS\RestBundle\Routing\ClassResourceInterface;
 use SebastianBergmann\Exporter\Exception;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
-use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\ListRestHelperInterface;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes collections available through a REST API
- * @package Sulu\Bundle\MediaBundle\Controller
  */
 class CollectionController extends RestController implements ClassResourceInterface, SecuredControllerInterface
 {
+    use RequestParametersTrait;
+
     /**
      * @var string
      */
@@ -74,13 +77,35 @@ class CollectionController extends RestController implements ClassResourceInterf
     {
         try {
             $locale = $this->getLocale($request);
+            $depth = intval($request->get('depth', 0));
+            $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $collectionManager = $this->getCollectionManager();
+
+            // filter children
+            $listRestHelper = $this->get('sulu_core.list_rest_helper');
+            $limit = $listRestHelper->getLimit();
+            $offset = $listRestHelper->getOffset();
+            $search = $listRestHelper->getSearchPattern();
+            $sortBy = $request->get('sortBy');
+            $sortOrder = $request->get('sortOrder', 'ASC');
+
+            $filter = array(
+                'limit' => $limit,
+                'offset' => $offset,
+                'search' => $search
+            );
+
             $view = $this->responseGetById(
                 $id,
-                function ($id) use ($locale, $collectionManager) {
-                    /** @var CollectionEntity $collectionEntity */
-
-                    return $collectionManager->getById($id, $locale);
+                function ($id) use ($locale, $collectionManager, $depth, $breadcrumb, $filter, $sortBy, $sortOrder) {
+                    return $collectionManager->getById(
+                        $id,
+                        $locale,
+                        $depth,
+                        $breadcrumb,
+                        $filter,
+                        $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                    );
                 }
             );
         } catch (CollectionNotFoundException $cnf) {
@@ -103,26 +128,36 @@ class CollectionController extends RestController implements ClassResourceInterf
             /** @var ListRestHelperInterface $listRestHelper */
             $listRestHelper = $this->get('sulu_core.list_rest_helper');
 
-            $parent = $request->get('parent');
-            $depth = $request->get('depth');
-            $limit = $request->get('limit', $listRestHelper->getLimit());
-            $offset = ($request->get('page', 1) - 1) * $limit;
-            $search = $request->get('search');
+            $flat = $this->getBooleanRequestParameter($request, 'flat', false);
+            $depth = $request->get('depth', 0);
+            $limit = $listRestHelper->getLimit();
+            $offset = $listRestHelper->getOffset();
+            $search = $listRestHelper->getSearchPattern();
             $sortBy = $request->get('sortBy');
             $sortOrder = $request->get('sortOrder', 'ASC');
             $collectionManager = $this->getCollectionManager();
 
-            $collections = $collectionManager->get(
-                $this->getLocale($request),
-                array(
-                    'parent' => $parent,
-                    'depth' => $depth,
-                    'search' => $search,
-                ),
-                $limit,
-                $offset,
-                $sortBy !== null ? array($sortBy => $sortOrder) : array()
-            );
+            if ($flat) {
+                $collections = $collectionManager->get(
+                    $this->getLocale($request),
+                    array(
+                        'depth' => $depth,
+                        'search' => $search,
+                    ),
+                    $limit,
+                    $offset,
+                    $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                );
+            } else {
+                $collections = $collectionManager->getTree(
+                    $this->getLocale($request),
+                    $offset,
+                    $limit,
+                    $search,
+                    $depth,
+                    $sortBy !== null ? array($sortBy => $sortOrder) : array()
+                );
+            }
 
             $all = $collectionManager->getCount();
 
@@ -192,6 +227,47 @@ class CollectionController extends RestController implements ClassResourceInterf
     }
 
     /**
+     * Trigger an action for given media. Action is specified over get-action parameter
+     * @Post("collections/{id}")
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    public function postTriggerAction($id, Request $request)
+    {
+        $action = $this->getRequestParameter($request, 'action', true);
+
+        try {
+            switch ($action) {
+                case 'move':
+                    return $this->moveEntity($id, $request);
+                    break;
+                default:
+                    throw new RestException(sprintf('Unrecognized action: "%s"', $action));
+            }
+        } catch (RestException $ex) {
+            $view = $this->view($ex->toArray(), 400);
+
+            return $this->handleView($view);
+        }
+    }
+
+    /**
+     * Moves an entity into another one
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     */
+    protected function moveEntity($id, Request $request)
+    {
+        $destinationId = $this->getRequestParameter($request, 'destination');
+        $collection = $this->getCollectionManager()->move($id, $this->getLocale($request), $destinationId);
+        $view = $this->view($collection);
+
+        return $this->handleView($view);
+    }
+
+    /**
      * @param Request $request
      * @return Collection
      */
@@ -222,6 +298,7 @@ class CollectionController extends RestController implements ClassResourceInterf
             $collectionManager = $this->getCollectionManager();
             $data = $this->getData($request);
             $data['id'] = $id;
+            $data['locale'] = $this->getLocale($request);
             $collection = $collectionManager->save($data, $this->getUser()->getId());
 
             $view = $this->view($collection, 200);

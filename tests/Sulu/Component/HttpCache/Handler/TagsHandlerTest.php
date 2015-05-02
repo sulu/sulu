@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\HttpCache\Handler\TagsHandler;
 use Prophecy\Argument;
 
-class TagsHandlerTest extends ProphecyTestCase
+class TagsHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var HandlerInterface

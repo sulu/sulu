@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define(['app-config', 'sulusecurity/components/permissions/models/user'], function(AppConfig, User) {
+define(['app-config', 'sulusecurity/components/users/models/user'], function(AppConfig, User) {
 
     'use strict';
 

@@ -39,9 +39,10 @@ interface FormatManagerInterface
      * @param string $fileName
      * @param array $storageOptions
      * @param int $version
+     * @param string $mimeType
      * @return array
      */
-    public function getFormats($id, $fileName, $storageOptions, $version);
+    public function getFormats($id, $fileName, $storageOptions, $version, $mimeType);
 
     /**
      * Delete the image by the given parameters

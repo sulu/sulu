@@ -34,6 +34,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% set child = '$prop'~layer %}
 {% if property.type == 'block' %}
         {{ child }} = {{ _self.blockPropertyConstructor(property) }}
+        {{ child }}->setStructure($this);
         {{ parent }}->addChild({{ child }});
 {% for type in property.types %}
 {{ _self.buildTypes(type, child, layer, loop.index) }}

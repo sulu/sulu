@@ -12,6 +12,7 @@ namespace Sulu\Bundle\ContactBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -30,23 +31,26 @@ class SuluContactExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
 
         $container->setParameter(
             'sulu_contact.defaults',
             $config['defaults']
         );
 
-        $container->setParameter(
-            'sulu_contact.account_types',
-            $config['account_types']
-        );
-
         $this->setDefaultForFormOfAddress($config);
         $container->setParameter(
             'sulu_contact.form_of_address',
             $config['form_of_address']
+        );
+        $container->setParameter(
+            'sulu_contact.contact_form.category_root',
+            $config['form']['contact']['category_root']
+        );
+        $container->setParameter(
+            'sulu_contact.account_form.category_root',
+            $config['form']['account']['category_root']
         );
     }
 

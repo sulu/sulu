@@ -12,6 +12,7 @@ namespace Sulu\Bundle\CoreBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
+use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 
 /**
@@ -28,8 +29,13 @@ class LocalizationController extends FOSRestController implements ClassResourceI
         /** @var LocalizationManagerInterface $localizationManager */
         $localizationManager = $this->get('sulu.core.localization_manager');
 
+        $representation = new CollectionRepresentation(
+            array_values($localizationManager->getLocalizations()),
+            'localizations'
+        );
+
         return $this->handleView(
-            $this->view(array_values($localizationManager->getLocalizations())),
+            $this->view($representation),
             200
         );
     }

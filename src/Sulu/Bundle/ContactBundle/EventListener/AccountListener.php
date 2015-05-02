@@ -11,7 +11,7 @@
 namespace Sulu\Bundle\ContactBundle\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 /**
  * Class AccountListener
@@ -23,7 +23,7 @@ class AccountListener
     {
         $entity = $args->getEntity();
 
-        if ($entity instanceof Account) {
+        if ($entity instanceof AccountInterface) {
             $entityManager = $args->getEntityManager();
             // after saving account check if number is set, else set a new one
             if ($entity->getNumber() === null) {

@@ -10,7 +10,6 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\SecurityBundle\Entity\User;

@@ -27,45 +27,48 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         $this->load();
 
         $this->assertContainerBuilderHasService('sulu_media.media_manager');
-        $this->assertContainerBuilderHasParameter('sulu_media.image.formats', array(
-            '170x170' => array(
-                'name' => '170x170',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '170',
-                            'y' => '170',
-                        )
-                    )
-                ),
-                'options' => array()
+        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.response_headers', array(
+            'Expires' => '+1 month',
+            'Pragma' => 'public',
+            'Cache-Control' => 'public'
+        ));
+        $this->assertContainerBuilderHasParameter('sulu_media.search.default_image_format', '170x170');
+        $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.path', '%kernel.root_dir%/../uploads/media');
+        $this->assertContainerBuilderHasParameter('sulu_media.media.storage.local.segments', 10);
+        $this->assertContainerBuilderHasParameter('sulu_media.collection.type.default', array(
+            'id' => 1
+        ));
+        $this->assertContainerBuilderHasParameter('sulu_media.format_cache.save_image', 'true');
+        $this->assertContainerBuilderHasParameter('sulu_media.format_cache.path', '%kernel.root_dir%/../web/uploads/media');
+        $this->assertContainerBuilderHasParameter('sulu_media.image.command.prefix', 'image.converter.prefix.');
+        $this->assertContainerBuilderHasParameter('sulu_media.media.blocked_file_types', array('file/exe'));
+        $this->assertContainerBuilderHasParameter('ghost_script.path', 'gs');
+        $this->assertContainerBuilderHasParameter('sulu_media.format_manager.mime_types',  array(
+            'image/jpeg',
+            'image/jpg',
+            'image/gif',
+            'image/png',
+            'image/bmp',
+            'image/svg+xml',
+            'image/vnd.adobe.photoshop',
+            'application/pdf',
+        ));
+        $this->assertContainerBuilderHasParameter('sulu_media.media.types', array(
+            array(
+                'type' => 'document',
+                'mimeTypes' => array('*')
             ),
-            '50x50' => array(
-                'name' => '50x50',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '50',
-                            'y' => '50',
-                        )
-                    )
-                ),
-                'options' => array()
+            array(
+                'type' => 'image',
+                'mimeTypes' => array('image/*')
             ),
-            '150x100' => array(
-                'name' => '150x100',
-                'commands' => array(
-                    array(
-                        'action' => 'scale',
-                        'parameters' => array(
-                            'x' => '150',
-                            'y' => '100',
-                        )
-                    )
-                ),
-                'options' => array()
+            array(
+                'type' => 'video',
+                'mimeTypes' => array('video/*')
+            ),
+            array(
+                'type' => 'audio',
+                'mimeTypes' => array('audio/*')
             )
         ));
     }

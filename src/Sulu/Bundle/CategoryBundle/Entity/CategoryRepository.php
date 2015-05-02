@@ -44,6 +44,22 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function findCategoryByKey($key)
+    {
+        try {
+            $queryBuilder = $this->getCategoryQuery()->where('category.key = :categoryKey');
+            $query = $queryBuilder->getQuery();
+            $query->setParameter('categoryKey', $key);
+
+            return $query->getSingleResult();
+        } catch (NoResultException $ex) {
+            return null;
+        }
+    }
+
+    /**
      * Returns all categories. Can be filtered with parent and depth
      *
      * @param number $parent the id of the parent to filter for
@@ -150,7 +166,6 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
             ->leftJoin('category.translations', 'categoryTranslations')
             ->leftJoin('category.parent', 'categoryParent')
             ->leftJoin('category.children', 'categoryChildren')
-
             ->addSelect('category')
             ->addSelect('categoryMeta')
             ->addSelect('categoryTranslations')

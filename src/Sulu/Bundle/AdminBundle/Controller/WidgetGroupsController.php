@@ -33,17 +33,22 @@ class WidgetGroupsController extends Controller
      */
     public function groupAction($groupAlias, Request $request)
     {
-        try {
-            $groupAlias = str_replace('-', '_', $groupAlias);
+        $widgetHandler = $this->getWidgetsHandler();
+        $groupAlias = str_replace('-', '_', $groupAlias);
 
-            return new Response(
-                $this->getWidgetsHandler()->renderWidgetGroup(
-                    $groupAlias,
-                    $request->query->all()
-                )
+        if (!$widgetHandler->hasWidgetGroup($groupAlias)) {
+            return new Response('', 404);
+        }
+
+        try {
+            $content = $this->getWidgetsHandler()->renderWidgetGroup(
+                $groupAlias,
+                $request->query->all()
             );
+
+            return new Response($content, $content !== '' ? 200 : 204);
         } catch (WidgetException $ex) {
-            return new Response($ex->getMessage());
+            return new Response($ex->getMessage(), 400);
         }
     }
 

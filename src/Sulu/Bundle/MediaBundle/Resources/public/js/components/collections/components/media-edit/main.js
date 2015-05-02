@@ -21,6 +21,7 @@ define(function () {
 
         defaults = {
             infoKey: 'public.info',
+            versionsKey: 'sulu.media.history',
             multipleEditTitle: 'sulu.media.multiple-edit.title',
             loadingTitle: 'sulu.media.edit.loading',
             instanceName: ''
@@ -28,6 +29,7 @@ define(function () {
 
         constants = {
             infoFormSelector: '#media-info',
+            versionsFormSelector: '#media-versions',
             multipleEditFormSelector: '#media-multiple-edit',
             dropzoneSelector: '#file-version-change',
             multipleEditDescSelector: '.media-description',
@@ -65,6 +67,14 @@ define(function () {
             return createEventName.call(this, 'closed');
         },
 
+        /**
+         * raised when component is initialized
+         * @event sulu.media-edit.closed
+         */
+        INITIALIZED = function () {
+            return createEventName.call(this, 'initialized');
+        },
+
         /** returns normalized event names */
         createEventName = function (postFix) {
             return namespace + (this.options.instanceName ? this.options.instanceName + '.' : '') + postFix;
@@ -74,6 +84,7 @@ define(function () {
 
         templates: [
             '/admin/media/template/media/info',
+            '/admin/media/template/media/versions',
             '/admin/media/template/media/multiple-edit'
         ],
 
@@ -94,9 +105,13 @@ define(function () {
 
             // stores info-tab html
             this.$info = null;
+            // stores version-tab html
+            this.$versions = null;
             // stores the multiple edit-form
             this.$multiple = null;
             this.startLoadingOverlay();
+
+            this.sandbox.emit(INITIALIZED.call(this));
         },
 
         /**
@@ -114,12 +129,6 @@ define(function () {
             this.sandbox.on(LOADING.call(this), function() {
                 this.sandbox.emit('husky.overlay.media-edit.loading.open');
             }.bind(this));
-
-            // change language (single-edit)
-            this.sandbox.on('husky.overlay.media-edit.language-changed', this.languageChangedSingle.bind(this));
-
-            // change language (multi-edit)
-            this.sandbox.on('husky.overlay.media-multiple-edit.language-changed', this.languageChangedMultiple.bind(this));
         },
 
         /**
@@ -135,62 +144,15 @@ define(function () {
         },
 
         /**
-         * Handles the changing of the language in the single-edit overlay
-         * @param locale
-         */
-        languageChangedSingle: function (locale) {
-            this.sandbox.emit('sulu.media.collections.reload-single-media',
-                this.media.id, {locale: locale},
-                function (media) {
-                    this.media = media;
-                    this.sandbox.form.setData(constants.infoFormSelector, this.media);
-                }.bind(this)
-            );
-        },
-
-        /**
-         * Handles the changing of the language in the single-edit overlay
-         * @param locale
-         */
-        languageChangedMultiple: function(locale) {
-            this.sandbox.emit('sulu.media.collections.reload-media',
-                this.medias, {locale: locale},
-                function(medias) {
-                    this.medias = medias;
-                    var descriptionVisible = this.sandbox.dom.is(
-                        constants.multipleEditFormSelector + ' ' + constants.multipleEditDescSelector, ':visible'
-                    ),
-                        tagsVisible = this.sandbox.dom.is(
-                            constants.multipleEditFormSelector + ' ' + constants.multipleEditTagsSelector, ':visible'
-                        );
-
-                    this.sandbox.stop(constants.multipleEditFormSelector + ' *');
-                    this.sandbox.form.setData(constants.multipleEditFormSelector, {
-                        records: this.medias
-                    }).then(function() {
-                            this.sandbox.start(constants.multipleEditFormSelector);
-                            if (descriptionVisible === true) {
-                                this.sandbox.dom.show(
-                                    constants.multipleEditFormSelector + ' ' + constants.multipleEditDescSelector
-                                );
-                            }
-                            if (tagsVisible) {
-                                this.sandbox.dom.show(
-                                    constants.multipleEditFormSelector + ' ' + constants.multipleEditTagsSelector
-                                );
-                            }
-                        }.bind(this));
-                }.bind(this)
-            );
-        },
-
-        /**
          * Edits a single media
          * @param media {Object} the id of the media to edit
          */
         editSingleMedia: function (media) {
             this.media = media;
             this.$info = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/info', {
+                media: this.media
+            }));
+            this.$versions = this.sandbox.dom.createElement(this.renderTemplate('/admin/media/template/media/versions', {
                 media: this.media
             }));
             this.startSingleOverlay();
@@ -212,7 +174,8 @@ define(function () {
          */
         startLoadingOverlay: function() {
             var $container = this.sandbox.dom.createElement('<div class="'+ constants.loadingClass +'"/>'),
-                $loader = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'" />')
+                $loader = this.sandbox.dom.createElement('<div class="'+ constants.loaderClass +'" />');
+            
             this.sandbox.dom.append(this.$el, $container);
             this.sandbox.once('husky.overlay.media-edit.loading.opened', function () {
                 this.sandbox.start([
@@ -233,6 +196,7 @@ define(function () {
                         el: $container,
                         title: this.sandbox.translate(this.options.loadingTitle),
                         data: $loader,
+                        skin: 'wide',
                         openOnStart: false,
                         removeOnClose: false,
                         instanceName: 'media-edit.loading',
@@ -259,12 +223,10 @@ define(function () {
                         el: $container,
                         title: this.media.title,
                         tabs: [
-                            {title: this.sandbox.translate(this.options.infoKey), data: this.$info}
+                            {title: this.sandbox.translate(this.options.infoKey), data: this.$info},
+                            {title: this.sandbox.translate(this.options.versionsKey), data: this.$versions}
                         ],
-                        languageChanger: {
-                            locales: ['en', 'de'],
-                            preSelected: this.media.locale
-                        },
+                        skin: 'wide',
                         openOnStart: true,
                         instanceName: 'media-edit',
                         propagateEvents: false,
@@ -319,10 +281,6 @@ define(function () {
                         el: $container,
                         title: this.sandbox.translate(this.options.multipleEditTitle),
                         data: this.$multiple,
-                        languageChanger: {
-                            locales: ['en', 'de'],
-                            preSelected: this.medias[0].locale
-                        },
                         openOnStart: true,
                         draggable: false,
                         propagateEvents: false,

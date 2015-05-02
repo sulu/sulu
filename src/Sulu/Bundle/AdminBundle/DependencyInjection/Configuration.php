@@ -33,6 +33,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('email')->isRequired()->end()
                 ->scalarNode('user_data_service')->defaultValue('sulu_security.user_manager')->end()
                 ->arrayNode('widget_groups')
+                    ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
                             ->arrayNode('mappings')

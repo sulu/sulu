@@ -10,7 +10,9 @@
 
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -38,24 +40,27 @@ class SuluSecurityListener
      */
     public function onKernelController(FilterControllerEvent $event)
     {
-        $controller = $event->getController();
+        $controllerDefinition = $event->getController();
+        $controller = $controllerDefinition[0];
 
-        if (!$controller[0] instanceof SecuredControllerInterface) {
+        if (
+            !$controller instanceof SecuredControllerInterface &&
+            !$controller instanceof SecuredObjectControllerInterface
+        ) {
             return;
         }
 
-        // get subject
-        $subject = $controller[0]->getSecurityContext();
+        $request = $event->getRequest();
 
         // find appropriate permission type for request
         $permission = '';
 
-        switch ($event->getRequest()->getMethod()) {
+        switch ($request->getMethod()) {
             case 'GET':
                 $permission = 'view';
                 break;
             case 'POST':
-                if ($controller[1] == 'postAction') { // means that the ClassResourceInterface has to be used
+                if ($controllerDefinition[1] == 'postAction') { // means that the ClassResourceInterface has to be used
                     $permission = 'add';
                 } else {
                     $permission = 'edit';
@@ -70,10 +75,26 @@ class SuluSecurityListener
                 break;
         }
 
-        // find locale for check
-        $locale = $controller[0]->getLocale($event->getRequest());
+        $securityContext = null;
+        $locale = $controller->getLocale($request);
+        $objectType = null;
+        $objectId = null;
+
+        if ($controller instanceof SecuredObjectControllerInterface) {
+            $objectType = $controller->getSecuredClass();
+            $objectId = $controller->getSecuredObjectId($request);
+        }
 
         // check permission
-        $this->securityChecker->checkPermission($subject, $permission, $locale);
+        if ($controller instanceof SecuredControllerInterface) {
+            $securityContext = $controller->getSecurityContext();
+        }
+
+        if ($securityContext !== null) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition($securityContext, $locale, $objectType, $objectId),
+                $permission
+            );
+        }
     }
 } 

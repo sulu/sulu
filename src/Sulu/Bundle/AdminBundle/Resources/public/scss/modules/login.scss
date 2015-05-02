@@ -55,6 +55,10 @@
             white-space: normal;
             position: relative;
             padding: 0 50px;
+
+            .hide {
+                display: none;
+            }
         }
 
         .inputs {

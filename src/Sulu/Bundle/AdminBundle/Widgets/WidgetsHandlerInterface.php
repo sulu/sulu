@@ -24,6 +24,13 @@ interface WidgetsHandlerInterface
     public function renderWidgetGroup($groupAlias, $parameters = array());
 
     /**
+     * return true of widget group exists
+     * @param $groupAlias
+     * @return mixed
+     */
+    public function hasWidgetGroup($groupAlias);
+
+    /**
      * renders widgets for given aliases
      * @param array $aliases
      * @param array $parameters

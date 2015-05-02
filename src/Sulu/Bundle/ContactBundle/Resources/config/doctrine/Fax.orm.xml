@@ -13,6 +13,6 @@
             </join-columns>
         </many-to-one>
         <many-to-many field="contacts" target-entity="Sulu\Bundle\ContactBundle\Entity\Contact" mapped-by="faxes"/>
-        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\Account" mapped-by="faxes"/>
+        <many-to-many field="accounts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" mapped-by="faxes"/>
     </entity>
 </doctrine-mapping>

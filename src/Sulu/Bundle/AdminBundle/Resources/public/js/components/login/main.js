@@ -319,6 +319,7 @@ define([], function() {
          */
         renderResetMailFrame: function() {
             this.dom.$resetMail = this.sandbox.dom.createElement(templates.frame);
+            this.sandbox.dom.addClass(this.dom.$resetMail, 'hide');
             this.sandbox.dom.addClass(this.dom.$resetMail, constants.resetMailFrameClass);
             this.sandbox.dom.append(this.dom.$resetMail, this.sandbox.util.template(templates.resetMailFrame)({
                 label: this.sandbox.translate(this.options.translations.resetPassword),
@@ -414,8 +415,8 @@ define([], function() {
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseenter', this.mouseenterHandler.bind(this));
             this.sandbox.dom.on(this.dom.$background, 'mousedown', this.toggleBackgroundActive.bind(this, true));
             this.sandbox.dom.on(this.sandbox.dom.window, 'mouseup', this.toggleBackgroundActive.bind(this, false));
-            this.sandbox.dom.on(this.dom.$forgotSwitch, 'click', this.moveToFrame.bind(this, this.dom.$resetMail));
-            this.sandbox.dom.on(this.dom.$loginSwitch, 'click', this.moveToFrame.bind(this, this.dom.$login));
+            this.sandbox.dom.on(this.dom.$forgotSwitch, 'click', this.moveToResetMail.bind(this));
+            this.sandbox.dom.on(this.dom.$loginSwitch, 'click', this.moveToLogin.bind(this));
             this.sandbox.dom.on(this.dom.$loginButton, 'click', this.loginButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resetMailButton, 'click', this.resetMailButtonClickHandler.bind(this));
             this.sandbox.dom.on(this.dom.$resendButton, 'click', this.resendButtonClickHandler.bind(this));
@@ -687,17 +688,38 @@ define([], function() {
             this.sandbox.dom.addClass(this.dom.$login, constants.errorClass);
         },
 
+        moveToResetMail: function() {
+            this.sandbox.dom.removeClass(this.dom.$resetMail, 'hide');
+            this.moveToFrame(this.dom.$resetMail);
+        },
+
+        moveToLogin: function() {
+            this.moveToFrame(this.dom.$login).then(function() {
+                this.sandbox.dom.addClass(this.dom.$resetMail, 'hide');
+            }.bind(this));
+        },
+
         /**
          * Moves the frames container so that a given frame is
          * visible in the box
          * @param $frame
          */
         moveToFrame: function($frame) {
-            this.sandbox.dom.css(this.dom.$frames, 'left', -(this.sandbox.dom.position($frame).left) + 'px');
+            var def = this.sandbox.data.deferred();
+
+            this.sandbox.dom.animate(this.dom.$frames, {left: -(this.sandbox.dom.position($frame).left) + 'px'}, {
+                duration: 300,
+                complete: function() {
+                    def.resolve();
+                }
+            });
+
             // focus first input
             if (this.sandbox.dom.find('input', $frame).length > 0) {
                 this.sandbox.dom.select(this.sandbox.dom.find('input', $frame)[0]);
             }
+
+            return def;
         },
 
         /**

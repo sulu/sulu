@@ -10,11 +10,10 @@
 
 namespace Sulu\Component\HttpCache\Handler;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\HttpCache\Handler\AggregateHandler;
 use Prophecy\Argument;
 
-class PublicHandlerTest extends ProphecyTestCase
+class PublicHandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var HandlerInterface

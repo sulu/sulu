@@ -5,10 +5,9 @@ namespace Sulu\Bundle\WebsiteBundle\Resolver;
 use Prophecy\Argument;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Content\StructureManagerInterface;
 
-class StructureResolverTest extends ProphecyTestCase
+class StructureResolverTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var StructureResolverInterface
