@@ -121,13 +121,14 @@ class InternalLinks extends ComplexContentType
         $refs = isset($data) ? $data : array();
         $ids = array();
         if (is_array($refs)) {
-            foreach ($refs as $i => $ref) {
+            foreach ($refs as $index => $reference) {
                 // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($i)) {
-                    $ref = $i;
+                if (UUIDHelper::isUUID($index)) {
+                    $ids[] = $index;
+                    continue;
                 }
 
-                $ids[] = $ref;
+                $ids[] = $reference->getIdentifier();
             }
         }
 

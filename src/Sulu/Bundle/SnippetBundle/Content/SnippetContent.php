@@ -230,18 +230,18 @@ class SnippetContent extends ComplexContentType
     {
         $snippets = array();
         foreach ($ids as $i => $ref) {
-            if (!array_key_exists($ref, $this->snippetCache)) {
-                $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
+            if (!array_key_exists($ref->getIdentifier(), $this->snippetCache)) {
+                $snippet = $this->contentMapper->loadByNode($ref, $locale, $webspaceKey);
                 if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
-                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
+                    $snippet = $this->contentMapper->loadByNode($ref, $shadowLocale, $webspaceKey);
                 }
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
 
-                $this->snippetCache[$ref] = $resolved;
+                $this->snippetCache[$ref->getIdentifier()] = $resolved;
             }
 
-            $snippets[] = $this->snippetCache[$ref];
+            $snippets[] = $this->snippetCache[$ref->getIdentifier()];
         }
 
         return $snippets;
