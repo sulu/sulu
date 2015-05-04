@@ -126,9 +126,7 @@ EOT
 
     private function upgradeSnippets(OutputInterface $output, Localization $localization)
     {
-        /**
-         * @var SnippetRepository
-         */
+        /** @var SnippetRepository */
         $snippetRepository = $this->getContainer()->get('sulu_snippet.repository');
 
         foreach ($snippetRepository->getSnippets($localization) as $snippet) {
@@ -142,8 +140,7 @@ EOT
         Localization $localization,
         ContentMapperInterface $contentMapper,
         OutputInterface $output
-    )
-    {
+    ) {
         $pages = $contentMapper->loadByParent(
             $parent->getUuid(),
             $webspace->getKey(),
@@ -163,8 +160,7 @@ EOT
         Localization $localization,
         OutputInterface $output,
         $depth = 0
-    )
-    {
+    ) {
         foreach ($structure->getProperties(true) as $property) {
             if ($property->getContentTypeName() == 'smart_content') {
                 $transProperty = new TranslatedProperty(
@@ -210,8 +206,7 @@ EOT
         OutputInterface $output,
         $property,
         $depth
-    )
-    {
+    ) {
         $node = $this->session->getNodeByIdentifier($structure->getUuid());
 
         if ($node->hasProperty($property->getName())) {
