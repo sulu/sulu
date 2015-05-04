@@ -7,13 +7,14 @@
  * with this source code in the file LICENSE.
  */
 
-define(function () {
+define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
 
     'use strict';
 
-    // add ckicked
-    var bindCustomEvents = function () {
-        this.sandbox.on('sulu.list-toolbar.add', function () {
+
+    var bindCustomEvents = function() {
+        // add ckicked
+        this.sandbox.on('sulu.list-toolbar.add', function() {
             this.sandbox.emit('sulu.resource.filters.new');
         }.bind(this));
 
@@ -41,28 +42,27 @@ define(function () {
             }
         },
 
-        header: function () {
+        header: function() {
             return {
-                title: 'resource.filters.title',
+                title: 'resource.filter',
                 noBack: true
-
-                // TODO
-                //breadcrumb: [
-                //    {title: 'navigation.pim'},
-                //    {title: 'pim.attributes.title'}
-                //]
             };
         },
 
         templates: ['/admin/resource/template/filter/list'],
 
-        initialize: function () {
+        initialize: function() {
             this.render();
             bindCustomEvents.call(this);
         },
 
-        renderGrid: function () {
+        renderGrid: function() {
             this.sandbox.dom.html(this.$el, this.renderTemplate('/admin/resource/template/filter/list'));
+
+            // TODO when list is accessed without type (e.g. contact) then a dropdown for adding new filters has to be
+            // visible instead of the simple add button
+
+            // TODO adjust url to fetch filters by type
 
             // init list-toolbar and datagrid
             this.sandbox.sulu.initListToolbarAndList.call(this, 'filterFields', '/admin/api/filters/fields',
@@ -87,8 +87,20 @@ define(function () {
             );
         },
 
-        render: function () {
+        /**
+         * Renders the grid and the header information
+         */
+        render: function() {
             this.renderGrid();
+            this.setHeaderInformation();
+        },
+
+        /**
+         * Sets header information like title and breadcrumb
+         */
+        setHeaderInformation: function() {
+            HeaderUtil.setTitle(this.sandbox, null);
+            HeaderUtil.setBreadCrumb(this.sandbox, this.options.type, null);
         }
     };
 });

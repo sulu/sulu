@@ -53,6 +53,9 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }
         },
 
+        /**
+         * Bind custom events for the filter handling
+         */
         bindCustomEvents: function() {
             this.sandbox.on(FILTER_NEW, function() {
                 this.newFilter();
@@ -84,28 +87,27 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         },
 
         save: function(data) {
-            // TODO
-            //this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-            //this.attribute.set(data);
-            //this.attribute.saveLocale(this.options.locale, {
-            //    success: function(response) {
-            //        var model = response.toJSON();
-            //        if (!!data.id) {
-            //            this.sandbox.emit('sulu.products.attributes.saved', model);
-            //        } else {
-            //            this.load(model.id, this.options.locale);
-            //        }
-            //    }.bind(this),
-            //    error: function() {
-            //        this.sandbox.logger.log('error while saving attribute');
-            //    }.bind(this)
-            //});
+            this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
+            this.filter.set(data);
+            this.filter.saveLocale(this.options.locale, {
+                success: function(response) {
+                    var model = response.toJSON();
+                    if (!!data.id) {
+                        this.sandbox.emit('sulu.resource.filters.saved', model);
+                    } else {
+                        this.load(model.id, this.options.locale);
+                    }
+                }.bind(this),
+                error: function() {
+                    this.sandbox.logger.log('error while saving filter');
+                }.bind(this)
+            });
         },
 
         newFilter: function() {
             this.sandbox.emit(
                 'sulu.router.navigate',
-                constants.baseFilterRoute + AppConfig.getUser().locale + '/add'
+                'resource/filters/' + this.options.type + '/' + AppConfig.getUser().locale + '/add'
             );
         },
 
@@ -172,10 +174,20 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }
         },
 
-        load: function(id, localization) {
-            this.sandbox.emit('sulu.router.navigate', constants.baseFilterRoute + '/' + localization + '/edit:' + id + '/details');
+        /**
+         * Triggers the loading and display of a filter form
+         * @param id
+         */
+        load: function(id) {
+            this.sandbox.emit(
+                'sulu.router.navigate',
+                'resource/filters/' + this.options.type + '/' + AppConfig.getUser().locale + '/' + 'edit:' + id + '/details'
+            );
         },
 
+        /**
+         * Renders the form for creating and editing filters
+         */
         renderForm: function() {
             var $form = this.sandbox.dom.createElement('<div id="filters-form-container"/>'),
                 component = {
@@ -183,7 +195,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                     options: {
                         el: $form,
                         locale: this.options.locale,
-                        data: this.filter.defaults()
+                        type: this.options.type
                     }
                 };
 
@@ -212,7 +224,8 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 {
                     name: 'filters/components/list@suluresource',
                     options: {
-                        el: $list
+                        el: $list,
+                        type: this.options.type
                     }
                 }
             ]);
