@@ -157,7 +157,8 @@ module.exports = function(grunt) {
                 options: {
                     baseUrl: 'Resources/public/js/',
                     mainConfigFile: 'Resources/public/js/main.js',
-                    preserveLicenseComments: false
+                    preserveLicenseComments: false,
+                    useStrict: false
                 }
             },
             login: {
@@ -165,7 +166,8 @@ module.exports = function(grunt) {
                     baseUrl: 'Resources/public/js/',
                     mainConfigFile: 'Resources/public/js/login.js',
                     preserveLicenseComments: false,
-                    out: 'Resources/public/dist/login.min.js'
+                    out: 'Resources/public/dist/login.min.js',
+                    useStrict: false
                 }
             }
         },
