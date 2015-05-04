@@ -19144,7 +19144,7 @@ define("husky-validation", function(){});
  *
  * Released under the MIT license.
  */
-
+'use strict';
 
 (function ($) {
     var dragging, draggingHeight, placeholders = $();
@@ -30469,7 +30469,7 @@ define('husky_components/datagrid/decorators/table-view',[],function() {
             this.sandbox.dom.stopPropagation(event);
             var recordId = this.sandbox.dom.data(event.currentTarget, 'id');
             this.emitRowClickedEvent(event);
-            if (!!recordId && !!this.table.rows[recordId]) {
+            if (!!recordId && !!this.table.rows && !!this.table.rows[recordId]) {
                 if (this.options.highlightSelected === true) {
                     this.uniqueHighlightRecord(recordId);
                 }
@@ -37454,7 +37454,7 @@ define('__component__$dependent-select@husky',[],function() {
  * @param {String} [options.direction] 'bottom', 'top', or 'auto' pop up direction of the drop down.
  * @param {String} [options.resultKey] key in result set - default is empty and the _embedded property of the result set will be taken
  * @param {String} [options.url] url to load data from
- * @param {Boolean} [options.isNative] should use native select 
+ * @param {Boolean} [options.isNative] should use native select
  */
 
 define('__component__$select@husky',[], function() {
@@ -37506,7 +37506,8 @@ define('__component__$select@husky',[], function() {
             editableFieldKey: 'editableindex',
             typeRowSelector: '.type-row',
             contentInnerSelector: '.content-inner',
-            toggleClass: '.toggle-icon'
+            toggleClass: '.toggle-icon',
+            formElementSelector: '.form-element'
         },
 
         templates = {
@@ -37990,7 +37991,7 @@ define('__component__$select@husky',[], function() {
 
             // change label
             this.changeLabel();
-            
+
             if (!this.selectedElements.length) {
                 this.triggerDeselect(selectedId);
             } else {
@@ -38369,6 +38370,8 @@ define('__component__$select@husky',[], function() {
                 this.sandbox.dom.find(
                     constants.contentInnerSelector),
                 $row);
+
+            this.sandbox.dom.focus(this.sandbox.dom.find(constants.formElementSelector, $row));
         },
 
         /**

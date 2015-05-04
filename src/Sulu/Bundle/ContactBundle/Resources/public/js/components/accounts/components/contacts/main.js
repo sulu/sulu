@@ -30,8 +30,8 @@ define([
         bindCustomEvents = function() {
             // navigate to edit contact
             this.sandbox.on('husky.datagrid.item.click', function(item) {
-                this.sandbox.emit('sulu.contacts.contact.load', item);
                 this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
+                this.sandbox.emit('sulu.contacts.contact.load', item);
             }, this);
 
             // delete clicked

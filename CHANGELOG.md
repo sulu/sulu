@@ -3,6 +3,7 @@ CHANGELOG for Sulu
 
 * dev-develop
     * FEATURE     #496 [ContentBundle]   SmartContent: change default tag filter to OR operation and user can decide to use OR or AND    
+    * ENHANCEMENT #1039 [ContactBundle]  Auto select new title or positions in contact form
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
