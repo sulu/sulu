@@ -197,6 +197,30 @@ class FilterController extends RestController implements ClassResourceInterface
     }
 
     /**
+     * Delete an filter with the given id.
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cdeleteAction(Request $request)
+    {
+        $ids = explode(',', $request->get('ids'));
+        if ($ids && count($ids) > 0) {
+            try {
+                $this->getManager()->batchDelete($ids);
+                $view = $this->view($ids, 204);
+            } catch (FilterNotFoundException $exc) {
+                $exception = new EntityNotFoundException($exc->getEntityName(), $exc->getId());
+                $view = $this->view($exception->toArray(), 404);
+            }
+        } else {
+            $exception = new InvalidArgumentException(static::$entityName, $ids);
+            $view = $this->view($exception->toArray(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
      * returns all fields that can be used by list
      *
      * @param \Symfony\Component\HttpFoundation\Request $request

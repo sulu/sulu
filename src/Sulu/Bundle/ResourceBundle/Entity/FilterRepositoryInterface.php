@@ -40,4 +40,12 @@ interface FilterRepositoryInterface {
      * @return mixed
      */
     public function findById($id);
+
+    /**
+     * Deletes multiple filters
+     *
+     * @param $ids
+     * @return mixed
+     */
+    public function deleteByIds($ids);
 }

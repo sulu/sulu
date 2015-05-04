@@ -154,18 +154,24 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             this.showDeleteConfirmation(ids, function(wasConfirmed, removeAttributes) {
                 if (wasConfirmed) {
                     // TODO: show loading icon
-                    // TODO batch delete
-                    //ids.forEach(function(id) {
-                    //    var filter = Filter.findOrCreate({id: id});
-                    //    attribute.destroy({
-                    //        data: {removeAttributes: !!removeAttributes},
-                    //        processData: true,
-                    //
-                    //        success: function() {
-                    //            this.sandbox.emit('husky.datagrid.record.remove', id);
-                    //        }.bind(this)
-                    //    });
-                    //}.bind(this));
+
+                    var url = '/admin/api/filters?ids='+ids.join(','),
+                        idsToDelete = ids.slice();
+
+                    this.sandbox.util.ajax({
+                        url: url,
+                        type: 'DELETE',
+
+                        success: function() {
+                            idsToDelete.forEach(function(id) {
+                                this.sandbox.emit('husky.datagrid.record.remove', id);
+                            }.bind(this));
+                        }.bind(this),
+
+                        error: function(jqXHR) {
+                            this.sandbox.logger.error('error when deleting multiple filters!', jqXHR);
+                        }.bind(this)
+                    });
                 }
             }.bind(this));
         },
