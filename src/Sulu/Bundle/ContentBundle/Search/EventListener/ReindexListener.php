@@ -106,7 +106,7 @@ class ReindexListener
             $this->purgeContentIndexes($output);
         }
 
-        $rows = $res->getRows();
+        $rows = $result->getRows();
 
         $progress = new ProgressHelper();
         $progress->start($output, count($rows));
