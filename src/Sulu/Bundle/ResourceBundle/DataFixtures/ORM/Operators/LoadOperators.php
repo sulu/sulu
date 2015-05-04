@@ -21,6 +21,7 @@ use Sulu\Bundle\ResourceBundle\Entity\OperatorValueTranslation;
 use Sulu\Bundle\ResourceBundle\Resource\DataTypes;
 
 /**
+ * Loads fixtures for operators
  * Class LoadOperators
  * @package Sulu\Bundle\ResourceBundle\DataFixtures\ORM\Operators
  */
