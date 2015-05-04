@@ -11,6 +11,13 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
 
     'use strict';
 
+    /**
+     * Returns the proper url for a localized filter
+     * @param urlRoot
+     * @param id
+     * @param locale
+     * @returns {string}
+     */
     function getUrl(urlRoot, id, locale) {
         return urlRoot + (id !== undefined ? '/' + id : '') + '?locale=' + locale;
     }
@@ -19,6 +26,12 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
 
         urlRoot: '/admin/api/filters',
 
+        /**
+         * Saves a localized filter
+         * @param locale
+         * @param options
+         * @returns {*}
+         */
         saveLocale: function (locale, options) {
             options = _.defaults(
                 (options || {}),
@@ -30,6 +43,12 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
             return this.save.call(this, null, options);
         },
 
+        /**
+         * Loads a localized filter
+         * @param locale
+         * @param options
+         * @returns {*}
+         */
         fetchLocale: function (locale, options) {
             options = _.defaults((options || {}),
                 {
@@ -40,6 +59,10 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
             return this.fetch.call(this, options);
         },
 
+        /**
+         * Defaults
+         * @returns {{name: string, entityName: string, conjunction: string, conditionGroups: Array}}
+         */
         defaults: function () {
             return {
                 name: '',
