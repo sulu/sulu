@@ -14,6 +14,6 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
  * Class OperatorException
  * @package Sulu\Bundle\ResourceBundle\Filter\Exception
  */
-class OperatorException extends \Exception{
-
+class OperatorException extends \Exception
+{
 }
