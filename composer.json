@@ -23,7 +23,6 @@
         "guzzle/http": "3.*",
         "guzzle/plugin-log": "3.9.*",
         "imagine/imagine": "~0.6.1",
-        "jackalope/jackalope-jackrabbit": "1.1.*",
         "liip/theme-bundle": "1.1.*",
         "massive/search-bundle": "~0.4",
         "php": ">=5.5",
@@ -35,6 +34,7 @@
         "symfony/swiftmailer-bundle": "~2.3"
     },
     "require-dev": {
+        "jackalope/jackalope-jackrabbit": "1.1.*",
         "phpcr/phpcr-shell": "~1.0.0@alpha",
         "doctrine/doctrine-bundle": "1.2.*",
         "doctrine/doctrine-fixtures-bundle": "2.2.*",
