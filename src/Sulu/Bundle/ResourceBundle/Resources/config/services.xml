@@ -9,6 +9,7 @@
         <parameter key="sulu_resource.filter_manager.class">Sulu\Bundle\ResourceBundle\Resource\FilterManager</parameter>
         <parameter key="sulu_resource.filter_repository.class">Sulu\Bundle\ResourceBundle\Entity\FilterRepository</parameter>
         <parameter key="sulu_resource.conditionGroup_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepository</parameter>
+        <parameter key="sulu_resource.condition_repository.class">Sulu\Bundle\ResourceBundle\Entity\ConditionRepository</parameter>
 
         <!-- Operators -->
         <parameter key="sulu_resource.operator_manager.class">Sulu\Bundle\ResourceBundle\Resource\OperatorManager</parameter>
@@ -32,11 +33,15 @@
                  factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
             <argument>SuluResourceBundle:ConditionGroup</argument>
         </service>
+        <service id="sulu_resource.condition_repository" class="%sulu_resource.condition_repository.class%"
+                 factory-method="getRepository" factory-service="doctrine.orm.entity_manager">
+            <argument>SuluResourceBundle:Condition</argument>
+        </service>
         <service id="sulu_resource.filter_manager" class="%sulu_resource.filter_manager.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="sulu_resource.filter_repository"/>
             <argument type="service" id="sulu_security.user_repository" />
-            <argument type="service" id="sulu_resource.conditionGroup_repository"/>
+            <argument type="service" id="sulu_resource.condition_repository"/>
         </service>
 
         <!-- Operators -->

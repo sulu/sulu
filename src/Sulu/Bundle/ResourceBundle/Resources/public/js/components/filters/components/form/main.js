@@ -49,11 +49,11 @@ define(['filtersutil/header'], function(HeaderUtil) {
 
             // filter delete
             this.sandbox.on('sulu.header.toolbar.delete', function() {
-                this.sandbox.emit('sulu.resource.filter.delete', this.sandbox.dom.val('#id'));
+                this.sandbox.emit('sulu.resource.filters.delete', this.sandbox.dom.val('#id'), this.options.type);
             }.bind(this));
 
             // filter saved
-            this.sandbox.on('sulu.resource.filter.saved', function(id) {
+            this.sandbox.on('sulu.resource.filters.saved', function(id) {
                 this.options.data.id = id;
                 this.setHeaderBar(true);
                 this.setHeaderInformation();
@@ -61,12 +61,8 @@ define(['filtersutil/header'], function(HeaderUtil) {
 
             // back to list
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.resource.filter.list', this.options.type);
+                this.sandbox.emit('sulu.resource.filters.list', this.options.type);
             }, this);
-
-            //this.sandbox.on('sulu.header.initialized', function() {
-            //    this.setHeaderInformation();
-            //}, this);
         },
 
         /**
@@ -154,7 +150,7 @@ define(['filtersutil/header'], function(HeaderUtil) {
             this.sandbox.dom.on('#filter-form', 'keyup', function() {
                 this.setHeaderBar(false);
             }.bind(this), 'input, textarea');
-            this.sandbox.on('sulu.content.changed', function() {
+            this.sandbox.on('husky.select.conjunction.selected.item', function() {
                 this.setHeaderBar(false);
             }.bind(this));
         }
