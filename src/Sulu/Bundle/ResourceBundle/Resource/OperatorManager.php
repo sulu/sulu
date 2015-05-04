@@ -14,6 +14,7 @@ use Sulu\Bundle\ResourceBundle\Api\Operator;
 use Sulu\Bundle\ResourceBundle\Entity\OperatorRepositoryInterface;
 
 /**
+ * Manager responsible for operators
  * Class OperatorManager
  * @package Sulu\Bundle\ResourceBundle\Resource
  */

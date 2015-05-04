@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Bundle\ResourceBundle\Api\Filter;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
@@ -27,6 +26,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Makes filters available through a REST API
  * Class FilterController
  * @package Sulu\Bundle\ResourceBundle\Controller
  */
