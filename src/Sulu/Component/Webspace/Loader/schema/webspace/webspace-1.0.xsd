@@ -123,7 +123,7 @@
         <xs:simpleContent>
             <xs:extension base="xs:string">
                 <xs:attribute name="default" type="xs:boolean"/>
-                <xs:attribute name="code" type="xs:string"/>
+                <xs:attribute name="code" type="xs:integer"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>

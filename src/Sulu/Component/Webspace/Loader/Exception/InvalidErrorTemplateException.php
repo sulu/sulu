@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Sulu CMS.
+ * This file is part of Sulu.
  *
  * (c) MASSIVE ART WebServices GmbH
  *
@@ -11,9 +11,33 @@
 namespace Sulu\Component\Webspace\Loader\Exception;
 
 /**
- * Class InvalidErrorTemplateException
+ * Represents a wrong error template configuration
  */
 class InvalidErrorTemplateException extends WebspaceException
 {
+    /**
+     * @var string
+     */
+    private $template;
 
+    /**
+     * InvalidErrorTemplateException constructor.
+     * @param string $template
+     */
+    public function __construct($template)
+    {
+        parent::__construct(
+            sprintf('Error template "%s" definition error. It has to be defined as default or with a code.', $template)
+        );
+
+        $this->template = $template;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
 }

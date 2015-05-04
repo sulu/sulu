@@ -12,6 +12,7 @@ namespace Sulu\Component\Webspace\Loader;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
@@ -19,7 +20,6 @@ use Sulu\Component\Webspace\Loader\Exception\InvalidPortalDefaultLocalizationExc
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultLocalizationException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidWebspaceDefaultSegmentException;
-use Sulu\Component\Webspace\Loader\Exception\MissingErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\PortalDefaultLocalizationNotFoundException;
 use Sulu\Component\Webspace\Loader\Exception\WebspaceDefaultSegmentNotFoundException;
 use Sulu\Component\Webspace\Navigation;
@@ -312,6 +312,7 @@ class XmlFileLoader extends FileLoader
         foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
             /** @var \DOMNode $errorTemplateNode */
             $errorTemplates++;
+            $template = $errorTemplateNode->nodeValue;
             if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
                 $code = $codeNode->nodeValue;
             } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
@@ -322,14 +323,15 @@ class XmlFileLoader extends FileLoader
                 $defaultErrorTemplates++;
                 $code = 'default';
             } else {
-                throw new InvalidErrorTemplateException();
+                throw new InvalidErrorTemplateException($template);
             }
 
-            $theme->addErrorTemplate($code, $errorTemplateNode->nodeValue);
+            $theme->addErrorTemplate($code, $template);
         }
 
+        // only one or none default error-template is legal
         if ($errorTemplates > 0 && $defaultErrorTemplates > 1) {
-            throw new InvalidDefaultErrorTemplateException();
+            throw new InvalidAmountOfDefaultErrorTemplateException();
         }
 
         return $theme;

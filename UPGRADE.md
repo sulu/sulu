@@ -8,7 +8,6 @@ The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
 been removed. You have to change these names in all usages of this classes in
 your own code.
 
-<<<<<<< HEAD
 ### Media preview urls
 
 The thumbnail url will only be generated for supported mime-types. Otherwise it returns a zero length array.

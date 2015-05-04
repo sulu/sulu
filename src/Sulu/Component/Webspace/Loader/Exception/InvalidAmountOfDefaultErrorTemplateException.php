@@ -11,15 +11,15 @@
 namespace Sulu\Component\Webspace\Loader\Exception;
 
 /**
- * This error represents a wrong default error template configuration
+ * This error represents a wrong number of default error templates
  */
-class InvalidDefaultErrorTemplateException extends WebspaceException
+class InvalidAmountOfDefaultErrorTemplateException extends WebspaceException
 {
     /**
-     * InvalidErrorTemplateException constructor.
+     * InvalidAmountOfDefaultErrorTemplateException constructor.
      */
     public function __construct()
     {
-        parent::__construct('Default cannot be false if no code is defined');
+        parent::__construct('One or no error template has to defined as default');
     }
 }
