@@ -72,8 +72,8 @@ class ExceptionController extends BaseExceptionController
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         $parameter = array(
-            'statusCode' => $code,
-            'statusText' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+            'status_code' => $code,
+            'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
             'exception' => $exception,
             'currentContent' => $currentContent
         );

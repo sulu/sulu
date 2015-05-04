@@ -24,8 +24,8 @@ To be sure that it is possible to generate a preview image you should check if t
 
 Variables of exception template `ClientWebsiteBundle:error404.html.twig` has changed.
 
-* `statusCode`: response code 
-* `statusText`: response text
+* `status_code`: response code 
+* `status_text`: response text
 * `exception`: whole exception object
 * `currentContent`: content which was rendered before exception was thrown
 
@@ -45,10 +45,34 @@ The behaviour of the errors has changed. In dev mode no custom error pages appea
 To see them you have to open following url:
 
 ```
-{portal-prefix}/_error/{statusCode}
+{portal-prefix}/_error/{status_code}
+sulu.lo/de/_error/500
 ```
 
 More Information can be found in [sulu-docs](http://docs.sulu.io/en/latest/cookbook/custom-error-page.html).
+
+### Twig Templates
+
+If a page has no url for a specific locale, it returns now the resource-locator to the index page (`'/'`) instead of a
+empty string (`''`).
+ 
+__Before:__
+```
+urls = array(
+    'de' => '/ueber-uns',
+    'en' => '/about-us',
+    'es' => ''
+);
+```
+
+__After:__
+```
+urls = array(
+    'de' => '/ueber-uns',
+    'en' => '/about-us',
+    'es' => '/'
+);
+```
 
 ## 0.17.0
 

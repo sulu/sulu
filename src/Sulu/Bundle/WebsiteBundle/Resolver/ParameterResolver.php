@@ -70,23 +70,21 @@ class ParameterResolver implements ParameterResolverInterface
             $allLocalizations = $requestAnalyzer->getWebspace()->getLocalizations();
         }
 
-        $urls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
-        $localizations = array();
+        $pageUrls = array_key_exists('urls', $structureData) ? $structureData['urls'] : array();
+        $urls = array();
 
         foreach ($allLocalizations as $localization) {
             /** @var Localization $localization */
             $locale = $localization->getLocalization();
 
-            if (array_key_exists($locale, $urls)) {
-                $localizations[$locale] = $urls[$locale];
-            } elseif ($structure === null) {
-                $localizations[$locale] = '/';
+            if (array_key_exists($locale, $pageUrls)) {
+                $urls[$locale] = $pageUrls[$locale];
             } else {
-                $localizations[$locale] = '';
+                $urls[$locale] = '/';
             }
         }
 
-        $structureData['urls'] = $localizations;
+        $structureData['urls'] = $urls;
 
         return array_merge(
             $parameter,
