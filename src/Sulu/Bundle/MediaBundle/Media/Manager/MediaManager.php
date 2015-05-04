@@ -63,7 +63,7 @@ class MediaManager implements MediaManagerInterface
      * The repository for communication with the database
      * @var CollectionRepository
      */
-    private $collectionRepository;
+    protected $collectionRepository;
 
     /**
      * @var EntityManager
