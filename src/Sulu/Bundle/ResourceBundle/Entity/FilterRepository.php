@@ -83,4 +83,16 @@ class FilterRepository extends EntityRepository implements FilterRepositoryInter
             return null;
         }
     }
+
+    /**
+     * Deletes multiple filters
+     *
+     * @param $ids
+     * @return mixed
+     */
+    public function deleteByIds($ids)
+    {
+        $qb= $this->createQueryBuilder('filter')->delete()->where('filter.id IN (:ids)')->setParameter('ids', $ids);
+        $qb->getQuery()->execute();
+    }
 }

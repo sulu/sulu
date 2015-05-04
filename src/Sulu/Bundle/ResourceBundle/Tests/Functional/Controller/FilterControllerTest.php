@@ -458,6 +458,20 @@ class FilterControllerTest extends SuluTestCase
     }
 
     /**
+     * Test CDELETE
+     */
+    public function testCDeleteByIds()
+    {
+        $this->client->request('DELETE', '/api/filters?ids=' . $this->filter1->getId(). ','.$this->filter2->getId());
+        $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/filters');
+        $this->assertEquals('200', $this->client->getResponse()->getStatusCode());
+        $response = json_decode($this->client->getResponse()->getContent());
+        $this->assertEmpty($response->_embedded->filters);
+    }
+
+    /**
      * Test DELETE on none existing Object
      */
     public function testDeleteByIdNotExisting()
