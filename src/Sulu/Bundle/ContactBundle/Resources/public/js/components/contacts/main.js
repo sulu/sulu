@@ -344,14 +344,19 @@ define([
                     'PATCH',
                     changedData)
                     .then(function(response) {
-                        var preselected = response[response.length - 1];
+                        if (response.length > 0) {
+                            var preselected = response[response.length - 1];
 
-                        this.sandbox.emit(
+                            this.sandbox.emit(
                                 instance + '.update',
-                            response,
-                            [preselected],
-                            true,
-                            true);
+                                response,
+                                [preselected],
+                                true,
+                                true
+                            );
+                        } else {
+                            this.sandbox.logger.error('No response from patch request');
+                        }
                     }.bind(this)).fail(function(status, error) {
                         this.sandbox.emit(instance + '.revert');
                         this.sandbox.logger.error(status, error);
