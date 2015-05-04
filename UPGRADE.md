@@ -51,6 +51,25 @@ sulu.lo/de/_error/500
 
 More Information can be found in [sulu-docs](http://docs.sulu.io/en/latest/cookbook/custom-error-page.html).
 
+To keep the backward compatibility you have to add following lines to your webspace configuration:
+
+```xml
+<webspace>
+    ...
+    
+    <theme>
+        ...
+        
+        <error-templates>
+            <error-template code="404">ClientWebsiteBundle:views:error404.html.twig</error-template>
+            <error-template default="true">ClientWebsiteBundle:views:error.html.twig</error-template>
+        </error-templates>
+    </theme>
+    
+    ...
+</webspace>
+```
+
 ### Twig Templates
 
 If a page has no url for a specific locale, it returns now the resource-locator to the index page (`'/'`) instead of a
