@@ -11,6 +11,7 @@
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
 /**
+ * The interface for the operator entity
  * Interface OperatorRepositoryInterface
  * @package Sulu\Bundle\ResourceBundle\Entity
  */
