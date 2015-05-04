@@ -8,14 +8,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ResourceBundle\Filter\Exception;
+namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
 
 /**
  * This exception is thrown if a required property for creating or manipulating
  * a filter is missing.
  *
  * Class MissingFilterException
- * @package Sulu\Bundle\ResourceBundle\Filter\Exception
+ * @package Sulu\Bundle\ResourceBundle\Resource\Exception
  */
 class MissingFilterException extends FilterException
 {

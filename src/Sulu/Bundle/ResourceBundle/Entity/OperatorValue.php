@@ -18,9 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
 class OperatorValue
 {
     /**
-     * @var integer
+     * @var string
      */
-    private $type;
+    private $value;
 
     /**
      * @var integer
@@ -43,29 +43,6 @@ class OperatorValue
     public function __construct()
     {
         $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Set type
-     *
-     * @param integer $type
-     * @return OperatorValue
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * Get type
-     *
-     * @return integer 
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
@@ -132,5 +109,28 @@ class OperatorValue
     public function getOperator()
     {
         return $this->operator;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return OperatorValue
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 }

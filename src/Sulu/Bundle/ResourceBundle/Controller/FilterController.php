@@ -12,12 +12,11 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
-use Sulu\Bundle\ResourceBundle\Api\Filter;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterDependencyNotFoundException;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\FilterNotFoundException;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingFilterAttributeException;
-use Sulu\Bundle\ResourceBundle\Filter\Exception\MissingFilterException;
-use Sulu\Bundle\ResourceBundle\Filter\FilterManagerInterface;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterException;
+use Sulu\Bundle\ResourceBundle\Resource\FilterManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
@@ -27,6 +26,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Makes filters available through a REST API
  * Class FilterController
  * @package Sulu\Bundle\ResourceBundle\Controller
  */
