@@ -525,6 +525,7 @@ class FileVersion implements AuditableInterface
             $this->id = null;
             /** @var FileVersionMeta[] $newMetaList */
             $newMetaList = array();
+            $defaultMetaLocale = $this->getDefaultMeta()->getLocale();
 
             /** @var FileVersionContentLanguage[] $newContentLanguageList */
             $newContentLanguageList = array();
@@ -541,6 +542,10 @@ class FileVersion implements AuditableInterface
             foreach ($newMetaList as $newMeta) {
                 $newMeta->setFileVersion($this);
                 $this->addMeta($newMeta);
+
+                if ($newMeta->getLocale() === $defaultMetaLocale) {
+                    $this->setDefaultMeta($newMeta);
+                }
             }
 
             /** @var FileVersionContentLanguage $contentLanguage */
