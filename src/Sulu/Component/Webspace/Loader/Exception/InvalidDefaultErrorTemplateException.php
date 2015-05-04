@@ -16,10 +16,24 @@ namespace Sulu\Component\Webspace\Loader\Exception;
 class InvalidDefaultErrorTemplateException extends WebspaceException
 {
     /**
-     * InvalidErrorTemplateException constructor.
+     * @var string
      */
-    public function __construct()
+    private $template;
+
+    /**
+     * InvalidErrorTemplateException constructor.
+     * @param string $template
+     * @param int $webspace
+     */
+    public function __construct($template, $webspace)
     {
-        parent::__construct('Default cannot be false if no code is defined');
+        parent::__construct(
+            'Default cannot of "%s" in webspace "%s" be false if no code is defined.',
+            $template,
+            $webspace
+        );
+        
+        $this->template = $template;
+        $this->webspace = $webspace;
     }
 }

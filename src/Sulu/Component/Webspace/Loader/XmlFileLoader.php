@@ -306,12 +306,10 @@ class XmlFileLoader extends FileLoader
 
     private function generateErrorTemplates(Theme $theme)
     {
-        $errorTemplates = 0;
         $defaultErrorTemplates = 0;
 
         foreach ($this->xpath->query('/x:webspace/x:theme/x:error-templates/x:error-template') as $errorTemplateNode) {
             /** @var \DOMNode $errorTemplateNode */
-            $errorTemplates++;
             $template = $errorTemplateNode->nodeValue;
             if (($codeNode = $errorTemplateNode->attributes->getNamedItem('code')) !== null) {
                 $code = $codeNode->nodeValue;
@@ -330,7 +328,7 @@ class XmlFileLoader extends FileLoader
         }
 
         // only one or none default error-template is legal
-        if ($errorTemplates > 0 && $defaultErrorTemplates > 1) {
+        if ($defaultErrorTemplates > 1) {
             throw new InvalidAmountOfDefaultErrorTemplateException();
         }
 

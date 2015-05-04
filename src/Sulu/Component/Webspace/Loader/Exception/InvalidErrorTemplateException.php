@@ -23,14 +23,20 @@ class InvalidErrorTemplateException extends WebspaceException
     /**
      * InvalidErrorTemplateException constructor.
      * @param string $template
+     * @param string $webspace
      */
-    public function __construct($template)
+    public function __construct($template, $webspace)
     {
         parent::__construct(
-            sprintf('Error template "%s" definition error. It has to be defined as default or with a code.', $template)
+            sprintf(
+                'Error template "%s" definition in "%s". It has to be defined as default or with a code.',
+                $template,
+                $webspace
+            )
         );
 
         $this->template = $template;
+        $this->webspace = $webspace;
     }
 
     /**
