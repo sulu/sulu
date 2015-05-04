@@ -10,6 +10,10 @@
 
 namespace Sulu\Bundle\ResourceBundle\Resource;
 
+/**
+ * Interface OperatorManagerInterface
+ * @package Sulu\Bundle\ResourceBundle\Resource
+ */
 interface OperatorManagerInterface
 {
     /**

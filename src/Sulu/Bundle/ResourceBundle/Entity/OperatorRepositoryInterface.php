@@ -10,6 +10,10 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
+/**
+ * Interface OperatorRepositoryInterface
+ * @package Sulu\Bundle\ResourceBundle\Entity
+ */
 interface OperatorRepositoryInterface
 {
     /**
