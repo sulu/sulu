@@ -464,7 +464,7 @@ class XmlFileLoaderTest extends \PHPUnit_Framework_TestCase
     public function testErrorTemplatesManyDefaults()
     {
         $this->setExpectedException(
-            '\Sulu\Component\Webspace\Loader\Exception\InvalidDefaultErrorTemplateException'
+            '\Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException'
         );
         $this->loader->load(
             __DIR__ . '/../../../../Resources/DataFixtures/Webspace/invalid/sulu.io_error_templates_many_defaults.xml'
