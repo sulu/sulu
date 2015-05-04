@@ -254,7 +254,7 @@ class FilterManager implements FilterManagerInterface
                     }
 
                     // check if conditions is related with condition group
-                    if($conditionEntity->getConditionGroup()->getId() !== $conditionGroup->getId()){
+                    if ($conditionEntity->getConditionGroup()->getId() !== $conditionGroup->getId()) {
                         throw new ConditionGroupMismatchException(
                             $matchedEntry['id']
                         );
@@ -386,5 +386,16 @@ class FilterManager implements FilterManagerInterface
         }
 
         return true;
+    }
+
+    /**
+     * Deletes multiple filters at once
+     *
+     * @param array $ids
+     */
+    public function batchDelete($ids)
+    {
+        // TODO write test
+        $this->filterRepository->deleteByIds($ids);
     }
 }

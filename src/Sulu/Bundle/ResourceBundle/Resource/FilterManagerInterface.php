@@ -61,4 +61,11 @@ interface FilterManagerInterface
      * @return Filter
      */
     public function save(array $data, $locale, $userId, $id = null);
+
+    /**
+     * Deletes multiple filters at once
+     *
+     * @param $ids
+     */
+    public function batchDelete($ids);
 }
