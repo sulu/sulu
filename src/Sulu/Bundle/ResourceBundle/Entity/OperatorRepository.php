@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
 /**
+ * Repository for operators
  * Class OperatorRepository
  * @package Sulu\Bundle\ResourceBundle\Entity
  */

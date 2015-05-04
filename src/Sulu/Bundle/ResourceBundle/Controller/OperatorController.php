@@ -17,6 +17,7 @@ use Hateoas\Representation\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Makes operators available through a REST API
  * Class OperatorController
  * @package Sulu\Bundle\ResourceBundle\Controller
  */

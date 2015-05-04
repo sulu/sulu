@@ -28,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 /**
+ * Manager responsible for filters
  * Class FilterManager
  * @package Sulu\Bundle\ResourceBundle\Filter
  */
