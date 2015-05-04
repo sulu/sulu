@@ -25,59 +25,67 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
     'use strict';
 
     var defaults = {
-        instanceName: '',
-        data: [],
-        valueName: 'name',
-        preSelectedElement: 0,
-        focused: false,
-        icons: {
-            inputIcon: 'fa-search'
-        }
-    },
+            instanceName: '',
+            data: [],
+            valueName: 'name',
+            preSelectedElement: 0,
+            focused: false,
+            icons: {
+                inputIcon: 'fa-search'
+            }
+        },
 
-    createEventName = function(postfix) {
-        return 'sulu.dropdown-input.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
-    },
+        createEventName = function(postfix) {
+            return 'sulu.dropdown-input.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
+        },
 
-    /**
-     * trigger after initialization has finished
-     * @event sulu.dropdown-input.[INSTANCE_NAME].initialized
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    },
+        /**
+         * trigger after initialization has finished
+         * @event sulu.dropdown-input.[INSTANCE_NAME].initialized
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        },
 
-    /**
-     * focus the input field on this event
-     * @event sulu.dropdown-input.[INSTANCE_NAME].focus
-     */
-    FOCUS = function() {
-        return createEventName.call(this, 'focus');
-    },
+        /**
+         * set the value of the drop down
+         * @event sulu.dropdown-input.[INSTANCE_NAME].set
+         */
+        SET = function() {
+            return createEventName.call(this, 'set');
+        },
 
-    /**
-     * emit that the action button was clicked
-     * @event sulu.dropdown-input.[INSTANCE_NAME].action
-     */
-    ACTION = function() {
-        return createEventName.call(this, 'action');
-    },
+        /**
+         * focus the input field on this event
+         * @event sulu.dropdown-input.[INSTANCE_NAME].focus
+         */
+        FOCUS = function() {
+            return createEventName.call(this, 'focus');
+        },
 
-    /**
-     * emit that dropdown value has changed
-     * @event sulu.dropdown-input.[INSTANCE_NAME].change
-     */
-    CHANGE = function() {
-        return createEventName.call(this, 'change');
-    },
+        /**
+         * emit that the action button was clicked
+         * @event sulu.dropdown-input.[INSTANCE_NAME].action
+         */
+        ACTION = function() {
+            return createEventName.call(this, 'action');
+        },
 
-    /**
-     * emit that dropdown value was cleared
-     * @event sulu.dropdown-input.[INSTANCE_NAME].clear
-     */
-    CLEAR = function() {
-        return createEventName.call(this, 'clear');
-    };
+        /**
+         * emit that dropdown value has changed
+         * @event sulu.dropdown-input.[INSTANCE_NAME].change
+         */
+        CHANGE = function() {
+            return createEventName.call(this, 'change');
+        },
+
+        /**
+         * emit that dropdown value was cleared
+         * @event sulu.dropdown-input.[INSTANCE_NAME].clear
+         */
+        CLEAR = function() {
+            return createEventName.call(this, 'clear');
+        };
 
     return {
         /**
@@ -100,7 +108,8 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
          */
         bindEvents: function() {
             this.sandbox.on(FOCUS.call(this), this.focusInputhandler.bind(this));
-            this.sandbox.on('husky.select.' + this.dropDownInstance +'.selected.item', this.dropdownChangeHandler.bind(this));
+            this.sandbox.on(SET.call(this), this.setSelected.bind(this));
+            this.sandbox.on('husky.select.' + this.dropDownInstance + '.selected.item', this.dropdownChangeHandler.bind(this));
         },
 
         /**
@@ -111,6 +120,24 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
             this.$el.on('click', '.dropdown-input-clear', this.clearInput.bind(this));
             this.$el.on('input', '.dropdown-input-entry', this.inputChangeHandler.bind(this));
             this.$el.on('keydown', '.dropdown-input-entry', this.inputKeyDownHandler.bind(this));
+        },
+
+        /**
+         * @method setSelected
+         * @param {String} category
+         */
+        setSelected: function(category) {
+            this.sandbox.dom.find('.husky-select', this.$el).data({
+                selection: category.id,
+                selectionValues: category.name
+            }).trigger('data-changed');
+
+            this.selectedElement = category.id;
+
+            this.sandbox.emit(CHANGE.call(this), {
+                value: this.$input.val(),
+                selectedElement: this.selectedElement
+            });
         },
 
         /**
@@ -128,7 +155,7 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
             var template = this.mainTemplate({
                 icons: this.options.icons
             });
-            
+
             this.$el.html(template);
             this.storeSelectors();
             this.updatePlaceHolder();
@@ -157,7 +184,7 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
                         preSelectedElements: [this.options.preSelectedElement],
                         data: this.options.data
                     }
-                },
+                }
             ]);
         },
 
@@ -173,8 +200,8 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
                 selected = this.options.preSelectedElement;
             }
 
-            selected = _.where(this.options.data, { id: selected })[0];
-            
+            selected = _.where(this.options.data, {id: selected})[0];
+
             this.$input.attr({
                 'placeholder': selected.placeholder || ''
             });

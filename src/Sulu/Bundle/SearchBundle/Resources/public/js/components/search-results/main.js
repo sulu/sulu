@@ -98,6 +98,7 @@ define([
 
             this.$el.html(template);
             this.createSearchInput();
+            this.createSearchTotals();
         },
 
         /**
@@ -159,6 +160,18 @@ define([
             }]);
         },
 
+        createSearchTotals: function() {
+            this.searchTotalsInstanceName = 'searchTotals';
+            this.sandbox.start([{
+                name: 'search-totals@sulusearch',
+                options: {
+                    el: this.$el.find('.search-totals'),
+                    instanceName: this.searchTotalsInstanceName,
+                    categories: this.categories
+                }
+            }]);
+        },
+
         /**
          * Fetch the data from the server
          * @method load
@@ -195,7 +208,8 @@ define([
 
                 return this.load({limit: this.options.pageLimit})
                     .then(this.mergeResults.bind(this))
-                    .then(this.updateResults.bind(this));
+                    .then(this.updateResults.bind(this))
+                    .then(this.updateTotals.bind(this));
             } else {
                 def.resolve();
             }
@@ -276,6 +290,7 @@ define([
                 this.load().then(function(data) {
                     this.categoriesStore = data;
                     this.updateResults(data);
+                    this.updateTotals(data);
                 }.bind(this));
             }
         },
@@ -340,6 +355,10 @@ define([
 
             this.stopLoader();
             this.$el.find('.search-results').html(template);
+        },
+
+        updateTotals: function(data) {
+            this.sandbox.emit('sulu.search-totals.' + this.searchTotalsInstanceName + '.update', this.totals, this.state.category);
         },
 
         /**

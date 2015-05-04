@@ -1,0 +1,16 @@
+.search-totals-wrapper {
+    background-color: $grayLighter;
+
+    h2 {
+        color: $gray
+    }
+
+    a {
+        text-decoration: none;
+        color: $gray;
+
+        &.active {
+            font-weight: bold;
+        }
+    }
+}
