@@ -71,8 +71,7 @@ class ReindexListener
         StructureManagerInterface $structureManager,
         SuluNodeHelper $nodeHelper,
         array $mapping = array()
-    )
-    {
+    ) {
         $this->sessionManager = $sessionManager;
         $this->contentMapper = $contentMapper;
         $this->searchManager = $searchManager;
@@ -84,7 +83,7 @@ class ReindexListener
 
     /**
      * Prefix url of document with current resourcelocator prefix
-     * @param HitEvent $event
+     * @param IndexRebuildEvent $event
      */
     public function onIndexRebuild(IndexRebuildEvent $event)
     {

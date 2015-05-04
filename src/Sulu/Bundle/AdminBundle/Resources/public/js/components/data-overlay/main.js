@@ -69,12 +69,12 @@ define(function() {
         initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.mainTpl = this.sandbox.util.template(templates.main);
+            this.mainTemplate = this.sandbox.util.template(templates.main);
 
             this.render();
             this.startComponent();
             this.bindEvents();
-            this.bindDOMEvents();
+            this.bindDomEvents();
             this.sandbox.emit(INITIALIZED.call(this));
         },
 
@@ -87,9 +87,9 @@ define(function() {
         },
 
         /**
-         * @method bindDOMEvents
+         * @method bindDomEvents
          */
-        bindDOMEvents: function() {
+        bindDomEvents: function() {
             this.$el.on('click', '.data-overlay-close', this.hide.bind(this));
         },
 
@@ -97,8 +97,8 @@ define(function() {
          * @method render
          */
         render: function() {
-            var tpl = this.mainTpl();
-            this.$el.html(tpl);
+            var template = this.mainTemplate();
+            this.$el.html(template);
         },
 
         /**
@@ -123,7 +123,7 @@ define(function() {
         },
 
         /**
-         * show the overaly instance
+         * show the overlay instance
          * @method show
          */
         show: function() {
@@ -131,7 +131,7 @@ define(function() {
         },
 
         /**
-         * hide the overaly instance
+         * hide the overlay instance
          * @method hide
          */
         hide: function() {

@@ -20,7 +20,7 @@
  * @param {Object} [options.icons] Collection of all icons
  * @param {Bool} [options.focused] Focus the input on render
  */
-define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl) {
+define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTemplate) {
 
     'use strict';
 
@@ -86,12 +86,12 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
         initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.mainTpl = this.sandbox.util.template(mainTpl);
+            this.mainTemplate = this.sandbox.util.template(mainTemplate);
 
             this.render();
             this.storeSelectors();
             this.bindEvents();
-            this.bindDOMEvents();
+            this.bindDomEvents();
             this.sandbox.emit(INITIALIZED.call(this));
         },
 
@@ -104,9 +104,9 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
         },
 
         /**
-         * @method bindDOMEvents
+         * @method bindDomEvents
          */
-        bindDOMEvents: function() {
+        bindDomEvents: function() {
             this.$el.on('click', '.dropdown-input-action-icon', this.inputActionHandler.bind(this));
             this.$el.on('click', '.dropdown-input-clear', this.clearInput.bind(this));
             this.$el.on('input', '.dropdown-input-entry', this.inputChangeHandler.bind(this));
@@ -125,11 +125,11 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTpl
          * @method render
          */
         render: function() {
-            var tpl = this.mainTpl({
+            var template = this.mainTemplate({
                 icons: this.options.icons
             });
             
-            this.$el.html(tpl);
+            this.$el.html(template);
             this.storeSelectors();
             this.updatePlaceHolder();
             this.createDropdown();

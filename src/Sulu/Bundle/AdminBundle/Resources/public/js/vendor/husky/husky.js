@@ -44296,7 +44296,7 @@ define('__component__$data-navigation@husky',[
             this.currentView = null;
             this.cache = this.sandbox.cacheFactory.create();
             this.options = this.sandbox.util.extend(true, {}, defaultOptions, this.options);
-            this.mainTpl = this.sandbox.util.template(templates.main());
+            this.mainTemplate = this.sandbox.util.template(templates.main());
             this.headerTpl = this.sandbox.util.template(templates.header());
 
             this.render();
@@ -44335,7 +44335,7 @@ define('__component__$data-navigation@husky',[
          * @method render
          */
         render: function() {
-            var tpl = this.mainTpl({options: this.options});
+            var tpl = this.mainTemplate({options: this.options});
             this.$el.html(tpl);
             this.bindDOMEvents();
 

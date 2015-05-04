@@ -18,15 +18,15 @@
                  * Set a url in the url store
                  * @method setUrl
                  * @param {String} key
-                 * @param {Mixed} urlTpl
+                 * @param {Mixed} template
                  * @param {Function} handler
                  */
-                sandbox.urlManager.setUrl = function(key, urlTpl, handler) {
+                sandbox.urlManager.setUrl = function(key, template, handler) {
                     urlStore[key] = {
-                        template: urlTpl,
+                        template: template,
                         handler: handler
                     };
-                },
+                };
 
                 /**
                  * @method getUrl
@@ -35,7 +35,7 @@
                  */
                 sandbox.urlManager.getUrl = function(key, data) {
                     var urlEntry = urlStore[key],
-                        urlTemplate = null;
+                        template;
 
                     if (!urlEntry) {
                         return null;
@@ -47,13 +47,13 @@
 
                     _.extend(data, { languageCode: AppConfig.getUser().locale }, {});
 
-                    urlTemplate = urlEntry.template;
+                    template = urlEntry.template;
 
-                    if (typeof urlTemplate === 'function') {
-                        urlTemplate = urlEntry.template.call(this, data);
+                    if (typeof template === 'function') {
+                        template = urlEntry.template.call(this, data);
                     }
 
-                    return sandbox.template.parse(urlTemplate, data);
+                    return sandbox.template.parse(template, data);
                 }
             }
         };

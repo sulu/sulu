@@ -7,7 +7,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
- 
+
 namespace Sulu\Bundle\SearchBundle\Rest;
 
 use Hateoas\Representation\PaginatedRepresentation;
@@ -41,7 +41,18 @@ class SearchResultRepresentation extends PaginatedRepresentation
         $total = null,
         $totals = array()
     ) {
-        parent::__construct($inline, $route, $parameters, $page, $limit, $pages, $pageParameterName, $limitParameterName, $absolute, $total);
+        parent::__construct(
+            $inline,
+            $route,
+            $parameters,
+            $page,
+            $limit,
+            $pages,
+            $pageParameterName,
+            $limitParameterName,
+            $absolute,
+            $total
+        );
 
         $this->totals = $totals;
     }

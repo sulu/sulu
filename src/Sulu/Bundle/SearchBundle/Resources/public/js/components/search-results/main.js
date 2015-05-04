@@ -16,27 +16,28 @@ define([
     'config',
     'text!sulusearch/components/search-results/main.html',
     'text!sulusearch/components/search-results/search-results.html'
-    ], function(Config, mainTpl, searchResultsTpl) {
+], function(Config, mainTemplate, searchResultsTemplate) {
 
     'use strict';
 
     var defaults = {
-        instanceName: '',
-        searchUrl: '/admin/search',
-        enabledCategoriesUrl: '/admin/search/categories'
-    },
+            instanceName: '',
+            searchUrl: '/admin/search',
+            enabledCategoriesUrl: '/admin/search/categories',
+            pageLimit: 20
+        },
 
-    createEventName = function(postfix) {
-        return 'sulu.search-results.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
-    },
+        createEventName = function(postfix) {
+            return 'sulu.search-results.' + ((!!this.options.instanceName) ? this.options.instanceName + '.' : '') + postfix;
+        },
 
-    /**
-     * trigger after initialization has finished
-     * @event sulu.search-results.[INSTANCE_NAME].initialized
-     */
-    INITIALIZED = function() {
-        return createEventName.call(this, 'initialized');
-    };
+        /**
+         * trigger after initialization has finished
+         * @event sulu.search-results.[INSTANCE_NAME].initialized
+         */
+        INITIALIZED = function() {
+            return createEventName.call(this, 'initialized');
+        };
 
     return {
         /**
@@ -45,8 +46,8 @@ define([
         initialize: function() {
             // merge defaults
             this.options = this.sandbox.util.extend(true, {}, defaults, this.options);
-            this.mainTpl = this.sandbox.util.template(mainTpl);
-            this.searchResultsTpl = this.sandbox.util.template(searchResultsTpl);
+            this.mainTemplate = this.sandbox.util.template(mainTemplate);
+            this.searchResultsTemplate = this.sandbox.util.template(searchResultsTemplate);
             this.dropDownEntries = [];
             this.enabledCategories = [];
             this.categories = {};
@@ -65,7 +66,7 @@ define([
                 this.render();
                 this.startInfiniteScroll();
                 this.bindEvents();
-                this.bindDOMEvents();
+                this.bindDomEvents();
                 this.sandbox.emit(INITIALIZED.call(this));
             }.bind(this));
         },
@@ -81,9 +82,9 @@ define([
         },
 
         /**
-         * @method bindDOMEvents
+         * @method bindDomEvents
          */
-        bindDOMEvents: function() {
+        bindDomEvents: function() {
             this.$el.on('click', '.search-results-section li', this.openSearchEntry.bind(this));
         },
 
@@ -91,11 +92,11 @@ define([
          * @method render
          */
         render: function() {
-            var tpl = this.mainTpl({
+            var template = this.mainTemplate({
                 translate: this.sandbox.translate
             });
-            
-            this.$el.html(tpl);
+
+            this.$el.html(template);
             this.createSearchInput();
         },
 
@@ -192,7 +193,7 @@ define([
 
                 this.state.page++;
 
-                return this.load({ limit: 20 })
+                return this.load({limit: this.options.pageLimit})
                     .then(this.mergeResults.bind(this))
                     .then(this.updateResults.bind(this));
             } else {
@@ -322,7 +323,7 @@ define([
                 }.bind(this));
             }
 
-            return this.searchResultsTpl({
+            return this.searchResultsTemplate({
                 sections: sections,
                 categories: this.categories,
                 totals: this.totals,
@@ -335,10 +336,10 @@ define([
          * @method updateResults
          */
         updateResults: function(data) {
-            var tpl = this.getTemplate(data);
+            var template = this.getTemplate(data);
 
             this.stopLoader();
-            this.$el.find('.search-results').html(tpl);
+            this.$el.find('.search-results').html(template);
         },
 
         /**
