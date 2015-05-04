@@ -18,8 +18,10 @@ class InvalidAmountOfDefaultErrorTemplateException extends WebspaceException
     /**
      * InvalidAmountOfDefaultErrorTemplateException constructor.
      */
-    public function __construct()
+    public function __construct($webspace)
     {
-        parent::__construct('One or no error template has to defined as default');
+        parent::__construct(sprintf('One or no error template in webspace "%s" has to defined as default.', $webspace));
+
+        $this->webspace = $webspace;
     }
 }

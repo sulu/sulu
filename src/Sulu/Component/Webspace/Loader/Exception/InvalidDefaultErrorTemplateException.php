@@ -28,12 +28,22 @@ class InvalidDefaultErrorTemplateException extends WebspaceException
     public function __construct($template, $webspace)
     {
         parent::__construct(
-            'Default cannot of "%s" in webspace "%s" be false if no code is defined.',
-            $template,
-            $webspace
+            sprintf(
+                'Default cannot of "%s" in webspace "%s" be false if no code is defined.',
+                $template,
+                $webspace
+            )
         );
-        
+
         $this->template = $template;
         $this->webspace = $webspace;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

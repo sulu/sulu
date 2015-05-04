@@ -316,12 +316,12 @@ class XmlFileLoader extends FileLoader
             } elseif (($defaultNode = $errorTemplateNode->attributes->getNamedItem('default')) !== null) {
                 $default = $defaultNode->nodeValue === 'true';
                 if (!$default) {
-                    throw new InvalidDefaultErrorTemplateException();
+                    throw new InvalidDefaultErrorTemplateException($template, $this->webspace->getKey());
                 }
                 $defaultErrorTemplates++;
                 $code = 'default';
             } else {
-                throw new InvalidErrorTemplateException($template);
+                throw new InvalidErrorTemplateException($template, $this->webspace->getKey());
             }
 
             $theme->addErrorTemplate($code, $template);
@@ -329,7 +329,7 @@ class XmlFileLoader extends FileLoader
 
         // only one or none default error-template is legal
         if ($defaultErrorTemplates > 1) {
-            throw new InvalidAmountOfDefaultErrorTemplateException();
+            throw new InvalidAmountOfDefaultErrorTemplateException($this->webspace->getKey());
         }
 
         return $theme;
