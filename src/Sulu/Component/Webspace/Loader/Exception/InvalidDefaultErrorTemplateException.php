@@ -29,7 +29,7 @@ class InvalidDefaultErrorTemplateException extends WebspaceException
     {
         parent::__construct(
             sprintf(
-                'Default cannot of "%s" in webspace "%s" be false if no code is defined.',
+                'Default of "%s" in webspace "%s" cannot be false if no code is defined.',
                 $template,
                 $webspace
             )
