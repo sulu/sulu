@@ -14,9 +14,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
 use Sulu\Bundle\ResourceBundle\Api\Filter;
-use Sulu\Bundle\ResourceBundle\Entity\ConditionGroupRepositoryInterface;
+use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
@@ -57,20 +58,20 @@ class FilterManager implements FilterManagerInterface
     protected $userRepository;
 
     /**
-     * @var ConditionGroupRepositoryInterface
+     * @var ConditionRepositoryInterface
      */
-    protected $conditionGroupRepository;
+    protected $conditionRepository;
 
     public function __construct(
         EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
-        ConditionGroupRepositoryInterface $conditionGroupRepository
+        ConditionRepositoryInterface $conditionRepository
     ) {
         $this->em = $em;
         $this->filterRepository = $filterRepo;
         $this->userRepository = $userRepository;
-        $this->conditionGroupRepository = $conditionGroupRepository;
+        $this->conditionRepository = $conditionRepository;
     }
 
     /**
@@ -95,8 +96,8 @@ class FilterManager implements FilterManagerInterface
             array(
                 self::$filterTranslationEntityName => new DoctrineJoinDescriptor(
                     self::$filterTranslationEntityName,
-                    self::$filterEntityName.'.translations',
-                    self::$filterTranslationEntityName.'.locale = \''.$locale.'\''
+                    self::$filterEntityName . '.translations',
+                    self::$filterTranslationEntityName . '.locale = \'' . $locale . '\''
                 ),
             )
         );
@@ -233,21 +234,29 @@ class FilterManager implements FilterManagerInterface
      * @param ConditionGroupEntity $conditionGroup
      * @param array $matchedEntry
      * @return bool
+     * @throws ConditionGroupMismatchException
      * @throws FilterDependencyNotFoundException
      */
     protected function updateConditionGroup(ConditionGroupEntity $conditionGroup, $matchedEntry)
     {
-        if (isset($matchedEntry['conditions'])) {
-
+        if (array_key_exists('id', $matchedEntry) && isset($matchedEntry['conditions'])) {
             foreach ($matchedEntry['conditions'] as $conditionData) {
-
                 if (array_key_exists('id', $conditionData)) {
                     /** @var ConditionEntity $conditionEntity */
-                    $conditionEntity = $this->conditionGroupRepository->findById($conditionData['id']);
+                    $conditionEntity = $this->conditionRepository->findById($conditionData['id']);
+
+                    // check if condition exists at all
                     if (!$conditionEntity) {
                         throw new FilterDependencyNotFoundException(
                             self::$conditionEntityName,
                             $conditionData['id']
+                        );
+                    }
+
+                    // check if conditions is related with condition group
+                    if($conditionEntity->getConditionGroup()->getId() !== $conditionGroup->getId()){
+                        throw new ConditionGroupMismatchException(
+                            $matchedEntry['id']
                         );
                     }
                 } else {

@@ -65,11 +65,11 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 this.save(data);
             }.bind(this));
 
-            this.sandbox.on(FILTER_DELETE, function(data) {
+            this.sandbox.on(FILTER_DELETE, function(data, type) {
                 if (this.sandbox.util.typeOf(data) === 'array') {
                     this.deleteFilters(data);
                 } else {
-                    this.deleteFilter(data);
+                    this.deleteFilter(data, type);
                 }
             }.bind(this));
 
@@ -86,6 +86,10 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             }, this);
         },
 
+        /**
+         * Save an existing filter
+         * @param data
+         */
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
             this.filter.set(data);
@@ -104,6 +108,9 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             });
         },
 
+        /**
+         * Navigate to the form for a new filter
+         */
         newFilter: function() {
             this.sandbox.emit(
                 'sulu.router.navigate',
@@ -111,52 +118,56 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
             );
         },
 
-        deleteFilter: function(id) {
-            // TODO
-            //if (!id && id != 0) {
-            //    // TODO: translations
-            //    this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
-            //    return;
-            //}
-            //this.showDeleteConfirmation(id, function(wasConfirmed) {
-            //    if (wasConfirmed) {
-            //        // TODO: show loading icon
-            //        var attribute = Attribute.findOrCreate({id: id});
-            //        attribute.destroy({
-            //            success: function() {
-            //                this.sandbox.emit(
-            //                    'sulu.router.navigate',
-            //                    'pim/attributes'
-            //                );
-            //            }.bind(this)
-            //        });
-            //    }
-            //}.bind(this));
+        /**
+         * Deletes a filter by id and navigates back to the list view
+         * @param id
+         * @param type
+         */
+        deleteFilter: function(id, type) {
+            if (!id && id != 0) {
+                // TODO: translations
+                this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
+                return;
+            }
+            this.showDeleteConfirmation(id, function(wasConfirmed) {
+                if (wasConfirmed) {
+                    // TODO: show loading icon
+                    var filter = Filter.findOrCreate({id: id});
+                    filter.destroy({
+                        success: function() {
+                            this.sandbox.emit(
+                                'sulu.router.navigate',
+                                'resource/filters/' + type
+                            );
+                        }.bind(this)
+                    });
+                }
+            }.bind(this));
         },
 
         deleteFilters: function(ids) {
-            // TODO
-            //if (ids.length < 1) {
-            //    // TODO: translations
-            //    this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
-            //    return;
-            //}
-            //this.showDeleteConfirmation(ids, function(wasConfirmed, removeAttributes) {
-            //    if (wasConfirmed) {
-            //        // TODO: show loading icon
-            //        ids.forEach(function(id) {
-            //            var attribute = Attribute.findOrCreate({id: id});
-            //            attribute.destroy({
-            //                data: {removeAttributes: !!removeAttributes},
-            //                processData: true,
-            //
-            //                success: function() {
-            //                    this.sandbox.emit('husky.datagrid.record.remove', id);
-            //                }.bind(this)
-            //            });
-            //        }.bind(this));
-            //    }
-            //}.bind(this));
+            if (ids.length < 1) {
+                // TODO: translations
+                this.sandbox.emit('sulu.overlay.show-error', 'sulu.overlay.delete-no-items');
+                return;
+            }
+            this.showDeleteConfirmation(ids, function(wasConfirmed, removeAttributes) {
+                if (wasConfirmed) {
+                    // TODO: show loading icon
+                    // TODO batch delete
+                    //ids.forEach(function(id) {
+                    //    var filter = Filter.findOrCreate({id: id});
+                    //    attribute.destroy({
+                    //        data: {removeAttributes: !!removeAttributes},
+                    //        processData: true,
+                    //
+                    //        success: function() {
+                    //            this.sandbox.emit('husky.datagrid.record.remove', id);
+                    //        }.bind(this)
+                    //    });
+                    //}.bind(this));
+                }
+            }.bind(this));
         },
 
         showDeleteConfirmation: function(ids, callbackFunction) {
@@ -167,7 +178,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 this.sandbox.emit(
                     'sulu.overlay.show-warning',
                     'sulu.overlay.be-careful',
-                    'product.attributes.delete.warning',
+                    'resource.filter.delete.warning',
                     callbackFunction.bind(this, false),
                     callbackFunction
                 );
