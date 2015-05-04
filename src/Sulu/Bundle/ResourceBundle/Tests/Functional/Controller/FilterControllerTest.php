@@ -131,7 +131,7 @@ class FilterControllerTest extends SuluTestCase
     {
         $this->client->request(
             'GET',
-            '/api/filters/'.$this->filter1->getId()
+            '/api/filters/' . $this->filter1->getId()
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -209,7 +209,7 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->client->request('GET', '/api/filters/'.$response->id);
+        $this->client->request('GET', '/api/filters/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -229,26 +229,26 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testInvalidPost()
     {
-        $filter = [
+        $filter = array(
             'conjunction' => false,
-            'entityName' => 'contact'
-        ];
+            'entityName' => 'contact',
+        );
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $filter = [
+        $filter = array(
             'name' => 'name',
-            'entityName' => 'contact'
-        ];
+            'entityName' => 'contact',
+        );
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
 
-        $filter = [
+        $filter = array(
             'name' => 'name',
-            'conjunction' => false
-        ];
+            'conjunction' => false,
+        );
         $this->client->request('POST', '/api/filters', $filter);
 
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
@@ -256,31 +256,31 @@ class FilterControllerTest extends SuluTestCase
 
     public function createFilterAsArray($name, $conjunction, $entityName, $partial = false)
     {
-        $result = [
+        $result = array(
             'name' => $name,
             'conjunction' => $conjunction,
             'entityName' => $entityName,
-        ];
+        );
 
         if (!$partial) {
-            $result['conditionGroups'] = [
-                [
-                    'conditions' => [
-                        [
+            $result['conditionGroups'] = array(
+                array(
+                    'conditions' => array(
+                        array(
                             'value' => '5',
                             'field' => 'id',
                             'operator' => '>',
                             'type' => Condition::TYPE_NUMBER,
-                        ],
-                        [
+                        ),
+                        array(
                             'value' => 'test',
                             'field' => 'name',
                             'operator' => 'LIKE',
                             'type' => Condition::TYPE_STRING,
-                        ],
-                    ],
-                ],
-            ];
+                        ),
+                    ),
+                ),
+            );
         }
 
         return $result;
@@ -295,7 +295,7 @@ class FilterControllerTest extends SuluTestCase
         $this->client->request('POST', '/api/filters', $filter);
         $response = json_decode($this->client->getResponse()->getContent());
 
-        $this->client->request('GET', '/api/filters/'.$response->id);
+        $this->client->request('GET', '/api/filters/' . $response->id);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
@@ -316,30 +316,30 @@ class FilterControllerTest extends SuluTestCase
         // remove old condition group and add a new one
         $this->client->request(
             'PUT',
-            '/api/filters/'.$this->filter1->getId(),
-            [
+            '/api/filters/' . $this->filter1->getId(),
+            array(
                 'name' => $newName,
                 'conjunction' => $conjunction,
                 'entityName' => $newEntityName,
-                'conditionGroups' => [
-                    [
-                        'conditions' => [
-                            [
+                'conditionGroups' => array(
+                    array(
+                        'conditions' => array(
+                            array(
                                 'value' => '6',
                                 'field' => 'nr',
                                 'operator' => '<',
                                 'type' => Condition::TYPE_NUMBER,
-                            ],
-                            [
+                            ),
+                            array(
                                 'value' => 'test',
                                 'field' => 'comment',
                                 'operator' => '%LIKE%',
                                 'type' => Condition::TYPE_STRING,
-                            ],
-                        ],
-                    ],
-                ],
-            ]
+                            ),
+                        ),
+                    ),
+                ),
+            )
         );
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -355,44 +355,44 @@ class FilterControllerTest extends SuluTestCase
         // remove old condition group and add a new one
         $this->client->request(
             'PUT',
-            '/api/filters/'.$this->filter1->getId(),
-            [
-                'conditionGroups' => [
-                    [
+            '/api/filters/' . $this->filter1->getId(),
+            array(
+                'conditionGroups' => array(
+                    array(
                         'id' => $conditionGroupId,
-                        'conditions' => [
-                            [
+                        'conditions' => array(
+                            array(
                                 'value' => '7',
                                 'field' => 'id',
                                 'operator' => 'LIKE',
                                 'type' => Condition::TYPE_STRING,
-                            ],
-                            [
+                            ),
+                            array(
                                 'value' => 'test2',
                                 'field' => 'nr',
                                 'operator' => '>',
                                 'type' => Condition::TYPE_NUMBER,
-                            ],
-                        ],
-                    ],
-                    [
-                        'conditions' => [
-                            [
+                            ),
+                        ),
+                    ),
+                    array(
+                        'conditions' => array(
+                            array(
                                 'value' => '123',
                                 'field' => 'nr',
                                 'operator' => '=<',
                                 'type' => Condition::TYPE_NUMBER,
-                            ],
-                            [
+                            ),
+                            array(
                                 'value' => 'test17',
                                 'field' => 'comment',
                                 'operator' => '%LIKE%',
                                 'type' => Condition::TYPE_STRING,
-                            ],
-                        ],
-                    ],
-                ],
-            ]
+                            ),
+                        ),
+                    ),
+                ),
+            )
         );
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -415,12 +415,12 @@ class FilterControllerTest extends SuluTestCase
 
         $this->client->request(
             'PUT',
-            '/api/filters/'.$this->filter1->getId(),
-            [
+            '/api/filters/' . $this->filter1->getId(),
+            array(
                 'name' => $newName,
                 'conjunction' => $conjunction,
                 'entityName' => $newEntityName,
-            ]
+            )
         );
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent());
@@ -449,10 +449,10 @@ class FilterControllerTest extends SuluTestCase
      */
     public function testDeleteById()
     {
-        $this->client->request('DELETE', '/api/filters/'.$this->filter1->getId());
+        $this->client->request('DELETE', '/api/filters/' . $this->filter1->getId());
         $this->assertEquals('204', $this->client->getResponse()->getStatusCode());
 
-        $this->client->request('GET', '/api/filters/'.$this->filter1->getId());
+        $this->client->request('GET', '/api/filters/' . $this->filter1->getId());
         $this->assertEquals('404', $this->client->getResponse()->getStatusCode());
     }
 
