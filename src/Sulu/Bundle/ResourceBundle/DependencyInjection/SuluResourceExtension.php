@@ -28,7 +28,40 @@ class SuluResourceExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+
+        $this->setDefaultForFilterConditionsConjunction($config);
+        $container->setParameter(
+            'sulu_resource.filters.conjunction',
+            $config['filters']['conjunctions']
+        );
+    }
+
+    /**
+     * Sets default values for filter condition conjunction
+     * @param $config
+     */
+    private function setDefaultForFilterConditionsConjunction(&$config)
+    {
+        if (!array_key_exists('filters', $config) ||
+            !array_key_exists('conjunctions', $config['filters']) ||
+            count($config['filters']['conjunctions']) === 0
+        ) {
+            $config['filters'] = array();
+            $config['filters']['conjunctions'] = array(
+                array(
+                    'id' => 'and',
+                    'translation' => 'resource.filter.conjunction.and',
+                ),
+                array(
+                    'id' => 'or',
+                    'translation' => 'resource.filter.conjunction.or',
+                )
+            );
+        }
     }
 }
