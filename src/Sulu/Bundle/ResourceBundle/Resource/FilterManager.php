@@ -10,7 +10,7 @@
 
 namespace Sulu\Bundle\ResourceBundle\Resource;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Condition as ConditionEntity;
 use Sulu\Bundle\ResourceBundle\Entity\ConditionGroup as ConditionGroupEntity;
 use Sulu\Bundle\ResourceBundle\Api\Filter;
@@ -28,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 /**
+ * Manager responsible for filters
  * Class FilterManager
  * @package Sulu\Bundle\ResourceBundle\Filter
  */
@@ -41,7 +42,7 @@ class FilterManager implements FilterManagerInterface
     protected static $filterTranslationEntityName = 'SuluResourceBundle:FilterTranslation';
 
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $em;
 
@@ -61,7 +62,7 @@ class FilterManager implements FilterManagerInterface
     protected $conditionGroupRepository;
 
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
         ConditionGroupRepositoryInterface $conditionGroupRepository

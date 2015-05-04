@@ -15,7 +15,7 @@ namespace Sulu\Bundle\ResourceBundle\Resource\Exception;
  * a filter is missing.
  *
  * Class MissingFilterException
- * @package Sulu\Bundle\ResourceBundle\Filter\Exception
+ * @package Sulu\Bundle\ResourceBundle\Resource\Exception
  */
 class MissingFilterException extends FilterException
 {
