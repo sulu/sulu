@@ -2,6 +2,15 @@
 
 ## dev-develop
 
+### Smart content tag operator
+
+The default operator for tags is now changed to OR. So you have to update with the following command,
+because the previous default operator was AND.
+
+```bash
+app/console sulu:upgrade:0.18.0:smart-content-operator tag and
+```
+
 ### Admin
 
 The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has
