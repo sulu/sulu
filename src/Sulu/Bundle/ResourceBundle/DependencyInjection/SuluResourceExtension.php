@@ -39,6 +39,8 @@ class SuluResourceExtension extends Extension
             'sulu_resource.filters.conjunction',
             $config['filters']['conjunctions']
         );
+
+        $container->setparameter('sulu_resource.filters.aliases', $config['aliases']);
     }
 
     /**
