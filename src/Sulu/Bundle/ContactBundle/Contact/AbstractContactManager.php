@@ -11,19 +11,18 @@
 namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountAddress;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
+use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 
 /**
  * This Manager handles general Account and Contact functionality
- * Class AbstractContactManager
- * @package Sulu\Bundle\ContactBundle\Contact
  */
 abstract class AbstractContactManager implements ContactManagerInterface
 {
     protected static $contactEntityName = 'SuluContactBundle:Contact';
-    protected static $accountEntityName = 'SuluContactBundle:Account';
     protected static $accountContactEntityName = 'SuluContactBundle:AccountContact';
     protected static $positionEntityName = 'SuluContactBundle:Position';
     protected static $addressTypeEntityName = 'SuluContactBundle:AddressType';
@@ -38,11 +37,18 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public $em;
 
     /**
-     * @param ObjectManager $em
+     * @var string
      */
-    public function __construct(ObjectManager $em)
+    protected $accountEntityName;
+
+    /**
+     * @param ObjectManager $em
+     * @param $accountEntityName
+     */
+    public function __construct(ObjectManager $em, $accountEntityName)
     {
         $this->em = $em;
+        $this->accountEntityName = $accountEntityName;
     }
 
     /**
@@ -101,7 +107,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * sets Entity's Main-Email
-     * @param Contact|Account $entity
+     * @param Contact|AccountInterface $entity
      */
     public function setMainEmail($entity)
     {
@@ -115,7 +121,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * sets Entity's Main-Phone
-     * @param Contact|Account $entity
+     * @param Contact|AccountInterface $entity
      */
     public function setMainPhone($entity)
     {
@@ -129,7 +135,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * sets Entity's Main-Fax
-     * @param Contact|Account $entity
+     * @param Contact|AccountInterface $entity
      */
     public function setMainFax($entity)
     {
@@ -143,7 +149,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * sets Entity's Main-Url
-     * @param Contact|Account $entity
+     * @param Contact|AccountInterface $entity
      */
     public function setMainUrl($entity)
     {
@@ -157,11 +163,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * Returns AccountContact relation if exists
-     * @param Account $account
+     * @param AccountInterface $account
      * @param Contact $contact
      * @return null|AccountContact
      */
-    public function getAccounContact(Account $account, Contact $contact)
+    public function getAccounContact(AccountInterface $account, Contact $contact)
     {
         foreach ($contact->getAccountContacts() as $accountContact) {
             /** @var AccountContact $accountContact */
@@ -176,7 +182,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * returns the main account-contact relation
      *
-     * @param Contact|Account $contact
+     * @param Contact|AccountInterface $contact
      * @return AccountContact|bool
      */
     public function getMainAccountContact($contact)
@@ -195,11 +201,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * creates a new main Account Contacts relation
      *
      * @param Contact $contact
-     * @param Account $account
+     * @param AccountInterface $account
      * @param $position
      * @return AccountContact
      */
-    public function createMainAccountContact(Contact $contact, Account $account, $position = null)
+    public function createMainAccountContact(Contact $contact, AccountInterface $account, $position = null)
     {
         $accountContact = new AccountContact();
         $accountContact->setAccount($account);
@@ -214,7 +220,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * Get a position object
-     * @param $id The position id
+     * @param int $id The position id
      * @return mixed
      */
     public function getPosition($id)
@@ -373,7 +379,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @param $arrayCollection
      */
-    protected function deleteAllEntitiesOfCollection($arrayCollection) {
+    protected function deleteAllEntitiesOfCollection($arrayCollection)
+    {
         foreach ($arrayCollection as $entity) {
             $this->em->remove($entity);
         }
@@ -381,7 +388,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     /**
      * Returns the billing address of an account/contact
-     * @param Account|Contact $entity
+     * @param AccountInterface|Contact $entity
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
      * @return mixed
@@ -389,15 +396,16 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function getBillingAddress($entity, $force = false)
     {
         /** @var Address $address */
-        $conditionCallback = function($address) {
+        $conditionCallback = function ($address) {
             return $address->getBillingAddress();
         };
+
         return $this->getAddressByCondition($entity, $conditionCallback, $force);
     }
 
     /**
      * Returns the delivery address
-     * @param Account|Contact $entity
+     * @param AccountInterface|Contact $entity
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
      * @return mixed
@@ -405,41 +413,78 @@ abstract class AbstractContactManager implements ContactManagerInterface
     public function getDeliveryAddress($entity, $force = false)
     {
         /** @var Address $address */
-        $conditionCallback = function($address) {
+        $conditionCallback = function ($address) {
             return $address->getDeliveryAddress();
         };
+
         return $this->getAddressByCondition($entity, $conditionCallback, $force);
     }
 
     /**
+     * checks if an account is employee of a company
+     * @param $contact
+     * @param $account
+     * @return bool
+     */
+    public function contactIsEmployeeOfAccount($contact, $account)
+    {
+        if ($contact->getAccountContacts() && !$contact->getAccountContacts()->isEmpty()) {
+            foreach ($contact->getAccountContacts() as $accountContact) {
+                if ($accountContact->getAccount()->getId() === $account->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * returns addresses from account or contact
+     *
+     * @param AccountInterface|Contact $entity
+     * @return \Doctrine\Common\Collections\Collection|null
+     */
+    private function getAddresses($entity)
+    {
+        if ($entity instanceof AccountInterface) {
+            return $entity->getAccountAddresses();
+        } elseif ($entity instanceof Contact) {
+            return $entity->getContactAddresses();
+        }
+
+        return null;
+    }
+
+    /**
      * Returns an address by callback-condition
-     * @param Account|Contact $entity
+     *
+     * @param AccountInterface|Contact $entity
+     * @param callable $conditionCallback
      * @param bool $force Forces function to return an address if any address is defined
      *          if no delivery address is defined it will first return the main address then any
      * @return mixed
      */
     public function getAddressByCondition($entity, callable $conditionCallback, $force = false)
     {
-        $accountAddresses = $entity->getAccountAddresses();
+        $addresses = $this->getAddresses($entity);
         $address = null;
         $main = null;
 
-        if (!is_null($accountAddresses)) {
+        if (!is_null($addresses)) {
             /** @var AccountAddress $accountAddress */
-            foreach ($accountAddresses as $accountAddress) {
-                if ($conditionCallback($accountAddress->getAddress())) {
-                    return $accountAddress->getAddress();
+            foreach ($addresses as $address) {
+                if ($conditionCallback($address->getAddress())) {
+                    return $address->getAddress();
                 }
-                if ($accountAddress->getMain()) {
-                    $main = $accountAddress->getAddress();
+                if ($address->getMain()) {
+                    $main = $address->getAddress();
                 }
             }
             if ($force) {
                 // return main or first address
-                if ($main !== null ) {
-                    return $main;
-                } else {
-                    return $accountAddresses->first()->getAddress();
+                if ($main === null && $addresses->first()) {
+                    return $addresses->first()->getAddress();
                 }
             }
         }

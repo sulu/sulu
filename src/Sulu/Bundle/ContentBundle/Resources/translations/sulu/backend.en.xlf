@@ -216,7 +216,7 @@
             </trans-unit>
             <trans-unit id="90a3276459ba0f52ef7a4d320298d5d" resname="smart-content.choose-data-source.cancel">
                 <source>smart-content.choose-data-source.cancel</source>
-                <target>Back</target>
+                <target>Cancel</target>
             </trans-unit>
             <trans-unit id="443d99ff2f64652633a5ca2169f22254" resname="sulu.content.seo.title">
                 <source>sulu.content.seo.title</source>
@@ -320,7 +320,7 @@
             </trans-unit>
             <trans-unit id="abaaaaa371239fbed4a73a4123dfdf010" resname="sulu.content.form.settings.type.internal-link.title">
                 <source>sulu.content.form.settings.type.internal-link.title</source>
-                <target>Title</target>
+                <target>Link title</target>
             </trans-unit>
             <trans-unit id="abaaaaa371239fbed4a73a4123dfdf011" resname="sulu.content.form.settings.type.internal-link.link">
                 <source>sulu.content.form.settings.type.internal-link.link</source>
@@ -406,6 +406,58 @@
             <trans-unit id="abaaaaa382148fbed4a73a4123dfdf028" resname="content.contents.start-preview">
                 <source>content.contents.start-preview</source>
                 <target>Start preview</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf030" resname="sulu.content.form.settings.changelog">
+                <source>sulu.content.form.settings.changelog</source>
+                <target>Changelog</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf031" resname="sulu.content.form.settings.changelog.changed">
+                <source>sulu.content.form.settings.changelog.changed</source>
+                <target>Changed by:</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf032" resname="sulu.content.form.settings.changelog.created">
+                <source>sulu.content.form.settings.changelog.created</source>
+                <target>Created by:</target>
+            </trans-unit>
+            <trans-unit id="abaaaaa382148fbed4a73a4123dfdf033" resname="sulu.content.form.settings.changelog.user-not-found">
+                <source>sulu.content.form.settings.changelog.user-not-found</source>
+                <target>User not found</target>
+            </trans-unit>
+            <trans-unit id="acbaaaaa382148fbed4a73a4123dfdf0f" resname="column-navigation.ghost">
+                <source>column-navigation.ghost</source>
+                <target>Ghost page</target>
+            </trans-unit>
+            <trans-unit id="acbaaaaa38148fbed4a73a4123dfdf0fc" resname="column-navigation.shadow">
+                <source>column-navigation.shadow</source>
+                <target>Shadow page</target>
+            </trans-unit>
+            <trans-unit id="9cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.unpublished">
+                <source>public.unpublished</source>
+                <target>Not published</target>
+            </trans-unit>
+            <trans-unit id="5cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.internal-link">
+                <source>public.internal-link</source>
+                <target>internal link</target>
+            </trans-unit>
+            <trans-unit id="2cbaaaaa38148fbed4a73a4123dfdf0fc" resname="public.external-link">
+                <source>public.external-link</source>
+                <target>external link</target>
+            </trans-unit>
+            <trans-unit id="2cbaaaaa38248fbed4a73a4129dfdf0fc" resname="column-navigation.order-title">
+                <source>column-navigation.order-title</source>
+                <target>Rearrange page</target>
+            </trans-unit>
+            <trans-unit id="2cbbaaca39148fbed4a73a4123dfdf0fc" resname="column-navigation.order-message">
+                <source>column-navigation.order-message</source>
+                <target>The operation you are about to do will rearrange a page.</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede200b7f5acb2dh4b" resname="search-overlay.category.page.title">
+                <source>search-overlay.category.page.title</source>
+                <target>Pages</target>
+            </trans-unit>
+            <trans-unit id="e4b14069a8a085ede2092hf5acb2dh4b" resname="search-overlay.placeholder.page">
+                <source>search-overlay.placeholder.page</source>
+                <target>Search pages...</target>
             </trans-unit>
         </body>
     </file>

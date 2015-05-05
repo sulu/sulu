@@ -36,16 +36,28 @@ class CreateRoleCommandTest extends SuluTestCase
         $this->tester = new CommandTester($createUserCommand);
     }
 
-    public function testExecute()
+    public function testCreateRole()
+    {
+        $this->createRole('foo');
+        $this->assertEquals('Created role "foo" in system "Sulu".' . PHP_EOL, $this->tester->getDisplay());
+    }
+
+    public function testCreateRoleAlreadyExisting()
+    {
+        $this->createRole('foo');
+        $this->createRole('foo');
+
+        $this->assertEquals('Role "foo" already exists.' . PHP_EOL, $this->tester->getDisplay());
+    }
+
+    private function createRole($name)
     {
         $this->tester->execute(
             array(
-                'name' => 'test',
+                'name' => $name,
                 'system' => 'Sulu'
             ),
             array('interactive' => false)
         );
-
-        $this->assertEquals("Created role test in system Sulu\n", $this->tester->getDisplay());
     }
 }

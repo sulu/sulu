@@ -150,14 +150,14 @@ define(function() {
          * @param {object} request
          * @return {string}
          */
-        extractErrorMessage: function (request) {
+        extractErrorMessage: function(request) {
             var message = [request.status];
 
             // if response is symfony JSON exception
             if (request.responseJSON !== undefined) {
-                var response = request.responseJSON
+                var response = request.responseJSON;
 
-                this.sandbox.util.each(response, function (index) {
+                this.sandbox.util.each(response, function(index) {
                     var exception = response[index];
 
                     if (exception.message !== undefined) {
@@ -221,20 +221,20 @@ define(function() {
                 // prevent the default action for the anchor tag
                 this.sandbox.dom.preventDefault(event);
 
-                var dataSuluEvent = this.sandbox.dom.attr(event.currentTarget, 'data-sulu-event');
+                var dataSuluEvent = this.sandbox.dom.attr(event.currentTarget, 'data-sulu-event'),
+                    eventArgs = this.sandbox.dom.data(event.currentTarget, 'eventArgs');
 
                 // if data-sulu-event attribute is set emit the attribute value as an event
                 if (!!dataSuluEvent &&
                     typeof dataSuluEvent === 'string') {
-                    this.sandbox.emit(dataSuluEvent);
+                    this.sandbox.emit(dataSuluEvent, eventArgs);
                 }
 
                 // if valid href attribute is set navigate to it using the sulu.navigate method
-                if (!!event.currentTarget.attributes.href &&
-                    !!event.currentTarget.attributes.href.value &&
+                if (!!event.currentTarget.attributes.href && !!event.currentTarget.attributes.href.value &&
                     event.currentTarget.attributes.href.value !== '#') {
 
-                    this.emitNavigationEvent({action: event.currentTarget.attributes.href.value}, true, true);
+                    this.emitNavigationEvent({ action: event.currentTarget.attributes.href.value }, true, true);
                 }
             }.bind(this), 'a' + constants.suluNavigateAMark);
 
@@ -249,20 +249,18 @@ define(function() {
          * @param forceReload {Boolean} force page to reload
          */
         navigate: function(route, trigger, noLoader, forceReload) {
+
             // if trigger is not define make it always true to actually route to
             trigger = (typeof trigger !== 'undefined') ? trigger : true;
 
-            forceReload = forceReload === true ? true : false;
+            forceReload = forceReload === true;
 
             if (forceReload) {
                 this.sandbox.mvc.history.fragment = null;
             }
-            // only route if route has changed
-            if (noLoader !== true && this.currentRoute !== route && this.currentRoute !== null) {
-                // todo: start loader
-            }
+
             // navigate
-            router.navigate(route, {trigger: trigger});
+            router.navigate(route, { trigger: trigger });
             this.sandbox.dom.scrollTop(this.sandbox.dom.$window, 0);
         },
 
@@ -303,10 +301,17 @@ define(function() {
                 }
             }.bind(this));
 
+            this.sandbox.on('husky.data-navigation.select', function(item) {
+                if (!!item && !!item._links && !!item._links.admin) {
+                    this.sandbox.emit('sulu.router.navigate', item._links.admin.href, true, false);
+                }
+            }.bind(this));
+
             // content tabs event
             this.sandbox.on('husky.tabs.content.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
             }.bind(this));
+
             // content tabs event
             this.sandbox.on('husky.tabs.header.item.select', function(event) {
                 this.emitNavigationEvent(event, true);
@@ -491,9 +496,9 @@ define(function() {
          */
         routeToUserForm: function() {
             //Todo: don't use hardcoded url
-            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.id + '/details', true, false, false);
+            this.navigate('contacts/contacts/edit:' + this.sandbox.sulu.user.contact.id + '/details', true, false, false);
             this.sandbox.emit('husky.navigation.select-item', 'contacts/contacts');
-         },
+        },
 
         /**
          * Takes a postifix and updates the page title

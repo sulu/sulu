@@ -12,7 +12,6 @@ namespace Sulu\Bundle\WebsiteBundle\Twig;
 
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
@@ -36,15 +35,13 @@ class TestStructure extends Structure
         $this->setUuid($uuid);
         $this->setCreator($userId);
         $this->setChanger($userId);
-        $this->setCreated(new \DateTime());
-        $this->setChanged(new \DateTime());
 
         $this->addChild(new Property('title', array(), 'text_line'));
         $this->getProperty('title')->setValue($title);
     }
 }
 
-class ContentTwigExtensionTest extends ProphecyTestCase
+class ContentTwigExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var StructureResolverInterface
@@ -165,8 +162,6 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         // metadata
         $this->assertEquals(1, $result['creator']);
         $this->assertEquals(1, $result['changer']);
-        $this->assertInstanceOf('\DateTime', $result['created']);
-        $this->assertInstanceOf('\DateTime', $result['changed']);
 
         // content
         $this->assertEquals(array('title' => 'test'), $result['content']);
@@ -195,8 +190,6 @@ class ContentTwigExtensionTest extends ProphecyTestCase
         // metadata
         $this->assertEquals(1, $result['creator']);
         $this->assertEquals(1, $result['changer']);
-        $this->assertInstanceOf('\DateTime', $result['created']);
-        $this->assertInstanceOf('\DateTime', $result['changed']);
 
         // content
         $this->assertEquals(array('title' => 'test'), $result['content']);

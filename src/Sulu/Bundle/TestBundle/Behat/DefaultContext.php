@@ -12,6 +12,7 @@ namespace Sulu\Bundle\TestBundle\Behat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\PyStringNode;
 
 /**
  * Default context class for Sulu contexts.
@@ -86,6 +87,7 @@ class DefaultContext extends BaseContext implements SnippetAcceptingContext
 
     /**
      * @Then I expect to see ":text"
+     * @Given I wait to see ":text"
      */
     public function iExpectToSee($text)
     {

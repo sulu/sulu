@@ -1,5 +1,5 @@
 massive_search:
-    adapter_id: massive_search.adapter.test
+    adapter: test
 
 sulu_media:
     search:

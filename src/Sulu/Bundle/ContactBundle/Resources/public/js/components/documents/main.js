@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  */
 
-define([], function() {
+define(['widget-groups'], function(WidgetGroups) {
 
     'use strict';
 
@@ -41,11 +41,16 @@ define([], function() {
 
         view: true,
 
-        layout: {
-            sidebar: {
-                width: 'fixed',
-                cssClasses: 'sidebar-padding-50'
-            }
+        layout: function() {
+            return {
+                content: {
+                    width: 'fixed'
+                },
+                sidebar: {
+                    width: 'max',
+                    cssClasses: 'sidebar-padding-50'
+                }
+            };
         },
 
         templates: ['/admin/contact/template/basic/documents'],
@@ -68,9 +73,9 @@ define([], function() {
             this.render();
 
             if (!!this.options.data && !!this.options.data.id) {
-                if (this.options.params.type === 'contact') {
+                if (this.options.params.type === 'contact' && WidgetGroups.exists('contact-detail')) {
                     this.initSidebar('/admin/widget-groups/contact-detail?contact=', this.options.data.id);
-                } else if (this.options.params.type === 'account') {
+                } else if (this.options.params.type === 'account' && WidgetGroups.exists('account-detail')) {
                     this.initSidebar('/admin/widget-groups/account-detail?account=', this.options.data.id);
                 }
             }
@@ -79,8 +84,7 @@ define([], function() {
         getPropertyFromArrayOfObject: function(data, propertyName) {
             if (this.sandbox.util.typeOf(data) === 'array' &&
                 data.length > 0 &&
-                this.sandbox.util.typeOf(data[0]) === 'object')
-            {
+                this.sandbox.util.typeOf(data[0]) === 'object') {
                 var values = [];
                 this.sandbox.util.foreach(data, function(el) {
                     values.push(el[propertyName]);
@@ -121,8 +125,20 @@ define([], function() {
                 this.submit();
             }, this);
 
+            this.sandbox.on('sulu.header.toolbar.delete', function() {
+                if (this.options.params.type === 'account') {
+                    this.sandbox.emit('sulu.contacts.account.delete', this.options.data.id);
+                } else {
+                    this.sandbox.emit('sulu.contacts.contact.delete', this.options.data.id);
+                }
+            }, this);
+
             this.sandbox.on('sulu.header.back', function() {
-                this.sandbox.emit('sulu.contacts.accounts.list');
+                if (this.options.params.type === 'account') {
+                    this.sandbox.emit('sulu.contacts.accounts.list');
+                } else {
+                    this.sandbox.emit('sulu.contacts.contacts.list');
+                }
             }, this);
 
             this.sandbox.on('sulu.media-selection.document-selection.data-changed', function() {
@@ -132,28 +148,28 @@ define([], function() {
             this.sandbox.on('sulu.contacts.contacts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
             this.sandbox.on('sulu.contacts.accounts.medias.removed', this.resetAndRemoveFromCurrent.bind(this));
 
-            this.sandbox.on('sulu.contacts.accounts.medias.saved',  this.resetAndAddToCurrent.bind(this));
+            this.sandbox.on('sulu.contacts.accounts.medias.saved', this.resetAndAddToCurrent.bind(this));
             this.sandbox.on('sulu.contacts.contacts.medias.saved', this.resetAndAddToCurrent.bind(this));
 
             this.sandbox.on('sulu.media-selection.document-selection.record-selected', this.selectItem.bind(this));
-            this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
             this.sandbox.on('sulu.media-selection.document-selection.record-deselected', this.deselectItem.bind(this));
+            this.sandbox.on('husky.dropzone.media-selection-document-selection.files-added', this.addedItems.bind(this));
         },
 
-        resetAndRemoveFromCurrent: function(data){
+        resetAndRemoveFromCurrent: function(data) {
             this.setHeaderBar(true);
             this.newSelections = [];
             this.removedSelections = [];
-            this.sandbox.util.foreach(data, function(id){
-                if(this.currentSelection.indexOf(id) > -1){
-                    this.currentSelection.splice(this.currentSelection.indexOf(id),1);
+            this.sandbox.util.foreach(data, function(id) {
+                if (this.currentSelection.indexOf(id) > -1) {
+                    this.currentSelection.splice(this.currentSelection.indexOf(id), 1);
                 }
             }.bind(this));
 
             this.setForm(this.currentSelection);
         },
 
-        resetAndAddToCurrent: function(data){
+        resetAndAddToCurrent: function(data) {
             this.setHeaderBar(true);
             this.newSelections = [];
             this.removedSelections = [];
@@ -163,11 +179,11 @@ define([], function() {
 
         deselectItem: function(id) {
             // when an element is in current selection and was deselected
-            if(this.currentSelection.indexOf(id) > -1 && this.removedSelections.indexOf(id) === -1){
+            if (this.currentSelection.indexOf(id) > -1 && this.removedSelections.indexOf(id) === -1) {
                 this.removedSelections.push(id);
             }
 
-            if(this.newSelections.indexOf(id) > -1){
+            if (this.newSelections.indexOf(id) > -1) {
                 this.newSelections.splice(this.newSelections.indexOf(id), 1);
             }
         },
@@ -176,9 +192,9 @@ define([], function() {
          * Processes an array of items
          * @param items - array of items
          */
-        addedItems: function(items){
-            this.sandbox.util.foreach(items, function(item){
-                if(!!item && !!item.id) {
+        addedItems: function(items) {
+            this.sandbox.util.foreach(items, function(item) {
+                if (!!item && !!item.id) {
                     this.selectItem(item.id);
                 }
             }.bind(this));
@@ -186,11 +202,11 @@ define([], function() {
 
         selectItem: function(id) {
             // add element when it is really new and not already selected
-            if(this.currentSelection.indexOf(id) < 0 && this.newSelections.indexOf(id) < 0){
+            if (this.currentSelection.indexOf(id) < 0 && this.newSelections.indexOf(id) < 0) {
                 this.newSelections.push(id);
             }
 
-            if(this.removedSelections.indexOf(id) > -1){
+            if (this.removedSelections.indexOf(id) > -1) {
                 this.removedSelections.splice(this.removedSelections.indexOf(id), 1);
             }
         },
@@ -200,7 +216,6 @@ define([], function() {
          */
         submit: function() {
             if (this.sandbox.form.validate(this.form)) {
-
                 if (this.options.params.type === 'account') {
                     this.sandbox.emit('sulu.contacts.accounts.medias.save', this.options.data.id, this.newSelections, this.removedSelections);
                 } else if (this.options.params.type === 'contact') {

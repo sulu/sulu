@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Sulu\Component\Security\UserRepositoryInterface;
+use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -71,7 +71,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->where('user.id=:userId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('userId', $id);
 
             return $query->getSingleResult();
@@ -106,7 +105,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->where('user.contact=:contactId');
 
             $query = $qb->getQuery();
-            $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
             $query->setParameter('contactId', $id);
 
             return $query->getSingleResult();
@@ -116,38 +114,19 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     }
 
     /**
-     * Loads the user for the given username.
+     * Loads the user for the given username or email
      *
-     * @param string $username The username
+     * @param string $identifier The username or email of the user to load
      * @throws LockedException if the User is Locked
      * @throws DisabledException if the User is not active
      * @throws UsernameNotFoundException if the User is not found
      * @return UserInterface
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($identifier)
     {
-        $qb = $this->createQueryBuilder('user')
-            ->leftJoin('user.userRoles', 'userRoles')
-            ->leftJoin('userRoles.role', 'role')
-            ->leftJoin('role.permissions', 'permissions')
-            ->leftJoin('user.userGroups', 'userGroups')
-            ->leftJoin('userGroups.group', 'grp')
-            ->leftJoin('user.userSettings', 'settings')
-            ->addSelect('userRoles')
-            ->addSelect('role')
-            ->addSelect('userGroups')
-            ->addSelect('grp')
-            ->addSelect('settings')
-            ->addSelect('permissions')
-            ->where('user.username=:username');
-
-        // TODO add groups for system recognition
-        $query = $qb->getQuery();
-        $query->setParameter('username', $username);
-
         try {
             /** @var User $user */
-            $user = $query->getSingleResult();
+            $user = $this->findUserByIdentifier($identifier);
 
             if (!$user->getEnabled()) {
                 throw new DisabledException();
@@ -167,7 +146,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
         } catch (NoResultException $nre) {
             $message = sprintf(
                 'Unable to find an SuluSecurityBundle:User object identified by %s',
-                $username
+                $identifier
             );
 
             throw new UsernameNotFoundException($message, 0, $nre);
@@ -190,8 +169,65 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->where('user.username=:username');
 
         $query = $qb->getQuery();
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('username', $username);
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * Finds a user for a given email
+     *
+     * @param string $email The email-address
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByEmail($email)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.email=:email');
+
+        $query = $qb->getQuery();
+        $query->setParameter('email', $email);
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * Finds a user for a given password-reset-token
+     *
+     * @param string $token the reset-token
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByToken($token)
+    {
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.passwordResetToken=:token');
+
+        $query = $qb->getQuery();
+        $query->setParameter('token', $token);
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * Finds a user for a given email or username
+     *
+     * @param string $identifier The email-address or username
+     * @return UserInterface
+     * @throws NoResultException if the user is not found
+     *
+     */
+    public function findUserByIdentifier($identifier) {
+        $qb = $this->createQueryBuilder('user')
+            ->where('user.email=:email')
+            ->orWhere('user.username=:username');
+
+        $query = $qb->getQuery();
+        $query->setParameter('email', $identifier);
+        $query->setParameter('username', $identifier);
 
         return $query->getSingleResult();
     }
@@ -285,7 +321,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->where('role.system=:system');
 
         $query = $qb->getQuery();
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
         $query->setParameter('system', $this->getSystem());
 
         try {

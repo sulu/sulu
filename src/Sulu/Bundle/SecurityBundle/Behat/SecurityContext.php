@@ -96,9 +96,10 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $this->theUserExistsWithPassword('admin', 'admin');
         $this->visitPath('/admin');
         $page = $this->getSession()->getPage();
-        $this->fillSelector("input[name='_username']", 'admin');
-        $this->fillSelector("input[name='_password']", 'admin');
-        $loginButton = $page->findById('submit');
+        $this->waitForSelector('#username');
+        $this->fillSelector('#username', 'admin');
+        $this->fillSelector('#password', 'admin');
+        $loginButton = $page->findById('login-button');
 
         if (!$loginButton) {
             throw new \InvalidArgumentException(
@@ -123,9 +124,6 @@ class SecurityContext extends BaseContext implements SnippetAcceptingContext
         $role = new Role();
         $role->setName($name);
         $role->setSystem($system);
-        $role->setCreated(new \DateTime());
-        $role->setChanged(new \DateTime());
-
         $pool = $this->getContainer()->get('sulu_admin.admin_pool');
         $securityContexts = $pool->getSecurityContexts();
 

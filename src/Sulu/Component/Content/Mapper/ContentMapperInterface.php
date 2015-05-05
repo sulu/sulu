@@ -15,6 +15,7 @@ use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
 use PHPCR\Query\QueryInterface;
+use PHPCR\NodeInterface;
 
 /**
  * Interface of ContentMapper
@@ -133,6 +134,24 @@ interface ContentMapperInterface
     public function load($uuid, $webspaceKey, $languageCode, $loadGhostContent = false);
 
     /**
+     * returns the data for the given node
+     * @param NodeInterface $contentNode The node for which to load the data
+     * @param string $languageCode The locale
+     * @param string $webspaceKey Key of the webspace
+     * @param boolean $excludeGhost Do not return Ghost structures (return null instead)
+     * @param boolean $loadGhostContent Load ghost content
+     * @param boolean $excludeShadow  Do not return shadow structures (return null instead)
+     */
+    public function loadByNode(
+        NodeInterface $contentNode,
+        $localization,
+        $webspaceKey = null,
+        $excludeGhost = true,
+        $loadGhostContent = false,
+        $excludeShadow = true
+    );
+
+    /**
      * returns the data from the given id
      * @param string $webspaceKey Key of webspace
      * @param string $languageCode Read data for given language
@@ -219,7 +238,7 @@ interface ContentMapperInterface
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
      */
-    public function delete($uuid, $webspaceKey);
+    public function delete($uuid, $webspaceKey, $dereference = false);
 
     /**
      * moves given node to a new parent node
@@ -265,6 +284,21 @@ interface ContentMapperInterface
      * @return StructureInterface
      */
     public function orderBefore($uuid, $beforeUuid, $userId, $webspaceKey, $languageCode);
+
+    /**
+     * brings a node with a given uuid into a given position
+     * @param string $uuid
+     * @param integer $position
+     * @param integer $userId
+     * @param string $webspaceKey
+     * @param string $languageCode
+     *
+     * @throws \Sulu\Component\Content\Exception\InvalidOrderPositionException
+     * thrown if position is out of range
+     *
+     * @return StructureInterface
+     */
+    public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 
     /**
      * TRUE dont rename pages on save

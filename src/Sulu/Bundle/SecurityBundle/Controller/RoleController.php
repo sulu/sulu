@@ -26,7 +26,7 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
-use Sulu\Bundle\SecurityBundle\Entity\RoleInterface;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException as DoctrineUniqueConstraintViolationException;
 use Sulu\Component\Rest\Exception\UniqueConstraintViolationException as SuluUniqueConstraintViolationException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
@@ -71,17 +71,17 @@ class RoleController extends RestController implements ClassResourceInterface, S
             array(),
             false, false, '', '50px'
         );
-        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
-            'system',
-            'system',
-            static::$entityName,
-            'security.roles.system'
-        );
         $this->fieldDescriptors['name'] = new DoctrineFieldDescriptor(
             'name',
             'name',
             static::$entityName,
             'public.name'
+        );
+        $this->fieldDescriptors['system'] = new DoctrineFieldDescriptor(
+            'system',
+            'system',
+            static::$entityName,
+            'security.roles.system'
         );
         $this->fieldDescriptors['created'] = new DoctrineFieldDescriptor(
             'created',
@@ -211,8 +211,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
             $role->setName($name);
             $role->setSystem($system);
 
-            $role->setCreated(new \DateTime());
-            $role->setChanged(new \DateTime());
 
             $permissions = $request->get('permissions');
             if (!empty($permissions)) {
@@ -265,7 +263,6 @@ class RoleController extends RestController implements ClassResourceInterface, S
                 $role->setName($name);
                 $role->setSystem($request->get('system'));
 
-                $role->setChanged(new \DateTime());
 
                 if (!$this->processPermissions($role, $request->get('permissions', array()))) {
                     throw new RestException("Could not update dependencies!");
@@ -412,6 +409,7 @@ class RoleController extends RestController implements ClassResourceInterface, S
     {
         $roleData['id'] = $role->getId();
         $roleData['name'] = $role->getName();
+        $roleData['identifier'] = $role->getIdentifier();
         $roleData['system'] = $role->getSystem();
         $roleData['permissions'] = array();
 

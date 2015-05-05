@@ -14,7 +14,7 @@ define(function() {
     return {
         header: {
             tabs: {
-                url: '/admin/security/navigation/roles'
+                url: '/admin/content-navigations?alias=roles'
             },
             toolbar: {
                 template: 'default'

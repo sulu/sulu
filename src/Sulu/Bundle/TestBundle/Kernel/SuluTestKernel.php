@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\TestBundle\Kernel;
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Sulu\Bundle\TestBundle\SuluTestBundle;
 use Sulu\Component\HttpKernel\SuluKernel;
@@ -39,6 +38,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\HttpCacheBundle\SuluHttpCacheBundle(),
             new \Sulu\Bundle\SnippetBundle\SuluSnippetBundle(),
             new \Sulu\Bundle\WebsocketBundle\SuluWebsocketBundle(),
+            new \Sulu\Bundle\LocationBundle\SuluLocationBundle(),
         );
 
         return $bundles;

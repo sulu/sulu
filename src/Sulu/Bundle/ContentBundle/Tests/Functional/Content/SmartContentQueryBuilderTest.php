@@ -15,6 +15,7 @@ use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\Structure;
 use Sulu\Component\Content\StructureInterface;
@@ -93,25 +94,19 @@ class SmartContentQueryBuilderTest extends SuluTestCase
 
         $this->tag1 = new Tag();
         $this->tag1->setName('test1');
-        $this->tag1->setChanged(new \DateTime());
         $this->tag1->setCreator($user);
-        $this->tag1->setCreated(new \DateTime());
         $this->tag1->setChanger($user);
         $em->persist($this->tag1);
 
         $this->tag2 = new Tag();
         $this->tag2->setName('test2');
-        $this->tag2->setChanged(new \DateTime());
         $this->tag2->setCreator($user);
-        $this->tag2->setCreated(new \DateTime());
         $this->tag2->setChanger($user);
         $em->persist($this->tag2);
 
         $this->tag3 = new Tag();
         $this->tag3->setName('test3');
-        $this->tag3->setChanged(new \DateTime());
         $this->tag3->setCreator($user);
-        $this->tag3->setCreated(new \DateTime());
         $this->tag3->setChanger($user);
         $em->persist($this->tag3);
 
@@ -180,7 +175,13 @@ class SmartContentQueryBuilderTest extends SuluTestCase
             $this->sessionManager,
             $this->languageNamespace
         );
-        $builder->init(array('properties' => array('my_article' => 'article')));
+        $builder->init(
+            array(
+                'properties' => array(
+                    'my_article' => new PropertyParameter('my_article', 'article')
+                )
+            )
+        );
 
         $tStart = microtime(true);
         $result = $this->contentQuery->execute('sulu_io', array('en'), $builder);
@@ -599,9 +600,9 @@ class SmartContentQueryBuilderTest extends SuluTestCase
         $builder->init(
             array(
                 'properties' => array(
-                    'my_title' => 'title',
-                    'ext_title' => 'excerpt.title',
-                    'ext_tags' => 'excerpt.tags'
+                    'my_title' => new PropertyParameter('my_title', 'title'),
+                    'ext_title' => new PropertyParameter('ext_title', 'excerpt.title'),
+                    'ext_tags' => new PropertyParameter('ext_tags', 'excerpt.tags')
                 )
             )
         );

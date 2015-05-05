@@ -488,13 +488,15 @@ define([
                 }.bind(this));
         },
 
-        order: function(id, parentId, successCallback, errorCallback) {
+        order: function(uuid, position, successCallback, errorCallback) {
             var url = [
-                '/admin/api/nodes/', id, '?webspace=', this.options.webspace,
-                '&language=', this.options.language, '&action=order&destination=', parentId
+                '/admin/api/nodes/', uuid, '?webspace=', this.options.webspace,
+                '&language=', this.options.language, '&action=order'
             ].join('');
 
-            this.sandbox.util.save(url, 'POST', {})
+            this.sandbox.util.save(url, 'POST', {
+                position: position
+            })
                 .then(function(data) {
                     if (!!successCallback && typeof successCallback === 'function') {
                         successCallback(data);
@@ -1191,7 +1193,7 @@ define([
                 def = this.sandbox.data.deferred();
 
             this.loadDataDeferred.then(function() {
-                var header, dropdownLocalizations = [], url;
+                var header, dropdownLocalizations = [], navigationUrl, navigationUrlParams = [];
 
                 if (this.options.display === 'column') {
                     header = {
@@ -1230,12 +1232,26 @@ define([
                         }
                     }
 
-                    url = '/admin/content/navigation/content' + (!!this.data.id ? '?id=' + this.data.id : '');
+                    navigationUrl = '/admin/content-navigations';
+                    navigationUrlParams.push('alias=content');
+
+                    if (!!this.data.id) {
+                        navigationUrlParams.push('id=' + this.data.id);
+                    }
+
+                    if (!!this.options.webspace) {
+                        navigationUrlParams.push('webspace=' + this.options.webspace);
+                    }
+
+                    if (!!navigationUrlParams.length) {
+                        navigationUrl += '?' + navigationUrlParams.join('&')
+                    }
+
                     header = {
                         noBack: noBack,
 
                         tabs: {
-                            url: url
+                            url: navigationUrl
                         },
 
                         toolbar: {

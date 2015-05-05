@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sulu_content.search.metadata.driver.structure.class">Sulu\Bundle\ContentBundle\Search\Metadata\StructureDriver</parameter>
+        <parameter key="sulu_content.search.event_subscriber.content_mapper.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\ContentMapperSubscriber</parameter>
+        <parameter key="sulu_content.search.event_subscriber.blame_timestamp.class">Sulu\Bundle\ContentBundle\Search\EventSubscriber\BlameTimestampSubscriber</parameter>
+        <parameter key="sulu_content.search.event_listener.search.class">Sulu\Bundle\ContentBundle\Search\EventListener\SearchListener</parameter>
+        <parameter key="sulu_content.search.event_listener.reindex.class">Sulu\Bundle\ContentBundle\Search\EventListener\ReindexListener</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="sulu_content.search.metadata.driver.structure" class="%sulu_content.search.metadata.driver.structure.class%">
+            <argument type="service" id="massive_search.factory" />
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument>%sulu_content.search.mapping%</argument>
+            <tag name="massive_search.metadata.driver" />
+        </service>
+
+        <!-- Node save event subscriber -->
+        <service id="sulu_content.search.subscriber.content_mapper" class="%sulu_content.search.event_subscriber.content_mapper.class%">
+            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="sulu.phpcr.session" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <!-- Blame and Timestamp subscriber -->
+        <service id="sulu_content.search.event_subscriber.blame_timestamp" class="%sulu_content.search.event_subscriber.blame_timestamp.class%">
+            <argument type="service" id="massive_search.factory" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <!-- Search event to be sure that all structures are loaded (generated) -->
+        <service id="sulu_content.search.event_listener.search" class="%sulu_search.event_listener.search.class%">
+            <argument type="service" id="sulu.content.structure_manager" />
+            <tag name="kernel.event_listener" event="massive_search.search" method="onSearch" />
+        </service>
+
+        <!-- Rebuild structure index on massive:search:index:rebuild -->
+        <service id="sulu_content.search.event_listener.search" class="%sulu_content.search.event_listener.reindex.class%">
+            <argument type="service" id="sulu.phpcr.session" />
+            <argument type="service" id="sulu.content.mapper" />
+            <argument type="service" id="massive_search.search_manager" />
+            <argument type="service" id="sulu_core.webspace.webspace_manager" />
+            <argument type="service" id="sulu.content.structure_manager" />
+            <argument type="service" id="sulu.util.node_helper" />
+            <argument>%sulu_content.search.mapping%</argument>
+            <tag name="kernel.event_listener" event="massive_search.index_rebuild" method="onIndexRebuild" />
+        </service>
+
+    </services>
+</container>

@@ -38,10 +38,11 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
         $width = '',
         $minWidth = '',
         $sortable = true,
-        $editable = false
+        $editable = false,
+        $cssClass = ''
     )
     {
-        parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $sortable, $editable);
+        parent::__construct($name, $translation, $disabled, $default, $type, $width, $minWidth, $sortable, $editable, $cssClass);
         $this->fieldDescriptors = $fieldDescriptors;
         $this->glue = $glue;
     }

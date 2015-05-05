@@ -117,12 +117,18 @@ interface ListBuilderInterface
     public function addGroupBy(AbstractFieldDescriptor $fieldDescriptor);
 
     /**
-     * Defines a constraint
+     * Defines a in constraint
      * @param AbstractFieldDescriptor $fieldDescriptor
      * @param $values
-     * @return mixed
      */
     public function in(AbstractFieldDescriptor $fieldDescriptor, $values);
+
+    /**
+     * Defines a between constraint
+     * @param AbstractFieldDescriptor $fieldDescriptor
+     * @param $values
+     */
+    public function between(AbstractFieldDescriptor $fieldDescriptor, $values);
 
     /**
      * The number of total elements for this list

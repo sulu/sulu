@@ -11,6 +11,10 @@ sulu_admin.navigation:
     type: rest
     resource: Sulu\Bundle\AdminBundle\Controller\NavigationsController
 
+sulu_admin.content_navigation:
+    type: rest
+    resource: sulu_admin.content_navigation_controller
+
 sulu_admin.routes:
     path: /bundles
     defaults:
@@ -29,6 +33,10 @@ sulu_admin.contexts:
 sulu_admin.login:
     path: /login
     defaults: { _controller: SuluAdminBundle:Security:login }
+
+sulu_admin.reset:
+    path: /reset/{token}
+    defaults: { _controller: SuluAdminBundle:Security:reset }
 
 sulu_admin.login_check:
     path: /login_check

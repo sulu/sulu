@@ -31,24 +31,78 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('search')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('default_image_format')->defaultValue(SuluMediaExtension::DEFAULT_FORMAT_NAME)->end()
+                    ->scalarNode('default_image_format')->defaultValue('170x170')->end()
                     ->booleanNode('enabled')->info('Enable integration with SuluMediaBundle')->defaultValue(false)->end()
                 ->end()
             ->end()
             ->arrayNode('ghost_script')
                 ->addDefaultsIfNotSet()
                 ->children()
-                     ->scalarNode('path')->defaultValue(SuluMediaExtension::DEFAULT_GHOST_SCRIPT_PATH)->end()
+                     ->scalarNode('path')->defaultValue('gs')->end()
+                ->end()
+            ->end()
+            ->arrayNode('storage')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->arrayNode('local')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('path')->defaultValue('%kernel.root_dir%/../uploads/media')->end()
+                            ->scalarNode('segments')->defaultValue(10)->end()
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
             ->arrayNode('format_manager')
                 ->addDefaultsIfNotSet()
                 ->children()
                     ->arrayNode('response_headers')
-                        ->prototype('scalar')->end()
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            'Expires' => '+1 month',
+                            'Pragma' => 'public',
+                            'Cache-Control' => 'public'
+                        ))
                     ->end()
                     ->arrayNode('default_imagine_options')
                         ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('config_paths')
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('blocked_file_types')
+                        ->prototype('scalar')->end()->defaultValue(array('file/exe'))
+                    ->end()
+                    ->arrayNode('mime_types')
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
+                            'image/png',
+                            'image/bmp',
+                            'image/svg+xml',
+                            'image/vnd.adobe.photoshop',
+                            'application/pdf',
+                        ))
+                    ->end()
+                    ->arrayNode('types')
+                        ->prototype('scalar')->end()->defaultValue(array(
+                            array(
+                                'type' => 'document',
+                                'mimeTypes' => array('*')
+                            ),
+                            array(
+                                'type' => 'image',
+                                'mimeTypes' => array('image/*')
+                            ),
+                            array(
+                                'type' => 'video',
+                                'mimeTypes' => array('video/*')
+                            ),
+                            array(
+                                'type' => 'audio',
+                                'mimeTypes' => array('audio/*')
+                            )
+                        ))
                     ->end()
                 ->end()
             ->end()

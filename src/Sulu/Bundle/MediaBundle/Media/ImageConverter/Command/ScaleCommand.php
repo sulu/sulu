@@ -11,29 +11,92 @@
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter\Command;
 
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 
 class ScaleCommand implements CommandInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function execute(&$image, $parameters)
+    public function execute(ImageInterface &$image, $parameters)
     {
-        $size = $image->getSize();
+        $parameters = array_merge(array(
+            'retina' => false,
+            'forceRatio' => true,
+            'x' => null,
+            'y' => null,
+            'mode' => $image::THUMBNAIL_OUTBOUND,
+        ), $parameters);
 
-        $retina = isset($parameters['retina']) && $parameters['retina'] != 'false' ? 2 : 1;
+        list($newWidth, $newHeight) = $this->getHeightWidth($parameters, $image->getSize());
 
-        $newWidth = isset($parameters['x']) ? intval($parameters['x']) * $retina : null;
-        $newHeight = isset($parameters['y']) ? intval($parameters['y']) * $retina : null;
-        $mode = isset($parameters['mode']) ? intval($parameters['mode']) : $image::THUMBNAIL_OUTBOUND;
+        $image = $image->thumbnail(new Box($newWidth, $newHeight), $parameters['mode']);
+    }
 
-        if ($newHeight == null) {
+    /**
+     * @param $parameters
+     * @param \Imagine\Image\BoxInterface $size
+     * @return array
+     */
+    protected function getHeightWidth($parameters, $size)
+    {
+        $newWidth = $parameters['x'];
+        $newHeight = $parameters['y'];
+
+        // retina x2
+        if ($parameters['retina']) {
+            $newWidth= $parameters['x'] * 2;
+            $newHeight = $parameters['x'] * 2;
+        }
+
+        // calculate height when not set
+        if (!$newHeight) {
             $newHeight = $size->getHeight() / $size->getWidth() * $newWidth;
         }
-        if ($newWidth == null) {
+
+        // calculate width when not set
+        if (!$newWidth) {
             $newWidth = $size->getWidth() / $size->getHeight() * $newHeight;
         }
 
-        $image = $image->thumbnail(new Box($newWidth, $newHeight), $mode);
+        // if image is smaller keep ratio
+        // e.g. when a square image is requested (200x200) and the original image is smaller (150x100)
+        //      it still returns a squared image (100x100)
+        if ($parameters['forceRatio']) {
+            if ($newWidth > $size->getWidth()) {
+                list($newHeight, $newWidth) = $this->getSizeInSameRatio(
+                    $newHeight,
+                    $newWidth,
+                    $size->getWidth()
+                );
+            }
+
+            if ($newHeight > $size->getHeight()) {
+                list($newHeight, $newWidth) = $this->getSizeInSameRatio(
+                    $newWidth,
+                    $newHeight,
+                    $size->getHeight()
+                );
+            }
+        }
+
+        return array($newWidth, $newHeight);
+    }
+
+    /**
+     * @param $size1
+     * @param $size2
+     * @param $originalSize
+     * @return array
+     */
+    protected function getSizeInSameRatio($size1, $size2, $originalSize)
+    {
+        if ($size1) {
+            $size1 = $size1 / $size2 * $originalSize;
+        }
+
+        $size2 = $originalSize;
+
+        return array($size1, $size2);
     }
 }

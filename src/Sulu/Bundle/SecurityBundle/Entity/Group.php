@@ -11,11 +11,14 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Component\Security\Authentication\RoleInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
+use Sulu\Component\Persistence\Model\AuditableInterface;
 
 /**
  * Group
  */
-class Group extends ApiEntity
+class Group extends ApiEntity implements AuditableInterface
 {
     /**
      * @var integer
@@ -63,7 +66,7 @@ class Group extends ApiEntity
     private $userGroups;
 
     /**
-     * @var \Sulu\Bundle\SecurityBundle\Entity\Group
+     * @var Group
      */
     private $parent;
 
@@ -73,12 +76,12 @@ class Group extends ApiEntity
     private $roles;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var UserInterface
      */
     private $changer;
 
     /**
-     * @var \Sulu\Component\Security\UserInterface
+     * @var UserInterface
      */
     private $creator;
 
@@ -185,19 +188,6 @@ class Group extends ApiEntity
     }
 
     /**
-     * Set created
-     *
-     * @param \DateTime $created
-     * @return Group
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
      * Get created
      *
      * @return \DateTime
@@ -205,19 +195,6 @@ class Group extends ApiEntity
     public function getCreated()
     {
         return $this->created;
-    }
-
-    /**
-     * Set changed
-     *
-     * @param \DateTime $changed
-     * @return Group
-     */
-    public function setChanged($changed)
-    {
-        $this->changed = $changed;
-
-        return $this;
     }
 
     /**
@@ -243,10 +220,10 @@ class Group extends ApiEntity
     /**
      * Add children
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $children
+     * @param Group $children
      * @return Group
      */
-    public function addChildren(\Sulu\Bundle\SecurityBundle\Entity\Group $children)
+    public function addChildren(Group $children)
     {
         $this->children[] = $children;
 
@@ -256,9 +233,9 @@ class Group extends ApiEntity
     /**
      * Remove children
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $children
+     * @param Group $children
      */
-    public function removeChildren(\Sulu\Bundle\SecurityBundle\Entity\Group $children)
+    public function removeChildren(Group $children)
     {
         $this->children->removeElement($children);
     }
@@ -276,10 +253,10 @@ class Group extends ApiEntity
     /**
      * Add userGroups
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     * @param UserGroup $userGroups
      * @return Group
      */
-    public function addUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    public function addUserGroup(UserGroup $userGroups)
     {
         $this->userGroups[] = $userGroups;
 
@@ -289,9 +266,9 @@ class Group extends ApiEntity
     /**
      * Remove userGroups
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups
+     * @param UserGroup $userGroups
      */
-    public function removeUserGroup(\Sulu\Bundle\SecurityBundle\Entity\UserGroup $userGroups)
+    public function removeUserGroup(UserGroup $userGroups)
     {
         $this->userGroups->removeElement($userGroups);
     }
@@ -309,10 +286,10 @@ class Group extends ApiEntity
     /**
      * Set parent
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $parent
+     * @param Group $parent
      * @return Group
      */
-    public function setParent(\Sulu\Bundle\SecurityBundle\Entity\Group $parent = null)
+    public function setParent(Group $parent = null)
     {
         $this->parent = $parent;
 
@@ -322,7 +299,7 @@ class Group extends ApiEntity
     /**
      * Get parent
      *
-     * @return \Sulu\Bundle\SecurityBundle\Entity\Group
+     * @return Group
      */
     public function getParent()
     {
@@ -332,10 +309,10 @@ class Group extends ApiEntity
     /**
      * Add roles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles
+     * @param RoleInterface $roles
      * @return Group
      */
-    public function addRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles)
+    public function addRole(RoleInterface $roles)
     {
         $this->roles[] = $roles;
 
@@ -345,9 +322,9 @@ class Group extends ApiEntity
     /**
      * Remove roles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles
+     * @param RoleInterface $roles
      */
-    public function removeRole(\Sulu\Bundle\SecurityBundle\Entity\RoleInterface $roles)
+    public function removeRole(RoleInterface $roles)
     {
         $this->roles->removeElement($roles);
     }
@@ -365,10 +342,10 @@ class Group extends ApiEntity
     /**
      * Set changer
      *
-     * @param \Sulu\Component\Security\UserInterface $changer
+     * @param UserInterface $changer
      * @return Group
      */
-    public function setChanger(\Sulu\Bundle\SecurityBundle\Entity\User $changer = null)
+    public function setChanger(UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -378,7 +355,7 @@ class Group extends ApiEntity
     /**
      * Get changer
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getChanger()
     {
@@ -388,10 +365,10 @@ class Group extends ApiEntity
     /**
      * Set creator
      *
-     * @param \Sulu\Component\Security\UserInterface $creator
+     * @param UserInterface $creator
      * @return Group
      */
-    public function setCreator(\Sulu\Component\Security\UserInterface $creator = null)
+    public function setCreator(UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -401,7 +378,7 @@ class Group extends ApiEntity
     /**
      * Get creator
      *
-     * @return \Sulu\Component\Security\UserInterface
+     * @return UserInterface
      */
     public function getCreator()
     {

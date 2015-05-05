@@ -1,5 +1,6 @@
 <?php
 use Sulu\Component\Content\Property;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Block\BlockProperty;
 use Sulu\Component\Content\Block\BlockPropertyType;
 use Sulu\Component\Content\PropertyTag;
@@ -33,6 +34,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% set child = '$prop'~layer %}
 {% if property.type == 'block' %}
         {{ child }} = {{ _self.blockPropertyConstructor(property) }}
+        {{ child }}->setStructure($this);
         {{ parent }}->addChild({{ child }});
 {% for type in property.types %}
 {{ _self.buildTypes(type, child, layer, loop.index) }}
@@ -101,11 +103,7 @@ new BlockProperty(
             {{ property.multilingual is same as(false) ? 'false' : 'true' }},
             {{ property.maxOccurs != null ? property.maxOccurs : 999 }},
             {{ property.minOccurs != null ? property.minOccurs : 1 }},
-            array(
-{% for param in property.params %}
-                '{{ param.name }}' => '{{ param.value }}',
-{% endfor %}
-            ),
+            {{ _self.renderParams(property.params) }},
             array(
 {% for tag in property.tags %}
                 '{{ tag.name }}' => {{ _self.propertyTag(tag) }},
@@ -132,17 +130,20 @@ new PropertyTag('{{ tag.name }}', {{ tag.priority is defined and tag.priority ? 
 {% macro renderParams(params) %}
             array(
 {% for param in params %}
+                '{{ param.name }}' => new PropertyParameter(
+                    '{{ param.name }}',
 {% if param.type == 'collection'  %}
-                '{{ param.name }}' => {{ _self.renderParams(param.value) }}
+                    {{ _self.renderParams(param.value) }},
 {% elseif param.type|lower == 'string'  %}
-{% if param.value|lower == 'true' %}
-                '{{ param.name }}' => {{ param.value|lower }},
-{% elseif param.value|lower == 'false' %}
-                '{{ param.name }}' => {{ param.value|lower }},
+{% if param.value|lower == 'true' or param.value|lower == 'false' %}
+                    {{ param.value|lower }},
 {% else %}
-                '{{ param.name }}' => '{{ param.value }}',
+                    '{{ param.value }}',
 {% endif %}
 {% endif %}
+                    {{ param.type == 'string' ? 'null' : ("'" ~ param.type ~ "'")|raw }},
+                    {{ _self.renderArray(param.meta) }}
+                ),
 {% endfor %}
             )
 {% endmacro %}

@@ -178,7 +178,7 @@ var f = function () {
     var items = document.querySelectorAll("%s");
 
     for (var i = 0; i < items.length; i++) {
-        if (items[i].textContent == '%s') {
+        if (items[i].textContent.trim() == '%s') {
             items[i].dispatchEvent(event);
             return;
         }
@@ -189,11 +189,8 @@ f();
 EOT;
 
         $script = sprintf($script, $type, $selector, $itemTitle);
-        try {
-            $this->getSession()->executeScript($script);
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());die();;
-        }
+
+        $this->getSession()->executeScript($script);
     }
 
     /**
@@ -325,8 +322,8 @@ EOT
     /**
      * Wait for the named aura events
      *
-     * @param array Array of event names
-     * @param integer Timeout in milliseconds
+     * @param array $eventNames Array of event names
+     * @param integer $time in milliseconds
      */
     protected function waitForAuraEvents($eventNames, $time = self::MEDIUM_WAIT_TIME)
     {

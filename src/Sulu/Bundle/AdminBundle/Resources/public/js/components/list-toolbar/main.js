@@ -189,7 +189,10 @@ define([], function() {
                                 data: this.sandbox.sulu.getUserSetting(this.options.columnOptions.key),
                                 hidden: false,
                                 instanceName: this.options.instanceName,
-                                trigger: '.toggle'
+                                trigger: '.toggle',
+                                header: {
+                                    title: this.sandbox.translate('list-toolbar.column-options.title')
+                                }
                             }
                         }
                     ]);
@@ -315,6 +318,7 @@ define([], function() {
 
             var $container,
                 options = {
+                    groups: this.options.groups,
                     hasSearch: true,
                     data: this.options.template,
                     instanceName: this.options.instanceName,

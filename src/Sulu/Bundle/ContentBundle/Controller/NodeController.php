@@ -23,13 +23,15 @@ use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestController;
+use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * handles content nodes
  */
-class NodeController extends RestController implements ClassResourceInterface, SecuredControllerInterface
+class NodeController extends RestController
+    implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
@@ -535,11 +537,11 @@ class NodeController extends RestController implements ClassResourceInterface, S
                     $data = $repository->copyNode($uuid, $srcLocale, $webspace, $language, $userId);
                     break;
                 case 'order':
-                    $srcLocale = $this->getRequestParameter($request, 'destination', true);
+                    $position = (int)$this->getRequestParameter($request, 'position', true);
                     $language = $this->getLanguage($request);
 
                     // call repository method
-                    $data = $repository->orderBefore($uuid, $srcLocale, $webspace, $language, $userId);
+                    $data = $repository->orderAt($uuid, $position, $webspace, $language, $userId);
                     break;
                 case 'copy-locale':
                     $srcLocale = $this->getLanguage($request);
@@ -570,8 +572,7 @@ class NodeController extends RestController implements ClassResourceInterface, S
     }
 
     /**
-     * Returns the SecurityContext required for the controller
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getSecurityContext()
     {
@@ -581,5 +582,21 @@ class NodeController extends RestController implements ClassResourceInterface, S
         if ($webspace) {
             return 'sulu.webspaces.' . $webspace->getKey();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredClass()
+    {
+        return Structure::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSecuredObjectId(Request $request)
+    {
+        return $request->get('uuid') ?: $request->get('parent');
     }
 }

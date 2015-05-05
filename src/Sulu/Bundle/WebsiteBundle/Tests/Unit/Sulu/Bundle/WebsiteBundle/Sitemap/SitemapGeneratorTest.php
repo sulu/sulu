@@ -304,56 +304,38 @@ class SitemapGeneratorTest extends PhpcrTestCase
         );
 
         $method->setAccessible(true);
-        $method->invokeArgs(
-            $structureMock,
-            array(
-                new Property(
-                    'title',
-                    '',
-                    'text_line',
-                    false,
-                    false,
-                    1,
-                    1,
-                    array()
-                )
-            )
-        );
+        $property = new Property('title', '', 'text_line', false, false, 1, 1, array());
+        $property->setStructure($structureMock);
+        $method->invokeArgs($structureMock, array($property));
 
         if ($addResourceLocatorProperty) {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property(
-                        'rl',
-                        '',
-                        'resource_locator',
-                        false,
-                        false,
-                        1,
-                        1,
-                        array(),
-                        array(new PropertyTag('sulu.rlp', 1))
-                    )
-                )
+            $property = new Property(
+                'rl',
+                '',
+                'resource_locator',
+                false,
+                false,
+                1,
+                1,
+                array(),
+                array(new PropertyTag('sulu.rlp', 1))
             );
+            $property->setStructure($structureMock);
+            $method->invokeArgs($structureMock, array($property));
         } else {
-            $method->invokeArgs(
-                $structureMock,
-                array(
-                    new Property(
-                        'external_url',
-                        '',
-                        'text_line',
-                        false,
-                        false,
-                        1,
-                        1,
-                        array(),
-                        array(new PropertyTag('sulu.rlp', 1))
-                    )
-                )
+            $property = new Property(
+                'external_url',
+                '',
+                'text_line',
+                false,
+                false,
+                1,
+                1,
+                array(),
+                array(new PropertyTag('sulu.rlp', 1))
             );
+            $property->setStructure($structureMock);
+            $method->invokeArgs($structureMock, array($property));
         }
 
         return $structureMock;
@@ -369,13 +351,13 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->assertEquals('News-1 en', $result[2]['title']);
         $this->assertEquals('News-2 en', $result[3]['title']);
         $this->assertEquals('Products-2 en', $result[4]['title']);
-        $this->assertEquals('News en', $result[5]['title']);
+        $this->assertEquals('Products-3 en', $result[5]['title']);
         $this->assertEquals('News en_us', $result[6]['title']);
         $this->assertEquals('News-1 en_us', $result[7]['title']);
         $this->assertEquals('News-2 en_us', $result[8]['title']);
         // Products-1 en/en_us is a internal link to the unpublished page products (not in result)
         $this->assertEquals('Products-2 en_us', $result[9]['title']);
-        $this->assertEquals('News en_us', $result[10]['title']);
+        $this->assertEquals('Products-3 en_us', $result[10]['title']);
 
         $this->assertEquals('/', $result[0]['url']);
         $this->assertEquals('/news', $result[1]['url']);
@@ -412,7 +394,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->assertEquals('News-1 en', $result[2]['title']);
         $this->assertEquals('News-2 en', $result[3]['title']);
         $this->assertEquals('Products-2 en', $result[4]['title']);
-        $this->assertEquals('News en', $result[5]['title']);
+        $this->assertEquals('Products-3 en', $result[5]['title']);
 
         $this->assertEquals('/', $result[0]['url']);
         $this->assertEquals('/news', $result[1]['url']);
@@ -450,7 +432,7 @@ class SitemapGeneratorTest extends PhpcrTestCase
         $this->assertEquals(4, $layer1[1]['nodeType']);
         $this->assertEquals('http://www.asdf.at', $layer1[1]['url']);
 
-        $this->assertEquals('News en', $layer1[2]['title']);
+        $this->assertEquals('Products-3 en', $layer1[2]['title']);
         $this->assertEquals('/news', $layer1[2]['url']);
         $this->assertEquals(2, $layer1[2]['nodeType']);
 
@@ -509,8 +491,10 @@ class ExcerptStructureExtension extends StructureExtension
      */
     private $languageNamespace;
 
-    public function __construct(StructureManagerInterface $structureManager, ContentTypeManagerInterface $contentTypeManager)
-    {
+    public function __construct(
+        StructureManagerInterface $structureManager,
+        ContentTypeManagerInterface $contentTypeManager
+    ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
     }
@@ -551,7 +535,11 @@ class ExcerptStructureExtension extends StructureExtension
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
             $contentType->read(
                 $node,
-                new TranslatedProperty($property, $languageCode . '-' . $this->additionalPrefix, $this->languageNamespace),
+                new TranslatedProperty(
+                    $property,
+                    $languageCode . '-' . $this->additionalPrefix,
+                    $this->languageNamespace
+                ),
                 $webspaceKey,
                 $languageCode,
                 null // segmentkey

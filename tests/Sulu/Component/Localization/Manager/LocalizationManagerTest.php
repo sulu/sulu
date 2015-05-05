@@ -10,10 +10,9 @@
 
 namespace Sulu\Component\Localization\Manager;
 
-use Prophecy\PhpUnit\ProphecyTestCase;
 use Sulu\Component\Localization\Localization;
 
-class LocalizationManagerTest extends ProphecyTestCase
+class LocalizationManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var LocalizationManagerInterface

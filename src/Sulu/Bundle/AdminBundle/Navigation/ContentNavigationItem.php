@@ -39,13 +39,6 @@ class ContentNavigationItem
     private $action;
 
     /**
-     * An array of groups, which contain this navigation item.
-     * This is used for filtering the items for the navigation.
-     * @var array
-     */
-    private $groups;
-
-    /**
      * The name of the component to start
      * @var string
      */
@@ -55,7 +48,7 @@ class ContentNavigationItem
      * An array of options, which will be passed to the corresponding component
      * @var array
      */
-    private $componentOptions;
+    private $componentOptions = array();
 
     /**
      * Defines in which state the navigation item will be displayed (basically new, edit)
@@ -76,8 +69,11 @@ class ContentNavigationItem
     private $resetStore;
 
     /**
-     * @param $name
+     * Defines position
+     * @var integer
      */
+    private $position;
+
     public function __construct($name)
     {
         $this->name = $name;
@@ -150,22 +146,6 @@ class ContentNavigationItem
     }
 
     /**
-     * @return array
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
-     * @param array $groups
-     */
-    public function setGroups(array $groups)
-    {
-        $this->groups = $groups;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -230,22 +210,18 @@ class ContentNavigationItem
     }
 
     /**
-     * Returns an array representation of the content navigation item
-     * @return array
+     * @return mixed
      */
-    public function toArray()
+    public function getPosition()
     {
-        $array = array(
-            'id' => ($this->getId() != null) ? $this->getId() : uniqid(),
-            'title' => $this->getName(),
-            'action' => $this->getAction(),
-            'display' => $this->getDisplay(),
-            'component' => $this->getComponent(),
-            'componentOptions' => $this->getComponentOptions(),
-            'disabled' => $this->getDisabled(),
-            'resetStore' => $this->getResetStore(),
-        );
+        return $this->position;
+    }
 
-        return $array;
+    /**
+     * @param mixed $position
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
     }
 }

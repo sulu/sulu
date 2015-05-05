@@ -124,7 +124,6 @@ define([
 
         bindCustomEvents = function() {
             this.sandbox.on('sulu.contact-form.add-collectionfilters', addCollectionFilters.bind(this));
-            this.sandbox.on('sulu.contact-form.add-required', addRequires.bind(this));
             this.sandbox.on('sulu.contact-form.is.initialized', isInitialized.bind(this));
 
             this.sandbox.on('husky.overlay.add-address.initialized', initializeDropdownForAddressTypes.bind(this));
@@ -367,24 +366,6 @@ define([
             });
         },
 
-        addRequires = function(data) {
-            var tplNames = {
-                    email: 'email-tpl'
-                },
-                tplSelector = '#contact-fields *[data-mapper-property-tpl="<%= selector %>"]:first',
-                emailSelector;
-
-            // TODO: set required to first email field
-
-            if (data.indexOf('email') !== -1) {
-                emailSelector = this.sandbox.util.template(tplSelector, {selector: tplNames.email});
-                this.sandbox.form.addConstraint(this.form, emailSelector + ' *[data-type=husky-input]', 'required', {required: true});
-//                this.sandbox.dom.attr(emailSelector + ' *[data-type=husky-input]', 'data-validation-required','true');
-                this.sandbox.dom.addClass(emailSelector + ' label.visible', 'required');
-                this.sandbox.dom.attr(emailSelector, 'data-contactform-required', true);
-            }
-        },
-
         getDataById = function(array, id) {
             for (var i = -1, len = array.length; ++i < len;) {
                 if (array[i].id.toString() === id.toString()) {
@@ -394,7 +375,7 @@ define([
         },
 
         isInitialized = function(callback) {
-            if (!this.initialized) {
+            if (!this.initializedFlag) {
                 this.sandbox.on('sulu.contact-form.initialized', function() {
                     callback.call(this);
                 }.bind(this));
@@ -688,7 +669,8 @@ define([
             // extend address data by additional variables
             this.sandbox.util.extend(true, data, {
                 translate: this.sandbox.translate,
-                countries: this.options.fieldTypes.countries
+                countries: this.options.fieldTypes.countries,
+                addressTypes: this.options.fieldTypes.address
             });
 
             addressTemplate = this.sandbox.util.template(AddressForm, data);
@@ -935,7 +917,7 @@ define([
     return {
 
         initialize: function() {
-            this.initialized = false;
+            this.initializedFlag = false;
             this.$editOverlayContent = null;
             this.form = null;
             this.$addOverlay = null;
@@ -953,7 +935,7 @@ define([
             bindDomEvents.call(this);
 
             this.sandbox.emit(EVENT_INITIALIZED.call(this));
-            this.initialized = true;
+            this.initializedFlag = true;
         },
 
         render: function() {

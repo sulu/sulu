@@ -15,10 +15,11 @@ use Sulu\Bundle\ContentBundle\Content\SmartContentContainer;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\PropertyInterface;
+use Sulu\Component\Content\PropertyParameter;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
 use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Sulu\Component\Util\ArrayableInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -180,8 +181,9 @@ class SmartContent extends ComplexContentType
     public function getDefaultParams()
     {
         $params = parent::getDefaultParams();
-        $params['page_parameter'] = 'p';
-        $params['properties'] = array();
+        $params['page_parameter'] = new PropertyParameter('page_parameter', 'p');
+        $params['properties'] = new PropertyParameter('properties', array(), 'collection');
+        $params['present_as'] = new PropertyParameter('present_as', array(), 'collection');
 
         return $params;
     }
@@ -193,6 +195,22 @@ class SmartContent extends ComplexContentType
     {
         $this->getContentData($property);
         $config = $property->getValue();
+
+        $config = array_merge(
+            array(
+                'dataSource' => null,
+                'includeSubFolders' => null,
+                'category' => null,
+                'tags' => array(),
+                'sortBy' => null,
+                'sortMethod' => null,
+                'presentAs' => null,
+                'limitResult' => null,
+                'page' => null,
+                'hasNextPage' => null,
+            ),
+            $config
+        );
 
         return $config;
     }
@@ -213,7 +231,7 @@ class SmartContent extends ComplexContentType
             $this->contentQuery,
             $this->contentQueryBuilder,
             $this->tagManager,
-            array_merge($this->getDefaultParams(), $property->getParams()),
+            $params,
             $property->getStructure()->getWebspaceKey(),
             $property->getStructure()->getLanguageCode(),
             // TODO segmentkey
@@ -247,17 +265,21 @@ class SmartContent extends ComplexContentType
 
     /**
      * load data from container
+     * @param SmartContentContainer $container
+     * @param PropertyInterface $property
+     * @param PropertyParameter[] $params
+     * @return array|\Sulu\Component\Content\StructureInterface[]
      */
     private function loadData(SmartContentContainer $container, PropertyInterface $property, $params)
     {
         if (isset($params['max_per_page'])) {
             // determine current page
-            $container->setPage($this->getCurrentPage($params['page_parameter']));
+            $container->setPage($this->getCurrentPage($params['page_parameter']->getValue()));
 
             $contentData = $this->getPagedContentData(
                 $container,
                 $container->getPage(),
-                intval($params['max_per_page']),
+                intval($params['max_per_page']->getValue()),
                 $property->getStructure()->getUuid()
             );
         } else {
@@ -276,6 +298,8 @@ class SmartContent extends ComplexContentType
 
     /**
      * determine current page from current request
+     * @param string $pageParameter
+     * @return int
      */
     private function getCurrentPage($pageParameter)
     {
@@ -326,6 +350,9 @@ class SmartContent extends ComplexContentType
 
     /**
      * Returns not paged content
+     * @param SmartContentContainer $container
+     * @param string $excludeUuid
+     * @return \Sulu\Component\Content\StructureInterface[]
      */
     private function getNotPagedContentData(SmartContentContainer $container, $excludeUuid)
     {

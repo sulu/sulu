@@ -2,7 +2,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sulu\Component\Rest\RestController;
 
 class TemplateController extends RestController
@@ -52,6 +51,9 @@ class TemplateController extends RestController
             $data['form_of_address'][] = $el;
         }
 
+        $categoryRoot = $this->container->getParameter('sulu_contact.contact_form.category_root');
+        $data['categoryUrl'] = $this->getCategoryUrl($categoryRoot);
+
         return $this->render('SuluContactBundle:Template:contact.form.html.twig', $data);
     }
 
@@ -61,7 +63,27 @@ class TemplateController extends RestController
      */
     public function accountFormAction()
     {
-        return $this->render('SuluContactBundle:Template:account.form.html.twig', $this->getRenderArray());
+        $categoryRoot = $this->container->getParameter('sulu_contact.account_form.category_root');
+
+        return $this->render(
+            'SuluContactBundle:Template:account.form.html.twig',
+            array_merge(array('categoryUrl' => $this->getCategoryUrl($categoryRoot)), $this->getRenderArray())
+        );
+    }
+
+    private function getCategoryUrl($key)
+    {
+        if ($key !== null) {
+            return $this->generateUrl(
+                'get_category_children',
+                array('key' => $key, 'flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc')
+            );
+        } else {
+            return $this->generateUrl(
+                'get_categories',
+                array('flat' => 'true', 'sortBy' => 'depth', 'sortOrder' => 'asc')
+            );
+        }
     }
 
     /**
@@ -71,26 +93,6 @@ class TemplateController extends RestController
     public function basicDocumentsAction()
     {
         return $this->render('SuluContactBundle:Template:basic.documents.html.twig');
-    }
-
-    /**
-     * Returns the financials form for accounts
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function accountFinancialsAction()
-    {
-        return $this->render('SuluContactBundle:Template:account.financials.html.twig');
-    }
-
-    /**
-     * Returns the activities form for contacts
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function contactActivitiesAction()
-    {
-        $values = $this->getActivityDropdownValues();
-
-        return $this->render('SuluContactBundle:Template:contact.activities.html.twig', $values);
     }
 
     /**
@@ -116,29 +118,6 @@ class TemplateController extends RestController
             'defaultFaxType' => $defaults['faxType'],
             'defaultCountry' => $defaults['country']
         );
-    }
-
-    /**
-     * Returns the possible values for the dropdowns of activities
-     * @return array
-     */
-    private function getActivityDropdownValues()
-    {
-        $values = array();
-
-        $values['activityTypes'] = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:ActivityType')
-            ->findAll();
-
-        $values['activityPriorities'] = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:ActivityPriority')
-            ->findAll();
-
-        $values['activityStatuses'] = $this->getDoctrine()
-            ->getRepository('SuluContactBundle:ActivityStatus')
-            ->findAll();
-
-        return $values;
     }
 
     /**

@@ -44,10 +44,10 @@ class Role extends BaseRole
     /**
      * Add permissions
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     * @param Permission $permissions
      * @return Role
      */
-    public function addPermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions)
+    public function addPermission(Permission $permissions)
     {
         $this->permissions[] = $permissions;
 
@@ -57,9 +57,9 @@ class Role extends BaseRole
     /**
      * Remove permissions
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Permission $permissions
+     * @param Permission $permissions
      */
-    public function removePermission(\Sulu\Bundle\SecurityBundle\Entity\Permission $permissions)
+    public function removePermission(Permission $permissions)
     {
         $this->permissions->removeElement($permissions);
     }
@@ -77,10 +77,10 @@ class Role extends BaseRole
     /**
      * Add userRoles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @param UserRole $userRoles
      * @return Role
      */
-    public function addUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
+    public function addUserRole(UserRole $userRoles)
     {
         $this->userRoles[] = $userRoles;
 
@@ -90,9 +90,9 @@ class Role extends BaseRole
     /**
      * Remove userRoles
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles
+     * @param UserRole $userRoles
      */
-    public function removeUserRole(\Sulu\Bundle\SecurityBundle\Entity\UserRole $userRoles)
+    public function removeUserRole(UserRole $userRoles)
     {
         $this->userRoles->removeElement($userRoles);
     }
@@ -110,10 +110,10 @@ class Role extends BaseRole
     /**
      * Add groups
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     * @param Group $groups
      * @return Role
      */
-    public function addGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups)
+    public function addGroup(Group $groups)
     {
         $this->groups[] = $groups;
 
@@ -123,9 +123,9 @@ class Role extends BaseRole
     /**
      * Remove groups
      *
-     * @param \Sulu\Bundle\SecurityBundle\Entity\Group $groups
+     * @param Group $groups
      */
-    public function removeGroup(\Sulu\Bundle\SecurityBundle\Entity\Group $groups)
+    public function removeGroup(Group $groups)
     {
         $this->groups->removeElement($groups);
     }

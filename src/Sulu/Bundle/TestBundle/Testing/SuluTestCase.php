@@ -2,18 +2,17 @@
 
 namespace Sulu\Bundle\TestBundle\Testing;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\TestBundle\Entity\TestUser;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Symfony\Cmf\Component\Testing\Functional\BaseTestCase;
+use Symfony\Cmf\Bundle\RoutingBundle\Tests\Functional\BaseTestCase;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\ProxyReferenceRepository;
 use Sulu\Component\Content\Structure;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Security\Core\Tests\Authentication\Token\TestUser;
 
 /**
  * Base test case for functional tests in Sulu
@@ -64,17 +63,28 @@ abstract class SuluTestCase extends BaseTestCase
     }
 
     /**
-     * Return the ID of the test user (which is provided / created
+     * Return the test user (which is provided / created
      * by the test_user_provider in this Bundle at runtime)
      *
      * @return TestUser
      */
-    protected function getTestUserId()
+    protected function getTestUser()
     {
         $user = $this->em->getRepository('Sulu\Bundle\SecurityBundle\Entity\User')
             ->findOneByUsername('test');
 
-        return $user->getId();
+        return $user;
+    }
+
+    /**
+     * Return the ID of the test user (which is provided / created
+     * by the test_user_provider in this Bundle at runtime)
+     *
+     * @return int
+     */
+    protected function getTestUserId()
+    {
+        return $this->getTestUser()->getId();
     }
 
     /**
@@ -92,8 +102,7 @@ abstract class SuluTestCase extends BaseTestCase
                 'PHP_AUTH_USER' => 'test',
                 'PHP_AUTH_PW' => 'test',
             )
-        );
-    }
+        ); }
 
     /**
      * Create client for tests on the "website" context
@@ -177,5 +186,4 @@ abstract class SuluTestCase extends BaseTestCase
             $em->getConnection()->executeUpdate("SET foreign_key_checks = 1;");
         }
     }
-
 }

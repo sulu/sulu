@@ -15,6 +15,7 @@ use PHPCR\RepositoryException;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\ContentMapperRequest;
 use Sulu\Component\Content\Query\ContentQueryBuilderInterface;
@@ -136,9 +137,15 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $structure->getUuid() . ($extension !== null ? '/' . $extension : ''),
-            'children' => $this->apiBasePath . '?parent=' . $structure->getUuid()
-                . '&depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            'self' => array(
+                'href' => $this->apiBasePath . '/' . $structure->getUuid() .
+                    ($extension !== null ? '/' . $extension : '')
+            ),
+            'children' => array(
+                'href' => $this->apiBasePath . '?parent=' . $structure->getUuid() . '&depth=' . $depth .
+                    '&webspace=' . $webspaceKey . '&language=' . $languageCode .
+                    ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            )
         );
 
         return $result;
@@ -220,7 +227,8 @@ class NodeRepository implements NodeRepositoryInterface
      */
     public function deleteNode($uuid, $webspaceKey)
     {
-        $this->getMapper()->delete($uuid, $webspaceKey);
+        // TODO remove third parameter, and ask in UI if referenced node should be deleted
+        $this->getMapper()->delete($uuid, $webspaceKey, true);
     }
 
     /**
@@ -291,7 +299,7 @@ class NodeRepository implements NodeRepositoryInterface
             ),
             'total' => sizeof($result),
             '_links' => array(
-                'self' => $this->apiBasePath . '?ids=' . $idString
+                'self' => array('href' => $this->apiBasePath . '?ids=' . $idString)
             )
         );
     }
@@ -314,7 +322,10 @@ class NodeRepository implements NodeRepositoryInterface
         );
         // add api links
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : ''),
+            'self' => array(
+                'href' => $this->apiBasePath . '/entry?depth=' . $depth . '&webspace=' . $webspaceKey .
+                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+            )
         );
 
         return $data;
@@ -335,7 +346,9 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/entry?language=' . $languageCode
+            'self' => array(
+                'href' => $this->apiBasePath . '/entry?language=' . $languageCode
+            )
         );
 
         return $data;
@@ -372,9 +385,13 @@ class NodeRepository implements NodeRepositoryInterface
             'path' => '/',
             'title' => $webspace->getName(),
             'hasSub' => true,
+            'publishedState' => true,
             '_embedded' => $embedded,
             '_links' => array(
-                'children' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey . '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                'children' => array(
+                    'href' => $this->apiBasePath . '?depth=' . $depth . '&webspace=' . $webspaceKey .
+                        '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                )
             )
         );
     }
@@ -533,6 +550,7 @@ class NodeRepository implements NodeRepositoryInterface
                             'id' => $this->sessionManager->getContentNode($webspace->getKey())->getIdentifier(),
                             'path' => '/',
                             'title' => $webspace->getName(),
+                            'publishedState' => true,
                             'hasSub' => true,
                             '_embedded' => array(
                                 'nodes' => $this->prepareNodesTree(
@@ -544,8 +562,10 @@ class NodeRepository implements NodeRepositoryInterface
                                 )
                             ),
                             '_links' => array(
-                                'children' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey .
-                                    '&language=' . $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                                'children' => array(
+                                    'href' => $this->apiBasePath . '?depth=1&webspace=' . $webspaceKey . '&language=' .
+                                        $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '')
+                                )
                             )
                         )
                     )
@@ -561,9 +581,11 @@ class NodeRepository implements NodeRepositoryInterface
 
         // add api links
         $result['_links'] = array(
-            'self' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
-                $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
-                ($appendWebspaceNode === true ? '&webspace-node=true' : ''),
+            'self' => array(
+                'href' => $this->apiBasePath . '/tree?uuid=' . $uuid . '&webspace=' . $webspaceKey . '&language=' .
+                    $languageCode . ($excludeGhosts === true ? '&exclude-ghosts=true' : '') .
+                    ($appendWebspaceNode === true ? '&webspace-node=true' : '')
+            ),
         );
 
         return $result;
@@ -586,8 +608,10 @@ class NodeRepository implements NodeRepositoryInterface
 
         // prepare data
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
-                '&language=' . $languageCode,
+            'self' => array(
+                'href' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                    '&language=' . $languageCode
+            )
         );
 
         return $data;
@@ -617,8 +641,10 @@ class NodeRepository implements NodeRepositoryInterface
 
         // prepare data
         $data['_links'] = array(
-            'self' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
-                '&language=' . $languageCode,
+            'self' => array(
+                'href' => $this->apiBasePath . '/' . $uuid . '/' . $extensionName . '?webspace=' . $webspaceKey .
+                    '&language=' . $languageCode
+            )
         );
 
         return $data;
@@ -669,6 +695,25 @@ class NodeRepository implements NodeRepositoryInterface
         } catch (PHPCRException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        }
+
+        return $this->prepareNode($structure, $webspaceKey, $languageCode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function orderAt($uuid, $position, $webspaceKey, $languageCode, $userId)
+    {
+        try {
+            // call mapper function
+            $structure = $this->getMapper()->orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
+        } catch (PHPCRException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (RepositoryException $ex) {
+            throw new RestException($ex->getMessage(), 1, $ex);
+        } catch (InvalidOrderPositionException $ex) {
             throw new RestException($ex->getMessage(), 1, $ex);
         }
 

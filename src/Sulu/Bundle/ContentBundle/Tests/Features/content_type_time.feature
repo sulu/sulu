@@ -16,24 +16,26 @@ Feature: Time content type
 
     Scenario Outline: Enter a valid time
         Given I am editing a page of type "time_page"
-        And I fill in "husky-input-time" with "<time>"
+        When I fill in "husky-input-time" with "<time>"
         And I click the save icon
         Then I expect a success notification to appear
         Examples:
             | time |
-            | 23:00 |
-            | 5:00pm |
-            | 1:00 |
+            | 5:00 pm |
+            | 05:00 pm |
+            | 11:00 pm |
+            | 5:00 am |
+            | 05:00 am |
+            | 11:00 am |
 
-    # TODO: time validation
-    # See: https://github.com/sulu-cmf/sulu/issues/729
-    # Scenario Outline: Enter a invalid time
-    #     Given I am editing a page of type "time_page"
-    #     And I fill in "husky-input-time" with "<time>"
-    #     And I click the save icon
-    #     Then there should be 1 form errors
-    #     Examples:
-    #         | time |
-    #         | 25:00 |
-    #         | asdasd |
-    #         | -1234 |
+    Scenario Outline: Enter a invalid time
+        Given I am editing a page of type "time_page"
+        When I fill in "husky-input-time" with "<time>"
+        And I click the save icon
+        Then there should be 1 form errors
+        Examples:
+            | time |
+            | 25:00 |
+            | 01:61 am |
+            | asdasd |
+            | -1234 |

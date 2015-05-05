@@ -29,18 +29,22 @@ class UserControllerTest extends SuluTestCase
         $this->em = $this->db('ORM')->getOm();
         $this->purgeDatabase();
 
+        $emailType = new EmailType();
+        $emailType->setName('Private');
+        $this->em->persist($emailType);
+
+        $email1 = new Email();
+        $email1->setEmail('contact.unique@test.com');
+        $email1->setEmailType($emailType);
+        $this->em->persist($email1);
+
         // Contact
         $contact1 = new Contact();
         $contact1->setFirstName('Max');
         $contact1->setLastName('Mustermann');
-        $contact1->setCreated(new DateTime());
-        $contact1->setChanged(new DateTime());
+        $contact1->addEmail($email1);
         $this->em->persist($contact1);
         $this->contact1 = $contact1;
-
-        $emailType = new EmailType();
-        $emailType->setName('Private');
-        $this->em->persist($emailType);
 
         $email = new Email();
         $email->setEmail('max.mustermann@muster.at');
@@ -50,8 +54,6 @@ class UserControllerTest extends SuluTestCase
         $contact2 = new Contact();
         $contact2->setFirstName("Max");
         $contact2->setLastName("Muster");
-        $contact2->setCreated(new DateTime());
-        $contact2->setChanged(new DateTime());
         $contact2->addEmail($email);
         $this->em->persist($contact2);
         $this->contact2 = $contact2;
@@ -59,8 +61,6 @@ class UserControllerTest extends SuluTestCase
         $contact3 = new Contact();
         $contact3->setFirstName("Disabled");
         $contact3->setLastName("User");
-        $contact3->setCreated(new DateTime());
-        $contact3->setChanged(new DateTime());
         $contact3->addEmail($email);
         $this->em->persist($contact3);
         $this->contact3 = $contact3;
@@ -70,22 +70,19 @@ class UserControllerTest extends SuluTestCase
         $role1 = new Role();
         $role1->setName('Role1');
         $role1->setSystem('Sulu');
-        $role1->setChanged(new DateTime());
-        $role1->setCreated(new DateTime());
         $this->em->persist($role1);
         $this->role1 = $role1;
 
         $role2 = new Role();
         $role2->setName('Role2');
         $role2->setSystem('Sulu');
-        $role2->setChanged(new DateTime());
-        $role2->setCreated(new DateTime());
         $this->em->persist($role2);
         $this->role2 = $role2;
 
         // User 1
         $user = new User();
         $user->setUsername('admin');
+        $user->setEmail('admin@test.com');
         $user->setPassword('securepassword');
         $user->setSalt('salt');
         $user->setLocale('de');
@@ -96,6 +93,7 @@ class UserControllerTest extends SuluTestCase
         // User 2
         $user1 = new User();
         $user1->setUsername('disabled');
+        $user1->setEmail('disabled@test.com');
         $user1->setPassword('securepassword');
         $user1->setSalt('salt');
         $user1->setLocale('de');
@@ -142,8 +140,6 @@ class UserControllerTest extends SuluTestCase
         $group1->setLft(0);
         $group1->setRgt(0);
         $group1->setDepth(0);
-        $group1->setCreated(new DateTime());
-        $group1->setChanged(new DateTime());
         $this->em->persist($group1);
         $this->group1 = $group1;
 
@@ -152,8 +148,6 @@ class UserControllerTest extends SuluTestCase
         $group2->setLft(0);
         $group2->setRgt(0);
         $group2->setDepth(0);
-        $group2->setCreated(new DateTime());
-        $group2->setChanged(new DateTime());
         $this->em->persist($group2);
         $this->group2 = $group2;
 
@@ -170,6 +164,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals(3, count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
+        $this->assertEquals('admin@test.com', $response->_embedded->users[0]->email);
         $this->assertEquals('securepassword', $response->_embedded->users[0]->password);
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
@@ -183,6 +178,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('admin', $response->username);
+        $this->assertEquals('admin@test.com', $response->email);
         $this->assertEquals('securepassword', $response->password);
         $this->assertEquals('de', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
@@ -211,6 +207,7 @@ class UserControllerTest extends SuluTestCase
             '/api/users',
             array(
                 'username' => 'manager',
+                'email' => 'manager@test.com',
                 'password' => 'verysecurepassword',
                 'locale' => 'en',
                 'contact' => array(
@@ -250,6 +247,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
+        $this->assertEquals('manager@test.com', $response->email);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
@@ -271,6 +269,7 @@ class UserControllerTest extends SuluTestCase
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
+        $this->assertEquals('manager@test.com', $response->email);
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
@@ -311,11 +310,77 @@ class UserControllerTest extends SuluTestCase
                 )
             )
         );
-
         $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
         $this->assertContains('username', $response->message);
+    }
+
+    public function testPostWithNotUniqueEmail() {
+
+        $client = $this->createAuthenticatedClient();
+
+        $client->request(
+            'POST',
+            '/api/users',
+            array(
+                'username' => 'hikari',
+                'email' => 'admin@test.com', //already used by admin
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => $this->contact1->getId()
+                ),
+                'userRoles' => array(
+                    array(
+                        'role' => array(
+                            'id' => $this->role1->getId(),
+                        ),
+                        'locales' => '["de"]'
+                    )
+                )
+            )
+        );
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
+        $this->assertContains('email', strtolower($response->message));
+        $this->assertEquals(1004, $response->code);
+    }
+
+    public function testPostWithContactEmail() {
+        $client = $this->createAuthenticatedClient();
+
+        // no user-email passed, but a unique contact-email
+        // so the controller should use the contact-email as the user-email as well
+        $client->request(
+            'POST',
+            '/api/users',
+            array(
+                'username' => 'hikari',
+                'password' => 'verysecurepassword',
+                'locale' => 'en',
+                'contact' => array(
+                    'id' => $this->contact1->getId(),
+                    'emails' => array(array('email' => $this->contact1->getEmails()[0]->getEmail()))
+                ),
+                'userRoles' => array(
+                    array(
+                        'role' => array(
+                            'id' => $this->role1->getId(),
+                        ),
+                        'locales' => '["de"]'
+                    )
+                )
+            )
+        );
+        $response = json_decode($client->getResponse()->getContent());
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals('hikari', $response->username);
+        $this->assertEquals('contact.unique@test.com', $response->email);
+        $this->assertEquals($this->contact1->getId(), $response->contact->id);
+        $this->assertEquals($this->contact1->getEmails()[0]->getEmail(), $response->contact->emails[0]->email);
     }
 
     public function testDelete()
@@ -448,7 +513,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -485,7 +550,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -564,7 +629,7 @@ class UserControllerTest extends SuluTestCase
 
         $response = json_decode($client->getResponse()->getContent());
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(409, $client->getResponse()->getStatusCode());
         $this->assertEquals('admin', $response->username);
         $this->assertEquals(1001, $response->code);
     }
@@ -636,8 +701,6 @@ class UserControllerTest extends SuluTestCase
             'GET',
             '/api/users?contactId=1234'
         );
-
-        $response = json_decode($client->getResponse()->getContent());
 
         $this->assertEquals(204, $client->getResponse()->getStatusCode());
     }

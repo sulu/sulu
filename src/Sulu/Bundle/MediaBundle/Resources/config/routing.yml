@@ -1,7 +1,3 @@
-sulu_media.collection_navigation:
-    path: /navigation/collection
-    defaults: { _controller: SuluMediaBundle:Navigation:collection }
-
 sulu_media.template.collection:
     pattern: /template/media/collection.html
     defaults: { _controller: SuluMediaBundle:Template:collection }
@@ -22,10 +18,10 @@ sulu_media.template.media.info:
     pattern: /template/media/info.html
     defaults: { _controller: SuluMediaBundle:Template:mediaInfo }
 
+sulu_media.template.media.versions:
+    pattern: /template/media/versions.html
+    defaults: { _controller: SuluMediaBundle:Template:mediaVersions }
+
 sulu_media.template.media.multiple_edit:
     pattern: /template/media/multiple-edit.html
     defaults: { _controller: SuluMediaBundle:Template:multipleEdit }
-
-sulu_media.template.collection.list:
-    pattern: /template/collection/list.html
-    defaults: { _controller: SuluMediaBundle:Template:collectionList }

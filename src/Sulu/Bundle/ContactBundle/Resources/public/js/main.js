@@ -12,11 +12,22 @@ require.config({
         sulucontact: '../../sulucontact/js',
         'accountsutil/header': '../../sulucontact/js/components/accounts/util/header',
         'type/bic-input': '../../sulucontact/js/input-type/bic-input',
-        'type/vat-input': '../../sulucontact/js/input-type/vat-input'
+        'type/vat-input': '../../sulucontact/js/input-type/vat-input',
+        'contactsutil/delete-dialog': '../../sulucontact/js/components/contacts/util/delete-dialog',
+        'accountsutil/delete-dialog': '../../sulucontact/js/components/accounts/util/delete-dialog',
+
+        'aura_extensions/iban': '../../sulucontact/js/aura_extensions/iban',
+        'vendor/iban-converter':'../../sulucontact/js/vendor/iban-converter/iban',
+        'type/iban-input': '../../sulucontact/js/input-type/iban-input',
+    },
+    shim: {
+        'vendor/iban-converter': {
+            exports: 'IBAN'
+        }
     }
 });
 
-define(['config'], function(Config) {
+define(['config', 'aura_extensions/iban'], function(Config, IbanExtension) {
 
     'use strict';
 
@@ -26,7 +37,12 @@ define(['config'], function(Config) {
 
         initialize: function(app) {
 
+            IbanExtension.initialize(app);
+
             var sandbox = app.sandbox;
+
+            sandbox.urlManager.setUrl('contact', 'contacts/contacts/edit:<%= id %>/details');
+            sandbox.urlManager.setUrl('account', 'contacts/accounts/edit:<%= id %>/details');
 
             Config.set('sulucontact.components.autocomplete.default.contact', {
                 remoteUrl: '/admin/api/contacts?searchFields=id,fullName&flat=true&fields=id,fullName&limit=25',
@@ -111,30 +127,12 @@ define(['config'], function(Config) {
                 }
             });
 
-            // list all accounts
-            sandbox.mvc.routes.push({
-                route: 'contacts/accounts/type::typeid',
-                callback: function(accountType) {
-                    this.html('<div data-aura-component="accounts@sulucontact" data-aura-display="list" data-aura-account-type="' + accountType + '" />');
-                }
-            });
-
             //show for a new account
             sandbox.mvc.routes.push({
                 route: 'contacts/accounts/add',
                 callback: function() {
                     this.html(
                         '<div data-aura-component="accounts/components/content@sulucontact"/>'
-                    );
-                }
-            });
-
-            //show for a new account
-            sandbox.mvc.routes.push({
-                route: 'contacts/accounts/add/type::id',
-                callback: function(accountType) {
-                    this.html(
-                            '<div data-aura-component="accounts/components/content@sulucontact" data-aura-account-type="' + accountType + '" />'
                     );
                 }
             });

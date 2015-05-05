@@ -50,8 +50,6 @@ class ContactControllerTest extends SuluTestCase
         $contact->setFirstName('Max');
         $contact->setLastName('Mustermann');
         $contact->setPosition('CEO');
-        $contact->setCreated(new DateTime());
-        $contact->setChanged(new DateTime());
         $contact->setFormOfAddress(1);
         $contact->setSalutation("Sehr geehrter Herr Dr Mustermann");
         $contact->setDisabled(0);
@@ -71,8 +69,6 @@ class ContactControllerTest extends SuluTestCase
         $account->setRgt(1);
         $account->setDepth(0);
         $account->setName('Musterfirma');
-        $account->setCreated(new DateTime());
-        $account->setChanged(new DateTime());
 
         $this->account = $account;
 
@@ -81,8 +77,6 @@ class ContactControllerTest extends SuluTestCase
         $account1->setRgt(1);
         $account1->setDepth(0);
         $account1->setName('Musterfirma');
-        $account1->setCreated(new DateTime());
-        $account1->setChanged(new DateTime());
 
         $this->account1 = $account1;
 
@@ -193,8 +187,6 @@ class ContactControllerTest extends SuluTestCase
         /* First Category
         -------------------------------------*/
         $category = new Category();
-        $category->setCreated(new \DateTime());
-        $category->setChanged(new \DateTime());
         $category->setKey('first-category-key');
 
         $this->category = $category;
@@ -219,8 +211,6 @@ class ContactControllerTest extends SuluTestCase
         /* Second Category
         -------------------------------------*/
         $category2 = new Category();
-        $category2->setCreated(new \DateTime());
-        $category2->setChanged(new \DateTime());
         $category2->setKey('second-category-key');
 
         $this->category2 = $category2;
@@ -277,6 +267,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
+        $this->assertEquals($this->addressType->getId(), $response->addresses[0]->addressType->id);
 
         $this->assertEquals(1, $response->formOfAddress);
         $this->assertEquals("Sehr geehrter Herr Dr Mustermann", $response->salutation);

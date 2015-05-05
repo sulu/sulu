@@ -10,7 +10,7 @@
      data-form="true"
      data-aura-column-navigation-url="/admin/api/nodes{/dataSource}?tree=true{% if webspaceKey != '' %}&webspace={{ webspaceKey }}{% endif %}&language={{ languageCode }}&webspace-node=true"
      data-aura-hide-categories="true"
-     data-aura-hide-present-as="true"
+     data-aura-present-as='{{ parameter_to_select(params.present_as.value, userLocale)|json_encode }}'
      data-aura-result-key="nodes"
      data-aura-tags-result-key="tags"
      data-aura-column-navigation-result-key="nodes"

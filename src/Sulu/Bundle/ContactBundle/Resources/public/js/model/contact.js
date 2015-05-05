@@ -18,8 +18,9 @@ define([
     'sulucontact/model/note',
     'sulucontact/model/accountContact',
     'sulucontact/model/contactMedia',
+    'sulucontact/model/bankAccount',
     'sulucategory/model/category'
-], function(RelationalModel, HasMany, HasOne, Account, Email, Phone, Address, Note, AccountContact, Media, Category) {
+], function(RelationalModel, HasMany, HasOne, Account, Email, Phone, Address, Note, AccountContact, Media, BankAccount, Category) {
 
     'use strict';
 
@@ -44,6 +45,7 @@ define([
                 salutation: '',
                 disabled: false,
                 medias: [],
+                bankAccount: [],
                 categories: []
             };
         }, relations: [
@@ -81,6 +83,11 @@ define([
                 type: HasMany,
                 key: 'medias',
                 relatedModel: Media
+            },
+            {
+                type: HasMany,
+                key: 'bankAccounts',
+                relatedModel: BankAccount
             },
             {
                 type: HasMany,

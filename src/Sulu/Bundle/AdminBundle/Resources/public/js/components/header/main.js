@@ -380,7 +380,7 @@ define([], function () {
                 return [toolbarTemplates.default.call(this)[0]];
             },
 
-            languageChanger: function (url, callback) {
+            languageChanger: function(url, callback, resultKey, titleAttribute) {
                 var button;
 
                 // default callback for language dropdown
@@ -394,7 +394,8 @@ define([], function () {
                     hidden: true,
                     itemsOption: {
                         url: url,
-                        titleAttribute: 'name',
+                        resultKey: resultKey,
+                        titleAttribute: titleAttribute || 'name',
                         idAttribute: 'localization',
                         translate: false,
                         markable: true,
@@ -598,7 +599,10 @@ define([], function () {
             if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.url) {
                 languageChanger = toolbarTemplates.languageChanger.call(
                     this,
-                    this.options.toolbarLanguageChanger.url, this.options.toolbarLanguageChanger.callback
+                    this.options.toolbarLanguageChanger.url,
+                    this.options.toolbarLanguageChanger.callback,
+                    this.options.toolbarLanguageChanger.resultKey || null,
+                    this.options.toolbarLanguageChanger.titleAttribute || null
                 );
             } else if (!!this.options.toolbarLanguageChanger && !!this.options.toolbarLanguageChanger.data) {
                 languageChanger = toolbarTemplates.languageChangerData.call(
@@ -881,16 +885,18 @@ define([], function () {
          */
         setBreadcrumb: function (crumbs) {
             if (!!crumbs && !!crumbs.length) {
-                var $breadcrumb = this.sandbox.dom.createElement('<ul class="breadcrumb"/>');
+                var $breadcrumb = this.sandbox.dom.createElement('<ul class="breadcrumb"/>'), $item;
 
                 this.sandbox.util.foreach(crumbs, function (crumb) {
                     if (!!crumb.title) {
-                        this.sandbox.dom.append($breadcrumb, this.sandbox.util.template(templates.breadcrumbItem)({
+                        $item = this.sandbox.dom.createElement(this.sandbox.util.template(templates.breadcrumbItem)({
                             title: this.sandbox.translate(crumb.title),
                             link: (!!crumb.link) ? crumb.link : '#',
                             event: (!!crumb.event) ? crumb.event : '',
                             inactive: (!crumb.link && !crumb.event) ? true : false
                         }));
+                        $item.find('a').data('eventArgs', (!!crumb.eventArgs) ? crumb.eventArgs : {});
+                        this.sandbox.dom.append($breadcrumb, $item);
                     }
                 }.bind(this));
 

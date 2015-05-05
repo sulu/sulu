@@ -9,11 +9,11 @@
 
 define([
     'sulucontact/model/contact',
-    'sulucontact/model/activity',
     'sulucontact/model/title',
     'sulucontact/model/position',
-    'sulucategory/model/category'
-], function(Contact, Activity, Title, Position, Category) {
+    'sulucategory/model/category',
+    'contactsutil/delete-dialog'
+], function(Contact, Title, Position, Category, DeleteDialog) {
 
     'use strict';
 
@@ -27,9 +27,7 @@ define([
                 this.renderList();
             } else if (this.options.display === 'form') {
                 this.renderForm();
-            } else if (this.options.display === 'activities') {
-                this.renderActivities();
-            }  else if (this.options.display === 'documents') {
+            } else if (this.options.display === 'documents') {
                 this.renderComponent('', this.options.display, 'documents-form', {type: 'contact'});
             } else {
                 throw 'display type wrong';
@@ -37,15 +35,6 @@ define([
         },
 
         bindCustomEvents: function() {
-
-            // listen for defaults for types/statuses/prios
-            this.sandbox.once('sulu.contacts.activities.set.defaults', this.parseActivityDefaults.bind(this));
-
-            // shares defaults with subcomponents
-            this.sandbox.on('sulu.contacts.activities.get.defaults', function() {
-                this.sandbox.emit('sulu.contacts.activities.set.defaults', this.activityDefaults);
-            }, this);
-
             // delete contact
             this.sandbox.on('sulu.contacts.contact.delete', function() {
                 this.del();
@@ -75,11 +64,6 @@ define([
             this.sandbox.on('sulu.contacts.contacts.list', function() {
                 this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
             }, this);
-
-            // activities remove / save / add
-            this.sandbox.on('sulu.contacts.contact.activities.delete', this.removeActivities.bind(this));
-            this.sandbox.on('sulu.contacts.contact.activity.save', this.saveActivity.bind(this));
-            this.sandbox.on('sulu.contacts.contact.activity.load', this.loadActivity.bind(this));
 
             this.initializeDropDownListender(
                 'title-select',
@@ -156,116 +140,8 @@ define([
             }.bind(this), '#main-account');
         },
 
-        /**
-         * Parses and translates defaults for acitivties
-         * @param defaults
-         */
-        parseActivityDefaults: function(defaults) {
-            var el, sub;
-            for (el in defaults) {
-                if (defaults.hasOwnProperty(el)) {
-                    for (sub in defaults[el]) {
-                        if (defaults[el].hasOwnProperty(sub)) {
-                            defaults[el][sub].translation = this.sandbox.translate(defaults[el][sub].name);
-                        }
-                    }
-                }
-            }
-            this.activityDefaults = defaults;
-        },
-
-        removeActivities: function(ids) {
-            this.confirmDeleteDialog(function(wasConfirmed) {
-                if (wasConfirmed) {
-                    var activity;
-                    this.sandbox.util.foreach(ids, function(id) {
-                        activity = Activity.findOrCreate({id: id});
-                        activity.destroy({
-                            success: function() {
-                                this.sandbox.emit('sulu.contacts.contact.activity.removed', id);
-                            }.bind(this),
-                            error: function() {
-                                this.sandbox.logger.log("error while deleting activity");
-                            }.bind(this)
-                        });
-                    }.bind(this));
-                }
-            }.bind(this));
-        },
-
-        saveActivity: function(data) {
-            var isNew = true;
-            if (!!data.id) {
-                isNew = false;
-            }
-
-            this.activity = Activity.findOrCreate({id: data.id});
-            this.activity.set(data);
-            this.activity.save(null, {
-                // on success save contacts id
-                success: function(response) {
-                    this.activity = this.flattenActivityObjects(response.toJSON());
-                    this.activity.assignedContact = this.activity.assignedContact.fullName;
-
-                    if (!!isNew) {
-                        this.sandbox.emit('sulu.contacts.contact.activity.added', this.activity);
-                    } else {
-                        this.sandbox.emit('sulu.contacts.contact.activity.updated', this.activity);
-                    }
-
-                }.bind(this),
-                error: function() {
-                    this.sandbox.logger.log("error while saving activity");
-                }.bind(this)
-            });
-        },
-
-        /**
-         * Flattens type/status/priority
-         * @param activity
-         */
-        flattenActivityObjects: function(activity) {
-            if (!!activity.activityStatus) {
-                activity.activityStatus = this.sandbox.translate(activity.activityStatus.name);
-            }
-            if (!!activity.activityType) {
-                activity.activityType = this.sandbox.translate(activity.activityType.name);
-            }
-            if (!!activity.activityPriority) {
-                activity.activityPriority = this.sandbox.translate(activity.activityPriority.name);
-            }
-
-            return activity;
-        },
-
-        loadActivity: function(id) {
-            if (!!id) {
-                this.activity = Activity.findOrCreate({id: id});
-                this.activity.fetch({
-                    success: function(model) {
-                        this.activity = model;
-                        this.sandbox.emit('sulu.contacts.contact.activity.loaded', model.toJSON());
-                    }.bind(this),
-                    error: function(e1, e2) {
-                        this.sandbox.logger.log('error while fetching activity', e1, e2);
-                    }.bind(this)
-                });
-            } else {
-                this.sandbox.logger.warn('no id given to load activity');
-            }
-        },
-
         del: function() {
-            this.confirmDeleteDialog(function(wasConfirmed) {
-                if (wasConfirmed) {
-                    this.sandbox.emit('sulu.header.toolbar.item.loading', 'options-button');
-                    this.contact.destroy({
-                        success: function() {
-                            this.sandbox.emit('sulu.router.navigate', 'contacts/contacts');
-                        }.bind(this)
-                    });
-                }
-            }.bind(this));
+            DeleteDialog.show(this.sandbox, this.contact);
         },
 
         save: function(data) {
@@ -360,40 +236,6 @@ define([
             }
         },
 
-        renderActivities: function() {
-            var $list;
-
-            // load data and show form
-            this.contact = new Contact();
-            $list = this.sandbox.dom.createElement('<div id="activities-list-container"/>');
-            this.html($list);
-
-            this.dfdContact = this.sandbox.data.deferred();
-            this.dfdSystemContacts = this.sandbox.data.deferred();
-
-            if (!!this.options.id) {
-
-                this.getContact(this.options.id);
-                this.getSystemMembers();
-
-                // start component when contact and system members are loaded
-                this.sandbox.data.when(this.dfdContact, this.dfdSystemContacts).then(function() {
-                    this.sandbox.start([
-                        {name: 'activities@sulucontact', options: {
-                            el: $list,
-                            contact: this.contact.toJSON(),
-                            responsiblePersons: this.responsiblePersons,
-                            instanceName: 'contact',
-                            widgetUrl: '/admin/widget-groups/contact-detail?contact='
-                        }}
-                    ]);
-                }.bind(this));
-
-            } else {
-                this.sandbox.logger.error("activities are not available for unsaved contacts!");
-            }
-        },
-
         /**
          * Adds a container with the given id and starts a component with the given name in it
          * @param path path to component
@@ -448,24 +290,6 @@ define([
                     this.sandbox.logger.log('error while fetching contact');
                 }.bind(this)
             });
-        },
-
-        /**
-         * loads system members
-         */
-        getSystemMembers: function() {
-            this.sandbox.util.load('api/contacts?bySystem=true')
-                .then(function(response) {
-                    this.responsiblePersons = response._embedded.contacts;
-                    this.sandbox.util.foreach(this.responsiblePersons, function(el) {
-                        var contact = Contact.findOrCreate(el);
-                        el = contact.toJSON();
-                    }.bind(this));
-                    this.dfdSystemContacts.resolve();
-                }.bind(this))
-                .fail(function(textStatus, error) {
-                    this.sandbox.logger.error(textStatus, error);
-                }.bind(this));
         },
 
         /**
@@ -558,12 +382,21 @@ define([
             if (!!callbackFunction && typeof(callbackFunction) !== 'function') {
                 throw 'callback is not a function';
             }
-            // show dialog
+
+            // show warning dialog
             this.sandbox.emit('sulu.overlay.show-warning',
                 'sulu.overlay.be-careful',
                 'sulu.overlay.delete-desc',
-                callbackFunction.bind(this, false),
-                callbackFunction.bind(this, true)
+
+                function() {
+                    // cancel callback
+                    callbackFunction(false);
+                }.bind(this),
+
+                function() {
+                    // ok callback
+                    callbackFunction(true);
+                }.bind(this)
             );
         }
     };

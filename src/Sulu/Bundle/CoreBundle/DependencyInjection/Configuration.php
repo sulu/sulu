@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sulu_core');
+        $rootNode->addDefaultsIfNotSet();
 
         $children = $rootNode->children();
         $this->getPhpcrConfiguration($children);
@@ -36,6 +37,7 @@ class Configuration implements ConfigurationInterface
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
         $this->getCacheConfiguration($children);
+        $this->getLocaleConfiguration($children);
         $children->end();
 
         return $treeBuilder;
@@ -47,6 +49,18 @@ class Configuration implements ConfigurationInterface
     private function getCoreConfiguration(NodeBuilder $rootNode)
     {
         $rootNode->scalarNode('cache_dir')->defaultValue('%kernel.cache_dir%/sulu')->end();
+    }
+
+    /**
+     * @param NodeBuilder $rootNode
+     */
+    private function getLocaleConfiguration(NodeBuilder $rootNode)
+    {
+        $rootNode->arrayNode('locales')
+            ->isRequired()
+            ->useAttributeAsKey('locale')
+            ->prototype('scalar')->end()
+        ->end();
     }
 
     /**
@@ -219,6 +233,9 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->scalarNode('snippet')
                                     ->defaultValue('default')
+                                ->end()
+                                ->scalarNode('homepage')
+                                    ->defaultValue('overview')
                                 ->end()
                             ->end()
                         ->end()

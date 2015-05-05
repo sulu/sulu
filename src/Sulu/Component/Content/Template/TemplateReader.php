@@ -336,6 +336,7 @@ class TemplateReader implements LoaderInterface
     {
         $name = $this->getValueFromXPath('@name', $xpath, $node, 'string');
         $type = $this->getValueFromXPath('@type', $xpath, $node, 'string');
+        $meta = $this->loadMeta('x:meta/x:*', $xpath, $node);
 
         switch ($type) {
             case 'collection':
@@ -349,7 +350,8 @@ class TemplateReader implements LoaderInterface
         return array(
             'name' => $name,
             'value' => $value,
-            'type' => $type
+            'type' => $type,
+            'meta' => $meta,
         );
     }
 

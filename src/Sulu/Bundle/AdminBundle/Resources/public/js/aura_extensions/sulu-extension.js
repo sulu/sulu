@@ -102,11 +102,11 @@
             /**
              * loads an url and matches it against user settings
              * @param key Defines which setting to compare with
-             * @param attributesArray Defines which Attributes should NOT be taken from user-settings and from fields API instead
+             * @param excludeAttributes Defines which Attributes should NOT be taken from user-settings and from fields API instead
              * @param url Where
              * @param callback
              */
-            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, attributesArray, url, callback) {
+            app.sandbox.sulu.loadUrlAndMergeWithSetting = function(key, excludeAttributes, url, callback) {
                 this.sandbox.util.load(url)
                     .then(function(data) {
                         var userFields = app.sandbox.sulu.getUserSetting(key),
@@ -129,7 +129,7 @@
 
                                     newSetting = serverFields[serverindex];
                                     for (var attrname in userFields[index]) {
-                                        if (attributesArray.indexOf(attrname) < 0) {
+                                        if (excludeAttributes.indexOf(attrname) < 0) {
                                             newSetting[attrname] = userFields[index][attrname];
                                         }
                                     }
@@ -269,8 +269,36 @@
                         }
                     }
                     return url;
+                },
+
+                /**
+                 * @param sandbox
+                 * @param $element
+                 */
+                cropLabelOfElement = function(sandbox, $element) {
+                    var original = sandbox.dom.trim(sandbox.dom.text($element));
+                    // replace multiple spaces with single
+                    original = original.replace(/\s{2,}/g, ' ');
+                    sandbox.dom.attr($element, 'title', original);
+                    sandbox.dom.html($element, sandbox.util.cropMiddle(original, 20));
                 };
 
+            /**
+             * function crops all labels with class 'crop'
+             * @param form The form that contains the labels
+             * @param className Define another class name than 'crop'
+             */
+            app.sandbox.sulu.cropAllLabels = function(form, className) {
+                var sandbox = app.sandbox;
+                if (!className) {
+                    className = 'crop';
+                }
+                var elements = sandbox.dom.find('label.' + className, form), i, length;
+                for (i = -1, length = elements.length; ++i < length;) {
+                    cropLabelOfElement(sandbox, elements[i]);
+                }
+            };
+            
             /**
              * creates an address string from an object
              * @param address
@@ -338,23 +366,18 @@
             /**
              * initializes sulu list-toolbar with column options and datagrid
              * @param key {String} Settings key
-             * @param url {String} Url to load fields from
+             * @param fields {String | Object} Url to load fields from or the fieldsObject
              * @param listToolbarOptions {Object}
              * @param datagridOptions {Object}
              */
-            app.sandbox.sulu.initListToolbarAndList = function(key, url, listToolbarOptions, datagridOptions) {
+            app.sandbox.sulu.initListToolbarAndList = function(key, fields, listToolbarOptions, datagridOptions) {
                 var orderKey = key + 'Order',
                     fieldsKey = key + 'Fields',
                     pageSizeKey = key + 'PageSize',
                     limit = this.sandbox.sulu.getUserSetting(pageSizeKey),
-                    order = this.sandbox.sulu.getUserSetting(orderKey);
-
-                this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
-                    this,
-                    fieldsKey,
-                    ['translation', 'default', 'editable', 'validation', 'width'],
-                    url,
-                    function(data) {
+                    order = this.sandbox.sulu.getUserSetting(orderKey),
+                    url = (typeof fields === 'string') ? fields : null,
+                    callback = function(data) {
                         var toolbarDefaults = {
                                 columnOptions: {
                                     data: data,
@@ -369,6 +392,7 @@
                                 view: 'table',
                                 pagination: 'dropdown',
                                 matchings: data,
+                                selectedCounter: true,
                                 viewOptions: {
                                     table: {
                                         noItemsText: 'public.empty-list',
@@ -384,7 +408,7 @@
                             gridOptions;
 
                         if (!!limit) {
-                            gridDefaults['paginationOptions'] = paginationOptionsDefaults;
+                            gridDefaults.paginationOptions = paginationOptionsDefaults;
                         }
 
                         gridOptions = this.sandbox.util.extend(true, {}, gridDefaults, datagridOptions);
@@ -417,8 +441,19 @@
                         this.sandbox.on('husky.datagrid.data.sort', function(data) {
                             this.sandbox.sulu.saveUserSetting(orderKey, data);
                         }.bind(this));
-                    }.bind(this)
-                );
+                    };
+
+                if (url) {
+                    this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
+                        this,
+                        fieldsKey,
+                        ['translation', 'default', 'editable', 'validation', 'width', 'type'],
+                        url,
+                        callback.bind(this)
+                    );
+                } else {
+                    callback.call(this, fields);
+                }
             };
 
             /**
@@ -432,13 +467,14 @@
                 this.sandbox.sulu.loadUrlAndMergeWithSetting.call(
                     this,
                     key,
-                    ['translation', 'default', 'editable', 'validation', 'width'],
+                    ['translation', 'default', 'editable', 'validation', 'width', 'type'],
                     url,
                     function(data) {
                         // the default options
                         var options = {
                             view: 'table',
                             pagination: 'dropdown',
+                            selectedCounter: true,
                             matchings: data
                         };
 

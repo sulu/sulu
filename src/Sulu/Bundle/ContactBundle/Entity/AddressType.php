@@ -20,13 +20,13 @@ class AddressType implements \JsonSerializable
 {
     /**
      * @var string
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     private $name;
 
     /**
      * @var integer
-     * @Groups({"fullAccount"})
+     * @Groups({"fullAccount","fullContact"})
      */
     private $id;
 
@@ -132,5 +132,28 @@ class AddressType implements \JsonSerializable
             'id' => $this->getId(),
             'name' => $this->getName()
         );
+    }
+
+    /**
+     * Add addresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     * @return AddressType
+     */
+    public function addAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    {
+        $this->addresses[] = $addresses;
+
+        return $this;
+    }
+
+    /**
+     * Remove addresses
+     *
+     * @param \Sulu\Bundle\ContactBundle\Entity\Address $addresses
+     */
+    public function removeAddress(\Sulu\Bundle\ContactBundle\Entity\Address $addresses)
+    {
+        $this->addresses->removeElement($addresses);
     }
 }

@@ -189,7 +189,7 @@
   line-height: 32px;
 }
 
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 900px) {
   /* line 183, ../scss/modules/preview.scss */
   .sulu-preview-toolbar .resolutions {
     display: none;
@@ -249,42 +249,47 @@
 }
 
 /* line 29, ../scss/modules/general.scss */
-.internal-links-overlay .overlay-header,
-.single-internal-overlay .overlay-header,
-.overlay-container .overlay-header {
-  margin-bottom: 1px;
-}
-/* line 32, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-content,
 .single-internal-overlay .overlay-content,
-.overlay-container .overlay-content {
+.node .overlay-content {
   margin: 0px;
 }
-/* line 36, ../scss/modules/general.scss */
+/* line 33, ../scss/modules/general.scss */
+.internal-links-overlay .overlay-header,
+.single-internal-overlay .overlay-header,
+.node .overlay-header {
+  margin-bottom: 0px !important;
+}
+/* line 37, ../scss/modules/general.scss */
 .internal-links-overlay .overlay-footer,
 .single-internal-overlay .overlay-footer,
-.overlay-container .overlay-footer {
-  margin: 0px;
+.node .overlay-footer {
+  margin-top: -1px !important;
 }
 
 /* smart content for column view */
-/* line 42, ../scss/modules/general.scss */
+/* line 43, ../scss/modules/general.scss */
 .column-navigation-wrapper {
   overflow: inherit;
 }
 
 /* block add-button */
-/* line 48, ../scss/modules/general.scss */
+/* line 49, ../scss/modules/general.scss */
 .text-block-footer.full .action .dropdown-label {
   background-color: #ccc;
   cursor: default;
 }
 
 /** multiple property */
-/* line 56, ../scss/modules/general.scss */
+/* line 57, ../scss/modules/general.scss */
 #sulu-content-container .multiple-property .move::before {
   left: -18px;
   top: 2px;
+}
+
+/* line 63, ../scss/modules/general.scss */
+#changelog-container {
+  color: #999;
 }
 
 /* line 1, ../scss/modules/seo.scss */

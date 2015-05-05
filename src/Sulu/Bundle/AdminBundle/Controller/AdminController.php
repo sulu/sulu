@@ -61,7 +61,7 @@ class AdminController extends Controller
                     $template,
                     array(
                         'name' => $this->container->getParameter('sulu_admin.name'),
-                        'locales' => $this->container->getParameter('sulu_admin.locales'),
+                        'locales' => $this->container->getParameter('sulu_core.locales'),
                         'suluVersion' => $this->container->getParameter('sulu.version'),
                         'user' => $user,
                         'config' => $jsconfig

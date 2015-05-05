@@ -29,8 +29,6 @@ class TagContext extends BaseContext implements SnippetAcceptingContext
         foreach ($node as $row) {
             $tag = new Tag();
             $tag->setName($row['name']);
-            $tag->setChanged(new \DateTime());
-            $tag->setCreated(new \DateTime());
             $this->getEntityManager()->persist($tag);
         }
 
