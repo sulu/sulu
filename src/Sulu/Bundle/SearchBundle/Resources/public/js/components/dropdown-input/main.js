@@ -238,6 +238,8 @@ define(['text!sulusearch/components/dropdown-input/main.html'], function(mainTem
          */
         inputKeyDownHandler: function(event) {
             if (event.which === 13) {
+                event.preventDefault();
+
                 this.inputActionHandler();
             }
         },
