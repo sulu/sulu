@@ -38,6 +38,7 @@ class FilterManager implements FilterManagerInterface
     use RelationTrait;
 
     protected static $filterEntityName = 'SuluResourceBundle:Filter';
+    protected static $userEntityName = 'SuluSecurityBundle:User';
     protected static $conditionGroupEntityName = 'SuluResourceBundle:ConditionGroup';
     protected static $conditionEntityName = 'SuluResourceBundle:Condition';
     protected static $filterTranslationEntityName = 'SuluResourceBundle:FilterTranslation';
@@ -62,16 +63,23 @@ class FilterManager implements FilterManagerInterface
      */
     protected $conditionRepository;
 
+    /**
+     * @var array
+     */
+    protected $aliasConfiguration;
+
     public function __construct(
         EntityManagerInterface $em,
         FilterRepositoryInterface $filterRepo,
         UserRepositoryInterface $userRepository,
-        ConditionRepositoryInterface $conditionRepository
+        ConditionRepositoryInterface $conditionRepository,
+        array $aliasConfiguration
     ) {
         $this->em = $em;
         $this->filterRepository = $filterRepo;
         $this->userRepository = $userRepository;
         $this->conditionRepository = $conditionRepository;
+        $this->aliasConfiguration = $aliasConfiguration;
     }
 
     /**
@@ -100,6 +108,38 @@ class FilterManager implements FilterManagerInterface
                     self::$filterTranslationEntityName . '.locale = \'' . $locale . '\''
                 ),
             )
+        );
+
+        return $fieldDescriptors;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getListFieldDescriptors($locale){
+        $fieldDescriptors = $this->getFieldDescriptors($locale);
+
+        $fieldDescriptors['entityName'] = new DoctrineFieldDescriptor(
+            'entityName',
+            'entityName',
+            self::$filterEntityName,
+            'public.entityName',
+            array(),
+            true
+        );
+
+        $fieldDescriptors['user'] = new DoctrineFieldDescriptor(
+            'id',
+            'user',
+            self::$userEntityName,
+            'public.user',
+            array(
+                self::$userEntityName => new DoctrineJoinDescriptor(
+                    self::$userEntityName,
+                    self::$filterEntityName . '.user'
+                ),
+            ),
+            true
         );
 
         return $fieldDescriptors;
@@ -154,6 +194,9 @@ class FilterManager implements FilterManagerInterface
     {
         $user = $this->userRepository->findUserById($userId);
 
+        // SECURITY: Only the user which is referenced by the filter should be allowed to
+        // to change the filter - or the administrator
+
         if ($id) {
             $filter = $this->filterRepository->findByIdAndLocale($id, $locale);
             if (!$filter) {
@@ -172,7 +215,14 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanged(new \DateTime());
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
-        $filter->setEntityName($this->getProperty($data, 'entityName', $filter->getEntityName()));
+
+        if(array_key_exists('entityName', $data)) {
+            $entityClassName = $this->getClassMappingForKey($data['entityName']);
+            if ($entityClassName) {
+                $filter->setEntityName($entityClassName);
+            }
+        }
+
         $filter->setConjunction($this->getProperty($data, 'conjunction', $filter->getConjunction()));
         $filter->setChanger($user);
         $filter->setChanged(new \DateTime());
@@ -382,7 +432,20 @@ class FilterManager implements FilterManagerInterface
      */
     public function batchDelete($ids)
     {
-        // TODO write test
         $this->filterRepository->deleteByIds($ids);
+    }
+
+    /**
+     * Returns the configured class for a key
+     * @param string $key
+     * @return string|null
+     */
+    public function getClassMappingForKey($key)
+    {
+        if($this->aliasConfiguration && array_key_exists($key, $this->aliasConfiguration)){
+            return $this->aliasConfiguration[$key]['class'];
+        }
+
+        return null;
     }
 }
