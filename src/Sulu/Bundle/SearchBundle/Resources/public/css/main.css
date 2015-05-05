@@ -118,6 +118,34 @@
   margin: 60px;
 }
 
+/* line 1, ../scss/modules/search-totals.scss */
+.search-totals-wrapper {
+  background-color: #ccc;
+  padding: 20px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+/* line 9, ../scss/modules/search-totals.scss */
+.search-totals-wrapper h2 {
+  color: #666;
+  font-size: 16px;
+  line-height: 22px;
+}
+/* line 15, ../scss/modules/search-totals.scss */
+.search-totals-wrapper a {
+  text-decoration: none;
+  color: #666;
+}
+/* line 19, ../scss/modules/search-totals.scss */
+.search-totals-wrapper a.active {
+  font-weight: bold;
+}
+/* line 25, ../scss/modules/search-totals.scss */
+.search-totals-wrapper table td {
+  font-size: 14px;
+}
+
 /* line 1, ../scss/modules/dropdown-input.scss */
 .dropdown-input-container,
 .dropdown-input-entry {
