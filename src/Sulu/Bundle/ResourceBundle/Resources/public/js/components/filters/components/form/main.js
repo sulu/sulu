@@ -24,7 +24,30 @@ define(['filtersutil/header'], function(HeaderUtil) {
         header: function() {
             return {
                 toolbar: {
-                    template: 'default',
+                    template: [
+                        {
+                            id: 'save-button',
+                            icon: 'floppy-o',
+                            iconSize: 'large',
+                            class: 'highlight',
+                            position: 1,
+                            group: 'left',
+                            disabled: true,
+                            callback: function() {
+                                this.sandbox.emit('sulu.header.toolbar.save');
+                            }.bind(this)
+                        },
+                        {
+                            icon: 'trash-o',
+                            iconSize: 'large',
+                            group: 'left',
+                            id: 'delete-button',
+                            position: 30,
+                            callback: function() {
+                                this.sandbox.emit('sulu.header.toolbar.delete');
+                            }.bind(this)
+                        }
+                    ],
                     languageChanger: {
                         preSelected: this.options.locale
                     }
