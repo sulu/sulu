@@ -2,6 +2,14 @@
 
 ## dev-develop
 
+### PHPCR: Doctrine-Dbal
+
+The structure of data has changed. Run following command:
+
+```bash
+app/console doctrine:schema:update --force
+```
+
 ### Admin
 
 The `Sulu` prefix from all `ContentNavigationProviders` and `Admin` classes has

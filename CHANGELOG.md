@@ -2,6 +2,7 @@ CHANGELOG for Sulu
 ==================
 
 * dev-develop
+    * ENHANCEMENT #1057 [All]            Upgrade of jackalope 1.2
     * ENHANCEMENT #--   [MediaBundle]    Added function to get base media types
     * ENHANCEMENT #1031 [MediaBundle]    Fixed success label for collection delete
     * BUGFIX      #945  [WebsiteBundle]  Fix Redirect url with query string correctly and trailing slash
