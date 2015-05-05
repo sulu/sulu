@@ -20,7 +20,7 @@
             </trans-unit>
             <trans-unit id="e4b1428ja8a085ede21265f5656d30f" resname="search-overlay.documents-found">
                 <source>search-overlay.documents-found</source>
-                <target>Gefundene Dokumente:</target>
+                <target>Dokumente gefunden:</target>
             </trans-unit>
         </body>
     </file>
