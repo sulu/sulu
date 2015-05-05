@@ -12,7 +12,6 @@ namespace Sulu\Bundle\ContentBundle\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
-use PHPCR\Util\UUIDHelper;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\ContentBundle\Content\InternalLinksContainer;
 use Sulu\Component\Content\ComplexContentType;
@@ -78,7 +77,10 @@ class InternalLinks extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-        $data = $node->getProperty($property->getName())->getString();
+        $data = array();
+        if ($node->hasProperty($property->getName())) {
+            $data = $node->getProperty($property->getName())->getString();
+        }
         $this->setData($data, $property);
     }
 

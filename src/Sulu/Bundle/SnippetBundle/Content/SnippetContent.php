@@ -91,7 +91,10 @@ class SnippetContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $refs = $node->getProperty($property->getName())->getString();
+        $refs = array();
+        if($node->hasProperty($property->getName())) {
+            $refs = $node->getProperty($property->getName())->getString();
+        }
         $this->setData($refs, $property);
     }
 
