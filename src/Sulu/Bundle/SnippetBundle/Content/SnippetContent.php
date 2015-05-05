@@ -83,19 +83,7 @@ class SnippetContent extends ComplexContentType
     protected function setData($data, PropertyInterface $property)
     {
         $refs = isset($data) ? $data : array();
-        $ids = array();
-        if (is_array($refs)) {
-            foreach ($refs as $i => $ref) {
-                // see https://github.com/jackalope/jackalope/issues/248
-                if (UUIDHelper::isUUID($i)) {
-                    $ref = $i;
-                }
-
-                $ids[] = $ref;
-            }
-        }
-
-        $property->setValue($ids);
+        $property->setValue($refs);
     }
 
     /**
@@ -103,7 +91,7 @@ class SnippetContent extends ComplexContentType
      */
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
-        $refs = $node->getPropertyValueWithDefault($property->getName(), array());
+        $refs = $node->getProperty($property->getName())->getString();
         $this->setData($refs, $property);
     }
 
@@ -126,7 +114,6 @@ class SnippetContent extends ComplexContentType
         $languageCode,
         $segmentKey
     ) {
-
         $snippetReferences = array();
         $values = $property->getValue();
 
@@ -230,18 +217,18 @@ class SnippetContent extends ComplexContentType
     {
         $snippets = array();
         foreach ($ids as $i => $ref) {
-            if (!array_key_exists($ref->getIdentifier(), $this->snippetCache)) {
-                $snippet = $this->contentMapper->loadByNode($ref, $locale, $webspaceKey);
+            if (!array_key_exists($ref, $this->snippetCache)) {
+                $snippet = $this->contentMapper->load($ref, $webspaceKey, $locale);
                 if (!$snippet->getHasTranslation() && $shadowLocale !== null) {
-                    $snippet = $this->contentMapper->loadByNode($ref, $shadowLocale, $webspaceKey);
+                    $snippet = $this->contentMapper->load($ref, $webspaceKey, $shadowLocale);
                 }
                 $resolved = $this->structureResolver->resolve($snippet);
                 $resolved['view']['template'] = $snippet->getKey();
 
-                $this->snippetCache[$ref->getIdentifier()] = $resolved;
+                $this->snippetCache[$ref] = $resolved;
             }
 
-            $snippets[] = $this->snippetCache[$ref->getIdentifier()];
+            $snippets[] = $this->snippetCache[$ref];
         }
 
         return $snippets;
