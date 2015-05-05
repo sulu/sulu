@@ -101,22 +101,6 @@ class FilterManager implements FilterManagerInterface
                 ),
             )
         );
-        $fieldDescriptors['conjunction'] = new DoctrineFieldDescriptor(
-            'conjunction',
-            'conjunction',
-            self::$filterEntityName,
-            'resource.filter.conjunction',
-            array(),
-            true
-        );
-        $fieldDescriptors['entityName'] = new DoctrineFieldDescriptor(
-            'entityName',
-            'entityName',
-            self::$filterEntityName,
-            'resource.filter.entityName',
-            array(),
-            true
-        );
 
         return $fieldDescriptors;
     }
