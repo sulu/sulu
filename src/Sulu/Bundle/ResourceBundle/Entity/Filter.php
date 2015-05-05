@@ -10,6 +10,7 @@
 
 namespace Sulu\Bundle\ResourceBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Sulu\Component\Security\Authentication\UserInterface;
 
@@ -22,11 +23,6 @@ class Filter
      * @var string
      */
     private $conjunction;
-
-    /**
-     * @var string
-     */
-    private $entityName;
 
     /**
      * @var integer
@@ -69,12 +65,17 @@ class Filter
     private $creator;
 
     /**
+     * @var string
+     */
+    private $context;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->translations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->conditionGroups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->translations = new ArrayCollection();
+        $this->conditionGroups = new ArrayCollection();
     }
 
     /**
@@ -90,10 +91,10 @@ class Filter
     /**
      * Add translations
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations
+     * @param FilterTranslation $translations
      * @return Filter
      */
-    public function addTranslation(\Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations)
+    public function addTranslation(FilterTranslation $translations)
     {
         $this->translations[] = $translations;
 
@@ -103,9 +104,9 @@ class Filter
     /**
      * Remove translations
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations
+     * @param FilterTranslation $translations
      */
-    public function removeTranslation(\Sulu\Bundle\ResourceBundle\Entity\FilterTranslation $translations)
+    public function removeTranslation(FilterTranslation $translations)
     {
         $this->translations->removeElement($translations);
     }
@@ -123,10 +124,10 @@ class Filter
     /**
      * Add conditionGroups
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups
+     * @param ConditionGroup $conditionGroups
      * @return Filter
      */
-    public function addConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups)
+    public function addConditionGroup(ConditionGroup $conditionGroups)
     {
         $this->conditionGroups[] = $conditionGroups;
 
@@ -136,9 +137,9 @@ class Filter
     /**
      * Remove conditionGroups
      *
-     * @param \Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups
+     * @param ConditionGroup $conditionGroups
      */
-    public function removeConditionGroup(\Sulu\Bundle\ResourceBundle\Entity\ConditionGroup $conditionGroups)
+    public function removeConditionGroup(ConditionGroup $conditionGroups)
     {
         $this->conditionGroups->removeElement($conditionGroups);
     }
@@ -151,29 +152,6 @@ class Filter
     public function getConditionGroups()
     {
         return $this->conditionGroups;
-    }
-
-    /**
-     * Set entityName
-     *
-     * @param string $entityName
-     * @return Filter
-     */
-    public function setEntityName($entityName)
-    {
-        $this->entityName = $entityName;
-
-        return $this;
-    }
-
-    /**
-     * Get entityName
-     *
-     * @return string 
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
     }
 
     /**
@@ -312,5 +290,28 @@ class Filter
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set context
+     *
+     * @param string $context
+     * @return Filter
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+
+        return $this;
+    }
+
+    /**
+     * Get context
+     *
+     * @return string 
+     */
+    public function getContext()
+    {
+        return $this->context;
     }
 }

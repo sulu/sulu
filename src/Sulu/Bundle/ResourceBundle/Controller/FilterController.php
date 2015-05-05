@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ResourceBundle\Controller;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use Hateoas\Representation\CollectionRepresentation;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingFilterAttributeException;
@@ -89,7 +90,6 @@ class FilterController extends RestController implements ClassResourceInterface
      */
     private function getListRepresentation($request)
     {
-        $entityClassName = $this->getManager()->getClassMappingForKey($request->get('entityName'));
         $userCondition = array($this->getUser()->getId(), null);
 
         /** @var RestHelperInterface $restHelper */
@@ -104,8 +104,8 @@ class FilterController extends RestController implements ClassResourceInterface
             $fieldDescriptors
         );
 
-        if($entityClassName) {
-            $listBuilder->where($fieldDescriptors['entityName'], $entityClassName);
+        if ($request->get('context')) {
+            $listBuilder->where($fieldDescriptors['context'], $request->get('context'));
         }
 
         // required
@@ -151,6 +151,9 @@ class FilterController extends RestController implements ClassResourceInterface
         } catch (ConditionGroupMismatchException $exc) {
             $exception = new InvalidArgumentException(self::$groupConditionEntityName, $exc->getId());
             $view = $this->view($exception->toArray(), 400);
+        } catch (FilterContextNotFoundException $exc) {
+            $exception = new InvalidArgumentException(self::$entityKey, $exc->getName());
+            $view = $this->view($exception->toArray(), 400);
         }
 
         return $this->handleView($view);
@@ -184,6 +187,9 @@ class FilterController extends RestController implements ClassResourceInterface
             $view = $this->view($exception->toArray(), 400);
         } catch (ConditionGroupMismatchException $exc) {
             $exception = new InvalidArgumentException(self::$groupConditionEntityName, $exc->getId());
+            $view = $this->view($exception->toArray(), 400);
+        } catch (FilterContextNotFoundException $exc) {
+            $exception = new InvalidArgumentException(self::$entityKey, $exc->getName());
             $view = $this->view($exception->toArray(), 400);
         }
 

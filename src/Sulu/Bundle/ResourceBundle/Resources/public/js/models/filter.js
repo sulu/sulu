@@ -61,12 +61,12 @@ define(['mvc/relationalmodel'], function (RelationalModel) {
 
         /**
          * Defaults
-         * @returns {{name: string, entityName: string, conjunction: string, conditionGroups: Array}}
+         * @returns {{name: string, context: string, conjunction: string, conditionGroups: Array}}
          */
         defaults: function () {
             return {
                 name: '',
-                entityName: '',
+                context: '',
                 conjunction: '',
                 conditionGroups: []
             };

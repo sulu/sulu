@@ -69,7 +69,7 @@ define(['config', 'filtersutil/header'], function(Config, HeaderUtil) {
                 },
                 {
                     el: this.sandbox.dom.find('#filter-list', this.$el),
-                    url: '/admin/api/filters?flat=true&entityName='+this.options.type,
+                    url: '/admin/api/filters?flat=true&context='+this.options.type,
                     resultKey: 'filters',
                     searchInstanceName: 'filterSearch',
                     searchFields: ['name'],
