@@ -53,8 +53,8 @@ define(['filtersutil/header'], function(HeaderUtil) {
             }.bind(this));
 
             // filter saved
-            this.sandbox.on('sulu.resource.filters.saved', function(id) {
-                this.options.data.id = id;
+            this.sandbox.on('sulu.resource.filters.saved', function(model) {
+                this.options.data = model;
                 this.setHeaderBar(true);
                 this.setHeaderInformation();
             }, this);
@@ -81,6 +81,8 @@ define(['filtersutil/header'], function(HeaderUtil) {
                 }
 
                 data.conjunction = data.conjunction.id;
+                data.entityName = this.options.type;
+
                 this.sandbox.emit('sulu.resource.filters.save', data);
             }
         },
