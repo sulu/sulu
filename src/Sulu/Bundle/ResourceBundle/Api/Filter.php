@@ -77,8 +77,6 @@ class Filter extends ApiWrapper
     /**
      * Get entity
      *
-     * @VirtualProperty
-     * @SerializedName("entityName")
      * @return string
      */
     public function getEntityName()
