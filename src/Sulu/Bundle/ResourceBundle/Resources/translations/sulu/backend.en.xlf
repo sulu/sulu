@@ -22,6 +22,18 @@
                 <source>resource.filter.conditions</source>
                 <target>Conditions</target>
             </trans-unit>
+            <trans-unit id="6" resname="resource.filter.delete.warning">
+                <source>resource.filter.delete.warning</source>
+                <target>Do you really want to delete the selected filters? All data is going to be lost.</target>
+            </trans-unit>
+            <trans-unit id="7" resname="resource.filter.conjunction.or">
+                <source>resource.filter.conjunction.or</source>
+                <target>at least one condition</target>
+            </trans-unit>
+            <trans-unit id="8" resname="resource.filter.conjunction.and">
+                <source>resource.filter.conjunction.and</source>
+                <target>all conditions</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
