@@ -105,7 +105,7 @@ class MessageDispatcherTest extends \PHPUnit_Framework_TestCase
         $ex = new \Exception('Thats my message', 4211);
 
         $handler = $this->prophesize('Sulu\Component\Websocket\MessageDispatcher\MessageHandlerInterface');
-        $handler->handle($conn->reveal(), $message, $context->reveal())->wilLThrow(new MessageHandlerException($ex));
+        $handler->handle($conn->reveal(), $message, $context->reveal())->willThrow(new MessageHandlerException($ex));
 
         $dispatcher = new MessageDispatcher();
         $dispatcher->add('test', $handler->reveal());
