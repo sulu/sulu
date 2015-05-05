@@ -63,7 +63,7 @@ define(['text!sulusearch/components/search-totals/main.html'], function(mainTemp
         bindCustomEvents: function() {
             this.sandbox.on(UPDATE.call(this), function(data, category) {
                 this.data = data;
-                this.activeCategory = category;
+                this.activeCategory = category || this.options.allCategory;
                 this.render();
             }.bind(this));
         },
