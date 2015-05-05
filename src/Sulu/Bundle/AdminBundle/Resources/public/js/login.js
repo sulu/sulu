@@ -32,8 +32,16 @@ require(['husky'], function(Husky) {
 
     'use strict';
 
-    var browserLocale = window.navigator.language.slice(0, 2).toLowerCase(),
+    var browserLocale,
         language = 'en';
+
+    // detect browser locale (ie, ff, chrome fallbacks)
+    browserLocale = window.navigator.languages ? window.navigator.languages[0] : null;
+    browserLocale = browserLocale || window.navigator.language || window.navigator.browserLanguage || window.navigator.userLanguage;
+
+    // select only language
+    browserLocale = browserLocale.slice(0, 2).toLowerCase();
+
     // get the locale for the login
     for (var i = -1, length = SULU.locales.length; ++i < length;) {
         if (SULU.locales[i] === browserLocale) {
