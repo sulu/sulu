@@ -18,6 +18,7 @@ use Sulu\Bundle\ResourceBundle\Entity\ConditionRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Entity\Filter as FilterEntity;
 use Sulu\Bundle\ResourceBundle\Entity\FilterRepositoryInterface;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\ConditionGroupMismatchException;
+use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterContextNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterDependencyNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\FilterNotFoundException;
 use Sulu\Bundle\ResourceBundle\Resource\Exception\MissingConditionAttributeException;
@@ -119,11 +120,11 @@ class FilterManager implements FilterManagerInterface
     public function getListFieldDescriptors($locale){
         $fieldDescriptors = $this->getFieldDescriptors($locale);
 
-        $fieldDescriptors['entityName'] = new DoctrineFieldDescriptor(
-            'entityName',
-            'entityName',
+        $fieldDescriptors['context'] = new DoctrineFieldDescriptor(
+            'context',
+            'context',
             self::$filterEntityName,
-            'public.entityName',
+            'public.context',
             array(),
             true
         );
@@ -216,10 +217,11 @@ class FilterManager implements FilterManagerInterface
         $filter->setChanger($user);
         $filter->setName($this->getProperty($data, 'name', $filter->getName()));
 
-        if(array_key_exists('entityName', $data)) {
-            $entityClassName = $this->getClassMappingForKey($data['entityName']);
-            if ($entityClassName) {
-                $filter->setEntityName($entityClassName);
+        if(array_key_exists('context', $data)) {
+            if ($this->getClassMappingForKey($data['context'])) {
+                $filter->setContext($data['context']);
+            } else {
+                throw new FilterContextNotFoundException(static::$filterEntityName, $data['context']);
             }
         }
 
@@ -378,7 +380,7 @@ class FilterManager implements FilterManagerInterface
     {
         $this->checkDataSet($data, 'name', $create);
         $this->checkDataSet($data, 'conjunction', $create);
-        $this->checkDataSet($data, 'entityName', $create);
+        $this->checkDataSet($data, 'context', $create);
     }
 
     /**

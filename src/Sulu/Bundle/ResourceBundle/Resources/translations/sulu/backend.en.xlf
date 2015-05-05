@@ -14,8 +14,8 @@
                 <source>resource.filter.conjunction</source>
                 <target>Filter entries that apply to</target>
             </trans-unit>
-            <trans-unit id="4" resname="resource.filter.entityName">
-                <source>resource.filter.entityName</source>
+            <trans-unit id="4" resname="resource.filter.context">
+                <source>resource.filter.context</source>
                 <target>Scope</target>
             </trans-unit>
             <trans-unit id="5" resname="resource.filter.conditions">

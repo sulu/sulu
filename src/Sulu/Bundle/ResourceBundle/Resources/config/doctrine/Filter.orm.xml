@@ -10,7 +10,7 @@
         </id>
 
         <field name="conjunction" type="string" length="10" column="conjunction" nullable="false"/>
-        <field name="entityName" type="string" column="entityName" length="255" nullable="false"/>
+        <field name="context" type="string" column="context" length="255" nullable="false"/>
         <field name="created" type="datetime" length="255"/>
         <field name="changed" type="datetime" length="255"/>
 
