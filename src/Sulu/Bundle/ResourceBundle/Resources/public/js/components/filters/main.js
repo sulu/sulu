@@ -77,8 +77,8 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 this.load(id, AppConfig.getUser().locale);
             }.bind(this));
 
-            this.sandbox.on(FILTER_LIST, function() {
-                this.sandbox.emit('sulu.router.navigate', constants.baseFilterRoute);
+            this.sandbox.on(FILTER_LIST, function(type) {
+                this.sandbox.emit('sulu.router.navigate', constants.baseFilterRoute + '/' + type);
             }.bind(this));
 
             this.sandbox.on('sulu.header.language-changed', function(locale) {
@@ -92,7 +92,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
          */
         save: function(data) {
             this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button');
-            this.filter.set(data);
+            this.filter = Filter.findOrCreate(data);
             this.filter.saveLocale(this.options.locale, {
                 success: function(response) {
                     var model = response.toJSON();
@@ -155,7 +155,7 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
                 if (wasConfirmed) {
                     // TODO: show loading icon
 
-                    var url = '/admin/api/filters?ids='+ids.join(','),
+                    var url = '/admin/api/filters?ids=' + ids.join(','),
                         idsToDelete = ids.slice();
 
                     this.sandbox.util.ajax({
@@ -194,11 +194,12 @@ define(['suluresource/models/filter', 'app-config'], function(Filter, AppConfig)
         /**
          * Triggers the loading and display of a filter form
          * @param id
+         * @param locale
          */
-        load: function(id) {
+        load: function(id, locale) {
             this.sandbox.emit(
                 'sulu.router.navigate',
-                'resource/filters/' + this.options.type + '/' + AppConfig.getUser().locale + '/' + 'edit:' + id + '/details'
+                'resource/filters/' + this.options.type + '/' + locale + '/' + 'edit:' + id + '/details'
             );
         },
 
